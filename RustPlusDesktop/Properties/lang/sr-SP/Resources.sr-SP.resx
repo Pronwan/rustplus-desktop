@@ -1,44 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,1780 +58,1780 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>Ð Ð£Ð¡Ð¢+ Ð”Ð•Ð¡ÐšÐ¢ÐžÐŸ</value>
+    <value>РУСТ+ ДЕСКТОП</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Steam Ð½Ð°Ð»Ð¾Ð³</value>
+    <value>Steam налог</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>ÐÐ¸ÑÑ‚Ðµ Ð¿Ñ€Ð¸Ñ˜Ð°Ð²Ñ™ÐµÐ½Ð¸</value>
+    <value>Нисте пријављени</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸ Ð°Ð¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐ°</value>
+    <value>Провери ажурирања</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑƒÐ·Ð¸Ð¼Ð°ÑšÐµ...</value>
+    <value>Преузимање...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸Ð´Ñ€ÑƒÐ¶Ð¸Ñ‚Ðµ ÑÐµ Ð”Ð¸ÑÐºÐ¾Ñ€Ð´Ñƒ</value>
+    <value>Придружите се Дискорду</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>Ð‘ÐµÐ»ÐµÑˆÐºÐµ Ð¾ Ð·Ð°ÐºÑ€Ð¿Ð°Ð¼Ð°</value>
+    <value>Белешке о закрпама</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°</value>
+    <value>Подешавања</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>Ð£Ð¿Ð°Ñ€ÐµÐ½Ð¸ ÑÐµÑ€Ð²ÐµÑ€Ð¸</value>
+    <value>Упарени сервери</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>ÐˆÐ¾Ñˆ Ð½Ð¸ÑÑƒ ÑƒÐ¿Ð°Ñ€ÐµÐ½Ð¸ ÑÐµÑ€Ð²ÐµÑ€Ð¸</value>
+    <value>Још нису упарени сервери</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>ÐŸÐžÐ”Ð£Ð”Ð’ÐÐ ÐÐŠÐ• Ð˜ ÐžÐ”Ð Ð–ÐÐ’ÐÐŠÐ•</value>
+    <value>ПОДУДВАРАЊЕ И ОДРЖАВАЊЕ</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
-    <value>ÐŸÐ°Ñ€Ñ‚Ð¸Ñ€Ð°ÑšÐµ: Ð¼Ð¸Ñ€Ð¾Ð²Ð°ÑšÐµ</value>
+    <value>Партирање: мировање</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Ð”ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº Ð·Ð° Ð¾Ð¿Ñ†Ð¸Ñ˜Ðµ</value>
+    <value>Десни клик за опције</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ›ÐµÑšÐµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾</value>
+    <value>Праћење активно</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>ÐŸÐ¾ÑÐ»ÐµÐ´ÑšÐµ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐµ: {0}</value>
+    <value>Последње повлачење: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Ð”Ð¾Ð½Ð¸Ñ€Ð°Ñ˜</value>
+    <value>Донирај</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´Ñ€Ð¶Ð¸Ñ‚Ðµ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼ÐµÑ€Ð°</value>
+    <value>Подржите програмера</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°Ñ‚Ð¸</value>
+    <value>Ресетовати</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ WebSocket Ð²ÐµÐ·Ðµ</value>
+    <value>Ресетовање WebSocket везе</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>Ð˜Ð³Ñ€Ð°Ñ‡Ð¸:</value>
+    <value>Играчи:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸ÐºÐ°Ð¶Ð¸ ÐºÐ°Ñ€Ñ‚Ð¸Ñ†Ñƒ Ð¾Ð½Ð»Ð°Ñ˜Ð½ Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Прикажи картицу онлајн играча</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Ð ÐµÐ´:</value>
+    <value>Ред:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>Ð£Ñ€ÐµÑ’Ð°Ñ˜Ð¸</value>
+    <value>Уређаји</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‡Ð¸Ñ†Ðµ</value>
+    <value>Пречице</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Ð£Ð²ÐµÐ·Ð¸Ñ‚Ðµ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ðµ Ð¾Ð´ ÑÐ°Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Увезите уређаје од саиграча</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>Ð˜Ð·Ð²ÐµÐ·Ð¸Ñ‚Ðµ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ðµ ÑÐ°Ñ€Ð°Ð´Ð½Ð¸Ñ†Ð¸Ð¼Ð°</value>
+    <value>Извезите уређаје сарадницима</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>ÐžÑÐ²ÐµÐ¶Ð¸</value>
+    <value>Освежи</value>
   </data>
   <data name="Decline" xml:space="preserve">
-    <value>ÐžÐ¿Ð°Ð´Ð°ÑšÐµ</value>
+    <value>Опадање</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐµ ÑÐ°Ð³Ð»Ð°ÑÐ½Ð¾ÑÑ‚Ð¸</value>
+    <value>Подешавање сагласности</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>ÐšÐ»Ð¸ÐºÐ¾Ð¼ Ð½Ð° "ÐŸÑ€Ð¸Ñ…Ð²Ð°Ñ‚Ð¸", Ð¿Ð°Ð¼ÐµÑ‚Ð½Ð¸ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð¸ (Ð¸ Ð¿Ð¾Ñ‚ÐµÐ½Ñ†Ð¸Ñ˜Ð°Ð»Ð½Ð¾ Ñ†Ñ€Ñ‚ÐµÐ¶Ð¸ Ð¼Ð°Ð¿Ð°) Ð·Ð° Ð¾Ð²Ð°Ñ˜ ÑÐµÑ€Ð²ÐµÑ€ Ð±Ð¸Ñ›Ðµ Ð¾Ñ‚Ð¿Ñ€ÐµÐ¼Ñ™ÐµÐ½Ð¸ Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€ ÐºÑ€ÐµÐ°Ñ‚Ð¾Ñ€Ð°. ÐžÐ²Ð¾ Ð¾Ð¼Ð¾Ð³ÑƒÑ›Ð°Ð²Ð° ÑÐ°Ð¸Ð³Ñ€Ð°Ñ‡Ð¸Ð¼Ð° Ð´Ð° Ð¸Ñ… Ð¿Ñ€ÐµÑƒÐ·Ð¼Ñƒ Ð¸ ÑÐ¸Ð½Ñ…Ñ€Ð¾Ð½Ð¸Ð·ÑƒÑ˜Ñƒ. Ð—Ð° Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ñƒ ÑÐ°Ð¸Ð³Ñ€Ð°Ñ‡Ð° Ð¿Ñ€ÐµÐ½Ð¾ÑÐ¸ ÑÐµ ÑÐ°Ð¼Ð¾ Ð²Ð°Ñˆ Steam ID. Ð¡Ð°Ð¼Ð¾ Ð¸Ð³Ñ€Ð°Ñ‡Ð¸ Ð¾Ð²Ð»Ð°ÑˆÑ›ÐµÐ½Ð¸ Ñƒ Tool Cupboard Ð¼Ð¾Ð³Ñƒ Ð´Ð° ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ð¸ÑˆÑƒ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ðµ.
+    <value>Кликом на "Прихвати", паметни уређаји (и потенцијално цртежи мапа) за овај сервер биће отпремљени на сервер креатора. Ово омогућава саиграчима да их преузму и синхронизују. За идентификацију саиграча преноси се само ваш Steam ID. Само играчи овлашћени у Tool Cupboard могу да контролишу уређаје.
 
-ÐÐ°Ð¿Ð¾Ð¼ÐµÐ½Ð°: ÐžÐ²Ð°Ñ˜ Ð¼ÐµÑ‚Ð¾Ð´ Ð¿Ñ€ÐµÐ½Ð¾ÑÐ° Ñ›Ðµ Ð±Ð¸Ñ‚Ð¸ Ð¾Ð¿Ñ‚Ð¸Ð¼Ð¸Ð·Ð¾Ð²Ð°Ð½ Ñƒ Ð±ÑƒÐ´ÑƒÑ›Ð½Ð¾ÑÑ‚Ð¸. ÐÐºÐ¾ ÑÐ°Ð¸Ð³Ñ€Ð°Ñ‡Ð¸ Ð½Ðµ Ð¼Ð¾Ð³Ñƒ Ð´Ð° Ð¿Ñ€ÐµÑƒÐ·Ð¼Ñƒ Ð¿Ð¾Ð´Ð°Ñ‚ÐºÐµ, Ð¿Ð¾ÐºÑƒÑˆÐ°Ñ˜Ñ‚Ðµ Ð´Ð° Ð¾Ð±Ñ€Ð¸ÑˆÐµÑ‚Ðµ Ñ†Ñ€Ñ‚ÐµÐ¶Ðµ Ð¼Ð°Ð¿Ð° Ð¸ Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð¾Ñ‚Ð¿Ñ€ÐµÐ¼Ð¸Ñ‚Ðµ.</value>
+Напомена: Овај метод преноса ће бити оптимизован у будућности. Ако саиграчи не могу да преузму податке, покушајте да обришете цртеже мапа и поново отпремите.</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸</value>
+    <value>Избриши</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>ÐœÐ¾Ð¶ÐµÑ‚Ðµ Ð´Ð° Ð¸Ð·Ð±Ñ€Ð¸ÑˆÐµÑ‚Ðµ ÑÐ°Ð¼Ð¾ Ð½ÐµÐ´Ð¾ÑÑ‚Ð°Ñ˜ÑƒÑ›Ðµ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ðµ.</value>
+    <value>Можете да избришете само недостајуће уређаје.</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ¸Ð¼ÐµÐ½ÑƒÑ˜ ÑƒÑ€ÐµÑ’Ð°Ñ˜</value>
+    <value>Преименуј уређај</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>ÐžÐ½Ð»Ð°Ñ˜Ð½</value>
+    <value>Онлајн</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>ÐžÑ„Ð»Ð°Ñ˜Ð½</value>
+    <value>Офлајн</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ¶Ð¸ ÑÐµ</value>
+    <value>Повежи се</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>ÐŸÑƒÐ½Ð¾ Ð¿Ð¾Ð²ÐµÐ·Ð¸Ð²Ð°ÑšÐµ</value>
+    <value>Пуно повезивање</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>Ð£Ñ‡Ð¸Ñ‚Ð°Ñ˜ Ð¼Ð°Ð¿Ñƒ Ð¸ Ñ‚Ð¸Ð¼</value>
+    <value>Учитај мапу и тим</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐºÐ¸Ð½Ð¸ Ð²ÐµÐ·Ñƒ</value>
+    <value>Прекини везу</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>Ð”ÐµÑ‚Ð°Ñ™Ð¸ ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
+    <value>Детаљи сервера</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>Ð¡Ð»ÑƒÑˆÐ°Ñ˜</value>
+    <value>Слушај</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð¾Ð¿</value>
+    <value>Стоп</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>ÐŸÐ¾ÐºÑƒÑˆÐ°Ñ˜Ñ‚Ðµ Ð´Ð° ÑƒÐ¿Ð°Ñ€Ð¸Ñ‚Ðµ ÑÐ° Ð•ÑŸÐ¾Ð¼</value>
+    <value>Покушајте да упарите са Еџом</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ° (Ð¸Ð·Ð±Ñ€Ð¸ÑˆÐ¸ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ñƒ)</value>
+    <value>Ресетовање упаривања (избриши конфигурацију)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°Ñ‚Ð¸ + Ð¡Ð»ÑƒÑˆÐ°Ñ‚Ð¸ (Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð¿Ð¾Ð¿Ñ€Ð°Ð²Ð¸Ñ‚Ð¸)</value>
+    <value>Ресетовати + Слушати (поново поправити)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ + Ð¡Ð»ÑƒÑˆÐ°ÑšÐµ ÑÐ° Ð¸Ð²Ð¸Ñ†Ð¾Ð¼</value>
+    <value>Ресетовање + Слушање са ивицом</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>ÐŸÐ¾Ð½Ð¾Ð²Ð¾ Ð¿Ð¾Ð²ÐµÐ¶Ð¸Ñ‚Ðµ Battlemetrics IDâ€¦</value>
+    <value>Поново повежите Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ ÑÐµÑ€Ð²ÐµÑ€â€¦</value>
+    <value>Избришите сервер…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>ÐœÐ¾Ð»Ð¸Ð¼ Ð²Ð°Ñ, ÑÐ°Ñ‡ÐµÐºÐ°Ñ˜Ñ‚Ðµ...</value>
+    <value>Молим вас, сачекајте...</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐºÐ¸Ð½Ð¸/Ð½Ð°ÑÑ‚Ð°Ð²Ð¸ Ð¿Ñ€Ð¸ÐºÐ°Ð· Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
+    <value>Прекини/настави приказ области сервера</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>Ð ÐµÐ¶Ð¸Ð¼ ÑÑ‚Ñ€Ð¸Ð¼Ð¾Ð²Ð°ÑšÐ°</value>
+    <value>Режим стримовања</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>ÐœÐ°ÑˆÑ‚Ð°:</value>
+    <value>Машта:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>ÐžÐ¼Ð¾Ð³ÑƒÑ›Ð¸ Ñ€ÐµÐ¶Ð¸Ð¼ ÑÑ‚Ñ€Ð¸Ð¼ÐµÑ€Ð° (Ð¡ÐºÑ€Ð°Ñ›ÑƒÑ˜Ðµ Ð¸Ð¼ÐµÐ½Ð°)</value>
+    <value>Омогући режим стримера (Скраћује имена)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>Ð¡ÐºÑ€Ð°Ñ›ÑƒÑ˜Ðµ Steam Ð¸Ð¼ÐµÐ½Ð° Ð¸ Ð˜Ð”-Ð¾Ð²Ðµ Ñ€Ð°Ð´Ð¸ Ð·Ð°ÑˆÑ‚Ð¸Ñ‚Ðµ Ð¿Ñ€Ð¸Ð²Ð°Ñ‚Ð½Ð¾ÑÑ‚Ð¸ Ñ‚Ð¾ÐºÐ¾Ð¼ ÑÑ‚Ñ€Ð¸Ð¼Ð¾Ð²Ð°. ÐÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¸ ÑÐ°ÐºÑ€Ð¸Ð²Ð° ÐºÐ¾Ð½Ð·Ð¾Ð»Ñƒ Ð¸ Ð»Ð¸ÑÑ‚Ñƒ ÑÐµÑ€Ð²ÐµÑ€Ð°.</value>
+    <value>Скраћује Steam имена и ИД-ове ради заштите приватности током стримова. Аутоматски сакрива конзолу и листу сервера.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜ÐµÐ´Ð½Ð° Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ñ˜Ð° Ð½Ð¸Ñ˜Ðµ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð° (Ð²Ð°Ð½ Ð¼Ñ€ÐµÐ¶Ðµ Ð¸Ð»Ð¸ Ð½Ð¸Ñ˜Ðµ Ð³ÐµÐ½ÐµÑ€Ð¸ÑÐ°Ð½Ð°).</value>
+    <value>Ниједна позиција није доступна (ван мреже или није генерисана).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
+    <value>Сачувај групу</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Ð£Ð½ÐµÑÐ¸Ñ‚Ðµ Ð½Ð°Ð·Ð¸Ð² Ð³Ñ€ÑƒÐ¿Ðµ.</value>
+    <value>Унесите назив групе.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ€ÑƒÐºÐ° Ð½Ð¸Ñ˜Ðµ Ð¼Ð¾Ð³Ð»Ð° Ð´Ð° Ð±ÑƒÐ´Ðµ Ð¿Ð¾ÑÐ»Ð°Ñ‚Ð°. ÐœÐ¾Ð»Ð¸Ð¼Ð¾ Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð¿Ð¾ÐºÑƒÑˆÐ°Ñ˜Ñ‚Ðµ. (ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚Ðµ Ð´Ð° Ð»Ð¸ ÑÑ‚Ðµ Ñƒ Ñ‚Ð¸Ð¼Ñƒ!)</value>
+    <value>Порука није могла да буде послата. Молимо поново покушајте. (Проверите да ли сте у тиму!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>Ð“Ñ€ÐµÑˆÐºÐ°: </value>
+    <value>Грешка: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>Ð”Ð¾Ð´ÐµÐ»Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
+    <value>Додели групу</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ° Ð³Ñ€ÑƒÐ¿Ðµ: {0}</value>
+    <value>Подешавања групе: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>ÐÐ°Ð·Ð¸Ð² Ð³Ñ€ÑƒÐ¿Ðµ</value>
+    <value>Назив групе</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Ð£Ð½ÐµÑÐ¸Ñ‚Ðµ Ð½Ð°Ð·Ð¸Ð² Ð³Ñ€ÑƒÐ¿Ðµ...</value>
+    <value>Унесите назив групе...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>Ð“Ñ€ÑƒÐ¿Ð½Ð° Ð±Ð¾Ñ˜Ð°</value>
+    <value>Групна боја</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜ Ð¿Ñ€Ð¾Ð¼ÐµÐ½Ðµ</value>
+    <value>Сачувај промене</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>ÐÐ½Ð°Ð»Ð¸Ñ‚Ð¸ÐºÐ° Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾ÑÑ‚Ð¸ Ð¸Ð³Ñ€Ð°Ñ‡Ð° Ð¸ Ð¿Ñ€Ð¾Ð³Ð½Ð¾Ð·Ðµ</value>
+    <value>Аналитика активности играча и прогнозе</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>Ð˜Ð³Ñ€Ð°Ñ‡Ð¸</value>
+    <value>Играчи</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>Ð ÐµÐ²Ð¸Ð·Ð¸Ñ˜Ð° ÑÑ‚Ñ€Ð¸Ð¼ÐµÑ€-Ð¼Ð¾Ð´Ð° Ð¸ Ð¼Ð¸Ð½Ð¸ Ð¼Ð°Ð¿Ðµ</value>
+    <value>Ревизија стример-мода и мини мапе</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>Ð ÐµÐ¶Ð¸Ð¼ ÑÑ‚Ñ€Ð¸Ð¼Ð¾Ð²Ð°ÑšÐ°</value>
+    <value>Режим стримовања</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Ð¡ÐºÐ°Ð»Ð¸Ñ€Ð°ÑšÐµ Ð¾Ð·Ð½Ð°ÐºÐµ Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Скалирање ознаке играча</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>ÐŸÐ¾Ð»Ð¸Ñ€Ð°ÑšÐµ Ð¼Ð¸Ð½Ð¸ Ð¼Ð°Ð¿Ðµ</value>
+    <value>Полирање мини мапе</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð½Ð¾ Ñ˜Ðµ Ð¿Ñ€ÐµÐ´ÑƒÐ·ÐµÑ‚Ð¸ Ð°ÐºÑ†Ð¸Ñ˜Ñƒ:</value>
+    <value>Потребно је предузети акцију:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Ð£ÐºÐ»Ð°ÑšÐ°ÑšÐµ Ð¿Ñ€Ð°Ñ›ÐµÑšÐ° BattleMetrics</value>
+    <value>Уклањање праћења BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑƒÑ€ÐµÑ’ÐµÑšÐµ ÑÐ¸ÑÑ‚ÐµÐ¼Ð° Ð·Ð° Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Преуређење система за праћење играча</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>ÐšÐ°ÐºÐ¾ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¾Ð½Ð¸ÑˆÐµ Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Како функционише праћење играча</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Ð”Ð¾Ð´Ð°Ñ˜Ñ‚Ðµ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ Ñƒ Ñ‚Ñ€Ð°ÐºÐµÑ€ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ Ð·Ð°Ð¿Ð¾Ñ‡ÐµÐ»Ð¸ Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ</value>
+    <value>Додајте играче у тракер да бисте започели праћење</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ›ÐµÑšÐµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾</value>
+    <value>Праћење активно</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ›ÐµÑšÐµ Ð¼Ð¸Ñ€Ð¾Ð²Ð°ÑšÐ°</value>
+    <value>Праћење мировања</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>Ð¤Ð¸Ð»Ñ‚Ñ€Ð¸Ñ€Ð°Ñ˜ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ...</value>
+    <value>Филтрирај играче...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ¶Ð¸Ñ‚Ðµ ÑÐµ Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ ÑƒÑ‡Ð¸Ñ‚Ð°Ð»Ð¸ Ð»Ð¸ÑÑ‚Ñƒ Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Повежите се на сервер да бисте учитали листу играча</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑƒÐ·Ð¸Ð¼Ð°ÑšÐµ Ð¸Ð³Ñ€Ð°Ñ‡Ð° Ð¿Ñ€ÐµÐºÐ¾ Steam Query...</value>
+    <value>Преузимање играча преко Steam Query...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>Ð˜Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ð° ÑÑ‚Ð°Ð·Ðµ</value>
+    <value>Идентификација стазе</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Ð ÑƒÑ‡Ð½Ð¾ Ð¸Ð¼Ðµ Ñ‚Ñ€Ð°ÐºÐµ...</value>
+    <value>Ручно име траке...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜ÐµÐ´Ð°Ð½ ÑƒÑ€ÐµÑ’Ð°Ñ˜.</value>
+    <value>Ниједан уређај.</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜Ðµ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¾Ð²Ð°Ð½ Ð½Ð¸Ñ˜ÐµÐ´Ð°Ð½ Ñ‚Ð¾ÐºÐµÐ½</value>
+    <value>Није регистрован ниједан токен</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Ð¢Ð¾ÐºÐµÐ½ Ñ˜Ðµ Ð¸ÑÑ‚ÐµÐºÐ°Ð¾!</value>
+    <value>Токен је истекао!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Ð˜ÑÑ‚ÐµÑ‡Ðµ Ð·Ð° {0} Ð´Ð°Ð½Ð°</value>
+    <value>Истече за {0} дана</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} Ð´Ð¾ Ð½Ð¾Ñ›Ð¸</value>
+    <value>{0} до ноћи</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} Ð´Ð¾ Ð´Ð°Ð½Ð°</value>
+    <value>{0} до дана</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ‚Ð¸Ñ‚Ðµ Ð¼Ðµ</value>
+    <value>Пратите ме</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ‚Ð¸Ñ‚Ðµ {0}</value>
+    <value>Пратите {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>ÐšÐ¾Ð¼Ð±Ð¸Ð½Ð°Ñ†Ð¸Ñ˜Ð°: ÑÐ»ÑƒÑˆÐ°ÑšÐµâ€¦</value>
+    <value>Комбинација: слушање…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>ÐŸÐ°Ñ€iranje: Ð·Ð°ÑƒÑÑ‚Ð°Ð²Ñ™ÐµÐ½Ð¾</value>
+    <value>Парiranje: заустављено</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>ÐŸÐ°Ñ€iranje: Ð½ÐµÑƒÑÐ¿ÐµÐ»Ð¾</value>
+    <value>Парiranje: неуспело</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>ÐÐ»Ð°Ñ€Ð¼ Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ð½!</value>
+    <value>Аларм је активиран!</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Ð¡ÐµÑ€Ð²ÐµÑ€</value>
+    <value>Сервер</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>ÐŸÐ°Ð¼ÐµÑ‚Ð½Ð¸ Ð°Ð»Ð°Ñ€Ð¼</value>
+    <value>Паметни аларм</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>ÐÐµÐ¼Ð¾Ð³ÑƒÑ›Ðµ Ñ˜Ðµ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚Ð¸ RustPlus-Link: {0}
-Ð¤Ð¾Ñ€Ð¼Ð°Ñ‚: rustplus://IP:PORT</value>
+    <value>Немогуће је прочитати RustPlus-Link: {0}
+Формат: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ°</value>
+    <value>Ресетовање упаривања</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ Ð¿Ð¾ÑÑ‚Ð¾Ñ˜ÐµÑ›Ñƒ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ñƒ ÑƒÐ¿Ð°Ñ€ÐµÑšÐ°?
-ÐœÐ¾Ñ€Ð°Ñ›ÐµÑ‚Ðµ Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð´Ð° ÑƒÐ¿Ð°Ñ€Ð¸Ñ‚Ðµ Ð¿Ñ€Ð¸ ÑÐ»ÐµÐ´ÐµÑ›ÐµÐ¼ Ð¿Ð¾ÐºÑ€ÐµÑ‚Ð°ÑšÑƒ.</value>
+    <value>Избришите постојећу конфигурацију упарења?
+Мораћете поново да упарите при следећем покретању.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚ÑƒÑ˜ + Ð¡Ð»ÑƒÑˆÐ°Ñ˜</value>
+    <value>Ресетуј + Слушај</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ñƒ ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ° Ð¸ Ð¾Ð´Ð¼Ð°Ñ… Ð¿Ð¾Ð½Ð¾Ð²Ð¾ ÑƒÐ¿Ð°Ñ€Ð¸Ñ‚Ðµ/ÑÐ»ÑƒÑˆÐ°Ñ˜Ñ‚Ðµ?</value>
+    <value>Избришите конфигурацију упаривања и одмах поново упарите/слушајте?</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°Ñ‚Ð¸ + Ð¡Ð»ÑƒÑˆÐ°Ñ‚Ð¸ (Ð˜Ð²Ð¸Ñ†Ð°)</value>
+    <value>Ресетовати + Слушати (Ивица)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ñƒ ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ° Ð¸ Ð¾Ð´Ð¼Ð°Ñ… Ð¿Ð¾Ð½Ð¾Ð²Ð¾ ÑƒÐ¿Ð°Ñ€Ð¸Ñ‚Ðµ/ÑÐ»ÑƒÑˆÐ°Ñ˜Ñ‚Ðµ Ð¿Ñ€ÐµÐºÐ¾ Edge-Ð°?</value>
+    <value>Избришите конфигурацију упаривања и одмах поново упарите/слушајте преко Edge-а?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜Ðµ Ð±Ð¸Ð»Ð¾ Ð¼Ð¾Ð³ÑƒÑ›Ðµ ÑƒÐ¿Ð¸Ñ‚Ð°Ñ‚Ð¸ Ð½Ð°Ñ˜Ð½Ð¾Ð²Ð¸Ñ˜Ðµ Ð¸Ð·Ð´Ð°ÑšÐµ. ÐœÐ¾Ð»Ð¸Ð¼Ð¾ Ð¿Ð¾ÐºÑƒÑˆÐ°Ñ˜Ñ‚Ðµ Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð¸Ð»Ð¸ Ð¾Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ðµ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñƒ Ð¸Ð·Ð´Ð°ÑšÐ°.</value>
+    <value>Није било могуће упитати најновије издање. Молимо покушајте поново или отворите страницу издања.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Ð’Ð¸ ÑÑ‚Ðµ Ñƒ Ñ‚Ð¾ÐºÑƒ.</value>
+    <value>Ви сте у току.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¾ Ð°Ð¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐµ</value>
+    <value>Доступно ажурирање</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð° Ð½Ð¾Ð²Ð° Ð²ÐµÑ€Ð·Ð¸Ñ˜Ð°: {0}
-ÐžÑ‚Ð²Ð¾Ñ€Ð¸ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñƒ Ð·Ð° Ð¾Ð±Ñ˜Ð°Ð²Ðµ?</value>
+    <value>Доступна нова верзија: {0}
+Отвори страницу за објаве?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð° Ð½Ð¾Ð²Ð° Ð²ÐµÑ€Ð·Ð¸Ñ˜Ð°: {0}
-ÐŸÑ€ÐµÑƒÐ·Ð¼Ð¸Ñ‚Ðµ Ð¸ Ð¸Ð½ÑÑ‚Ð°Ð»Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ ÑÐ°Ð´Ð°?</value>
+    <value>Доступна нова верзија: {0}
+Преузмите и инсталирајте сада?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑƒÐ·Ð¸Ð¼Ð°ÑšÐµ Ñ˜Ðµ Ð½ÐµÑƒÑÐ¿ÐµÐ»Ð¾.</value>
+    <value>Преузимање је неуспело.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð°Ð¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐ° Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿ÐµÐ»Ð°.
+    <value>Проверка ажурирања није успела.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜ÐµÐ´Ð°Ð½ ÑƒÑ€ÐµÑ’Ð°Ñ˜.</value>
+    <value>Ниједан уређај.</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸ÐºÐ°Ð¶Ð¸ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»</value>
+    <value>Прикажи профил</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð¼ÐµÐ½Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
+    <value>Промени групу</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ¸Ð¼ÐµÐ½ÑƒÑ˜</value>
+    <value>Преименуј</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Ð£ÐºÐ»Ð¾Ð½Ð¸ Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ</value>
+    <value>Уклони праћење</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸ÐºÐ°Ð·</value>
+    <value>Приказ</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Ð’Ð¸ÑˆÐµ Ð¾Ð¿Ñ†Ð¸Ñ˜Ð°</value>
+    <value>Више опција</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>ÐŸÐ¾Ð½Ð¾Ð²Ð¾ Ð¿Ð¾Ð²ÐµÐ¶Ð¸Ñ‚Ðµ Battlemetrics IDâ€¦</value>
+    <value>Поново повежите Battlemetrics ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ ÑÐµÑ€Ð²ÐµÑ€â€¦</value>
+    <value>Избришите сервер…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Ð”ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ Ð¿Ñ€ÐµÐ¸Ð¼ÐµÐ½Ð¾Ð²Ð°Ð»Ð¸</value>
+    <value>Десни клик да бисте преименовали</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ±Ð°Ñ†Ð¸</value>
+    <value>Пребаци</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>Ð˜ÑÐºÐ°Ñ‡ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð·Ð¾Ñ€</value>
+    <value>Искачући прозор</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>Ð£Ð¿Ð¾Ð·Ð¾Ñ€ÐµÑšÐµ Ñƒ Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ð¸</value>
+    <value>Упозорење у апликацији</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>ÐÑƒÐ´Ð¸Ð¾ ÑƒÐ¿Ð¾Ð·Ð¾Ñ€ÐµÑšÐµ</value>
+    <value>Аудио упозорење</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ð° Ð°ÑƒÐ´Ð¸Ð¾ Ð´Ð°Ñ‚Ð¾Ñ‚ÐµÐºÐ°...</value>
+    <value>Прилагођена аудио датотека...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°Ñ‚Ð¸ Ð½Ð° Ð¿Ð¾Ð´Ñ€Ð°Ð·ÑƒÐ¼ÐµÐ²Ð°Ð½Ð¾</value>
+    <value>Ресетовати на подразумевано</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ³Ð»ÐµÐ´: </value>
+    <value>Преглед: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> ÐŸÑ€ÐµÐ´Ð¼ÐµÑ‚Ð¸, Ð¾Ð´Ñ€Ð¶Ð°Ð²Ð°ÑšÐµ=</value>
+    <value> Предмети, одржавање=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜Ðµ Ð¿Ñ€Ð¾Ð½Ð°Ñ’ÐµÐ½ Ð½Ð¸Ñ˜ÐµÐ´Ð°Ð½ ÑƒÑ€ÐµÑ’Ð°Ñ˜</value>
+    <value>Није пронађен ниједан уређај</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>ÐŸÐ°Ñ€Ð°Ñ˜Ñ‚Ðµ Ð¿Ð°Ð¼ÐµÑ‚Ð½Ð¸ ÑƒÑ€ÐµÑ’Ð°Ñ˜, Ð¿Ñ€ÐµÐºÐ¸Ð´Ð°Ñ‡ Ð¸Ð»Ð¸ Ð°Ð»Ð°Ñ€Ð¼ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ Ð³Ð° Ð¾Ð²Ð´Ðµ Ð²Ð¸Ð´ÐµÐ»Ð¸</value>
+    <value>Парајте паметни уређај, прекидач или аларм да бисте га овде видели</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>Ð¢Ð¸Ð¼</value>
+    <value>Тим</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Ð¦ÐµÐ½Ñ‚Ð°Ñ€ Ð½Ð° Ð¼Ð°Ð¿Ð¸</value>
+    <value>Центар на мапи</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ‚Ð¸Ñ‚Ðµ Ð½Ð° Ð¼Ð°Ð¿Ð¸</value>
+    <value>Пратите на мапи</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>ÐžÑ‚Ð²Ð¾Ñ€Ð¸ Steam Ð¿Ñ€Ð¾Ñ„Ð¸Ð»</value>
+    <value>Отвори Steam профил</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>Ð£Ð½Ð°Ð¿Ñ€ÐµÑ’ÐµÑšÐµ Ñƒ Ð»Ð¸Ð´ÐµÑ€Ð°</value>
+    <value>Унапређење у лидера</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Ð£Ð´Ð°Ñ€ Ð¸Ð· Ñ‚Ð¸Ð¼Ð°</value>
+    <value>Удар из тима</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ñ„Ð¸Ð»Ð½Ð¸ Ð¼Ð°Ñ€ÐºÐµÑ€Ð¸</value>
+    <value>Профилни маркери</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>ÐœÐ°Ñ€ÐºÐµÑ€Ð¸ ÑÐ¼Ñ€Ñ‚Ð¸</value>
+    <value>Маркери смрти</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>ÐšÐ°Ð¼ÐµÑ€Ðµ</value>
+    <value>Камере</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Ð”Ð¾Ð´Ð°Ñ˜ ÐºÐ°Ð¼ÐµÑ€Ñƒ</value>
+    <value>Додај камеру</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜Ðµ Ð¿Ñ€Ð¾Ð½Ð°Ñ’ÐµÐ½Ð° Ð½Ð¸Ñ˜ÐµÐ´Ð½Ð° ÐºÐ°Ð¼ÐµÑ€Ð°</value>
+    <value>Није пронађена ниједна камера</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>Ð¡Ð¿Ð°Ñ€Ð¸Ñ‚Ðµ ÐºÐ°Ð¼ÐµÑ€Ñƒ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ Ð¾Ð²Ð´Ðµ Ð²Ð¸Ð´ÐµÐ»Ð¸ ÑšÐµÐ½ Ð¿Ñ€ÐµÐ³Ð»ÐµÐ´</value>
+    <value>Спарите камеру да бисте овде видели њен преглед</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>Ð˜Ð³Ñ€Ð°Ñ‡Ð¸</value>
+    <value>Играчи</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>ÐšÐ°ÐºÐ¾ Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ð¸</value>
+    <value>Како пратити</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Ð¡Ð°Ð·Ð½Ð°Ñ˜Ñ‚Ðµ ÐºÐ°ÐºÐ¾ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¾Ð½Ð¸ÑˆÐµ Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ Ð¸Ð³Ñ€Ð°Ñ‡Ð°</value>
+    <value>Сазнајте како функционише праћење играча</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>ÐžÐ½Ð»Ð°Ñ˜Ð½</value>
+    <value>Онлајн</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>ÐžÐ½Ð»Ð°Ñ˜Ð½ Ð¸Ð³Ñ€Ð°Ñ‡Ð¸</value>
+    <value>Онлајн играчи</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‚Ñ€Ð°Ð³Ð° BM</value>
+    <value>Претрага BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‚Ñ€Ð°Ð¶Ð¸Ñ‚Ðµ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¸ ÑÐµÑ€Ð²ÐµÑ€ Ð½Ð° BattleMetrics</value>
+    <value>Претражите тренутни сервер на BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>Ð˜ÑÐºÐ¾Ñ‡Ð¸</value>
+    <value>Искочи</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>ÐžÑ‚Ð²Ð¾Ñ€Ð¸ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ Ñƒ Ð·Ð°ÑÐµÐ±Ð½Ð¾Ð¼ Ð¿Ñ€Ð¾Ð·Ð¾Ñ€Ñƒ</value>
+    <value>Отвори играче у засебном прозору</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ð·Ð°</value>
+    <value>Стаза</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Ð£Ð½ÐµÑÐ¸Ñ‚Ðµ Ð½Ð°Ð·Ð¸Ð² Ñ‚Ñ€Ð°ÐºÐµ Ð¸Ð»Ð¸ Steam ID...</value>
+    <value>Унесите назив траке или Steam ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>Ð¤Ð¸Ð»Ñ‚Ñ€Ð¸Ñ€Ð°Ñ˜ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ...</value>
+    <value>Филтрирај играче...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Ð£Ñ‡Ð¸Ñ‚Ð°Ð²Ð°ÑšÐµ Ð¸Ð³Ñ€Ð°Ñ‡Ð°...</value>
+    <value>Учитавање играча...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ›ÐµÐ½Ð¾</value>
+    <value>Праћено</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ›ÐµÐ½Ð¸ Ð¸Ð³Ñ€Ð°Ñ‡Ð¸</value>
+    <value>Праћени играчи</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>Ð£Ð¿Ñ€Ð°Ð²Ñ™Ð°ÑšÐµ Ð³Ñ€ÑƒÐ¿Ð°Ð¼Ð°</value>
+    <value>Управљање групама</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>ÐŸÐ¾Ð³Ð»ÐµÐ´Ð°Ñ˜Ñ‚Ðµ Ñ†ÐµÐ¾ Ð¸Ð·Ð²ÐµÑˆÑ‚Ð°Ñ˜ Ð¾ Ð°Ð½Ð°Ð»Ð¸Ð·Ð¸</value>
+    <value>Погледајте цео извештај о анализи</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>ÐˆÐµÑÐ¸ Ð»Ð¸ ÑÐ¿Ñ€ÐµÐ¼Ð°Ð½ Ð´Ð° Ð¸ÑÑ‚Ñ€Ð°Ð¶Ð¸Ñˆ Ð¼Ð°Ð¿Ñƒ?</value>
+    <value>Јеси ли спреман да истражиш мапу?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ¶Ð¸Ñ‚Ðµ ÑÐµ Ð½Ð° Ð¾Ð´Ð°Ð±Ñ€Ð°Ð½Ð¸ ÑÐµÑ€Ð²ÐµÑ€ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ ÑƒÑ‡Ð¸Ñ‚Ð°Ð»Ð¸ Rust Ð¼Ð°Ð¿Ñƒ Ð¸ Ñ‚Ð¸Ð¼ ÑƒÐ¶Ð¸Ð²Ð¾.</value>
+    <value>Повежите се на одабрани сервер да бисте учитали Rust мапу и тим уживо.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Ð¡Ð¿Ñ€ÐµÐ¼Ð½Ð¸ Ð´Ð° Ð´Ð¾Ð¼Ð¸Ð½Ð¸Ñ€Ð°Ñˆ Rust-Ð¾Ð¼?</value>
+    <value>Спремни да доминираш Rust-ом?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ¶Ð¸Ñ‚Ðµ ÑÐ²Ð¾Ñ˜ Ð½Ð°Ð»Ð¾Ð³ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ Ð¾Ð´Ð¼Ð°Ñ… Ð¿Ð¾Ñ‡ÐµÐ»Ð¸ Ð´Ð° Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ðµ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ, Ð¿Ñ€Ð¸Ð¼Ð°Ñ‚Ðµ Ð¾Ð±Ð°Ð²ÐµÑˆÑ‚ÐµÑšÐ° Ð¾ Ð±Ð°Ð·Ð½Ð¸Ð¼ ÑƒÐ¿Ð°Ð´Ð¸Ð¼Ð° Ð¸ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ð¸ÑˆÐµÑ‚Ðµ ÑÐ²Ð¾Ñ˜Ðµ Ð¿Ð°Ð¼ÐµÑ‚Ð½Ðµ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ðµ.</value>
+    <value>Повежите свој налог да бисте одмах почели да пратите играче, примате обавештења о базним упадима и контролишете своје паметне уређаје.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸Ñ˜Ð°Ð²Ð° Ð¸ Ð¿Ð¾Ð²ÐµÐ·Ð¸Ð²Ð°ÑšÐµ Ð½Ð°Ð»Ð¾Ð³Ð°</value>
+    <value>Пријава и повезивање налога</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð½Ð° Ñ˜Ðµ Ð¿Ñ€Ð¸Ñ˜Ð°Ð²Ð° Ð½Ð° Steam Ñƒ Ð²Ð°ÑˆÐµÐ¼ Ð¿Ð¾Ð´Ñ€Ð°Ð·ÑƒÐ¼ÐµÐ²Ð°Ð½Ð¾Ð¼ Ð¿Ñ€ÐµÐ³Ð»ÐµÐ´Ð°Ñ‡Ñƒ.</value>
+    <value>Потребна је пријава на Steam у вашем подразумеваном прегледачу.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸ ÑÐµÑ€Ð²ÐµÑ€?</value>
+    <value>Избриши сервер?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Ð”Ð° Ð»Ð¸ ÑÑ‚Ðµ ÑÐ¸Ð³ÑƒÑ€Ð½Ð¸ Ð´Ð° Ð¶ÐµÐ»Ð¸Ñ‚Ðµ Ð´Ð° Ð¸Ð·Ð±Ñ€Ð¸ÑˆÐµÑ‚Ðµ Ð¾Ð²Ð°Ñ˜ ÑÐµÑ€Ð²ÐµÑ€? ÐžÐ²Ð° Ð°ÐºÑ†Ð¸Ñ˜Ð° ÑÐµ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð¿Ð¾Ð½Ð¸ÑˆÑ‚Ð¸Ñ‚Ð¸.</value>
+    <value>Да ли сте сигурни да желите да избришете овај сервер? Ова акција се не може поништити.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>ÐžÑ‚ÐºÐ°Ð¶Ð¸</value>
+    <value>Откажи</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸</value>
+    <value>Избриши</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>ÐÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¾ ÑÐ°ÐºÑ€Ð¸Ð²Ð°ÑšÐµ Ð½Ð°ÐºÐ¾Ð½ 3 ÑÐµÐºÑƒÐ½Ð´Ðµ</value>
+    <value>Аутоматско сакривање након 3 секунде</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>ÐœÐÐŸ Ð¤Ð˜Ð›Ð¢Ð•Ð Ð˜</value>
+    <value>МАП ФИЛТЕРИ</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Ð ÐµÑˆÐµÑ‚ÐºÐ°</value>
+    <value>Решетка</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Ð¡Ð¿Ð¾Ð¼ÐµÐ½Ð¸Ñ†Ð¸</value>
+    <value>Споменици</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ðµ</value>
+    <value>Продавнице</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>Ð§ÐµÑ‚ Ð¾Ð±Ð°Ð²ÐµÑˆÑ‚ÐµÑšÐ°</value>
+    <value>Чет обавештења</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Ð£Ð¿Ð¾Ð·Ð¾Ñ€ÐµÑšÐ°</value>
+    <value>Упозорења</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð¸ÑˆÐ¸</value>
+    <value>Конфигуриши</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸ ÑÐ²Ðµ</value>
+    <value>Изабери све</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>ÐžÐ´ÐµÑ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¾Ð²Ð°Ñ‚Ð¸ ÑÐ²Ðµ</value>
+    <value>Одерегистровати све</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>Ð”ÐžÐ“ÐÐ‚ÐÐˆÐ˜</value>
+    <value>ДОГАЂАЈИ</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´</value>
+    <value>Теретни брод</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Ð˜ÐºÑ€Ð°</value>
+    <value>Икра</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Ð£ÐºÐ¾Ñ‚Ð²Ñ™ÐµÑšÐµ Ñƒ Ð»ÑƒÑ†Ð¸</value>
+    <value>Укотвљење у луци</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>ÐŸÐ¾Ð»Ð°Ð·Ð°Ðº (5 Ð¼Ð¸Ð½ÑƒÑ‚Ð° ÑƒÐ¿Ð¾Ð·Ð¾Ñ€ÐµÑšÐ°)</value>
+    <value>Полазак (5 минута упозорења)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Ð£Ð¿Ð¾Ð·Ð¾Ñ€ÐµÑšÐµ Ð¾ Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ð·Ð°ÑšÑƒ (5 Ð¼ÐµÑ‚Ð°Ñ€Ð° Ð¿Ñ€Ðµ Ð¿Ñ€Ð¸ÑÑ‚Ð°Ð½Ð°)</value>
+    <value>Упозорење о пристизању (5 метара пре пристана)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€</value>
+    <value>Патролни хеликоптер</value>
   </data>
   <data name="Chinook" xml:space="preserve">
-    <value>Ð§Ð¸Ð½ÑƒÐº (CH47)</value>
+    <value>Чинук (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ†</value>
+    <value>Путујући продавац</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>ÐžÐºÐ¸Ð´Ð°Ñ‡ Ð½Ð°Ñ„Ñ‚Ð½Ðµ Ð¿Ð»Ð°Ñ‚Ñ„Ð¾Ñ€Ð¼Ðµ</value>
+    <value>Окидач нафтне платформе</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Ð”Ð¾Ð³Ð°Ñ’Ð°Ñ˜ Ñƒ Ð´ÑƒÐ±Ð¾ÐºÐ¾Ð¼ Ð¼Ð¾Ñ€Ñƒ</value>
+    <value>Догађај у дубоком мору</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>ÐŸÐ°Ð¼ÐµÑ‚Ð½Ð¸ Ð°Ð»Ð°Ñ€Ð¼Ð¸</value>
+    <value>Паметни аларми</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>ÐžÐ½Ð»Ð°Ñ˜Ð½ ÑÑ‚Ð°Ñ‚ÑƒÑ</value>
+    <value>Онлајн статус</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>ÐžÑ„Ð»Ð°Ñ˜Ð½ ÑÑ‚Ð°Ñ‚ÑƒÑ</value>
+    <value>Офлајн статус</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>ÐžÐ±Ð°Ð²ÐµÑˆÑ‚ÐµÑšÐ° Ð¾ Ð¿Ñ€Ð°Ñ›ÐµÑšÑƒ</value>
+    <value>Обавештења о праћењу</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Ð¡Ð°Ð¼Ð¾ÑƒÐ±Ð¸ÑÑ‚Ð²Ð¾</value>
+    <value>Самоубиство</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Ð¢Ð¸Ð¼ÑÐºÐ° ÑÐ¼Ñ€Ñ‚</value>
+    <value>Тимска смрт</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>Ð¡Ð°Ð¼Ð¾ÑÑ‚Ð°Ð»Ð½Ð¸ Ñ€ÐµÑÐ¿Ð°ÑƒÐ½</value>
+    <value>Самостални респаун</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Ð¢Ð¸Ð¼ Ð ÐµÑÐ¿Ð°ÑƒÐ½</value>
+    <value>Тим Респаун</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>ÐÐ¾Ð²Ðµ Ñ€Ð°Ð´ÑšÐµ</value>
+    <value>Нове радње</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Ð¡ÑƒÐ¼ÑšÐ¸Ð²Ðµ Ñ€Ð°Ð´ÑšÐµ</value>
+    <value>Сумњиве радње</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Ð¢Ñ€Ð³Ð¾Ð²Ð¸Ð½ÑÐºÐ¸ Ð°Ð»Ð°Ñ€Ð¼Ð¸</value>
+    <value>Трговински аларми</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð¸Ð» Ð½Ð¸ÑˆÐ°Ð½Ð°</value>
+    <value>Стил нишана</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Ð—ÐµÐ»ÐµÐ½Ð¸ Ñ‚Ð°Ñ‡Ð°Ðº</value>
+    <value>Зелени тачак</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>ÐœÐ¸Ð½Ð¸ Ð“Ñ€Ð¸Ð½</value>
+    <value>Мини Грин</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>ÐžÑ‚Ð²Ð¾Ñ€Ð¸ Ð½Ð¸ÑˆÐ°Ð½ (Ð´ÐµÑÐ½Ð¾/Ð»ÐµÐ²Ð¾)</value>
+    <value>Отвори нишан (десно/лево)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Ð¢Ð°Ð½ÐºÐ¸ Ñ†Ñ€Ð²ÐµÐ½Ð¸ ÐºÑ€ÑƒÐ³</value>
+    <value>Танки црвени круг</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>ÐšÐ²Ð°Ð´Ñ€Ð°Ñ‚ + Ñ‚Ð°Ñ‡ÐºÐ°</value>
+    <value>Квадрат + тачка</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>ÐœÐ°Ð³ÐµÐ½Ñ‚Ð° Ñ‚Ð°Ñ‡ÐºÐ°</value>
+    <value>Магента тачка</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>ÐœÐ°Ð³ÐµÐ½Ñ‚Ð° ÐžÑ‚Ð²Ð¾Ñ€ÐµÐ½Ð¸ ÐšÑ€ÑÑ‚</value>
+    <value>Магента Отворени Крст</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Ð ÐµÐ½ÑŸ Ð»Ð¸Ð½Ð¸Ñ˜Ð° (Ñ‚Ð¸ÐºÐ¾Ð²Ð¸)</value>
+    <value>Ренџ линија (тикови)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>ÐÐ°Ñ†Ñ€Ñ‚Ð°Ñ˜ Ð½Ð¸ÑˆÐ°Ð½...</value>
+    <value>Нацртај нишан...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¼Ð¾Ð½Ð¸Ñ‚Ð¾Ñ€</value>
+    <value>Изаберите монитор</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÑƒÑ†Ð¸Ñ‚Ðµ Ð¿Ñ€ÐµÐºÐ»Ð°Ð¿Ð°ÑšÐµ</value>
+    <value>Повуците преклапање</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Ð¦Ñ€Ñ‚Ð°ÑšÐµ (Ð´ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº: Ð²ÐµÐ»Ð¸Ñ‡Ð¸Ð½Ð° / Ð±Ð¾Ñ˜Ð°)</value>
+    <value>Цртање (десни клик: величина / боја)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>ÐŸÐ¾ÑÑ‚Ð°Ð²Ð¸ Ñ‚ÐµÐºÑÑ‚ (Ð´ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº: Ð±Ð¾Ñ˜Ð° / Ð²ÐµÐ»Ð¸Ñ‡Ð¸Ð½Ð°)</value>
+    <value>Постави текст (десни клик: боја / величина)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>ÐŸÐ¾ÑÑ‚Ð°Ð²Ð¸ Ð¸ÐºÐ¾Ð½Ñƒ (Ð´ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº: Ð¸Ð·Ð°Ð±ÐµÑ€Ð¸ Ð¸ÐºÐ¾Ð½Ñƒ)</value>
+    <value>Постави икону (десни клик: изабери икону)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Ð‘Ñ€Ð¸ÑˆÐ°Ñ‡ (Ð´Ñ€Ð¶Ð¸Ñ‚Ðµ Ð¸Ð»Ð¸ ÐºÐ»Ð¸ÐºÐ½Ð¸Ñ‚Ðµ)</value>
+    <value>Бришач (држите или кликните)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸ ÑÐ²Ð¾Ñ˜ Ð¿Ñ€ÐµÐºÑ€Ð¸Ð²Ð°Ñ‡</value>
+    <value>Избриши свој прекривач</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>ÐžÑ‚Ð¿Ñ€ÐµÐ¼Ð¸Ñ‚Ðµ ÑÐ¾Ð¿ÑÑ‚Ð²ÐµÐ½Ð¸ Ð¿Ñ€ÐµÐºÑ€Ð¸Ð²Ð°Ñ‡ / Ð¿Ð¾Ð´ÐµÐ»Ð¸Ñ‚Ðµ</value>
+    <value>Отпремите сопствени прекривач / поделите</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ñ„Ð¸Ñ‚Ð°Ð±Ð¸Ð»Ð½Ðµ Ñ‚Ñ€Ð³Ð¾Ð²Ð¸Ð½Ðµ</value>
+    <value>Профитабилне трговине</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Ð”Ð¸Ñ€ÐµÐºÑ‚Ð½Ðµ Ð°Ñ€Ð±Ð¸Ñ‚Ñ€Ð°Ð¶Ð½Ðµ Ð¿Ñ€Ð¸Ð»Ð¸ÐºÐµ | ÐºÑƒÐ¿Ð¸ Ð½Ð¸ÑÐºÐ¾ â†’ Ð¿Ñ€Ð¾Ð´Ð°Ñ˜ Ð²Ð¸ÑÐ¾ÐºÐ¾.</value>
+    <value>Директне арбитражне прилике | купи ниско → продај високо.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>ÐšÑƒÐ¿Ð¸ X Ð·Ð° Y</value>
+    <value>Купи X за Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>ÐÐ½Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð°Ñ˜</value>
+    <value>Анализирај</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Ð–ÐµÐ»Ð¸Ð¼ Ð´Ð° Ð´Ð¾Ð±Ð¸Ñ˜ÐµÐ¼</value>
+    <value>Желим да добијем</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>ÐœÐ¾Ð³Ñƒ Ð´Ð° Ð¿Ð»Ð°Ñ‚Ð¸Ð¼ ÑÐ°</value>
+    <value>Могу да платим са</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Ð§Ð°Ñ‚ Ñ‚Ð¸Ð¼Ð°</value>
+    <value>Чат тима</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>ÐŸÐ¾ÑˆÐ°Ñ™Ð¸</value>
+    <value>Пошаљи</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>Ð¤Ð¦Ðœ Ð°ÐºÑ€ÐµÐ´Ð¸Ñ‚Ð¸Ð²Ð°</value>
+    <value>ФЦМ акредитива</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Ð”ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð¸ÑÐ°Ð»Ð¸</value>
+    <value>Десни клик да бисте конфигурисали</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ</value>
+    <value>Ресетовање</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°Ñ‚Ð¸ Ð·ÑƒÐ¼ Ð¼Ð°Ð¿Ðµ Ð¸ Ð¿Ð¾Ð»Ð¾Ð¶Ð°Ñ˜</value>
+    <value>Ресетовати зум мапе и положај</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>ÐœÐ¸Ð½Ð¸</value>
+    <value>Мини</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>ÐšÑ€ÑÑ‚Ð½Ð¸Ðº ÑƒÐºÑ™ÑƒÑ‡Ð¸/Ð¸ÑÐºÑ™ÑƒÑ‡Ð¸ (Ð´ÐµÑÐ½Ð¸ ÐºÐ»Ð¸Ðº Ð·Ð° Ð¾Ð¿Ñ†Ð¸Ñ˜Ðµ)</value>
+    <value>Крстник укључи/искључи (десни клик за опције)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>ÐŸÐ»ÐµÐµÑ€ Ð·Ð° Ð½ÑƒÐ¼ÐµÑ€Ñƒ</value>
+    <value>Плеер за нумеру</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸ Ð¿Ñ€ÐµÐ³Ð»ÐµÐ´Ð°Ñ‡ BattleMetrics</value>
+    <value>Затвори прегледач BattleMetrics</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‚Ñ€Ð°Ð³Ð° Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ðµ</value>
+    <value>Претрага продавнице</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸ Ð¿Ñ€ÐµÑ‚Ñ€Ð°Ð³Ñƒ</value>
+    <value>Затвори претрагу</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>ÐœÐ¾Ð»Ð¸Ð¼Ð¾ Ð¿Ñ€Ð²Ð¾ Ð°ÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ðµ.</value>
+    <value>Молимо прво активирајте продавнице.</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>ÐÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ñ‚Ð¸ Shop Ð°Ð½ÐºÐµÑ‚Ð¸Ñ€Ð°ÑšÐµ</value>
+    <value>Активирати Shop анкетирање</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>Ð§Ð°Ñ‚ Ñ‚Ð¸Ð¼Ð°</value>
+    <value>Чат тима</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸ Ñ›Ð°ÑÐºÐ°ÑšÐµ</value>
+    <value>Затвори ћаскање</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ° ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¸ Ð·Ð° Ñ›Ð°ÑÐºÐ°ÑšÐµ</value>
+    <value>Подешавања команди за ћаскање</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ðµ Ð·Ð° Ñ›Ð°ÑÐºÐ°ÑšÐµ</value>
+    <value>Команде за ћаскање</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>ÐÐ°Ð·Ð°Ð´</value>
+    <value>Назад</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>ÐÐ°Ð¿Ñ€ÐµÐ´</value>
+    <value>Напред</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>ÐžÑ‚Ð²Ð¾Ñ€Ð¸ Ñƒ ÑÐ¿Ð¾Ñ™Ð½Ð¾Ð¼ Ð¿Ñ€ÐµÐ³Ð»ÐµÐ´Ð°Ñ‡Ñƒ</value>
+    <value>Отвори у спољном прегледачу</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‚Ñ€Ð°Ð³Ð° Ð‘Ðœ...</value>
+    <value>Претрага БМ...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‚Ñ€Ð°Ð³Ð°</value>
+    <value>Претрага</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ ÑÐµÑ€Ð²ÐµÑ€</value>
+    <value>Изаберите сервер</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>ÐžÐ¢ÐŸÐžÐˆÐ•Ð”Ð•ÐÐž</value>
+    <value>ОТПОЈЕДЕНО</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ÐŸÐžÐ’Ð•Ð—Ð˜Ð’ÐÐŠÐ•...</value>
+    <value>ПОВЕЗИВАЊЕ...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>Ð˜ÐÐ˜Ð¦Ð˜ÐˆÐÐ›Ð˜Ð—ÐÐ¦Ð˜ÐˆÐ...</value>
+    <value>ИНИЦИЈАЛИЗАЦИЈА...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>Ð£Ð Ð•Ð‚ÐÐˆÐ˜ ÐÐšÐ¢Ð˜Ð’ÐÐ˜</value>
+    <value>УРЕЂАЈИ АКТИВНИ</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ‚Ð¿ÑƒÐ½Ð¾ Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½Ð¾</value>
+    <value>Потпуно повезано</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾</value>
+    <value>Непознато</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>ÐžÐ²Ð¾ Ð¼Ð¾Ð¶Ðµ Ð¿Ð¾Ñ‚Ñ€Ð°Ñ˜Ð°Ñ‚Ð¸ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð°Ðº...</value>
+    <value>Ово може потрајати тренутак...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ° Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ</value>
+    <value>Подешавања апликације</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>ÐžÐ¿ÑˆÑ‚Ðµ</value>
+    <value>Опште</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>ÐŸÐ¾ÐºÑ€ÐµÐ½Ð¸ ÑÐ° Windows-Ð¾Ð¼ (ÑÐ²ÐµÐ´ÐµÐ½Ð¾ Ð½Ð° Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼)</value>
+    <value>Покрени са Windows-ом (сведено на минимум)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>ÐŸÐ¾ÐºÑ€ÐµÐ½Ð¸ Ñƒ Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾Ð¼ Ð¿Ñ€Ð¾Ð·Ð¾Ñ€Ñƒ (ÑƒÐ²ÐµÐº)</value>
+    <value>Покрени у минимализованом прозору (увек)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>ÐÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¾ Ð¿Ð¾Ð²ÐµÐ·Ð¸Ð²Ð°ÑšÐµ Ð½Ð° Ð¿Ð¾ÑÐ»ÐµÐ´ÑšÐ¸ ÑÐµÑ€Ð²ÐµÑ€ Ð¿Ñ€Ð¸ Ð¿Ð¾ÐºÑ€ÐµÑ‚Ð°ÑšÑƒ</value>
+    <value>Аутоматско повезивање на последњи сервер при покретању</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>ÐÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¸ ÑÐµ Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð¿Ð¾Ð²ÐµÐ·ÑƒÑ˜Ðµ Ð½Ð° Ð¿Ð¾ÑÐ»ÐµÐ´ÑšÐ¸ ÑÐµÑ€Ð²ÐµÑ€ Ð¸ ÑƒÑ‡Ð¸Ñ‚Ð°Ð²Ð° Ð¼Ð°Ð¿Ñƒ.</value>
+    <value>Аутоматски се поново повезује на последњи сервер и учитава мапу.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>ÐŸÐ¾Ð½Ð°ÑˆÐ°ÑšÐµ</value>
+    <value>Понашање</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>ÐœÐ¸Ð½Ð¸Ð¼Ð¸Ð·Ð¸Ñ€Ð°Ñ˜ Ñƒ ÑÐ¸ÑÑ‚ÐµÐ¼ÑÐºÑƒ Ñ‚Ñ€Ð°ÐºÑƒ ÑƒÐ¼ÐµÑÑ‚Ð¾ Ð·Ð°Ñ‚Ð²Ð°Ñ€Ð°ÑšÐ°</value>
+    <value>Минимизирај у системску траку уместо затварања</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>ÐžÐ¼Ð¾Ð³ÑƒÑ›Ð¸ Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ Ð¿Ð»ÐµÑ˜ÐµÑ€Ð° Ñƒ Ð¿Ð¾Ð·Ð°Ð´Ð¸Ð½Ð¸</value>
+    <value>Омогући праћење плејера у позадини</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>ÐÐ°ÑÑ‚Ð°Ð²Ñ™Ð° Ð´Ð° Ð¿Ñ€Ð°Ñ‚Ð¸ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ Ð¿Ñ€ÐµÐºÐ¾ BattleMetrics Ñ‡Ð°Ðº Ð¸ ÐºÐ°Ð´Ð° Ñ˜Ðµ Ð¼Ð¸Ð½Ð¸Ð¼Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾.</value>
+    <value>Наставља да прати играче преко BattleMetrics чак и када је минимизовано.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>Ð¡Ð°ÐºÑ€Ð¸Ñ˜ ÑÐ¸ÑÑ‚ÐµÐ¼ÑÐºÑƒ ÐºÐ¾Ð½Ð·Ð¾Ð»Ñƒ (Ð£ÐºÐ»Ð¾Ð½Ð¸ Ð½ÐµÑ€ÐµÐ´)</value>
+    <value>Сакриј системску конзолу (Уклони неред)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Ð¡Ð°ÐºÑ€Ð¸Ð²Ð° Ð´Ð¾ÑšÐ¸ Ð¿Ð°Ð½ÐµÐ» Ð»Ð¾Ð³Ð°/ÐºÐ¾Ð½Ð·Ð¾Ð»Ðµ ÐºÐ°ÐºÐ¾ Ð±Ð¸ ÑÐµ ÑƒÑˆÑ‚ÐµÐ´ÐµÐ¾ Ð¿Ñ€Ð¾ÑÑ‚Ð¾Ñ€ Ð½Ð° Ð¼Ð°Ð¿Ð¸.</value>
+    <value>Сакрива доњи панел лога/конзоле како би се уштедео простор на мапи.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ° Ð¼Ð°Ð¿Ðµ</value>
+    <value>Подешавања мапе</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>ÐÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¾ ÑƒÑ‡Ð¸Ñ‚Ð°Ð²Ð°ÑšÐµ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ð° Ð¿Ñ€Ð¸ Ð¿Ð¾Ð²ÐµÐ·Ð¸Ð²Ð°ÑšÑƒ</value>
+    <value>Аутоматско учитавање продавница при повезивању</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>ÐÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¸ Ð¿Ð¾Ñ‡Ð¸ÑšÐµ Ð´Ð° Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð°Ð²Ð° Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ðµ Ð¸ ÑÐ»Ð°ÑšÐµ Ð¾Ð±Ð°Ð²ÐµÑˆÑ‚ÐµÑšÐ° ÐºÐ°Ð´Ð° Ñ˜Ðµ Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½ Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€.</value>
+    <value>Аутоматски почиње да проверава продавнице и слање обавештења када је повезан на сервер.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>ÐšÐ¾Ñ€Ð¸ÑÑ‚Ð¸Ñ‚Ðµ Ð¾Ð·Ð½Ð°ÐºÐµ Ñ‚ÐµÐºÑÑ‚Ð° Ð·Ð° ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐµ ÑƒÐ¼ÐµÑÑ‚Ð¾ Ð¸ÐºÐ¾Ð½Ð°.</value>
+    <value>Користите ознаке текста за споменике уместо икона.</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>ÐšÐ°Ð´Ð° Ñ˜Ðµ Ð¾Ð¼Ð¾Ð³ÑƒÑ›ÐµÐ½Ð¾, Ð¸Ð¼ÐµÐ½Ð° ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ° Ð½Ð° Rust Ð¼Ð°Ð¿Ð¸ Ð¿Ñ€Ð¸ÐºÐ°Ð·ÑƒÑ˜Ñƒ ÑÐµ ÐºÐ°Ð¾ Ñ‚ÐµÐºÑÑ‚ ÐºÐ¾Ñ€Ð¸ÑÑ‚ÐµÑ›Ð¸ Ñ„Ð¾Ð½Ñ‚ Permanent Marker ÑƒÐ¼ÐµÑÑ‚Ð¾ Ð¸ÐºÐ¾Ð½Ð°.</value>
+    <value>Када је омогућено, имена споменика на Rust мапи приказују се као текст користећи фонт Permanent Marker уместо икона.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð¸Ð» ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ°:</value>
+    <value>Стил споменика:</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>ÐœÐµÑ€ÐºÐ° ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ°:</value>
+    <value>Мерка споменика:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð·Ð¸Ñ€Ð½Ð¾ÑÑ‚ ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ°:</value>
+    <value>Прозирност споменика:</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
-    <value>Ð˜ÐºÐ¾Ð½Ðµ ÑÐ° rustmaps.com</value>
+    <value>Иконе са rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>ÐžÑ€Ð¸Ð³Ð¸Ð½Ð°Ð»Ð½Ð¸ Ñ‚ÐµÐºÑÑ‚ Ð½Ð°Ð·Ð¸Ð²Ð° ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ°</value>
+    <value>Оригинални текст назива споменика</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
-    <value>Ð—Ð°ÑÐ»ÑƒÐ³Ðµ</value>
+    <value>Заслуге</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>Ð˜ÐºÐ¾Ð½Ðµ ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ° Ð½Ð° Ð¼Ð°Ð¿Ð¸ Ð¾Ð±ÐµÐ·Ð±ÐµÐ´Ð¸Ð¾ </value>
+    <value>Иконе споменика на мапи обезбедио </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> â€” ÐºÐ¾Ñ€Ð¸ÑˆÑ›ÐµÐ½Ð¾ ÑƒÐ· Ð´Ð¾Ð·Ð²Ð¾Ð»Ñƒ.</value>
+    <value> — коришћено уз дозволу.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>Ð¡Ð²Ðµ Ð¸ÐºÐ¾Ð½Ðµ ÑÐ¿Ð¾Ð¼ÐµÐ½Ð¸ÐºÐ° Ð¸ Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½Ðµ ÑƒÐ¼ÐµÑ‚Ð½Ð¸Ñ‡ÐºÐµ Ñ€Ð°Ð´Ð¾Ð²Ðµ ÑÑƒ Ð²Ð»Ð°ÑÐ½Ð¸ÑˆÑ‚Ð²Ð¾ rustmaps.com. Ð¥Ð²Ð°Ð»Ð° Ð²Ð°Ð¼ ÑˆÑ‚Ð¾ Ð¿Ð¾Ð´Ñ€Ð¶Ð°Ð²Ð°Ñ‚Ðµ Rust Ð·Ð°Ñ˜ÐµÐ´Ð½Ð¸Ñ†Ñƒ!</value>
+    <value>Све иконе споменика и повезане уметничке радове су власништво rustmaps.com. Хвала вам што подржавате Rust заједницу!</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Ð§ÐµÑ‚</value>
+    <value>Чет</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Ð˜Ð·Ð¼ÐµÐ½Ð¸Ñ‚Ð¸ Ð¾Ð±Ð°Ð²ÐµÑˆÑ‚ÐµÑšÐ° Ñƒ Ñ›Ð°ÑÐºÐ°ÑšÑƒ</value>
+    <value>Изменити обавештења у ћаскању</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Ð£Ð¿Ñ€Ð°Ð²Ñ™Ð°Ñ˜Ñ‚Ðµ ÑÐ²Ð¾Ñ˜Ð¸Ð¼ Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½Ð¸Ð¼ Steam Ð½Ð°Ð»Ð¾Ð·Ð¾Ð¼ Ñƒ Ð³Ð»Ð°Ð²Ð½Ð¾Ð¼ Ð¿Ñ€Ð¾Ð·Ð¾Ñ€Ñƒ.</value>
+    <value>Управљајте својим повезаним Steam налозом у главном прозору.</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸</value>
+    <value>Затвори</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>Ð£Ð»Ð°Ð·Ð½Ð¸ Ð°Ð»Ð°Ñ€Ð¼Ð¸</value>
+    <value>Улазни аларми</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸</value>
+    <value>Избриши</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>Ð˜Ð³Ñ€Ð°Ñ‡Ð¸</value>
+    <value>Играчи</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>Ð˜Ð³Ñ€Ð°Ñ‡Ð¸</value>
+    <value>Играчи</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Ð–ÐµÐ»Ð¸Ð¼ Ð´Ð° Ð´Ð¾Ð±Ð¸Ñ˜ÐµÐ¼ (Ð½Ð¿Ñ€. ÑÐ¸Ñ€Ð¾Ð²Ñƒ Ð½Ð°Ñ„Ñ‚Ñƒ)</value>
+    <value>Желим да добијем (нпр. сирову нафту)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Ð–ÐµÐ»Ð¸Ð¼ Ð´Ð° Ð¿Ð»Ð°Ñ‚Ð¸Ð¼ ÑÐ° (Ð½Ð¿Ñ€. Ð¡ÐºÑ€Ð°Ð¿)</value>
+    <value>Желим да платим са (нпр. Скрап)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Ð”Ð° Ð»Ð¸ ÑÑ‚Ðµ ÑÐ¸Ð³ÑƒÑ€Ð½Ð¸ Ð´Ð° Ð¶ÐµÐ»Ð¸Ñ‚Ðµ Ð´Ð° Ð¸Ð·Ð±Ñ€Ð¸ÑˆÐµÑ‚Ðµ ÑÐµÑ€Ð²ÐµÑ€ "{0}"? ÐžÐ²Ð° Ð°ÐºÑ†Ð¸Ñ˜Ð° ÑÐµ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð¿Ð¾Ð½Ð¸ÑˆÑ‚Ð¸Ñ‚Ð¸.</value>
+    <value>Да ли сте сигурни да желите да избришете сервер "{0}"? Ова акција се не може поништити.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
-    <value>ÐŸÐ°Ñ€iranje: Ð³Ñ€ÐµÑˆÐºÐ°</value>
+    <value>Парiranje: грешка</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>ÐŸÐ°Ñ€iranje: Ð¿Ð¾Ñ‡Ð¸ÑšÐµ...</value>
+    <value>Парiranje: почиње...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ‡Ð¸ÑšÐµ Pairing-Listener...</value>
+    <value>Почиње Pairing-Listener...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸Ñ˜Ð°Ð²Ñ™ÐµÐ½Ð¾</value>
+    <value>Пријављено</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ð½Ð´Ð°Ñ€Ð´</value>
+    <value>Стандард</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Ð¦ÐµÐ½Ð°</value>
+    <value>Цена</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>Ð£ÐšÐ›Ð®Ð§Ð•ÐÐž</value>
+    <value>УКЛЮЧЕНО</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Ð˜ÑÐºÑ™ÑƒÑ‡ÐµÐ½Ð¾</value>
+    <value>Искључено</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>ÐÐšÐ¢Ð˜Ð’ÐÐž</value>
+    <value>АКТИВНО</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>ÐÐ•ÐÐšÐ¢Ð˜Ð’ÐÐ</value>
+    <value>НЕАКТИВАН</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>Ð“Ð Ð£ÐŸÐ</value>
+    <value>ГРУПА</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Ð”ÐµÑÐº â€“ Ð£Ð²Ð¾Ð· ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð°</value>
+    <value>Rust+ Деск – Увоз уређаја</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Ð£Ð²Ð¾Ð· ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð°</value>
+    <value>Увоз уређаја</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ ÐºÐ¾Ñ˜Ðµ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ðµ Ð¶ÐµÐ»Ð¸Ñ‚Ðµ Ð´Ð° ÑƒÐ²ÐµÐ·ÐµÑ‚Ðµ Ð·Ð° Ð¾Ð²Ð°Ñ˜ ÑÐµÑ€Ð²ÐµÑ€.</value>
+    <value>Изаберите које уређаје желите да увезете за овај сервер.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚Ðµ ÑÑ‚Ð°Ñ‚ÑƒÑ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð°</value>
+    <value>Проверите статус уређаја</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Ð£Ð²Ð¾Ð· Ð¾Ð´Ð°Ð±Ñ€Ð°Ð½Ð¾Ð³</value>
+    <value>Увоз одабраног</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>Ð‘Ðœ Ð¿Ñ€ÐµÑ‡Ð¸Ñ†Ðµ</value>
+    <value>БМ пречице</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Ð£Ð¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐµ: ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ð° Ð¸Ð·Ð±Ñ€Ð¸ÑÐ°Ð½Ð°</value>
+    <value>Упаривање: конфигурација избрисана</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rust+ Ñ‚Ñ€Ð°ÐºÐµÑ€ Ð·Ð° ÑÑ‚Ð¾</value>
+    <value>Rust+ тракер за сто</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rust+ ÑÑ‚Ð¾ (Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ {0})</value>
+    <value>Rust+ сто (праћење {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ¸Ð¼ÐµÐ½ÑƒÑ˜ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
+    <value>Преименуј групу</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>ÐÐ¾Ð²Ð¾ Ð¸Ð¼Ðµ Ð³Ñ€ÑƒÐ¿Ðµ:</value>
+    <value>Ново име групе:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>ÐÐ¾Ð²Ð¾ Ð¸Ð¼Ðµ Ð·Ð° #{0}:</value>
+    <value>Ново име за #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Ð£Ð½ÐµÑÐ¸Ñ‚Ðµ ID ÑÐµÑ€Ð²ÐµÑ€Ð° Battlemetrics Ð·Ð° "{0}":</value>
+    <value>Унесите ID сервера Battlemetrics за "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ñ›ÐµÑšÐµ: {0}</value>
+    <value>Праћење: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>ÐŸÐ¾ÑÐ»ÐµÐ´ÑšÐµ Ð°Ð¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐµ: {0}</value>
+    <value>Последње ажурирање: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>ÐžÑ‚Ð²Ð¾Ñ€ÐµÐ½Ð¸ Ð ÑƒÑÑ‚+ ÑÑ‚Ð¾</value>
+    <value>Отворени Руст+ сто</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Ð˜Ð·Ð»Ð°Ð·</value>
+    <value>Излаз</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>ÐžÐ¿Ð¸Ñ</value>
+    <value>Опис</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>ÐšÐ°Ð¼ÐµÑ€Ð°</value>
+    <value>Камера</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>ÐÐ»Ð°Ñ€Ð¼Ð¸</value>
+    <value>Аларми</value>
   </data>
   <data name="Identifier" xml:space="preserve">
-    <value>Ð˜Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€:</value>
+    <value>Идентификатор:</value>
   </data>
   <data name="FPS" xml:space="preserve">
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>ÐÐ°Ð¿Ð¾Ð¼ÐµÐ½Ð°: Ð¿Ñ€ÐµÐ¿Ð¾Ñ€ÑƒÑ‡ÑƒÑ˜Ðµ ÑÐµ 2 fps, Ð²ÐµÑ›Ð¸ fps Ð²ÐµÑ€Ð¾Ð²Ð°Ñ‚Ð½Ð¾ Ñ›Ðµ Ð¿Ñ€ÐµÐºÐ¸Ð½ÑƒÑ‚Ð¸ Ð²Ð°ÑˆÑƒ Ð²ÐµÐ·Ñƒ ÑÐ° ÑÐµÑ€Ð²ÐµÑ€Ð¾Ð¼.</value>
+    <value>Напомена: препоручује се 2 fps, већи fps вероватно ће прекинути вашу везу са сервером.</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>ÐŸÐ¸ÐºÑÐµÐ»</value>
+    <value>Пиксел</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>ÐŸÐµÑ€Ð¾</value>
+    <value>Перо</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Ð›Ð¸Ð½Ð¸Ñ˜Ð°</value>
+    <value>Линија</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>ÐšÐ²Ð°Ð´Ñ€Ð°Ñ‚</value>
+    <value>Квадрат</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>ÐšÑ€ÑƒÐ³</value>
+    <value>Круг</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>Ð”ÐµÐ±Ñ™Ð¸Ð½Ð°:</value>
+    <value>Дебљина:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð²Ð¸Ð´Ð½Ð¾ÑÑ‚:</value>
+    <value>Провидност:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>ÐžÑ‚Ð¿Ñ€ÐµÐ¼Ð¸ PNG</value>
+    <value>Отпреми PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>ÐˆÐ°ÑÐ½Ð¾</value>
+    <value>Јасно</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜</value>
+    <value>Сачувај</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Ð”Ð¾Ð´ÐµÐ»Ð¸Ñ‚Ðµ Ð³Ð»Ð¾Ð±Ð°Ð»Ð½Ðµ Ð¿Ñ€ÐµÑ‡Ð¸Ñ†Ðµ Ð½Ð° Ñ‚Ð°ÑÑ‚Ð°Ñ‚ÑƒÑ€Ð¸ Ð¿Ð°Ð¼ÐµÑ‚Ð½Ð¸Ð¼ Ð¿Ñ€ÐµÐºÐ¸Ð´Ð°Ñ‡Ð¸Ð¼Ð°. Ð’Ð¸ÑˆÐµ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð° Ð¼Ð¾Ð¶Ðµ Ð´Ð° Ð´ÐµÐ»Ð¸ Ñ˜ÐµÐ´Ð½Ñƒ Ð¿Ñ€ÐµÑ‡Ð¸Ñ†Ñƒ (Ð¿Ñ€ÐµÐºÐ¸Ð´Ð°Ñ‡Ð¸ Ñ›Ðµ ÑÐµ ÑÐ¼ÐµÑšÐ¸Ð²Ð°Ñ‚Ð¸ Ð¿Ð¾ Ñ€ÐµÐ´Ñƒ).</value>
+    <value>Доделите глобалне пречице на тастатури паметним прекидачима. Више уређаја може да дели једну пречицу (прекидачи ће се смењивати по реду).</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Ð£Ñ€ÐµÑ’Ð°Ñ˜</value>
+    <value>Уређај</value>
   </data>
   <data name="EntityId" xml:space="preserve">
-    <value>Ð˜Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ ÐµÐ½Ñ‚Ð¸Ñ‚ÐµÑ‚Ð°</value>
+    <value>Идентификатор ентитета</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ‡Ð¸Ñ†Ð°</value>
+    <value>Пречица</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>ÐŸÐ¾ÑÑ‚Ð°Ð²Ð¸</value>
+    <value>Постави</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸ Ð¸ Ð´ÐµÐ°ÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ñ˜</value>
+    <value>Затвори и деактивирај</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸ Ð¸ Ð°ÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ñ˜</value>
+    <value>Затвори и активирај</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>ÐÐ¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐµ Ð¾Ð´Ñ€Ð¶Ð°Ð²Ð°ÑšÐ°, Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð¿Ðµ Ð¸ Ð¿Ñ€Ð°Ñ›ÐµÑšÐ°</value>
+    <value>Ажурирање одржавања, минимапе и праћења</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Ð ÐµÐ·Ð¸Ð¼Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ˜Ð° Ð¸ Ð¿Ð¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°</value>
+    <value>Резиме функција и подешавања</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>ÐÐµÐ¼Ð¾Ñ˜ Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð´Ð° Ð¿Ñ€Ð¸ÐºÐ°Ð¶ÐµÑˆ Ð¾Ð²Ð¾</value>
+    <value>Немој поново да прикажеш ово</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Ð¡ÑƒÐ¿ÐµÑ€, Ñ…Ð°Ñ˜Ð´Ðµ Ð´Ð° Ð¸Ð´ÐµÐ¼Ð¾!</value>
+    <value>Супер, хајде да идемо!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ° Ð¼Ð¸Ð½Ð¸-Ð¼Ð°Ð¿Ðµ</value>
+    <value>Подешавања мини-мапе</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>ÐžÐ±Ð»Ð¸Ðº</value>
+    <value>Облик</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>ÐŸÑ€Ð°Ð²Ð¾ÑƒÐ³Ð°Ð¾Ð½Ð¸Ðº</value>
+    <value>Правоугаоник</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð·Ð¸Ñ€Ð½Ð¾ÑÑ‚: {0}%</value>
+    <value>Прозирност: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Ð’ÐµÐ»Ð¸Ñ‡Ð¸Ð½Ð°: {0}% (SHIFT+Ñ‚Ð¾Ñ‡Ð°Ðº Ð¼Ð¸ÑˆÐ°)</value>
+    <value>Величина: {0}% (SHIFT+точак миша)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸ÐºÐ°Ð¶Ð¸ Ð²Ñ€ÐµÐ¼Ðµ ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
+    <value>Прикажи време сервера</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ˜Ðµ Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ñƒ</value>
+    <value>Информације о серверу</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>ÐžÐ¿Ð¸Ñ Ð½Ð¸Ñ˜Ðµ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð°Ð½.</value>
+    <value>Опис није доступан.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Ð¢Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð° Ð²ÐµÑ€Ð·Ð¸Ñ˜Ð°: {0}</value>
+    <value>Тренутна верзија: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>Ð‘ÐµÐ»ÐµÑˆÐºÐµ Ð¾ Ð·Ð°ÐºÑ€Ð¿Ð°Ð¼Ð° Ð¸ Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð° Ð²ÐµÑ€Ð·Ð¸Ñ˜Ð°</value>
+    <value>Белешке о закрпама и историја верзија</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>ÐžÐ¼Ð¾Ð³ÑƒÑ›Ð¸Ñ‚Ðµ ÐºÐ¾Ð¼Ð°Ð½Ð´Ðµ Ð·Ð° Ñ›Ð°ÑÐºÐ°ÑšÐµ</value>
+    <value>Омогућите команде за ћаскање</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÑ„Ð¸ÐºÑ:</value>
+    <value>Префикс:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ð½Ð´Ð°Ñ€Ð´Ð½Ðµ ÐºÐ¾Ð¼Ð°Ð½Ð´Ðµ</value>
+    <value>Стандардне команде</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ð½Ð¾Ð²Ð½Ð¸ÑˆÑ‚Ð²Ð¾:</value>
+    <value>Становништво:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Ð’Ñ€ÐµÐ¼Ðµ:</value>
+    <value>Време:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð¼Ð¾Ð²Ð¸ÑˆÐ¸Ñ‚Ðµ:</value>
+    <value>Промовишите:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Ð”ÑƒÐ±Ð¾ÐºÐ¾ Ð¼Ð¾Ñ€Ðµ:</value>
+    <value>Дубоко море:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´:</value>
+    <value>Теретни брод:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>ÐÐ°Ñ„Ñ‚Ð½Ð° Ð¿Ð»Ð°Ñ‚Ñ„Ð¾Ñ€Ð¼Ð°:</value>
+    <value>Нафтна платформа:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€:</value>
+    <value>Патролни хеликоптер:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ†:</value>
+    <value>Путујући продавац:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>Ð”ÐµÑ‚Ð°Ñ™Ð¸ Ð¾ Ð¾Ð´Ñ€Ð¶Ð°Ð²Ð°ÑšÑƒ:</value>
+    <value>Детаљи о одржавању:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð½Ð¾ ÐºÐ°ÑˆÑšÐµÑšÐµ:</value>
+    <value>Командно кашњење:</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>ÐˆÐµÐ·Ð¸Ðº</value>
+    <value>Језик</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ñ˜ÐµÐ·Ð¸Ðº</value>
+    <value>Изаберите језик</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð¼ÐµÐ½Ð° Ñ˜ÐµÐ·Ð¸ÐºÐ° Ð·Ð°Ñ…Ñ‚ÐµÐ²Ð° Ð¿Ð¾Ð½Ð¾Ð²Ð½Ð¾ Ð¿Ð¾ÐºÑ€ÐµÑ‚Ð°ÑšÐµ Ð´Ð° Ð±Ð¸ ÑÑ‚ÑƒÐ¿Ð¸Ð»Ð° Ñƒ Ð¿Ð¾Ñ‚Ð¿ÑƒÐ½Ñƒ ÑÐ½Ð°Ð³Ñƒ.</value>
+    <value>Промена језика захтева поновно покретање да би ступила у потпуну снагу.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>ÐŸÐ°Ð¼ÐµÑ‚Ð½Ð¸ Ð¿Ñ€ÐµÐºÐ¸Ð´Ð°Ñ‡Ð¸</value>
+    <value>Паметни прекидачи</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>ÐžÐ´Ñ€Ð¶Ð¸Ð²Ð¾ÑÑ‚ (TC) Ð¼Ð¾Ð½Ð¸Ñ‚Ð¾Ñ€Ð¸</value>
+    <value>Одрживост (TC) монитори</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜Ðµ Ð¿Ñ€Ð¾Ð½Ð°Ñ’ÐµÐ½ Ð½Ð¸Ñ˜ÐµÐ´Ð°Ð½ TC Ð¼Ð¾Ð½Ð¸Ñ‚Ð¾Ñ€.</value>
+    <value>Није пронађен ниједан TC монитор.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜ Ð¸ Ð·Ð°Ñ‚Ð²Ð¾Ñ€Ð¸</value>
+    <value>Сачувај и затвори</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ€ÑƒÐºÐ°...</value>
+    <value>Порука...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>ÐžÐ²Ð´Ðµ Ð¿Ð¾Ñ€ÑƒÐºÐ° Ð¾ Ð³Ñ€ÐµÑˆÑ†Ð¸</value>
+    <value>Овде порука о грешци</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€</value>
+    <value>Патролни хеликоптер</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ â€“ Ñƒ Ð¿Ð¾ÐºÑ€ÐµÑ‚Ñƒ Ð·Ð° {0}</value>
+    <value>Патролни хеликоптер активан – у покрету за {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ·Ð°Ð½ Ñ‚Ð¾ÐºÐ¾Ð¼ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ñ˜Ð°Ð²Ñ™Ð¸Ð²Ð°ÑšÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾</value>
+    <value>Повезан током догађаја – време појављивања непознато</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ñ˜Ð°Ð²Ðµ Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾)</value>
+    <value>Патролни хеликоптер активан (време појаве непознато)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ñ˜Ðµ Ð¾Ð±Ð¾Ñ€ÐµÐ½ Ð¿Ñ€Ðµ {0} -Ð° Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸</value>
+    <value>Патролни хеликоптер је оборен пре {0} -а у овој сесији</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ Ñ˜Ðµ Ð½Ð°Ð¿ÑƒÑÑ‚Ð¸Ð¾ Ð¼Ð°Ð¿Ñƒ Ð¿Ñ€Ðµ {0} Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸</value>
+    <value>Патролни хели је напустио мапу пре {0} у овој сесији</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Ð£ÐºÐ¾Ñ‚Ð²Ñ™ÐµÐ½Ð¾ Ñƒ {0} â€“ Ð¿Ð¾Ð»Ð°Ð·Ð°Ðº Ð¾Ñ‚Ð¿Ñ€Ð¸Ð»Ð¸ÐºÐµ Ñƒ{1}</value>
+    <value>Укотвљено у {0} – полазак отприлике у{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>Ð»ÑƒÐºÐ°</value>
+    <value>лука</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Ð’ÐµÑ› Ñ˜Ðµ Ð¿Ñ€Ð¸Ñ‡Ð²Ñ€ÑˆÑ›ÐµÐ½Ð¾ Ð¿Ñ€Ð¸ Ð¿Ð¾Ð²ÐµÐ·Ð¸Ð²Ð°ÑšÑƒ â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð¾Ð´Ð»Ð°ÑÐºÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾</value>
+    <value>Већ је причвршћено при повезивању – време одласка непознато</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Ð£ÐºÐ¾Ñ‚Ð²Ñ™ÐµÐ½Ð¾ Ñƒ {0} (Ñ‚Ñ€Ð°Ñ˜Ð°ÑšÐµ ÑƒÐºÐ¾Ñ‚Ð²Ñ™ÐµÑšÐ° Ñ˜Ð¾Ñˆ Ð½Ð¸Ñ˜Ðµ Ð¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾)</value>
+    <value>Укотвљено у {0} (трајање укотвљења још није познато)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ¾ÑÑ‚Ð°Ð»Ð¾ Ð²Ñ€ÐµÐ¼Ðµ Ð½Ð° Ð¼Ð°Ð¿Ð¸ (Ð¾Ð´ Ð¿Ð¾Ñ˜Ð°Ð²Ðµ)</value>
+    <value>Преостало време на мапи (од појаве)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ·Ð°Ð½ Ð½Ð° ÑÑ€ÐµÐ´Ð¸Ð½Ð¸ Ð¿ÑƒÑ‚Ð° â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾</value>
+    <value>Повезан на средини пута – време непознато</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ·Ð°Ð½Ð¾ Ð½Ð° ÑÑ€ÐµÐ´ÑšÐ¾Ñ˜ Ñ€ÑƒÑ‚Ð¸ â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾ (Ñ€ÑƒÑ‚Ð° ~{0}Ð¼ ÑƒÐºÑƒÐ¿Ð½Ð¾)</value>
+    <value>Повезано на средњој рути – време непознато (рута ~{0}м укупно)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ñ˜Ðµ Ð½ÐµÑÑ‚Ð°Ð¾ Ð¿Ñ€Ðµ {0}Ð¼ Ð¸ {1}Ñ Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸</value>
+    <value>Теретни брод је нестао пре {0}м и {1}с у овој сесији</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>ÐÐºÑ‚Ð¸Ð²Ð½Ð¸ Ð¿ÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ‡ â€“ Ñ‚Ñ€Ð°Ñ˜Ðµ Ð·Ð° {0}</value>
+    <value>Активни путујући продавач – траје за {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ† Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ñ˜Ð°Ð²Ñ™Ð¸Ð²Ð°ÑšÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾)</value>
+    <value>Путујући продавац активан (време појављивања непознато)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ† Ñ˜Ðµ Ð½ÐµÑÑ‚Ð°Ð¾ Ð¿Ñ€Ðµ {0} Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸</value>
+    <value>Путујући продавац је нестао пре {0} у овој сесији</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea Ð°ÐºÑ‚Ð¸Ð² â€“ Ñ‚Ñ€Ñ‡Ð°ÑšÐµ Ð·Ð° {0}</value>
+    <value>Deep Sea актив – трчање за {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Ð”ÑƒÐ±Ð¾ÐºÐ¾ Ð¼Ð¾Ñ€Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾ (Ð²Ñ€ÐµÐ¼Ðµ Ð¼Ñ€ÐµÐ¶ÐµÑšÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾)</value>
+    <value>Дубоко море активно (време мрежења непознато)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea Ñ˜Ðµ Ð·Ð°Ð²Ñ€ÑˆÐ¸Ð¾ {0} Ð¿Ñ€Ðµ</value>
+    <value>Deep Sea је завршио {0} пре</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
-    <value>{0}Ñ… {1:D2}Ð¼</value>
+    <value>{0}х {1:D2}м</value>
   </data>
   <data name="TimerMinutesSeconds" xml:space="preserve">
     <value>{0}m {1:D2}s</value>
   </data>
   <data name="AgoHoursMinutes" xml:space="preserve">
-    <value>{0}Ñ… {1}Ð¼</value>
+    <value>{0}х {1}м</value>
   </data>
   <data name="AgoMinutes" xml:space="preserve">
-    <value>{0}Ð¼</value>
+    <value>{0}м</value>
   </data>
   <data name="DurationMinutesSeconds" xml:space="preserve">
-    <value>{0}Ð¼ {1}Ñ</value>
+    <value>{0}м {1}с</value>
   </data>
   <data name="DurationSeconds" xml:space="preserve">
-    <value>{0}Ñ</value>
+    <value>{0}с</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} Ð¸Ð³Ñ€Ð°Ñ‡Ð¸ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð¾Ð½Ð»Ð°Ñ˜Ð½.{1}</value>
+    <value>{0} играчи тренутно онлајн.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Ð ÐµÐ´: {0} Ð¸Ð³Ñ€Ð°Ñ‡Ð¸.</value>
+    <value> Ред: {0} играчи.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Ð¢Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð²Ñ€ÐµÐ¼Ðµ Ñƒ Ð¸Ð³Ñ€Ð¸: {0}.</value>
+    <value>Тренутно време у игри: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} Ñ˜Ðµ ÑƒÐ½Ð°Ð¿Ñ€ÐµÑ’ÐµÐ½ Ñƒ Ð²Ð¾Ñ’Ñƒ.</value>
+    <value>{0} је унапређен у вођу.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½! Ð¢Ñ€Ñ‡Ð¸ Ð·Ð° " {0}".</value>
+    <value>Deep Sea је активан! Трчи за " {0}".</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea Ñ˜Ðµ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½ Ñ‚Ð¾ÐºÐ¾Ð¼ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ñ˜Ð°Ð²Ñ™Ð¸Ð²Ð°ÑšÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾).</value>
+    <value>Deep Sea је тренутно активан (повезан током догађаја – време појављивања непознато).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea Ñ˜Ðµ Ð¿Ñ€Ðµ {0} Ð¼Ð¸Ð½ÑƒÑ‚Ð° Ð·Ð°Ð²Ñ€ÑˆÐ¸Ð¾ Ð¾Ð²Ñƒ ÑÐµÑÐ¸Ñ˜Ñƒ.</value>
+    <value>Deep Sea је пре {0} минута завршио ову сесију.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° Deep Sea Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚ (Ð½Ð¸Ñ˜Ðµ Ð²Ð¸Ñ’ÐµÐ½ Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸).</value>
+    <value>Статус догађаја Deep Sea непознат (није виђен у овој сесији).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð½Ð¸Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½.</value>
+    <value>Теретни брод није активан.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ñ˜Ðµ Ð¿Ñ€Ð¸ÑÑ‚Ð°Ð¾ Ñƒ {0}. ÐŸÐ¾Ð»Ð°Ð·Ð°Ðº Ð·Ð° Ð¾ÐºÐ¾ {1} Ð¼Ð¸Ð½ÑƒÑ‚Ð°.</value>
+    <value>Теретни брод је пристао у {0}. Полазак за око {1} минута.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ñ˜Ðµ Ð¿Ñ€Ð¸ÑÑ‚Ð°Ð¾ Ñƒ Ð»ÑƒÑ†Ð¸ {0} Ð¸ Ð¿Ñ€Ð¸Ð¿Ñ€ÐµÐ¼Ð° ÑÐµ Ð·Ð° Ð¾Ð´Ð»Ð°Ð·Ð°Ðº.</value>
+    <value>Теретни брод је пристао у луци {0} и припрема се за одлазак.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð¿Ñ€Ð¸ÑÑ‚Ð°Ð¾ Ñƒ Ð»ÑƒÑ†Ð¸ {0} (Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ð»Ð°ÑÐºÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾).</value>
+    <value>Теретни брод пристао у луци {0} (време поласка непознато).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½. ÐŸÐ¾Ð»Ð°Ð·Ð°Ðº Ð·Ð° Ð¾ÐºÐ¾ {0} Ð¼Ð¸Ð½ÑƒÑ‚Ð°.</value>
+    <value>Теретни брод активан. Полазак за око {0} минута.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ Ð¸ Ð¿Ñ€Ð¸Ð¿Ñ€ÐµÐ¼Ð° ÑÐµ Ð·Ð° ÑƒÑÐºÐ¾Ñ€Ð¾ Ð¾Ñ‚Ð¿Ð»Ð¾Ð²Ñ™ÐµÑšÐµ.</value>
+    <value>Теретни брод је активан и припрема се за ускоро отпловљење.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ñ‚Ñ€Ð°Ñ˜Ð°ÑšÐµ Ñ€ÑƒÑ‚Ðµ Ñ˜Ð¾Ñˆ Ð½Ð¸Ñ˜Ðµ ÑƒÑ‚Ð²Ñ€Ñ’ÐµÐ½Ð¾ Ð·Ð° Ð¾Ð²Ð°Ñ˜ ÑÐµÑ€Ð²ÐµÑ€).</value>
+    <value>Теретни брод активан (трајање руте још није утврђено за овај сервер).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½ Ð½Ð°ÐºÐ¾Ð½ Ð¿Ð¾Ñ˜Ð°Ð²Ðµ â€“ Ð¿Ñ€ÐµÐ¾ÑÑ‚Ð°Ð»Ð¸ Ð²Ñ€ÐµÐ¼Ðµ Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚).</value>
+    <value>Теретни брод активан (повезан након појаве – преостали време непознат).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð½Ð¸Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½. Ð”ÐµÑÐ¿Ð°ÑƒÐ½Ð¾Ð²Ð°Ð½ Ð¿Ñ€Ðµ {0} Ð¼Ð¸Ð½ÑƒÑ‚Ð° Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸.</value>
+    <value>Теретни брод није активан. Деспаунован пре {0} минута у овој сесији.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: ÑÐ°Ð½Ð´ÑƒÐº Ñƒ {1}Ð¼ {2}s</value>
+    <value>{0}: сандук у {1}м {2}s</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: Ð¿Ð¾ÑÐ»ÐµÐ´ÑšÐ¸ Ð¿ÑƒÑ‚ Ð¿Ð¾Ð·Ð²Ð°Ð½Ð¾ Ð¿Ñ€Ðµ {1}Ð¼Ð¸Ð½ÑƒÑ‚Ð°</value>
+    <value>{0}: последњи пут позвано пре {1}минута</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: Ð½Ð¸Ñ˜Ðµ Ð¿Ð¾Ð·Ð²Ð°Ð½Ð¾ Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸</value>
+    <value>{0}: није позвано у овој сесији</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>ÐŸÐ°íŠ¸ë¡¤ Ð¥ÐµÐ»Ð¸ Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½! Ð¢Ñ€Ñ‡Ð¸ Ð·Ð° " {0}".</value>
+    <value>Па트롤 Хели је активан! Трчи за " {0}".</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>ÐŸÐ°íŠ¸ë¡¤ Ð¥ÐµÐ»Ð¸ Ñ˜Ðµ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½ Ñ‚Ð¾ÐºÐ¾Ð¼ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ñ˜Ð°Ð²Ñ™Ð¸Ð²Ð°ÑšÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾).</value>
+    <value>Па트롤 Хели је тренутно активан (повезан током догађаја – време појављивања непознато).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ Ð½Ð¸Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½. Ð‘Ð¸Ð¾ Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ Ð¿Ñ€Ðµ {0} {1} Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸.</value>
+    <value>Патролни хели није активан. Био је активан пре {0} {1} у овој сесији.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>ÑÑ€ÑƒÑˆÐµÐ½</value>
+    <value>срушен</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>Ð½Ð°Ð¿ÑƒÑÑ‚Ð¸Ð¾ Ð¼Ð°Ð¿Ñƒ</value>
+    <value>напустио мапу</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° Patrol Heli Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚ (Ð½Ð¸Ñ˜Ðµ Ð²Ð¸Ñ’ÐµÐ½ Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸).</value>
+    <value>Статус догађаја Patrol Heli непознат (није виђен у овој сесији).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Travelling Vendor Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½! Ð¢Ñ€Ñ‡Ð¸ Ð·Ð° {0}.</value>
+    <value>Travelling Vendor је активан! Трчи за {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ† Ñ˜Ðµ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½ (Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½ Ñ‚Ð¾ÐºÐ¾Ð¼ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° â€“ Ð²Ñ€ÐµÐ¼Ðµ Ð¿Ð¾Ñ˜Ð°Ð²Ñ™Ð¸Ð²Ð°ÑšÐ° Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾).</value>
+    <value>Путујући продавац је тренутно активан (повезан током догађаја – време појављивања непознато).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ† Ð½Ð¸Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð°Ð½. Ð”ÐµÑÐ¿Ð°ÑƒÐ½Ñ‚Ð¾Ð²Ð°Ð½ Ð¿Ñ€Ðµ {0} -Ð° Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸.</value>
+    <value>Путујући продавац није активан. Деспаунтован пре {0} -а у овој сесији.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ð´Ð¾Ð³Ð°Ñ’Ð°Ñ˜Ð° Travelling Vendor Ñ˜Ðµ Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚ (Ð½Ð¸Ñ˜Ðµ Ð²Ð¸Ñ’ÐµÐ½ Ñƒ Ð¾Ð²Ð¾Ñ˜ ÑÐµÑÐ¸Ñ˜Ð¸).</value>
+    <value>Статус догађаја Travelling Vendor је непознат (није виђен у овој сесији).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>ÐÐ¸Ñ˜ÐµÐ´Ð½Ð° Ð¾Ñ€Ð¼Ð°Ñ€Ð¸Ñ›ÐºÐ° Ð°Ð»Ð°Ñ‚Ð° Ð½Ð¸Ñ˜Ðµ Ð´Ð¾Ð´ÐµÑ™ÐµÐ½Ð° Ð·Ð° ÐºÐ¾Ð¼Ð°Ð½Ð´Ðµ Ð¾Ð´Ñ€Ð¶Ð°Ð²Ð°ÑšÐ°.</value>
+    <value>Ниједна ормарићка алата није додељена за команде одржавања.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>ÐžÐ´Ñ€Ð¶Ð¸Ð²Ð¾ÑÑ‚ Ñƒ {0} TC: ÐŸÑ€Ð°Ð·Ð½Ð¾ Ð¸Ð»Ð¸ Ð¸ÑÑ‚ÐµÐºÐ»Ð¾.</value>
+    <value>Одрживост у {0} TC: Празно или истекло.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð°/24Ñ‡: {0}</value>
+    <value> Потреба/24ч: {0}</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>ÐžÐ´Ñ€Ð¶Ð°Ð²Ð°ÑšÐµ Ñƒ {0} TC: {1}</value>
+    <value>Одржавање у {0} TC: {1}</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} Ð´Ð°Ð½Ð¸</value>
+    <value>{0} дани</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} ÑÐ°Ñ‚Ð¸</value>
+    <value>{0} сати</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} Ð¼Ð¸Ð½ÑƒÑ‚Ð°</value>
+    <value>{0} минута</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: ÐŸÑ€Ð°Ð·Ð½Ð¾/Ð¸ÑÑ‚ÐµÐºÐ»Ð¾</value>
+    <value>{0}: Празно/истекло</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
-    <value>{0} {1}Ð´, {2}Ñ…</value>
+    <value>{0} {1}д, {2}х</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>ÐžÐ´Ñ€Ð¶Ð¸Ð²Ð¾ÑÑ‚: {0}</value>
+    <value>Одрживост: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>ÐžÑ€Ð¼Ð°Ñ€Ð¸Ñ› ÑÐ° Ð°Ð»Ð°Ñ‚Ð¸Ð¼Ð° Bound Tool Ð½Ð¸Ñ˜Ðµ Ð¿Ñ€Ð¾Ð½Ð°Ñ’ÐµÐ½ Ð¸Ð»Ð¸ Ð½Ð¸Ñ˜Ðµ ÑƒÐ¿Ð°Ñ€ÐµÐ½.</value>
+    <value>Ормарић са алатима Bound Tool није пронађен или није упарен.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>ÐœÐ¾Ð½Ð¸Ñ‚Ð¾Ñ€ Ð¾Ñ€Ð¼Ð°Ñ€Ð¸Ñ›Ð° Ð°Ð»Ð°Ñ‚Ð° Bound Tool Cupboard Ð½Ð¸Ñ˜Ðµ Ð¿Ñ€Ð¾Ð½Ð°Ñ’ÐµÐ½ Ð¸Ð»Ð¸ Ð½Ð¸Ñ˜Ðµ ÑƒÐ¿Ð°Ñ€ÐµÐ½.</value>
+    <value>Монитор ормарића алата Bound Tool Cupboard није пронађен или није упарен.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} Ð¿Ñ€ÐµÑ‚Ð²Ð¾Ñ€Ð¸Ð¾ ÑÐµ Ñƒ {1}.</value>
+    <value>{0} претворио се у {1}.</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>Ð£ÐšÐ›Ð®Ð§Ð•ÐÐž</value>
+    <value>УКЛЮЧЕНО</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>Ð˜ÑÐºÑ™ÑƒÑ‡ÐµÐ½Ð¾</value>
+    <value>Искључено</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ·Ð°Ð½Ð¸ Ð¿Ð°Ð¼ÐµÑ‚Ð½Ð¸ Ð¿Ñ€ÐµÐºÐ¸Ð´Ð°Ñ‡ Ð½Ð¸Ñ˜Ðµ Ð¿Ñ€Ð¾Ð½Ð°Ñ’ÐµÐ½ Ð¸Ð»Ð¸ Ð½Ð¸Ñ˜Ðµ ÑƒÐ¿Ð°Ñ€ÐµÐ½.</value>
+    <value>Повезани паметни прекидач није пронађен или није упарен.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Ð”Ñ€Ð²Ð¾</value>
+    <value>Дрво</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>ÐšÐ°Ð¼ÐµÐ½</value>
+    <value>Камен</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>ÐœÐµÑ‚Ð°Ð»</value>
+    <value>Метал</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
-    <value>Ð•Ð¥Ðš</value>
+    <value>ЕХК</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>ÐœÐ°Ð»Ð° Ð½Ð°Ñ„Ñ‚Ð½Ð° Ð¿Ð»Ð°Ñ‚Ñ„Ð¾Ñ€Ð¼Ð°</value>
+    <value>Мала нафтна платформа</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Ð’ÐµÐ»Ð¸ÐºÐ° Ð½Ð°Ñ„Ñ‚Ð½Ð° Ð¿Ð»Ð°Ñ‚Ñ„Ð¾Ñ€Ð¼Ð°</value>
+    <value>Велика нафтна платформа</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ð°</value>
+    <value>Продавница</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´</value>
+    <value>Теретни брод</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>ÐŸÑƒÑ‚ÑƒÑ˜ÑƒÑ›Ð¸ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ñ†</value>
+    <value>Путујући продавац</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€</value>
+    <value>Патролни хеликоптер</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>ÐÐ°Ñ„Ñ‚Ð½Ð° Ð¿Ð»Ð°Ñ‚Ñ„Ð¾Ñ€Ð¼Ð°</value>
+    <value>Нафтна платформа</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>Ð•ÐºÑÐ¿Ð»Ð¾Ð·Ð¸Ñ˜Ð°</value>
+    <value>Експлозија</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>Ð“Ñ€Ð°Ñ’ÐµÐ²Ð¸Ð½ÑÐºÐ¸ Ð±Ð»Ð¾ÐºÐ¾Ð²Ð¸</value>
+    <value>Грађевински блокови</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Ð”Ð¾Ð³Ð°Ñ’Ð°Ñ˜</value>
+    <value>Догађај</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] Ñ˜Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ð½! ÐšÑƒÑ‚Ð¸Ñ˜Ð° ÑÐµ Ð¾Ñ‚ÐºÑ™ÑƒÑ‡Ð°Ð²Ð° Ñƒ {1}.</value>
+    <value>[{0}] је активиран! Кутија се откључава у {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ÐÐ›ÐÐ Ðœ: {0} Ð°ÐºÑ‚Ð¸Ð²Ð¸Ñ€Ð°Ð½!</value>
+    <value>АЛАРМ: {0} активиран!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] ÐšÑ€Ð°Ñ‚Ðµ ÑÐµ Ð¾Ñ‚Ð²Ð°Ñ€Ð° Ð·Ð° 10 Ð¼Ð¸Ð½ÑƒÑ‚Ð°!</value>
+    <value>[{0}] Крате се отвара за 10 минута!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] ÐžÑ‚ÐºÑ™ÑƒÑ‡Ð°Ð²Ð°ÑšÐµ ÑÐ°Ð½Ð´ÑƒÐºÐ° Ð·Ð° 5 Ð¼Ð¸Ð½ÑƒÑ‚Ð°!</value>
+    <value>[{0}] Откључавање сандука за 5 минута!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Ð”Ð¸Ð¿ Ð¡Ð¸ Ñ˜Ðµ Ð³Ð¾Ñ€Ðµ</value>
+    <value>Дип Си је горе</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>ÐÐ¾Ð²Ð° Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ð° {0} [{1}]: {2}</value>
+    <value>Нова продавница {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Ð¡ÑƒÐ¼ÑšÐ¸Ñ‡Ð°Ð² Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ð° {0} [{1}] Ð±Ð¸Ð»Ð° Ñ˜Ðµ Ð¾Ð½Ð»Ð°Ñ˜Ð½ {2}-Ð¾Ð²Ð°, Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ð»Ð° {3}</value>
+    <value>Сумњичав продавница {0} [{1}] била је онлајн {2}-ова, продавала {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ˜Ð°Ð²Ñ™ÐµÐ½ Ñ‚ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ {0}</value>
+    <value>Појављен теретни брод {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>Ð´Ð°Ð»ÐµÐºÐ¾ Ð½Ð° Ð¼Ð¾Ñ€Ñƒ (Ð±Ð»Ð¸Ð·Ñƒ {0})</value>
+    <value>далеко на мору (близу {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ñ˜Ðµ Ð¿Ñ€Ð¸ÑÑ‚Ð°Ð¾ Ñƒ Ð»ÑƒÑ†Ð¸ {0} ({1})</value>
+    <value>Теретни брод је пристао у луци {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ ÑÐµ Ð¾Ñ‡ÐµÐºÑƒÑ˜Ðµ Ð´Ð° Ð¿Ñ€Ð¸ÑÑ‚Ð°Ð½Ðµ Ñƒ {0} ({1}) Ð·Ð° Ð¾ÐºÐ¾ 5 Ð¼Ð¸Ð½ÑƒÑ‚Ð°.</value>
+    <value>Теретни брод се очекује да пристане у {0} ({1}) за око 5 минута.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Ð¢ÐµÑ€ÐµÑ‚Ð½Ð¸ Ð±Ñ€Ð¾Ð´ Ð¿Ð¾Ð»Ð°Ð·Ð¸ ÑÐ° {0} Ð·Ð° 5 Ð¼Ð¸Ð½ÑƒÑ‚Ð° ({1})</value>
+    <value>Теретни брод полази са {0} за 5 минута ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Ð£Ð´Ð°Ñ€ Ð´ÐµÑ‚ÐµÐºÑ‚Ð¾Ð²Ð°Ð½ Ð·Ð±Ð¾Ð³ ÐºÐ°ÑˆÑšÐµÑšÐ° ÑÐµÑ€Ð²ÐµÑ€Ð° â€” Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ñ˜Ðµ Ð¸ Ð´Ð°Ñ™Ðµ Ð½Ð° Ð¼Ð°Ð¿Ð¸ Ð½Ð° {0}</value>
+    <value>Удар детектован због кашњења сервера — хеликоптер је и даље на мапи на {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} Ñ€Ð¾Ñ’ÐµÐ½ Ñƒ {1}</value>
+    <value>{0} рођен у {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>ÐŸÐ°Ñ‚Ñ€Ð¾Ð»Ð½Ð¸ Ñ…ÐµÐ»Ð¸ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð¾Ð±Ð¾Ñ€ÐµÐ½ ÐºÐ¾Ð´ {0}</value>
+    <value>Патролни хеликоптер оборен код {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>Ð½ÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾</value>
+    <value>непознато</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} Ð¿Ð¾Ñ˜Ð°Ð²Ð¸Ð¾ ÑÐµ Ð½Ð° Ð¼Ñ€ÐµÐ¶Ð¸ @ {1}</value>
+    <value>{0} појавио се на мрежи @ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} Ð¿Ñ€ÐµÑÑ‚Ð°Ð¾ Ñ˜Ðµ Ð´Ð° Ð±ÑƒÐ´Ðµ Ð¾Ð½Ð»Ð°Ñ˜Ð½</value>
+    <value>{0} престао је да буде онлајн</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} ÑƒÐ¼Ñ€Ð¾ Ñ˜Ðµ @ {1}</value>
+    <value>{0} умро је @ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} Ð¿Ð¾Ð½Ð¾Ð²Ð¾ ÑÐµ Ð¿Ð¾Ñ˜Ð°Ð²Ð¸Ð¾ @ {1}</value>
+    <value>{0} поново се појавио @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[ÐŸÑ€Ð°Ñ›ÐµÑšÐµ] {0}{1} Ñ˜Ðµ ÑÐ°Ð´Ð° ÐžÐÐ›ÐÐˆÐ</value>
+    <value>[Праћење] {0}{1} је сада ОНЛАЈН</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[ÐŸÑ€Ð°Ñ›ÐµÑšÐµ] {0}{1} Ñ˜Ðµ ÑÐ°Ð´Ð° Ð²Ð°Ð½ Ð¼Ñ€ÐµÐ¶Ðµ</value>
+    <value>[Праћење] {0}{1} је сада ван мреже</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[ÐŸÑ€Ð°Ñ›ÐµÑšÐµ] {0}{1} Ð¿Ñ€ÐµÐ¸Ð¼ÐµÐ½Ð¾Ð²Ð°Ð½Ð¾ Ñƒ {2}!</value>
+    <value>[Праћење] {0}{1} преименовано у {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>Ð¿Ñ€Ð¾Ð´Ð°Ñ˜Ðµ</value>
+    <value>продаје</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>ÐºÑƒÐ¿ÑƒÑ˜Ðµ</value>
+    <value>купује</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ð°</value>
+    <value>Продавница</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) Ð·Ð° {6} {7}</value>
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) за {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>Ð¡Ð¿Ð¸ÑÐ°Ðº ÐºÐ¾Ð¼Ð°Ð½Ð´a Ð·Ð° Ñ€Ð°Ð·Ð³Ð¾Ð²Ð¾Ñ€</value>
+    <value>Списак командa за разговор</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
-    <value>ÐšÐžÐœÐÐÐ”Ð•: {0}</value>
+    <value>КОМАНДЕ: {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>Ð›Ð¾ÐºÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ñ˜Ð°, Ð¼Ð¾Ð´ÐµÑ€Ð½Ð¸Ð·Ð°Ñ†Ð¸Ñ˜Ð° ÐºÐ¾Ñ€Ð¸ÑÐ½Ð¸Ñ‡ÐºÐ¾Ð³ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÑ˜ÑÐ° Ð¸ ÑÐºÐ»Ð°Ð´Ð¸ÑˆÑ‚ÐµÑšÐµ</value>
+    <value>Локализација, модернизација корисничког интерфејса и складиштење</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Ð”Ð¸Ð½Ð°Ð¼Ð¸Ñ‡ÐºÐ¾ Ð¿Ñ€ÐµÐ±Ð°Ñ†Ð¸Ð²Ð°ÑšÐµ Ð»Ð¾ÐºÐ°Ð»Ð°</value>
+    <value>Динамичко пребацивање локала</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> â€” Ð¿Ñ€ÐµÐºÐ¾ 30 Ñ˜ÐµÐ·Ð¸ÐºÐ° Ð·Ð° Ð¸Ð·Ð±Ð¾Ñ€</value>
+    <value> — преко 30 језика за избор</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð½Ð¸ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÑ˜Ñ Ð·Ð° Ñ›Ð°ÑÐºÐ°ÑšÐµ</value>
+    <value>Командни интерфејс за ћаскање</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> â€” Ð˜Ð·Ð¾Ð»Ð¸Ñ€Ð°Ð½Ð¸ Ð¿Ñ€Ð¸ÐºÐ°Ð· Ð·Ð° Ñ‡Ð¸ÑÑ‚ Ð¸Ð·Ð³Ð»ÐµÐ´</value>
+    <value> — Изолирани приказ за чист изглед</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>ÐÐ¾Ð²Ð¸ Ð¿Ñ€ÐµÐºÑ€Ð¸Ð²Ð°Ñ‡ Ð¿Ð¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°</value>
+    <value>Нови прекривач подешавања</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> â€” ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚Ðµ Ð±Ð¾Ñ‡Ð½Ñƒ Ñ‚Ñ€Ð°ÐºÑƒ Ð·Ð° ÑÐ²Ðµ Ð¿Ð¾ÑÑ‚Ð°Ð²ÐºÐµ</value>
+    <value> — Очистите бочну траку за све поставке</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Ð£ÐºÐ»Ð°ÑšÐ°ÑšÐµ Ð¿Ñ€Ð°Ñ›ÐµÑšÐ° BattleMetrics</value>
+    <value>Уклањање праћења BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>Ð’Ð°ÑˆÐ° Ð±Ð°Ð·Ð° Ñ˜Ðµ Ð¿Ð¾Ð´ Ð½Ð°Ð¿Ð°Ð´Ð¾Ð¼!</value>
+    <value>Ваша база је под нападом!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>ÐœÐ¾Ð»Ð¸Ð¼Ð¾ Ð²Ð°Ñ Ð´Ð° ÑÐµ Ð¿Ñ€Ð²Ð¾ Ð¿Ð¾Ð²ÐµÐ¶ÐµÑ‚Ðµ Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€.</value>
+    <value>Молимо вас да се прво повежете на сервер.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>ÐÐ¸ÑÑ‚Ðµ Ð¿Ð¾Ð²ÐµÐ·Ð°Ð½Ð¸ Ð½Ð¸ ÑÐ° Ñ˜ÐµÐ´Ð½Ð¸Ð¼ ÑÐµÑ€Ð²ÐµÑ€Ð¾Ð¼.</value>
+    <value>Нисте повезани ни са једним сервером.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>Ð§ÐµÑ‚ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð½Ð¸Ñ˜Ðµ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð°Ð½.</value>
+    <value>Чет тренутно није доступан.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>ÐœÐ¾Ð»Ð¸Ð¼Ð¾ Ð¸Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ ÑÐµÑ€Ð²ÐµÑ€ Ð¿Ñ€Ð²Ð¾.</value>
+    <value>Молимо изаберите сервер прво.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²ÐµÐ·Ð°Ð½Ð¾ÑÑ‚</value>
+    <value>Повезаност</value>
   </data>
   <data name="SnackbarTitleChat" xml:space="preserve">
-    <value>Ð§ÐµÑ‚</value>
+    <value>Чет</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>ÐšÐ°ÐºÐ¾ Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ð¸ Ð¸Ð³Ñ€Ð°Ñ‡Ðµ</value>
+    <value>Како пратити играче</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>Ð£Ñ€Ð¾Ñ’ÐµÐ½Ð¾ Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ UDP-Ð°</value>
+    <value>Урођено праћење UDP-а</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>Ð’Ð¾Ð´Ð¸Ñ‡ Ð·Ð° Ð¿Ñ€Ð°Ñ›ÐµÑšÐµ Ñ˜Ðµ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð°Ð½ ÑÐ°Ð¼Ð¾ Ð½Ð° ÐµÐ½Ð³Ð»ÐµÑÐºÐ¾Ð¼ Ñ˜ÐµÐ·Ð¸ÐºÑƒ, Ñ˜ÐµÑ€ Ñ›Ðµ ÑƒÑÐºÐ¾Ñ€Ð¾ Ð±Ð¸Ñ‚Ð¸ Ð¸Ð·Ð¼ÐµÑšÐµÐ½. ÐœÐ¾Ð»Ð¸Ð¼Ð¾ Ð·Ð° Ð²Ð°ÑˆÐµ ÑÑ‚Ñ€Ð¿Ñ™ÐµÑšÐµ.</value>
+    <value>Водич за праћење је тренутно доступан само на енглеском језику, јер ће ускоро бити измењен. Молимо за ваше стрпљење.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>Ð—Ð°Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ðµ Ð¾Ð²Ð°Ñ˜ Ð¿Ñ€Ð¾Ð·Ð¾Ñ€ Ñƒ Ð±Ð¸Ð»Ð¾ ÐºÐ¾Ð¼ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚ÐºÑƒ â€” Ð¼Ð¾Ð¶ÐµÑ‚Ðµ Ð³Ð° Ð¿Ð¾Ð½Ð¾Ð²Ð¾ Ð¾Ñ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð¿Ð¾Ð¼Ð¾Ñ›Ñƒ Ð´ÑƒÐ³Ð¼ÐµÑ‚Ð° â“ ÐšÐ°ÐºÐ¾ Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ð¸.</value>
+    <value>Затворите овај прозор у било ком тренутку — можете га поново отворити помоћу дугмета ❓ Како пратити.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>ÐžÐ´Ñ€Ð¶Ð°Ð²Ð°ÑšÐµ</value>
+    <value>Одржавање</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ, Ð½Ð°Ð¿Ñ€Ð°Ð²Ð¸Ñ‚Ðµ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ñƒ ÐºÐ¾Ð¿Ð¸Ñ˜Ñƒ Ð¸Ð»Ð¸ Ð²Ñ€Ð°Ñ‚Ð¸Ñ‚Ðµ Ð¿Ð¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ° Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ, Ð¿Ñ€Ð¾Ñ„Ð¸Ð»Ðµ Ð¸ Ð¿Ñ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ðµ Ñ†Ñ€Ñ‚ÐµÐ¶Ðµ.</value>
+    <value>Избришите, направите резервну копију или вратите подешавања апликације, профиле и прилагођене цртеже.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚ÑƒÑ˜ Ð¿Ð¾Ð´Ð°Ñ‚ÐºÐµ Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ...</value>
+    <value>Ресетуј податке апликације...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>Ð¡Ð¸Ð³ÑƒÑ€Ð½Ð° ÐºÐ¾Ð¿Ð¸Ñ˜Ð° Ð¿Ð¾Ð´Ð°Ñ‚Ð°ÐºÐ°...</value>
+    <value>Сигурна копија података...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>ÐžÐ±Ð½Ð¾Ð²Ð¸ Ð¿Ð¾Ð´Ð°Ñ‚ÐºÐµ...</value>
+    <value>Обнови податке...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ Ð¿Ð¾Ð´Ð°Ñ‚Ð°ÐºÐ° Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ</value>
+    <value>Ресетовање података апликације</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ðµ ÐºÐ¾Ñ˜Ðµ Ð¶ÐµÐ»Ð¸Ñ‚Ðµ Ð´Ð° Ð¾Ð±Ñ€Ð¸ÑˆÐµÑ‚Ðµ ÑÐ° Ð¾Ð²Ð¾Ð³ ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð°. Ð¡Ð²Ðµ Ð¸Ð·Ð°Ð±Ñ€Ð°Ð½Ðµ Ð¾Ð¿Ñ†Ð¸Ñ˜Ðµ Ð±Ð¸Ñ›Ðµ Ñ‚Ñ€Ð°Ñ˜Ð½Ð¾ Ð¾Ð±Ñ€Ð¸ÑÐ°Ð½Ðµ.</value>
+    <value>Изаберите компоненте које желите да обришете са овог уређаја. Све изабране опције биће трајно обрисане.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>ÐÐºÑ‚Ð¸Ð²Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€ÑÐºÐ° Ð²ÐµÐ·Ð° (ÐŸÑ€ÐµÐºÐ¸Ð½Ð¸)</value>
+    <value>Активна серверска веза (Прекини)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ð½Ð¸ ÑÐµÑ€Ð²ÐµÑ€ÑÐºÐ¸ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»Ð¸ (Ð˜Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ ÑƒÐ¿Ð°Ñ€ÐµÐ½Ðµ ÑÐµÑ€Ð²ÐµÑ€ÑÐºÐµ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ðµ)</value>
+    <value>Сачувани серверски профили (Избришите упарене серверске конфигурације)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´Ð°Ñ†Ð¸ Ð·Ð° Ð¿Ñ€Ð¸Ñ˜Ð°Ð²Ñƒ Ð½Ð° Steam Ð½Ð°Ð»Ð¾Ð³ (ÐžÐ´Ñ˜Ð°Ð²Ð¸Ñ‚Ðµ ÑÐµ)</value>
+    <value>Подаци за пријаву на Steam налог (Одјавите се)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ð° ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ° ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð° (Ð ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ Ñ‚Ð¾ÐºÐµÐ½Ð° Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ˜Ðµ)</value>
+    <value>Конфигурација упаривања уређаја (Ресетовање токена регистрације)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ðµ Ð½Ð¸ÑˆÐ°Ð½Ðµ (ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ðµ Ð±Ñ€Ð¸ÑÐ°ÑšÐ°)</value>
+    <value>Прилагођене нишане (конфигурације брисања)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>Ð›Ð¾ÐºÐ°Ð»Ð½Ð° ÐºÐµÑˆ Ð¼ÐµÐ¼Ð¾Ñ€Ð¸Ñ˜Ð° Ð¸ Ñ†Ñ€Ñ‚ÐµÐ¶Ð¸ (Ð¸Ð·Ð±Ñ€Ð¸ÑˆÐ¸Ñ‚Ðµ ÑÐ°Ñ‡ÑƒÐ²Ð°Ð½Ðµ Ð¼Ð°Ð¿Ðµ/Ð»Ð¸Ð½Ð¸Ñ˜Ðµ)</value>
+    <value>Локална кеш меморија и цртежи (избришите сачуване мапе/линије)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>ÐžÐ²Ð° Ð°ÐºÑ†Ð¸Ñ˜Ð° Ñ˜Ðµ Ñ‚Ñ€Ð°Ñ˜Ð½Ð° Ð¸ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ ÑÐµ Ð¿Ð¾Ð½Ð¸ÑˆÑ‚Ð¸Ñ‚Ð¸.</value>
+    <value>Ова акција је трајна и не може се поништити.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>ÐŸÐ¾Ñ‚Ð²Ñ€Ð´Ð¸ Ñ€ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ</value>
+    <value>Потврди ресетовање</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>Ð›Ð¾Ð·Ð¸Ð½ÐºÐ° Ð·Ð° Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ñƒ ÐºÐ¾Ð¿Ð¸Ñ˜Ñƒ</value>
+    <value>Лозинка за резервну копију</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>Ð—Ð°ÑˆÑ‚Ð¸Ñ‚Ð° Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¸Ñ… ÐºÐ¾Ð¿Ð¸Ñ˜Ð°</value>
+    <value>Заштита резервних копија</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Ð£Ð½ÐµÑÐ¸Ñ‚Ðµ Ð»Ð¾Ð·Ð¸Ð½ÐºÑƒ Ð·Ð° ÑˆÐ¸Ñ„Ñ€Ð¾Ð²Ð°ÑšÐµ Ð¾Ð²Ðµ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ Ð´Ð°Ñ‚Ð¾Ñ‚ÐµÐºÐµ. ÐÐºÐ¾ Ñ˜Ðµ Ð¾ÑÑ‚Ð°Ð²Ð¸Ñ‚Ðµ Ð¿Ñ€Ð°Ð·Ð½Ð¸, Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð° Ð´Ð°Ñ‚Ð¾Ñ‚ÐµÐºÐ° Ð½ÐµÑ›Ðµ Ð±Ð¸Ñ‚Ð¸ ÑˆÐ¸Ñ„Ñ€Ð¾Ð²Ð°Ð½Ð°.</value>
+    <value>Унесите лозинку за шифровање ове резервне датотеке. Ако је оставите празни, резервна датотека неће бити шифрована.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>ÐžÐ±Ð½Ð¾Ð²Ð¸ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ñƒ ÐºÐ¾Ð¿Ð¸Ñ˜Ñƒ</value>
+    <value>Обнови резервну копију</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>ÐžÐ²Ð° Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð° ÐºÐ¾Ð¿Ð¸Ñ˜Ð° Ñ˜Ðµ Ð·Ð°ÑˆÑ‚Ð¸Ñ›ÐµÐ½Ð° Ð»Ð¾Ð·Ð¸Ð½ÐºÐ¾Ð¼. Ð£Ð½ÐµÑÐ¸Ñ‚Ðµ Ð»Ð¾Ð·Ð¸Ð½ÐºÑƒ Ð´Ð° Ð±Ð¸ÑÑ‚Ðµ Ñ˜Ðµ Ð´ÐµÑˆÐ¸Ñ„Ñ€Ð¾Ð²Ð°Ð»Ð¸:</value>
+    <value>Ова резервна копија је заштићена лозинком. Унесите лозинку да бисте је дешифровали:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>Ð¨Ð¸Ñ„Ñ€ÑƒÑ˜</value>
+    <value>Шифруј</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>Ð”ÐµÑˆÐ¸Ñ„Ñ€ÑƒÑ˜</value>
+    <value>Дешифруј</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>Ð£ Ñ€ÐµÐ´Ñƒ</value>
+    <value>У реду</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>Ð¡Ð¸Ð³ÑƒÑ€Ð½Ð¾ÑÐ½Ð° ÐºÐ¾Ð¿Ð¸Ñ˜Ð° Ð¿Ð¾Ð´Ð°Ñ‚Ð°ÐºÐ° Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ</value>
+    <value>Сигурносна копија података апликације</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[Ð¡Ð˜Ð¡Ð¢Ð•Ðœ] Ð‘ÐµÐºÐ°Ð¿ Ñ˜Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÐºÑ€ÐµÐ¸Ñ€Ð°Ð½ Ð½Ð°: {0}</value>
+    <value>[СИСТЕМ] Бекап је успешно креиран на: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>Ð¡Ð¸Ð³ÑƒÑ€Ð½Ð° ÐºÐ¾Ð¿Ð¸Ñ˜Ð° ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÐºÑ€ÐµÐ¸Ñ€Ð°Ð½Ð°!</value>
+    <value>Сигурна копија успешно креирана!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ð° ÐºÐ¾Ð¿Ð¸Ñ˜Ð° Ð·Ð°Ð²Ñ€ÑˆÐµÐ½Ð°</value>
+    <value>Резервна копија завршена</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[Ð¡Ð˜Ð¡Ð¢Ð•Ðœ] Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ Ð¸Ð·Ñ€Ð°Ð´Ð¸ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ð¸Ñ˜Ðµ: {0}</value>
+    <value>[СИСТЕМ] Грешка при изради резервне копије: {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ ÐºÑ€ÐµÐ¸Ñ€Ð°ÑšÑƒ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ð¸Ñ˜Ðµ: {0}</value>
+    <value>Грешка при креирању резервне копије: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ð¾ ÐºÐ¾Ð¿Ð¸Ñ€Ð°ÑšÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿ÐµÐ»Ð¾</value>
+    <value>Резервно копирање није успело</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>ÐžÐ¿Ð¾Ñ€Ð°Ð²ÐºÐ¾Ð¼ Ð¿Ð¾Ð´Ð°Ñ‚Ð°ÐºÐ° Ð±Ð¸Ñ›Ðµ Ð¿Ñ€ÐµÐ¿Ð¸ÑÐ°Ð½Ð¸ Ð²Ð°ÑˆÐ¸ Ñ‚Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¸ ÑÐµÑ€Ð²ÐµÑ€ÑÐºÐ¸ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»Ð¸, Ð¿Ñ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ðµ Ð½Ð¸ÑˆÐ°Ð½Ðµ, Ð¿Ñ€ÐµÐºÑ€Ð¸Ð²Ð°Ñ‡Ð¸ Ð·Ð° Ñ†Ñ€Ñ‚Ð°ÑšÐµ Ð¸ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ðµ Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð¿Ðµ.
+    <value>Опоравком података биће преписани ваши тренутни серверски профили, прилагођене нишане, прекривачи за цртање и конфигурације минимапе.
 
-Ð”Ð° Ð»Ð¸ ÑÑ‚Ðµ ÑÐ¸Ð³ÑƒÑ€Ð½Ð¸ Ð´Ð° Ð¶ÐµÐ»Ð¸Ñ‚Ðµ Ð´Ð° Ð½Ð°ÑÑ‚Ð°Ð²Ð¸Ñ‚Ðµ?</value>
+Да ли сте сигурни да желите да наставите?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>ÐŸÐ¾Ð²Ñ€Ð°Ñ‚Ð¸ Ð¿Ð¾Ñ‚Ð²Ñ€Ð´Ñƒ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ð¸Ñ˜Ðµ</value>
+    <value>Поврати потврду резервне копије</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>ÐžÐ±Ð½Ð¾Ð²Ð¸ Ð¿Ð¾Ð´Ð°Ñ‚ÐºÐµ Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ</value>
+    <value>Обнови податке апликације</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>ÐŸÐ¾Ð´Ð°Ñ†Ð¸ Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð¾Ð±Ð½Ð¾Ð²Ñ™ÐµÐ½Ð¸!</value>
+    <value>Подаци апликације успешно обновљени!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>ÐžÐ¿Ð¾Ñ€Ð°Ð²Ð°Ðº Ð·Ð°Ð²Ñ€ÑˆÐµÐ½</value>
+    <value>Опоравак завршен</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[Ð¡Ð˜Ð¡Ð¢Ð•Ðœ] Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ Ð¾Ð±Ð½Ð¾Ð²Ð¸: ÑƒÐ½ÐµÑ‚Ð° Ð½ÐµÐ²Ð°Ð¶ÐµÑ›Ð° Ð»Ð¾Ð·Ð¸Ð½ÐºÐ°.</value>
+    <value>[СИСТЕМ] Грешка при обнови: унета неважећа лозинка.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>Ð”ÐµÑˆÐ¸Ñ„Ñ€Ð¾Ð²Ð°ÑšÐµ Ñ˜Ðµ Ð½ÐµÑƒÑÐ¿ÐµÐ»Ð¾. ÐÐµÐ²Ð°Ð¶ÐµÑ›Ð° Ð»Ð¾Ð·Ð¸Ð½ÐºÐ° Ð¸Ð»Ð¸ Ð¾ÑˆÑ‚ÐµÑ›ÐµÐ½Ð° Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð° ÐºÐ¾Ð¿Ð¸Ñ˜Ð°.</value>
+    <value>Дешифровање је неуспело. Неважећа лозинка или оштећена резервна копија.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>ÐžÐ±Ð½Ð¾Ð²Ð¸ Ð½ÐµÑƒÑÐ¿ÐµÐ»Ð¾</value>
+    <value>Обнови неуспело</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[Ð¡Ð˜Ð¡Ð¢Ð•Ðœ] Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ Ð²Ñ€Ð°Ñ›Ð°ÑšÑƒ: {0}</value>
+    <value>[СИСТЕМ] Грешка при враћању: {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ Ð¾Ð±Ð½Ð¾Ð²Ð¸ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ð¸Ñ˜Ðµ: {0}</value>
+    <value>Грешка при обнови резервне копије: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>ÐÐµÐ²Ð°Ð¶ÐµÑ›Ð¸ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ð¸Ñ˜Ðµ Ð¸Ð»Ð¸ Ð½ÐµÐ´Ð¾ÑÑ‚Ð°Ñ˜ÑƒÑ›Ðµ Ð¿Ð¾Ñ‚Ð¿Ð¸ÑÐ¸Ð²Ð°ÑšÐµ.</value>
+    <value>Неважећи формат резервне копије или недостајуће потписивање.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] ÐŸÐ¾Ñ‡Ð¸ÑšÐµ Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ñ˜Ð° ÑÐµÐ»ÐµÐºÑ‚Ð¸Ð²Ð½Ð¾Ð³ Ñ€ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐ°...</value>
+    <value>[WIPE] Почиње операција селективног ресетовања...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[WIPE] ÐŸÑ€ÐµÐºÐ¸Ð´Ð° ÑÐµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð° Ð²ÐµÐ·Ð° ÑÐ° ÑÐµÑ€Ð²ÐµÑ€Ð¾Ð¼...</value>
+    <value>[WIPE] Прекида се активна веза са сервером...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] ÐŸÐ¾Ñ‚Ð²Ñ€Ñ’ÐµÐ½Ð¾ Ñ€ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐµ Ð²ÐµÐ·Ðµ.</value>
+    <value>[WIPE] Потврђено ресетовање везе.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] Ð‘Ñ€Ð¸ÑˆÐµ ÑÐµ ÑÐ°Ñ‡ÑƒÐ²Ð°Ð½Ð¸ ÑÐµÑ€Ð²ÐµÑ€ÑÐºÐ¸ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»Ð¸...</value>
+    <value>[WIPE] Брише се сачувани серверски профили...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[WIPE] Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ð½Ð¸ ÑÐµÑ€Ð²ÐµÑ€ÑÐºÐ¸ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»Ð¸ ÑÑƒ Ð¸Ð·Ð±Ñ€Ð¸ÑÐ°Ð½Ð¸.</value>
+    <value>[WIPE] Сачувани серверски профили су избрисани.</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[WIPE] Ð‘Ñ€Ð¸ÑˆÐµÑšÐµ Ð°ÐºÑ€ÐµÐ´Ð¸Ñ‚Ð¸Ð²Ð° Ð·Ð° Steam Ð½Ð°Ð»Ð¾Ð³...</value>
+    <value>[WIPE] Бришење акредитива за Steam налог...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[WIPE] ÐŸÐ¾Ð´Ð°Ñ†Ð¸ Ð¾ Ð½Ð°Ð»Ð¾Ð³Ñƒ Ð·Ð° Steam ÑÑƒ Ð¸Ð·Ð±Ñ€Ð¸ÑÐ°Ð½Ð¸.</value>
+    <value>[WIPE] Подаци о налогу за Steam су избрисани.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[Ð‘Ð Ð˜Ð¨Ð•ÐŠÐ•] Ð‘Ñ€Ð¸ÑˆÐµ ÑÐµ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ð° ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ° ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð°...</value>
+    <value>[БРИШЕЊЕ] Брише се конфигурација упаривања уређаја...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[WIPE] ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ˜Ð° ÑƒÐ¿Ð°Ñ€Ð¸Ð²Ð°ÑšÐ° ÑƒÑ€ÐµÑ’Ð°Ñ˜Ð° Ñ˜Ðµ Ð¸Ð·Ð±Ñ€Ð¸ÑÐ°Ð½Ð°.</value>
+    <value>[WIPE] Конфигурација упаривања уређаја је избрисана.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[Ð‘Ð Ð˜Ð¨Ð•ÐŠÐ•] Ð‘Ñ€Ð¸ÑˆÐµÑšÐµ Ð¿Ñ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ð¸Ñ… Ð½Ð¸ÑˆÐ°Ð½Ð°...</value>
+    <value>[БРИШЕЊЕ] Бришење прилагођених нишана...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ Ð±Ñ€Ð¸ÑÐ°ÑšÑƒ Ð¿Ñ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ð¸Ñ… Ð½Ð¸ÑˆÐ°Ð½Ð°: {0}</value>
+    <value>[WIPE] Грешка при брисању прилагођених нишана: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[WIPE] ÐŸÑ€Ð¸Ð»Ð°Ð³Ð¾Ñ’ÐµÐ½Ðµ Ð½Ð¸ÑˆÐ°Ð½Ðµ ÑÑƒ Ð¸Ð·Ð±Ñ€Ð¸ÑÐ°Ð½Ðµ.</value>
+    <value>[WIPE] Прилагођене нишане су избрисане.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] Ð§Ð¸ÑˆÑ›ÐµÑšÐµ Ð»Ð¾ÐºÐ°Ð»Ð½Ð¸Ñ… ÐºÐµÑˆ Ñ„Ð°Ñ˜Ð»Ð¾Ð²Ð° Ð¸ Ð¿Ñ€ÐµÐºÑ€Ð¸Ð²Ð½Ð¸Ñ… Ñ†Ñ€Ñ‚ÐµÐ¶Ð°...</value>
+    <value>[WIPE] Чишћење локалних кеш фајлова и прекривних цртежа...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] Ð“Ñ€ÐµÑˆÐºÐ° Ð¿Ñ€Ð¸ Ð±Ñ€Ð¸ÑÐ°ÑšÑƒ Ñ„Ð°ÑÑ†Ð¸ÐºÐ»Ðµ ÐºÐµÑˆÐ°: {0}</value>
+    <value>[WIPE] Грешка при брисању фасцикле кеша: {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[WIPE] ÐšÐµÑˆ Ñ„Ð°ÑÑ†Ð¸ÐºÐ»Ðµ ÑÑƒ Ð¸Ð·Ð±Ñ€Ð¸ÑÐ°Ð½Ðµ.</value>
+    <value>[WIPE] Кеш фасцикле су избрисане.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] ÐŸÐ¾Ð½Ð¾Ð²Ð½Ð¾ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¾Ð²Ð°ÑšÐµ ÑÐ»ÑƒÑˆÐ°Ð¾Ñ†Ð° Ð¸ FCM Ð°ÐºÑ€ÐµÐ´Ð¸Ñ‚Ð¸Ð²Ð°...</value>
+    <value>[WIPE] Поновно регистровање слушаоца и FCM акредитива...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] Ð¡ÐµÐ»ÐµÐºÑ‚Ð¸Ð²Ð½Ð° Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ñ˜Ð° Ñ€ÐµÑÐµÑ‚Ð¾Ð²Ð°ÑšÐ° ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð·Ð°Ð²Ñ€ÑˆÐµÐ½Ð°.</value>
+    <value>[WIPE] Селективна операција ресетовања успешно завршена.</value>
   </data>
-  <data name="DeleteDeathMarker" xml:space="preserve">
-    <value>ÐžÐ±Ñ€Ð¸ÑˆÐ¸ Ð¾Ð·Ð½Ð°ÐºÐµ ÑÐ¼Ñ€Ñ‚Ð¸</value>
+<data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Обриши ознаке смрти</value>
   </data>
-  <data name="WipeDeathMarkers" xml:space="preserve">
-    <value>ÐžÐ±Ñ€Ð¸ÑˆÐ¸ ÑÐ²Ðµ</value>
+<data name="WipeDeathMarkers" xml:space="preserve">
+    <value>Обриши све</value>
   </data>
-  <data name="Accept" xml:space="preserve">
-    <value>ÐŸÑ€Ð¸Ñ…Ð²Ð°Ñ‚Ð¸</value>
+<data name="Accept" xml:space="preserve">
+    <value>Прихвати</value>
   </data>
-  <data name="RenameDeathMarker" xml:space="preserve">
-    <value>ÐŸÑ€ÐµÐ¸Ð¼ÐµÐ½ÑƒÑ˜ Ð¾Ð·Ð½Ð°ÐºÑƒ ÑÐ¼Ñ€Ñ‚Ð¸</value>
+<data name="RenameDeathMarker" xml:space="preserve">
+    <value>Преименуј ознаку смрти</value>
   </data>
-  <data name="PlayerDirectionArrow" xml:space="preserve">
-  <value>ÐŸÑ€Ð°Ð²Ð°Ñ†</value>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Правац</value>
 </data>
-  <data name="Profile" xml:space="preserve">
-    <value>ÐŸÑ€Ð¾Ñ„Ð¸Ð»</value>
+<data name="Profile" xml:space="preserve">
+    <value>Профил</value>
   </data>
-  <data name="Death" xml:space="preserve">
-    <value>Ð¡Ð¼Ñ€Ñ‚</value>
+<data name="Death" xml:space="preserve">
+    <value>Смрт</value>
   </data>
-  <data name="Markers" xml:space="preserve">
-    <value>ÐžÐ·Ð½Ð°ÐºÐµ:</value>
+<data name="Markers" xml:space="preserve">
+    <value>Ознаке:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
-    <value>Ð²Ð¸</value>
+    <value>ви</value>
   </data>
   <data name="StateOn" xml:space="preserve">
-    <value>Ð£ÐšÐ‰Ð£Ð§Ð•ÐÐž</value>
+    <value>УКЉУЧЕНО</value>
   </data>
   <data name="StateOff" xml:space="preserve">
-    <value>Ð˜Ð¡ÐšÐ‰Ð£Ð§Ð•ÐÐž</value>
+    <value>ИСКЉУЧЕНО</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: Ð¿Ñ€ÐµÐ±Ð°Ñ‡ÐµÐ½ Ñƒ {1} (Ð¿Ð¾ÐºÑ€ÐµÐ½ÑƒÐ¾ {2})</value>
+    <value>[Hotkey] {0}: пребачен у {1} (покренуо {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>PretraÅ¾i i izaberi ikonu predmeta za ovaj ureÄ‘aj.</value>
+    <value>Pretraži i izaberi ikonu predmeta za ovaj uređaj.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>Promeni ikonu ureÄ‘aja</value>
+    <value>Promeni ikonu uređaja</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>PretraÅ¾i i izaberi ikonu predmeta za ovo pravilo.</value>
+    <value>Pretraži i izaberi ikonu predmeta za ovo pravilo.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
     <value>Promeni ikonu pravila</value>
@@ -1843,33 +1843,13 @@
     <value>Pravilo</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>PretraÅ¾i ikone (npr. kula, prekidaÄ)...</value>
+    <value>Pretraži ikone (npr. kula, prekidač)...</value>
   </data>
+
   <data name="NotificationRetentionDays" xml:space="preserve">
-    <value>{0} Ð´Ð°Ð½Ð°</value>
-  </data>
-  <data name="Update700Desc1" xml:space="preserve">
-    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
-  </data>
-  <data name="Delete3DMapDataTooltip" xml:space="preserve">
-    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
-  </data>
-  <data name="Delete3DMapData" xml:space="preserve">
-    <value>Delete all 3D Map Data</value>
-  </data>
-  <data name="Update700Title" xml:space="preserve">
-    <value>Rust+ Desktop v7.0.0 Update</value>
-  </data>
-  <data name="Update700Desc3" xml:space="preserve">
-    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
-  </data>
-  <data name="ThreeDMapSectionTitle" xml:space="preserve">
-    <value>3D Map</value>
-  </data>
-  <data name="Update700Desc2" xml:space="preserve">
-    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
-  </data>
-  <data name="Update700DontShowAgain" xml:space="preserve">
-    <value>Don't show this again</value>
+    <value>{0} дана</value>
   </data>
 </root>
+
+
+

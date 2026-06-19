@@ -1,44 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -64,64 +64,64 @@
     <value>Cont Steam</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>Nu eÈ™ti logat</value>
+    <value>Nu ești logat</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>VerificÄƒ pentru actualizÄƒri</value>
+    <value>Verifică pentru actualizări</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>DescÄƒrcare...</value>
+    <value>Descărcare...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>AlÄƒturÄƒ-te Discord</value>
+    <value>Alătură-te Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
     <value>Note Patch</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>SetÄƒri</value>
+    <value>Setări</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>SERVERS PÄ‚STRAT</value>
+    <value>SERVERS PĂSTRAT</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Niciun server asociat Ã®ncÄƒ</value>
+    <value>Niciun server asociat încă</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>PÄ‚STRARE &amp; ÃŽNTREÈšINERE</value>
+    <value>PĂSTRARE &amp; ÎNTREȚINERE</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Click dreapta pentru opÈ›iuni</value>
+    <value>Click dreapta pentru opțiuni</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>UrmÄƒrire activÄƒ</value>
+    <value>Urmărire activă</value>
   </data>
   <data name="LastPull" xml:space="preserve">
     <value>Ultima tragere: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>DoneazÄƒ</value>
+    <value>Donează</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>SprijinÄƒ dezvoltatorul</value>
+    <value>Sprijină dezvoltatorul</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>ReseteazÄƒ conexiunea WebSocket</value>
+    <value>Resetează conexiunea WebSocket</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>JucÄƒtori:</value>
+    <value>Jucători:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>AratÄƒ fila jucÄƒtori online</value>
+    <value>Arată fila jucători online</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>CoadÄƒ:</value>
+    <value>Coadă:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
     <value>Dispozitive</value>
@@ -130,30 +130,30 @@
     <value>Taste</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>ImportÄƒ dispozitive de la coechipieri</value>
+    <value>Importă dispozitive de la coechipieri</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>ExportÄƒ dispozitivele Ã®n coechipieri</value>
+    <value>Exportă dispozitivele în coechipieri</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>ÃŽmprospÄƒteazÄƒ</value>
+    <value>Împrospătează</value>
   </data>
   <data name="Decline" xml:space="preserve">
     <value>Declin</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>ÃŽncÄƒrcaÈ›i consimÈ›ÄƒmÃ¢ntul</value>
+    <value>Încărcați consimțământul</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>FÄƒcÃ¢nd clic pe "Accept", dispozitivele inteligente (È™i eventual desenele hÄƒrÈ›ilor) pentru acest server vor fi Ã®ncÄƒrcate pe serverul creatorului. Acest lucru permite coechipierilor sÄƒ le descarce È™i sÄƒ le sincronizeze. Doar ID-ul tÄƒu Steam este transmis pentru a identifica coechipierii. Doar jucÄƒtorii autorizaÈ›i la Tool Cupboard pot controla dispozitivele.
+    <value>Făcând clic pe "Accept", dispozitivele inteligente (și eventual desenele hărților) pentru acest server vor fi încărcate pe serverul creatorului. Acest lucru permite coechipierilor să le descarce și să le sincronizeze. Doar ID-ul tău Steam este transmis pentru a identifica coechipierii. Doar jucătorii autorizați la Tool Cupboard pot controla dispozitivele.
 
-NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. DacÄƒ coechipierii nu pot descÄƒrca datele, vÄƒ rugÄƒm sÄƒ Ã®ncercaÈ›i sÄƒ È™tergeÈ›i desenele hÄƒrÈ›ilor È™i sÄƒ le Ã®ncÄƒrcaÈ›i din nou.</value>
+Notă: Această metodă de transmitere va fi optimizată în viitor. Dacă coechipierii nu pot descărca datele, vă rugăm să încercați să ștergeți desenele hărților și să le încărcați din nou.</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>È˜tergere</value>
+    <value>Ștergere</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>PuteÈ›i È™terge doar dispozitivele care lipsesc</value>
+    <value>Puteți șterge doar dispozitivele care lipsesc</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
     <value>Redenumire dispozitiv</value>
@@ -165,13 +165,13 @@ NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. D
     <value>OFFLINE</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>ConecteazÄƒ-te</value>
+    <value>Conectează-te</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>Conectare completÄƒ</value>
+    <value>Conectare completă</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>ÃŽncarcÄƒ hartÄƒ È™i echipÄƒ</value>
+    <value>Încarcă hartă și echipă</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
     <value>Deconectare</value>
@@ -180,13 +180,13 @@ NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. D
     <value>Detalii server</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>AscultÄƒ</value>
+    <value>Ascultă</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>OpreÈ™te</value>
+    <value>Oprește</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>ÃŽncearcÄƒ asocierea cu margine</value>
+    <value>Încearcă asocierea cu margine</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
     <value>Reset pairing (delete config)</value>
@@ -195,19 +195,19 @@ NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. D
     <value>Resetare + Ascultare (re-pereche)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>ReseteazÄƒ + ascultÄƒ cu muchie</value>
+    <value>Resetează + ascultă cu muchie</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>ReÃ®ncarcÄƒ ID Battlemeticsâ€¦</value>
+    <value>Reîncarcă ID Battlemetics…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>È˜tergeÈ›i serverulâ€¦</value>
+    <value>Ștergeți serverul…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten â€¦</value>
+    <value>Bitte warten …</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>ActiveazÄƒ/dezactiveazÄƒ zona serverului</value>
+    <value>Activează/dezactivează zona serverului</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
     <value>Modul Streaming</value>
@@ -216,22 +216,22 @@ NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. D
     <value>Dimensiune:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>ActiveazÄƒ Modul Streaming (Abbreviates Names)</value>
+    <value>Activează Modul Streaming (Abbreviates Names)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
     <value>Abreviates Steam Names and IDs to protection privacy during streams. Auto-hides console and server list.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Nicio poziÈ›ie disponibilÄƒ (offline sau nu a fost generatÄƒ).</value>
+    <value>Nicio poziție disponibilă (offline sau nu a fost generată).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>SalveazÄƒ grup</value>
+    <value>Salvează grup</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
     <value>Te rog introdu un nume de grup.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>Mesajul nu a putut fi trimis. ÃŽncercaÈ›i din nou. (VerificaÈ›i dacÄƒ vÄƒ aflaÈ›i Ã®ntr-o echipÄƒ!)</value>
+    <value>Mesajul nu a putut fi trimis. Încercați din nou. (Verificați dacă vă aflați într-o echipă!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
     <value>Eroare: </value>
@@ -240,25 +240,25 @@ NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. D
     <value>Atribuie grup</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>SetÄƒri grup: {0}</value>
+    <value>Setări grup: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
     <value>Nume grup</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>IntroduceÈ›i numele grupului...</value>
+    <value>Introduceți numele grupului...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
     <value>Culoare grup</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>SalveazÄƒ modificÄƒrile</value>
+    <value>Salvează modificările</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>Activitatea jucÄƒtorilor Analytics &amp; Prognoze</value>
+    <value>Activitatea jucătorilor Analytics &amp; Prognoze</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>JucÄƒtori</value>
+    <value>Jucători</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
     <value>Mod-Streamer-Mode &amp; Mini Map Revizuire</value>
@@ -267,88 +267,88 @@ NotÄƒ: AceastÄƒ metodÄƒ de transmitere va fi optimizatÄƒ Ã®n viitor. D
     <value>Modul Streaming</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Scalare Marker JucÄƒtor</value>
+    <value>Scalare Marker Jucător</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Mini Harta PolonezÄƒ</value>
+    <value>Mini Harta Poloneză</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>AcÈ›iune necesarÄƒ:</value>
+    <value>Acțiune necesară:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>UrmÄƒrirea BattleMetrics eliminatÄƒ</value>
+    <value>Urmărirea BattleMetrics eliminată</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Revizuirea sistemului de urmÄƒrire a jucÄƒtorilor</value>
+    <value>Revizuirea sistemului de urmărire a jucătorilor</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Cum funcÈ›ioneazÄƒ urmÄƒrirea jucÄƒtorilor</value>
+    <value>Cum funcționează urmărirea jucătorilor</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>AdaugÄƒ jucÄƒtori la tracker pentru a Ã®ncepe urmÄƒrirea</value>
+    <value>Adaugă jucători la tracker pentru a începe urmărirea</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>UrmÄƒrire activÄƒ</value>
+    <value>Urmărire activă</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>Indice de urmÄƒrire</value>
+    <value>Indice de urmărire</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>FiltreazÄƒ jucÄƒtorii...</value>
+    <value>Filtrează jucătorii...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>ConecteazÄƒ-te la un server pentru a Ã®ncÄƒrca lista jucÄƒtorilor</value>
+    <value>Conectează-te la un server pentru a încărca lista jucătorilor</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Preluare jucÄƒtori prin Steam Query...</value>
+    <value>Preluare jucători prin Steam Query...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>ID piesÄƒ</value>
+    <value>ID piesă</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Nume Manual de UrmÄƒrire...</value>
+    <value>Nume Manual de Urmărire...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
     <value>Niciun dispozitiv.</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Niciun token Ã®nregistrat</value>
+    <value>Niciun token înregistrat</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>MonedÄƒ expiratÄƒ!</value>
+    <value>Monedă expirată!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>ExpirÄƒ Ã®n {0} zile</value>
+    <value>Expiră în {0} zile</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} pÃ¢nÄƒ noaptea</value>
+    <value>{0} până noaptea</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} pÃ¢nÄƒ Ã®n zi</value>
+    <value>{0} până în zi</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>UrmÄƒreÈ™te-mÄƒ pe mine</value>
+    <value>Urmărește-mă pe mine</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>UrmÄƒreÈ™te {0}</value>
+    <value>Urmărește {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Asociere: ascultareâ€¦</value>
+    <value>Asociere: ascultare…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>Asocierea: opritÄƒ</value>
+    <value>Asocierea: oprită</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>Asociere: eÈ™uat</value>
+    <value>Asociere: eșuat</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>AlarmÄƒ activatÄƒ!</value>
+    <value>Alarmă activată!</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>AlarmÄƒ inteligentÄƒ</value>
+    <value>Alarmă inteligentă</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
     <value>Imposibil de citit RustPlus-Link: {0}
@@ -358,43 +358,43 @@ Format: rustplus://IP:PORT</value>
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>È˜tergeÈ›i configuraÈ›ia existentÄƒ de asociere?
-Va trebui sÄƒ vÄƒ conectaÈ›i din nou la urmÄƒtorul Ã®nceput.</value>
+    <value>Ștergeți configurația existentă de asociere?
+Va trebui să vă conectați din nou la următorul început.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>È˜tergeÈ›i configurarea de asociere È™i re-Ã®mperecherea/ascultaÈ›i?</value>
+    <value>Ștergeți configurarea de asociere și re-împerecherea/ascultați?</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
     <value>Resetare + Ascultare (Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>È˜tergeÈ›i configurarea de Ã®mperechere È™i re-Ã®mperecherea/ascultaÈ›i imediat folosind Edge?</value>
+    <value>Ștergeți configurarea de împerechere și re-împerecherea/ascultați imediat folosind Edge?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>Nu s-a putut interoga ultima versiune. ÃŽncercaÈ›i din nou sau deschideÈ›i pagina de lansÄƒri.</value>
+    <value>Nu s-a putut interoga ultima versiune. Încercați din nou sau deschideți pagina de lansări.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>SunteÈ›i la zi.</value>
+    <value>Sunteți la zi.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Actualizare disponibilÄƒ</value>
+    <value>Actualizare disponibilă</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Versiune nouÄƒ disponibilÄƒ: {0}
-Deschide pagina LansÄƒri?</value>
+    <value>Versiune nouă disponibilă: {0}
+Deschide pagina Lansări?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Versiune nouÄƒ disponibilÄƒ: {0}
-DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
+    <value>Versiune nouă disponibilă: {0}
+Descărcați și instalați acum?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>DescÄƒrcare eÈ™uatÄƒ.</value>
+    <value>Descărcare eșuată.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Verificarea actualizÄƒrii a eÈ™uat.
+    <value>Verificarea actualizării a eșuat.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
@@ -404,25 +404,25 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Vezi profil</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>SchimbÄƒ grupul</value>
+    <value>Schimbă grupul</value>
   </data>
   <data name="Rename" xml:space="preserve">
     <value>Redenumire</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Eliminare urmÄƒrire</value>
+    <value>Eliminare urmărire</value>
   </data>
   <data name="View" xml:space="preserve">
     <value>Vizualizare</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Mai multe opÈ›iuni</value>
+    <value>Mai multe opțiuni</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>ReÃ®ncarcÄƒ ID Battlemeticsâ€¦</value>
+    <value>Reîncarcă ID Battlemetics…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>È˜tergeÈ›i serverulâ€¦</value>
+    <value>Ștergeți serverul…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>Click dreapta pentru a redenumi</value>
@@ -431,16 +431,16 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>TOGLE</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>FereastrÄƒ pop-up</value>
+    <value>Fereastră pop-up</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>AlertÄƒ Ã®n aplicaÈ›ie</value>
+    <value>Alertă în aplicație</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>AlertÄƒ audio</value>
+    <value>Alertă audio</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>FiÈ™ier audio personalizat...</value>
+    <value>Fișier audio personalizat...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
     <value>Resetare la valorile implicite</value>
@@ -449,31 +449,31 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> Articole, Ã®ntreÈ›inere =</value>
+    <value> Articole, întreținere =</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>Niciun dispozitiv gÄƒsit</value>
+    <value>Niciun dispozitiv găsit</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>AsociazÄƒ un dispozitiv inteligent, comutÄƒ sau alarmÄƒ pentru a-l vedea aici</value>
+    <value>Asociază un dispozitiv inteligent, comută sau alarmă pentru a-l vedea aici</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
     <value>Echipa</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>CentreazÄƒ pe hartÄƒ</value>
+    <value>Centrează pe hartă</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>UrmÄƒriÈ›i pe hartÄƒ</value>
+    <value>Urmăriți pe hartă</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
     <value>Deschide profilul Steam</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>PromoveazÄƒ la Lider</value>
+    <value>Promovează la Lider</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>DÄƒ afarÄƒ din echipÄƒ</value>
+    <value>Dă afară din echipă</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
     <value>Markeri de profil</value>
@@ -485,31 +485,31 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Camere</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>AdaugÄƒ camerÄƒ foto</value>
+    <value>Adaugă cameră foto</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>Nici o camerÄƒ foto gÄƒsitÄƒ</value>
+    <value>Nici o cameră foto găsită</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>AsociazÄƒ o camerÄƒ foto pentru a-i vedea previzualizarea aici</value>
+    <value>Asociază o cameră foto pentru a-i vedea previzualizarea aici</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>jucÄƒtori</value>
+    <value>jucători</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Cum sÄƒ urmÄƒreÈ™ti</value>
+    <value>Cum să urmărești</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>AflÄƒ cum funcÈ›ioneazÄƒ urmÄƒrirea jucÄƒtorilor</value>
+    <value>Află cum funcționează urmărirea jucătorilor</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
     <value>Online</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>JucÄƒtori online</value>
+    <value>Jucători online</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>CÄƒutare BM</value>
+    <value>Căutare BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
     <value>Cauta serverul curent in BattleMetrics</value>
@@ -518,70 +518,70 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Poub</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>Deschide jucÄƒtorii Ã®ntr-o fereastrÄƒ separatÄƒ</value>
+    <value>Deschide jucătorii într-o fereastră separată</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>UrmÄƒrire</value>
+    <value>Urmărire</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
     <value>Numele piesei manuale sau ID-ul Steam...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>FiltreazÄƒ jucÄƒtorii...</value>
+    <value>Filtrează jucătorii...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Se Ã®ncarcÄƒ jucÄƒtorii...</value>
+    <value>Se încarcă jucătorii...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>UrmÄƒrit</value>
+    <value>Urmărit</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>JucÄƒtori urmÄƒriÈ›i</value>
+    <value>Jucători urmăriți</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>GestioneazÄƒ grupuri</value>
+    <value>Gestionează grupuri</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Vezi raportul complet de analizÄƒ</value>
+    <value>Vezi raportul complet de analiză</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>EÈ™ti gata sÄƒ explorezi harta?</value>
+    <value>Ești gata să explorezi harta?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>ConectaÈ›i-vÄƒ la un server selectat pentru a Ã®ncÄƒrca live Rust map È™i echipÄƒ.</value>
+    <value>Conectați-vă la un server selectat pentru a încărca live Rust map și echipă.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>EÈ™ti gata sÄƒ domini Rust-ul?</value>
+    <value>Ești gata să domini Rust-ul?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>AsociaÈ›i-vÄƒ contul pentru a Ã®ncepe urmÄƒrirea jucÄƒtorilor, pentru a primi alerte de raid de bazÄƒ È™i pentru a vÄƒ controla dispozitivele inteligente instant.</value>
+    <value>Asociați-vă contul pentru a începe urmărirea jucătorilor, pentru a primi alerte de raid de bază și pentru a vă controla dispozitivele inteligente instant.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Conectare È™i asociere cont</value>
+    <value>Conectare și asociere cont</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>NecesitÄƒ autentificare cu Steam Ã®n browser-ul implicit.</value>
+    <value>Necesită autentificare cu Steam în browser-ul implicit.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>È˜tergeÈ›i serverul?</value>
+    <value>Ștergeți serverul?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>SunteÅ£i sigur cÄƒ doriÅ£i sÄƒ ÅŸtergeÅ£i acest server? AceastÄƒ acÅ£iune nu poate fi anulatÄƒ.</value>
+    <value>Sunteţi sigur că doriţi să ştergeţi acest server? Această acţiune nu poate fi anulată.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>AnuleazÄƒ</value>
+    <value>Anulează</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>È˜tergere</value>
+    <value>Ștergere</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Ascundere automatÄƒ dupÄƒ 3s</value>
+    <value>Ascundere automată după 3s</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
     <value>FILTRELE MAI</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>GrilÄƒ</value>
+    <value>Grilă</value>
   </data>
   <data name="Monuments" xml:space="preserve">
     <value>Monumente</value>
@@ -599,16 +599,16 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Configurare</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>SelecteazÄƒ tot</value>
+    <value>Selectează tot</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>DeselecteazÄƒ tot</value>
+    <value>Deselectează tot</value>
   </data>
   <data name="Events" xml:space="preserve">
     <value>EVENIMENTE</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ</value>
+    <value>Navă de marfă</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
     <value>Intoarce</value>
@@ -620,7 +620,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Plecare (5 m Avertizare)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Avertizare de sosire (5 m Ã®nainte de dock)</value>
+    <value>Avertizare de sosire (5 m înainte de dock)</value>
   </data>
   <data name="Heli" xml:space="preserve">
     <value>Elicopter de patrulare</value>
@@ -629,13 +629,13 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>VÃ¢nzÄƒtor de cÄƒlÄƒtorie</value>
+    <value>Vânzător de călătorie</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>DeclanÈ™are instalaÈ›ie petrolierÄƒ</value>
+    <value>Declanșare instalație petrolieră</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Eveniment Marea AdÃ¢ncatÄƒ</value>
+    <value>Eveniment Marea Adâncată</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
     <value>Alerte inteligente</value>
@@ -647,7 +647,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Stare offline</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>NotificÄƒri de urmÄƒrire</value>
+    <value>Notificări de urmărire</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
     <value>Moarte proprie</value>
@@ -659,7 +659,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Repetare proprie</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>ReÃ®nnoirea echipei</value>
+    <value>Reînnoirea echipei</value>
   </data>
   <data name="NewShops" xml:space="preserve">
     <value>Magazine noi</value>
@@ -668,7 +668,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Magazine suspecte</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Alerte de tranzacÈ›ionare</value>
+    <value>Alerte de tranzacționare</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
     <value>Stil Crosshair</value>
@@ -683,7 +683,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Deschide Crosshair (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Cerc roÈ™u subÈ›ire</value>
+    <value>Cerc roșu subțire</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
     <value>Patrat + Punct</value>
@@ -692,64 +692,64 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Punct Magenta</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Crucea Magenta DeschisÄƒ</value>
+    <value>Crucea Magenta Deschisă</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Linie de distanÈ›Äƒ (cÄƒpuÈ™e)</value>
+    <value>Linie de distanță (căpușe)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>DeseneazÄƒ Crosshair...</value>
+    <value>Desenează Crosshair...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
     <value>Alege monitor</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>DeseneazÄƒ suprapunere</value>
+    <value>Desenează suprapunere</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>DeseneazÄƒ Click-ul DreaptÄƒ: Dimensiune / Culoare)</value>
+    <value>Desenează Click-ul Dreaptă: Dimensiune / Culoare)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Textul Locului (Clic Dreapta: Culoare / MÄƒrime)</value>
+    <value>Textul Locului (Clic Dreapta: Culoare / Mărime)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
     <value>Pictograma Locului (Clic Dreapta: Alege pictograma)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Eraser (È›ine apÄƒsat sau clic)</value>
+    <value>Eraser (ține apăsat sau clic)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>ÅžtergeÅ£i propria suprapunere</value>
+    <value>Ştergeţi propria suprapunere</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>ÃŽncÄƒrcaÈ›i propriul overlay / partajare</value>
+    <value>Încărcați propriul overlay / partajare</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>OportunitÄƒÅ£i directe de arbitraj - cumpÄƒrÄƒ mai puÅ£in â†’ vinde mult.</value>
+    <value>Oportunităţi directe de arbitraj - cumpără mai puţin → vinde mult.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>CumpÄƒrÄƒ X pentru Y</value>
+    <value>Cumpără X pentru Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>AnalizeazÄƒ</value>
+    <value>Analizează</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Vreau sÄƒ GET</value>
+    <value>Vreau să GET</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Pot plÄƒti cu</value>
+    <value>Pot plăti cu</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Chat de echipÄƒ</value>
+    <value>Chat de echipă</value>
   </data>
   <data name="Send" xml:space="preserve">
     <value>Trimite</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>AcreditÄƒri CGPM</value>
+    <value>Acreditări CGPM</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Click dreapta pentru a configura</value>
@@ -758,7 +758,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>ReseteazÄƒ zoom-ul hÄƒrÈ›ii È™i poziÈ›ia</value>
+    <value>Resetează zoom-ul hărții și poziția</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
     <value>Mini</value>
@@ -767,52 +767,52 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Crosshair on/off (Right Click for Options)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>ÃŽNCÄ‚RCAÅ¢I JUCÄ‚TORUL</value>
+    <value>ÎNCĂRCAŢI JUCĂTORUL</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>ÃŽnchide browserul pentru valori de luptÄƒ</value>
+    <value>Închide browserul pentru valori de luptă</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>CÄ‚UTARE CÄ‚UTARE</value>
+    <value>CĂUTARE CĂUTARE</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>ÃŽnchide cÄƒutarea</value>
+    <value>Închide căutarea</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
     <value>Te rugam sa activezi magazinele mai intai</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>ActiveazÄƒ sondajul magazinului</value>
+    <value>Activează sondajul magazinului</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
     <value>CHAT TEAM</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>ÃŽnchide conversaÈ›ia</value>
+    <value>Închide conversația</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>SetÄƒri comenzi chat</value>
+    <value>Setări comenzi chat</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
     <value>Comenzi chat</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>ÃŽnapoi</value>
+    <value>Înapoi</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>RedirecÈ›ionare</value>
+    <value>Redirecționare</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>Deschide Ã®n browser extern</value>
+    <value>Deschide în browser extern</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>CÄƒutare BM...</value>
+    <value>Căutare BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>CautÄƒ</value>
+    <value>Caută</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>SelecteazÄƒ un server</value>
+    <value>Selectează un server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
     <value>Deconectat</value>
@@ -821,7 +821,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>CONECTARE...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INIÈšIALIZARE...</value>
+    <value>INIȚIALIZARE...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
     <value>DISPOZITIVE ACTIVITATE</value>
@@ -830,25 +830,25 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>CONECTAT complet</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>NECUNOSCUTÄ‚</value>
+    <value>NECUNOSCUTĂ</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
     <value>Acest lucru poate dura un moment...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>SetÄƒri aplicaÈ›ie</value>
+    <value>Setări aplicație</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>GeneralitÄƒÈ›i</value>
+    <value>Generalități</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
     <value>Lansare cu Windows (Minimized)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Pornire minimizatÄƒ (Ã®ntotdeauna)</value>
+    <value>Pornire minimizată (întotdeauna)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Conectare automatÄƒ la ultimul server la pornire</value>
+    <value>Conectare automată la ultimul server la pornire</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
     <value>Reconecteaza automat la ultimul server si incarca harta.</value>
@@ -857,34 +857,34 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Comportament</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>MinimizeazÄƒ Ã®n sertar Ã®n loc sÄƒ Ã®nchizi</value>
+    <value>Minimizează în sertar în loc să închizi</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>ActiveazÄƒ urmÄƒrirea jucÄƒtorului de fundal</value>
+    <value>Activează urmărirea jucătorului de fundal</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>MenÈ›ine jucÄƒtori de urmÄƒrire prin BattleMetrics chiar È™i atunci cÃ¢nd sunt minimizaÈ›i.</value>
+    <value>Menține jucători de urmărire prin BattleMetrics chiar și atunci când sunt minimizați.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Ascunde consola de sistem (Declutter)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Ascunde panoul de log/consolÄƒ de jos pentru a salva spaÈ›iul hÄƒrÈ›ii.</value>
+    <value>Ascunde panoul de log/consolă de jos pentru a salva spațiul hărții.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>SetÄƒri HartÄƒ</value>
+    <value>Setări Hartă</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>ÃŽncÄƒrcare automatÄƒ a magazinelor la conexiune</value>
+    <value>Încărcare automată a magazinelor la conexiune</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>PorniÈ›i automat sondajele de opinie È™i alertele cÃ¢nd sunteÈ›i conectat la un server.</value>
+    <value>Porniți automat sondajele de opinie și alertele când sunteți conectat la un server.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>UtilizaÈ›i etichete text monument Ã®n loc de pictograme</value>
+    <value>Utilizați etichete text monument în loc de pictograme</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>Atunci cÃ¢nd este activat, numele monumentelor de pe harta Rust sunt redate ca text utilizÃ¢nd fontul Permanent Marker Ã®n loc de pictograme.</value>
+    <value>Atunci când este activat, numele monumentelor de pe harta Rust sunt redate ca text utilizând fontul Permanent Marker în loc de pictograme.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
     <value>Monument Stil:</value>
@@ -905,22 +905,22 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Credite</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>Icoane ale monumentelor pe hartÄƒ furnizate de </value>
+    <value>Icoane ale monumentelor pe hartă furnizate de </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
     <value> - utilizate cu permisiune.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>Toate pictogramele monument È™i lucrÄƒrile de artÄƒ aferente sunt proprietatea rustmaps.com. VÄƒ mulÈ›umim pentru susÈ›inerea comunitÄƒÈ›ii Rust!</value>
+    <value>Toate pictogramele monument și lucrările de artă aferente sunt proprietatea rustmaps.com. Vă mulțumim pentru susținerea comunității Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>ModificÄƒ alertele de chat</value>
+    <value>Modifică alertele de chat</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>GestionaÈ›i contul Steam conectat Ã®n fereastra principalÄƒ.</value>
+    <value>Gestionați contul Steam conectat în fereastra principală.</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Inchide</value>
@@ -932,25 +932,25 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Sterge</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>JucÄƒtori</value>
+    <value>Jucători</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>JucÄƒtori</value>
+    <value>Jucători</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Vreau sÄƒ GET (de ex. È›iÈ›ei de petrol)</value>
+    <value>Vreau să GET (de ex. țiței de petrol)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Vreau sÄƒ PAY CU (de ex. RÄƒzuire)</value>
+    <value>Vreau să PAY CU (de ex. Răzuire)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>SunteÅ£i sigur cÄƒ doriÅ£i sÄƒ ÅŸtergeÅ£i serverul "{0}"? AceastÄƒ acÅ£iune nu poate fi anulatÄƒ.</value>
+    <value>Sunteţi sigur că doriţi să ştergeţi serverul "{0}"? Această acţiune nu poate fi anulată.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>Asociere: se porneÅŸte...</value>
+    <value>Asociere: se porneşte...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
     <value>Pornire Pairing-Listener...</value>
@@ -962,10 +962,10 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Stoc</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>PreÈ›</value>
+    <value>Preț</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>PORNITÄ‚</value>
+    <value>PORNITĂ</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>OPRIT</value>
@@ -980,31 +980,31 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>GRUP</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Desk â€“ Import Dispozitive</value>
+    <value>Rust+ Desk – Import Dispozitive</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>ImportÄƒ dispozitive</value>
+    <value>Importă dispozitive</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>SelectaÈ›i ce dispozitive doriÈ›i sÄƒ importaÈ›i pentru acest server.</value>
+    <value>Selectați ce dispozitive doriți să importați pentru acest server.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>VerificÄƒ starea dispozitivului</value>
+    <value>Verifică starea dispozitivului</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>ImportÄƒ selecÅ£ia</value>
+    <value>Importă selecţia</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
     <value>Comenzi rapide BM</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Asociere: configurare È™tearsÄƒ</value>
+    <value>Asociere: configurare ștearsă</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
     <value>Tracker Rust+ Desk</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Birou Rust+ (UrmÄƒrire {0})</value>
+    <value>Birou Rust+ (Urmărire {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
     <value>Redenumire grup</value>
@@ -1016,10 +1016,10 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Nou nume pentru #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>IntroduceÈ›i ID-ul serverului Battlemetrics pentru "{0}":</value>
+    <value>Introduceți ID-ul serverului Battlemetrics pentru "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>UrmÄƒrire: {0}</value>
+    <value>Urmărire: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
     <value>Ultima actualizare: {0}</value>
@@ -1028,13 +1028,13 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Deschide Biroul Rust+</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>IeÈ™ire</value>
+    <value>Ieșire</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Descriere</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>CamerÄƒ</value>
+    <value>Cameră</value>
   </data>
   <data name="Alarms" xml:space="preserve">
     <value>Alarme</value>
@@ -1046,7 +1046,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>NotÄƒ: 2 fps este recomandat, cel mai mare FPS probabil Ã®nchideÈ›i conexiunea la server</value>
+    <value>Notă: 2 fps este recomandat, cel mai mare FPS probabil închideți conexiunea la server</value>
   </data>
   <data name="Pixel" xml:space="preserve">
     <value>Pixel</value>
@@ -1070,16 +1070,16 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Opacitate:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>ÃŽncarcÄƒ PNG</value>
+    <value>Încarcă PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>CurÄƒÈ›Äƒ</value>
+    <value>Curăță</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>SalveazÄƒ</value>
+    <value>Salvează</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>AtribuiÈ›i taste globale pentru Smart Switches. Mai multe dispozitive pot partaja o singurÄƒ cheie rapidÄƒ (se vor comuta secvenÈ›ial).</value>
+    <value>Atribuiți taste globale pentru Smart Switches. Mai multe dispozitive pot partaja o singură cheie rapidă (se vor comuta secvențial).</value>
   </data>
   <data name="Device" xml:space="preserve">
     <value>Dispozitiv</value>
@@ -1091,31 +1091,31 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Cheie</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>SeteazÄƒ</value>
+    <value>Setează</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>ÃŽnchide È™i dezactiveazÄƒ</value>
+    <value>Închide și dezactivează</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>ÃŽnchide È™i activeazÄƒ</value>
+    <value>Închide și activează</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
     <value>Actualizeaza actualizarea, minimap si urmarire</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Rezumatul caracteristicilor È™i ajustÄƒrile</value>
+    <value>Rezumatul caracteristicilor și ajustările</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>Nu afiÅŸa asta din nou</value>
+    <value>Nu afişa asta din nou</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Grozav, hai sÄƒ mergem!</value>
+    <value>Grozav, hai să mergem!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>SetÄƒri Mini-HartÄƒ</value>
+    <value>Setări Mini-Hartă</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>FormÄƒ</value>
+    <value>Formă</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
     <value>Dreptunghi</value>
@@ -1127,22 +1127,22 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Dimensiune: {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>AratÄƒ ora serverului</value>
+    <value>Arată ora serverului</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
     <value>Informatii server</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Nici o descriere disponibilÄƒ.</value>
+    <value>Nici o descriere disponibilă.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Versiunea curentÄƒ: {0}</value>
+    <value>Versiunea curentă: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
     <value>Patch Notes &amp; Version Istoric</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>ActiveazÄƒ comenzile pentru chat</value>
+    <value>Activează comenzile pentru chat</value>
   </data>
   <data name="Prefix" xml:space="preserve">
     <value>Prefix:</value>
@@ -1151,7 +1151,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Comenzi standard</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>PopulaÅ£ia:</value>
+    <value>Populaţia:</value>
   </data>
   <data name="Time" xml:space="preserve">
     <value>Ora:</value>
@@ -1160,46 +1160,46 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Promovare:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Marea adÃ¢ncÄƒ:</value>
+    <value>Marea adâncă:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Transport de marfÄƒ:</value>
+    <value>Transport de marfă:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>TijÄƒ de petrol:</value>
+    <value>Tijă de petrol:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>PatrulÄƒ Heli:</value>
+    <value>Patrulă Heli:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>VÃ¢nzÄƒtor ambulant:</value>
+    <value>Vânzător ambulant:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>PÄƒstrare detalii:</value>
+    <value>Păstrare detalii:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>ÃŽntÃ¢rziere comandÄƒ:</value>
+    <value>Întârziere comandă:</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Limba</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>SelectaÅ£i limba</value>
+    <value>Selectaţi limba</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Schimbarea limbii necesitÄƒ o repornire pentru a avea efect maxim.</value>
+    <value>Schimbarea limbii necesită o repornire pentru a avea efect maxim.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
     <value>Comutatoare inteligente</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Monitorizatori de Ã®ntreÅ£inere (TC)</value>
+    <value>Monitorizatori de întreţinere (TC)</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Nu s-au gÄƒsit monitoare TC.</value>
+    <value>Nu s-au găsit monitoare TC.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>SalveazÄƒ È™i Ã®nchide</value>
+    <value>Salvează și închide</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
     <value>Mesaj...</value>
@@ -1208,10 +1208,10 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Mesaj de eroare aici</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>PatrulÄƒ Heli</value>
+    <value>Patrulă Heli</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Patrol Heli activ - ruleazÄƒ pentru {0}</value>
+    <value>Patrol Heli activ - rulează pentru {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
     <value>Conectat la mijlocul evenimentului - timp de reproducere necunoscut</value>
@@ -1220,25 +1220,25 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Patrol Heli activ (timp de depunere necunoscut)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>Patrol Heli doborÃ¢t {0} acum aceastÄƒ sesiune</value>
+    <value>Patrol Heli doborât {0} acum această sesiune</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Patrol Heli a pÄƒrÄƒsit harta {0} acum aceastÄƒ sesiune</value>
+    <value>Patrol Heli a părăsit harta {0} acum această sesiune</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Docat la {0} - pleacÄƒ Ã®n ~{1}</value>
+    <value>Docat la {0} - pleacă în ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
     <value>port</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Deja andocat pe conexiune - ora de plecare necunoscutÄƒ</value>
+    <value>Deja andocat pe conexiune - ora de plecare necunoscută</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Andocat la {0} (durata andocÄƒrii nu a fost Ã®ncÄƒ stabilitÄƒ)</value>
+    <value>Andocat la {0} (durata andocării nu a fost încă stabilită)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Timpul rÄƒmas pe hartÄƒ (de la spawn)</value>
+    <value>Timpul rămas pe hartă (de la spawn)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
     <value>Conectat la mijlocul traseului - timp necunoscut</value>
@@ -1247,25 +1247,25 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Conectat la mijlocul traseului - timp necunoscut (traseu ~{0}m total)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Cargo Ship a dispÄƒrut {0}m {1}s Ã®n urmÄƒ cu aceastÄƒ sesiune</value>
+    <value>Cargo Ship a dispărut {0}m {1}s în urmă cu această sesiune</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Travelling Vendor activ - ruleazÄƒ pentru {0}</value>
+    <value>Travelling Vendor activ - rulează pentru {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Furnizor cÄƒlÄƒtor activ (timp de depunere necunoscut)</value>
+    <value>Furnizor călător activ (timp de depunere necunoscut)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Travelling Vendor a dispÄƒrut acum {0} Ã®n aceastÄƒ sesiune</value>
+    <value>Travelling Vendor a dispărut acum {0} în această sesiune</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active - Ã®n curs de desfÄƒÈ™urare pentru {0}</value>
+    <value>Deep Sea active - în curs de desfășurare pentru {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
     <value>Deep Sea active (timp de reproducere necunoscut)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea s-a Ã®ncheiat cu {0} Ã®n urmÄƒ cu aceastÄƒ sesiune</value>
+    <value>Deep Sea s-a încheiat cu {0} în urmă cu această sesiune</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1286,106 +1286,106 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} jucÄƒtori online Ã®n prezent.{1}</value>
+    <value>{0} jucători online în prezent.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> CoadÄƒ: {0} jucÄƒtori.</value>
+    <value> Coadă: {0} jucători.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Ora curentÄƒ Ã®n joc: {0}.</value>
+    <value>Ora curentă în joc: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
     <value>{0} a fost promovat ca lider.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea este activ! ÃŽn cursÄƒ pentru {0}.</value>
+    <value>Deep Sea este activ! În cursă pentru {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea este Ã®n prezent activÄƒ (conectatÄƒ la mijlocul evenimentului - timp de reproducere necunoscut).</value>
+    <value>Deep Sea este în prezent activă (conectată la mijlocul evenimentului - timp de reproducere necunoscut).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea a Ã®ncheiat {0} minute Ã®n urmÄƒ aceastÄƒ sesiune.</value>
+    <value>Deep Sea a încheiat {0} minute în urmă această sesiune.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Statutul evenimentului Deep Sea necunoscut (nu a fost vÄƒzut Ã®n aceastÄƒ sesiune).</value>
+    <value>Statutul evenimentului Deep Sea necunoscut (nu a fost văzut în această sesiune).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Nava de marfÄƒ nu este activÄƒ.</value>
+    <value>Nava de marfă nu este activă.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ andocatÄƒ la {0}. Plecare Ã®n aprox. {1} minute.</value>
+    <value>Navă de marfă andocată la {0}. Plecare în aprox. {1} minute.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ andocatÄƒ la {0} È™i pregÄƒtindu-se sÄƒ plece.</value>
+    <value>Navă de marfă andocată la {0} și pregătindu-se să plece.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ andocatÄƒ la {0} (ora plecÄƒrii necunoscutÄƒ).</value>
+    <value>Navă de marfă andocată la {0} (ora plecării necunoscută).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ activÄƒ. Plecare Ã®n aprox. {0} minute.</value>
+    <value>Navă de marfă activă. Plecare în aprox. {0} minute.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ activÄƒ È™i se pregÄƒteÈ™te sÄƒ plece Ã®n curÃ¢nd.</value>
+    <value>Navă de marfă activă și se pregătește să plece în curând.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Cargo Ship activ (durata rutei nu a fost Ã®ncÄƒ Ã®nvÄƒÈ›atÄƒ pentru acest server).</value>
+    <value>Cargo Ship activ (durata rutei nu a fost încă învățată pentru acest server).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ activÄƒ (conectatÄƒ dupÄƒ spawn - timp rÄƒmas necunoscut).</value>
+    <value>Navă de marfă activă (conectată după spawn - timp rămas necunoscut).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Nava de marfÄƒ nu este activÄƒ. Despawned {0} minute Ã®n urmÄƒ Ã®n aceastÄƒ sesiune.</value>
+    <value>Nava de marfă nu este activă. Despawned {0} minute în urmă în această sesiune.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: ladÄƒ Ã®n {1}m {2}s</value>
+    <value>{0}: ladă în {1}m {2}s</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: ultimul apel {1}m Ã®n urmÄƒ</value>
+    <value>{0}: ultimul apel {1}m în urmă</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: nu a fost apelat Ã®n aceastÄƒ sesiune</value>
+    <value>{0}: nu a fost apelat în această sesiune</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Patrula Heli este activÄƒ! ÃŽn cursÄƒ pentru {0}.</value>
+    <value>Patrula Heli este activă! În cursă pentru {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>Patrula Heli este Ã®n prezent activÄƒ (conectatÄƒ la mijlocul evenimentului - timp de apariÈ›ie necunoscut).</value>
+    <value>Patrula Heli este în prezent activă (conectată la mijlocul evenimentului - timp de apariție necunoscut).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Patrula Heli nu este activÄƒ. Acesta a fost {0} {1} Ã®n urmÄƒ cu aceastÄƒ sesiune.</value>
+    <value>Patrula Heli nu este activă. Acesta a fost {0} {1} în urmă cu această sesiune.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>doborÃ¢t</value>
+    <value>doborât</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>a pÄƒrÄƒsit harta</value>
+    <value>a părăsit harta</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Statutul evenimentului Patrol Heli necunoscut (nu a fost vÄƒzut Ã®n aceastÄƒ sesiune).</value>
+    <value>Statutul evenimentului Patrol Heli necunoscut (nu a fost văzut în această sesiune).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
     <value>Travelling Vendor este activ! Candidez pentru {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>VÃ¢nzÄƒtorul cÄƒlÄƒtor este Ã®n prezent activ (conectat la mijlocul evenimentului - timpul de apariÈ›ie necunoscut).</value>
+    <value>Vânzătorul călător este în prezent activ (conectat la mijlocul evenimentului - timpul de apariție necunoscut).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Travelling Vendor nu este activ. Despawned {0} acum aceastÄƒ sesiune.</value>
+    <value>Travelling Vendor nu este activ. Despawned {0} acum această sesiune.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Statutul evenimentului Travelling Vendor necunoscut (nu a fost vÄƒzut Ã®n aceastÄƒ sesiune).</value>
+    <value>Statutul evenimentului Travelling Vendor necunoscut (nu a fost văzut în această sesiune).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Nu existÄƒ dulapuri de scule cartografiate pentru comenzile de Ã®ntreÈ›inere.</value>
+    <value>Nu există dulapuri de scule cartografiate pentru comenzile de întreținere.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Upkeep Ã®n {0} TC: gol sau expirat.</value>
+    <value>Upkeep în {0} TC: gol sau expirat.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
     <value> Necesar/24h: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>MenÈ›inerea Ã®n {0} TC: {1}.</value>
+    <value>Menținerea în {0} TC: {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
     <value>{0} zile</value>
@@ -1403,13 +1403,13 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>{0}: {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>ÃŽntreÈ›inere: {0}</value>
+    <value>Întreținere: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>Monitoarele Bound Tool Cupboard nu au fost gÄƒsite sau nu au fost Ã®mperecheate.</value>
+    <value>Monitoarele Bound Tool Cupboard nu au fost găsite sau nu au fost împerecheate.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>Monitorul Bound Tool Cupboard nu a fost gÄƒsit sau nu a fost asociat.</value>
+    <value>Monitorul Bound Tool Cupboard nu a fost găsit sau nu a fost asociat.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
     <value>{0} transformat {1}.</value>
@@ -1421,13 +1421,13 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>OFF</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>Bound Smart Switch nu a fost gÄƒsit sau nu este asociat.</value>
+    <value>Bound Smart Switch nu a fost găsit sau nu este asociat.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
     <value>Lemn</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>PiatrÄƒ</value>
+    <value>Piatră</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
     <value>Metal</value>
@@ -1436,16 +1436,16 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>HQM</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>platformÄƒ petrolierÄƒ micÄƒ</value>
+    <value>platformă petrolieră mică</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Mare platformÄƒ petrolierÄƒ</value>
+    <value>Mare platformă petrolieră</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
     <value>Magazin</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ</value>
+    <value>Navă de marfă</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
     <value>Furnizor itinerant</value>
@@ -1457,28 +1457,28 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Elicopter de patrulare</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>LadÄƒ Oilrig</value>
+    <value>Ladă Oilrig</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
     <value>Explozie</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>ClÄƒdire blocatÄƒ</value>
+    <value>Clădire blocată</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
     <value>Eveniment</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] declanÈ™at! Lada se deblocheazÄƒ Ã®n {1}.</value>
+    <value>[{0}] declanșat! Lada se deblochează în {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ALARMÄ‚: {0} declanÈ™atÄƒ!</value>
+    <value>ALARMĂ: {0} declanșată!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] CoÈ™ul se deblocheazÄƒ Ã®n 10 minute!</value>
+    <value>[{0}] Coșul se deblochează în 10 minute!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] Lada se deblocheazÄƒ Ã®n 5 minute!</value>
+    <value>[{0}] Lada se deblochează în 5 minute!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
     <value>Deep Sea este sus</value>
@@ -1487,31 +1487,31 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Magazin nou {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Magazin suspect {0} [{1}] a fost online {2}s, a vÃ¢ndut {3}</value>
+    <value>Magazin suspect {0} [{1}] a fost online {2}s, a vândut {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>Nava de marfÄƒ a generat {0}</value>
+    <value>Nava de marfă a generat {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>departe pe mare (lÃ¢ngÄƒ {0})</value>
+    <value>departe pe mare (lângă {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>NavÄƒ de marfÄƒ andocatÄƒ la {0} ({1})</value>
+    <value>Navă de marfă andocată la {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>Nava de marfÄƒ este aÈ™teptatÄƒ sÄƒ acosteze la {0} ({1}) Ã®n aproximativ 5 minute.</value>
+    <value>Nava de marfă este așteptată să acosteze la {0} ({1}) în aproximativ 5 minute.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Nava de marfÄƒ pleacÄƒ de la {0} Ã®n 5 minute ({1})</value>
+    <value>Nava de marfă pleacă de la {0} în 5 minute ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Crash detectat din cauza Ã®ntÃ¢rzierii serverului - Heli este Ã®ncÄƒ pe hartÄƒ la {0}</value>
+    <value>Crash detectat din cauza întârzierii serverului - Heli este încă pe hartă la {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} nÄƒscutÄƒ la {1}</value>
+    <value>{0} născută la {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>Heli de patrulare doborÃ¢t la {0}</value>
+    <value>Heli de patrulare doborât la {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>necunoscut</value>
@@ -1526,22 +1526,22 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>{0} a murit @ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} reapÄƒrut @ {1}</value>
+    <value>{0} reapărut @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[UrmÄƒrire] {0}{1} este acum ONLINE</value>
+    <value>[Urmărire] {0}{1} este acum ONLINE</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[UrmÄƒrire] {0}{1} este acum OFFLINE</value>
+    <value>[Urmărire] {0}{1} este acum OFFLINE</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[UrmÄƒrire] {0}{1} redenumit Ã®n {2}!</value>
+    <value>[Urmărire] {0}{1} redenumit în {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
     <value>vinde</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>cumpÄƒrÄƒtori</value>
+    <value>cumpărători</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
     <value>Magazin</value>
@@ -1556,43 +1556,43 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>COMANDAMENTE: {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>Localizare, modernizare UI È™i stocare</value>
+    <value>Localizare, modernizare UI și stocare</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Comutare dinamicÄƒ a limbii locale</value>
+    <value>Comutare dinamică a limbii locale</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
     <value> - 30+ limbi pentru a alege</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>InterfaÈ›Äƒ comenzi chat</value>
+    <value>Interfață comenzi chat</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - Vedere izolatÄƒ pentru un aspect curat</value>
+    <value> - Vedere izolată pentru un aspect curat</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Noua suprapunere a setÄƒrilor</value>
+    <value>Noua suprapunere a setărilor</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - BarÄƒ lateralÄƒ curatÄƒ pentru toate setÄƒrile</value>
+    <value> - Bară laterală curată pentru toate setările</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>UrmÄƒrirea BattleMetrics eliminatÄƒ</value>
+    <value>Urmărirea BattleMetrics eliminată</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>Baza ta este atacatÄƒ!</value>
+    <value>Baza ta este atacată!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>VÄƒ rugÄƒm sÄƒ vÄƒ conectaÈ›i mai Ã®ntÃ¢i la un server.</value>
+    <value>Vă rugăm să vă conectați mai întâi la un server.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>Nu sunteÈ›i conectat la niciun server.</value>
+    <value>Nu sunteți conectat la niciun server.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
     <value>Chat nu este disponibil acum.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>VÄƒ rugÄƒm sÄƒ selectaÈ›i mai Ã®ntÃ¢i un server.</value>
+    <value>Vă rugăm să selectați mai întâi un server.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
     <value>Conexiune</value>
@@ -1601,76 +1601,76 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Chat</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>Cum sÄƒ urmÄƒriÈ›i jucÄƒtorii</value>
+    <value>Cum să urmăriți jucătorii</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>UrmÄƒrire nativÄƒ UDP</value>
+    <value>Urmărire nativă UDP</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>Ghidul de urmÄƒrire este disponibil Ã®n prezent numai Ã®n limba englezÄƒ, deoarece va suferi modificÄƒri Ã®n viitorul apropiat. VÄƒ rugÄƒm sÄƒ aveÈ›i rÄƒbdare.</value>
+    <value>Ghidul de urmărire este disponibil în prezent numai în limba engleză, deoarece va suferi modificări în viitorul apropiat. Vă rugăm să aveți răbdare.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>ÃŽnchideÈ›i aceastÄƒ fereastrÄƒ Ã®n orice moment - o puteÈ›i redeschide cu ajutorul butonului â“ Cum sÄƒ urmÄƒriÈ›i.</value>
+    <value>Închideți această fereastră în orice moment - o puteți redeschide cu ajutorul butonului ❓ Cum să urmăriți.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>ÃŽntreÈ›inere</value>
+    <value>Întreținere</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>È˜tergeÈ›i, salvaÈ›i sau restauraÈ›i setÄƒrile, profilurile È™i desenele personalizate ale aplicaÈ›iilor.</value>
+    <value>Ștergeți, salvați sau restaurați setările, profilurile și desenele personalizate ale aplicațiilor.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>ResetaÈ›i datele aplicaÈ›iei...</value>
+    <value>Resetați datele aplicației...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>Date de rezervÄƒ...</value>
+    <value>Date de rezervă...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
     <value>Restaurarea datelor...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>ResetaÈ›i datele aplicaÈ›iei</value>
+    <value>Resetați datele aplicației</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>SelectaÈ›i componentele pe care doriÈ›i sÄƒ le È™tergeÈ›i de pe acest dispozitiv. Toate opÈ›iunile selectate vor fi È™terse definitiv.</value>
+    <value>Selectați componentele pe care doriți să le ștergeți de pe acest dispozitiv. Toate opțiunile selectate vor fi șterse definitiv.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
     <value>Conexiune la serverul activ (Deconectare)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>Saved Server Profiles (È˜tergeÈ›i configuraÈ›iile de server Ã®mperecheate)</value>
+    <value>Saved Server Profiles (Ștergeți configurațiile de server împerecheate)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>CredenÈ›iale cont Steam (Deconectare)</value>
+    <value>Credențiale cont Steam (Deconectare)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>Configurare Ã®mperechere dispozitiv (resetare jetoane de Ã®nregistrare)</value>
+    <value>Configurare împerechere dispozitiv (resetare jetoane de înregistrare)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>Traiectorii personalizate (configuraÈ›ii de È™tergere)</value>
+    <value>Traiectorii personalizate (configurații de ștergere)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>Cache local È™i desene (È˜tergeÈ›i hÄƒrÈ›ile/linile salvate)</value>
+    <value>Cache local și desene (Ștergeți hărțile/linile salvate)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>AceastÄƒ acÈ›iune este permanentÄƒ È™i nu poate fi anulatÄƒ.</value>
+    <value>Această acțiune este permanentă și nu poate fi anulată.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>ConfirmaÈ›i resetarea</value>
+    <value>Confirmați resetarea</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>ParolÄƒ de rezervÄƒ</value>
+    <value>Parolă de rezervă</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>ProtecÈ›ie de rezervÄƒ</value>
+    <value>Protecție de rezervă</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>IntroduceÈ›i o parolÄƒ pentru a cripta acest fiÈ™ier de rezervÄƒ. DacÄƒ o lÄƒsaÈ›i goalÄƒ, copia de rezervÄƒ nu va fi criptatÄƒ.</value>
+    <value>Introduceți o parolă pentru a cripta acest fișier de rezervă. Dacă o lăsați goală, copia de rezervă nu va fi criptată.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>Restaurare copie de rezervÄƒ</value>
+    <value>Restaurare copie de rezervă</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>AceastÄƒ copie de rezervÄƒ este protejatÄƒ prin parolÄƒ. IntroduceÈ›i parola pentru a o decripta:</value>
+    <value>Această copie de rezervă este protejată prin parolă. Introduceți parola pentru a o decripta:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
     <value>Criptare</value>
@@ -1682,7 +1682,7 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>OK</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>Datele aplicaÈ›iei de rezervÄƒ</value>
+    <value>Datele aplicației de rezervă</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
     <value>[SYSTEM] Backup creat cu succes la: {0}</value>
@@ -1700,33 +1700,33 @@ DescÄƒrcaÈ›i È™i instalaÈ›i acum?</value>
     <value>Eroare la crearea backup-ului: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>Backup eÈ™uat</value>
+    <value>Backup eșuat</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>Restaurarea datelor va suprascrie profilurile curente ale serverului, liniile de ochire personalizate, suprapunerile de desen È™i configuraÈ›iile minimapelor.
+    <value>Restaurarea datelor va suprascrie profilurile curente ale serverului, liniile de ochire personalizate, suprapunerile de desen și configurațiile minimapelor.
 
-SunteÈ›i sigur cÄƒ doriÈ›i sÄƒ continuaÈ›i?</value>
+Sunteți sigur că doriți să continuați?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>Confirmare restaurare copie de rezervÄƒ</value>
+    <value>Confirmare restaurare copie de rezervă</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>Restaurarea datelor aplicaÈ›iei</value>
+    <value>Restaurarea datelor aplicației</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>Datele aplicaÈ›iei restaurate cu succes!</value>
+    <value>Datele aplicației restaurate cu succes!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>Restaurare finalizatÄƒ</value>
+    <value>Restaurare finalizată</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Eroare de restaurare: ParolÄƒ invalidÄƒ furnizatÄƒ.</value>
+    <value>[SYSTEM] Eroare de restaurare: Parolă invalidă furnizată.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>Decriptarea a eÈ™uat. ParolÄƒ invalidÄƒ sau fiÈ™ier de rezervÄƒ corupt.</value>
+    <value>Decriptarea a eșuat. Parolă invalidă sau fișier de rezervă corupt.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>Restaurare eÈ™uatÄƒ</value>
+    <value>Restaurare eșuată</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
     <value>[SYSTEM] Eroare de restaurare: {0}</value>
@@ -1735,81 +1735,81 @@ SunteÈ›i sigur cÄƒ doriÈ›i sÄƒ continuaÈ›i?</value>
     <value>Eroare la restaurarea backup-ului: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>Format de fiÈ™ier de rezervÄƒ invalid sau semnÄƒturÄƒ lipsÄƒ.</value>
+    <value>Format de fișier de rezervă invalid sau semnătură lipsă.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] Pornirea operaÈ›iei de resetare selectivÄƒ...</value>
+    <value>[WIPE] Pornirea operației de resetare selectivă...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
     <value>[WIPE] Deconectarea conexiunii serverului activ...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] Resetarea conexiunii finalizatÄƒ.</value>
+    <value>[WIPE] Resetarea conexiunii finalizată.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] CurÄƒÈ›area profilurilor de server salvate...</value>
+    <value>[WIPE] Curățarea profilurilor de server salvate...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[WIPE] Profiluri server salvate È™terse.</value>
+    <value>[WIPE] Profiluri server salvate șterse.</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[WIPE] Eliminarea acreditÄƒrilor contului Steam...</value>
+    <value>[WIPE] Eliminarea acreditărilor contului Steam...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[WIPE] AutentificÄƒrile Steam È™terse.</value>
+    <value>[WIPE] Autentificările Steam șterse.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[WIPE] È˜tergerea configuraÈ›iei de Ã®mperechere a dispozitivului...</value>
+    <value>[WIPE] Ștergerea configurației de împerechere a dispozitivului...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[WIPE] ConfiguraÈ›ia de Ã®mperechere a dispozitivului È™tearsÄƒ.</value>
+    <value>[WIPE] Configurația de împerechere a dispozitivului ștearsă.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[WIPE] È˜tergerea liniilor de ochire personalizate...</value>
+    <value>[WIPE] Ștergerea liniilor de ochire personalizate...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] Eroare la È™tergerea ochilor Ã®ncruciÈ™aÈ›i personalizaÈ›i: {0}</value>
+    <value>[WIPE] Eroare la ștergerea ochilor încrucișați personalizați: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[WIPE] Traiectorii personalizate È™terse.</value>
+    <value>[WIPE] Traiectorii personalizate șterse.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] CurÄƒÈ›area fiÈ™ierelor cache locale È™i a desenelor de suprapunere...</value>
+    <value>[WIPE] Curățarea fișierelor cache locale și a desenelor de suprapunere...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] Eroare la È™tergerea folderului cache: {0}</value>
+    <value>[WIPE] Eroare la ștergerea folderului cache: {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[WIPE] Folderele cache È™terse.</value>
+    <value>[WIPE] Folderele cache șterse.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] ReÃ®nregistrarea acreditÄƒrilor ascultÄƒtorului È™i FCM...</value>
+    <value>[WIPE] Reînregistrarea acreditărilor ascultătorului și FCM...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] OperaÈ›iunea de resetare selectivÄƒ s-a Ã®ncheiat cu succes.</value>
+    <value>[WIPE] Operațiunea de resetare selectivă s-a încheiat cu succes.</value>
   </data>
-  <data name="DeleteDeathMarker" xml:space="preserve">
+<data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-  <data name="WipeDeathMarkers" xml:space="preserve">
+<data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-  <data name="Accept" xml:space="preserve">
+<data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-  <data name="RenameDeathMarker" xml:space="preserve">
+<data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-  <data name="PlayerDirectionArrow" xml:space="preserve">
-  <value>DirecÈ›ie</value>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Direcție</value>
 </data>
-  <data name="Profile" xml:space="preserve">
+<data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="Death" xml:space="preserve">
+<data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-  <data name="Markers" xml:space="preserve">
+<data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1822,54 +1822,34 @@ SunteÈ›i sigur cÄƒ doriÈ›i sÄƒ continuaÈ›i?</value>
     <value>DEZACTIVAT</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: comutat {1} (declanÈ™at de {2})</value>
+    <value>[Hotkey] {0}: comutat {1} (declanșat de {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>CautÄƒ È™i selecteazÄƒ o pictogramÄƒ de element pentru acest dispozitiv.</value>
+    <value>Caută și selectează o pictogramă de element pentru acest dispozitiv.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>SchimbÄƒ pictograma dispozitivului</value>
+    <value>Schimbă pictograma dispozitivului</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>CautÄƒ È™i selecteazÄƒ o pictogramÄƒ de element pentru aceastÄƒ regulÄƒ.</value>
+    <value>Caută și selectează o pictogramă de element pentru această regulă.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
-    <value>SchimbÄƒ pictograma regulii</value>
+    <value>Schimbă pictograma regulii</value>
   </data>
   <data name="ResetToDefaultIcon" xml:space="preserve">
-    <value>Resetare la pictograma implicitÄƒ</value>
+    <value>Resetare la pictograma implicită</value>
   </data>
   <data name="Rule" xml:space="preserve">
-    <value>RegulÄƒ</value>
+    <value>Regulă</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>CautÄƒ pictograme (ex. turn, comutator)...</value>
+    <value>Caută pictograme (ex. turn, comutator)...</value>
   </data>
+
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} zile</value>
   </data>
-  <data name="Update700Desc1" xml:space="preserve">
-    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
-  </data>
-  <data name="Delete3DMapDataTooltip" xml:space="preserve">
-    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
-  </data>
-  <data name="Delete3DMapData" xml:space="preserve">
-    <value>Delete all 3D Map Data</value>
-  </data>
-  <data name="Update700Title" xml:space="preserve">
-    <value>Rust+ Desktop v7.0.0 Update</value>
-  </data>
-  <data name="Update700Desc3" xml:space="preserve">
-    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
-  </data>
-  <data name="ThreeDMapSectionTitle" xml:space="preserve">
-    <value>3D Map</value>
-  </data>
-  <data name="Update700Desc2" xml:space="preserve">
-    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
-  </data>
-  <data name="Update700DontShowAgain" xml:space="preserve">
-    <value>Don't show this again</value>
-  </data>
 </root>
+
+
+

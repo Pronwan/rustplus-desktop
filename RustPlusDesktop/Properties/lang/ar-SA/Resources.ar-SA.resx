@@ -61,2275 +61,2275 @@
     <value>RUST+ DESKTOP</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ…</value>
+    <value>حساب ستيم</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„</value>
+    <value>لم يتم تسجيل الدخول</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† ÙˆØ¬ÙˆØ¯ ØªØ­Ø¯ÙŠØ«Ø§Øª</value>
+    <value>التحقق من وجود تحديثات</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...</value>
+    <value>جاري التحميل...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>Ø§Ù†Ø¶Ù… Ø¥Ù„Ù‰ Ø³ÙŠØ±ÙØ± Ø¯ÙŠØ³ÙƒÙˆØ±Ø¯</value>
+    <value>انضم إلى سيرفر ديسكورد</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>Ù…Ù„Ø§Ø­Ø¸Ø§Øª Ø§Ù„ØªØ­Ø¯ÙŠØ«</value>
+    <value>ملاحظات التحديث</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª</value>
+    <value>الإعدادات</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø§Ù„Ù…Ù‚ØªØ±Ù†Ø©</value>
+    <value>السيرفرات المقترنة</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Ù„Ø§ ØªÙˆØ¬Ø¯ Ø³ÙŠØ±ÙØ±Ø§Øª Ù…Ù‚ØªØ±Ù†Ø© Ø¨Ø¹Ø¯</value>
+    <value>لا توجد سيرفرات مقترنة بعد</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† ÙˆØ§Ù„ØµÙŠØ§Ù†Ø©</value>
+    <value>الاقتران والصيانة</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: ØºÙŠØ± Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹</value>
+    <value>الاقتران: غير نشط حالياً</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Ø§Ù†Ù‚Ø± Ø¨Ø²Ø± Ø§Ù„Ù…Ø§ÙˆØ³ Ø§Ù„Ø£ÙŠÙ…Ù† Ù„Ù„Ø®ÙŠØ§Ø±Ø§Øª</value>
+    <value>انقر بزر الماوس الأيمن للخيارات</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØªØ¨Ø¹</value>
+    <value>جاري التتبع</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Ø¢Ø®Ø± ØªØ­Ø¯ÙŠØ« Ù„Ù„Ø¨ÙŠØ§Ù†Ø§Øª: {0}</value>
+    <value>آخر تحديث للبيانات: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Ø¯Ø¹Ù… Ø§Ù„Ù…Ø´Ø±ÙˆØ¹</value>
+    <value>دعم المشروع</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>Ø¯Ø¹Ù… Ø§Ù„Ù…Ø·ÙˆØ±</value>
+    <value>دعم المطور</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø¶Ø¨Ø·</value>
+    <value>إعادة ضبط</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ø§ØªØµØ§Ù„ WebSocket</value>
+    <value>إعادة تعيين اتصال WebSocket</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙˆÙ†:</value>
+    <value>اللاعبون:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>Ø¥Ø¸Ù‡Ø§Ø± ØªØ¨ÙˆÙŠØ¨ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø§Ù„Ù…ØªØµÙ„ÙŠÙ† (Ø£ÙˆÙ†Ù„Ø§ÙŠÙ†)</value>
+    <value>إظهار تبويب اللاعبين المتصلين (أونلاين)</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Ø·Ø§Ø¨ÙˆØ± Ø§Ù„Ø§Ù†ØªØ¸Ø§Ø±:</value>
+    <value>طابور الانتظار:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ©</value>
+    <value>الأجهزة الذكية</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>Ù…ÙØ§ØªÙŠØ­ Ø§Ù„Ø§Ø®ØªØµØ§Ø±</value>
+    <value>مفاتيح الاختصار</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Ø§Ø³ØªÙŠØ±Ø§Ø¯ Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ù…Ù† Ø£Ø¹Ø¶Ø§Ø¡ Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>استيراد الأجهزة من أعضاء الفريق</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>ØªØµØ¯ÙŠØ± Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø¥Ù„Ù‰ Ø£Ø¹Ø¶Ø§Ø¡ Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>تصدير الأجهزة إلى أعضاء الفريق</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>ØªØ­Ø¯ÙŠØ«</value>
+    <value>تحديث</value>
   </data>
   <data name="Decline" xml:space="preserve">
-    <value>Ø±ÙØ¶</value>
+    <value>رفض</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>Ø§Ù„Ù…ÙˆØ§ÙÙ‚Ø© Ø¹Ù„Ù‰ Ø±ÙØ¹ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª</value>
+    <value>الموافقة على رفع البيانات</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>Ø¨Ø§Ù„Ù†Ù‚Ø± ÙÙˆÙ‚ "Ù‚Ø¨ÙˆÙ„"ØŒ Ø³ÙŠØªÙ… Ø±ÙØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ© (ÙˆØ±Ø¨Ù…Ø§ Ø±Ø³ÙˆÙ…Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø©) Ø§Ù„Ø®Ø§ØµØ© Ø¨Ù‡Ø°Ø§ Ø§Ù„Ø³ÙŠØ±ÙØ± Ø¥Ù„Ù‰ Ø®Ø§Ø¯Ù… Ø§Ù„Ù…Ø·ÙˆØ±. ÙŠØªÙŠØ­ Ø°Ù„Ùƒ Ù„Ø£Ø¹Ø¶Ø§Ø¡ Ø§Ù„ÙØ±ÙŠÙ‚ ØªÙ†Ø²ÙŠÙ„Ù‡Ø§ ÙˆÙ…Ø²Ø§Ù…Ù†ØªÙ‡Ø§ Ù…Ø¹Ù‹Ø§. ÙŠØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ù…Ø¹Ø±Ù Ø³ØªÙŠÙ… (Steam ID) Ø§Ù„Ø®Ø§Øµ Ø¨Ùƒ ÙÙ‚Ø· Ù„ØªØ­Ø¯ÙŠØ¯ Ø²Ù…Ù„Ø§Ø¦Ùƒ ÙÙŠ Ø§Ù„ÙØ±ÙŠÙ‚. ÙŠÙ…ÙƒÙ† ÙÙ‚Ø· Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø§Ù„Ù…ØµØ±Ø­ Ù„Ù‡Ù… ÙÙŠ Ø®Ø²Ø§Ù†Ø© Ø§Ù„Ø£Ø¯ÙˆØ§Øª (TC) Ø§Ù„ØªØ­ÙƒÙ… ÙÙŠ Ø§Ù„Ø£Ø¬Ù‡Ø²Ø©.
+    <value>بالنقر فوق "قبول"، سيتم رفع بيانات الأجهزة الذكية (وربما رسومات الخريطة) الخاصة بهذا السيرفر إلى خادم المطور. يتيح ذلك لأعضاء الفريق تنزيلها ومزامنتها معًا. يتم إرسال معرف ستيم (Steam ID) الخاص بك فقط لتحديد زملائك في الفريق. يمكن فقط للاعبين المصرح لهم في خزانة الأدوات (TC) التحكم في الأجهزة.
 
-Ù…Ù„Ø§Ø­Ø¸Ø©: Ø³ÙŠØªÙ… ØªØ­Ø³ÙŠÙ† Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ù†Ù‚Ù„ Ù‡Ø°Ù‡ ÙÙŠ Ø§Ù„Ù…Ø³ØªÙ‚Ø¨Ù„. Ø¥Ø°Ø§ Ù„Ù… ÙŠØªÙ…ÙƒÙ† Ø£Ø¹Ø¶Ø§Ø¡ ÙØ±ÙŠÙ‚Ùƒ Ù…Ù† ØªÙ†Ø²ÙŠÙ„ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§ØªØŒ ÙŠÙØ±Ø¬Ù‰ Ù…Ø­Ø§ÙˆÙ„Ø© Ù…Ø³Ø­ Ø±Ø³ÙˆÙ…Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø© ÙˆØ¥Ø¹Ø§Ø¯Ø© Ø±ÙØ¹Ù‡Ø§ Ù…Ø¬Ø¯Ø¯Ø§Ù‹.</value>
+ملاحظة: سيتم تحسين طريقة النقل هذه في المستقبل. إذا لم يتمكن أعضاء فريقك من تنزيل البيانات، يُرجى محاولة مسح رسومات الخريطة وإعادة رفعها مجدداً.</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Ø­Ø°Ù</value>
+    <value>حذف</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>ÙŠÙ…ÙƒÙ†Ùƒ ÙÙ‚Ø· Ø­Ø°Ù Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ù…ÙÙ‚ÙˆØ¯Ø©</value>
+    <value>يمكنك فقط حذف الأجهزة المفقودة</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ³Ù…ÙŠØ© Ø§Ù„Ø¬Ù‡Ø§Ø²</value>
+    <value>إعادة تسمية الجهاز</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>Ù…ØªØµÙ„</value>
+    <value>متصل</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>ØºÙŠØ± Ù…ØªØµÙ„</value>
+    <value>غير متصل</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>الاتصال بالسيرفر</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>Ø§Ù„Ø§ØªØµØ§Ù„ Ø§Ù„ÙƒØ§Ù…Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>الاتصال الكامل بالسيرفر</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø®Ø±ÙŠØ·Ø© ÙˆØ§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>تحميل الخريطة والفريق</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Ù‚Ø·Ø¹ Ø§Ù„Ø§ØªØµØ§Ù„</value>
+    <value>قطع الاتصال</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>تفاصيل السيرفر</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ Ù„Ù„Ø¥Ø´Ø¹Ø§Ø±Ø§Øª</value>
+    <value>الاستماع للإشعارات</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Ø¥ÙŠÙ‚Ø§Ù Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹</value>
+    <value>إيقاف الاستماع</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>ØªØ¬Ø±ÙŠØ© Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† Ø¹Ø¨Ø± Ù…ØªØµÙØ­ Edge</value>
+    <value>تجرية الاقتران عبر متصفح Edge</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† (Ø­Ø°Ù Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª)</value>
+    <value>إعادة تعيين الاقتران (حذف الإعدادات)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ¹ÙŠÙŠÙ† + Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ (Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø¥Ù‚ØªØ±Ø§Ù†)</value>
+    <value>إعادة التعيين + الاستماع (إعادة الإقتران)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ¹ÙŠÙŠÙ† + Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ Ø¹Ø¨Ø± Ù…ØªØµÙØ­ Edge</value>
+    <value>إعادة التعيين + الاستماع عبر متصفح Edge</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø±Ø¨Ø· Ù…Ø¹Ø±Ù Battlemetricsâ€¦</value>
+    <value>إعادة ربط معرف Battlemetrics…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Ø­Ø°Ù Ø§Ù„Ø³ÙŠØ±ÙØ±â€¦</value>
+    <value>حذف السيرفر…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø§Ù„Ø§Ù†ØªØ¸Ø§Ø±...</value>
+    <value>الرجاء الانتظار...</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>ØªØ¨Ø¯ÙŠÙ„ Ù…Ù†Ø·Ù‚Ø© Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>تبديل منطقة السيرفر</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>ÙˆØ¶Ø¹ Ø§Ù„Ø³ØªØ±ÙŠÙ…Ø± (Ø§Ù„Ø¨Ø«)</value>
+    <value>وضع الستريمر (البث)</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>Ø§Ù„Ø­Ø¬Ù…:</value>
+    <value>الحجم:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>ØªÙØ¹ÙŠÙ„ ÙˆØ¶Ø¹ Ø§Ù„Ø³ØªØ±ÙŠÙ…Ø± (Ø¥Ø®ÙØ§Ø¡/Ø§Ø®ØªØµØ§Ø± Ø§Ù„Ø£Ø³Ù…Ø§Ø¡)</value>
+    <value>تفعيل وضع الستريمر (إخفاء/اختصار الأسماء)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>ÙŠØ®ÙÙŠ ÙˆÙŠØ®ØªØµØ± Ø£Ø³Ù…Ø§Ø¡ ÙˆÙ…Ø¹Ø±ÙØ§Øª Ø³ØªÙŠÙ… Ù„Ø­Ù…Ø§ÙŠØ© Ø§Ù„Ø®ØµÙˆØµÙŠØ© Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ø¨Ø« Ø§Ù„Ù…Ø¨Ø§Ø´Ø±. ÙƒÙ…Ø§ ÙŠØ®ÙÙŠ ÙˆØ­Ø¯Ø© Ø§Ù„ØªØ­ÙƒÙ… ÙˆÙ‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§.</value>
+    <value>يخفي ويختصر أسماء ومعرفات ستيم لحماية الخصوصية أثناء البث المباشر. كما يخفي وحدة التحكم وقائمة السيرفرات تلقائيًا.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Ø§Ù„Ù…ÙˆÙ‚Ø¹ ØºÙŠØ± Ù…ØªØ§Ø­ (Ø§Ù„Ù„Ø§Ø¹Ø¨ ØºÙŠØ± Ù…ØªØµÙ„ Ø£Ùˆ Ù…Ø¬Ù‡ÙˆÙ„ Ø§Ù„Ù…ÙƒØ§Ù†).</value>
+    <value>الموقع غير متاح (اللاعب غير متصل أو مجهول المكان).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>Ø­ÙØ¸ Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>حفظ المجموعة</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©.</value>
+    <value>الرجاء إدخال اسم المجموعة.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>ØªØ¹Ø°Ø± Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ø±Ø³Ø§Ù„Ø©. ÙŠØ±Ø¬Ù‰ Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ù…Ø±Ø© Ø£Ø®Ø±Ù‰ (ØªØ£ÙƒØ¯ Ù…Ù† Ø£Ù†Ùƒ Ø¹Ø¶Ùˆ ÙÙŠ ÙØ±ÙŠÙ‚!).</value>
+    <value>تعذر إرسال الرسالة. يرجى المحاولة مرة أخرى (تأكد من أنك عضو في فريق!).</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>Ø§Ù„Ø®Ø·Ø£: </value>
+    <value>الخطأ: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>ØªØ¹ÙŠÙŠÙ† ÙÙŠ Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>تعيين في مجموعة</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©: {0}</value>
+    <value>إعدادات المجموعة: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>Ø§Ø³Ù… Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>اسم المجموعة</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Ø£Ø¯Ø®Ù„ Ø§Ø³Ù… Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©...</value>
+    <value>أدخل اسم المجموعة...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>Ù„ÙˆÙ† Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>لون المجموعة</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Ø­ÙØ¸ Ø§Ù„ØªØºÙŠÙŠØ±Ø§Øª</value>
+    <value>حفظ التغييرات</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>ØªØ­Ù„ÙŠÙ„Ø§Øª ÙˆØªÙˆÙ‚Ø¹Ø§Øª Ù†Ø´Ø§Ø· Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>تحليلات وتوقعات نشاط اللاعبين</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙˆÙ†</value>
+    <value>اللاعبون</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>ØªØ­Ø¯ÙŠØ« ÙˆØ¶Ø¹ Ø§Ù„Ø³ØªØ±ÙŠÙ…Ø± ÙˆØ¥ØµÙ„Ø§Ø­Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ù…ØµØºØ±Ø©</value>
+    <value>تحديث وضع الستريمر وإصلاحات الخريطة المصغرة</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>ÙˆØ¶Ø¹ Ø§Ù„Ø³ØªØ±ÙŠÙ…Ø±</value>
+    <value>وضع الستريمر</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Ø­Ø¬Ù… Ø¹Ù„Ø§Ù…Ø© Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø¹Ù„Ù‰ Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>حجم علامة اللاعب على الخريطة</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>ØªØ­Ø³ÙŠÙ† ÙˆØªÙ„Ù…ÙŠØ¹ Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ù…ØµØºØ±Ø©</value>
+    <value>تحسين وتلميع الخريطة المصغرة</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨:</value>
+    <value>الإجراء المطلوب:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>ØªÙ…Øª Ø¥Ø²Ø§Ù„Ø© ØªØªØ¨Ø¹ BattleMetrics</value>
+    <value>تمت إزالة تتبع BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ù‡ÙŠÙƒÙ„Ø© Ù†Ø¸Ø§Ù… ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>إعادة هيكلة نظام تتبع اللاعبين</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Ø¢Ù„ÙŠØ© Ø¹Ù…Ù„ Ù†Ø¸Ø§Ù… ØªØ¹Ù‚Ø¨ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>آلية عمل نظام تعقب اللاعبين</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Ø£Ø¶Ù Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø¥Ù„Ù‰ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù…Ø±Ø§Ù‚Ø¨Ø© Ù„Ø¨Ø¯Ø¡ Ø§Ù„ØªØªØ¨Ø¹</value>
+    <value>أضف لاعبين إلى قائمة المراقبة لبدء التتبع</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>Ø§Ù„ØªØªØ¨Ø¹: Ù†Ø´Ø·</value>
+    <value>التتبع: نشط</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>Ø§Ù„ØªØªØ¨Ø¹: ØºÙŠØ± Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹</value>
+    <value>التتبع: غير نشط حالياً</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>ØªØµÙÙŠØ© Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†...</value>
+    <value>تصفية اللاعبين...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>Ø§ØªØµÙ„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ± Ù„ØªØ­Ù…ÙŠÙ„ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>اتصل بالسيرفر لتحميل قائمة اللاعبين</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ Ø¬Ù„Ø¨ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø¹Ø¨Ø± Ø³ØªÙŠÙ…...</value>
+    <value>جاري جلب قائمة اللاعبين عبر ستيم...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>Ù…Ø¹Ø±Ù Ø§Ù„ØªØªØ¨Ø¹ (Track ID)</value>
+    <value>معرف التتبع (Track ID)</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Ø§Ø³Ù… Ø§Ù„Ù…Ø³Ø§Ø± Ø§Ù„ÙŠØ¯ÙˆÙŠ...</value>
+    <value>اسم المسار اليدوي...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£Ø¬Ù‡Ø²Ø© Ù…Ø¶Ø§ÙØ©.</value>
+    <value>لا توجد أجهزة مضافة.</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ø±Ù…Ø² (Token) Ù…Ø³Ø¬Ù„</value>
+    <value>لا يوجد رمز (Token) مسجل</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Ø§Ù†ØªÙ‡Øª ØµÙ„Ø§Ø­ÙŠØ© Ø§Ù„Ø±Ù…Ø² Ø§Ù„Ù…Ù…ÙŠØ² (Token)!</value>
+    <value>انتهت صلاحية الرمز المميز (Token)!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>ØªÙ†ØªÙ‡ÙŠ Ø§Ù„ØµÙ„Ø§Ø­ÙŠØ© Ø®Ù„Ø§Ù„ {0} ÙŠÙˆÙ…</value>
+    <value>تنتهي الصلاحية خلال {0} يوم</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>Ù…ØªØ¨Ù‚ÙŠ {0} Ø­ØªÙ‰ Ø­Ù„ÙˆÙ„ Ø§Ù„Ù„ÙŠÙ„</value>
+    <value>متبقي {0} حتى حلول الليل</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>Ù…ØªØ¨Ù‚ÙŠ {0} Ø­ØªÙ‰ Ø­Ù„ÙˆÙ„ Ø§Ù„Ù†Ù‡Ø§Ø±</value>
+    <value>متبقي {0} حتى حلول النهار</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Ù„Ø­Ø§Ù‚ Ø§Ù„ÙƒØ§Ù…ÙŠØ±Ø§ Ø¨ÙŠ</value>
+    <value>لحاق الكاميرا بي</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ {0}</value>
+    <value>تتبع اللاعب {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ Ù„Ù„Ø§ØªØµØ§Ù„â€¦</value>
+    <value>الاقتران: جاري الاستماع للاتصال…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: Ù…ØªÙˆÙ‚Ù</value>
+    <value>الاقتران: متوقف</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: ÙØ´Ù„</value>
+    <value>الاقتران: فشل</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>ØªÙ… Ø¥Ø·Ù„Ø§Ù‚ Ø§Ù„Ø¥Ù†Ø°Ø§Ø±!</value>
+    <value>تم إطلاق الإنذار!</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>السيرفر</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ù†Ø¨Ù‡ Ø§Ù„Ø°ÙƒÙŠ</value>
+    <value>المنبه الذكي</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>ØªØ¹Ø°Ø± Ù‚Ø±Ø§Ø¡Ø© Ø±Ø§Ø¨Ø· RustPlus-Link: {0}
-Ø§Ù„ØµÙŠØºØ© Ø§Ù„ØµØ­ÙŠØ­Ø©: Rustplus://IP:PORT</value>
+    <value>تعذر قراءة رابط RustPlus-Link: {0}
+الصيغة الصحيحة: Rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†</value>
+    <value>إعادة تعيين الاقتران</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† Ø§Ù„Ø­Ø§Ù„ÙŠØ©ØŸ Ø³ØªØ¶Ø·Ø± Ø¥Ù„Ù‰ Ø¥Ù‚Ø±Ø§Ù† Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ Ù…Ø¬Ø¯Ø¯Ø§Ù‹ Ø¹Ù†Ø¯ ØªØ´ØºÙŠÙ„Ù‡ ÙÙŠ Ø§Ù„Ù…Ø±Ø© Ø§Ù„Ù‚Ø§Ø¯Ù…Ø©.</value>
+    <value>هل تريد حذف إعدادات الاقتران الحالية؟ ستضطر إلى إقران التطبيق مجدداً عند تشغيله في المرة القادمة.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ¹ÙŠÙŠÙ† + Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹</value>
+    <value>إعادة التعيين + الاستماع</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† Ø§Ù„Ø­Ø§Ù„ÙŠØ© ÙˆØ§Ù„Ø¨Ø¯Ø¡ ÙÙŠ Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹/Ø§Ù„Ø¥Ù‚Ø±Ø§Ù† ÙÙˆØ±Ø§Ù‹ØŸ</value>
+    <value>هل تريد حذف إعدادات الاقتران الحالية والبدء في إعادة الاستماع/الإقران فوراً؟</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ¹ÙŠÙŠÙ† + Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ Ø¹Ø¨Ø± Ù…ØªØµÙØ­ Edge</value>
+    <value>إعادة التعيين + الاستماع عبر متصفح Edge</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† ÙˆØ§Ù„Ø¨Ø¯Ø¡ ÙÙŠ Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ Ø§Ù„ÙÙˆØ±ÙŠ Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Ù…ØªØµÙØ­ EdgeØŸ</value>
+    <value>هل تريد حذف إعدادات الاقتران والبدء في الاستماع الفوري باستخدام متصفح Edge؟</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>ØªØ¹Ø°Ø± Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† ÙˆØ¬ÙˆØ¯ Ø¥ØµØ¯Ø§Ø± Ø¬Ø¯ÙŠØ¯. ÙŠØ±Ø¬Ù‰ Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ù…Ø±Ø© Ø£Ø®Ø±Ù‰ Ø£Ùˆ ÙØªØ­ ØµÙØ­Ø© Ø§Ù„ØªØ­Ø¯ÙŠØ«Ø§Øª ÙŠØ¯ÙˆÙŠØ§Ù‹.</value>
+    <value>تعذر التحقق من وجود إصدار جديد. يرجى المحاولة مرة أخرى أو فتح صفحة التحديثات يدوياً.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Ø£Ù†Øª ØªØ³ØªØ®Ø¯Ù… Ø£Ø­Ø¯Ø« Ø¥ØµØ¯Ø§Ø± Ø¨Ø§Ù„ÙØ¹Ù„!</value>
+    <value>أنت تستخدم أحدث إصدار بالفعل!</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>ÙŠØªÙˆÙØ± ØªØ­Ø¯ÙŠØ« Ø¬Ø¯ÙŠØ¯</value>
+    <value>يتوفر تحديث جديد</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Ø¥ØµØ¯Ø§Ø± Ø¬Ø¯ÙŠØ¯ Ù…ØªØ§Ø­ Ø­Ø§Ù„ÙŠØ§Ù‹: {0}
-Ù‡Ù„ ØªÙˆØ¯ ÙØªØ­ ØµÙØ­Ø© Ø§Ù„ØªØ­Ù…ÙŠÙ„ØŸ</value>
+    <value>إصدار جديد متاح حالياً: {0}
+هل تود فتح صفحة التحميل؟</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Ø¥ØµØ¯Ø§Ø± Ø¬Ø¯ÙŠØ¯ Ù…ØªØ§Ø­ Ø­Ø§Ù„ÙŠØ§Ù‹: {0}
-Ù‡Ù„ ØªØ±ÙŠØ¯ ØªØ­Ù…ÙŠÙ„Ù‡ ÙˆØªØ«Ø¨ÙŠØªÙ‡ Ø§Ù„Ø¢Ù†ØŸ</value>
+    <value>إصدار جديد متاح حالياً: {0}
+هل تريد تحميله وتثبيته الآن؟</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>ÙØ´Ù„ ØªØ­Ù…ÙŠÙ„ Ø§Ù„ØªØ­Ø¯ÙŠØ«</value>
+    <value>فشل تحميل التحديث</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>ÙØ´Ù„ Ø§Ù„ØªØ­Ù‚Ù‚ Ù…Ù† ÙˆØ¬ÙˆØ¯ ØªØ­Ø¯ÙŠØ«Ø§Øª.
+    <value>فشل التحقق من وجود تحديثات.
 {0}</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>Ø¹Ø±Ø¶ Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ø®ØµÙŠ</value>
+    <value>عرض الملف الشخصي</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>ØªØºÙŠÙŠØ± Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>تغيير المجموعة</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ³Ù…ÙŠØ©</value>
+    <value>إعادة تسمية</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Ø¥Ù„ØºØ§Ø¡ Ø§Ù„ØªØªØ¨Ø¹</value>
+    <value>إلغاء التتبع</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Ø¹Ø±Ø¶</value>
+    <value>عرض</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø²ÙŠØ¯ Ù…Ù† Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª</value>
+    <value>المزيد من الخيارات</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø±Ø¨Ø· Ù…Ø¹Ø±Ù Battlemetricsâ€¦</value>
+    <value>إعادة ربط معرف Battlemetrics…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Ø­Ø°Ù Ø§Ù„Ø³ÙŠØ±ÙØ±â€¦</value>
+    <value>حذف السيرفر…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Ø§Ù†Ù‚Ø± Ø¨Ø²Ø± Ø§Ù„Ù…Ø§ÙˆØ³ Ø§Ù„Ø£ÙŠÙ…Ù† Ù„Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ³Ù…ÙŠØ©</value>
+    <value>انقر بزر الماوس الأيمن لإعادة التسمية</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>ØªØ¨Ø¯ÙŠÙ„ Ø§Ù„Ø­Ø§Ù„Ø© (ØªØ´ØºÙŠÙ„/Ø¥ÙŠÙ‚Ø§Ù)</value>
+    <value>تبديل الحالة (تشغيل/إيقاف)</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>Ù†Ø§ÙØ°Ø© Ù…Ù†Ø¨Ø«Ù‚Ø©</value>
+    <value>نافذة منبثقة</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡ Ø¯Ø§Ø®Ù„ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚</value>
+    <value>تنبيه داخل التطبيق</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡ ØµÙˆØªÙŠ</value>
+    <value>تنبيه صوتي</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>Ù…Ù„Ù ØµÙˆØªÙŠ Ù…Ø®ØµØµ...</value>
+    <value>ملف صوتي مخصص...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„ÙˆØ¶Ø¹ Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠ</value>
+    <value>استعادة الوضع الافتراضي</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
-    <value>Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø©: </value>
+    <value>لقطة شاشة: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> Ø§Ù„Ø¹Ù†Ø§ØµØ±ØŒ Ø§Ù„ØµÙŠØ§Ù†Ø© ==</value>
+    <value> العناصر، الصيانة ==</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¹Ø«ÙˆØ± Ø¹Ù„Ù‰ Ø£Ø¬Ù‡Ø²Ø© Ø°ÙƒÙŠØ©</value>
+    <value>لم يتم العثور على أجهزة ذكية</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>Ù‚Ù… Ø¨Ø¥Ù‚Ø±Ø§Ù† Ø¬Ù‡Ø§Ø² Ø°ÙƒÙŠ Ø£Ùˆ Ù…ÙØªØ§Ø­ ØªØ´ØºÙŠÙ„ Ø£Ùˆ Ù…Ù†Ø¨Ù‡ Ù„ÙŠØ¸Ù‡Ø± Ù‡Ù†Ø§</value>
+    <value>قم بإقران جهاز ذكي أو مفتاح تشغيل أو منبه ليظهر هنا</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>الفريق</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>ØªÙˆØ³ÙŠØ· Ø§Ù„ÙƒØ§Ù…ÙŠØ±Ø§ Ø¹Ù„Ù‰ Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>توسيط الكاميرا على الخريطة</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>ØªØªØ¨Ø¹ Ø§Ù„ØªØ­Ø±ÙƒØ§Øª Ø¹Ù„Ù‰ Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>تتبع التحركات على الخريطة</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>ÙØªØ­ Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ…</value>
+    <value>فتح حساب ستيم</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>ØªØ±Ù‚ÙŠØ© Ø¥Ù„Ù‰ Ù‚Ø§Ø¦Ø¯ ÙØ±ÙŠÙ‚</value>
+    <value>ترقية إلى قائد فريق</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Ø·Ø±Ø¯ Ù…Ù† Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>طرد من الفريق</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ø®ØµÙŠ</value>
+    <value>علامات الملف الشخصي</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø§Øª Ø£Ù…Ø§ÙƒÙ† Ø§Ù„Ù…ÙˆØª</value>
+    <value>علامات أماكن الموت</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>Ø§Ù„ÙƒØ§Ù…ÙŠØ±Ø§Øª</value>
+    <value>الكاميرات</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© ÙƒØ§Ù…ÙŠØ±Ø§</value>
+    <value>إضافة كاميرا</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¹Ø«ÙˆØ± Ø¹Ù„Ù‰ ÙƒØ§Ù…ÙŠØ±Ø§Øª Ù…Ø¶Ø§ÙØ©</value>
+    <value>لم يتم العثور على كاميرات مضافة</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>Ù‚Ù… Ø¨Ø¥Ù‚Ø±Ø§Ù† ÙƒØ§Ù…ÙŠØ±Ø§ Ù„Ù…Ø´Ø§Ù‡Ø¯Ø© Ø§Ù„Ø¨Ø« Ø§Ù„Ù…Ø¨Ø§Ø´Ø± Ù‡Ù†Ø§</value>
+    <value>قم بإقران كاميرا لمشاهدة البث المباشر هنا</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙˆÙ†</value>
+    <value>اللاعبون</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Ø´Ø±Ø­ Ø§Ù„ØªØªØ¨Ø¹</value>
+    <value>شرح التتبع</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>ØªØ¹Ø±Ù‘Ù Ø¹Ù„Ù‰ Ø¢Ù„ÙŠØ© Ø¹Ù…Ù„ ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>تعرّف على آلية عمل تتبع اللاعبين</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>Ø§Ù„Ù…ØªØµÙ„ÙˆÙ†</value>
+    <value>المتصلون</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø§Ù„Ù…ØªØµÙ„ÙŠÙ† Ø­Ø§Ù„ÙŠØ§Ù‹</value>
+    <value>اللاعبين المتصلين حالياً</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>Ø¨Ø­Ø« BattleMetrics</value>
+    <value>بحث BattleMetrics</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø­Ø« Ø¹Ù† Ø§Ù„Ø³ÙŠØ±ÙØ± Ø§Ù„Ø­Ø§Ù„ÙŠ ÙÙŠ BattleMetrics</value>
+    <value>البحث عن السيرفر الحالي في BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>Ø§Ù†Ø¨Ø«Ø§Ù‚ Ù„Ù„Ø®Ø§Ø±Ø¬</value>
+    <value>انبثاق للخارج</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>ÙØªØ­ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† ÙÙŠ Ù†Ø§ÙØ°Ø© Ù…Ù†ÙØµÙ„Ø©</value>
+    <value>فتح قائمة اللاعبين في نافذة منفصلة</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>ØªØªØ¨Ø¹</value>
+    <value>تتبع</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Ø§Ø³Ù… Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø£Ùˆ Ù…Ø¹Ø±Ù Ø³ØªÙŠÙ… (Steam ID)...</value>
+    <value>اسم اللاعب أو معرف ستيم (Steam ID)...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>ØªØµÙÙŠØ© Ø§Ù„Ø¨Ø­Ø« Ø¹Ù† Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†...</value>
+    <value>تصفية البحث عن اللاعبين...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ ØªØ­Ù…ÙŠÙ„ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†...</value>
+    <value>جاري تحميل قائمة اللاعبين...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>Ø§Ù„Ù…ÙØªØ¹Ù‚ÙŽÙ‘Ø¨ÙˆÙ†</value>
+    <value>المُتعقَّبون</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙˆÙ† ØªØ­Øª Ø§Ù„ØªØªØ¨Ø¹</value>
+    <value>اللاعبون تحت التتبع</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø§Øª</value>
+    <value>إدارة المجموعات</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Ø¹Ø±Ø¶ ØªÙ‚Ø±ÙŠØ± Ø§Ù„ØªØ­Ù„ÙŠÙ„Ø§Øª Ø§Ù„ÙƒØ§Ù…Ù„</value>
+    <value>عرض تقرير التحليلات الكامل</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>Ù‡Ù„ Ø£Ù†Øª Ù…Ø³ØªØ¹Ø¯ Ù„Ø§Ø³ØªÙƒØ´Ø§Ù Ø§Ù„Ø®Ø±ÙŠØ·Ø©ØŸ</value>
+    <value>هل أنت مستعد لاستكشاف الخريطة؟</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Ø§ØªØµÙ„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ± Ø§Ù„Ù…Ø­Ø¯Ø¯ Ù„ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø®Ø±ÙŠØ·Ø© ÙˆØ¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ÙØ±ÙŠÙ‚ Ø§Ù„Ù…Ø¨Ø§Ø´Ø±Ø©.</value>
+    <value>اتصل بالسيرفر المحدد لتحميل الخريطة وبيانات الفريق المباشرة.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Ù‡Ù„ Ø£Ù†Øª Ù…Ø³ØªØ¹Ø¯ Ù„Ù„Ø³ÙŠØ·Ø±Ø© Ø¹Ù„Ù‰ Ø³ÙŠØ±ÙØ± RustØŸ</value>
+    <value>هل أنت مستعد للسيطرة على سيرفر Rust؟</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Ù‚Ù… Ø¨Ø¥Ù‚Ø±Ø§Ù† Ø­Ø³Ø§Ø¨Ùƒ Ù„Ø¨Ø¯Ø¡ ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†ØŒ ÙˆØªÙ„Ù‚ÙŠ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª ØºØ§Ø±Ø§Øª Ø§Ù„Ø£Ø¹Ø¯Ø§Ø¡ (Raid Alerts)ØŒ ÙˆØ§Ù„ØªØ­ÙƒÙ… Ø¨Ø£Ø¬Ù‡Ø²ØªÙƒ Ø§Ù„Ø°ÙƒÙŠØ© ÙÙˆØ±Ø§Ù‹.</value>
+    <value>قم بإقران حسابك لبدء تتبع اللاعبين، وتلقي تنبيهات غارات الأعداء (Raid Alerts)، والتحكم بأجهزتك الذكية فوراً.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ ÙˆØ¥Ù‚Ø±Ø§Ù† Ø§Ù„Ø­Ø³Ø§Ø¨</value>
+    <value>تسجيل الدخول وإقران الحساب</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>ÙŠØªØ·Ù„Ø¨ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ… (Steam) ÙÙŠ Ù…ØªØµÙØ­Ùƒ Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠ.</value>
+    <value>يتطلب تسجيل الدخول بحساب ستيم (Steam) في متصفحك الافتراضي.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>Ø­Ø°Ù Ø§Ù„Ø³ÙŠØ±ÙØ±ØŸ</value>
+    <value>حذف السيرفر؟</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Ù‡Ù„ Ø£Ù†Øª Ù…ØªØ£ÙƒØ¯ Ù…Ù† Ø±ØºØ¨ØªÙƒ ÙÙŠ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„Ø³ÙŠØ±ÙØ±ØŸ Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø§Ù„ØªØ±Ø§Ø¬Ø¹ Ø¹Ù† Ù‡Ø°Ø§ Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡.</value>
+    <value>هل أنت متأكد من رغبتك في حذف هذا السيرفر؟ لا يمكن التراجع عن هذا الإجراء.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Ø¥Ù„ØºØ§Ø¡</value>
+    <value>إلغاء</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>Ø­Ø°Ù</value>
+    <value>حذف</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Ø¥Ø®ÙØ§Ø¡ ØªÙ„Ù‚Ø§Ø¦ÙŠ Ø¨Ø¹Ø¯ 3 Ø«ÙˆØ§Ù†Ù</value>
+    <value>إخفاء تلقائي بعد 3 ثوانٍ</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>ÙÙ„Ø§ØªØ± Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>فلاتر الخريطة</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ§Øª (Ø§Ù„Ø´Ø¨ÙƒØ©)</value>
+    <value>الإحداثيات (الشبكة)</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø¹Ø§Ù„Ù… (Monuments)</value>
+    <value>المعالم (Monuments)</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>Ø§Ù„Ù…ØªØ§Ø¬Ø± / Ø§Ù„Ø´ÙˆØ¨</value>
+    <value>المتاجر / الشوب</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø´Ø§Øª Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>تنبيهات شات اللعبة</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Ø§Ù„ØªÙ†Ø¨ÙŠÙ‡Ø§Øª</value>
+    <value>التنبيهات</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>ØªÙ‡ÙŠØ¦Ø© Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª</value>
+    <value>تهيئة الإعدادات</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>ØªØ­Ø¯ÙŠØ¯ Ø§Ù„ÙƒÙ„</value>
+    <value>تحديد الكل</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Ø¥Ù„ØºØ§Ø¡ ØªØ­Ø¯ÙŠØ¯ Ø§Ù„ÙƒÙ„</value>
+    <value>إلغاء تحديد الكل</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>Ø§Ù„Ø£Ø­Ø¯Ø§Ø« ÙˆØ§Ù„ÙØ¹Ø§Ù„ÙŠØ§Øª (Events)</value>
+    <value>الأحداث والفعاليات (Events)</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† (Cargo)</value>
+    <value>سفينة الشحن (Cargo)</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Ø±Ø³Ø¨Ù† / Ø¸Ù‡Ø±</value>
+    <value>رسبن / ظهر</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Ø±Ø³Øª ÙÙŠ Ø§Ù„Ù…ÙŠÙ†Ø§Ø¡</value>
+    <value>رست في الميناء</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>Ù…ØºØ§Ø¯Ø±Ø© Ø§Ù„ÙƒØ§Ø±Ø¬Ùˆ (ØªØ­Ø°ÙŠØ± Ù‚Ø¨Ù„ 5 Ø¯Ù‚Ø§Ø¦Ù‚)</value>
+    <value>مغادرة الكارجو (تحذير قبل 5 دقائق)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>ØªØ­Ø°ÙŠØ± ÙˆØµÙˆÙ„ Ø§Ù„ÙƒØ§Ø±Ø¬Ùˆ (5 Ø¯Ù‚Ø§Ø¦Ù‚ Ù‚Ø¨Ù„ Ø§Ù„Ø±Ø³Ùˆ)</value>
+    <value>تحذير وصول الكارجو (5 دقائق قبل الرسو)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© (Ø§Ù„Ù‡ÙŠÙ„ÙŠ)</value>
+    <value>مروحية الدورية (الهيلي)</value>
   </data>
   <data name="Chinook" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø´ÙŠÙ†ÙˆÙƒ (CH47)</value>
+    <value>مروحية شينوك (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªØ¬ÙˆÙ„</value>
+    <value>البائع المتجول</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Ù…Ù†ØµØ© Ø§Ù„Ù†ÙØ· (Ø£ÙˆÙŠÙ„ Ø±ÙŠØ¬)</value>
+    <value>منصة النفط (أويل ريج)</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø±</value>
+    <value>حدث أعماق البحار</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Ø§Ù„ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø°ÙƒÙŠØ©</value>
+    <value>التنبيهات الذكية</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>Ø­Ø§Ù„Ø© Ø¯Ø®ÙˆÙ„ Ø§Ù„Ù„Ø§Ø¹Ø¨ (Ø£ÙˆÙ†Ù„Ø§ÙŠÙ†)</value>
+    <value>حالة دخول اللاعب (أونلاين)</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>Ø­Ø§Ù„Ø© Ø®Ø±ÙˆØ¬ Ø§Ù„Ù„Ø§Ø¹Ø¨ (Ø£ÙˆÙÙ„Ø§ÙŠÙ†)</value>
+    <value>حالة خروج اللاعب (أوفلاين)</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>Ø¥Ø´Ø¹Ø§Ø±Ø§Øª Ø­Ø§Ù„Ø© Ø§Ù„ØªØªØ¨Ø¹</value>
+    <value>إشعارات حالة التتبع</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Ù…ÙˆØªÙƒ Ø§Ù„Ø´Ø®ØµÙŠ</value>
+    <value>موتك الشخصي</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Ù…ÙˆØª Ø£Ø­Ø¯ Ø£Ø¹Ø¶Ø§Ø¡ Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>موت أحد أعضاء الفريق</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø±Ø³Ø¨Ù†ØªÙƒ (Ø§Ù„Ø¸Ù‡ÙˆØ±)</value>
+    <value>إعادة رسبنتك (الظهور)</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø±Ø³Ø¨Ù†Ø© Ø¹Ø¶Ùˆ Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>إعادة رسبنة عضو الفريق</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>Ù…ØªØ§Ø¬Ø± Ø¬Ø¯ÙŠØ¯Ø© Ù…Ø¶Ø§ÙØ©</value>
+    <value>متاجر جديدة مضافة</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Ø§Ù„Ù…ØªØ§Ø¬Ø± Ø§Ù„Ù…Ø´Ø¨ÙˆÙ‡Ø© (Ø´ÙˆØ¨ ÙØ®)</value>
+    <value>المتاجر المشبوهة (شوب فخ)</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¨ÙŠØ¹ ÙˆØ§Ù„Ø´Ø±Ø§Ø¡</value>
+    <value>تنبيهات البيع والشراء</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Ù†Ù…Ø· Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØµÙˆÙŠØ¨ (Crosshair)</value>
+    <value>نمط علامة التصويب (Crosshair)</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Ù†Ù‚Ø·Ø© Ø®Ø¶Ø±Ø§Ø¡</value>
+    <value>نقطة خضراء</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Ù†Ù‚Ø·Ø© Ø®Ø¶Ø±Ø§Ø¡ ØµØºÙŠØ±Ø©</value>
+    <value>نقطة خضراء صغيرة</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø© ØªØµÙˆÙŠØ¨ Ù…ÙØªÙˆØ­Ø© (Ø£Ø­Ù…Ø±/Ø£Ø®Ø¶Ø±)</value>
+    <value>علامة تصويب مفتوحة (أحمر/أخضر)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Ø¯Ø§Ø¦Ø±Ø© Ø­Ù…Ø±Ø§Ø¡ Ø±Ù‚ÙŠÙ‚Ø©</value>
+    <value>دائرة حمراء رقيقة</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>Ù…Ø±Ø¨Ø¹ Ù…Ø¹ Ù†Ù‚Ø·Ø© ÙÙŠ Ø§Ù„Ù…Ù†ØªØµÙ</value>
+    <value>مربع مع نقطة في المنتصف</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>Ù†Ù‚Ø·Ø© Ø£Ø±Ø¬ÙˆØ§Ù†ÙŠØ©</value>
+    <value>نقطة أرجوانية</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø© ØªØµÙˆÙŠØ¨ Ù…ÙØªÙˆØ­Ø© Ø£Ø±Ø¬ÙˆØ§Ù†ÙŠØ©</value>
+    <value>علامة تصويب مفتوحة أرجوانية</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Ø®Ø· ØªØ­Ø¯ÙŠØ¯ Ø§Ù„Ù…Ø¯Ù‰ (Ù…Ø¹ Ø¹Ù„Ø§Ù…Ø§Øª ØªØ¯Ø±ÙŠØ¬)</value>
+    <value>خط تحديد المدى (مع علامات تدريج)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>ØªÙØ¹ÙŠÙ„ Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØµÙˆÙŠØ¨...</value>
+    <value>تفعيل علامة التصويب...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Ø§Ø®ØªØ± Ø§Ù„Ø´Ø§Ø´Ø© Ø§Ù„Ù…Ø®ØªØµØ©</value>
+    <value>اختر الشاشة المختصة</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>Ø±Ø³Ù… ØªØ±Ø§ÙƒØ¨ ÙÙˆÙ‚ Ø§Ù„Ø´Ø§Ø´Ø© (Overlay)</value>
+    <value>رسم تراكب فوق الشاشة (Overlay)</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Ø±Ø³Ù… Ø­Ø± (Ø§Ù†Ù‚Ø± Ø¨Ø²Ø± Ø§Ù„Ù…Ø§ÙˆØ³ Ø§Ù„Ø£ÙŠÙ…Ù† Ù„ØªØºÙŠÙŠØ±: Ø§Ù„Ø­Ø¬Ù…/Ø§Ù„Ù„Ù‘ÙˆÙ†)</value>
+    <value>رسم حر (انقر بزر الماوس الأيمن لتغيير: الحجم/اللّون)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© Ù†Øµ (Ø§Ù†Ù‚Ø± Ø¨Ø²Ø± Ø§Ù„Ù…Ø§ÙˆØ³ Ø§Ù„Ø£ÙŠÙ…Ù† Ù„ØªØºÙŠÙŠØ±: Ø§Ù„Ù„ÙˆÙ†/Ø§Ù„Ø­Ø¬Ù…)</value>
+    <value>إضافة نص (انقر بزر الماوس الأيمن لتغيير: اللون/الحجم)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© Ø£ÙŠÙ‚ÙˆÙ†Ø© (Ø§Ù†Ù‚Ø± Ø¨Ø²Ø± Ø§Ù„Ù…Ø§ÙˆØ³ Ø§Ù„Ø£ÙŠÙ…Ù† Ù„Ø§Ø®ØªÙŠØ§Ø± Ù†ÙˆØ¹ Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø©)</value>
+    <value>إضافة أيقونة (انقر بزر الماوس الأيمن لاختيار نوع الأيقونة)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ù…Ø­Ø§Ø© (Ø§Ù†Ù‚Ø± Ù†Ù‚Ø±Ø§Ù‹ Ø£Ùˆ Ø§Ø³ØªÙ…Ø± Ø¨Ø§Ù„Ø¶ØºØ· Ù„Ù„Ù…Ø³Ø­)</value>
+    <value>الممحاة (انقر نقراً أو استمر بالضغط للمسح)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Ø­Ø°Ù Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø±Ø³ÙˆÙ…Ø§Øª Ø§Ù„Ø®Ø§ØµØ© Ø¨Ùƒ</value>
+    <value>حذف جميع الرسومات الخاصة بك</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>Ù…Ø´Ø§Ø±ÙƒØ©/Ø±ÙØ¹ Ø§Ù„Ø±Ø³ÙˆÙ…Ø§Øª ÙˆØ§Ù„ØªØ±Ø§ÙƒØ¨ Ø§Ù„Ø®Ø§Øµ Ø¨Ùƒ</value>
+    <value>مشاركة/رفع الرسومات والتراكب الخاص بك</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
-    <value>Ø§Ù„ØµÙÙ‚Ø§Øª Ø§Ù„Ù…Ø±Ø¨Ø­Ø©</value>
+    <value>الصفقات المربحة</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>ÙØ±Øµ Ø§Ù„Ù…Ù‚Ø§ÙŠØ¶Ø© Ø§Ù„Ø³Ø±ÙŠØ¹Ø© Ø§Ù„Ù…Ø±Ø¨Ø­Ø© | Ø´Ø±Ø§Ø¡ Ø±Ø®ÙŠØµ â† Ø¨ÙŠØ¹ ØºØ§Ù„Ù.</value>
+    <value>فرص المقايضة السريعة المربحة | شراء رخيص ← بيع غالٍ.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>Ø§Ø´ØªØ±Ù X Ù…Ù‚Ø§Ø¨Ù„ Y</value>
+    <value>اشترِ X مقابل Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>ØªØ­Ù„ÙŠÙ„</value>
+    <value>تحليل</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø§Ø¯Ø© Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø©</value>
+    <value>المادة المطلوبة</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø§Ø¯Ø© Ø§Ù„Ù…Ø¹Ø±ÙˆØ¶Ø© Ù„Ù„Ø¯ÙØ¹</value>
+    <value>المادة المعروضة للدفع</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Ø´Ø§Øª Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>شات الفريق</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Ø¥Ø±Ø³Ø§Ù„</value>
+    <value>إرسال</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ø¹ØªÙ…Ø§Ø¯ FCM</value>
+    <value>بيانات اعتماد FCM</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Ø§Ù†Ù‚Ø± Ø¨Ø²Ø± Ø§Ù„Ù…Ø§ÙˆØ³ Ø§Ù„Ø£ÙŠÙ…Ù† Ù„Ù„Ø¥Ø¹Ø¯Ø§Ø¯</value>
+    <value>انقر بزر الماوس الأيمن للإعداد</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>إعادة تعيين الخريطة</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø¶Ø¨Ø· Ø²ÙˆÙ… Ø§Ù„Ø®Ø±ÙŠØ·Ø© ÙˆÙ…ÙˆÙ‚Ø¹Ù‡Ø§ Ù„Ù„ÙˆØ¶Ø¹ Ø§Ù„Ø£ØµÙ„ÙŠ</value>
+    <value>إعادة ضبط زوم الخريطة وموقعها للوضع الأصلي</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Ø®Ø±ÙŠØ·Ø© Ù…ØµØºØ±Ø©</value>
+    <value>خريطة مصغرة</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>ØªØ´ØºÙŠÙ„/Ø¥ÙŠÙ‚Ø§Ù Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØµÙˆÙŠØ¨ (Ø§Ù†Ù‚Ø± Ø¨Ø§Ù„Ø²Ø± Ø§Ù„Ø£ÙŠÙ…Ù† Ù„Ù„Ø®ÙŠØ§Ø±Ø§Øª)</value>
+    <value>تشغيل/إيقاف علامة التصويب (انقر بالزر الأيمن للخيارات)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>تتبع اللاعبين</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚ Ù…ØªØµÙØ­ BattleMetrics</value>
+    <value>إغلاق متصفح BattleMetrics</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø­Ø« ÙÙŠ Ø§Ù„Ù…ØªØ§Ø¬Ø±</value>
+    <value>البحث في المتاجر</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø«</value>
+    <value>إغلاق البحث</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>ÙŠØ±Ø¬Ù‰ ØªÙØ¹ÙŠÙ„ Ø®ÙŠØ§Ø± Ø§Ù„Ù…ØªØ§Ø¬Ø± Ø£ÙˆÙ„Ø§Ù‹</value>
+    <value>يرجى تفعيل خيار المتاجر أولاً</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>ØªÙØ¹ÙŠÙ„ ØªØªØ¨Ø¹ ØªØ­Ø¯ÙŠØ«Ø§Øª Ø§Ù„Ù…ØªØ§Ø¬Ø±</value>
+    <value>تفعيل تتبع تحديثات المتاجر</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>Ù…Ø­Ø§Ø¯Ø«Ø© Ø§Ù„ÙØ±ÙŠÙ‚</value>
+    <value>محادثة الفريق</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©</value>
+    <value>إغلاق المحادثة</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ø´Ø§Øª</value>
+    <value>إعدادات أوامر الشات</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ø´Ø§Øª</value>
+    <value>أوامر الشات</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Ø±Ø¬ÙˆØ¹</value>
+    <value>رجوع</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>ØªÙ‚Ø¯ÙŠÙ… Ù„Ù„Ø£Ù…Ø§Ù…</value>
+    <value>تقديم للأمام</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>ÙØªØ­ ÙÙŠ Ù…ØªØµÙØ­ Ø®Ø§Ø±Ø¬ÙŠ</value>
+    <value>فتح في متصفح خارجي</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>Ø¨Ø­Ø« ÙÙŠ Ù…ÙŠØ²Ø§Øª Ø§Ù„Ù€ BM...</value>
+    <value>بحث في ميزات الـ BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Ø¨Ø­Ø«</value>
+    <value>بحث</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Ø§Ø®ØªØ± Ø³ÙŠØ±ÙØ±</value>
+    <value>اختر سيرفر</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>ØºÙŠØ± Ù…ØªØµÙ„</value>
+    <value>غير متصل</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø§ØªØµØ§Ù„...</value>
+    <value>جاري الاتصال...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªÙ‡ÙŠØ¦Ø© ÙˆØ§Ù„ØªØ­Ù…ÙŠÙ„...</value>
+    <value>جاري التهيئة والتحميل...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ© Ù†Ø´Ø·Ø©</value>
+    <value>الأجهزة الذكية نشطة</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>Ù…ØªØµÙ„ Ø¨Ø§Ù„ÙƒØ§Ù…Ù„</value>
+    <value>متصل بالكامل</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>Ø§Ù„Ø­Ø§Ù„Ø© Ù…Ø¬Ù‡ÙˆÙ„Ø©</value>
+    <value>الحالة مجهولة</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Ù‚Ø¯ ÙŠØ³ØªØºØ±Ù‚ Ù‡Ø°Ø§ Ø§Ù„Ø£Ù…Ø± Ø¨Ø¹Ø¶ Ø§Ù„ÙˆÙ‚Øª...</value>
+    <value>قد يستغرق هذا الأمر بعض الوقت...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„ØªØ·Ø¨ÙŠÙ‚</value>
+    <value>إعدادات التطبيق</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø¹Ø§Ù…Ø©</value>
+    <value>إعدادات عامة</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>Ø§Ù„ØªØ´ØºÙŠÙ„ Ø§Ù„ØªÙ„Ù‚Ø§Ø¦ÙŠ Ù…Ø¹ Ù†Ø¸Ø§Ù… ÙˆÙŠÙ†Ø¯ÙˆØ² (Ù…ØµØºØ±Ø§Ù‹)</value>
+    <value>التشغيل التلقائي مع نظام ويندوز (مصغراً)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Ø¨Ø¯Ø¡ Ø§Ù„ØªØ´ØºÙŠÙ„ Ø¨ÙˆØ¶Ø¹ Ø§Ù„ØªØµØºÙŠØ± Ø¯Ø§Ø¦Ù…Ø§Ù‹</value>
+    <value>بدء التشغيل بوضع التصغير دائماً</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Ø§ØªØµØ§Ù„ ØªÙ„Ù‚Ø§Ø¦ÙŠ Ø¨Ø¢Ø®Ø± Ø³ÙŠØ±ÙØ± Ø¹Ù†Ø¯ ØªØ´ØºÙŠÙ„ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚</value>
+    <value>اتصال تلقائي بآخر سيرفر عند تشغيل التطبيق</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø§ØªØµØ§Ù„ ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§ Ø¨Ø¢Ø®Ø± Ø³ÙŠØ±ÙØ± ÙƒÙ†Øª Ù…ØªØµÙ„Ø§Ù‹ Ø¨Ù‡ ÙˆØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø®Ø±ÙŠØ·Ø© ÙÙˆØ±ÙŠØ§Ù‹.</value>
+    <value>إعادة الاتصال تلقائيًا بآخر سيرفر كنت متصلاً به وتحميل الخريطة فورياً.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>Ø³Ù„ÙˆÙƒ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚</value>
+    <value>سلوك التطبيق</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Ø§Ù„ØªØµØºÙŠØ± Ø¥Ù„Ù‰ Ø´Ø±ÙŠØ· Ø§Ù„Ù…Ù‡Ø§Ù… (Tray) Ø¹Ù†Ø¯ Ø¥ØºÙ„Ø§Ù‚ Ø§Ù„Ù†Ø§ÙØ°Ø©</value>
+    <value>التصغير إلى شريط المهام (Tray) عند إغلاق النافذة</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>ØªÙØ¹ÙŠÙ„ ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† ÙÙŠ Ø§Ù„Ø®Ù„ÙÙŠØ©</value>
+    <value>تفعيل تتبع اللاعبين في الخلفية</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>ÙŠØ¶Ù…Ù† Ø§Ø³ØªÙ…Ø±Ø§Ø± ØªØªØ¨Ø¹ ØªØ­Ø±ÙƒØ§Øª Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø¹Ø¨Ø± BattleMetrics Ø­ØªÙ‰ Ø¹Ù†Ø¯ ØªØµØºÙŠØ± Ø§Ù„ØªØ·Ø¨ÙŠÙ‚.</value>
+    <value>يضمن استمرار تتبع تحركات اللاعبين عبر BattleMetrics حتى عند تصغير التطبيق.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>Ø¥Ø®ÙØ§Ø¡ Ù†Ø§ÙØ°Ø© Ø§Ù„Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ø¨Ø±Ù…Ø¬ÙŠØ© Ù„Ù„Ù†Ø¸Ø§Ù… (Ù„ÙˆØ­Ø© Ø§Ù„ÙƒÙˆÙ†Ø³ÙˆÙ„)</value>
+    <value>إخفاء نافذة الأوامر البرمجية للنظام (لوحة الكونسول)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>ÙŠØ®ÙÙŠ Ù„ÙˆØ­Ø© Ø§Ù„Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ø¨Ø±Ù…Ø¬ÙŠØ© ÙˆØ§Ù„Ø³Ø¬Ù„Ø§Øª Ø§Ù„Ø³ÙÙ„ÙŠØ© Ù„ØªÙˆÙÙŠØ± Ù…Ø³Ø§Ø­Ø© Ø£ÙƒØ¨Ø± Ù„Ø¹Ø±Ø¶ Ø§Ù„Ø®Ø±ÙŠØ·Ø©.</value>
+    <value>يخفي لوحة الأوامر البرمجية والسجلات السفلية لتوفير مساحة أكبر لعرض الخريطة.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>إعدادات الخريطة</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù…ØªØ§Ø¬Ø± (Ø§Ù„Ø´ÙˆØ¨) ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§ Ø¹Ù†Ø¯ Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>تحميل المتاجر (الشوب) تلقائيًا عند الاتصال بالسيرفر</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø¯Ø¡ ÙÙŠ Ø¬Ù„Ø¨ Ø¨ÙŠØ§Ù†Ø§Øª Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ù…ØªØ§Ø¬Ø± ÙˆØªØ­Ø¯ÙŠØ« ØªÙ†Ø¨ÙŠÙ‡Ø§ØªÙ‡Ø§ ÙÙˆØ± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±.</value>
+    <value>البدء في جلب بيانات أسعار المتاجر وتحديث تنبيهاتها فور الاتصال بالسيرفر.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>Ø¹Ø±Ø¶ Ø£Ø³Ù…Ø§Ø¡ Ø§Ù„Ù…Ø¹Ø§Ù„Ù… ÙƒÙ†ØµÙˆØµ Ø¨Ø¯Ù„Ø§Ù‹ Ù…Ù† Ø§Ù„Ø±Ù…ÙˆØ² ÙˆØ§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª</value>
+    <value>عرض أسماء المعالم كنصوص بدلاً من الرموز والأيقونات</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>Ø¹Ù†Ø¯ ØªÙØ¹ÙŠÙ„ Ù‡Ø°Ø§ Ø§Ù„Ø®ÙŠØ§Ø±ØŒ Ø³ÙŠØªÙ… Ø¹Ø±Ø¶ Ø£Ø³Ù…Ø§Ø¡ Ù…Ø¹Ø§Ù„Ù… Ø§Ù„Ø®Ø±ÙŠØ·Ø© (Monuments) ÙƒÙ†ØµÙˆØµ Ù…ÙƒØªÙˆØ¨Ø© Ø¨Ø®Ø· Ø¹Ø±ÙŠØ¶ Ø¨Ø¯Ù„Ø§Ù‹ Ù…Ù† Ø§Ù„Ø±Ù…ÙˆØ² Ø§Ù„ØªØµÙˆÙŠØ±ÙŠØ©.</value>
+    <value>عند تفعيل هذا الخيار، سيتم عرض أسماء معالم الخريطة (Monuments) كنصوص مكتوبة بخط عريض بدلاً من الرموز التصويرية.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
-    <value>Ù†Ù…Ø· Ù…Ø¹Ø§Ù„Ù… Ø§Ù„Ø®Ø±ÙŠØ·Ø©:</value>
+    <value>نمط معالم الخريطة:</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>Ù…Ù‚ÙŠØ§Ø³ Ø­Ø¬Ù… Ø§Ù„Ù…Ø¹Ø§Ù„Ù…:</value>
+    <value>مقياس حجم المعالم:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>Ø´ÙØ§ÙÙŠØ© Ù…Ø¹Ø§Ù„Ù… Ø§Ù„Ø®Ø±ÙŠØ·Ø©:</value>
+    <value>شفافية معالم الخريطة:</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
-    <value>Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª Ù…Ù‚Ø¯Ù…Ø© Ù…Ù† rustmaps.com</value>
+    <value>أيقونات مقدمة من rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>Ø§Ù„Ø£Ø³Ù…Ø§Ø¡ Ø§Ù„Ø£ØµÙ„ÙŠØ© Ù„Ù„Ù…Ø¹Ø§Ù„Ù… (Ù†ØµÙŠ)</value>
+    <value>الأسماء الأصلية للمعالم (نصي)</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
-    <value>Ø­Ù‚ÙˆÙ‚ Ø§Ù„Ø¹Ù…Ù„ ÙˆØ§Ù„ØªÙ‚Ø¯ÙŠØ±</value>
+    <value>حقوق العمل والتقدير</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª Ù…Ø¹Ø§Ù„Ù… Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ù…Ø£Ø®ÙˆØ°Ø© Ù…Ù† </value>
+    <value>أيقونات معالم الخريطة مأخوذة من </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> - Ù…Ø³ØªØ®Ø¯Ù…Ø© Ø¨Ø¥Ø°Ù† Ø±Ø³Ù…ÙŠ.</value>
+    <value> - مستخدمة بإذن رسمي.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>Ø¬Ù…ÙŠØ¹ Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª Ø§Ù„Ù…Ø¹Ø§Ù„Ù… ÙˆØ§Ù„Ø±Ø³ÙˆÙ…Ø§Øª Ø§Ù„ØªÙˆØ¶ÙŠØ­ÙŠØ© Ø°Ø§Øª Ø§Ù„ØµÙ„Ø© Ù‡ÙŠ Ù…Ù„Ùƒ Ø­ØµØ±ÙŠ Ù„Ù…ÙˆÙ‚Ø¹ rustmaps.com. Ø´ÙƒØ±Ø§Ù‹ Ù„ÙƒÙ… Ø¹Ù„Ù‰ Ø¯Ø¹Ù… Ù…Ø¬ØªÙ…Ø¹ Rust!</value>
+    <value>جميع أيقونات المعالم والرسومات التوضيحية ذات الصلة هي ملك حصري لموقع rustmaps.com. شكراً لكم على دعم مجتمع Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Ø§Ù„Ø´Ø§Øª</value>
+    <value>الشات</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>ØªØ¹Ø¯ÙŠÙ„ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø´Ø§Øª</value>
+    <value>تعديل تنبيهات الشات</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>ÙŠÙ…ÙƒÙ†Ùƒ Ø¥Ø¯Ø§Ø±Ø© Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ… (Steam) Ø§Ù„Ù…Ø±ØªØ¨Ø· Ø¨Ùƒ Ù…Ù† Ø®Ù„Ø§Ù„ Ø§Ù„Ù†Ø§ÙØ°Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©.</value>
+    <value>يمكنك إدارة حساب ستيم (Steam) المرتبط بك من خلال النافذة الرئيسية.</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚</value>
+    <value>إغلاق</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>Ø§Ù„Ø¥Ù†Ø°Ø§Ø±Ø§Øª Ø§Ù„ÙˆØ§Ø±Ø¯Ø©</value>
+    <value>الإنذارات الواردة</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>Ø§Ù„ÙˆØ§ÙŠØ¨ / ØªØµÙÙŠØ± Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>الوايب / تصفير السيرفر</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙˆÙ† ÙÙ‚Ø·</value>
+    <value>اللاعبون فقط</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙˆÙ†</value>
+    <value>اللاعبون</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø§Ø¯Ø© Ø§Ù„ØªÙŠ ØªØ±ÙŠØ¯ Ø§Ù„Ø­ØµÙˆÙ„ Ø¹Ù„ÙŠÙ‡Ø§ Ù„Ø´Ø±Ø§Ø¡ Ø´ÙŠ Ù…Ø§ (Ù…Ø«Ù„: Ø§Ù„Ù†ÙØ· Ø§Ù„Ø®Ø§Ù…)</value>
+    <value>المادة التي تريد الحصول عليها لشراء شي ما (مثل: النفط الخام)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø§Ø¯Ø© Ø§Ù„ØªÙŠ ØªØ±ÙŠØ¯ Ø§Ù„Ø¯ÙØ¹ Ø¨Ù‡Ø§ (Ù…Ø«Ù„: Ø§Ù„Ø³ÙƒØ±Ø§Ø¨/Ø§Ù„Ø®Ø±Ø¯Ø©)</value>
+    <value>المادة التي تريد الدفع بها (مثل: السكراب/الخردة)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Ù‡Ù„ ØªØ±ÙŠØ¯ Ø¨Ø§Ù„ØªØ£ÙƒÙŠØ¯ Ø­Ø°Ù Ø§Ù„Ø³ÙŠØ±ÙØ± "{0}"ØŸ Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø§Ù„ØªØ±Ø§Ø¬Ø¹ Ø¹Ù† Ù‡Ø°Ø§ Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡ Ù…Ø·Ù„Ù‚Ø§Ù‹.</value>
+    <value>هل تريد بالتأكيد حذف السيرفر "{0}"؟ لا يمكن التراجع عن هذا الإجراء مطلقاً.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: Ø®Ø·Ø£ ÙÙŠ Ø§Ù„Ø§ØªØµØ§Ù„</value>
+    <value>الاقتران: خطأ في الاتصال</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø¨Ø¯Ø¡...</value>
+    <value>الاقتران: جاري البدء...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ ØªØ´ØºÙŠÙ„ Ù…Ø³ØªÙ…Ø¹ Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù† (Listener)...</value>
+    <value>جاري تشغيل مستمع الاقتران (Listener)...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>ØªÙ… ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨Ù†Ø¬Ø§Ø­</value>
+    <value>تم تسجيل الدخول بنجاح</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø®Ø²ÙˆÙ† Ø§Ù„Ù…ØªÙˆÙØ±</value>
+    <value>المخزون المتوفر</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Ø§Ù„Ø³Ø¹Ø±</value>
+    <value>السعر</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>ØªØ´ØºÙŠÙ„</value>
+    <value>تشغيل</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>Ø¥ÙŠÙ‚Ø§Ù</value>
+    <value>إيقاف</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Ù†Ø´Ø·</value>
+    <value>نشط</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>ØºÙŠØ± Ù†Ø´Ø·</value>
+    <value>غير نشط</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>المجموعة</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Desktop - Ø§Ø³ØªÙŠØ±Ø§Ø¯ Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ©</value>
+    <value>Rust+ Desktop - استيراد الأجهزة الذكية</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Ø§Ø³ØªÙŠØ±Ø§Ø¯ Ø§Ù„Ø£Ø¬Ù‡Ø²Ø©</value>
+    <value>استيراد الأجهزة</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Ø­Ø¯Ø¯ Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ© Ø§Ù„ØªÙŠ ØªØ±ØºØ¨ ÙÙŠ Ø§Ø³ØªÙŠØ±Ø§Ø¯Ù‡Ø§ Ù„Ù‡Ø°Ø§ Ø§Ù„Ø³ÙŠØ±ÙØ±.</value>
+    <value>حدد الأجهزة الذكية التي ترغب في استيرادها لهذا السيرفر.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>ÙØ­Øµ Ø­Ø§Ù„Ø© Ø§Ù„Ø¬Ù‡Ø§Ø²</value>
+    <value>فحص حالة الجهاز</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Ø§Ø³ØªÙŠØ±Ø§Ø¯ Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ù…Ø­Ø¯Ø¯Ø©</value>
+    <value>استيراد الأجهزة المحددة</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>Ø§Ø®ØªØµØ§Ø±Ø§Øª BattleMetrics</value>
+    <value>اختصارات BattleMetrics</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ù‚ØªØ±Ø§Ù†: ØªÙ… Ù…Ø³Ø­ Ù…Ù„Ù Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª</value>
+    <value>الاقتران: تم مسح ملف الإعدادات</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Ø¨Ø±Ù†Ø§Ù…Ø¬ Rust+ Desktop</value>
+    <value>برنامج Rust+ Desktop</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rust+ Desktop (Ø¬Ø§Ø±ÙŠ ØªØªØ¨Ø¹ {0})</value>
+    <value>Rust+ Desktop (جاري تتبع {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ³Ù…ÙŠØ© Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©</value>
+    <value>إعادة تسمية المجموعة</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>Ø§Ø³Ù… Ø¬Ø¯ÙŠØ¯ Ù„Ù„Ù…Ø¬Ù…ÙˆØ¹Ø©:</value>
+    <value>اسم جديد للمجموعة:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>Ø§Ø³Ù… Ø¬Ø¯ÙŠØ¯ Ù„Ù„Ø¬Ù‡Ø§Ø² Ø±Ù‚Ù… #{0}:</value>
+    <value>اسم جديد للجهاز رقم #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Ø£Ø¯Ø®Ù„ Ù…Ø¹Ø±Ù Ø³ÙŠØ±ÙØ± Battlemetrics Ù„Ù€ "{0}":</value>
+    <value>أدخل معرف سيرفر Battlemetrics لـ "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>Ø§Ù„ØªØªØ¨Ø¹: {0}</value>
+    <value>التتبع: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>Ø¢Ø®Ø± ØªØ­Ø¯ÙŠØ«: {0}</value>
+    <value>آخر تحديث: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>ÙØªØ­ ÙˆØ§Ø¬Ù‡Ø© Rust+ Desktop</value>
+    <value>فتح واجهة Rust+ Desktop</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚ ÙˆØªØ³ÙƒÙŠØ± Ø§Ù„Ø¨Ø±Ù†Ø§Ù…Ø¬</value>
+    <value>إغلاق وتسكير البرنامج</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Ø§Ù„ÙˆØµÙ</value>
+    <value>الوصف</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>ÙƒØ§Ù…ÙŠØ±Ø§</value>
+    <value>كاميرا</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>Ø§Ù„Ø¥Ù†Ø°Ø§Ø±Ø§Øª</value>
+    <value>الإنذارات</value>
   </data>
   <data name="Identifier" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø¹Ø±Ù‘Ù Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ:</value>
+    <value>المعرّف الإلكتروني:</value>
   </data>
   <data name="FPS" xml:space="preserve">
-    <value>Ù…Ø¹Ø¯Ù„ Ø§Ù„Ø¥Ø·Ø§Ø±Ø§Øª (FPS):</value>
+    <value>معدل الإطارات (FPS):</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Ù…Ù„Ø§Ø­Ø¸Ø©: ÙŠÙ†ØµØ­ Ø¨Ø¶Ø¨Ø· Ø¬ÙˆØ¯Ø© Ø§Ù„ÙƒØ§Ù…ÙŠØ±Ø§ Ø¹Ù„Ù‰ 2 Ø¥Ø·Ø§Ø± ÙÙŠ Ø§Ù„Ø«Ø§Ù†ÙŠØ© (2 FPS). Ø±ÙØ¹ Ù…Ø¹Ø¯Ù„ Ø§Ù„Ø¥Ø·Ø§Ø±Ø§Øª Ø¹Ù† Ø°Ù„Ùƒ Ù‚Ø¯ ÙŠØ¤Ø¯ÙŠ Ù„Ù‚Ø·Ø¹ Ø§ØªØµØ§Ù„Ùƒ ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹ Ù…Ù† Ù‚ÙØ¨Ù„ Ø§Ù„Ø³ÙŠØ±ÙØ± Ù„Ø­Ù…Ø§ÙŠØªÙ‡.</value>
+    <value>ملاحظة: ينصح بضبط جودة الكاميرا على 2 إطار في الثانية (2 FPS). رفع معدل الإطارات عن ذلك قد يؤدي لقطع اتصالك تلقائياً من قِبل السيرفر لحمايته.</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>Ø¨ÙƒØ³Ù„</value>
+    <value>بكسل</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>Ù‚Ù„Ù… Ø§Ù„Ø±Ø³Ù…</value>
+    <value>قلم الرسم</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Ø®Ø· Ù…Ø³ØªÙ‚ÙŠÙ…</value>
+    <value>خط مستقيم</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>Ù…Ø±Ø¨Ø¹</value>
+    <value>مربع</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>Ø¯Ø§Ø¦Ø±Ø©</value>
+    <value>دائرة</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>Ø³ÙÙ…Ùƒ Ø§Ù„Ø®Ø·:</value>
+    <value>سُمك الخط:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Ù…Ø³ØªÙˆÙ‰ Ø§Ù„ØªØ¹ØªÙŠÙ…:</value>
+    <value>مستوى التعتيم:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>Ø±ÙØ¹ ØµÙˆØ±Ø© PNG</value>
+    <value>رفع صورة PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Ù…Ø³Ø­ Ø§Ù„ÙƒÙ„</value>
+    <value>مسح الكل</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Ø­ÙØ¸</value>
+    <value>حفظ</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>ØªØ¹ÙŠÙŠÙ† Ù…ÙØ§ØªÙŠØ­ Ø§Ø®ØªØµØ§Ø± Ø¹Ø§Ù…Ø© Ù…Ù† Ù„ÙˆØ­Ø© Ø§Ù„Ù…ÙØ§ØªÙŠØ­ Ù„Ù„Ù…ÙØ§ØªÙŠØ­ Ø§Ù„Ø°ÙƒÙŠØ©. ÙŠÙ…ÙƒÙ† Ù„Ø¹Ø¯Ø© Ø£Ø¬Ù‡Ø²Ø© Ù…Ø´Ø§Ø±ÙƒØ© Ù†ÙØ³ Ø²Ø± Ø§Ù„Ø§Ø®ØªØµØ§Ø± (Ø³ÙŠØªÙ… ØªØ´ØºÙŠÙ„Ù‡Ø§ Ø¨Ø§Ù„ØªÙ†Ø§ÙˆØ¨ ØªØªØ§Ø¨Ø¹ÙŠÙ‹Ø§ Ø¹Ù†Ø¯ Ø§Ù„Ø¶ØºØ·).</value>
+    <value>تعيين مفاتيح اختصار عامة من لوحة المفاتيح للمفاتيح الذكية. يمكن لعدة أجهزة مشاركة نفس زر الاختصار (سيتم تشغيلها بالتناوب تتابعيًا عند الضغط).</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Ø§Ù„Ø¬Ù‡Ø§Ø²</value>
+    <value>الجهاز</value>
   </data>
   <data name="EntityId" xml:space="preserve">
-    <value>Ù…Ø¹Ø±Ù‘Ù Ø§Ù„ÙƒÙŠØ§Ù† Ø§Ù„Ø£Ø³Ø§Ø³ÙŠ (Entity ID)</value>
+    <value>معرّف الكيان الأساسي (Entity ID)</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>Ø²Ø± Ø§Ù„Ø§Ø®ØªØµØ§Ø±</value>
+    <value>زر الاختصار</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>ØªØ¹ÙŠÙŠÙ†</value>
+    <value>تعيين</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚ ÙˆØªØ¹Ø·ÙŠÙ„ Ø§Ù„Ø£Ù…Ø±</value>
+    <value>إغلاق وتعطيل الأمر</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Ø¥ØºÙ„Ø§Ù‚ ÙˆØªÙØ¹ÙŠÙ„ Ø§Ù„Ø£Ù…Ø±</value>
+    <value>إغلاق وتفعيل الأمر</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>ØªØ­Ø¯ÙŠØ«Ø§Øª Ù†Ø¸Ø§Ù… Ø§Ù„ØµÙŠØ§Ù†Ø© ÙˆØ§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ù…ØµØºØ±Ø© ÙˆØ§Ù„ØªØªØ¨Ø¹</value>
+    <value>تحديثات نظام الصيانة والخريطة المصغرة والتتبع</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Ù…Ù„Ø®Øµ Ø§Ù„Ù…ÙŠØ²Ø§Øª Ø§Ù„Ù…Ø¶Ø§ÙØ© ÙˆØ§Ù„ØªØ¹Ø¯ÙŠÙ„Ø§Øª</value>
+    <value>ملخص الميزات المضافة والتعديلات</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>Ù„Ø§ ØªØ¸Ù‡Ø± Ù‡Ø°Ù‡ Ø§Ù„Ø±Ø³Ø§Ù„Ø© Ù…Ø¬Ø¯Ø¯Ø§Ù‹</value>
+    <value>لا تظهر هذه الرسالة مجدداً</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Ø±Ø§Ø¦Ø¹ØŒ Ù‡ÙŠØ§ Ø¨Ù†Ø§!</value>
+    <value>رائع، هيا بنا!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ù…ØµØºØ±Ø©</value>
+    <value>إعدادات الخريطة المصغرة</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>Ø§Ù„Ø´ÙƒÙ„ Ø§Ù„Ù‡Ù†Ø¯Ø³ÙŠ</value>
+    <value>الشكل الهندسي</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>Ù…Ø³ØªØ·ÙŠÙ„</value>
+    <value>مستطيل</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Ù…Ø³ØªÙˆÙ‰ Ø§Ù„Ø´ÙØ§ÙÙŠØ©: {0}%</value>
+    <value>مستوى الشفافية: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Ø§Ù„Ø­Ø¬Ù…: {0}% (Ø§Ø³ØªØ®Ø¯Ù… Ø²Ø± SHIFT + Ø¹Ø¬Ù„Ø© Ø§Ù„Ù…Ø§ÙˆØ³ Ù„Ù„ØªØ­ÙƒÙ…)</value>
+    <value>الحجم: {0}% (استخدم زر SHIFT + عجلة الماوس للتحكم)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>Ø¹Ø±Ø¶ ØªÙˆÙ‚ÙŠØª Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>عرض توقيت السيرفر</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ø§Ù„Ø³ÙŠØ±ÙØ± Ø§Ù„Ø­Ø§Ù„ÙŠ</value>
+    <value>معلومات السيرفر الحالي</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙˆØµÙ Ù…ØªØ§Ø­ Ù„Ù‡Ø°Ø§ Ø§Ù„Ø³ÙŠØ±ÙØ±.</value>
+    <value>لا يوجد وصف متاح لهذا السيرفر.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Ø§Ù„Ø¥ØµØ¯Ø§Ø± Ø§Ù„Ø­Ø§Ù„ÙŠ Ù„Ù„Ø¨Ø±Ù†Ø§Ù…Ø¬: {0}</value>
+    <value>الإصدار الحالي للبرنامج: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>Ù…Ù„Ø§Ø­Ø¸Ø§Øª Ø§Ù„ØªØ­Ø¯ÙŠØ«Ø§Øª ÙˆØªØ§Ø±ÙŠØ® Ø§Ù„Ø¥ØµØ¯Ø§Ø±</value>
+    <value>ملاحظات التحديثات وتاريخ الإصدار</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>ØªÙ…ÙƒÙŠÙ† Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ø´Ø§Øª</value>
+    <value>تمكين استخدام أوامر الشات</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¯Ø¦Ø© Ù„Ù„Ø£ÙˆØ§Ù…Ø± (Ù…Ø«Ù„ ! Ø£Ùˆ /)</value>
+    <value>البادئة للأوامر (مثل ! أو /)</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>Ø§Ù„Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ù‚ÙŠØ§Ø³ÙŠØ© ÙˆØ§Ù„Ø£Ø³Ø§Ø³ÙŠØ©</value>
+    <value>الأوامر القياسية والأساسية</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>Ø¹Ø¯Ø¯ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø§Ù„Ø­Ø§Ù„ÙŠÙŠÙ†:</value>
+    <value>عدد اللاعبين الحاليين:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Ø§Ù„ÙˆÙ‚Øª Ø¯Ø§Ø®Ù„ Ø§Ù„Ù„Ø¹Ø¨Ø©:</value>
+    <value>الوقت داخل اللعبة:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>ØªØ±Ù‚ÙŠØ© Ø§Ù„Ø¹Ø¶Ùˆ:</value>
+    <value>ترقية العضو:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Ø£Ù…Ø± Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø±:</value>
+    <value>أمر حدث أعماق البحار:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Ø£Ù…Ø± Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ø§Ù„ÙƒØ§Ø±Ø¬Ùˆ:</value>
+    <value>أمر سفينة الشحن الكارجو:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>Ø£Ù…Ø± Ù…Ù†ØµØ© Ø§Ù„Ù†ÙØ· Ø£ÙˆÙŠÙ„ Ø±ÙŠØ¬:</value>
+    <value>أمر منصة النفط أويل ريج:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>Ø£Ù…Ø± Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ø§Ù„Ù‡ÙŠÙ„ÙŠ:</value>
+    <value>أمر مروحية الدورية الهيلي:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>Ø£Ù…Ø± Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„:</value>
+    <value>أمر البائع المتنقل:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>ØªÙØ§ØµÙŠÙ„ Ù…Ø¯Ø© Ø§Ù„ØµÙŠØ§Ù†Ø© (Ø§Ù„Ø£Ø¨ ÙƒÙŠØ¨):</value>
+    <value>تفاصيل مدة الصيانة (الأب كيب):</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ù‡Ù„Ø© Ø§Ù„Ø²Ù…Ù†ÙŠØ© Ø¨ÙŠÙ† Ø§Ù„Ø£ÙˆØ§Ù…Ø± (Cooldown):</value>
+    <value>المهلة الزمنية بين الأوامر (Cooldown):</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Ø§Ù„Ù„ØºØ©</value>
+    <value>اللغة</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Ø§Ø®ØªØ± Ø§Ù„Ù„ØºØ© Ø§Ù„Ù…Ù†Ø§Ø³Ø¨Ø©</value>
+    <value>اختر اللغة المناسبة</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>ØªØºÙŠÙŠØ± Ù„ØºØ© Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ ÙŠØªØ·Ù„Ø¨ Ø¥Ø¹Ø§Ø¯Ø© ØªØ´ØºÙŠÙ„ Ø§Ù„Ø¨Ø±Ù†Ø§Ù…Ø¬ Ø¨Ø§Ù„ÙƒØ§Ù…Ù„ Ù„ØªØ·Ø¨ÙŠÙ‚ Ø§Ù„ØªØ¹Ø¯ÙŠÙ„Ø§Øª Ø¨Ù†Ø¬Ø§Ø­.</value>
+    <value>تغيير لغة التطبيق يتطلب إعادة تشغيل البرنامج بالكامل لتطبيق التعديلات بنجاح.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>Ù…ÙØ§ØªÙŠØ­ Ø§Ù„ØªØ¨Ø¯ÙŠÙ„ Ø§Ù„Ø°ÙƒÙŠØ© (Smart Switches)</value>
+    <value>مفاتيح التبديل الذكية (Smart Switches)</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Ø£Ø¬Ù‡Ø²Ø© Ù…Ø±Ø§Ù‚Ø¨Ø© Ø®Ø²Ø§Ù†Ø© Ø§Ù„Ø£Ø¯ÙˆØ§Øª (TC Upkeep)</value>
+    <value>أجهزة مراقبة خزانة الأدوات (TC Upkeep)</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¹Ø«ÙˆØ± Ø¹Ù„Ù‰ Ø£Ø¬Ù‡Ø²Ø© Ù…Ø±Ø§Ù‚Ø¨Ø© Ù„Ù„Ø®Ø²Ø§Ù†Ø© (TC) Ù…ØªØµÙ„Ø©.</value>
+    <value>لم يتم العثور على أجهزة مراقبة للخزانة (TC) متصلة.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Ø§Ù„Ø­ÙØ¸ ÙˆØ¥ØºÙ„Ø§Ù‚ Ø§Ù„Ù†Ø§ÙØ°Ø©</value>
+    <value>الحفظ وإغلاق النافذة</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>Ø§ÙƒØªØ¨ Ø±Ø³Ø§Ù„ØªÙƒ Ù‡Ù†Ø§...</value>
+    <value>اكتب رسالتك هنا...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>Ø³ØªØ¸Ù‡Ø± Ø±Ø³Ø§Ù„Ø© Ø§Ù„Ø®Ø·Ø£ Ù‡Ù†Ø§</value>
+    <value>ستظهر رسالة الخطأ هنا</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© (Ø§Ù„Ù‡ÙŠÙ„ÙŠ)</value>
+    <value>مروحية الدورية (الهيلي)</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ù†Ø´Ø·Ø© Ø­Ø§Ù„ÙŠØ§Ù‹ - Ù…ØªÙˆØ§Ø¬Ø¯Ø© Ù…Ù†Ø° {0}</value>
+    <value>مروحية الدورية نشطة حالياً - متواجدة منذ {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ ÙÙŠ Ù…Ù†ØªØµÙ Ø§Ù„ÙØ¹Ø§Ù„ÙŠØ© - ÙˆÙ‚Øª Ø¸Ù‡ÙˆØ± Ø§Ù„Ø­Ø¯Ø« (Ø§Ù„Ø±Ø³Ø¨Ù†) Ù…Ø¬Ù‡ÙˆÙ„</value>
+    <value>تم الاتصال في منتصف الفعالية - وقت ظهور الحدث (الرسبن) مجهول</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ù…ØªÙˆØ§Ø¬Ø¯Ø© ÙÙŠ Ø§Ù„Ø£Ø¬ÙˆØ§Ø¡ (ÙˆÙ‚Øª Ø§Ù„Ø±Ø³Ø¨Ù† ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙ)</value>
+    <value>مروحية الدورية متواجدة في الأجواء (وقت الرسبن غير معروف)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>ØªÙ… Ø¥Ø³Ù‚Ø§Ø· Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ù‚Ø¨Ù„ {0} Ù…Ù† Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©</value>
+    <value>تم إسقاط مروحية الدورية قبل {0} من هذه الجلسة</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>ØºØ§Ø¯Ø±Øª Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ø£Ø¬ÙˆØ§Ø¡ Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ù‚Ø¨Ù„ {0} Ù…Ù† Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©</value>
+    <value>غادرت مروحية الدورية أجواء الخريطة قبل {0} من هذه الجلسة</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Ø§Ù„Ø±Ø³Ùˆ ÙÙŠ Ø§Ù„Ù…ÙŠÙ†Ø§Ø¡: {0} - Ø³ØªØºØ§Ø¯Ø± Ø®Ù„Ø§Ù„ {1} ØªÙ‚Ø±ÙŠØ¨Ø§Ù‹</value>
+    <value>الرسو في الميناء: {0} - ستغادر خلال {1} تقريباً</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>Ø§Ù„Ù…ÙŠÙ†Ø§Ø¡ (Harbor)</value>
+    <value>الميناء (Harbor)</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Ø§Ù„Ø³ÙÙŠÙ†Ø© Ø±Ø§Ø³ÙŠØ© Ø¨Ø§Ù„ÙØ¹Ù„ Ø¨Ø§Ù„Ù…ÙŠÙ†Ø§Ø¡ Ø¹Ù†Ø¯ Ø¯Ø®ÙˆÙ„Ùƒ - ØªÙˆÙ‚ÙŠØª Ø§Ù„Ù…ØºØ§Ø¯Ø±Ø© Ù…Ø¬Ù‡ÙˆÙ„</value>
+    <value>السفينة راسية بالفعل بالميناء عند دخولك - توقيت المغادرة مجهول</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Ø§Ù„Ø³ÙÙŠÙ†Ø© Ø±Ø§Ø³ÙŠØ© ÙÙŠ {0} (Ù„Ù… ÙŠØªÙ… ØªØ­Ø¯ÙŠØ¯ Ù…Ø¯Ø© Ø§Ù„Ø±Ø³Ùˆ Ø¨Ø¯Ù‚Ø© Ø¨Ø¹Ø¯)</value>
+    <value>السفينة راسية في {0} (لم يتم تحديد مدة الرسو بدقة بعد)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Ø§Ù„ÙˆÙ‚Øª Ø§Ù„Ù…ØªØ¨Ù‚ÙŠ Ù„Ù„Ø³ÙÙŠÙ†Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø®Ø±ÙŠØ·Ø© (Ù…Ù†Ø° Ø±Ø³Ø¨Ù†ØªÙ‡Ø§)</value>
+    <value>الوقت المتبقي للسفينة على الخريطة (منذ رسبنتها)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù… ÙˆÙ‡ÙŠ ÙÙŠ Ù…Ù†ØªØµÙ Ù…Ø³Ø§Ø±Ù‡Ø§ - Ø§Ù„ÙˆÙ‚Øª Ø§Ù„Ù…ØªØ¨Ù‚ÙŠ Ù…Ø¬Ù‡ÙˆÙ„</value>
+    <value>تم الاتصال بالخادم وهي في منتصف مسارها - الوقت المتبقي مجهول</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù… ÙˆÙ‡ÙŠ ÙÙŠ Ù…Ù†ØªØµÙ Ù…Ø³Ø§Ø±Ù‡Ø§ - Ø§Ù„ÙˆÙ‚Øª Ù…Ø¬Ù‡ÙˆÙ„ (Ø·ÙˆÙ„ Ø§Ù„Ù…Ø³Ø§Ø± Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ {0}Ù… ØªÙ‚Ø±ÙŠØ¨Ø§Ù‹)</value>
+    <value>تم الاتصال بالخادم وهي في منتصف مسارها - الوقت مجهول (طول المسار الإجمالي {0}م تقريباً)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Ø§Ø®ØªÙØª Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† ÙˆØºØ§Ø¯Ø±Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø© (Ø¯ÙŠØ³Ø¨Ù†) Ù…Ù†Ø° {0}Ø¯ Ùˆ {1}Ø« ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©</value>
+    <value>اختفت سفينة الشحن وغادرت الخريطة (ديسبن) منذ {0}د و {1}ث في هذه الجلسة</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ Ù†Ø´Ø· - Ù…ØªÙˆØ§Ø¬Ø¯ ÙÙŠ Ø§Ù„Ù…Ø³Ø§Ø± Ù…Ù†Ø° {0}</value>
+    <value>البائع المتنقل نشط - متواجد في المسار منذ {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ Ù…ØªÙˆØ§Ø¬Ø¯ (ÙˆÙ‚Øª Ø§Ù„Ø¸Ù‡ÙˆØ± Ù…Ø¬Ù‡ÙˆÙ„)</value>
+    <value>البائع المتنقل متواجد (وقت الظهور مجهول)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Ø§Ø®ØªÙÙ‰ Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ (Ø¯ÙŠØ³Ø¨Ù†) Ù‚Ø¨Ù„ {0} Ù…Ù† Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©</value>
+    <value>اختفى البائع المتنقل (ديسبن) قبل {0} من هذه الجلسة</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹ - Ø¨Ø¯Ø£ Ù…Ù†Ø° {0}</value>
+    <value>حدث أعماق البحار نشط حالياً - بدأ منذ {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹ (ÙˆÙ‚Øª Ø¨Ø¯Ø§ÙŠØ© Ø§Ù„Ø­Ø¯Ø« ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙ)</value>
+    <value>حدث أعماق البحار نشط حالياً (وقت بداية الحدث غير معروف)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Ø§Ù†ØªÙ‡Ù‰ Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± Ù…Ù†Ø° {0} Ù…Ù† Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©</value>
+    <value>انتهى حدث أعماق البحار منذ {0} من هذه الجلسة</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
-    <value>{0} Ø³Ø§Ø¹Ø© Ùˆ {1:D2} Ø¯Ù‚ÙŠÙ‚Ø©</value>
+    <value>{0} ساعة و {1:D2} دقيقة</value>
   </data>
   <data name="TimerMinutesSeconds" xml:space="preserve">
-    <value>{0} Ø¯Ù‚ÙŠÙ‚Ø© Ùˆ {1:D2} Ø«Ø§Ù†ÙŠØ©</value>
+    <value>{0} دقيقة و {1:D2} ثانية</value>
   </data>
   <data name="AgoHoursMinutes" xml:space="preserve">
-    <value>Ù…Ù†Ø° {0} Ø³Ø§Ø¹Ø© Ùˆ {1} Ø¯Ù‚ÙŠÙ‚Ø©</value>
+    <value>منذ {0} ساعة و {1} دقيقة</value>
   </data>
   <data name="AgoMinutes" xml:space="preserve">
-    <value>Ù…Ù†Ø° {0} Ø¯Ù‚ÙŠÙ‚Ø©</value>
+    <value>منذ {0} دقيقة</value>
   </data>
   <data name="DurationMinutesSeconds" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø¯Ø©: {0} Ø¯Ù‚ÙŠÙ‚Ø© Ùˆ {1} Ø«Ø§Ù†ÙŠØ©</value>
+    <value>المدة: {0} دقيقة و {1} ثانية</value>
   </data>
   <data name="DurationSeconds" xml:space="preserve">
-    <value>{0} Ø«Ø§Ù†ÙŠØ©</value>
+    <value>{0} ثانية</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>ÙŠØªÙˆØ§Ø¬Ø¯ Ø­Ø§Ù„ÙŠØ§Ù‹ {0} Ù„Ø§Ø¹Ø¨ Ø¹Ù„Ù‰ Ø§Ù„Ø¥Ù†ØªØ±Ù†Øª ÙÙŠ Ø§Ù„Ø³ÙŠØ±ÙØ±. {1}</value>
+    <value>يتواجد حالياً {0} لاعب على الإنترنت في السيرفر. {1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> ÙˆØ·Ø§Ø¨ÙˆØ± Ø§Ù„Ø§Ù†ØªØ¸Ø§Ø±: {0} Ù„Ø§Ø¹Ø¨ÙŠÙ†.</value>
+    <value> وطابور الانتظار: {0} لاعبين.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Ø§Ù„ØªÙˆÙ‚ÙŠØª Ø§Ù„Ø­Ø§Ù„ÙŠ Ø¯Ø§Ø®Ù„ Ø§Ù„Ù„Ø¹Ø¨Ø© Ù‡Ùˆ: {0}.</value>
+    <value>التوقيت الحالي داخل اللعبة هو: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>ØªÙ…Øª ØªØ±Ù‚ÙŠØ© Ø§Ù„Ù„Ø§Ø¹Ø¨ {0} Ù„ÙŠØµØ¨Ø­ Ù‚Ø§Ø¦Ø¯ Ø§Ù„ÙØ±ÙŠÙ‚.</value>
+    <value>تمت ترقية اللاعب {0} ليصبح قائد الفريق.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹! ÙˆÙ…Ø³ØªÙ…Ø± Ù„Ù€ {0}.</value>
+    <value>حدث أعماق البحار نشط حالياً! ومستمر لـ {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹ (ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù… Ø¨Ø¹Ø¯ Ø¨Ø¯Ø¡ Ø§Ù„Ø­Ø¯Ø« - ÙˆÙ‚Øª Ø±Ø³Ø¨Ù† Ø§Ù„Ø­Ø¯Ø« Ø§Ù„Ø£ØµÙ„ÙŠ Ù…Ø¬Ù‡ÙˆÙ„).</value>
+    <value>حدث أعماق البحار نشط حالياً (تم الاتصال بالخادم بعد بدء الحدث - وقت رسبن الحدث الأصلي مجهول).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Ø§Ù†ØªÙ‡Ù‰ Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± Ù…Ù†Ø° {0} Ø¯Ù‚ÙŠÙ‚Ø© ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ©.</value>
+    <value>انتهى حدث أعماق البحار منذ {0} دقيقة في هذه الجلسة الحالية.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Ø­Ø§Ù„Ø© Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙØ© (Ù„Ù… ÙŠØªÙ… Ø±ØµØ¯ Ø§Ù„ÙØ¹Ø§Ù„ÙŠØ© ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ© Ø¨Ø¹Ø¯).</value>
+    <value>حالة حدث أعماق البحار غير معروفة (لم يتم رصد الفعالية في هذه الجلسة الحالية بعد).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† (Ø§Ù„ÙƒØ§Ø±Ø¬Ùˆ) ØºÙŠØ± Ù…ØªÙˆØ§Ø¬Ø¯Ø© Ø­Ø§Ù„ÙŠØ§Ù‹.</value>
+    <value>سفينة الشحن (الكارجو) غير متواجدة حالياً.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ø±Ø§Ø³ÙŠØ© Ø­Ø§Ù„ÙŠØ§Ù‹ ÙÙŠ {0}. ÙˆØ³ØªØºØ§Ø¯Ø± Ø®Ù„Ø§Ù„ {1} Ø¯Ù‚ÙŠÙ‚Ø© ØªÙ‚Ø±ÙŠØ¨Ø§Ù‹.</value>
+    <value>سفينة الشحن راسية حالياً في {0}. وستغادر خلال {1} دقيقة تقريباً.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ø±Ø§Ø³ÙŠØ© ÙÙŠ {0} ÙˆØªØ³ØªØ¹Ø¯ Ù„Ù„Ù…ØºØ§Ø¯Ø±Ø© ÙˆØ§Ù„ØªØ­Ø±Ùƒ Ø§Ù„Ø¢Ù†.</value>
+    <value>سفينة الشحن راسية في {0} وتستعد للمغادرة والتحرك الآن.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Ø±Ø³Øª Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† ÙÙŠ {0} (ØªÙˆÙ‚ÙŠØª Ù…ØºØ§Ø¯Ø±ØªÙ‡Ø§ Ù…Ø¬Ù‡ÙˆÙ„ Ø­Ø§Ù„ÙŠØ§Ù‹).</value>
+    <value>رست سفينة الشحن في {0} (توقيت مغادرتها مجهول حالياً).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ù…ØªØ­Ø±ÙƒØ© ÙˆÙ†Ø´Ø·Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø®Ø±ÙŠØ·Ø©. Ø³ØªØºØ§Ø¯Ø± Ø§Ù„Ø®Ø±ÙŠØ·Ø© ØªÙ…Ø§Ù…Ø§Ù‹ Ø®Ù„Ø§Ù„ {0} Ø¯Ù‚ÙŠÙ‚Ø© ØªÙ‚Ø±ÙŠØ¨Ø§Ù‹.</value>
+    <value>سفينة الشحن متحركة ونشطة على الخريطة. ستغادر الخريطة تماماً خلال {0} دقيقة تقريباً.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ù†Ø´Ø·Ø© ÙÙŠ Ø§Ù„Ø¨Ø­Ø± ÙˆØªØ³ØªØ¹Ø¯ Ù„Ù…ØºØ§Ø¯Ø±Ø© Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ù‚Ø±ÙŠØ¨Ø§Ù‹.</value>
+    <value>سفينة الشحن نشطة في البحر وتستعد لمغادرة الخريطة قريباً.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ù…ØªÙˆØ§Ø¬Ø¯Ø© Ø­Ø§Ù„ÙŠØ§Ù‹ (ØªÙˆÙ‚ÙŠØª ÙˆÙ…Ø³Ø§Ø± Ø§Ù„ØªØ­Ø±Ùƒ Ø§Ù„ÙƒØ§Ù…Ù„ Ù„Ù… ÙŠØªÙ… ØªØ­Ù„ÙŠÙ„Ù‡ Ø¨Ø¯Ù‚Ø© Ø¨Ø¹Ø¯ ÙÙŠ Ù‡Ø°Ø§ Ø§Ù„Ø³ÙŠØ±ÙØ±).</value>
+    <value>سفينة الشحن متواجدة حالياً (توقيت ومسار التحرك الكامل لم يتم تحليله بدقة بعد في هذا السيرفر).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ù…ØªÙˆØ§Ø¬Ø¯Ø© (ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ± Ø¨Ø¹Ø¯ Ø±Ø³Ø¨Ù†ØªÙ‡Ø§ Ø¨Ø§Ù„ÙØ¹Ù„ - Ø§Ù„ÙˆÙ‚Øª Ø§Ù„Ù…ØªØ¨Ù‚ÙŠ Ù„Ù‡Ø§ ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙ).</value>
+    <value>سفينة الشحن متواجدة (تم الاتصال بالسيرفر بعد رسبنتها بالفعل - الوقت المتبقي لها غير معروف).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† ØºÙŠØ± Ù†Ø´Ø·Ø©Ø› Ø­ÙŠØ« ØºØ§Ø¯Ø±Øª ÙˆØ§Ø®ØªÙØª (Ø¯ÙŠØ³Ø¨Ù†) Ù…Ù†Ø° {0} Ø¯Ù‚ÙŠÙ‚Ø© ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©.</value>
+    <value>سفينة الشحن غير نشطة؛ حيث غادرت واختفت (ديسبن) منذ {0} دقيقة في هذه الجلسة.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>[{0}] Ø§Ù„ØµÙ†Ø¯ÙˆÙ‚ ÙŠÙØªØ­ ÙÙŠ ØºØ¶ÙˆÙ† {1}Ø¯ {2}Ø«</value>
+    <value>[{0}] الصندوق يفتح في غضون {1}د {2}ث</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>[{0}] Ø¢Ø®Ø± Ø§Ø³ØªØ¯Ø¹Ø§Ø¡ Ù„Ù„Ø­Ø¯Ø« ÙƒØ§Ù† Ù‚Ø¨Ù„ {1} Ø¯Ù‚ÙŠÙ‚Ø©</value>
+    <value>[{0}] آخر استدعاء للحدث كان قبل {1} دقيقة</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>[{0}] Ù„Ù… ÙŠØªÙ… Ø§Ø³ØªØ¯Ø¹Ø§Ø¡ Ù‡Ø°Ø§ Ø§Ù„Ø­Ø¯Ø« ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø© Ø¨Ø¹Ø¯</value>
+    <value>[{0}] لم يتم استدعاء هذا الحدث في هذه الجلسة بعد</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© (Ø§Ù„Ù‡ÙŠÙ„ÙŠ) Ù†Ø´Ø·Ø© ÙÙŠ Ø§Ù„Ø£Ø¬ÙˆØ§Ø¡ Ø­Ø§Ù„ÙŠØ§Ù‹! ÙˆÙ…Ø³ØªÙ…Ø±Ø© Ù…Ù†Ø° {0}.</value>
+    <value>مروحية الدورية (الهيلي) نشطة في الأجواء حالياً! ومستمرة منذ {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ù†Ø´Ø·Ø© Ø­Ø§Ù„ÙŠØ§Ù‹ ÙÙŠ Ø§Ù„Ø³ÙŠØ±ÙØ± (ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù… Ø£Ø«Ù†Ø§Ø¡ ØªÙˆØ§Ø¬Ø¯Ù‡Ø§ - ØªÙˆÙ‚ÙŠØª Ø±Ø³Ø¨Ù†ØªÙ‡Ø§ Ù…Ø¬Ù‡ÙˆÙ„).</value>
+    <value>مروحية الدورية نشطة حالياً في السيرفر (تم الاتصال بالخادم أثناء تواجدها - توقيت رسبنتها مجهول).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© ØºÙŠØ± Ù…ØªÙˆØ§Ø¬Ø¯Ø© Ø­Ø§Ù„ÙŠØ§Ù‹. Ø¢Ø®Ø± Ø¸Ù‡ÙˆØ± Ù„Ù‡Ø§ ÙƒØ§Ù† {0} Ø¨Ø³Ø¨Ø¨: {1} Ù‚Ø¨Ù„ Ù‡Ø°Ù‡ Ø§Ù„Ø¯ÙˆØ±Ø©.</value>
+    <value>مروحية الدورية غير متواجدة حالياً. آخر ظهور لها كان {0} بسبب: {1} قبل هذه الدورة.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>ØªÙ… Ø¥Ø³Ù‚Ø§Ø·Ù‡Ø§ ÙˆØªÙØ¬ÙŠØ±Ù‡Ø§</value>
+    <value>تم إسقاطها وتفجيرها</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>ØºØ§Ø¯Ø±Øª Ø­Ø¯ÙˆØ¯ Ø§Ù„Ø®Ø±ÙŠØ·Ø©</value>
+    <value>غادرت حدود الخريطة</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Ø­Ø§Ù„Ø© Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ù…Ø¬Ù‡ÙˆÙ„Ø© (Ù„Ù… ØªØ¸Ù‡Ø± ÙÙŠ Ø§Ù„Ø£Ø¬ÙˆØ§Ø¡ Ø®Ù„Ø§Ù„ Ø§Ù„Ø¬Ù„Ø³Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ©).</value>
+    <value>حالة مروحية الدورية مجهولة (لم تظهر في الأجواء خلال الجلسة الحالية).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ Ù†Ø´Ø· ÙÙŠ Ø§Ù„Ø³ÙŠØ±ÙØ±! ÙˆÙŠØªØ­Ø±Ùƒ Ù…Ù†Ø° {0}.</value>
+    <value>البائع المتنقل نشط في السيرفر! ويتحرك منذ {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹ (ØªÙ… Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ± Ø£Ø«Ù†Ø§Ø¡ ØªÙˆØ§Ø¬Ø¯Ù‡ - ÙˆÙ‚Øª Ø±Ø³Ø¨Ù†ØªÙ‡ Ù…Ø¬Ù‡ÙˆÙ„).</value>
+    <value>البائع المتنقل نشط حالياً (تم الاتصال بالسيرفر أثناء تواجده - وقت رسبنته مجهول).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ ØºÙŠØ± Ù…ØªÙˆØ§Ø¬Ø¯ Ø­Ø§Ù„ÙŠØ§Ù‹Ø› Ø­ÙŠØ« Ø§Ø®ØªÙÙ‰ (Ø¯ÙŠØ³Ø¨Ù†) Ù…Ù†Ø° {0} Ø¯Ù‚ÙŠÙ‚Ø© ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø©.</value>
+    <value>البائع المتنقل غير متواجد حالياً؛ حيث اختفى (ديسبن) منذ {0} دقيقة في هذه الجلسة.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Ø­Ø§Ù„Ø© Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„ Ù…Ø¬Ù‡ÙˆÙ„Ø© (Ù„Ù… ÙŠØªÙ… Ø±ØµØ¯Ù‡ ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„Ø¬Ù„Ø³Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ© Ø¨Ø¹Ø¯).</value>
+    <value>حالة البائع المتنقل مجهولة (لم يتم رصده في هذه الجلسة الحالية بعد).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… Ø±Ø¨Ø· Ø£Ùˆ ØªØ¹ÙŠÙŠÙ† Ø£ÙŠ Ø®Ø²Ø§Ù†Ø§Øª Ø£Ø¯ÙˆØ§Øª (TC) Ù„ØªÙ„Ù‚ÙŠ Ø£ÙˆØ§Ù…Ø± ØªÙØ§ØµÙŠÙ„ Ø§Ù„ØµÙŠØ§Ù†Ø©.</value>
+    <value>لم يتم ربط أو تعيين أي خزانات أدوات (TC) لتلقي أوامر تفاصيل الصيانة.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Ø­Ø§Ù„Ø© Ø§Ù„ØµÙŠØ§Ù†Ø© ÙÙŠ Ø§Ù„Ø®Ø²Ø§Ù†Ø© {0}: ÙØ§Ø±ØºØ© ØªÙ…Ø§Ù…Ø§Ù‹ Ø£Ùˆ Ù…Ù†ØªÙ‡ÙŠØ© Ø§Ù„ØµÙ„Ø§Ø­ÙŠØ© (Ø§Ù„Ø¨ÙŠØª ÙŠØªØ¯Ù…Ø±!).</value>
+    <value>حالة الصيانة في الخزانة {0}: فارغة تماماً أو منتهية الصلاحية (البيت يتدمر!).</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø© Ù„ÙƒÙ„ 24 Ø³Ø§Ø¹Ø© Ù‡ÙŠ: {0}.</value>
+    <value> الموارد المطلوبة لكل 24 ساعة هي: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>ÙˆÙ‚Øª Ø§Ù„Ø£Ø¨ ÙƒÙŠØ¨ Ø§Ù„Ù…ØªØ¨Ù‚ÙŠ ÙÙŠ Ø§Ù„Ø®Ø²Ø§Ù†Ø© {0} Ù‡Ùˆ: {1}.</value>
+    <value>وقت الأب كيب المتبقي في الخزانة {0} هو: {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} Ø£ÙŠØ§Ù…</value>
+    <value>{0} أيام</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} Ø³Ø§Ø¹Ø§Øª</value>
+    <value>{0} ساعات</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} Ø¯Ù‚Ø§Ø¦Ù‚</value>
+    <value>{0} دقائق</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>[{0}] :: Ø§Ù„Ø®Ø²Ø§Ù†Ø© ÙØ§Ø±ØºØ©/Ù…Ù†ØªÙ‡ÙŠØ© Ø§Ù„ØµÙ„Ø§Ø­ÙŠØ©</value>
+    <value>[{0}] :: الخزانة فارغة/منتهية الصلاحية</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
-    <value>[{0}] :: Ù…ØªØ¨Ù‚ÙŠ {1} ÙŠÙˆÙ…ØŒ Ùˆ {2} Ø³Ø§Ø¹Ø©</value>
+    <value>[{0}] :: متبقي {1} يوم، و {2} ساعة</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>ÙˆÙ‚Øª Ø§Ù„ØµÙŠØ§Ù†Ø© (Ø§Ù„Ø£Ø¨ ÙƒÙŠØ¨): {0}</value>
+    <value>وقت الصيانة (الأب كيب): {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>Ø£Ø¬Ù‡Ø²Ø© Ù…Ø±Ø§Ù‚Ø¨Ø© Ø®Ø²Ø§Ù†Ø§Øª Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ø§Ù„Ù…Ø±ØªØ¨Ø·Ø© ØºÙŠØ± Ù…ØªÙˆÙØ±Ø© Ø£Ùˆ Ù„Ù… ÙŠØªÙ… Ø¥Ù‚Ø±Ø§Ù†Ù‡Ø§ Ø¨Ù†Ø¬Ø§Ø­.</value>
+    <value>أجهزة مراقبة خزانات الأدوات المرتبطة غير متوفرة أو لم يتم إقرانها بنجاح.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>Ø¬Ù‡Ø§Ø² Ù…Ø±Ø§Ù‚Ø¨Ø© Ø®Ø²Ø§Ù†Ø© Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ø§Ù„Ù…Ø·Ù„ÙˆØ¨ ØºÙŠØ± Ù…ØªÙˆÙØ± Ø£Ùˆ Ù„Ù… ÙŠØªÙ… Ø¥Ù‚Ø±Ø§Ù†Ù‡ Ø¨Ø§Ù„ØªØ·Ø¨ÙŠÙ‚.</value>
+    <value>جهاز مراقبة خزانة الأدوات المطلوب غير متوفر أو لم يتم إقرانه بالتطبيق.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>ØªÙ… ØªØ­ÙˆÙŠÙ„ Ø­Ø§Ù„Ø© Ø§Ù„Ù…ÙØªØ§Ø­ Ø§Ù„Ø°ÙƒÙŠ {0} Ø¥Ù„Ù‰ Ø§Ù„ÙˆØ¶Ø¹: {1}.</value>
+    <value>تم تحويل حالة المفتاح الذكي {0} إلى الوضع: {1}.</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>Ù‚ÙŠØ¯ Ø§Ù„ØªØ´ØºÙŠÙ„ (On)</value>
+    <value>قيد التشغيل (On)</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>Ø¥ÙŠÙ‚Ø§Ù Ø§Ù„ØªØ´ØºÙŠÙ„ (Off)</value>
+    <value>إيقاف التشغيل (Off)</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>Ø§Ù„Ù…ÙØªØ§Ø­ Ø§Ù„Ø°ÙƒÙŠ Ø§Ù„Ù…Ø±ØªØ¨Ø· Ø¨Ù‡Ø°Ø§ Ø§Ù„Ø£Ù…Ø± ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯ Ø£Ùˆ ØºÙŠØ± Ù…Ù‚ØªØ±Ù† Ø¨Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ Ø­Ø§Ù„ÙŠØ§Ù‹.</value>
+    <value>المفتاح الذكي المرتبط بهذا الأمر غير موجود أو غير مقترن بالتطبيق حالياً.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Ø®Ø´Ø¨</value>
+    <value>خشب</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>Ø­Ø¬Ø±</value>
+    <value>حجر</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>Ø­Ø¯ÙŠØ¯ (Ù…Ø¹Ø¯Ù†)</value>
+    <value>حديد (معدن)</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
-    <value>Ù…Ø¹Ø¯Ù† Ø¹Ø§Ù„ÙŠ Ø§Ù„Ø¬ÙˆØ¯Ø© (HQM)</value>
+    <value>معدن عالي الجودة (HQM)</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>Ù…Ù†ØµØ© Ø§Ù„Ù†ÙØ· Ø§Ù„ØµØºÙŠØ±Ø© (Ø³ÙŠØ±Ù…Ù„ Ø£ÙˆÙŠÙ„)</value>
+    <value>منصة النفط الصغيرة (سيرمل أويل)</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Ù…Ù†ØµØ© Ø§Ù„Ù†ÙØ· Ø§Ù„ÙƒØ¨ÙŠØ±Ø© (Ù„Ø§Ø±Ø¬ Ø£ÙˆÙŠÙ„)</value>
+    <value>منصة النفط الكبيرة (لارج أويل)</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>Ø§Ù„Ù…ØªØ¬Ø± (Ø§Ù„Ø´ÙˆØ¨)</value>
+    <value>المتجر (الشوب)</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† (ÙƒØ§Ø±Ø¬Ùˆ)</value>
+    <value>سفينة الشحن (كارجو)</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø§Ø¦Ø¹ Ø§Ù„Ù…ØªÙ†Ù‚Ù„</value>
+    <value>البائع المتنقل</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø´ÙŠÙ†ÙˆÙƒ (CH47)</value>
+    <value>مروحية الشينوك (CH47)</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© (Ø§Ù„Ù‡ÙŠÙ„ÙŠ)</value>
+    <value>مروحية الدورية (الهيلي)</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>ØµÙ†Ø¯ÙˆÙ‚ Ù…Ù†ØµØ© Ø§Ù„Ù†ÙØ· Ø§Ù„Ù…Ø´ÙØ±</value>
+    <value>صندوق منصة النفط المشفر</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>Ø§Ù†ÙØ¬Ø§Ø±</value>
+    <value>انفجار</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>Ù…Ù†Ø·Ù‚Ø© Ø¨Ù†Ø§Ø¡ Ù…Ø­Ø¸ÙˆØ±Ø© (Ø¨Ù„Ø¯ Ø¨Ù„ÙˆÙƒ)</value>
+    <value>منطقة بناء محظورة (بلد بلوك)</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø¹Ø§Ù…</value>
+    <value>حدث عام</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>Ø­Ø¯Ø« [{0}] ØªÙ… ØªÙØ¹ÙŠÙ„Ù‡ ÙˆØ¨Ø¯Ø£ Ø§Ù„Ø¢Ù†! Ø³ÙŠÙØªØ­ Ø§Ù„ØµÙ†Ø¯ÙˆÙ‚ Ø§Ù„Ù…Ø´ÙØ± ÙÙŠ ØºØ¶ÙˆÙ† {1}.</value>
+    <value>حدث [{0}] تم تفعيله وبدأ الآن! سيفتح الصندوق المشفر في غضون {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡ Ø¥Ù†Ø°Ø§Ø±: ØªÙ… Ø¥Ø·Ù„Ø§Ù‚ Ø¥Ù†Ø°Ø§Ø± Ø§Ù„Ø¬Ù‡Ø§Ø² {0}!</value>
+    <value>تنبيه إنذار: تم إطلاق إنذار الجهاز {0}!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] Ø§Ù„ØµÙ†Ø¯ÙˆÙ‚ Ø§Ù„Ù…Ø´ÙØ± Ø³ÙŠÙØªØ­ Ø¨Ø¹Ø¯ 10 Ø¯Ù‚Ø§Ø¦Ù‚!</value>
+    <value>[{0}] الصندوق المشفر سيفتح بعد 10 دقائق!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] Ø§Ù„ØµÙ†Ø¯ÙˆÙ‚ Ø§Ù„Ù…Ø´ÙØ± Ø³ÙŠÙØªØ­ Ø¨Ø¹Ø¯ 5 Ø¯Ù‚Ø§Ø¦Ù‚!</value>
+    <value>[{0}] الصندوق المشفر سيفتح بعد 5 دقائق!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Ø¨Ø¯Ø¡ Ø­Ø¯Ø« Ø£Ø¹Ù…Ø§Ù‚ Ø§Ù„Ø¨Ø­Ø§Ø± ÙÙŠ Ø§Ù„Ù…Ø­ÙŠØ·</value>
+    <value>بدء حدث أعماق البحار في المحيط</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>Ù…ØªØ¬Ø± Ø¬Ø¯ÙŠØ¯ Ù…Ø¶Ø§Ù {0} ÙÙŠ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© [{1}]: {2}</value>
+    <value>متجر جديد مضاف {0} في الإحداثية [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Ù…ØªØ¬Ø± Ù…Ø´Ø¨ÙˆÙ‡ Ø±ÙØµØ¯ {0} ÙÙŠ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© [{1}] Ù…ØªØ§Ø­ Ù…Ù†Ø° {2}Ø«ØŒ ÙˆÙŠÙ‚ÙˆÙ… Ø¨Ø¨ÙŠØ¹: {3}</value>
+    <value>متجر مشبوه رُصد {0} في الإحداثية [{1}] متاح منذ {2}ث، ويقوم ببيع: {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>Ø¸Ù‡Ø±Øª Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† (Ø§Ù„ÙƒØ§Ø±Ø¬Ùˆ) ÙÙŠ Ø§Ù„Ø¨Ø­Ø± Ø¹Ù†Ø¯ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© {0}</value>
+    <value>ظهرت سفينة الشحن (الكارجو) في البحر عند الإحداثية {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>Ø¨Ø¹ÙŠØ¯ Ø¬Ø¯Ø§Ù‹ ÙÙŠ Ø¹Ø±Ø¶ Ø§Ù„Ø¨Ø­Ø± (Ø¨Ø§Ù„Ù‚Ø±Ø¨ Ù…Ù† {0})</value>
+    <value>بعيد جداً في عرض البحر (بالقرب من {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† Ø±Ø³Øª Ø§Ù„Ø¢Ù† ÙÙŠ Ø§Ù„Ù…ÙŠÙ†Ø§Ø¡: {0} ({1})</value>
+    <value>سفينة الشحن رست الآن في الميناء: {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>Ù…Ù† Ø§Ù„Ù…ØªÙˆÙ‚Ø¹ Ø±Ø³Ùˆ Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† ÙÙŠ Ù…ÙŠÙ†Ø§Ø¡ {0} ({1}) Ø®Ù„Ø§Ù„ 5 Ø¯Ù‚Ø§Ø¦Ù‚ ØªÙ‚Ø±ÙŠØ¨Ø§Ù‹.</value>
+    <value>من المتوقع رسو سفينة الشحن في ميناء {0} ({1}) خلال 5 دقائق تقريباً.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Ø³ÙÙŠÙ†Ø© Ø§Ù„Ø´Ø­Ù† ØªØ³ØªØ¹Ø¯ Ù„Ù„Ù…ØºØ§Ø¯Ø±Ø© Ù…Ù† Ù…ÙŠÙ†Ø§Ø¡ {0} Ø®Ù„Ø§Ù„ 5 Ø¯Ù‚Ø§Ø¦Ù‚ ({1})</value>
+    <value>سفينة الشحن تستعد للمغادرة من ميناء {0} خلال 5 دقائق ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>ØªÙ… Ø±ØµØ¯ Ø³Ù‚ÙˆØ· ÙˆÙ‡Ù…ÙŠ Ø¨Ø³Ø¨Ø¨ ØªØ¹Ù„ÙŠÙ‚ (Ù„Ø§Øº) Ù…Ù† Ø§Ù„Ø³ÙŠØ±ÙØ± - Ø§Ù„Ù…Ø±ÙˆØ­ÙŠØ© Ù„Ø§ ØªØ²Ø§Ù„ Ù…ØªÙˆØ§Ø¬Ø¯Ø© Ø¹Ù†Ø¯ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© {0}</value>
+    <value>تم رصد سقوط وهمي بسبب تعليق (لاغ) من السيرفر - المروحية لا تزال متواجدة عند الإحداثية {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>Ø¸Ù‡Ø± Ø­Ø¯Ø« {0} (Ø±Ø³Ø¨Ù†) Ø¹Ù†Ø¯ Ø§Ù„Ù…ÙˆÙ‚Ø¹ {1}</value>
+    <value>ظهر حدث {0} (رسبن) عند الموقع {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>ØªÙ… Ø¥Ø³Ù‚Ø§Ø· ÙˆØªØ¯Ù…ÙŠØ± Ù…Ø±ÙˆØ­ÙŠØ© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© (Ø§Ù„Ù‡ÙŠÙ„ÙŠ) Ø¹Ù†Ø¯ Ø§Ù„Ù…ÙˆÙ‚Ø¹ {0}</value>
+    <value>تم إسقاط وتدمير مروحية الدورية (الهيلي) عند الموقع {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>Ù…Ø¬Ù‡ÙˆÙ„</value>
+    <value>مجهول</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ {0} Ø¯Ø®Ù„ Ø§Ù„Ø³ÙŠØ±ÙØ± (Ø£ÙˆÙ†Ù„Ø§ÙŠÙ†) Ø¹Ù†Ø¯ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© {1}</value>
+    <value>اللاعب {0} دخل السيرفر (أونلاين) عند الإحداثية {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ {0} Ø®Ø±Ø¬ Ù…Ù† Ø§Ù„Ø³ÙŠØ±ÙØ± (Ø£ÙˆÙÙ„Ø§ÙŠÙ†)</value>
+    <value>اللاعب {0} خرج من السيرفر (أوفلاين)</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>Ù…Ø§Øª Ø§Ù„Ù„Ø§Ø¹Ø¨ {0} Ø¹Ù†Ø¯ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© {1}</value>
+    <value>مات اللاعب {0} عند الإحداثية {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>Ø£Ø¹Ø§Ø¯ Ø§Ù„Ù„Ø§Ø¹Ø¨ {0} Ø±Ø³Ø¨Ù†ØªÙ‡ Ø¹Ù†Ø¯ Ø§Ù„Ø¥Ø­Ø¯Ø§Ø«ÙŠØ© {1}</value>
+    <value>أعاد اللاعب {0} رسبنته عند الإحداثية {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[ØªØªØ¨ÙÙ‘Ø¹] Ø§Ù„Ù„Ø§Ø¹Ø¨ {0}{1} Ù…ØªØµÙ„ Ø§Ù„Ø¢Ù† (Ø£ÙˆÙ†Ù„Ø§ÙŠÙ†)</value>
+    <value>[تتبُّع] اللاعب {0}{1} متصل الآن (أونلاين)</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[ØªØªØ¨ÙÙ‘Ø¹] Ø§Ù„Ù„Ø§Ø¹Ø¨ {0}{1} ØºØ§Ø¯Ø± Ø§Ù„Ø³ÙŠØ±ÙØ± Ø§Ù„Ø¢Ù† (Ø£ÙˆÙÙ„Ø§ÙŠÙ†)</value>
+    <value>[تتبُّع] اللاعب {0}{1} غادر السيرفر الآن (أوفلاين)</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[ØªØªØ¨Ø¹] Ø§Ù„Ù„Ø§Ø¹Ø¨ Ø§Ù„Ù…ÙØ±Ø§Ù‚Ø¨ {0}{1} Ù‚Ø§Ù… Ø¨ØªØºÙŠÙŠØ± Ø§Ø³Ù…Ù‡ Ø¥Ù„Ù‰ {2}!</value>
+    <value>[تتبع] اللاعب المُراقب {0}{1} قام بتغيير اسمه إلى {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>ÙŠØ¨ÙŠØ¹</value>
+    <value>يبيع</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>ÙŠØ´ØªØ±ÙŠ</value>
+    <value>يشتري</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>Ø§Ù„Ù…ØªØ¬Ø±</value>
+    <value>المتجر</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} Ø¹Ø¯Ø¯ x{3} {4} (Ø§Ù„Ù…Ø®Ø²ÙˆÙ† Ø§Ù„Ù…ØªÙˆÙØ± {5}) Ù…Ù‚Ø§Ø¨Ù„ {6} {7}</value>
+    <value>{0} [{1}] {2} عدد x{3} {4} (المخزون المتوفر {5}) مقابل {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>Ø¹Ø±Ø¶ Ù‚Ø§Ø¦Ù…Ø© Ø£ÙˆØ§Ù…Ø± Ø´Ø§Øª Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>عرض قائمة أوامر شات اللعبة</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
-    <value>Ø§Ù„Ø£ÙˆØ§Ù…Ø± Ø§Ù„Ù…ØªØ§Ø­Ø©: {0}</value>
+    <value>الأوامر المتاحة: {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>ØªØ­Ø¯ÙŠØ« ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… ÙˆØ§Ù„Ù„ØºØ§Øª ÙˆÙ†Ø¸Ø§Ù… Ø§Ù„ØªØ®Ø²ÙŠÙ†</value>
+    <value>تحديث واجهة المستخدم واللغات ونظام التخزين</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ù…Ø®ØµØµØ©</value>
+    <value>تنبيهات مخصصة</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
     <value> - !timer [name],[minutes]</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Ø®Ø±ÙŠØ·Ø© Ù…ØµØºØ±Ø©</value>
+    <value>خريطة مصغرة</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - ÙŠØ¹Ù…Ù„ Ø¹Ù†Ø¯ Ø§Ù„ØªØµØºÙŠØ±</value>
+    <value> - يعمل عند التصغير</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Ø¥ØµÙ„Ø§Ø­ Ø§Ù„Ù…ØªØ¬Ø±</value>
+    <value>إصلاح المتجر</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - ÙˆØ§Ø¬Ù‡Ø© Ù…Ø³ØªØ®Ø¯Ù… Ø¬Ø¯ÙŠØ¯Ø© Ù„Ù„Ù…ØªØ¬Ø±</value>
+    <value> - واجهة مستخدم جديدة للمتجر</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>Ù‚Ø§Ø¹Ø¯ØªÙƒ ØªØªØ¹Ø±Ø¶ Ù„Ù„Ù‡Ø¬ÙˆÙ… ÙˆØ§Ù„ØºØ²Ùˆ Ø§Ù„Ø¢Ù† (Raid Alert)!</value>
+    <value>قاعدتك تتعرض للهجوم والغزو الآن (Raid Alert)!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>ÙŠÙØ±Ø¬Ù‰ Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø£Ø­Ø¯ Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø£ÙˆÙ„Ø§Ù‹ Ù„Ù„Ø§Ø³ØªÙ…Ø±Ø§Ø±.</value>
+    <value>يُرجى الاتصال بأحد السيرفرات أولاً للاستمرار.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>Ø£Ù†Øª ØºÙŠØ± Ù…ØªØµÙ„ Ø¨Ø£ÙŠ Ø³ÙŠØ±ÙØ± Ø­Ø§Ù„ÙŠØ§Ù‹.</value>
+    <value>أنت غير متصل بأي سيرفر حالياً.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>Ù…Ø­Ø§Ø¯Ø«Ø§Øª Ø§Ù„Ø´Ø§Øª ØºÙŠØ± Ù…ØªØ§Ø­Ø© Ø­Ø§Ù„ÙŠØ§Ù‹.</value>
+    <value>محادثات الشات غير متاحة حالياً.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>ÙŠÙØ±Ø¬Ù‰ ØªØ­Ø¯ÙŠØ¯ ÙˆØ§Ø®ØªÙŠØ§Ø± Ø³ÙŠØ±ÙØ± Ø£ÙˆÙ„Ø§Ù‹.</value>
+    <value>يُرجى تحديد واختيار سيرفر أولاً.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
-    <value>Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø³ÙŠØ±ÙØ±</value>
+    <value>الاتصال بالسيرفر</value>
   </data>
   <data name="SnackbarTitleChat" xml:space="preserve">
-    <value>Ø§Ù„Ø´Ø§Øª ÙˆØ§Ù„Ù…Ø­Ø§Ø¯Ø«Ø§Øª</value>
+    <value>الشات والمحادثات</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>Ø´Ø±Ø­ ÙƒÙŠÙÙŠØ© ØªØªØ¨Ø¹ ØªØ­Ø±ÙƒØ§Øª Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ†</value>
+    <value>شرح كيفية تتبع تحركات اللاعبين</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>Ù†Ø¸Ø§Ù… ØªØªØ¨Ø¹ Ø§Ù„Ù€ UDP Ø§Ù„Ø£ØµÙ„ÙŠ</value>
+    <value>نظام تتبع الـ UDP الأصلي</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>Ø¯Ù„ÙŠÙ„ ØªØªØ¨Ø¹ Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ù…ØªØ§Ø­ Ø­Ø§Ù„ÙŠØ§Ù‹ Ø¨Ø§Ù„Ù„ØºØ© Ø§Ù„Ø¥Ù†Ø¬Ù„ÙŠØ²ÙŠØ© ÙÙ‚Ø· Ù†Ø¸Ø±Ø§Ù‹ Ù„ÙƒÙˆÙ†Ù‡ ÙŠØ®Ø¶Ø¹ Ù„Ø¨Ø¹Ø¶ Ø§Ù„ØªØºÙŠÙŠØ±Ø§Øª Ø§Ù„Ù‡ÙŠÙƒÙ„ÙŠØ© ÙÙŠ Ø§Ù„Ù…Ø³ØªÙ‚Ø¨Ù„ Ø§Ù„Ù‚Ø±ÙŠØ¨. Ù†Ø´ÙƒØ±ÙƒÙ… Ø¹Ù„Ù‰ Ø­Ø³Ù† ØµØ¨Ø±ÙƒÙ….</value>
+    <value>دليل تتبع اللاعبين متاح حالياً باللغة الإنجليزية فقط نظراً لكونه يخضع لبعض التغييرات الهيكلية في المستقبل القريب. نشكركم على حسن صبركم.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>ÙŠÙ…ÙƒÙ†Ùƒ Ø¥ØºÙ„Ø§Ù‚ Ù‡Ø°Ù‡ Ø§Ù„Ù†Ø§ÙØ°Ø© ÙÙŠ Ø£ÙŠ ÙˆÙ‚Øª - ÙˆØ¨Ø¥Ù…ÙƒØ§Ù†Ùƒ Ø¥Ø¹Ø§Ø¯Ø© ÙØªØ­Ù‡Ø§ Ù…Ø¬Ø¯Ø¯Ø§Ù‹ Ø¹Ø¨Ø± Ø§Ù„Ø¶ØºØ· Ø¹Ù„Ù‰ Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„Ø§Ø³ØªÙÙ‡Ø§Ù… â“ (ÙƒÙŠÙÙŠØ© Ø§Ù„ØªØªØ¨Ø¹).</value>
+    <value>يمكنك إغلاق هذه النافذة في أي وقت - وبإمكانك إعادة فتحها مجدداً عبر الضغط على أيقونة الاستفهام ❓ (كيفية التتبع).</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>Ø§Ù„ØµÙŠØ§Ù†Ø© Ø§Ù„Ø¯ÙˆØ±ÙŠØ© Ù„Ù„Ø¨ÙŠØ§Ù†Ø§Øª</value>
+    <value>الصيانة الدورية للبيانات</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>Ù…Ø³Ø­ Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ Ø¨Ø§Ù„ÙƒØ§Ù…Ù„ØŒ Ø£Ùˆ Ø¥Ø¯Ø§Ø±Ø§Ø© Ù…Ù„ÙØ§Øª ØªØ¹Ø±ÙŠÙ Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª ÙˆØ§Ù„Ø±Ø³ÙˆÙ…Ø§Øª Ø§Ù„Ù…Ø®ØµØµØ©ØŒ Ø£Ùˆ Ø£Ø®Ø° Ù†Ø³Ø® Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© ÙˆØ§Ø³ØªØ¹Ø§Ø¯ØªÙ‡Ø§.</value>
+    <value>مسح إعدادات التطبيق بالكامل، أو إداراة ملفات تعريف السيرفرات والرسومات المخصصة، أو أخذ نسخ احتياطية واستعادتها.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ Ø¨Ø§Ù„ÙƒØ§Ù…Ù„...</value>
+    <value>إعادة تعيين بيانات التطبيق بالكامل...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>Ø¥Ù†Ø´Ø§Ø¡ Ù†Ø³Ø®Ø© Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© Ù„Ù„Ø¨ÙŠØ§Ù†Ø§Øª...</value>
+    <value>إنشاء نسخة احتياطية للبيانات...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ù…Ù† Ù†Ø³Ø®Ø© Ø³Ø§Ø¨Ù‚Ø©...</value>
+    <value>استعادة البيانات من نسخة سابقة...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø¶Ø¨Ø· Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªØ·Ø¨ÙŠÙ‚</value>
+    <value>إعادة ضبط بيانات التطبيق</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>Ø­Ø¯Ø¯ Ø§Ù„Ù…ÙƒÙˆÙ†Ø§Øª Ø§Ù„ØªÙŠ ØªØ±ØºØ¨ ÙÙŠ ØªØµÙÙŠØ±Ù‡Ø§ ÙˆÙ…Ø³Ø­Ù‡Ø§ Ù…Ù† Ù‡Ø°Ø§ Ø§Ù„Ø¬Ù‡Ø§Ø². ÙŠØ±Ø¬Ù‰ Ø§Ù„Ø¹Ù„Ù… Ø¨Ø£Ù† Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø®ÙŠØ§Ø±Ø§Øª Ø§Ù„Ù…Ø­Ø¯Ø¯Ø© Ø³ØªÙØ­Ø°Ù Ù†Ù‡Ø§Ø¦ÙŠØ§Ù‹ ÙˆÙ„Ù† ÙŠÙ…ÙƒÙ† Ø§Ø³ØªØ±Ø¬Ø§Ø¹Ù‡Ø§.</value>
+    <value>حدد المكونات التي ترغب في تصفيرها ومسحها من هذا الجهاز. يرجى العلم بأن جميع الخيارات المحددة ستُحذف نهائياً ولن يمكن استرجاعها.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>Ø¨ÙŠØ§Ù†Ø§Øª Ø§ØªØµØ§Ù„ Ø§Ù„Ø³ÙŠØ±ÙØ± Ø§Ù„Ù†Ø´Ø· Ø­Ø§Ù„ÙŠØ§Ù‹ (Ù‚Ø·Ø¹ Ø§Ù„Ø§ØªØµØ§Ù„ Ø§Ù„ÙÙˆØ±ÙŠ)</value>
+    <value>بيانات اتصال السيرفر النشط حالياً (قطع الاتصال الفوري)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>Ù…Ù„ÙØ§Øª ØªØ¹Ø±ÙŠÙ Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø© (Ø­Ø°Ù Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø§Ù„Ù…Ù‚ØªØ±Ù†Ø© ÙˆØ¥Ø¹Ø¯Ø§Ø¯Ø§ØªÙ‡Ø§)</value>
+    <value>ملفات تعريف السيرفرات المحفوظة (حذف السيرفرات المقترنة وإعداداتها)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ø¹ØªÙ…Ø§Ø¯ Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ… (ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù† Ø§Ù„Ø­Ø³Ø§Ø¨)</value>
+    <value>بيانات اعتماد حساب ستيم (تسجيل الخروج من الحساب)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù‚ØªØ±Ø§Ù† Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ© (Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ø±Ù…ÙˆØ² Ø§Ù„ØªØ³Ø¬ÙŠÙ„ Ø§Ù„ØªÙ„Ù‚Ø§Ø¦ÙŠ)</value>
+    <value>إعدادات اقتران الأجهزة الذكية (إعادة تعيين رموز التسجيل التلقائي)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØµÙˆÙŠØ¨ Ø§Ù„Ù…Ø®ØµØµØ© (Ù…Ø³Ø­ ÙÙˆØ±ÙŠ Ù„Ù„ØªÙƒÙˆÙŠÙ†Ø§Øª Ø§Ù„Ù…Ø¶Ø§ÙØ©)</value>
+    <value>علامات التصويب المخصصة (مسح فوري للتكوينات المضافة)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ù„ÙØ§Øª Ø§Ù„Ù…Ø¤Ù‚ØªØ© Ø§Ù„Ù…Ø­Ù„ÙŠØ© ÙˆØ§Ù„Ø±Ø³ÙˆÙ…Ø§Øª (Ù…Ø³Ø­ Ø§Ù„Ø®Ø±Ø§Ø¦Ø· Ø§Ù„ØªØ®Ø²ÙŠÙ†ÙŠØ© ÙˆØ§Ù„Ø®Ø·ÙˆØ· Ø§Ù„Ù…Ø±Ø³ÙˆÙ…Ø©)</value>
+    <value>الملفات المؤقتة المحلية والرسومات (مسح الخرائط التخزينية والخطوط المرسومة)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡: Ù‡Ø°Ø§ Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡ Ù†Ù‡Ø§Ø¦ÙŠ ÙˆØ¯Ø§Ø¦Ù… ÙˆÙ„Ø§ ÙŠÙ…ÙƒÙ† Ø§Ù„ØªØ±Ø§Ø¬Ø¹ Ø¹Ù†Ù‡ Ø¨Ø£ÙŠ Ø´ÙƒÙ„ Ù…Ù† Ø§Ù„Ø£Ø´ÙƒØ§Ù„.</value>
+    <value>تنبيه: هذا الإجراء نهائي ودائم ولا يمكن التراجع عنه بأي شكل من الأشكال.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>ØªØ£ÙƒÙŠØ¯ Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ¹ÙŠÙŠÙ† ÙˆØ§Ù„ØªØµÙÙŠØ±</value>
+    <value>تأكيد إعادة التعيين والتصفير</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ù…Ù„Ù Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©</value>
+    <value>كلمة مرور ملف النسخة الاحتياطية</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>Ø­Ù…Ø§ÙŠØ© Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© ÙˆØªØ´ÙÙŠØ±Ù‡Ø§</value>
+    <value>حماية النسخة الاحتياطية وتشفيرها</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Ø£Ø¯Ø®Ù„ ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ù‚ÙˆÙŠØ© Ù„ØªØ´ÙÙŠØ± Ù…Ù„Ù Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© ÙˆØªØ£Ù…ÙŠÙ†Ù‡. Ø¥Ø°Ø§ ØªØ±ÙƒØª Ù‡Ø°Ø§ Ø§Ù„Ø­Ù‚Ù„ ÙØ§Ø±ØºØ§Ù‹ØŒ ÙØ³ÙŠØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© Ø¨Ø¯ÙˆÙ† ØªØ´ÙÙŠØ± Ù„Ø­Ù…Ø§ÙŠØªÙ‡Ø§.</value>
+    <value>أدخل كلمة مرور قوية لتشفير ملف النسخة الاحتياطية وتأمينه. إذا تركت هذا الحقل فارغاً، فسيتم إنشاء النسخة الاحتياطية بدون تشفير لحمايتها.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ù†Ø³Ø®Ø© Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©</value>
+    <value>استعادة نسخة احتياطية</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>Ù‡Ø°Ø§ Ø§Ù„Ù…Ù„Ù Ø§Ù„Ù…Ø­ÙÙˆØ¸ Ù…Ø­Ù…ÙŠ Ø¨ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ù…Ø´ÙØ±Ø©. ÙŠÙØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø§Ù„ØµØ­ÙŠØ­Ø© Ù„ÙÙƒ Ø§Ù„ØªØ´ÙÙŠØ± ÙˆØ¨Ø¯Ø¡ Ø§Ù„Ø§Ø³ØªØ¹Ø§Ø¯Ø©:</value>
+    <value>هذا الملف المحفوظ محمي بكلمة مرور مشفرة. يُرجى إدخال كلمة المرور الصحيحة لفك التشفير وبدء الاستعادة:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>ØªØ´ÙÙŠØ± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª</value>
+    <value>تشفير البيانات</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>ÙÙƒ Ø§Ù„ØªØ´ÙÙŠØ± Ø¹Ù† Ø§Ù„Ù…Ù„Ù</value>
+    <value>فك التشفير عن الملف</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>Ù…ÙˆØ§ÙÙ‚</value>
+    <value>موافق</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>Ù†Ø³Ø® Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ Ø§Ø­ØªÙŠØ§Ø·ÙŠØ§Ù‹</value>
+    <value>نسخ بيانات التطبيق احتياطياً</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[Ø§Ù„Ù†Ø¸Ø§Ù…] ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ù…Ù„Ù Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© ÙˆØªØ£Ù…ÙŠÙ†Ù‡ Ø¨Ù†Ø¬Ø§Ø­ ÙÙŠ Ø§Ù„Ù…Ø³Ø§Ø± Ø§Ù„ØªØ§Ù„ÙŠ: {0}</value>
+    <value>[النظام] تم إنشاء ملف النسخة الاحتياطية وتأمينه بنجاح في المسار التالي: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© Ù„Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø¨Ù†Ø¬Ø§Ø­ ÙˆØªØ£Ù…ÙŠÙ†Ù‡Ø§!</value>
+    <value>تم إنشاء النسخة الاحتياطية للبيانات بنجاح وتأمينها!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>Ø§ÙƒØªÙ…Ù„ Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©</value>
+    <value>اكتمل إنشاء النسخة الاحتياطية</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[Ø§Ù„Ù†Ø¸Ø§Ù…] ÙØ´Ù„ Ø¥Ø¬Ø±Ø§Ø¡ Ø§Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ› Ø®Ø·Ø£: {0}</value>
+    <value>[النظام] فشل إجراء النسخ الاحتياطي؛ خطأ: {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø®Ø·Ø£ ØºÙŠØ± Ù…ØªÙˆÙ‚Ø¹ Ø£Ø«Ù†Ø§Ø¡ Ù…Ø­Ø§ÙˆÙ„Ø© Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©: {0}</value>
+    <value>حدث خطأ غير متوقع أثناء محاولة إنشاء النسخة الاحتياطية: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>ÙØ´Ù„Øª Ø¹Ù…Ù„ÙŠØ© Ø§Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠ</value>
+    <value>فشلت عملية النسخ الاحتياطي</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡: Ø³ØªØ¤Ø¯ÙŠ Ø¹Ù…Ù„ÙŠØ© Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø³Ø§Ø¨Ù‚Ø© Ø¥Ù„Ù‰ Ø§Ø³ØªØ¨Ø¯Ø§Ù„ ÙˆØ­Ø°Ù Ù…Ù„ÙØ§Øª Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø§Ù„Ø­Ø§Ù„ÙŠØ©ØŒ ÙˆØ¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØµÙˆÙŠØ¨ Ø§Ù„Ù…Ø®ØµØµØ©ØŒ ÙˆØªØ±Ø§ÙƒØ¨Ø§Øª Ø§Ù„Ø±Ø³Ù… Ø§Ù„Ø­Ø§Ù„ÙŠØ©ØŒ ÙˆØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ù…ØµØºØ±Ø© Ø¨Ø§Ù„ÙƒØ§Ù…Ù„. Ù‡Ù„ Ø£Ù†Øª Ù…ØªØ£ÙƒØ¯ Ù…Ù† Ø±ØºØ¨ØªÙƒ ÙÙŠ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø©ØŸ</value>
+    <value>تنبيه: ستؤدي عملية استعادة البيانات السابقة إلى استبدال وحذف ملفات السيرفرات الحالية، وعلامات التصويب المخصصة، وتراكبات الرسم الحالية، وإعدادات الخريطة المصغرة بالكامل. هل أنت متأكد من رغبتك في المتابعة؟</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>ØªØ£ÙƒÙŠØ¯ Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©</value>
+    <value>تأكيد استعادة النسخة الاحتياطية</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø¨ÙŠØ§Ù†Ø§Øª ØªØ·Ø¨ÙŠÙ‚ Rust+</value>
+    <value>استعادة بيانات تطبيق Rust+</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>ØªÙ…Øª Ø§Ø³ØªØ¹Ø§Ø¯Ø© ÙƒØ§ÙØ© Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ Ø§Ù„Ø³Ø§Ø¨Ù‚Ø© Ø¨Ù†Ø¬Ø§Ø­ ÙˆØªØ·Ø¨ÙŠÙ‚Ù‡Ø§ ÙƒØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§ÙØªØ±Ø§Ø¶ÙŠØ©!</value>
+    <value>تمت استعادة كافة بيانات التطبيق السابقة بنجاح وتطبيقها كإعدادات افتراضية!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>Ø§ÙƒØªÙ…Ù„Øª Ø¹Ù…Ù„ÙŠØ© Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª</value>
+    <value>اكتملت عملية استعادة البيانات</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[Ø§Ù„Ù†Ø¸Ø§Ù…] ÙØ´Ù„ ÙÙƒ Ø§Ù„ØªØ´ÙÙŠØ± ÙˆØ§Ù„Ø§Ø³ØªØ¹Ø§Ø¯Ø©: ØªÙ… Ø¥Ø¯Ø®Ø§Ù„ ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± ØºÙŠØ± Ù…Ø·Ø§Ø¨Ù‚Ø© Ø£Ùˆ Ø®Ø§Ø·Ø¦Ø©.</value>
+    <value>[النظام] فشل فك التشفير والاستعادة: تم إدخال كلمة مرور غير مطابقة أو خاطئة.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>ÙØ´Ù„Øª Ø¹Ù…Ù„ÙŠØ© ÙÙƒ Ø§Ù„ØªØ´ÙÙŠØ± Ø¹Ù† Ø§Ù„Ù…Ù„ÙØ› ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø§Ù„Ù…Ø¯Ø®Ù„Ø© ØºÙŠØ± ØµØ§Ù„Ø­Ø© Ø£Ùˆ Ø£Ù† Ù…Ù„Ù Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© ØªØ§Ù„Ù Ø¨Ø§Ù„ÙƒØ§Ù…Ù„.</value>
+    <value>فشلت عملية فك التشفير عن الملف؛ كلمة المرور المدخلة غير صالحة أو أن ملف النسخة الاحتياطية تالف بالكامل.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>ÙØ´Ù„Øª Ø¹Ù…Ù„ÙŠØ© Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª</value>
+    <value>فشلت عملية استعادة البيانات</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[Ø§Ù„Ù†Ø¸Ø§Ù…] Ø­Ø¯Ø« Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø¥Ø¬Ø±Ø§Ø¡ Ø§Ù„Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ù„Ù„Ù…Ù„ÙØ§Øª: {0}</value>
+    <value>[النظام] حدث خطأ أثناء إجراء الاستعادة للملفات: {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>Ø®Ø·Ø£ ÙÙŠ Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© Ø§Ù„Ù…Ø¯Ø®Ù„Ø©: {0}</value>
+    <value>خطأ في استعادة النسخة الاحتياطية المدخلة: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>ØµÙŠØºØ© ÙˆØªÙ†Ø³ÙŠÙ‚ Ù…Ù„Ù Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© ØºÙŠØ± Ù…Ø¯Ø¹ÙˆÙ…ØŒ Ø£Ùˆ Ø£Ù† ØªÙˆÙ‚ÙŠØ¹ Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø¨Ø±Ù…Ø¬ÙŠ Ù…ÙÙ‚ÙˆØ¯.</value>
+    <value>صيغة وتنسيق ملف النسخة الاحتياطية غير مدعوم، أو أن توقيع الملف البرمجي مفقود.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¨Ø¯Ø¡ Ø¥Ø¬Ø±Ø§Ø¡Ø§Øª Ø¹Ù…Ù„ÙŠØ© Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø¶Ø¨Ø· Ø§Ù„Ø§Ù†ØªÙ‚Ø§Ø¦ÙŠ Ø§Ù„Ø´Ø§Ù…Ù„Ø© Ù„Ù„Ø¨ÙŠØ§Ù†Ø§Øª...</value>
+    <value>[تصفير] بدء إجراءات عملية إعادة الضبط الانتقائي الشاملة للبيانات...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ù‚Ø·Ø¹ Ø§Ù„Ø§ØªØµØ§Ù„ Ø§Ù„Ù†Ø´Ø· Ù…Ø¹ Ø§Ù„Ø³ÙŠØ±ÙØ± ÙˆØªØµÙÙŠØ± Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¬Ù„Ø³Ø© Ø§Ù„Ø­Ø§Ù„ÙŠØ©...</value>
+    <value>[تصفير] جاري قطع الاتصال النشط مع السيرفر وتصفير بيانات الجلسة الحالية...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø§ÙƒØªÙ…Ù„Øª Ø¹Ù…Ù„ÙŠØ© Ø¥Ø¹Ø§Ø¯Ø© Ø¶Ø¨Ø· ÙˆØªØµÙÙŠØ± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ù†Ø¬Ø§Ø­.</value>
+    <value>[تصفير] اكتملت عملية إعادة ضبط وتصفير الاتصال بنجاح.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ù…Ø³Ø­ ÙƒØ§ÙØ© Ù…Ù„ÙØ§Øª ØªØ¹Ø±ÙŠÙ Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø© Ù„Ù„ØªØ·Ø¨ÙŠÙ‚...</value>
+    <value>[تصفير] جاري مسح كافة ملفات تعريف السيرفرات المحفوظة للتطبيق...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] ØªÙ… Ù…Ø³Ø­ ÙˆØ­Ø°Ù Ù…Ù„ÙØ§Øª ØªØ¹Ø±ÙŠÙ Ø§Ù„Ø³ÙŠØ±ÙØ±Ø§Øª Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø© Ø¨Ø§Ù„ÙƒØ§Ù…Ù„.</value>
+    <value>[تصفير] تم مسح وحذف ملفات تعريف السيرفرات المحفوظة بالكامل.</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ø¥Ø²Ø§Ù„Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ø¹ØªÙ…Ø§Ø¯ Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ… (Steam) Ø§Ù„Ù…Ø³Ø¬Ù„Ø© Ø¨Ø§Ù„ØªØ·Ø¨ÙŠÙ‚...</value>
+    <value>[تصفير] جاري إزالة بيانات اعتماد حساب ستيم (Steam) المسجلة بالتطبيق...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] ØªÙ… Ù…Ø³Ø­ ÙˆØ¥Ø²Ø§Ù„Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ø¹ØªÙ…Ø§Ø¯ Ø­Ø³Ø§Ø¨ Ø³ØªÙŠÙ… Ø¨Ù†Ø¬Ø§Ø­.</value>
+    <value>[تصفير] تم مسح وإزالة بيانات اعتماد حساب ستيم بنجاح.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ù…Ø³Ø­ ÙˆØ­Ø°Ù ØªÙƒÙˆÙŠÙ†Ø§Øª Ø¥Ù‚Ø±Ø§Ù† Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ© Ø§Ù„Ù…Ø®Ø²Ù†Ø©...</value>
+    <value>[تصفير] جاري مسح وحذف تكوينات إقران الأجهزة الذكية المخزنة...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] ØªÙ… Ø­Ø°Ù ÙˆØ¥Ø²Ø§Ù„Ø© ØªÙƒÙˆÙŠÙ†Ø§Øª Ø¥Ù‚Ø±Ø§Ù† Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© ØªÙ…Ø§Ù…Ø§Ù‹.</value>
+    <value>[تصفير] تم حذف وإزالة تكوينات إقران الأجهزة تماماً.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ù…Ø³Ø­ ÙˆØ¥Ø²Ø§Ù„Ø© ÙƒØ§ÙØ© Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØµÙˆÙŠØ¨ Ø§Ù„Ù…Ø®ØµØµØ© (Crosshairs)...</value>
+    <value>[تصفير] جاري مسح وإزالة كافة علامات التصويب المخصصة (Crosshairs)...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø­Ø¯Ø« Ø®Ø·Ø£ ØºÙŠØ± Ù…ØªÙˆÙ‚Ø¹ Ø£Ø«Ù†Ø§Ø¡ Ù…Ø­Ø§ÙˆÙ„Ø© ØªØµÙÙŠØ± Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØµÙˆÙŠØ¨ Ø§Ù„Ù…Ø®ØµØµØ©: {0}</value>
+    <value>[تصفير] حدث خطأ غير متوقع أثناء محاولة تصفير علامات التصويب المخصصة: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] ØªÙ… ØªØµÙÙŠØ± ÙˆÙ…Ø³Ø­ Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØµÙˆÙŠØ¨ Ø§Ù„Ù…Ø®ØµØµØ© Ø¨Ù†Ø¬Ø§Ø­ Ù…Ù† Ø§Ù„Ø°Ø§ÙƒØ±Ø©.</value>
+    <value>[تصفير] تم تصفير ومسح علامات التصويب المخصصة بنجاح من الذاكرة.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ù…Ø³Ø­ Ù…Ø¬Ù„Ø¯Ø§Øª Ø§Ù„Ù…Ù„ÙØ§Øª Ø§Ù„Ù…Ø¤Ù‚ØªØ© Ø§Ù„Ù…Ø­Ù„ÙŠØ© ÙˆØ±Ø³ÙˆÙ…Ø§Øª ØªØ±Ø§ÙƒØ¨ Ø§Ù„Ø´Ø§Ø´Ø© Ø§Ù„ØªØ®Ø²ÙŠÙ†ÙŠØ©...</value>
+    <value>[تصفير] جاري مسح مجلدات الملفات المؤقتة المحلية ورسومات تراكب الشاشة التخزينية...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø­Ø¯Ø« Ø®Ø·Ø£ Ø¨Ø±Ù…ÙŠ Ø£Ø«Ù†Ø§Ø¡ Ù…Ø­Ø§ÙˆÙ„Ø© ØªÙ†Ø¸ÙŠÙ Ù…Ø¬Ù„Ø¯ Ø§Ù„Ù…Ù„ÙØ§Øª Ø§Ù„Ù…Ø¤Ù‚ØªØ© (Cache): {0}</value>
+    <value>[تصفير] حدث خطأ برمي أثناء محاولة تنظيف مجلد الملفات المؤقتة (Cache): {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] ØªÙ… Ø¥ÙØ±Ø§Øº ÙˆØªÙ†Ø¸ÙŠÙ Ù…Ø¬Ù„Ø¯Ø§Øª Ø§Ù„Ø°Ø§ÙƒØ±Ø© Ø§Ù„Ù…Ø¤Ù‚ØªØ© Ø§Ù„ØªØ®Ø²ÙŠÙ†ÙŠØ© Ø¨Ù†Ø¬Ø§Ø­.</value>
+    <value>[تصفير] تم إفراغ وتنظيف مجلدات الذاكرة المؤقتة التخزينية بنجاح.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø¬Ø§Ø±ÙŠ Ø¥Ø¹Ø§Ø¯Ø© ØªØ³Ø¬ÙŠÙ„ Ø¨ÙŠØ§Ù†Ø§Øª Ù†Ø¸Ø§Ù… Ø§Ù„Ù…Ø³ØªÙ…Ø¹ ÙˆØ¥Ø´Ø¹Ø§Ø±Ø§Øª Ø§Ù„Ù€ FCM Ø§Ù„Ù…ØªØ²Ø§Ù…Ù†Ø© Ø¨Ø§Ù„Ø¨Ø±Ù†Ø§Ù…Ø¬...</value>
+    <value>[تصفير] جاري إعادة تسجيل بيانات نظام المستمع وإشعارات الـ FCM المتزامنة بالبرنامج...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[ØªØµÙÙŠØ±] Ø§ÙƒØªÙ…Ù„Øª Ø¹Ù…Ù„ÙŠØ© Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø¶Ø¨Ø· Ø§Ù„Ø§Ù†ØªÙ‚Ø§Ø¦ÙŠ ÙˆØ§Ù„ØªØµÙÙŠØ± Ø¨Ù†Ø¬Ø§Ø­ ØªØ§Ù… ÙˆØ¨Ø¯ÙˆÙ† Ù…Ø´Ø§ÙƒÙ„.</value>
+    <value>[تصفير] اكتملت عملية إعادة الضبط الانتقائي والتصفير بنجاح تام وبدون مشاكل.</value>
   </data>
   <data name="DeleteDeathMarker" xml:space="preserve">
-    <value>Ù…Ø³Ø­ Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„Ù…ÙˆØª</value>
+    <value>مسح علامات الموت</value>
   </data>
   <data name="RenameDeathMarker" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ³Ù…ÙŠØ© Ø¹Ù„Ø§Ù…Ø© Ø§Ù„Ù…ÙˆØª</value>
+    <value>إعادة تسمية علامة الموت</value>
   </data>
   <data name="PlayerDirectionArrow" xml:space="preserve">
-    <value>Ø§ØªØ¬Ø§Ù‡</value>
+    <value>اتجاه</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ø®ØµÙŠ</value>
+    <value>الملف الشخصي</value>
   </data>
   <data name="Death" xml:space="preserve">
-    <value>Ù…ÙˆØª</value>
+    <value>موت</value>
   </data>
   <data name="Markers" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø§Øª:</value>
+    <value>علامات:</value>
   </data>
   <data name="WipeDeathMarkers" xml:space="preserve">
-    <value>Ù…Ø³Ø­ Ø§Ù„ÙƒÙ„</value>
+    <value>مسح الكل</value>
   </data>
   <data name="Accept" xml:space="preserve">
-    <value>Ù‚Ø¨ÙˆÙ„</value>
+    <value>قبول</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
-    <value>Ù…Ø¤Ù‚Øª Ù…Ø®ØµØµ</value>
+    <value>مؤقت مخصص</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
     <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
-    <value>Ù…Ø¤Ù‚Øª Ù…Ø®ØµØµ</value>
+    <value>مؤقت مخصص</value>
   </data>
   <data name="ActiveTimersCategory" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø¤Ù‚ØªØ§Øª Ø§Ù„Ù†Ø´Ø·Ø©</value>
+    <value>المؤقتات النشطة</value>
   </data>
   <data name="AddTimer" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© Ù…Ø¤Ù‚Øª</value>
+    <value>إضافة مؤقت</value>
   </data>
   <data name="TimerName" xml:space="preserve">
-    <value>Ø§Ù„Ø§Ø³Ù…</value>
+    <value>الاسم</value>
   </data>
   <data name="TimerCreateCmdLabel" xml:space="preserve">
-    <value>Ø£Ù…Ø±:</value>
+    <value>أمر:</value>
   </data>
   <data name="CheckTimerStatusInfo" xml:space="preserve">
-    <value>Ø§Ø³ØªØ®Ø¯Ù… Ø§Ù„Ø£Ù…Ø± Ù„Ù„ØªØ­Ù‚Ù‚.</value>
+    <value>استخدم الأمر للتحقق.</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
-    <value>Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ù‚ØµÙ‰ 5 Ù…Ø¤Ù‚ØªØ§Øª.</value>
+    <value>الحد الأقصى 5 مؤقتات.</value>
   </data>
   <data name="TimerDurationRequired" xml:space="preserve">
-    <value>Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ù…Ø¯Ø© Ø§Ù„Ù…Ø¤Ù‚Øª (Ø³Ø§Ø¹Ø§Øª Ø£Ùˆ Ø¯Ù‚Ø§Ø¦Ù‚ Ø£Ùˆ Ø«ÙˆØ§Ù†Ù).</value>
+    <value>الرجاء إدخال مدة المؤقت (ساعات أو دقائق أو ثوانٍ).</value>
   </data>
   <data name="TimerNameMustStartWithLetter" xml:space="preserve">
-    <value>ÙŠØ¬Ø¨ Ø£Ù† ÙŠØ¨Ø¯Ø£ Ø§Ø³Ù… Ø§Ù„Ù…Ø¤Ù‚Øª Ø¨Ø­Ø±Ù.</value>
+    <value>يجب أن يبدأ اسم المؤقت بحرف.</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
-    <value>Ø¹Ù„Ø§Ù…Ø© Ø§Ù„Ù…ÙˆØª</value>
+    <value>علامة الموت</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value> - Ø¹Ù„Ø§Ù…Ø§Øª Ù…Ø®ØµØµØ© Ù„Ù„ÙØ±ÙŠÙ‚</value>
+    <value> - علامات مخصصة للفريق</value>
   </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ù…Ø¤Ù‚Øª</value>
+    <value>تنبيهات المؤقت</value>
   </data>
   <data name="FeatureTimerAlertsDesc" xml:space="preserve">
-    <value> - 60,30,10,3 Ù… Ù‚Ø¨Ù„ Ø§Ù„Ù†Ù‡Ø§ÙŠØ©</value>
+    <value> - 60,30,10,3 م قبل النهاية</value>
   </data>
   <data name="TranslationConsentTitle" xml:space="preserve">
-    <value>Ù…ÙˆØ§ÙÙ‚Ø© Ø§Ù„ØªØ±Ø¬Ù…Ø©</value>
+    <value>موافقة الترجمة</value>
   </data>
   <data name="TranslationConsentText" xml:space="preserve">
-    <value>Ø¨Ø§Ù„Ù†Ù‚Ø± ÙÙˆÙ‚ Ù‚Ø¨ÙˆÙ„ØŒ Ø³ÙŠØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ù…Ø­ØªÙˆÙŠØ§Øª Ù…Ù„Ø§Ø­Ø¸Ø§Øª Ø§Ù„ØªØµØ­ÙŠØ­ Ø¥Ù„Ù‰ Ø®Ø¯Ù…Ø© ØªØ±Ø¬Ù…Ø© Google (Ø§Ù„ÙˆÙ„Ø§ÙŠØ§Øª Ø§Ù„Ù…ØªØ­Ø¯Ø© Ø§Ù„Ø£Ù…Ø±ÙŠÙƒÙŠØ©) Ù„Ù„ØªØ±Ø¬Ù…Ø©. Ù‡Ù„ ØªÙ‚Ø¨Ù„ØŸ</value>
+    <value>بالنقر فوق قبول، سيتم إرسال محتويات ملاحظات التصحيح إلى خدمة ترجمة Google (الولايات المتحدة الأمريكية) للترجمة. هل تقبل؟</value>
   </data>
   <data name="TranslationApiLinkText" xml:space="preserve">
-    <value>Ø´Ø±ÙˆØ· ÙˆØ§Ø¬Ù‡Ø© Ø¨Ø±Ù…Ø¬Ø© ØªØ·Ø¨ÙŠÙ‚Ø§Øª Google Translate</value>
+    <value>شروط واجهة برمجة تطبيقات Google Translate</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>ÙŠØ±Ø¬Ù‰ Ø§Ù„Ù…Ù„Ø§Ø­Ø¸Ø©</value>
+    <value>يرجى الملاحظة</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>ØªØ­Ù‚Ù‚ Ù…Ù† Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© Ù„Ù„Ù…Ø¤Ù‚ØªØ§Øª Ø§Ù„Ù…Ø®ØµØµØ© Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø©. ÙŠØªÙ… Ø§Ù„Ø¢Ù† Ø¯Ø§Ø¦Ù…Ù‹Ø§ Ø­ÙØ¸ Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„Ù…ÙˆØª Ù…Ø­Ù„ÙŠÙ‹Ø§. ÙŠØªÙ… Ø§Ù„Ø¢Ù† Ø£ÙŠØ¶Ù‹Ø§ ØªØ­Ø¯ÙŠØ« Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ù…ØµØºØ±Ø© Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„ØªØµØºÙŠØ±.</value>
+    <value>تحقق من إعدادات تنبيهات الدردشة للمؤقتات المخصصة الجديدة. يتم الآن دائمًا حفظ علامات الموت محليًا. يتم الآن أيضًا تحديث الخريطة المصغرة أثناء التصغير.</value>
   </data>
   <data name="TranslateViaGoogle" xml:space="preserve">
-    <value>ØªØ±Ø¬Ù…Ø© Ø¹Ø¨Ø± Ø¬ÙˆØ¬Ù„</value>
+    <value>ترجمة عبر جوجل</value>
   </data>
   <data name="PremiumFeatures" xml:space="preserve">
-    <value>Ù…Ø²Ø§ÙŠØ§ Ø§Ù„Ø¯Ø§Ø¹Ù… (Supporter)</value>
+    <value>مزايا الداعم (Supporter)</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>ÙŠØªÙˆÙØ± Ø£ÙƒØ«Ø± Ù…Ù† 10 Ø£Ø¬Ù‡Ø²Ø© Ù…Ø­Ù„ÙŠÙ‹Ø§ Ø£Ùˆ Ø¹Ø¨Ø± Ø§Ù„Ø§Ø³ØªÙŠØ±Ø§Ø¯. Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨Ø© Ø§Ù„Ù…Ø¬Ø§Ù†ÙŠØ© ØªØ­ØªÙØ¸ Ø¨Ø£ÙˆÙ„ 10 Ø£Ø¬Ù‡Ø²Ø©Ø› ÙŠÙ…ÙƒÙ† Ù„Ù„Ø¯Ø§Ø¹Ù…ÙŠÙ† Ù…Ø²Ø§Ù…Ù†Ø© Ø¹Ø¯Ø¯ ØºÙŠØ± Ù…Ø­Ø¯ÙˆØ¯ Ù…Ù† Ø§Ù„Ø£Ø¬Ù‡Ø²Ø©.</value>
+    <value>يتوفر أكثر من 10 أجهزة محليًا أو عبر الاستيراد. مزامنة السحابة المجانية تحتفظ بأول 10 أجهزة؛ يمكن للداعمين مزامنة عدد غير محدود من الأجهزة.</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>Ù‡Ø°Ø§ Ø§Ù„ØªØ±Ø§ÙƒØ¨ Ø£ÙƒØ¨Ø± Ù…Ù† Ø­Ø¯ Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ© Ø§Ù„Ù…Ø¬Ø§Ù†ÙŠ. ÙŠØ­ØµÙ„ Ø§Ù„Ø¯Ø§Ø¹Ù…ÙˆÙ† Ø¹Ù„Ù‰ Ø­Ø¬Ù… ØªØ±Ø§ÙƒØ¨Ø§Øª Ø£ÙƒØ¨Ø± 10 Ù…Ø±Ø§ØªØŒ ÙˆÙ…Ø²ÙŠØ¯ Ù…Ù† Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„Ø®Ø±ÙŠØ·Ø© ÙˆÙ„Ù‚Ø·Ø§Øª Ø§Ù„Ø´Ø§Ø´Ø©.</value>
+    <value>هذا التراكب أكبر من حد المزامنة السحابية المجاني. يحصل الداعمون على حجم تراكبات أكبر 10 مرات، ومزيد من علامات الخريطة ولقطات الشاشة.</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
-    <value>Ø§Ù„Ø®ØµÙˆØµÙŠØ© ÙˆØ§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ©</value>
+    <value>الخصوصية والمزامنة السحابية</value>
   </data>
   <data name="PrivacyDisclaimerDesc" xml:space="preserve">
-    <value>Ù„ØªÙ…ÙƒÙŠÙ† Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø­ÙŠØ© Ù„ØªØ±Ø§ÙƒØ¨Ø§Øª Ø§Ù„Ø®Ø±Ø§Ø¦Ø· ÙˆØ§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ©ØŒ ÙŠØ¬Ø¨ Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø¥Ù„Ù‰ Ø³Ø­Ø§Ø¨ØªÙ†Ø§ Ø§Ù„Ø¢Ù…Ù†Ø©. Ù†Ø¬Ù…Ø¹ Ø£ÙŠØ¶Ù‹Ø§ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ø³ØªØ®Ø¯Ø§Ù… Ù…Ø¬Ù‡ÙˆÙ„Ø©.</value>
+    <value>لتمكين المزامنة الحية لتراكبات الخرائط والأجهزة الذكية، يجب إرسال البيانات إلى سحابتنا الآمنة. نجمع أيضًا بيانات استخدام مجهولة.</value>
   </data>
   <data name="AcceptCloud" xml:space="preserve">
-    <value>Ù‚Ø¨ÙˆÙ„ ÙˆØªÙ…ÙƒÙŠÙ† Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>قبول وتمكين السحابة</value>
   </data>
   <data name="DeclineCloud" xml:space="preserve">
-    <value>Ø±ÙØ¶ Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>رفض السحابة</value>
   </data>
   <data name="ConnectDiscord" xml:space="preserve">
-    <value>Ø±Ø¨Ø· Ø¯ÙŠØ³ÙƒÙˆØ±Ø¯ Ù„Ù…Ø²Ø§ÙŠØ§ Ø§Ù„Ø¯Ø§Ø¹Ù…ÙŠÙ†</value>
+    <value>ربط ديسكورد لمزايا الداعمين</value>
   </data>
   <data name="DisconnectDiscord" xml:space="preserve">
-    <value>Ù‚Ø·Ø¹ Ø§ØªØµØ§Ù„ Ø¯ÙŠØ³ÙƒÙˆØ±Ø¯</value>
+    <value>قطع اتصال ديسكورد</value>
   </data>
   <data name="DiscordConnecting" xml:space="preserve">
-    <value>Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø§ØªØµØ§Ù„...</value>
+    <value>جاري الاتصال...</value>
   </data>
   <data name="CloudSync" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ© ÙˆØ§Ù„ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù…Ø¨Ø§Ø´Ø±</value>
+    <value>المزامنة السحابية والتحميل المباشر</value>
   </data>
   <data name="CloudSyncDesc" xml:space="preserve">
-    <value>Ù‚Ù… Ø¨Ø§Ù„ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù…Ø¨Ø§Ø´Ø± ÙˆÙ…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© Ø§Ù„Ø°ÙƒÙŠØ© ÙˆØªØ±Ø§ÙƒØ¨Ø§Øª Ø§Ù„Ø®Ø±Ø§Ø¦Ø· Ø¨Ø£Ù…Ø§Ù† ÙÙŠ Ø§Ù„Ø³Ø­Ø§Ø¨Ø©.</value>
+    <value>قم بالتحميل المباشر ومزامنة الأجهزة الذكية وتراكبات الخرائط بأمان في السحابة.</value>
   </data>
   <data name="SupporterSettingsHeader" xml:space="preserve">
-    <value>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø¯Ø§Ø¹Ù…</value>
+    <value>إعدادات الداعم</value>
   </data>
   <data name="SupporterDescription" xml:space="preserve">
-    <value>Ù‡Ø°Ù‡ Ø§Ù„Ù…ÙŠØ²Ø§Øª Ù…ØªØ§Ø­Ø© Ø­ØµØ±ÙŠÙ‹Ø§ Ù„Ù„Ø¯Ø§Ø¹Ù…ÙŠÙ† ÙˆØ§Ù„Ù…Ø·ÙˆØ±ÙŠÙ† Ù„Ø¯ÙŠÙ†Ø§ Ø¹Ø¨Ø± ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¥Ù„Ù‰ Ø¯ÙŠØ³ÙƒÙˆØ±Ø¯.</value>
+    <value>هذه الميزات متاحة حصريًا للداعمين والمطورين لدينا عبر تسجيل الدخول إلى ديسكورد.</value>
   </data>
   <data name="AdvancedDiscordIntegration" xml:space="preserve">
-    <value>ØªÙƒØ§Ù…Ù„ Ø¯ÙŠØ³ÙƒÙˆØ±Ø¯ Ø§Ù„Ù…ØªÙ‚Ø¯Ù… (ÙˆÙŠØ¨ Ù‡ÙˆÙƒØŒ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª ØµÙˆØªÙŠØ©)</value>
+    <value>تكامل ديسكورد المتقدم (ويب هوك، تنبيهات صوتية)</value>
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
-    <value>ØªÙƒØ§Ù…Ù„ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª ØªÙŠÙ„ÙŠØ¬Ø±Ø§Ù…</value>
+    <value>تكامل تنبيهات تيليجرام</value>
   </data>
   <data name="PremiumStopSync">
-    <value>Ø¥ÙŠÙ‚Ø§Ù Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø©</value>
+    <value>إيقاف المزامنة</value>
   </data>
   <data name="PremiumStayFree">
-    <value>Ø§Ø¨Ù‚ Ù…Ø¬Ø§Ù†Ù‹Ø§</value>
+    <value>ابق مجانًا</value>
   </data>
   <data name="PremiumSupportNow">
-    <value>Ø§Ø¯Ø¹Ù… Ø§Ù„Ø¢Ù†</value>
+    <value>ادعم الآن</value>
   </data>
   <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
-    <value>ØªÙ…Øª Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„ØªØ±Ø§ÙƒØ¨ {0} ÙƒÙŠÙ„ÙˆØ¨Ø§ÙŠØª {1}</value>
+    <value>تمت مزامنة التراكب {0} كيلوبايت {1}</value>
   </data>
   <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
-    <value>10 Ø£Ø¬Ù‡Ø²Ø© ÙƒØ­Ø¯ Ø£Ù‚ØµÙ‰ ÙÙŠ Ø§Ù„Ø®Ø·Ø© Ø§Ù„Ù…Ø¬Ø§Ù†ÙŠØ©</value>
+    <value>10 أجهزة كحد أقصى في الخطة المجانية</value>
   </data>
   <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
-    <value>ØªÙ…Øª Ù…Ø²Ø§Ù…Ù†Ø© {0} Ø£Ø¬Ù‡Ø²Ø© {1}</value>
+    <value>تمت مزامنة {0} أجهزة {1}</value>
   </data>
   <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
-    <value>Ø­Ø¬Ù… Ø§Ù„ØªØ±Ø§ÙƒØ¨ ÙƒØ¨ÙŠØ± Ø¬Ø¯Ù‹Ø§ Ù„Ù„Ù…Ø²Ø§Ù…Ù†Ø© ({0} ÙƒÙŠÙ„ÙˆØ¨Ø§ÙŠØª)</value>
+    <value>حجم التراكب كبير جدًا للمزامنة ({0} كيلوبايت)</value>
   </data>
   <data name="CloudTooltipActivate" xml:space="preserve">
-    <value>ØªÙØ¹ÙŠÙ„ Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>تفعيل مزامنة السحابة</value>
   </data>
   <data name="CloudTooltipActive" xml:space="preserve">
-    <value>Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨Ø© Ù…ÙØ¹Ù‘Ù„Ø©</value>
+    <value>مزامنة السحابة مفعّلة</value>
   </data>
   <data name="CloudAccountTitle" xml:space="preserve">
-    <value>Ø­Ø³Ø§Ø¨ Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>حساب السحابة</value>
   </data>
   <data name="EmailLoginWindowTitle" xml:space="preserve">
-    <value>ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¥Ù„Ù‰ Ø­Ø³Ø§Ø¨ Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>تسجيل الدخول إلى حساب السحابة</value>
   </data>
   <data name="EmailSignInTab" xml:space="preserve">
-    <value>ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„</value>
+    <value>تسجيل الدخول</value>
   </data>
   <data name="EmailSignUpTab" xml:space="preserve">
-    <value>Ø¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨</value>
+    <value>إنشاء حساب</value>
   </data>
   <data name="EmailAddressLabel" xml:space="preserve">
-    <value>Ø¹Ù†ÙˆØ§Ù† Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ</value>
+    <value>عنوان البريد الإلكتروني</value>
   </data>
   <data name="PasswordLabel" xml:space="preserve">
-    <value>ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±</value>
+    <value>كلمة المرور</value>
   </data>
   <data name="PasswordMinCharsLabel" xml:space="preserve">
-    <value>ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± (6 Ø£Ø­Ø±Ù Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„)</value>
+    <value>كلمة المرور (6 أحرف على الأقل)</value>
   </data>
   <data name="ConfirmPasswordLabel" xml:space="preserve">
-    <value>ØªØ£ÙƒÙŠØ¯ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±</value>
+    <value>تأكيد كلمة المرور</value>
   </data>
   <data name="EmailSignInButton" xml:space="preserve">
-    <value>ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„</value>
+    <value>تسجيل الدخول</value>
   </data>
   <data name="EmailCreateAccountButton" xml:space="preserve">
-    <value>Ø¥Ù†Ø´Ø§Ø¡ Ø­Ø³Ø§Ø¨</value>
+    <value>إنشاء حساب</value>
   </data>
   <data name="EmailConfirmationSentTitle" xml:space="preserve">
-    <value>ØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ø±Ø³Ø§Ù„Ø© Ø§Ù„ØªØ£ÙƒÙŠØ¯!</value>
+    <value>تم إرسال رسالة التأكيد!</value>
   </data>
   <data name="EmailConfirmationSentMessage" xml:space="preserve">
-    <value>Ø§Ø¶ØºØ· Ø¹Ù„Ù‰ Ø§Ù„Ø±Ø§Ø¨Ø· ÙÙŠ Ø¨Ø±ÙŠØ¯Ùƒ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ. ÙŠØªØ­Ù‚Ù‚ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§ ÙƒÙ„ Ø¨Ø¶Ø¹ Ø«ÙˆØ§Ù†...</value>
+    <value>اضغط على الرابط في بريدك الإلكتروني. يتحقق التطبيق تلقائيًا كل بضع ثوان...</value>
   </data>
   <data name="EmailWaitingForConfirmation" xml:space="preserve">
-    <value>ÙÙŠ Ø§Ù†ØªØ¸Ø§Ø± Ø§Ù„ØªØ£ÙƒÙŠØ¯...</value>
+    <value>في انتظار التأكيد...</value>
   </data>
   <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
-    <value>ÙÙŠ Ø§Ù†ØªØ¸Ø§Ø± Ø§Ù„ØªØ£ÙƒÙŠØ¯... ({0}Ø«)</value>
+    <value>في انتظار التأكيد... ({0}ث)</value>
   </data>
   <data name="EmailProblemsPrefix" xml:space="preserve">
-    <value>Ù‡Ù„ ØªÙˆØ¬Ø¯ Ù…Ø´ÙƒÙ„Ø©ØŸ </value>
+    <value>هل توجد مشكلة؟ </value>
   </data>
   <data name="EmailOpenInBrowser" xml:space="preserve">
-    <value>ÙØªØ­ ÙÙŠ Ø§Ù„Ù…ØªØµÙØ­</value>
+    <value>فتح في المتصفح</value>
   </data>
   <data name="EmailPasswordRequiredError" xml:space="preserve">
-    <value>ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ ÙˆÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±.</value>
+    <value>يرجى إدخال البريد الإلكتروني وكلمة المرور.</value>
   </data>
   <data name="EmailRequiredError" xml:space="preserve">
-    <value>ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ Ø¹Ù†ÙˆØ§Ù† Ø¨Ø±ÙŠØ¯ Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ.</value>
+    <value>يرجى إدخال عنوان بريد إلكتروني.</value>
   </data>
   <data name="EmailPasswordTooShortError" xml:space="preserve">
-    <value>ÙŠØ¬Ø¨ Ø£Ù† ØªØªÙƒÙˆÙ† ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ù…Ù† 6 Ø£Ø­Ø±Ù Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„.</value>
+    <value>يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</value>
   </data>
   <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
-    <value>ÙƒÙ„Ù…ØªØ§ Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± Ù…ØªØ·Ø§Ø¨Ù‚ØªÙŠÙ†.</value>
+    <value>كلمتا المرور غير متطابقتين.</value>
   </data>
   <data name="EmailSigningInStatus" xml:space="preserve">
-    <value>Ø¬Ø§Ø±Ù ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„...</value>
+    <value>جارٍ تسجيل الدخول...</value>
   </data>
   <data name="EmailSignedInSuccess" xml:space="preserve">
-    <value>ØªÙ… ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø¨Ù†Ø¬Ø§Ø­!</value>
+    <value>تم تسجيل الدخول بنجاح!</value>
   </data>
   <data name="EmailSignInFailed" xml:space="preserve">
-    <value>ÙØ´Ù„ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„.</value>
+    <value>فشل تسجيل الدخول.</value>
   </data>
   <data name="EmailRegistrationRunningStatus" xml:space="preserve">
-    <value>Ø¬Ø§Ø±Ù Ø§Ù„ØªØ³Ø¬ÙŠÙ„...</value>
+    <value>جارٍ التسجيل...</value>
   </data>
   <data name="EmailRegistrationFailed" xml:space="preserve">
-    <value>ÙØ´Ù„ Ø§Ù„ØªØ³Ø¬ÙŠÙ„.</value>
+    <value>فشل التسجيل.</value>
   </data>
   <data name="EmailConfirmationTimeout" xml:space="preserve">
-    <value>Ø§Ù†ØªÙ‡Øª Ø§Ù„Ù…Ù‡Ù„Ø©: Ù„Ù… ÙŠØªÙ… ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ Ø®Ù„Ø§Ù„ 5 Ø¯Ù‚Ø§Ø¦Ù‚. ÙŠÙ…ÙƒÙ†Ùƒ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ù„Ø§Ø­Ù‚Ù‹Ø§.</value>
+    <value>انتهت المهلة: لم يتم تأكيد البريد الإلكتروني خلال 5 دقائق. يمكنك تسجيل الدخول لاحقًا.</value>
   </data>
   <data name="EmailInvalidCredentialsError" xml:space="preserve">
-    <value>Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¯Ø®ÙˆÙ„ ØºÙŠØ± ØµØ§Ù„Ø­Ø©. ØªØ­Ù‚Ù‚ Ù…Ù† Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ ÙˆÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±.</value>
+    <value>بيانات الدخول غير صالحة. تحقق من البريد الإلكتروني وكلمة المرور.</value>
   </data>
   <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
-    <value>Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¯Ø®ÙˆÙ„ ØºÙŠØ± ØµØ§Ù„Ø­Ø©.</value>
+    <value>بيانات الدخول غير صالحة.</value>
   </data>
   <data name="EmailNotConfirmedError" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… ØªØ£ÙƒÙŠØ¯ Ø¹Ù†ÙˆØ§Ù† Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ Ø¨Ø¹Ø¯. Ø§Ø¶ØºØ· Ø¹Ù„Ù‰ Ø±Ø§Ø¨Ø· Ø§Ù„ØªØ£ÙƒÙŠØ¯ ÙÙŠ ØµÙ†Ø¯ÙˆÙ‚ Ø§Ù„ÙˆØ§Ø±Ø¯.</value>
+    <value>لم يتم تأكيد عنوان البريد الإلكتروني بعد. اضغط على رابط التأكيد في صندوق الوارد.</value>
   </data>
   <data name="EmailAlreadyRegisteredError" xml:space="preserve">
-    <value>Ø¹Ù†ÙˆØ§Ù† Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ Ù‡Ø°Ø§ Ù…Ø³Ø¬Ù„ Ø¨Ø§Ù„ÙØ¹Ù„. ÙŠØ±Ø¬Ù‰ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„.</value>
+    <value>عنوان البريد الإلكتروني هذا مسجل بالفعل. يرجى تسجيل الدخول.</value>
   </data>
   <data name="AuthDiscordDisconnectButton" xml:space="preserve">
-    <value>Ù‚Ø·Ø¹ Ø§ØªØµØ§Ù„ Discord</value>
+    <value>قطع اتصال Discord</value>
   </data>
   <data name="AuthDiscordConnectedFormat" xml:space="preserve">
-    <value>Discord Ù…ØªØµÙ„ - Ø§Ù„ÙØ¦Ø©: {0}</value>
+    <value>Discord متصل - الفئة: {0}</value>
   </data>
   <data name="AuthEmailConnectedFormat" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ Ù…ØªØµÙ„: {0} - Ø§Ù„ÙØ¦Ø©: {1}</value>
+    <value>البريد الإلكتروني متصل: {0} - الفئة: {1}</value>
   </data>
   <data name="AuthNotConnectedStatus" xml:space="preserve">
-    <value>ØºÙŠØ± Ù…ØªØµÙ„ - Ø³Ø¬Ù‘Ù„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ù„Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ© ÙˆØ§Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©</value>
+    <value>غير متصل - سجّل الدخول لاستخدام المزامنة السحابية والنسخ الاحتياطية</value>
   </data>
   <data name="AuthDisconnectingStatus" xml:space="preserve">
-    <value>Ø¬Ø§Ø±Ù Ù‚Ø·Ø¹ Ø§Ù„Ø§ØªØµØ§Ù„...</value>
+    <value>جارٍ قطع الاتصال...</value>
   </data>
   <data name="AuthConnectingStatus" xml:space="preserve">
-    <value>Ø¬Ø§Ø±Ù Ø§Ù„Ø§ØªØµØ§Ù„...</value>
+    <value>جارٍ الاتصال...</value>
   </data>
   <data name="EmailAccountButton" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ / Ø§Ù„Ø­Ø³Ø§Ø¨</value>
+    <value>البريد الإلكتروني / الحساب</value>
   </data>
   <data name="EmailLogoutConfirmMessage" xml:space="preserve">
-    <value>Ù‡Ù„ ØªØ±ÙŠØ¯ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù† Ø­Ø³Ø§Ø¨ Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠØŸ</value>
+    <value>هل تريد تسجيل الخروج من حساب البريد الإلكتروني؟</value>
   </data>
   <data name="CloudLoginPromptTitle" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ©</value>
+    <value>المزامنة السحابية</value>
   </data>
   <data name="CloudLoginPromptHeading" xml:space="preserve">
-    <value>ÙŠÙ„Ø²Ù… Ø­Ø³Ø§Ø¨ Ù„Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ©</value>
+    <value>يلزم حساب للمزامنة السحابية</value>
   </data>
   <data name="CloudLoginPromptDescription" xml:space="preserve">
-    <value>ØªØªØ·Ù„Ø¨ Ø®Ø¯Ù…Ø§Øª Ø§Ù„Ø³Ø­Ø§Ø¨Ø© Ù…Ø«Ù„ Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© ÙˆØªØ®Ø²ÙŠÙ† Ø§Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ© Ø­Ø³Ø§Ø¨Ù‹Ø§ Ù…Ø¬Ø§Ù†ÙŠÙ‹Ø§. Ø§Ø®ØªØ± Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ Ø£Ùˆ Discord Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø£Ø¬Ù‡Ø²Ø© ÙˆØ§Ù„ØªØ±Ø§ÙƒØ¨Ø§Øª ÙˆØ§Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©.</value>
+    <value>تتطلب خدمات السحابة مثل المزامنة وتخزين النسخ الاحتياطية حسابًا مجانيًا. اختر البريد الإلكتروني أو Discord لمتابعة مزامنة الأجهزة والتراكبات والنسخ الاحتياطية.</value>
   </data>
   <data name="CloudLoginPromptEmailButton" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø¹Ø¨Ø± Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠ</value>
+    <value>المزامنة عبر البريد الإلكتروني</value>
   </data>
   <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
-    <value>Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø© Ø¹Ø¨Ø± Discord</value>
+    <value>المزامنة عبر Discord</value>
   </data>
   <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
-    <value>Ù„Ø§ Ø´ÙƒØ±Ù‹Ø§</value>
+    <value>لا شكرًا</value>
   </data>
   <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
-    <value>ØªÙ… Ø§Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø­Ø¯ Ø§Ù„Ù…Ø²Ø§Ù…Ù†Ø©</value>
+    <value>تم الوصول إلى حد المزامنة</value>
   </data>
   <data name="CloudTooltipBaseLimit" xml:space="preserve">
-    <value>ØªÙ… Ø§Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø­Ø¯ Ø§Ù„Ù‚ÙˆØ§Ø¹Ø¯ (Ù…Ø¬Ø§Ù†ÙŠ: Ù‚Ø§Ø¹Ø¯ØªØ§Ù† ÙƒØ­Ø¯ Ø£Ù‚ØµÙ‰ØŒ Premium: 10 Ù‚ÙˆØ§Ø¹Ø¯ ÙƒØ­Ø¯ Ø£Ù‚ØµÙ‰)</value>
+    <value>تم الوصول إلى حد القواعد (مجاني: قاعدتان كحد أقصى، Premium: 10 قواعد كحد أقصى)</value>
   </data>
   <data name="BaseAddScreenshot" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø©</value>
+    <value>إضافة لقطة شاشة</value>
   </data>
   <data name="BaseScreenshotDragDrop" xml:space="preserve">
-    <value>Ø§Ø³Ø­Ø¨ ØµÙˆØ±Ø© ÙˆØ£ÙÙ„ØªÙ‡Ø§ Ù‡Ù†Ø§</value>
+    <value>اسحب صورة وأفلتها هنا</value>
   </data>
   <data name="BaseScreenshotPasteHint" xml:space="preserve">
-    <value>Ø£Ùˆ Ø§Ø¶ØºØ· CTRL+V Ù„Ù„ØµÙ‚ Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø©</value>
+    <value>أو اضغط CTRL+V للصق لقطة شاشة</value>
   </data>
   <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… Ø§Ù„Ø¹Ø«ÙˆØ± Ø¹Ù„Ù‰ ØµÙˆØ±Ø© ÙÙŠ Ø§Ù„Ø­Ø§ÙØ¸Ø©.</value>
+    <value>لم يتم العثور على صورة في الحافظة.</value>
   </data>
   <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
-    <value>Ø®Ø·Ø£ ÙÙŠ Ø§Ù„Ù„ØµÙ‚</value>
+    <value>خطأ في اللصق</value>
   </data>
   <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
-    <value>ÙØ´Ù„ Ù„ØµÙ‚ Ø§Ù„ØµÙˆØ±Ø©: {0}</value>
+    <value>فشل لصق الصورة: {0}</value>
   </data>
   <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
-    <value>ÙØ´Ù„ ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØµÙˆØ±Ø©: {0}</value>
+    <value>فشل تحميل ملف الصورة: {0}</value>
   </data>
   <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
-    <value>Ø®Ø·Ø£ ÙÙŠ Ø§Ù„Ø¶ØºØ·</value>
+    <value>خطأ في الضغط</value>
   </data>
   <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
-    <value>Ø­Ø¯Ø« Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø¶ØºØ· Ø§Ù„ØµÙˆØ±Ø©: {0}</value>
+    <value>حدث خطأ أثناء ضغط الصورة: {0}</value>
   </data>
   <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
-    <value>Ø§Ù„Ø¯Ù‚Ø©: {0}x{1} | Ø§Ù„Ø­Ø¬Ù…: {2} ÙƒÙŠÙ„ÙˆØ¨Ø§ÙŠØª (Ø§Ù„Ø¬ÙˆØ¯Ø© 25%)</value>
+    <value>الدقة: {0}x{1} | الحجم: {2} كيلوبايت (الجودة 25%)</value>
   </data>
   <data name="BaseNoteWindowTitle" xml:space="preserve">
-    <value>ØªØ¹Ø¯ÙŠÙ„ Ù…Ù„Ø§Ø­Ø¸Ø© Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø©</value>
+    <value>تعديل ملاحظة القاعدة</value>
   </data>
   <data name="BaseNoteTitle" xml:space="preserve">
-    <value>Ù…Ù„Ø§Ø­Ø¸Ø© Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø©</value>
+    <value>ملاحظة القاعدة</value>
   </data>
   <data name="BaseAddNote" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© Ù…Ù„Ø§Ø­Ø¸Ø©</value>
+    <value>إضافة ملاحظة</value>
   </data>
   <data name="BaseEditNote" xml:space="preserve">
-    <value>ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ù…Ù„Ø§Ø­Ø¸Ø©</value>
+    <value>تعديل الملاحظة</value>
   </data>
   <data name="BaseDeleteNote" xml:space="preserve">
-    <value>Ø­Ø°Ù Ø§Ù„Ù…Ù„Ø§Ø­Ø¸Ø©</value>
+    <value>حذف الملاحظة</value>
   </data>
   <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
-    <value>Ø­Ø°Ù Ù„Ù‚Ø·Ø© Ø§Ù„Ø´Ø§Ø´Ø© {0}</value>
+    <value>حذف لقطة الشاشة {0}</value>
   </data>
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
-    <value>Ø¥Ø¶Ø§ÙØ© Ù„Ù‚Ø·Ø© Ø§Ù„Ø´Ø§Ø´Ø© {0} (ÙŠØªØ·Ù„Ø¨ Premium)</value>
+    <value>إضافة لقطة الشاشة {0} (يتطلب Premium)</value>
   </data>
   <data name="BaseNoNotesYet" xml:space="preserve">
-    <value>Ù„Ù… ØªØªÙ… Ø¥Ø¶Ø§ÙØ© Ø£ÙŠ Ù…Ù„Ø§Ø­Ø¸Ø§Øª Ø¨Ø¹Ø¯.</value>
+    <value>لم تتم إضافة أي ملاحظات بعد.</value>
   </data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve">
-    <value>Ù„Ù… ØªØªÙ… Ø¥Ø¶Ø§ÙØ© Ø£ÙŠ Ù„Ù‚Ø·Ø§Øª Ø´Ø§Ø´Ø© Ø¨Ø¹Ø¯</value>
+    <value>لم تتم إضافة أي لقطات شاشة بعد</value>
   </data>
   <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
-    <value>Chat Master Ù…ØªØµÙ„</value>
+    <value>Chat Master متصل</value>
   </data>
   <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
-    <value>{0} ÙŠØªØ­ÙƒÙ… ÙÙŠ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© ÙˆØ£ÙˆØ§Ù…Ø± Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±ÙŠÙ‚.</value>
+    <value>{0} يتحكم في تنبيهات الدردشة وأوامر الدردشة لهذا الفريق.</value>
   </data>
   <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
-    <value>Chat Master {0} Ù…ØªØµÙ„. ØªÙ… Ø¥ÙŠÙ‚Ø§Ù ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© ÙˆØ£ÙˆØ§Ù…Ø± Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© Ø¹Ù„Ù‰ Ù‡Ø°Ø§ Ø§Ù„Ø¬Ù‡Ø§Ø².</value>
+    <value>Chat Master {0} متصل. تم إيقاف تنبيهات الدردشة وأوامر الدردشة على هذا الجهاز.</value>
   </data>
   <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
-    <value>Ø£Ù†Øª Chat Master</value>
+    <value>أنت Chat Master</value>
   </data>
   <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
-    <value>Ù‡Ø°Ø§ Ø§Ù„Ø¬Ù‡Ø§Ø² ÙŠØªØ­ÙƒÙ… Ø§Ù„Ø¢Ù† ÙÙŠ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© ÙˆØ£ÙˆØ§Ù…Ø± Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© Ù„ÙØ±ÙŠÙ‚Ùƒ.</value>
+    <value>هذا الجهاز يتحكم الآن في تنبيهات الدردشة وأوامر الدردشة لفريقك.</value>
   </data>
   <data name="ChatFeatureMasterAccept" xml:space="preserve">
-    <value>Ù‚Ø¨ÙˆÙ„</value>
+    <value>قبول</value>
   </data>
   <data name="ChatFeatureMasterDeny" xml:space="preserve">
-    <value>Ø±ÙØ¶</value>
+    <value>رفض</value>
   </data>
   <data name="Update600Title" xml:space="preserve">
-    <value>ØªØ­Ø¯ÙŠØ« v6.0.0</value>
+    <value>تحديث v6.0.0</value>
   </data>
   <data name="CompareCloudFeatures" xml:space="preserve">
-    <value>Ù…Ù‚Ø§Ø±Ù†Ø© Ù…ÙŠØ²Ø§Øª Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>مقارنة ميزات السحابة</value>
   </data>
   <data name="CloudFeaturesTitle" xml:space="preserve">
-    <value>Ù…Ù‚Ø§Ø±Ù†Ø© Ù…ÙŠØ²Ø§Øª Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>مقارنة ميزات السحابة</value>
   </data>
   <data name="CloudFeaturesMainHeader" xml:space="preserve">
-    <value>Ù…Ø±Ø­Ø¨Ù‹Ø§ Ø¨Ùƒ ÙÙŠ Ø§Ù„Ø³Ø­Ø§Ø¨Ø©</value>
+    <value>مرحبًا بك في السحابة</value>
   </data>
   <data name="CloudFeaturesSubHeader" xml:space="preserve">
-    <value>Ø§Ø®ØªØ± Ø§Ù„Ù…Ø³ØªÙˆÙ‰ Ø§Ù„Ø£Ù†Ø³Ø¨ Ù„Ø§Ø­ØªÙŠØ§Ø¬Ø§ØªÙƒ.</value>
+    <value>اختر المستوى الأنسب لاحتياجاتك.</value>
   </data>
   <data name="TierNoAccountTitle" xml:space="preserve">
-    <value>Ø¨Ø¯ÙˆÙ† Ø­Ø³Ø§Ø¨</value>
+    <value>بدون حساب</value>
   </data>
   <data name="TierNoAccountDesc" xml:space="preserve">
-    <value>ØªØ¨Ù‚Ù‰ Ø¨ÙŠØ§Ù†Ø§ØªÙƒ Ù…Ø­Ù„ÙŠØ© 100%. Ø§Ù„Ø£ÙØ¶Ù„ Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† Ø§Ù„ÙØ±Ø¯ÙŠÙŠÙ†.</value>
+    <value>تبقى بياناتك محلية 100%. الأفضل للاعبين الفرديين.</value>
   </data>
   <data name="FeatNoCloudSync" xml:space="preserve">
-    <value>Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ø²Ø§Ù…Ù†Ø© Ø³Ø­Ø§Ø¨ÙŠØ© Ø£Ùˆ Ù†Ø³Ø® Ø§Ø­ØªÙŠØ§Ø·ÙŠ</value>
+    <value>لا توجد مزامنة سحابية أو نسخ احتياطي</value>
   </data>
   <data name="FeatNoDeviceSharing" xml:space="preserve">
-    <value>Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ø´Ø§Ø±ÙƒØ© Ù„Ù„Ø£Ø¬Ù‡Ø²Ø©</value>
+    <value>لا توجد مشاركة للأجهزة</value>
   </data>
   <data name="FeatNoPortal" xml:space="preserve">
-    <value>Ù„Ø§ ÙŠÙˆØ¬Ø¯ ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø§Ù„Ø¨ÙˆØ§Ø¨Ø© Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠØ©</value>
+    <value>لا يوجد وصول إلى البوابة الإلكترونية</value>
   </data>
   <data name="TierFreeAccountTitle" xml:space="preserve">
-    <value>Ø­Ø³Ø§Ø¨ Ø³Ø­Ø§Ø¨ÙŠ Ù…Ø¬Ø§Ù†ÙŠ</value>
+    <value>حساب سحابي مجاني</value>
   </data>
   <data name="TierFreeAccountDesc" xml:space="preserve">
-    <value>Ù…ÙŠØ²Ø§Øª Ø§Ù„Ø³Ø­Ø§Ø¨Ø© Ø§Ù„Ø£Ø³Ø§Ø³ÙŠØ© Ù„Ù„Ø¨Ø¯Ø¡ Ø¨Ø§Ù„Ù…Ø´Ø§Ø±ÙƒØ©.</value>
+    <value>ميزات السحابة الأساسية للبدء بالمشاركة.</value>
   </data>
   <data name="FeatBasicDiscord" xml:space="preserve">
-    <value>ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Webhook Ø§Ù„Ø£Ø³Ø§Ø³ÙŠØ© Ù„Ù€ Discord</value>
+    <value>تنبيهات Webhook الأساسية لـ Discord</value>
   </data>
   <data name="FeatDeviceSharingFree" xml:space="preserve">
-    <value>Ø´Ø§Ø±Ùƒ Ù…Ø§ ÙŠØµÙ„ Ø¥Ù„Ù‰ 10 Ø£Ø¬Ù‡Ø²Ø©</value>
+    <value>شارك ما يصل إلى 10 أجهزة</value>
   </data>
   <data name="FeatMapSharingFree" xml:space="preserve">
-    <value>Ù…Ø´Ø§Ø±ÙƒØ© Ø§Ù„Ø®Ø±ÙŠØ·Ø© (300 ÙƒÙŠÙ„ÙˆØ¨Ø§ÙŠØªØŒ Ù‚Ø§Ø¹Ø¯ØªØ§Ù†ØŒ Ù„Ù‚Ø·Ø© Ø´Ø§Ø´Ø© ÙˆØ§Ø­Ø¯Ø©)</value>
+    <value>مشاركة الخريطة (300 كيلوبايت، قاعدتان، لقطة شاشة واحدة)</value>
   </data>
   <data name="FeatSupporterHelper" xml:space="preserve">
-    <value>Ø¨Ù…Ø«Ø§Ø¨Ø© Ù…Ø³Ø§Ø¹Ø¯ Ù„Ù„Ø¯Ø§Ø¹Ù… (Supporter)</value>
+    <value>بمثابة مساعد للداعم (Supporter)</value>
   </data>
   <data name="FeatPortalAccess" xml:space="preserve">
-    <value>Ø§Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø§Ù„Ø¨ÙˆØ§Ø¨Ø© Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠØ© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ©</value>
+    <value>الوصول إلى البوابة الإلكترونية السحابية</value>
   </data>
   <data name="TierSupporterTitle" xml:space="preserve">
-    <value>Ø³Ø­Ø§Ø¨Ø© Ø§Ù„Ø¯Ø§Ø¹Ù… (Supporter)</value>
+    <value>سحابة الداعم (Supporter)</value>
   </data>
   <data name="TierSupporterDesc" xml:space="preserve">
-    <value>ØªØ¬Ø±Ø¨Ø© Rust+ Ø§Ù„Ù…Ø·Ù„Ù‚Ø© Ù„Ù„Ø¹Ø´Ø§Ø¦Ø± ÙˆØ§Ù„Ù…Ø³ØªØ®Ø¯Ù…ÙŠÙ† Ø§Ù„Ù…ØªÙ‚Ø¯Ù…ÙŠÙ†.</value>
+    <value>تجربة Rust+ المطلقة للعشائر والمستخدمين المتقدمين.</value>
   </data>
   <data name="FeatMapSharingPro" xml:space="preserve">
-    <value>Ù…Ø´Ø§Ø±ÙƒØ© Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ø§Ù„Ø§Ø­ØªØ±Ø§ÙÙŠØ© (3 Ù…ÙŠØ¬Ø§Ø¨Ø§ÙŠØªØŒ 10 Ù‚ÙˆØ§Ø¹Ø¯ØŒ 5 Ù„Ù‚Ø·Ø§Øª Ø´Ø§Ø´Ø©)</value>
+    <value>مشاركة الخريطة الاحترافية (3 ميجابايت، 10 قواعد، 5 لقطات شاشة)</value>
   </data>
   <data name="FeatChatMaster" xml:space="preserve">
-    <value>Ù†Ø¸Ø§Ù… Chat Master</value>
+    <value>نظام Chat Master</value>
   </data>
   <data name="FeatAdvDiscord" xml:space="preserve">
-    <value>Ø±ÙˆØ¨ÙˆØª Discord Ù…ØªÙ‚Ø¯Ù… Ø«Ù†Ø§Ø¦ÙŠ Ø§Ù„Ø§ØªØ¬Ø§Ù‡</value>
+    <value>روبوت Discord متقدم ثنائي الاتجاه</value>
   </data>
   <data name="FeatBetaAccess" xml:space="preserve">
-    <value>Ø§Ù„ÙˆØµÙˆÙ„ Ø§Ù„Ù…Ø¨ÙƒØ± Ù„Ù„Ù†Ø³Ø®Ø© Ø§Ù„ØªØ¬Ø±ÙŠØ¨ÙŠØ© Ø¹Ø¨Ø± Discord</value>
+    <value>الوصول المبكر للنسخة التجريبية عبر Discord</value>
   </data>
   <data name="BecomeSupporterTitle" xml:space="preserve">
-    <value>ÙƒÙ† Ø¯Ø§Ø¹Ù…Ù‹Ø§</value>
+    <value>كن داعمًا</value>
   </data>
   <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Ø§Ø¯Ø¹Ù…Ù†Ø§ Ø¹Ù„Ù‰ </value>
+    <value>ادعمنا على </value>
   </data>
   <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Ø§Ø±Ø¨Ø· Patreon Ø¨Ù€ Discord Ù„Ù„ÙƒØ´Ù Ø§Ù„ØªÙ„Ù‚Ø§Ø¦ÙŠ Ø¹Ù† Ø§Ù„Ø¯ÙˆØ±.</value>
+    <value> - اربط Patreon بـ Discord للكشف التلقائي عن الدور.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
-    <value>Ø¨Ù‚Ø´ÙŠØ´ Ø¹Ø¨Ø± </value>
+    <value>بقشيش عبر </value>
   </data>
   <data name="SupportViaSEDesc" xml:space="preserve">
-    <value> - ØªÙˆØ§ØµÙ„ Ù…Ø¹ Jawad Ø£Ùˆ Pronwan ÙÙŠ Discord Ù„Ù„ØªØ¹ÙŠÙŠÙ† Ø§Ù„ÙŠØ¯ÙˆÙŠ Ù„Ù„Ø¯ÙˆØ±.</value>
+    <value> - تواصل مع Jawad أو Pronwan في Discord للتعيين اليدوي للدور.</value>
   </data>
   <data name="OpenCloudWebPortal" xml:space="preserve">
-    <value>Ø§ÙØªØ­ Ø§Ù„Ø¨ÙˆØ§Ø¨Ø© Ø§Ù„Ø¥Ù„ÙƒØªØ±ÙˆÙ†ÙŠØ© Ø§Ù„Ø³Ø­Ø§Ø¨ÙŠØ©</value>
+    <value>افتح البوابة الإلكترونية السحابية</value>
   </data>
   <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
-    <value>ÙØ´Ù„ Ø§Ù„Ø§ØªØµØ§Ù„: Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø§Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Rust+.</value>
+    <value>فشل الاتصال: لا يمكن الوصول إلى Rust+.</value>
   </data>
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
-    <value>Ø¥Ù…Ø§ Ø£Ù† Ø¬Ø¯Ø§Ø± Ø§Ù„Ø­Ù…Ø§ÙŠØ© Ø§Ù„Ø®Ø§Øµ Ø¨Ùƒ ÙŠÙ…Ù†Ø¹ Ø§Ù„Ø§ØªØµØ§Ù„ Ø£Ùˆ Ø£Ù† ÙˆØ§Ø¬Ù‡Ø© Ø¨Ø±Ù…Ø¬Ø© ØªØ·Ø¨ÙŠÙ‚Ø§Øª Rust+ Ø¹Ù„Ù‰ Ø§Ù„Ø®Ø§Ø¯Ù… Ù„Ø§ ØªØ¹Ù…Ù„ Ø¨Ø´ÙƒÙ„ ØµØ­ÙŠØ­.</value>
+    <value>إما أن جدار الحماية الخاص بك يمنع الاتصال أو أن واجهة برمجة تطبيقات Rust+ على الخادم لا تعمل بشكل صحيح.</value>
   </data>
   <data name="WordYou" xml:space="preserve">
-    <value>Ø£Ù†Øª</value>
+    <value>أنت</value>
   </data>
   <data name="StateOn" xml:space="preserve">
-    <value>ØªØ´ØºÙŠÙ„</value>
+    <value>تشغيل</value>
   </data>
   <data name="StateOff" xml:space="preserve">
-    <value>Ø¥ÙŠÙ‚Ø§Ù</value>
+    <value>إيقاف</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: ØªÙ… Ø§Ù„ØªØ¨Ø¯ÙŠÙ„ Ø¥Ù„Ù‰ {1} (Ø¨ÙˆØ§Ø³Ø·Ø© {2})</value>
+    <value>[Hotkey] {0}: تم التبديل إلى {1} (بواسطة {2})</value>
   </data>
   <data name="OfflineDeathTitle" xml:space="preserve">
-    <value>Ù…ÙˆØª Ø®Ø§Ø±Ø¬ Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>موت خارج اللعبة</value>
   </data>
   <data name="OfflineDeathMessage" xml:space="preserve">
-    <value>ØªÙ… Ù‚ØªÙ„Ùƒ Ø¨ÙˆØ§Ø³Ø·Ø© {0} ÙÙŠ {1}.</value>
+    <value>تم قتلك بواسطة {0} في {1}.</value>
   </data>
   <data name="StopSound" xml:space="preserve">
-    <value>Ø¥ÙŠÙ‚Ø§Ù Ø§Ù„ØµÙˆØª</value>
+    <value>إيقاف الصوت</value>
   </data>
   <data name="OfflineDeathNotifications" xml:space="preserve">
-    <value>Ø¥Ø´Ø¹Ø§Ø±Ø§Øª Ø§Ù„Ù…ÙˆØª Ø®Ø§Ø±Ø¬ Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>إشعارات الموت خارج اللعبة</value>
   </data>
   <data name="EnableOfflineDeathAlerts" xml:space="preserve">
-    <value>ØªÙ…ÙƒÙŠÙ† ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ù…ÙˆØª Ø®Ø§Ø±Ø¬ Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>تمكين تنبيهات الموت خارج اللعبة</value>
   </data>
   <data name="AlertSound" xml:space="preserve">
-    <value>ØµÙˆØª Ø§Ù„ØªÙ†Ø¨ÙŠÙ‡</value>
+    <value>صوت التنبيه</value>
   </data>
   <data name="DefaultSoundLabel" xml:space="preserve">
-    <value>Ø§ÙØªØ±Ø§Ø¶ÙŠ: death.mp3</value>
+    <value>افتراضي: death.mp3</value>
   </data>
   <data name="SelectEllipsis" xml:space="preserve">
-    <value>Ø§Ø®ØªÙŠØ§Ø±...</value>
+    <value>اختيار...</value>
   </data>
   <data name="LoopAlertSound" xml:space="preserve">
-    <value>ØªÙƒØ±Ø§Ø± ØµÙˆØª Ø§Ù„ØªÙ†Ø¨ÙŠÙ‡</value>
+    <value>تكرار صوت التنبيه</value>
   </data>
   <data name="SendToDiscordRaidAlerts" xml:space="preserve">
-    <value>Ø¥Ø±Ø³Ø§Ù„ Ø¥Ù„Ù‰ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ù…Ø¯Ø§Ù‡Ù…Ø© Ø¯ÙŠØ³ÙƒÙˆØ±Ø¯ (Supporter)</value>
+    <value>إرسال إلى تنبيهات مداهمة ديسكورد (Supporter)</value>
   </data>
   <data name="OpenOfflineDeathsLog" xml:space="preserve">
-    <value>ÙØªØ­ Ø³Ø¬Ù„ Ø§Ù„Ù…ÙˆØª Ø®Ø§Ø±Ø¬ Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>فتح سجل الموت خارج اللعبة</value>
   </data>
   <data name="OfflineDeathLogTitle" xml:space="preserve">
-    <value>Ø³Ø¬Ù„ Ø§Ù„Ù…ÙˆØª Ø®Ø§Ø±Ø¬ Ø§Ù„Ù„Ø¹Ø¨Ø©</value>
+    <value>سجل الموت خارج اللعبة</value>
   </data>
   <data name="ClearLog" xml:space="preserve">
-    <value>Ù…Ø³Ø­ Ø§Ù„Ø³Ø¬Ù„</value>
+    <value>مسح السجل</value>
   </data>
   <data name="NoOfflineDeathsRecorded" xml:space="preserve">
-    <value>Ù„Ù… ÙŠØªÙ… ØªØ³Ø¬ÙŠÙ„ Ø£ÙŠ ÙˆÙÙŠØ§Øª Ø®Ø§Ø±Ø¬ Ø§Ù„Ù„Ø¹Ø¨Ø©.</value>
+    <value>لم يتم تسجيل أي وفيات خارج اللعبة.</value>
   </data>
   <data name="KilledBy" xml:space="preserve">
-    <value>Ù‚ØªÙ„ Ø¨ÙˆØ§Ø³Ø·Ø©</value>
+    <value>قتل بواسطة</value>
   </data>
   <data name="CustomAlertsTitle" xml:space="preserve">
-    <value>ØªØ®ØµÙŠØµ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø©</value>
+    <value>تخصيص تنبيهات الدردشة</value>
   </data>
   <data name="CustomAlertsHeader" xml:space="preserve">
-    <value>ØªØ®ØµÙŠØµ Ù‚ÙˆØ§Ù„Ø¨ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø©</value>
+    <value>تخصيص قوالب تنبيهات الدردشة</value>
   </data>
   <data name="CustomAlertsDesc" xml:space="preserve">
-    <value>Ù‡Ù†Ø§ ÙŠÙ…ÙƒÙ†Ùƒ ØªØ¹Ø¯ÙŠÙ„ Ù‚ÙˆØ§Ù„Ø¨ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø© Ø§Ù„ØªÙ„Ù‚Ø§Ø¦ÙŠØ©. Ø³ÙŠØªÙ… Ø§Ø³ØªØ¨Ø¯Ø§Ù„ Ø§Ù„Ù…ØªØºÙŠØ±Ø§Øª (Ù…Ø«Ù„ {0}ØŒ {1}) ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§.</value>
+    <value>هنا يمكنك تعديل قوالب تنبيهات الدردشة التلقائية. سيتم استبدال المتغيرات (مثل {0}، {1}) تلقائيًا.</value>
   </data>
   <data name="VariablesLabel" xml:space="preserve">
-    <value>Ø§Ù„Ù…ØªØºÙŠØ±Ø§Øª: {0}</value>
+    <value>المتغيرات: {0}</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>ØªÙ… Ø­ÙØ¸ Ù‚Ø§Ù„Ø¨ '{0}' Ø¨Ù†Ø¬Ø§Ø­.</value>
+    <value>تم حفظ قالب '{0}' بنجاح.</value>
   </data>
   <data name="ResetSuccess" xml:space="preserve">
-    <value>ØªÙ…Øª Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ† Ù‚Ø§Ù„Ø¨ '{0}' Ø¥Ù„Ù‰ Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠ.</value>
+    <value>تمت إعادة تعيين قالب '{0}' إلى الافتراضي.</value>
   </data>
   <data name="SaveSuccessTitle" xml:space="preserve">
-    <value>ØªÙ… Ø§Ù„Ø­ÙØ¸ Ø¨Ù†Ø¬Ø§Ø­</value>
+    <value>تم الحفظ بنجاح</value>
   </data>
   <data name="ResetSuccessTitle" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© ØªØ¹ÙŠÙŠÙ†</value>
+    <value>إعادة تعيين</value>
   </data>
   <data name="AlertOilRigTriggeredName" xml:space="preserve">
     <value>Oil Rig Triggered</value>
@@ -2530,84 +2530,62 @@
     <value>{0}: Old Name, {1}: Group Info, {2}: New Name</value>
   </data>
   <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
-    <value>ØªØ®ØµÙŠØµ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù„Ø¯Ø±Ø¯Ø´Ø©</value>
+    <value>تخصيص تنبيهات الدردشة</value>
   </data>
   <data name="AfkCommand" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ÙŠÙ† AFK</value>
+    <value>اللاعبين AFK</value>
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
-    <value>Ù„Ø§ Ø£Ø­Ø¯ AFK.</value>
+    <value>لا أحد AFK.</value>
   </data>
   <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>Ø§Ù„Ù„Ø§Ø¹Ø¨ AFK</value>
+    <value>اللاعب AFK</value>
   </data>
   <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>ÙŠØªÙ… Ø¥Ø±Ø³Ø§Ù„Ù‡ Ø¹Ù†Ø¯Ù…Ø§ ÙŠÙƒÙˆÙ† Ø£Ø­Ø¯ Ø£Ø¹Ø¶Ø§Ø¡ Ø§Ù„ÙØ±ÙŠÙ‚ AFK Ù„ÙØªØ±Ø© Ø·ÙˆÙŠÙ„Ø©.</value>
+    <value>يتم إرساله عندما يكون أحد أعضاء الفريق AFK لفترة طويلة.</value>
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: Ø§Ø³Ù… Ø§Ù„Ù„Ø§Ø¹Ø¨ØŒ {1}: Ø§Ù„ÙˆÙ‚Øª</value>
+    <value>{0}: اسم اللاعب، {1}: الوقت</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>Ø§Ø¨Ø­Ø« Ø¹Ù† Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø¹Ù†ØµØ± Ù„Ù‡Ø°Ø§ Ø§Ù„Ø¬Ù‡Ø§Ø² ÙˆØ­Ø¯Ø¯Ù‡Ø§.</value>
+    <value>ابحث عن أيقونة عنصر لهذا الجهاز وحددها.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>ØªØºÙŠÙŠØ± Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„Ø¬Ù‡Ø§Ø²</value>
+    <value>تغيير أيقونة الجهاز</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>Ø§Ø¨Ø­Ø« Ø¹Ù† Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø¹Ù†ØµØ± Ù„Ù‡Ø°Ù‡ Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø© ÙˆØ­Ø¯Ø¯Ù‡Ø§.</value>
+    <value>ابحث عن أيقونة عنصر لهذه القاعدة وحددها.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
-    <value>ØªØºÙŠÙŠØ± Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø©</value>
+    <value>تغيير أيقونة القاعدة</value>
   </data>
   <data name="ResetToDefaultIcon" xml:space="preserve">
-    <value>Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„ØªØ¹ÙŠÙŠÙ† Ø¥Ù„Ù‰ Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ©</value>
+    <value>إعادة التعيين إلى الأيقونة الافتراضية</value>
   </data>
   <data name="Rule" xml:space="preserve">
-    <value>Ù‚Ø§Ø¹Ø¯Ø©</value>
+    <value>قاعدة</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>Ø§Ù„Ø¨Ø­Ø« ÙÙŠ Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª (Ù…Ø«Ù„: Ø¨Ø±Ø¬ØŒ Ù…ÙØªØ§Ø­)...</value>
+    <value>البحث في الأيقونات (مثل: برج، مفتاح)...</value>
   </data>
   <data name="NotificationRetentionDays" xml:space="preserve">
-    <value>{0} ÙŠÙˆÙ…Ù‹Ø§</value>
+    <value>{0} يومًا</value>
   </data>
-  <data name="Update700Desc1" xml:space="preserve">
-    <value>استكشف خادم Rust الخاص بك كما لم يحدث من قبل مع خرائطنا ثلاثية الأبعاد التفاعلية بالكامل! يتضمن مواقع اللاعبين المباشرة وعلامات الموت لمساعدتك في وضع الاستراتيجيات وتحديد أماكن الغنائم.</value>
-  </data>
-  <data name="Delete3DMapDataTooltip" xml:space="preserve">
-    <value>يحذف جميع الأشكال الهندسية المحلية للخريطة المحللة المستخدمة بواسطة عارض الخرائط ثلاثية الأبعاد.</value>
-  </data>
-  <data name="Delete3DMapData" xml:space="preserve">
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
     <value>حذف جميع بيانات الخريطة ثلاثية الأبعاد</value>
   </data>
-  <data name="Update700Title" xml:space="preserve">
-    <value>تحديث Rust+ Desktop v7.0.0</value>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>حاسبة إعادة التدوير للمكونات الخاصة بك والمزيد. شاهد الفرق بين المنطقة الآمنة وإعادة التدوير العادية على الفور.</value>
   </data>
-  <data name="Update700Desc3" xml:space="preserve">
-    <value>هل تخطط لقاعدة جديدة؟ استخدم منشئ البصمة الجديد في الخريطة ثلاثية الأبعاد لمعاينة كيفية تناسب قاعدتك بالضبط. اختبر ما إذا كانت تتناسب بين مناطق حظر البناء، أو تحقق من انحدار المنحدر، أو تحقق من عمق المياه قبل البناء في اللعبة.</value>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>الإصدار 7.0 - التغييرات الرئيسية</value>
   </data>
-  <data name="ThreeDMapSectionTitle" xml:space="preserve">
-    <value>خريطة ثلاثية الأبعاد</value>
-  </data>
-  <data name="Update700Desc2" xml:space="preserve">
-    <value>يمكنك الآن قراءة ملفات .map المحلية بشكل اختياري (بأمان، للقراءة فقط) عن طريق النقر فوق زر الخريطة ثلاثية الأبعاد لاستخراج تفاصيل دقيقة داخل اللعبة. هذا يجلب مناطق حظر البناء الدقيقة، والكهوف، والجبال الجليدية، وأكثر من ذلك مباشرة إلى خرائطك ثلاثية وثنائية الأبعاد! يتم تفريغ الخريطة ثلاثية الأبعاد بالكامل من ذاكرة الوصول العشوائي (RAM) عند إغلاقها.</value>
-  </data>
-  <data name="Update700DontShowAgain" xml:space="preserve">
-    <value>لا تظهر هذا مرة أخرى</value>
-  </data>
-  <data name="Update700Desc4" xml:space="preserve">
-    <value>آلة حاسبة لإعادة تدوير مكوناتك والمزيد. اكتشف الفرق بين إعادة التدوير في المنطقة الآمنة وإعادة التدوير العادية على الفور.</value>
-  </data>
-  <data name="Update700Title1" xml:space="preserve">
-    <value>خرائط ثلاثية الأبعاد تفاعلية</value>
-  </data>
-  <data name="Update700Title2" xml:space="preserve">
-    <value>تحليل اختياري لملف الخريطة</value>
-  </data>
-  <data name="Update700Title3" xml:space="preserve">
-    <value>منشئ بصمة القاعدة</value>
-  </data>
-  <data name="Update700Title4" xml:space="preserve">
-    <value>آلة حاسبة لإعادة التدوير</value>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• خريطة 3D مع مواقع اللاعبين الحية وعلامات الموت
+• تم بناء الخريطة من ملف الخريطة المحلي، وتحصل على معلومات إضافية مثل مناطق حظر البناء، الجبال الجليدية، الكهوف وتعرضها على الخريطة 2D
+• دمج منشئ البصمة للقاعدة 3D
+• محرك منطقي محسن
+• تظهر الآن علامات الفريق داخل اللعبة على الخريطة 2D
+• أيقونات مخصصة للأجهزة الذكية</value>
   </data>
 </root>

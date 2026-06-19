@@ -1,44 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -61,79 +61,79 @@
     <value>RUST+ DESKTOP</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Steam ÃºÄet</value>
+    <value>Steam účet</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>NepÅ™ihlÃ¡Å¡en</value>
+    <value>Nepřihlášen</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Zkontrolovat aktualizace</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>StahovÃ¡nÃ­...</value>
+    <value>Stahování...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>PÅ™ipojit se k Discordu</value>
+    <value>Připojit se k Discordu</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>PoznÃ¡mky k opravÄ›</value>
+    <value>Poznámky k opravě</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>NastavenÃ­</value>
+    <value>Nastavení</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>SLUÅ½BY PRO PLAVIDLA</value>
+    <value>SLUŽBY PRO PLAVIDLA</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Å½Ã¡dnÃ© servery zatÃ­m nebyly spÃ¡rovÃ¡ny</value>
+    <value>Žádné servery zatím nebyly spárovány</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>PLATNOST A ÃšDRÅ½BA</value>
+    <value>PLATNOST A ÚDRŽBA</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>KlepnÄ›te pravÃ½m tlaÄÃ­tkem myÅ¡i pro moÅ¾nosti</value>
+    <value>Klepněte pravým tlačítkem myši pro možnosti</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>SledovÃ¡nÃ­ aktivnÃ­</value>
+    <value>Sledování aktivní</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>PoslednÃ­ tah: {0}</value>
+    <value>Poslední tah: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>PÅ™ispÄ›t</value>
+    <value>Přispět</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>PodpoÅ™te vÃ½vojÃ¡Å™e</value>
+    <value>Podpořte vývojáře</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Obnovit pÅ™ipojenÃ­ k WebSocket</value>
+    <value>Obnovit připojení k WebSocket</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>HrÃ¡Äi:</value>
+    <value>Hráči:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>Zobrazit zÃ¡loÅ¾ku online hrÃ¡ÄÅ¯</value>
+    <value>Zobrazit záložku online hráčů</value>
   </data>
   <data name="Queue" xml:space="preserve">
     <value>Fronta:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>ZaÅ™Ã­zenÃ­</value>
+    <value>Zařízení</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>KlÃ¡vesy</value>
+    <value>Klávesy</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Importovat zaÅ™Ã­zenÃ­ z tÃ½movÃ½ch partnerÅ¯</value>
+    <value>Importovat zařízení z týmových partnerů</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>Exportovat zaÅ™Ã­zenÃ­ do tÃ½mÅ¯</value>
+    <value>Exportovat zařízení do týmů</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Aktualizovat</value>
@@ -142,21 +142,21 @@
     <value>Pokles</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>OdeslÃ¡nÃ­ souhlasu</value>
+    <value>Odeslání souhlasu</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>KliknutÃ­m na tlaÄÃ­tko "PÅ™ijmout" se chytrÃ¡ zaÅ™Ã­zenÃ­ (a pÅ™Ã­padnÄ› i mapovÃ© vÃ½kresy) pro tento server nahrajÃ­ na server tvÅ¯rce. To umoÅ¾nÃ­ spoluhrÃ¡ÄÅ¯m jejich staÅ¾enÃ­ a synchronizaci. K identifikaci spoluhrÃ¡ÄÅ¯ se pÅ™enÃ¡Å¡Ã­ pouze vaÅ¡e Steam ID. ZaÅ™Ã­zenÃ­ mohou ovlÃ¡dat pouze hrÃ¡Äi oprÃ¡vnÄ›nÃ­ ve skÅ™Ã­ni s nÃ¡Å™adÃ­m.
+    <value>Kliknutím na tlačítko "Přijmout" se chytrá zařízení (a případně i mapové výkresy) pro tento server nahrají na server tvůrce. To umožní spoluhráčům jejich stažení a synchronizaci. K identifikaci spoluhráčů se přenáší pouze vaše Steam ID. Zařízení mohou ovládat pouze hráči oprávnění ve skříni s nářadím.
 
-PoznÃ¡mka: Tento zpÅ¯sob pÅ™enosu bude v budoucnu optimalizovÃ¡n. Pokud spoluhrÃ¡Äi nemohou data stÃ¡hnout, zkuste vymazat vÃ½kresy map a nahrÃ¡t je znovu.</value>
+Poznámka: Tento způsob přenosu bude v budoucnu optimalizován. Pokud spoluhráči nemohou data stáhnout, zkuste vymazat výkresy map a nahrát je znovu.</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Vymazat</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>MÅ¯Å¾ete odstranit pouze chybÄ›jÃ­cÃ­ zaÅ™Ã­zenÃ­</value>
+    <value>Můžete odstranit pouze chybějící zařízení</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>PÅ™ejmenovat zaÅ™Ã­zenÃ­</value>
+    <value>Přejmenovat zařízení</value>
   </data>
   <data name="Online" xml:space="preserve">
     <value>ONLINE</value>
@@ -165,13 +165,13 @@ PoznÃ¡mka: Tento zpÅ¯sob pÅ™enosu bude v budoucnu optimalizovÃ¡n. Pokud
     <value>OFFLINE</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>PÅ™ipojit</value>
+    <value>Připojit</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>KompletnÃ­ pÅ™ipojenÃ­</value>
+    <value>Kompletní připojení</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>NaÄÃ­st mapu a tÃ½m</value>
+    <value>Načíst mapu a tým</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
     <value>Odpojit</value>
@@ -186,139 +186,139 @@ PoznÃ¡mka: Tento zpÅ¯sob pÅ™enosu bude v budoucnu optimalizovÃ¡n. Pokud
     <value>Zastavit</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>VyzkouÅ¡ejte pÃ¡rovÃ¡nÃ­ s hranou</value>
+    <value>Vyzkoušejte párování s hranou</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
     <value>Reset pairing (delete config)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Resetovat + Poslouchat (repatriovat pÃ¡ru)</value>
+    <value>Resetovat + Poslouchat (repatriovat páru)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
     <value>Resetovat + poslouchat s Edge</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Znovu zopakovat Battlemetrics IDâ€¦</value>
+    <value>Znovu zopakovat Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Odstranit serverâ€¦</value>
+    <value>Odstranit server…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten â€¦</value>
+    <value>Bitte warten …</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>PÅ™epnout oblast serveru</value>
+    <value>Přepnout oblast serveru</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>StreamovacÃ­ reÅ¾im</value>
+    <value>Streamovací režim</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>MÄ›Å™Ã­tko:</value>
+    <value>Měřítko:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>Povolit streamovacÃ­ reÅ¾im (zkratky)</value>
+    <value>Povolit streamovací režim (zkratky)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>Zkratka Steam jmen a ID pro ochranu soukromÃ­ bÄ›hem vysÃ­lÃ¡nÃ­. Automaticky skryje konzoli a seznam serverÅ¯.</value>
+    <value>Zkratka Steam jmen a ID pro ochranu soukromí během vysílání. Automaticky skryje konzoli a seznam serverů.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Å½Ã¡dnÃ¡ pozice nenÃ­ k dispozici (offline nebo nenÃ­ spawnuta).</value>
+    <value>Žádná pozice není k dispozici (offline nebo není spawnuta).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>UloÅ¾it skupinu</value>
+    <value>Uložit skupinu</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Zadejte prosÃ­m nÃ¡zev skupiny.</value>
+    <value>Zadejte prosím název skupiny.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>ZprÃ¡vu nelze odeslat. Zkuste to prosÃ­m znovu. (Zkontrolujte, zda jste v tÃ½mu!)</value>
+    <value>Zprávu nelze odeslat. Zkuste to prosím znovu. (Zkontrolujte, zda jste v týmu!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
     <value>Chyba: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>PÅ™iÅ™adit skupinu</value>
+    <value>Přiřadit skupinu</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>NastavenÃ­ skupiny: {0}</value>
+    <value>Nastavení skupiny: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>NÃ¡zev skupiny</value>
+    <value>Název skupiny</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Zadejte nÃ¡zev skupiny...</value>
+    <value>Zadejte název skupiny...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
     <value>Barva skupiny</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>UloÅ¾it zmÄ›ny</value>
+    <value>Uložit změny</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>AnalÃ½za a prognÃ³zy aktivity hrÃ¡Äe</value>
+    <value>Analýza a prognózy aktivity hráče</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>HrÃ¡Äi</value>
+    <value>Hráči</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>PÅ™epsÃ¡nÃ­ streamovÃ©ho reÅ¾imu &amp; Mini mapy</value>
+    <value>Přepsání streamového režimu &amp; Mini mapy</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>StreamovacÃ­ reÅ¾im</value>
+    <value>Streamovací režim</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>MÄ›Å™Ã­tko hrÃ¡Äe</value>
+    <value>Měřítko hráče</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Mini mapa polÅ¡tina</value>
+    <value>Mini mapa polština</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>VyÅ¾adovÃ¡na akce:</value>
+    <value>Vyžadována akce:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>OdstranÄ›nÃ­ sledovÃ¡nÃ­ BattleMetrics</value>
+    <value>Odstranění sledování BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>GenerÃ¡lnÃ­ oprava systÃ©mu sledovÃ¡nÃ­ hrÃ¡ÄÅ¯</value>
+    <value>Generální oprava systému sledování hráčů</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Jak funguje sledovÃ¡nÃ­ hrÃ¡ÄÅ¯</value>
+    <value>Jak funguje sledování hráčů</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>PÅ™idat hrÃ¡Äe do trackeru pro spuÅ¡tÄ›nÃ­ sledovÃ¡nÃ­</value>
+    <value>Přidat hráče do trackeru pro spuštění sledování</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>SledovÃ¡nÃ­ aktivnÃ­</value>
+    <value>Sledování aktivní</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>NeÄinnÃ© sledovÃ¡nÃ­</value>
+    <value>Nečinné sledování</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>Filtrovat pÅ™ehrÃ¡vaÄe...</value>
+    <value>Filtrovat přehrávače...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>PÅ™ipojte se k serveru pro naÄtenÃ­ seznamu hrÃ¡ÄÅ¯</value>
+    <value>Připojte se k serveru pro načtení seznamu hráčů</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>NaÄÃ­tÃ¡nÃ­ hrÃ¡ÄÅ¯ pomocÃ­ Steam Query...</value>
+    <value>Načítání hráčů pomocí Steam Query...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
     <value>ID trasy</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>NÃ¡zev manuÃ¡lnÃ­ skladby...</value>
+    <value>Název manuální skladby...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Å½Ã¡dnÃ¡ zaÅ™Ã­zenÃ­.</value>
+    <value>Žádná zařízení.</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Å½Ã¡dnÃ½ token nenÃ­ registrovÃ¡n</value>
+    <value>Žádný token není registrován</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Token vyprÅ¡el!</value>
+    <value>Token vypršel!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>VyprÅ¡Ã­ za {0} dnÃ­</value>
+    <value>Vyprší za {0} dní</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} do noci</value>
@@ -327,261 +327,261 @@ PoznÃ¡mka: Tento zpÅ¯sob pÅ™enosu bude v budoucnu optimalizovÃ¡n. Pokud
     <value>{0} do dne</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Sledujte mÄ›</value>
+    <value>Sledujte mě</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
     <value>Sledovat {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>PÃ¡rovÃ¡nÃ­: naslouchÃ¡mâ€¦</value>
+    <value>Párování: naslouchám…</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>PÃ¡rovÃ¡nÃ­: zastaveno</value>
+    <value>Párování: zastaveno</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>PÃ¡rovÃ¡nÃ­: selhalo</value>
+    <value>Párování: selhalo</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>BudÃ­k aktivovÃ¡n!</value>
+    <value>Budík aktivován!</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>InteligentnÃ­ budÃ­k</value>
+    <value>Inteligentní budík</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>Nelze ÄÃ­st RustPlus-Link: {0}
-FormÃ¡t: rustplus://IP:PORT</value>
+    <value>Nelze číst RustPlus-Link: {0}
+Formát: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Smazat existujÃ­cÃ­ konfiguraci pÃ¡rovÃ¡nÃ­?
-Budete muset znovu spÃ¡rovat pÅ™i pÅ™Ã­Å¡tÃ­m spuÅ¡tÄ›nÃ­.</value>
+    <value>Smazat existující konfiguraci párování?
+Budete muset znovu spárovat při příštím spuštění.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Smazat nastavenÃ­ pÃ¡rovÃ¡nÃ­ a okamÅ¾itÄ› znovu pÃ¡rovat/poslouchat?</value>
+    <value>Smazat nastavení párování a okamžitě znovu párovat/poslouchat?</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
     <value>Resetovat + poslouchat (Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Smazat nastavenÃ­ pÃ¡rovÃ¡nÃ­ a okamÅ¾itÄ› znovu pÃ¡rovat/poslouchat pomocÃ­ Edge?</value>
+    <value>Smazat nastavení párování a okamžitě znovu párovat/poslouchat pomocí Edge?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>NepodaÅ™ilo se dotÃ¡zat na nejnovÄ›jÅ¡Ã­ verzi. Zkuste to prosÃ­m znovu nebo otevÅ™ete strÃ¡nku Releass.</value>
+    <value>Nepodařilo se dotázat na nejnovější verzi. Zkuste to prosím znovu nebo otevřete stránku Releass.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Jste aktuÃ¡lnÃ­.</value>
+    <value>Jste aktuální.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
     <value>K dispozici je aktualizace</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>DostupnÃ¡ novÃ¡ verze: {0}
-OtevÅ™Ã­t strÃ¡nku Releases ?</value>
+    <value>Dostupná nová verze: {0}
+Otevřít stránku Releases ?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>DostupnÃ¡ novÃ¡ verze: {0}
-StÃ¡hnout a nainstalovat nynÃ­?</value>
+    <value>Dostupná nová verze: {0}
+Stáhnout a nainstalovat nyní?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>StahovÃ¡nÃ­ se nezdaÅ™ilo.</value>
+    <value>Stahování se nezdařilo.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Kontrola aktualizacÃ­ se nezdaÅ™ila.
+    <value>Kontrola aktualizací se nezdařila.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Å½Ã¡dnÃ¡ zaÅ™Ã­zenÃ­.</value>
+    <value>Žádná zařízení.</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Zobrazit profil</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>ZmÄ›nit skupinu</value>
+    <value>Změnit skupinu</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>PÅ™ejmenovat</value>
+    <value>Přejmenovat</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Odstranit sledovanÃ©</value>
+    <value>Odstranit sledované</value>
   </data>
   <data name="View" xml:space="preserve">
     <value>Zobrazit</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>DalÅ¡Ã­ moÅ¾nosti</value>
+    <value>Další možnosti</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Znovu zopakovat Battlemetrics IDâ€¦</value>
+    <value>Znovu zopakovat Battlemetrics ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Odstranit serverâ€¦</value>
+    <value>Odstranit server…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>KliknutÃ­m pravÃ½m tlaÄÃ­tkem myÅ¡i pÅ™ejmenujete</value>
+    <value>Kliknutím pravým tlačítkem myši přejmenujete</value>
   </data>
   <data name="Toggle" xml:space="preserve">
     <value>ZAPNOUT</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>VyskakovacÃ­ okno</value>
+    <value>Vyskakovací okno</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>UpozornÄ›nÃ­ v aplikaci</value>
+    <value>Upozornění v aplikaci</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>ZvukovÃ© upozornÄ›nÃ­</value>
+    <value>Zvukové upozornění</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>VlastnÃ­ zvukovÃ½ soubor...</value>
+    <value>Vlastní zvukový soubor...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Obnovit vÃ½chozÃ­</value>
+    <value>Obnovit výchozí</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
     <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> PoloÅ¾ky, aktualizace=</value>
+    <value> Položky, aktualizace=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>Nebyla nalezena Å¾Ã¡dnÃ¡ zaÅ™Ã­zenÃ­</value>
+    <value>Nebyla nalezena žádná zařízení</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>SpÃ¡rujte chytrÃ© zaÅ™Ã­zenÃ­, pÅ™epnÄ›te nebo budÃ­k a uvidÃ­te ho zde</value>
+    <value>Spárujte chytré zařízení, přepněte nebo budík a uvidíte ho zde</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>TÃ½m</value>
+    <value>Tým</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Vycentrovat na mapÄ›</value>
+    <value>Vycentrovat na mapě</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
     <value>Sledujte mapu</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>OtevÅ™Ã­t profil Steam</value>
+    <value>Otevřít profil Steam</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>PovÃ½Å¡it na vÅ¯dce</value>
+    <value>Povýšit na vůdce</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Vyhodit z tÃ½mu</value>
+    <value>Vyhodit z týmu</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>ZnaÄky profilu</value>
+    <value>Značky profilu</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>ZnaÄky smrti</value>
+    <value>Značky smrti</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>FotoaparÃ¡ty</value>
+    <value>Fotoaparáty</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>PÅ™idat kameru</value>
+    <value>Přidat kameru</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>Nenalezeny Å¾Ã¡dnÃ© kamery</value>
+    <value>Nenalezeny žádné kamery</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>SpÃ¡rujte kameru a podÃ­vejte se zde na jejÃ­ nÃ¡hled</value>
+    <value>Spárujte kameru a podívejte se zde na její náhled</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>HrÃ¡Äi</value>
+    <value>Hráči</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
     <value>Jak sledovat</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>ZjistÄ›te, jak funguje sledovÃ¡nÃ­ hrÃ¡ÄÅ¯</value>
+    <value>Zjistěte, jak funguje sledování hráčů</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
     <value>Online</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>Online hrÃ¡Äi</value>
+    <value>Online hráči</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
     <value>Hledat BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Hledat aktuÃ¡lnÃ­ server na BattleMetrics</value>
+    <value>Hledat aktuální server na BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>KuliÄka</value>
+    <value>Kulička</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>OtevÅ™Ã­t hrÃ¡Äe v samostatnÃ©m oknÄ›</value>
+    <value>Otevřít hráče v samostatném okně</value>
   </data>
   <data name="Track" xml:space="preserve">
     <value>Stopa</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>RuÄnÃ­ nÃ¡zev skladby nebo Steam ID...</value>
+    <value>Ruční název skladby nebo Steam ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>Filtrovat pÅ™ehrÃ¡vaÄe...</value>
+    <value>Filtrovat přehrávače...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>NaÄÃ­tÃ¡nÃ­ hrÃ¡ÄÅ¯...</value>
+    <value>Načítání hráčů...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>ZaznamenÃ¡no</value>
+    <value>Zaznamenáno</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>SledovanÃ­ hrÃ¡Äi</value>
+    <value>Sledovaní hráči</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
     <value>Spravovat skupiny</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Zobrazit Ãºplnou analÃ½zu</value>
+    <value>Zobrazit úplnou analýzu</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>Jste pÅ™ipraveni prozkoumat mapu?</value>
+    <value>Jste připraveni prozkoumat mapu?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>PÅ™ipojte se k vybranÃ©mu serveru pro naÄtenÃ­ mapy a tÃ½mu live Rust.</value>
+    <value>Připojte se k vybranému serveru pro načtení mapy a týmu live Rust.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Jste pÅ™ipraveni ovlÃ¡dnout Rusta?</value>
+    <value>Jste připraveni ovládnout Rusta?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>SpÃ¡rujte svÅ¯j ÃºÄet a zaÄnÄ›te sledovat hrÃ¡Äe, pÅ™ijÃ­mat zÃ¡kladnÃ­ vÃ½strahy a okamÅ¾itÄ› ovlÃ¡dat vaÅ¡e chytrÃ¡ zaÅ™Ã­zenÃ­.</value>
+    <value>Spárujte svůj účet a začněte sledovat hráče, přijímat základní výstrahy a okamžitě ovládat vaše chytrá zařízení.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>PÅ™ihlaste se a spÃ¡rujte se</value>
+    <value>Přihlaste se a spárujte se</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>VyÅ¾aduje pÅ™ihlÃ¡Å¡enÃ­ pÅ™es Steam ve vaÅ¡em vÃ½chozÃ­m prohlÃ­Å¾eÄi.</value>
+    <value>Vyžaduje přihlášení přes Steam ve vašem výchozím prohlížeči.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
     <value>Odstranit server?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Opravdu chcete smazat tento server? Tuto akci nelze vrÃ¡tit zpÄ›t.</value>
+    <value>Opravdu chcete smazat tento server? Tuto akci nelze vrátit zpět.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>ZruÅ¡it</value>
+    <value>Zrušit</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
     <value>Vymazat</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Automaticky skrÃ½t po 3 sekundÃ¡ch</value>
+    <value>Automaticky skrýt po 3 sekundách</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
     <value>FILTRY MAP</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>MÅ™Ã­Å¾ka</value>
+    <value>Mřížka</value>
   </data>
   <data name="Monuments" xml:space="preserve">
     <value>Monumenty</value>
@@ -590,40 +590,40 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Obchody</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>POZNÃMKY NA CHAT</value>
+    <value>POZNÁMKY NA CHAT</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>VÃ½strahy</value>
+    <value>Výstrahy</value>
   </data>
   <data name="Configure" xml:space="preserve">
     <value>Konfigurace</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Vybrat vÅ¡e</value>
+    <value>Vybrat vše</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>ZruÅ¡it vÃ½bÄ›r vÅ¡ech</value>
+    <value>Zrušit výběr všech</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>UDÃLOSTI</value>
+    <value>UDÁLOSTI</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ</value>
+    <value>Nákladní loď</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
     <value>Vejce</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>DokovÃ¡nÃ­ Harboru</value>
+    <value>Dokování Harboru</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>Odjezd (5m oteplovÃ¡nÃ­)</value>
+    <value>Odjezd (5m oteplování)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>VarovÃ¡nÃ­ pÅ™i pÅ™Ã­jezdu (5m pÅ™ed dokem)</value>
+    <value>Varování při příjezdu (5m před dokem)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>HlÃ­dkovÃ½ vrtulnÃ­k</value>
+    <value>Hlídkový vrtulník</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
@@ -632,13 +632,13 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Prodejce cesty</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>SpouÅ¡tÄ›Ä ropy</value>
+    <value>Spouštěč ropy</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>HlubokÃ¡ nÃ¡moÅ™nÃ­ udÃ¡lost</value>
+    <value>Hluboká námořní událost</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>ChytrÃ© vÃ½strahy</value>
+    <value>Chytré výstrahy</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
     <value>Online stav</value>
@@ -647,88 +647,88 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Offline stav</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>SledovÃ¡nÃ­ oznÃ¡menÃ­</value>
+    <value>Sledování oznámení</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>VlastnÃ­ smrt</value>
+    <value>Vlastní smrt</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>TÃ½m smrti</value>
+    <value>Tým smrti</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>OpÄ›tovnÃ© nastavenÃ­</value>
+    <value>Opětovné nastavení</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>OpÄ›tovnÃ½ tÃ½m</value>
+    <value>Opětovný tým</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>NovÃ© obchody</value>
+    <value>Nové obchody</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>PodezÅ™elÃ© obchody</value>
+    <value>Podezřelé obchody</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>ObchodnÃ­ vÃ½strahy</value>
+    <value>Obchodní výstrahy</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Styl kÅ™Ã­Å¾ku</value>
+    <value>Styl křížku</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>ZelenÃ¡ teÄka</value>
+    <value>Zelená tečka</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Mini zelenÃ¡</value>
+    <value>Mini zelená</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>OtevÅ™enÃ© kÅ™iÅ¾ovatky (R/G)</value>
+    <value>Otevřené křižovatky (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>TenkÃ½ ÄervenÃ½ kruh</value>
+    <value>Tenký červený kruh</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>ÄŒtvereÄnÃ­ + teÄka</value>
+    <value>Čtvereční + tečka</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>PurpurovÃ¡ teÄka</value>
+    <value>Purpurová tečka</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>PurpurovÃ¡ otevÅ™enÃ¡ kÅ™Ã­Å¾</value>
+    <value>Purpurová otevřená kříž</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Å˜Ã¡dek rozsahu (zaÅ¡krtnutÃ­)</value>
+    <value>Řádek rozsahu (zaškrtnutí)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>Vykreslovat kÅ™Ã­Å¾ek...</value>
+    <value>Vykreslovat křížek...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
     <value>Vybrat monitor</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>Nakreslit pÅ™ekrytÃ­</value>
+    <value>Nakreslit překrytí</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Nakreslit (pravÃ© kliknutÃ­: velikost/barva)</value>
+    <value>Nakreslit (pravé kliknutí: velikost/barva)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Text umÃ­stÄ›nÃ­ (pravÃ© kliknutÃ­: barva / velikost)</value>
+    <value>Text umístění (pravé kliknutí: barva / velikost)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Ikona umÃ­stÄ›nÃ­ (pravÃ© kliknutÃ­: Vybrat ikonu)</value>
+    <value>Ikona umístění (pravé kliknutí: Vybrat ikonu)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>MazÃ¡nÃ­ (podrÅ¾enÃ­m nebo kliknutÃ­m)</value>
+    <value>Mazání (podržením nebo kliknutím)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Odstranit vlastnÃ­ pÅ™ekrytÃ­</value>
+    <value>Odstranit vlastní překrytí</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>NahrÃ¡t vlastnÃ­ pÅ™ekrytÃ­ / sdÃ­lenÃ­</value>
+    <value>Nahrát vlastní překrytí / sdílení</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>PÅ™Ã­mÃ© pÅ™Ã­leÅ¾itosti k arbitrÃ¡Å¾i | koupit nÃ­zkou â†’ prodÃ¡vat vysoko.</value>
+    <value>Přímé příležitosti k arbitráži | koupit nízkou → prodávat vysoko.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
     <value>Koupit X za Y</value>
@@ -740,70 +740,70 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Chci GET</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Mohu ZPÄšT S</value>
+    <value>Mohu ZPĚT S</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>TÃ½movÃ½ chat</value>
+    <value>Týmový chat</value>
   </data>
   <data name="Send" xml:space="preserve">
     <value>Poslat</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>PÅ™ihlaÅ¡ovacÃ­ Ãºdaje pro FCM</value>
+    <value>Přihlašovací údaje pro FCM</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>KliknÄ›te pravÃ½m tlaÄÃ­tkem myÅ¡i pro konfiguraci</value>
+    <value>Klikněte pravým tlačítkem myši pro konfiguraci</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Resetovat pÅ™iblÃ­Å¾enÃ­ a pozici mapy</value>
+    <value>Resetovat přiblížení a pozici mapy</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
     <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>Zapnout/vypnout (KlepnÄ›te pravÃ½m tlaÄÃ­tkem pro moÅ¾nosti)</value>
+    <value>Zapnout/vypnout (Klepněte pravým tlačítkem pro možnosti)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>ZPÄšT HRÃÄŒE</value>
+    <value>ZPĚT HRÁČE</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>ZavÅ™Ã­t BattleMetrics prohlÃ­Å¾eÄ</value>
+    <value>Zavřít BattleMetrics prohlížeč</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>ZOBRAZIT HLEDÃNÃ</value>
+    <value>ZOBRAZIT HLEDÁNÍ</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>ZavÅ™Ã­t hledÃ¡nÃ­</value>
+    <value>Zavřít hledání</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Nejprve prosÃ­m aktivujte obchody</value>
+    <value>Nejprve prosím aktivujte obchody</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>Aktivovat prÅ¯zkum obchodu</value>
+    <value>Aktivovat průzkum obchodu</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
     <value>TEAM CHAT</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>ZavÅ™Ã­t chat</value>
+    <value>Zavřít chat</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>NastavenÃ­ pÅ™Ã­kazÅ¯ chatu</value>
+    <value>Nastavení příkazů chatu</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>PÅ™Ã­kazy v chatu</value>
+    <value>Příkazy v chatu</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>ZpÄ›t</value>
+    <value>Zpět</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>PÅ™eposlat</value>
+    <value>Přeposlat</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>OtevÅ™Ã­t v externÃ­m prohlÃ­Å¾eÄi</value>
+    <value>Otevřít v externím prohlížeči</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
     <value>Hledat BM...</value>
@@ -818,148 +818,148 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>ZOBRAZENO</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>PÅ˜IPOJENO...</value>
+    <value>PŘIPOJENO...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
     <value>INICIALIZACE...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ZAÅ˜ÃZENÃ AKTIVNÃ</value>
+    <value>ZAŘÍZENÍ AKTIVNÍ</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>PLNÄš PÅ˜IPOJENO</value>
+    <value>PLNĚ PŘIPOJENO</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>NEZNÃMÃ</value>
+    <value>NEZNÁMÝ</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>MÅ¯Å¾e to chvÃ­li trvat...</value>
+    <value>Může to chvíli trvat...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>NastavenÃ­ aplikace</value>
+    <value>Nastavení aplikace</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>ObecnÃ¡ ustanovenÃ­</value>
+    <value>Obecná ustanovení</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>Spustit s Windows (MinimalizovanÃ©)</value>
+    <value>Spustit s Windows (Minimalizované)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Spustit minimalizovanÃ© (vÅ¾dy)</value>
+    <value>Spustit minimalizované (vždy)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Automaticky pÅ™ipojit k poslednÃ­mu serveru pÅ™i spuÅ¡tÄ›nÃ­</value>
+    <value>Automaticky připojit k poslednímu serveru při spuštění</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Automaticky se znovu pÅ™ipojÃ­ k poslednÃ­mu serveru a naÄte mapu.</value>
+    <value>Automaticky se znovu připojí k poslednímu serveru a načte mapu.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>ChovÃ¡nÃ­</value>
+    <value>Chování</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Minimalizovat do systÃ©movÃ© liÅ¡ty namÃ­sto zavÅ™enÃ­</value>
+    <value>Minimalizovat do systémové lišty namísto zavření</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>Povolit sledovÃ¡nÃ­ pÅ™ehrÃ¡vaÄe na pozadÃ­</value>
+    <value>Povolit sledování přehrávače na pozadí</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>UdrÅ¾uje sledovÃ¡nÃ­ hrÃ¡ÄÅ¯ pÅ™es BattleMetrics i kdyÅ¾ je minimalizovÃ¡no.</value>
+    <value>Udržuje sledování hráčů přes BattleMetrics i když je minimalizováno.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>SkrÃ½t systÃ©movou konzoli (deÅ¡ifrovÃ¡nÃ­)</value>
+    <value>Skrýt systémovou konzoli (dešifrování)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Skryje panel spodnÃ­ log/konzole pro uloÅ¾enÃ­ mÃ­sta na mapÄ›.</value>
+    <value>Skryje panel spodní log/konzole pro uložení místa na mapě.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>NastavenÃ­ mapy</value>
+    <value>Nastavení mapy</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>AutomatickÃ© naÄÃ­tÃ¡nÃ­ obchodÅ¯ pÅ™i pÅ™ipojenÃ­</value>
+    <value>Automatické načítání obchodů při připojení</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Automaticky spustÃ­ dotazovacÃ­ obchody a upozornÄ›nÃ­ pÅ™i pÅ™ipojenÃ­ k serveru.</value>
+    <value>Automaticky spustí dotazovací obchody a upozornění při připojení k serveru.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>PouÅ¾itÃ­ textovÃ½ch popiskÅ¯ pamÃ¡tek mÃ­sto ikon</value>
+    <value>Použití textových popisků památek místo ikon</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>Pokud je tato funkce povolena, nÃ¡zvy pamÃ¡tek na mapÄ› Rust se mÃ­sto ikon zobrazujÃ­ jako text pomocÃ­ pÃ­sma Permanent Marker.</value>
+    <value>Pokud je tato funkce povolena, názvy památek na mapě Rust se místo ikon zobrazují jako text pomocí písma Permanent Marker.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
-    <value>Styl pamÃ¡tnÃ­ku:</value>
+    <value>Styl památníku:</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>MÄ›Å™Ã­tko pamÃ¡tky:</value>
+    <value>Měřítko památky:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>NeprÅ¯hlednost pamÃ¡tky:</value>
+    <value>Neprůhlednost památky:</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
     <value>Ikony podle rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>PÅ¯vodnÃ­ text nÃ¡zvy pamÃ¡tek</value>
+    <value>Původní text názvy památek</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
     <value>Kredity</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>Ikony pamÃ¡tek na mapÄ› poskytl </value>
+    <value>Ikony památek na mapě poskytl </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> - pouÅ¾ito se svolenÃ­m.</value>
+    <value> - použito se svolením.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>VÅ¡echny ikony pamÃ¡tek a souvisejÃ­cÃ­ umÄ›leckÃ¡ dÃ­la jsou majetkem spoleÄnosti rustmaps.com. DÄ›kujeme vÃ¡m za podporu komunity Rust!</value>
+    <value>Všechny ikony památek a související umělecká díla jsou majetkem společnosti rustmaps.com. Děkujeme vám za podporu komunity Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Upravit upozornÄ›nÃ­ na chatu</value>
+    <value>Upravit upozornění na chatu</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Spravujte svÅ¯j propojenÃ½ Steam ÃºÄet v hlavnÃ­m oknÄ›.</value>
+    <value>Spravujte svůj propojený Steam účet v hlavním okně.</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>ZavÅ™Ã­t</value>
+    <value>Zavřít</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>PÅ˜ÃJEMCI ALARMÅ®</value>
+    <value>PŘÍJEMCI ALARMŮ</value>
   </data>
   <data name="Wipe" xml:space="preserve">
     <value>Vymazat</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>HrÃ¡Äi</value>
+    <value>Hráči</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>HrÃ¡Äi</value>
+    <value>Hráči</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Chci GET (napÅ™. surovÃ½ olej)</value>
+    <value>Chci GET (např. surový olej)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Chci PAY WITH (napÅ™. Scrap)</value>
+    <value>Chci PAY WITH (např. Scrap)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Jste si jisti, Å¾e chcete odstranit server{0}"? Tuto akci nelze vrÃ¡tit zpÄ›t.</value>
+    <value>Jste si jisti, že chcete odstranit server{0}"? Tuto akci nelze vrátit zpět.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>PÃ¡rovÃ¡nÃ­: zaÄÃ­nÃ¡nÃ­...</value>
+    <value>Párování: začínání...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>SpouÅ¡tÄ›nÃ­ pÃ¡rovÃ¡nÃ­...</value>
+    <value>Spouštění párování...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>PÅ™ihlÃ¡Å¡en</value>
+    <value>Přihlášen</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>ZÃ¡soby</value>
+    <value>Zásoby</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Cena</value>
@@ -971,34 +971,34 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Vypnout</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>AKTIVNÃ</value>
+    <value>AKTIVNÍ</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>NEAKTIVNÃ</value>
+    <value>NEAKTIVNÍ</value>
   </data>
   <data name="Group" xml:space="preserve">
     <value>SKUPINA</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Desk â€“ Importovat zaÅ™Ã­zenÃ­</value>
+    <value>Rust+ Desk – Importovat zařízení</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Importovat zaÅ™Ã­zenÃ­</value>
+    <value>Importovat zařízení</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Vyberte, kterÃ¡ zaÅ™Ã­zenÃ­ chcete importovat pro tento server.</value>
+    <value>Vyberte, která zařízení chcete importovat pro tento server.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>Zkontrolovat stav zaÅ™Ã­zenÃ­</value>
+    <value>Zkontrolovat stav zařízení</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Importovat vybranÃ©</value>
+    <value>Importovat vybrané</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
     <value>BM zkratky</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>SpÃ¡rovÃ¡nÃ­: konfigurace odstranÄ›na</value>
+    <value>Spárování: konfigurace odstraněna</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
     <value>Rust+ Desk Tracker</value>
@@ -1007,37 +1007,37 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Rust+ desk (Tracking {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>PÅ™ejmenovat skupinu</value>
+    <value>Přejmenovat skupinu</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>NovÃ½ nÃ¡zev skupiny:</value>
+    <value>Nový název skupiny:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>NovÃ© jmÃ©no pro #{0}:</value>
+    <value>Nové jméno pro #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
     <value>Zadejte ID Battlemetrics serveru pro "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>SledovÃ¡nÃ­: {0}</value>
+    <value>Sledování: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>PoslednÃ­ aktualizace: {0}</value>
+    <value>Poslední aktualizace: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>OtevÅ™Ã­t Rust+ stÅ¯l</value>
+    <value>Otevřít Rust+ stůl</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>UkonÄit</value>
+    <value>Ukončit</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>L 343, 22.12.2009, s. 1).</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>FotoaparÃ¡t</value>
+    <value>Fotoaparát</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>PoplaÅ¡nÃ¡ zaÅ™Ã­zenÃ­</value>
+    <value>Poplašná zařízení</value>
   </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifier:</value>
@@ -1046,7 +1046,7 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>PoznÃ¡mka: doporuÄujeme 2 fps a vyÅ¡Å¡Ã­ FPS pravdÄ›podobnÄ› zavÅ™e pÅ™ipojenÃ­ k serveru</value>
+    <value>Poznámka: doporučujeme 2 fps a vyšší FPS pravděpodobně zavře připojení k serveru</value>
   </data>
   <data name="Pixel" xml:space="preserve">
     <value>Pixel</value>
@@ -1055,130 +1055,130 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Pec</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Å˜Ã¡dek</value>
+    <value>Řádek</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>ÄŒtverec</value>
+    <value>Čtverec</value>
   </data>
   <data name="Circle" xml:space="preserve">
     <value>Kruh</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>TlouÅ¡Å¥ka:</value>
+    <value>Tloušťka:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>PrÅ¯hlednost:</value>
+    <value>Průhlednost:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>NahrÃ¡t PNG</value>
+    <value>Nahrát PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>VyÄistit</value>
+    <value>Vyčistit</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>UloÅ¾it</value>
+    <value>Uložit</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>PÅ™iÅ™aÄte globÃ¡lnÃ­ klÃ¡vesovÃ© zkratky k Smart Switches. VÃ­ce zaÅ™Ã­zenÃ­ mÅ¯Å¾e sdÃ­let jednu klÃ¡vesovou zkratku (pÅ™epÃ­nÃ¡ postupnÄ›).</value>
+    <value>Přiřaďte globální klávesové zkratky k Smart Switches. Více zařízení může sdílet jednu klávesovou zkratku (přepíná postupně).</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>ZaÅ™Ã­zenÃ­</value>
+    <value>Zařízení</value>
   </data>
   <data name="EntityId" xml:space="preserve">
     <value>EntityId</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>KlÃ¡vesovÃ¡ zkratka</value>
+    <value>Klávesová zkratka</value>
   </data>
   <data name="Set" xml:space="preserve">
     <value>Nastavit</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>ZavÅ™Ã­t a deaktivovat</value>
+    <value>Zavřít a deaktivovat</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>ZavÅ™Ã­t a aktivovat</value>
+    <value>Zavřít a aktivovat</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Aktualizace, minimap a sledovÃ¡nÃ­</value>
+    <value>Aktualizace, minimap a sledování</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>PÅ™ehled funkcÃ­ a Ãºpravy</value>
+    <value>Přehled funkcí a úpravy</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>PÅ™Ã­Å¡tÄ› nezobrazovat</value>
+    <value>Příště nezobrazovat</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>SkvÄ›lÃ©, pojÄme dÃ¡l!</value>
+    <value>Skvělé, pojďme dál!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>NastavenÃ­ mini-mapy</value>
+    <value>Nastavení mini-mapy</value>
   </data>
   <data name="Shape" xml:space="preserve">
     <value>Tvar</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>ObdÃ©lnÃ­k</value>
+    <value>Obdélník</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>PrÅ¯hlednost: {0}%</value>
+    <value>Průhlednost: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
     <value>Velikost: {0}% (SHIFT + Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>Zobrazit Äas serveru</value>
+    <value>Zobrazit čas serveru</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
     <value>Informace o serveru</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Å½Ã¡dnÃ½ popis nenÃ­ k dispozici.</value>
+    <value>Žádný popis není k dispozici.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>AktuÃ¡lnÃ­ verze: {0}</value>
+    <value>Aktuální verze: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>PoznÃ¡mky k opravÃ¡m a verze historie</value>
+    <value>Poznámky k opravám a verze historie</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>Povolit pÅ™Ã­kazy v chatu</value>
+    <value>Povolit příkazy v chatu</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>PÅ™edpona:</value>
+    <value>Předpona:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>StandardnÃ­ pÅ™Ã­kazy</value>
+    <value>Standardní příkazy</value>
   </data>
   <data name="Population" xml:space="preserve">
     <value>Populace:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>ÄŒas:</value>
+    <value>Čas:</value>
   </data>
   <data name="Promote" xml:space="preserve">
     <value>Promote:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>HlubokÃ© moÅ™e:</value>
+    <value>Hluboké moře:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ:</value>
+    <value>Nákladní loď:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>OlejovÃ½ tyÄ:</value>
+    <value>Olejový tyč:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>HlÃ­dkovÃ¡ helia:</value>
+    <value>Hlídková helia:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>CestujÃ­cÃ­ prodejce:</value>
+    <value>Cestující prodejce:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
     <value>Detaily aktualizace:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>ZpoÅ¾dÄ›nÃ­ pÅ™Ã­kazu:</value>
+    <value>Zpoždění příkazu:</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Jazyk</value>
@@ -1187,85 +1187,85 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Vyberte jazyk</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>ZmÄ›na jazyka vyÅ¾aduje restartovÃ¡nÃ­, aby se plnÄ› projevil.</value>
+    <value>Změna jazyka vyžaduje restartování, aby se plně projevil.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>ChytrÃ© pÅ™epÃ­naÄe</value>
+    <value>Chytré přepínače</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Monitory ÃºdrÅ¾by (TC)</value>
+    <value>Monitory údržby (TC)</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Nebyly nalezeny Å¾Ã¡dnÃ© monitory TC.</value>
+    <value>Nebyly nalezeny žádné monitory TC.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>UloÅ¾it a zavÅ™Ã­t</value>
+    <value>Uložit a zavřít</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>ZprÃ¡va...</value>
+    <value>Zpráva...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>ChybovÃ¡ zprÃ¡va zde</value>
+    <value>Chybová zpráva zde</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>HlÃ­dkovÃ½ vrtulnÃ­k</value>
+    <value>Hlídkový vrtulník</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Patrol Heli aktivnÃ­ - bÄ›Å¾Ã­ na {0}</value>
+    <value>Patrol Heli aktivní - běží na {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>PÅ™ipojen v polovinÄ› akce - Äas spawnu neznÃ¡mÃ½</value>
+    <value>Připojen v polovině akce - čas spawnu neznámý</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>HlÃ­dkovÃ¡ helikoptÃ©ra aktivnÃ­ (Äas tÅ™enÃ­ neznÃ¡mÃ½)</value>
+    <value>Hlídková helikoptéra aktivní (čas tření neznámý)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>HlÃ­dkovÃ½ vrtulnÃ­k sestÅ™elen {0} pÅ™ed touto relacÃ­</value>
+    <value>Hlídkový vrtulník sestřelen {0} před touto relací</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>HlÃ­dka Heli opustila mapu {0} pÅ™ed touto relacÃ­</value>
+    <value>Hlídka Heli opustila mapu {0} před touto relací</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
     <value>Zakotveno na adrese {0} - odjezd za ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>pÅ™Ã­stav</value>
+    <value>přístav</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>JiÅ¾ zakotveno na pÅ™Ã­pojce - Äas odjezdu neznÃ¡mÃ½</value>
+    <value>Již zakotveno na přípojce - čas odjezdu neznámý</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Zakotveno na adrese {0} (doba trvÃ¡nÃ­ doku zatÃ­m neznÃ¡mÃ¡)</value>
+    <value>Zakotveno na adrese {0} (doba trvání doku zatím neznámá)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>ZbÃ½vajÃ­cÃ­ Äas na mapÄ› (od spawnu)</value>
+    <value>Zbývající čas na mapě (od spawnu)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>PÅ™ipojeno v polovinÄ› trasy - Äas neznÃ¡mÃ½</value>
+    <value>Připojeno v polovině trasy - čas neznámý</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>PÅ™ipojenÃ­ v polovinÄ› trasy - Äas neznÃ¡mÃ½ (trasa ~{0}m celkem)</value>
+    <value>Připojení v polovině trasy - čas neznámý (trasa ~{0}m celkem)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ byla vypuÅ¡tÄ›na {0}m {1}s pÅ™ed touto relacÃ­.</value>
+    <value>Nákladní loď byla vypuštěna {0}m {1}s před touto relací.</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>CestovÃ¡nÃ­ Prodejce aktivnÃ­ - bÄ›h pro {0}</value>
+    <value>Cestování Prodejce aktivní - běh pro {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>CestujÃ­cÃ­ prodejce aktivnÃ­ (doba spawnu neznÃ¡mÃ¡)</value>
+    <value>Cestující prodejce aktivní (doba spawnu neznámá)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
     <value>Traveling Vendor despawned {0} ago this session</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active - bÄ›h pro {0}</value>
+    <value>Deep Sea active - běh pro {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>HlubokomoÅ™skÃ½ aktivnÃ­ (doba tÅ™enÃ­ neznÃ¡mÃ¡)</value>
+    <value>Hlubokomořský aktivní (doba tření neznámá)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea skonÄilo pÅ™ed tÃ­mto zasedÃ¡nÃ­m {0}</value>
+    <value>Deep Sea skončilo před tímto zasedáním {0}</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1286,106 +1286,106 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} hrÃ¡ÄÅ¯, kteÅ™Ã­ jsou v souÄasnÃ© dobÄ› online.{1}</value>
+    <value>{0} hráčů, kteří jsou v současné době online.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Fronta: {0} hrÃ¡ÄÅ¯.</value>
+    <value> Fronta: {0} hráčů.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>AktuÃ¡lnÃ­ Äas ve hÅ™e: {0}.</value>
+    <value>Aktuální čas ve hře: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} byl povÃ½Å¡en na vedoucÃ­ho.</value>
+    <value>{0} byl povýšen na vedoucího.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea je aktivnÃ­! BÄ›Å¾Ã­ na {0}.</value>
+    <value>Deep Sea je aktivní! Běží na {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea je v souÄasnÃ© dobÄ› aktivnÃ­ (pÅ™ipojeno v polovinÄ› akce - doba spawnu neznÃ¡mÃ¡).</value>
+    <value>Deep Sea je v současné době aktivní (připojeno v polovině akce - doba spawnu neznámá).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea skonÄila pÅ™ed {0} minutami.</value>
+    <value>Deep Sea skončila před {0} minutami.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Stav udÃ¡losti Deep Sea neznÃ¡mÃ½ (v tÃ©to relaci nebyl zaznamenÃ¡n).</value>
+    <value>Stav události Deep Sea neznámý (v této relaci nebyl zaznamenán).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ nenÃ­ aktivnÃ­.</value>
+    <value>Nákladní loď není aktivní.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ zakotvila na adrese {0}. OdplouvÃ¡ pÅ™ibliÅ¾nÄ› za {1} minut.</value>
+    <value>Nákladní loď zakotvila na adrese {0}. Odplouvá přibližně za {1} minut.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ zakotvila na adrese {0} a pÅ™ipravuje se k odjezdu.</value>
+    <value>Nákladní loď zakotvila na adrese {0} a připravuje se k odjezdu.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ zakotvila na adrese {0} (Äas odjezdu neznÃ¡mÃ½).</value>
+    <value>Nákladní loď zakotvila na adrese {0} (čas odjezdu neznámý).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ aktivnÃ­. OdplouvÃ¡ pÅ™ibliÅ¾nÄ› za {0} minut.</value>
+    <value>Nákladní loď aktivní. Odplouvá přibližně za {0} minut.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ je aktivnÃ­ a chystÃ¡ se brzy odplout.</value>
+    <value>Nákladní loď je aktivní a chystá se brzy odplout.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ aktivnÃ­ (doba trvÃ¡nÃ­ trasy pro tento server jeÅ¡tÄ› nebyla nauÄena).</value>
+    <value>Nákladní loď aktivní (doba trvání trasy pro tento server ještě nebyla naučena).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ aktivnÃ­ (pÅ™ipojena po spawnu - zbÃ½vajÃ­cÃ­ Äas neznÃ¡mÃ½).</value>
+    <value>Nákladní loď aktivní (připojena po spawnu - zbývající čas neznámý).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ nenÃ­ aktivnÃ­. Depawned {0} minut pÅ™ed touto relacÃ­.</value>
+    <value>Nákladní loď není aktivní. Depawned {0} minut před touto relací.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
     <value>{0}: bedna na {1}m {2}s</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: naposledy volÃ¡no {1}m ago</value>
+    <value>{0}: naposledy voláno {1}m ago</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: v tÃ©to relaci se nevolÃ¡</value>
+    <value>{0}: v této relaci se nevolá</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>HlÃ­dka Heli je aktivnÃ­! BÄ›Å¾Ã­ na {0}.</value>
+    <value>Hlídka Heli je aktivní! Běží na {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>HlÃ­dka Heli je v souÄasnÃ© dobÄ› aktivnÃ­ (pÅ™ipojena v polovinÄ› akce - Äas spawnu neznÃ¡mÃ½).</value>
+    <value>Hlídka Heli je v současné době aktivní (připojena v polovině akce - čas spawnu neznámý).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>HlÃ­dkovÃ¡ helikoptÃ©ra nenÃ­ aktivnÃ­. PÅ™ed tÃ­mto zasedÃ¡nÃ­m to bylo {0} {1}.</value>
+    <value>Hlídková helikoptéra není aktivní. Před tímto zasedáním to bylo {0} {1}.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>sestÅ™elen</value>
+    <value>sestřelen</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
     <value>opustil mapu</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Stav udÃ¡losti Patrol Heli neznÃ¡mÃ½ (v tÃ©to relaci nebyl zaznamenÃ¡n).</value>
+    <value>Stav události Patrol Heli neznámý (v této relaci nebyl zaznamenán).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>CestujÃ­cÃ­ prodejce je aktivnÃ­! BÄ›Å¾Ã­ na {0}.</value>
+    <value>Cestující prodejce je aktivní! Běží na {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>CestujÃ­cÃ­ prodejce je v souÄasnÃ© dobÄ› aktivnÃ­ (pÅ™ipojen v polovinÄ› akce - Äas spawnu neznÃ¡mÃ½).</value>
+    <value>Cestující prodejce je v současné době aktivní (připojen v polovině akce - čas spawnu neznámý).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>CestujÃ­cÃ­ prodejce nenÃ­ aktivnÃ­. PÅ™ed touto relacÃ­ byl vyÅ™azen {0}.</value>
+    <value>Cestující prodejce není aktivní. Před touto relací byl vyřazen {0}.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Stav udÃ¡losti Travelling Vendor neznÃ¡mÃ½ (v tÃ©to relaci nebyl vidÄ›n).</value>
+    <value>Stav události Travelling Vendor neznámý (v této relaci nebyl viděn).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Pro pÅ™Ã­kazy ÃºdrÅ¾by nejsou mapovÃ¡ny Å¾Ã¡dnÃ© skÅ™Ã­nÄ› s nÃ¡Å™adÃ­m.</value>
+    <value>Pro příkazy údržby nejsou mapovány žádné skříně s nářadím.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>ÃšdrÅ¾ba na {0} TC: PrÃ¡zdnÃ¡ nebo proÅ¡lÃ¡.</value>
+    <value>Údržba na {0} TC: Prázdná nebo prošlá.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> PotÅ™eba/24h: {0}.</value>
+    <value> Potřeba/24h: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>ÃšdrÅ¾ba na {0} TC: {1}.</value>
+    <value>Údržba na {0} TC: {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
     <value>{0} dny</value>
@@ -1397,22 +1397,22 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>{0} minuty</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: PrÃ¡zdnÃ½/vyprÅ¡el</value>
+    <value>{0}: Prázdný/vypršel</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
     <value>{0}: {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>ÃšdrÅ¾ba: {0}</value>
+    <value>Údržba: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>VÃ¡zanÃ© monitory skÅ™Ã­nÄ› na nÃ¡Å™adÃ­ nebyly nalezeny nebo nebyly spÃ¡rovÃ¡ny.</value>
+    <value>Vázané monitory skříně na nářadí nebyly nalezeny nebo nebyly spárovány.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>VÃ¡zanÃ½ monitor Tool Cupboard nebyl nalezen nebo nebyl spÃ¡rovÃ¡n.</value>
+    <value>Vázaný monitor Tool Cupboard nebyl nalezen nebo nebyl spárován.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} obrÃ¡til {1}.</value>
+    <value>{0} obrátil {1}.</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
     <value>NA</value>
@@ -1421,13 +1421,13 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>OFF</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>VÃ¡zanÃ½ pÅ™epÃ­naÄ Smart Switch nebyl nalezen nebo nebyl spÃ¡rovÃ¡n.</value>
+    <value>Vázaný přepínač Smart Switch nebyl nalezen nebo nebyl spárován.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>DÅ™evo</value>
+    <value>Dřevo</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>KÃ¡men</value>
+    <value>Kámen</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
     <value>Kov</value>
@@ -1436,43 +1436,43 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>HQM</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>MalÃ¡ ropnÃ¡ ploÅ¡ina</value>
+    <value>Malá ropná plošina</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>VelkÃ¡ ropnÃ¡ ploÅ¡ina</value>
+    <value>Velká ropná plošina</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
     <value>Obchod</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ</value>
+    <value>Nákladní loď</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>CestujÃ­cÃ­ prodejce</value>
+    <value>Cestující prodejce</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>HlÃ­dkovÃ½ vrtulnÃ­k</value>
+    <value>Hlídkový vrtulník</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>Bedna na ropnÃ© soupravy</value>
+    <value>Bedna na ropné soupravy</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>VÃ½buch</value>
+    <value>Výbuch</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>ZablokovanÃ¡ budova</value>
+    <value>Zablokovaná budova</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>UdÃ¡lost</value>
+    <value>Událost</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] spuÅ¡tÄ›no! Bedna se odemkne na {1}.</value>
+    <value>[{0}] spuštěno! Bedna se odemkne na {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ALARM: {0} spuÅ¡tÄ›n!</value>
+    <value>ALARM: {0} spuštěn!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
     <value>[{0}] Bedna se odemkne za 10 minut!</value>
@@ -1481,64 +1481,64 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>[{0}] Bedna se odemkne za 5 minut!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Deep Sea je nahoÅ™e</value>
+    <value>Deep Sea je nahoře</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>NovÃ½ obchod {0} [{1}]: {2}</value>
+    <value>Nový obchod {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>PodezÅ™elÃ½ obchod {0} [{1}] byl online {2}s, prodÃ¡val {3}</value>
+    <value>Podezřelý obchod {0} [{1}] byl online {2}s, prodával {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ zplozenÃ¡ {0}</value>
+    <value>Nákladní loď zplozená {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>daleko na moÅ™i (poblÃ­Å¾ {0})</value>
+    <value>daleko na moři (poblíž {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ zakotvila na adrese {0} ({1})</value>
+    <value>Nákladní loď zakotvila na adrese {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ by mÄ›la zakotvit na adrese {0} ({1}) pÅ™ibliÅ¾nÄ› za 5 minut.</value>
+    <value>Nákladní loď by měla zakotvit na adrese {0} ({1}) přibližně za 5 minut.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>NÃ¡kladnÃ­ loÄ odplouvÃ¡ z {0} za 5 minut ({1})</value>
+    <value>Nákladní loď odplouvá z {0} za 5 minut ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>ZjiÅ¡tÄ›n pÃ¡d kvÅ¯li zpoÅ¾dÄ›nÃ­ serveru - Heli je stÃ¡le na mapÄ› na adrese {0}</value>
+    <value>Zjištěn pád kvůli zpoždění serveru - Heli je stále na mapě na adrese {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
     <value>{0} se objevil na adrese {1}.</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>HlÃ­dkovÃ½ vrtulnÃ­k sestÅ™elen na adrese {0}</value>
+    <value>Hlídkový vrtulník sestřelen na adrese {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>neznÃ¡mÃ½</value>
+    <value>neznámý</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} pÅ™iÅ¡el online @ {1}</value>
+    <value>{0} přišel online @ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} pÅ™eÅ¡el do reÅ¾imu offline</value>
+    <value>{0} přešel do režimu offline</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} zemÅ™el @ {1}</value>
+    <value>{0} zemřel @ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
     <value>{0} respawned @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[SledovÃ¡nÃ­] {0}{1} je nynÃ­ ONLINE</value>
+    <value>[Sledování] {0}{1} je nyní ONLINE</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[SledovÃ¡nÃ­] {0}{1} je nynÃ­ OFFLINE</value>
+    <value>[Sledování] {0}{1} je nyní OFFLINE</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[SledovÃ¡nÃ­] {0}{1} pÅ™ejmenovÃ¡n na {2}!</value>
+    <value>[Sledování] {0}{1} přejmenován na {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>prodÃ¡vÃ¡</value>
+    <value>prodává</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
     <value>kupuje</value>
@@ -1547,269 +1547,269 @@ StÃ¡hnout a nainstalovat nynÃ­?</value>
     <value>Obchod</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (zÃ¡soba {5}) pro {6} {7}.</value>
+    <value>{0} [{1}] {2} x{3} {4} (zásoba {5}) pro {6} {7}.</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>Seznam pÅ™Ã­kazÅ¯ chatu</value>
+    <value>Seznam příkazů chatu</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
-    <value>PÅ˜ÃKAZY: {0}</value>
+    <value>PŘÍKAZY: {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>Lokalizace, modernizace uÅ¾ivatelskÃ©ho rozhranÃ­ a ÃºloÅ¾iÅ¡tÄ›</value>
+    <value>Lokalizace, modernizace uživatelského rozhraní a úložiště</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>DynamickÃ© pÅ™epÃ­nÃ¡nÃ­ lokalizace</value>
+    <value>Dynamické přepínání lokalizace</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - VÃ­ce neÅ¾ 30 jazykÅ¯ k vÃ½bÄ›ru</value>
+    <value> - Více než 30 jazyků k výběru</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>UÅ¾ivatelskÃ© rozhranÃ­ pÅ™Ã­kazÅ¯ chatu</value>
+    <value>Uživatelské rozhraní příkazů chatu</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - IzolovanÃ½ pohled pro ÄistÃ½ vzhled</value>
+    <value> - Izolovaný pohled pro čistý vzhled</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>NovÃ© pÅ™ekrytÃ­ nastavenÃ­</value>
+    <value>Nové překrytí nastavení</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - ÄŒistÃ½ postrannÃ­ panel pro vÅ¡echna nastavenÃ­</value>
+    <value> - Čistý postranní panel pro všechna nastavení</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>OdstranÄ›nÃ­ sledovÃ¡nÃ­ BattleMetrics</value>
+    <value>Odstranění sledování BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>VaÅ¡e zÃ¡kladna je pod Ãºtokem!</value>
+    <value>Vaše základna je pod útokem!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>Nejprve se pÅ™ipojte k serveru.</value>
+    <value>Nejprve se připojte k serveru.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>Nejste pÅ™ipojeni k Å¾Ã¡dnÃ©mu serveru.</value>
+    <value>Nejste připojeni k žádnému serveru.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>Chat nenÃ­ prÃ¡vÄ› teÄ k dispozici.</value>
+    <value>Chat není právě teď k dispozici.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
     <value>Nejprve vyberte server.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
-    <value>PÅ™ipojenÃ­</value>
+    <value>Připojení</value>
   </data>
   <data name="SnackbarTitleChat" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>Jak sledovat hrÃ¡Äe</value>
+    <value>Jak sledovat hráče</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>NativnÃ­ sledovÃ¡nÃ­ UDP</value>
+    <value>Nativní sledování UDP</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>PrÅ¯vodce sledovÃ¡nÃ­m je v souÄasnÃ© dobÄ› k dispozici pouze v angliÄtinÄ›, protoÅ¾e v blÃ­zkÃ© budoucnosti projde zmÄ›nami. ProsÃ­me vÃ¡s o trpÄ›livost.</value>
+    <value>Průvodce sledováním je v současné době k dispozici pouze v angličtině, protože v blízké budoucnosti projde změnami. Prosíme vás o trpělivost.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>Toto okno mÅ¯Å¾ete kdykoli zavÅ™Ã­t - znovu jej otevÅ™ete tlaÄÃ­tkem â“ Jak sledovat.</value>
+    <value>Toto okno můžete kdykoli zavřít - znovu jej otevřete tlačítkem ❓ Jak sledovat.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>ÃšdrÅ¾ba</value>
+    <value>Údržba</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>VymazÃ¡nÃ­, zÃ¡lohovÃ¡nÃ­ nebo obnovenÃ­ nastavenÃ­ aplikacÃ­, profilÅ¯ a vlastnÃ­ch kreseb.</value>
+    <value>Vymazání, zálohování nebo obnovení nastavení aplikací, profilů a vlastních kreseb.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>ObnovenÃ­ dat aplikace...</value>
+    <value>Obnovení dat aplikace...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>ZÃ¡lohovÃ¡nÃ­ dat...</value>
+    <value>Zálohování dat...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>ObnovenÃ­ dat...</value>
+    <value>Obnovení dat...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>ObnovenÃ­ dat aplikace</value>
+    <value>Obnovení dat aplikace</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>Vyberte souÄÃ¡sti, kterÃ© chcete z tohoto zaÅ™Ã­zenÃ­ vymazat. VÅ¡echny vybranÃ© moÅ¾nosti budou trvale odstranÄ›ny.</value>
+    <value>Vyberte součásti, které chcete z tohoto zařízení vymazat. Všechny vybrané možnosti budou trvale odstraněny.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>AktivnÃ­ pÅ™ipojenÃ­ k serveru (odpojenÃ­)</value>
+    <value>Aktivní připojení k serveru (odpojení)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>UloÅ¾enÃ© profily serverÅ¯ (odstranÄ›nÃ­ spÃ¡rovanÃ½ch konfiguracÃ­ serverÅ¯)</value>
+    <value>Uložené profily serverů (odstranění spárovaných konfigurací serverů)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>PovÄ›Å™enÃ­ k ÃºÄtu sluÅ¾by Steam (odhlÃ¡Å¡enÃ­)</value>
+    <value>Pověření k účtu služby Steam (odhlášení)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>Konfigurace pÃ¡rovÃ¡nÃ­ zaÅ™Ã­zenÃ­ (resetovÃ¡nÃ­ registraÄnÃ­ch tokenÅ¯)</value>
+    <value>Konfigurace párování zařízení (resetování registračních tokenů)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>VlastnÃ­ zamÄ›Å™ovacÃ­ kÅ™Ã­Å¾ (konfigurace Wipe)</value>
+    <value>Vlastní zaměřovací kříž (konfigurace Wipe)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>MÃ­stnÃ­ mezipamÄ›Å¥ a vÃ½kresy (vymazÃ¡nÃ­ uloÅ¾enÃ½ch map/Äar)</value>
+    <value>Místní mezipaměť a výkresy (vymazání uložených map/čar)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>Tato akce je trvalÃ¡ a nelze ji vrÃ¡tit zpÄ›t.</value>
+    <value>Tato akce je trvalá a nelze ji vrátit zpět.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>PotvrzenÃ­ resetovÃ¡nÃ­</value>
+    <value>Potvrzení resetování</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>ZÃ¡loÅ¾nÃ­ heslo</value>
+    <value>Záložní heslo</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>ZÃ¡loÅ¾nÃ­ ochrana</value>
+    <value>Záložní ochrana</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Zadejte heslo pro zaÅ¡ifrovÃ¡nÃ­ tohoto zÃ¡loÅ¾nÃ­ho souboru. Pokud jej nechÃ¡te prÃ¡zdnÃ©, zÃ¡loha nebude zaÅ¡ifrovÃ¡na.</value>
+    <value>Zadejte heslo pro zašifrování tohoto záložního souboru. Pokud jej necháte prázdné, záloha nebude zašifrována.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>ObnovenÃ­ zÃ¡lohy</value>
+    <value>Obnovení zálohy</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>Tato zÃ¡loha je chrÃ¡nÄ›na heslem. ZadÃ¡nÃ­m hesla ji deÅ¡ifrujete:</value>
+    <value>Tato záloha je chráněna heslem. Zadáním hesla ji dešifrujete:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>Å ifrovÃ¡nÃ­</value>
+    <value>Šifrování</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>DeÅ¡ifrovÃ¡nÃ­</value>
+    <value>Dešifrování</value>
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>ZÃ¡lohovÃ¡nÃ­ dat aplikace</value>
+    <value>Zálohování dat aplikace</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[SYSTEM] ZÃ¡loha byla ÃºspÄ›Å¡nÄ› vytvoÅ™ena na adrese: {0}</value>
+    <value>[SYSTEM] Záloha byla úspěšně vytvořena na adrese: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>ZÃ¡loha byla ÃºspÄ›Å¡nÄ› vytvoÅ™ena!</value>
+    <value>Záloha byla úspěšně vytvořena!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>ZÃ¡lohovÃ¡nÃ­ dokonÄeno</value>
+    <value>Zálohování dokončeno</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Chyba zÃ¡lohovÃ¡nÃ­: {0}</value>
+    <value>[SYSTEM] Chyba zálohování: {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>Chyba pÅ™i vytvÃ¡Å™enÃ­ zÃ¡lohy: {0}</value>
+    <value>Chyba při vytváření zálohy: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>ZÃ¡lohovÃ¡nÃ­ se nezdaÅ™ilo</value>
+    <value>Zálohování se nezdařilo</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>ObnovenÃ­ dat pÅ™epÃ­Å¡e vaÅ¡e aktuÃ¡lnÃ­ profily serveru, vlastnÃ­ zamÄ›Å™ovacÃ­ kÅ™Ã­Å¾, pÅ™ekryvy kreslenÃ­ a konfigurace minimapy.
+    <value>Obnovení dat přepíše vaše aktuální profily serveru, vlastní zaměřovací kříž, překryvy kreslení a konfigurace minimapy.
 
-Jste si jisti, Å¾e chcete pokraÄovat?</value>
+Jste si jisti, že chcete pokračovat?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>PotvrzenÃ­ obnovenÃ­ zÃ¡lohy</value>
+    <value>Potvrzení obnovení zálohy</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>ObnovenÃ­ dat aplikace</value>
+    <value>Obnovení dat aplikace</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>Data aplikace byla ÃºspÄ›Å¡nÄ› obnovena!</value>
+    <value>Data aplikace byla úspěšně obnovena!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>Obnova dokonÄena</value>
+    <value>Obnova dokončena</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Chyba pÅ™i obnovÄ›: Chyba: ZadÃ¡no neplatnÃ© heslo.</value>
+    <value>[SYSTEM] Chyba při obnově: Chyba: Zadáno neplatné heslo.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>DeÅ¡ifrovÃ¡nÃ­ se nezdaÅ™ilo. NeplatnÃ© heslo nebo poÅ¡kozenÃ½ soubor zÃ¡lohy.</value>
+    <value>Dešifrování se nezdařilo. Neplatné heslo nebo poškozený soubor zálohy.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>ObnovenÃ­ se nezdaÅ™ilo</value>
+    <value>Obnovení se nezdařilo</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[SYSTEM] Chyba obnovenÃ­: {0}</value>
+    <value>[SYSTEM] Chyba obnovení: {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>Chyba pÅ™i obnovenÃ­ zÃ¡lohy: {0}</value>
+    <value>Chyba při obnovení zálohy: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>NesprÃ¡vnÃ½ formÃ¡t souboru zÃ¡lohy nebo chybÄ›jÃ­cÃ­ podpis.</value>
+    <value>Nesprávný formát souboru zálohy nebo chybějící podpis.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] ZahÃ¡jenÃ­ operace selektivnÃ­ho resetu...</value>
+    <value>[WIPE] Zahájení operace selektivního resetu...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[WIPE] OdpojenÃ­ aktivnÃ­ho pÅ™ipojenÃ­ k serveru...</value>
+    <value>[WIPE] Odpojení aktivního připojení k serveru...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] ObnovenÃ­ spojenÃ­ dokonÄeno.</value>
+    <value>[WIPE] Obnovení spojení dokončeno.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] VymazÃ¡nÃ­ uloÅ¾enÃ½ch profilÅ¯ serveru...</value>
+    <value>[WIPE] Vymazání uložených profilů serveru...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[WIPE] UloÅ¾enÃ© profily serveru byly vymazÃ¡ny.</value>
+    <value>[WIPE] Uložené profily serveru byly vymazány.</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[WIPE] OdstranÄ›nÃ­ povÄ›Å™enÃ­ k ÃºÄtu sluÅ¾by Steam...</value>
+    <value>[WIPE] Odstranění pověření k účtu služby Steam...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[WIPE] PovÄ›Å™enÃ­ sluÅ¾by Steam vymazÃ¡na.</value>
+    <value>[WIPE] Pověření služby Steam vymazána.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[WIPE] Konfigurace pÃ¡rovÃ¡nÃ­ zaÅ™Ã­zenÃ­...</value>
+    <value>[WIPE] Konfigurace párování zařízení...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[WIPE] Konfigurace pÃ¡rovÃ¡nÃ­ zaÅ™Ã­zenÃ­ odstranÄ›na.</value>
+    <value>[WIPE] Konfigurace párování zařízení odstraněna.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[WIPE] VymazÃ¡nÃ­ vlastnÃ­ho zamÄ›Å™ovacÃ­ho kÅ™Ã­Å¾e...</value>
+    <value>[WIPE] Vymazání vlastního zaměřovacího kříže...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] Chyba pÅ™i vymazÃ¡nÃ­ vlastnÃ­ho zamÄ›Å™ovacÃ­ho kÅ™Ã­Å¾e: {0}</value>
+    <value>[WIPE] Chyba při vymazání vlastního zaměřovacího kříže: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[WIPE] VymazÃ¡nÃ­ vlastnÃ­ho kÅ™Ã­Å¾e.</value>
+    <value>[WIPE] Vymazání vlastního kříže.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] VymazÃ¡nÃ­ souborÅ¯ mÃ­stnÃ­ mezipamÄ›ti a pÅ™ekryvnÃ½ch vÃ½kresÅ¯...</value>
+    <value>[WIPE] Vymazání souborů místní mezipaměti a překryvných výkresů...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] Chyba pÅ™i vymazÃ¡nÃ­ sloÅ¾ky mezipamÄ›ti: {0}</value>
+    <value>[WIPE] Chyba při vymazání složky mezipaměti: {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[WIPE] SloÅ¾ky mezipamÄ›ti vymazÃ¡ny.</value>
+    <value>[WIPE] Složky mezipaměti vymazány.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] OpÄ›tovnÃ¡ registrace posluchaÄe a povÄ›Å™enÃ­ FCM...</value>
+    <value>[WIPE] Opětovná registrace posluchače a pověření FCM...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] Operace selektivnÃ­ho resetu byla ÃºspÄ›Å¡nÄ› dokonÄena.</value>
+    <value>[WIPE] Operace selektivního resetu byla úspěšně dokončena.</value>
   </data>
-  <data name="DeleteDeathMarker" xml:space="preserve">
+<data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-  <data name="WipeDeathMarkers" xml:space="preserve">
+<data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-  <data name="Accept" xml:space="preserve">
+<data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-  <data name="RenameDeathMarker" xml:space="preserve">
+<data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-  <data name="PlayerDirectionArrow" xml:space="preserve">
-  <value>SmÄ›r</value>
+<data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>Směr</value>
 </data>
-  <data name="Profile" xml:space="preserve">
+<data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="Death" xml:space="preserve">
+<data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-  <data name="Markers" xml:space="preserve">
+<data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1822,54 +1822,34 @@ Jste si jisti, Å¾e chcete pokraÄovat?</value>
     <value>VYPNUTO</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: pÅ™epnuto na {1} (spustil {2})</value>
+    <value>[Hotkey] {0}: přepnuto na {1} (spustil {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>Vyhledejte a vyberte ikonu pÅ™edmÄ›tu pro toto zaÅ™Ã­zenÃ­.</value>
+    <value>Vyhledejte a vyberte ikonu předmětu pro toto zařízení.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>ZmÄ›nit ikonu zaÅ™Ã­zenÃ­</value>
+    <value>Změnit ikonu zařízení</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>Vyhledejte a vyberte ikonu pÅ™edmÄ›tu pro toto pravidlo.</value>
+    <value>Vyhledejte a vyberte ikonu předmětu pro toto pravidlo.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
-    <value>ZmÄ›nit ikonu pravidla</value>
+    <value>Změnit ikonu pravidla</value>
   </data>
   <data name="ResetToDefaultIcon" xml:space="preserve">
-    <value>Obnovit vÃ½chozÃ­ ikonu</value>
+    <value>Obnovit výchozí ikonu</value>
   </data>
   <data name="Rule" xml:space="preserve">
     <value>Pravidlo</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>Hledat ikony (napÅ™. vÄ›Å¾, pÅ™epÃ­naÄ)...</value>
+    <value>Hledat ikony (např. věž, přepínač)...</value>
   </data>
+
   <data name="NotificationRetentionDays" xml:space="preserve">
-    <value>{0} dnÃ­</value>
-  </data>
-  <data name="Update700Desc1" xml:space="preserve">
-    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
-  </data>
-  <data name="Delete3DMapDataTooltip" xml:space="preserve">
-    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
-  </data>
-  <data name="Delete3DMapData" xml:space="preserve">
-    <value>Delete all 3D Map Data</value>
-  </data>
-  <data name="Update700Title" xml:space="preserve">
-    <value>Rust+ Desktop v7.0.0 Update</value>
-  </data>
-  <data name="Update700Desc3" xml:space="preserve">
-    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
-  </data>
-  <data name="ThreeDMapSectionTitle" xml:space="preserve">
-    <value>3D Map</value>
-  </data>
-  <data name="Update700Desc2" xml:space="preserve">
-    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
-  </data>
-  <data name="Update700DontShowAgain" xml:space="preserve">
-    <value>Don't show this again</value>
+    <value>{0} dní</value>
   </data>
 </root>
+
+
+

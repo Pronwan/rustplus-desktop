@@ -58,1214 +58,1214 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>RUST+ æ¡Œé¢</value>
+    <value>RUST+ 桌面</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Steamè´¦æˆ·</value>
+    <value>Steam账户</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>æœªç™»å½•</value>
+    <value>未登录</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>æ£€æŸ¥æ›´æ–°</value>
+    <value>检查更新</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>æ­£åœ¨ä¸‹è½½...</value>
+    <value>正在下载...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>åŠ å…¥Discord</value>
+    <value>加入Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>è¡¥ä¸è¯´æ˜Ž</value>
+    <value>补丁说明</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>è®¾ç½®</value>
+    <value>设置</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>é…å¯¹æœåŠ¡å™¨</value>
+    <value>配对服务器</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>å°šæœªé…å¯¹æœåŠ¡å™¨</value>
+    <value>尚未配对服务器</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>é…å¯¹ç®¡ç†</value>
+    <value>配对管理</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
-    <value>é…å¯¹çŠ¶æ€:ç©ºé—²</value>
+    <value>配对状态:空闲</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>å³é”®ç‚¹å‡»æŸ¥çœ‹é€‰é¡¹</value>
+    <value>右键点击查看选项</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>è·Ÿè¸ªå·²å¯ç”¨</value>
+    <value>跟踪已启用</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>ä¸Šæ¬¡èŽ·å–</value>
+    <value>上次获取</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>æåŠ©</value>
+    <value>捐助</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>æ”¯æŒå¼€å‘è€…</value>
+    <value>支持开发者</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>é‡ç½®</value>
+    <value>重置</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>é‡ç½® WebSocket è¿žæŽ¥</value>
+    <value>重置 WebSocket 连接</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>çŽ©å®¶ï¼š</value>
+    <value>玩家：</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>æ˜¾ç¤ºåœ¨çº¿çŽ©å®¶æ ‡ç­¾</value>
+    <value>显示在线玩家标签</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>é˜Ÿåˆ—ï¼š</value>
+    <value>队列：</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>è®¾å¤‡</value>
+    <value>设备</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>çƒ­é”®</value>
+    <value>热键</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>ä»Žå›¢é˜Ÿæˆå‘˜å¯¼å…¥è®¾å¤‡</value>
+    <value>从团队成员导入设备</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>å¯¼å‡ºè®¾å¤‡ç»™é˜Ÿå‹</value>
+    <value>导出设备给队友</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>åˆ·æ–°</value>
+    <value>刷新</value>
   </data>
   <data name="Decline" xml:space="preserve">
-    <value>ä¸‹é™</value>
+    <value>下降</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>ä¸Šä¼ åŒæ„è¯´æ˜Ž</value>
+    <value>上传同意说明</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>ç‚¹å‡» "æŽ¥å— "åŽï¼Œè¯¥æœåŠ¡å™¨çš„æ™ºèƒ½è®¾å¤‡ï¼ˆå¯èƒ½è¿˜æœ‰åœ°å›¾å›¾çº¸ï¼‰å°†ä¸Šä¼ åˆ°åˆ›å»ºè€…çš„æœåŠ¡å™¨ã€‚è¿™æ ·é˜Ÿå‹å°±å¯ä»¥ä¸‹è½½å¹¶åŒæ­¥å®ƒä»¬ã€‚åªæœ‰æ‚¨çš„ Steam ID æ‰ä¼šè¢«ä¼ é€ä»¥è¯†åˆ«é˜Ÿå‹ã€‚åªæœ‰èŽ·å¾—å·¥å…·æŸœæŽˆæƒçš„çŽ©å®¶æ‰èƒ½æŽ§åˆ¶è¿™äº›è®¾å¤‡ã€‚
+    <value>点击 "接受 "后，该服务器的智能设备（可能还有地图图纸）将上传到创建者的服务器。这样队友就可以下载并同步它们。只有您的 Steam ID 才会被传送以识别队友。只有获得工具柜授权的玩家才能控制这些设备。
 
-æ³¨æ„ï¼šè¿™ç§ä¼ è¾“æ–¹å¼å°†åœ¨æœªæ¥è¿›è¡Œä¼˜åŒ–ã€‚å¦‚æžœé˜Ÿå‹æ— æ³•ä¸‹è½½æ•°æ®ï¼Œè¯·å°è¯•æ¸…é™¤åœ°å›¾å›¾çº¸å¹¶é‡æ–°ä¸Šä¼ ã€‚</value>
+注意：这种传输方式将在未来进行优化。如果队友无法下载数据，请尝试清除地图图纸并重新上传。</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>åˆ é™¤</value>
+    <value>删除</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>æ‚¨åªèƒ½åˆ é™¤ç¼ºå¤±çš„è®¾å¤‡</value>
+    <value>您只能删除缺失的设备</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>é‡å‘½åè®¾å¤‡</value>
+    <value>重命名设备</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>åœ¨çº¿ç”¨æˆ·</value>
+    <value>在线用户</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>å…³é—­</value>
+    <value>关闭</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>è¿žæŽ¥</value>
+    <value>连接</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>å®Œå…¨è¿žæŽ¥</value>
+    <value>完全连接</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>åŠ è½½åœ°å›¾ &amp; å›¢é˜Ÿ</value>
+    <value>加载地图 &amp; 团队</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>æ–­å¼€è¿žæŽ¥</value>
+    <value>断开连接</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>æœåŠ¡å™¨è¯¦ç»†ä¿¡æ¯</value>
+    <value>服务器详细信息</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>ç›‘å¬</value>
+    <value>监听</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>åœæ­¢</value>
+    <value>停止</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>å°è¯•ä½¿ç”¨Edgeæµè§ˆå™¨é…å¯¹</value>
+    <value>尝试使用Edge浏览器配对</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>é‡ç½®é…å¯¹(åˆ é™¤é…ç½®)</value>
+    <value>重置配对(删除配置)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>é‡ç½® + ç›‘å¬(é‡æ–°é…å¯¹)</value>
+    <value>重置 + 监听(重新配对)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>ä½¿ç”¨Edgeæµè§ˆå™¨é‡ç½® + ç›‘å¬</value>
+    <value>使用Edge浏览器重置 + 监听</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>é‡æ–°é“¾æŽ¥Battlemetrics IDâ€¦</value>
+    <value>重新链接Battlemetrics ID…</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>åˆ é™¤æœåŠ¡å™¨â€¦</value>
+    <value>删除服务器…</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>è¯·ç¨ç­‰â€¦â€¦</value>
+    <value>请稍等……</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>åˆ‡æ¢æœåŠ¡å™¨åŒºåŸŸ</value>
+    <value>切换服务器区域</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>ç›´æ’­æ¨¡å¼</value>
+    <value>直播模式</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>ç¼©æ”¾ï¼š</value>
+    <value>缩放：</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>å¯ç”¨ä¸»æ’­æ¨¡å¼ (ç¼©å†™åç§°)</value>
+    <value>启用主播模式 (缩写名称)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>ç¼©å†™Steamåç§°å’ŒIDä»¥ä¿æŠ¤æµä¸­çš„éšç§ã€‚è‡ªåŠ¨éšè—æŽ§åˆ¶å°å’ŒæœåŠ¡å™¨åˆ—è¡¨ã€‚</value>
+    <value>缩写Steam名称和ID以保护流中的隐私。自动隐藏控制台和服务器列表。</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>æ²¡æœ‰å¯ç”¨çš„ä½ç½®(ç¦»çº¿æˆ–æœªç”Ÿæˆ)ã€‚</value>
+    <value>没有可用的位置(离线或未生成)。</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>ä¿å­˜ç¾¤ç»„</value>
+    <value>保存群组</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>è¯·è¾“å…¥ç»„åç§°ã€‚</value>
+    <value>请输入组名称。</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>æ¶ˆæ¯æ— æ³•å‘é€ã€‚è¯·å†è¯•ä¸€æ¬¡ã€‚(æ£€æŸ¥æ‚¨æ˜¯å¦åœ¨ä¸€ä¸ªå›¢é˜Ÿä¸­!)</value>
+    <value>消息无法发送。请再试一次。(检查您是否在一个团队中!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>é”™è¯¯ï¼š </value>
+    <value>错误： </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>åˆ†é…ç»„</value>
+    <value>分配组</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>ç¾¤ç»„è®¾ç½®ï¼š {0}</value>
+    <value>群组设置： {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>ç¾¤ç»„åç§°</value>
+    <value>群组名称</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>è¾“å…¥ç»„åç§°â€œâ€¦â€¦â€</value>
+    <value>输入组名称“……”</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>ç»„é¢œè‰²</value>
+    <value>组颜色</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>ä¿å­˜æ›´æ”¹</value>
+    <value>保存更改</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>çŽ©å®¶æ´»åŠ¨åˆ†æžå’Œé¢„æµ‹</value>
+    <value>玩家活动分析和预测</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>çŽ©å®¶</value>
+    <value>玩家</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>ä¸»æ’­æ¨¡å¼å’Œè¿·ä½ åœ°å›¾Overhaul</value>
+    <value>主播模式和迷你地图Overhaul</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>ä¸»æ’­æ¨¡å¼</value>
+    <value>主播模式</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>çŽ©å®¶æ ‡è®°ç¼©æ”¾</value>
+    <value>玩家标记缩放</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>å°åœ°å›¾</value>
+    <value>小地图</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>éœ€è¦åŠ¨ä½œï¼š</value>
+    <value>需要动作：</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>ç§»é™¤ BattleMetrics è·Ÿè¸ªâ€œï¼šâ€</value>
+    <value>移除 BattleMetrics 跟踪“：”</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>çŽ©å®¶è·Ÿè¸ªç³»ç»Ÿä¿®è¡¥</value>
+    <value>玩家跟踪系统修补</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>çŽ©å®¶è·Ÿè¸ªæœåŠ¡</value>
+    <value>玩家跟踪服务</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>æ·»åŠ çŽ©å®¶åˆ°è·Ÿè¸ªå™¨å¼€å§‹è·Ÿè¸ª</value>
+    <value>添加玩家到跟踪器开始跟踪</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>è·Ÿè¸ªå·²å¯ç”¨</value>
+    <value>跟踪已启用</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>è·Ÿè¸ªç©ºé—²</value>
+    <value>跟踪空闲</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>ç­›é€‰çŽ©å®¶â€œâ€¦â€¦â€â€¦â€¦</value>
+    <value>筛选玩家“……”……</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>è¿žæŽ¥åˆ°æœåŠ¡å™¨ä»¥åŠ è½½çŽ©å®¶åˆ—è¡¨</value>
+    <value>连接到服务器以加载玩家列表</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>æ­£åœ¨é€šè¿‡ Steam æŸ¥è¯¢èŽ·å–çŽ©å®¶â€œâ€¦â€¦â€</value>
+    <value>正在通过 Steam 查询获取玩家“……”</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>éŸ³è½¨ ID</value>
+    <value>音轨 ID</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>æ‰‹åŠ¨æ›²ç›®åç§°â€œâ€¦â€¦â€</value>
+    <value>手动曲目名称“……”</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>æ²¡æœ‰è®¾å¤‡ã€‚</value>
+    <value>没有设备。</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>æœªæ³¨å†Œä»¤ç‰Œ</value>
+    <value>未注册令牌</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>ä»¤ç‰Œåˆ°æœŸ</value>
+    <value>令牌到期</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>åœ¨ {0} å¤©åŽè¿‡æœŸ</value>
+    <value>在 {0} 天后过期</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} åˆ°æ™šä¸Š</value>
+    <value>{0} 到晚上</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} ç›´åˆ°å¤©</value>
+    <value>{0} 直到天</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>è·Ÿéšæˆ‘</value>
+    <value>跟随我</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>è·Ÿéš {0}</value>
+    <value>跟随 {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>é…å¯¹ï¼šåšæŒºä¸­â€œâ€¦â€¦â€</value>
+    <value>配对：坚挺中“……”</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>é…å¯¹ï¼šåœæ­¢</value>
+    <value>配对：停止</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>é…å¯¹ï¼šå¤±è´¥</value>
+    <value>配对：失败</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>é—¹é’Ÿå·²æ¿€æ´»ï¼</value>
+    <value>闹钟已激活！</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>æœåŠ¡å™¨</value>
+    <value>服务器</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>æ™ºèƒ½æŠ¥è­¦å™¨</value>
+    <value>智能报警器</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>æ— æ³•è¯»å–RustPlus-Link: {0}
-æ ¼å¼: rustplus://IP:PORT</value>
+    <value>无法读取RustPlus-Link: {0}
+格式: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
-    <value>é‡ç½®é…å¯¹</value>
+    <value>重置配对</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>åˆ é™¤çŽ°æœ‰é…å¯¹é…ç½®ï¼Ÿ
-ä¸‹æ¬¡å¯åŠ¨æ—¶éœ€è¦é‡æ–°é…å¯¹ã€‚</value>
+    <value>删除现有配对配置？
+下次启动时需要重新配对。</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>åˆ é™¤é…å¯¹é…ç½®å¹¶ç«‹å³é‡æ–°é…å¯¹/ç›‘å¬ï¼Ÿ</value>
+    <value>删除配对配置并立即重新配对/监听？</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>é‡ç½® + ç›‘å¬(Edge)</value>
+    <value>重置 + 监听(Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>åˆ é™¤é…å¯¹é…ç½®å¹¶ç«‹å³é‡æ–°é…å¯¹/ç›‘å¬ä½¿ç”¨è¾¹ç¼˜ï¼Ÿ</value>
+    <value>删除配对配置并立即重新配对/监听使用边缘？</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>æ— æ³•æŸ¥è¯¢æœ€æ–°ç‰ˆæœ¬ã€‚è¯·é‡è¯•æˆ–æ‰“å¼€å‘å¸ƒé¡µé¢ã€‚</value>
+    <value>无法查询最新版本。请重试或打开发布页面。</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>æ‚¨æ˜¯æœ€æ–°çš„ã€‚</value>
+    <value>您是最新的。</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>å¯ç”¨æ›´æ–°</value>
+    <value>可用更新</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>æœ‰æ–°ç‰ˆæœ¬å¯ç”¨ï¼š {0}
-æ‰“å¼€å‘å¸ƒé¡µé¢ï¼Ÿ</value>
+    <value>有新版本可用： {0}
+打开发布页面？</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>æœ‰æ–°ç‰ˆæœ¬å¯ç”¨: {0}
-çŽ°åœ¨ä¸‹è½½å¹¶å®‰è£…ï¼Ÿ</value>
+    <value>有新版本可用: {0}
+现在下载并安装？</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>ä¸‹è½½å¤±è´¥ã€‚</value>
+    <value>下载失败。</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>æ›´æ–°æ£€æŸ¥å¤±è´¥ã€‚
+    <value>更新检查失败。
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>æ²¡æœ‰è®¾å¤‡ã€‚</value>
+    <value>没有设备。</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>æŸ¥çœ‹ä¸ªäººèµ„æ–™</value>
+    <value>查看个人资料</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>æ›´æ”¹ç»„</value>
+    <value>更改组</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>é‡å‘½åï¼š</value>
+    <value>重命名：</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>ç§»é™¤è·Ÿè¸ª</value>
+    <value>移除跟踪</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>æŸ¥çœ‹</value>
+    <value>查看</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>æ›´å¤šé€‰é¡¹</value>
+    <value>更多选项</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>é‡æ–°é“¾æŽ¥æˆ˜æ–—è®¡IDâ€¦</value>
+    <value>重新链接战斗计ID…</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>åˆ é™¤æœåŠ¡å™¨â€¦</value>
+    <value>删除服务器…</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>å³é”®å•å‡»ä»¥é‡å‘½å</value>
+    <value>右键单击以重命名</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>åˆ‡æ¢è¾¹æ¡†</value>
+    <value>切换边框</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>å¼¹å‡ºçª—å£</value>
+    <value>弹出窗口</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>åº”ç”¨å†…é€šçŸ¥</value>
+    <value>应用内通知</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>éŸ³é¢‘æé†’</value>
+    <value>音频提醒</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>è‡ªå®šä¹‰éŸ³é¢‘æ–‡ä»¶...</value>
+    <value>自定义音频文件...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>é‡ç½®ä¸ºé»˜è®¤å€¼</value>
+    <value>重置为默认值</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
     <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> é¡¹ç›®, Upkeep=</value>
+    <value> 项目, Upkeep=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>æœªæ‰¾åˆ°è®¾å¤‡</value>
+    <value>未找到设备</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>é…å¯¹æ™ºèƒ½è®¾å¤‡ï¼Œåˆ‡æ¢æˆ–é—¹é’Ÿæ¥æŸ¥çœ‹å®ƒ</value>
+    <value>配对智能设备，切换或闹钟来查看它</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>å›¢é˜Ÿ</value>
+    <value>团队</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>åœ¨åœ°å›¾å±…ä¸­</value>
+    <value>在地图居中</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>åœ¨åœ°å›¾ä¸Šå…³æ³¨</value>
+    <value>在地图上关注</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>æ‰“å¼€Steamé…ç½®æ–‡ä»¶</value>
+    <value>打开Steam配置文件</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>æå‡ä¸ºç»„é•¿</value>
+    <value>提升为组长</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>ä»Žå›¢é˜Ÿä¸­è¸¢å‡º</value>
+    <value>从团队中踢出</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>é…ç½®æ–‡ä»¶æ ‡è®°</value>
+    <value>配置文件标记</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>æ­»äº¡æ ‡è®°</value>
+    <value>死亡标记</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>ç›¸æœº</value>
+    <value>相机</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>æ·»åŠ ç›¸æœº</value>
+    <value>添加相机</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>æœªæ‰¾åˆ°ç›¸æœº</value>
+    <value>未找到相机</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>é…å¯¹ç›¸æœºæ¥æŸ¥çœ‹å…¶é¢„è§ˆ</value>
+    <value>配对相机来查看其预览</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>çŽ©å®¶</value>
+    <value>玩家</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>å¦‚ä½•è·Ÿè¸ª</value>
+    <value>如何跟踪</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>äº†è§£çŽ©å®¶è·Ÿè¸ªæ˜¯å¦‚ä½•å·¥ä½œçš„</value>
+    <value>了解玩家跟踪是如何工作的</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>åœ¨çº¿</value>
+    <value>在线</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>åœ¨çº¿çŽ©å®¶</value>
+    <value>在线玩家</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>æœç´¢ BM</value>
+    <value>搜索 BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>åœ¨ BattleMetrics ä¸Šæœç´¢å½“å‰æœåŠ¡å™¨</value>
+    <value>在 BattleMetrics 上搜索当前服务器</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>å¼¹å‡º</value>
+    <value>弹出</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>åœ¨å•ç‹¬çª—å£ä¸­æ‰“å¼€çŽ©å®¶</value>
+    <value>在单独窗口中打开玩家</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>æ›²ç›®</value>
+    <value>曲目</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>æ‰‹åŠ¨æ›²ç›®åç§°æˆ– Steam ID...</value>
+    <value>手动曲目名称或 Steam ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>ç­›é€‰çŽ©å®¶...</value>
+    <value>筛选玩家...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>æ­£åœ¨åŠ è½½çŽ©å®¶...</value>
+    <value>正在加载玩家...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>å·²è·Ÿè¸ª</value>
+    <value>已跟踪</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>è·Ÿè¸ªçŽ©å®¶</value>
+    <value>跟踪玩家</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>ç®¡ç†ç»„</value>
+    <value>管理组</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>æŸ¥çœ‹å®Œæ•´åˆ†æžæŠ¥å‘Š</value>
+    <value>查看完整分析报告</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>å‡†å¤‡å¥½æŽ¢ç´¢åœ°å›¾ï¼Ÿ</value>
+    <value>准备好探索地图？</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>è¿žæŽ¥åˆ°é€‰å®šçš„æœåŠ¡å™¨ä»¥åŠ è½½å®žæ—¶Ruståœ°å›¾å’Œå›¢é˜Ÿã€‚</value>
+    <value>连接到选定的服务器以加载实时Rust地图和团队。</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>å‡†å¤‡å¥½ä¸»å®°ä¿„ç½—æ–¯å—ï¼Ÿ</value>
+    <value>准备好主宰俄罗斯吗？</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>é…å¯¹æ‚¨çš„å¸æˆ·æ¥å¼€å§‹è·Ÿè¸ªçŽ©å®¶ï¼ŒæŽ¥æ”¶åŸºæœ¬çš„çªå‡»è­¦æŠ¥ï¼Œå¹¶ç«‹å³æŽ§åˆ¶æ‚¨çš„æ™ºèƒ½è®¾å¤‡ã€‚</value>
+    <value>配对您的帐户来开始跟踪玩家，接收基本的突击警报，并立即控制您的智能设备。</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>ç™»å½•å’Œé…å¯¹å¸æˆ·</value>
+    <value>登录和配对帐户</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>éœ€è¦åœ¨æ‚¨çš„é»˜è®¤æµè§ˆå™¨ä¸­ç™»å½•Steamã€‚</value>
+    <value>需要在您的默认浏览器中登录Steam。</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>åˆ é™¤æœåŠ¡å™¨ï¼Ÿ</value>
+    <value>删除服务器？</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>æ‚¨ç¡®å®šè¦åˆ é™¤æ­¤æœåŠ¡å™¨å—ï¼Ÿæ­¤æ“ä½œæ— æ³•æ’¤æ¶ˆã€‚</value>
+    <value>您确定要删除此服务器吗？此操作无法撤消。</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>å–æ¶ˆ</value>
+    <value>取消</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>åˆ é™¤</value>
+    <value>删除</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>3ç§’åŽè‡ªåŠ¨éšè—</value>
+    <value>3秒后自动隐藏</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>MAP æ–‡ä»¶</value>
+    <value>MAP 文件</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>ç½‘æ ¼</value>
+    <value>网格</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>çºªå¿µç‰©</value>
+    <value>纪念物</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>å•†åº—ï¼š</value>
+    <value>商店：</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>èŠå¤©æé†’</value>
+    <value>聊天提醒</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>æé†’</value>
+    <value>提醒</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>é…ç½®</value>
+    <value>配置</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>é€‰æ‹©æ‰€æœ‰</value>
+    <value>选择所有</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>å–æ¶ˆå…¨é€‰</value>
+    <value>取消全选</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>ç‰©å“æ </value>
+    <value>物品栏</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>è´§è¿èˆ¹</value>
+    <value>货运船</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>ç”Ÿæˆ</value>
+    <value>生成</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>ç å¤´åœé ä¸­</value>
+    <value>码头停靠中</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>ç¦»å¼€(5ç±³è­¦å‘Š)</value>
+    <value>离开(5米警告)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>æŠµè¾¾è­¦å‘Š(åœé å‰5ç±³)</value>
+    <value>抵达警告(停靠前5米)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>å·¡æŸ¥ç›´å‡æœº</value>
+    <value>巡查直升机</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>æ—…è¡Œä¾›åº”å•†</value>
+    <value>旅行供应商</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>ç‡ƒæ²¹æœºè§¦å‘å™¨</value>
+    <value>燃油机触发器</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>æ·±æµ·äº‹ä»¶</value>
+    <value>深海事件</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>æ™ºèƒ½æé†’</value>
+    <value>智能提醒</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>åœ¨çº¿çŠ¶æ€</value>
+    <value>在线状态</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>ç¦»çº¿çŠ¶æ€</value>
+    <value>离线状态</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>è·Ÿè¸ªé€šçŸ¥</value>
+    <value>跟踪通知</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>è‡ªå·±æ­»äº¡æ•°</value>
+    <value>自己死亡数</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>å›¢é˜Ÿæ­»äº¡æ•°</value>
+    <value>团队死亡数</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>è‡ªé‡ç”Ÿ</value>
+    <value>自重生</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>å›¢é˜Ÿé‡ç”Ÿ</value>
+    <value>团队重生</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>æ–°å»ºå•†åº—</value>
+    <value>新建商店</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>å¯ç–‘å•†åº—</value>
+    <value>可疑商店</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>äº¤æ˜“æé†’</value>
+    <value>交易提醒</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>åå­—å‡†çº¿æ ·å¼</value>
+    <value>十字准线样式</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>ç»¿è‰²ç‚¹æ•°</value>
+    <value>绿色点数</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>è¿·ä½ ç»¿ç¯</value>
+    <value>迷你绿灯</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>æ‰“å¼€ Crosshair (R/G)</value>
+    <value>打开 Crosshair (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>ç»†çº¢åœ†</value>
+    <value>细红圆</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>æ–¹å½¢ + ç‚¹æ•°</value>
+    <value>方形 + 点数</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>å“çº¢è‰²æŸ“æ–™</value>
+    <value>品红色染料</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>å“çº¢è‰²æ‰“å¼€åå­—å½¢</value>
+    <value>品红色打开十字形</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>èŒƒå›´çº¿ (ticks)</value>
+    <value>范围线 (ticks)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>ç»˜åˆ¶åå­—å…‰æ ‡...</value>
+    <value>绘制十字光标...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>é€‰æ‹©ç›‘è§†å™¨</value>
+    <value>选择监视器</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>ç»˜åˆ¶å åŠ </value>
+    <value>绘制叠加</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>ç»˜åˆ¶(å³é”®ç‚¹å‡»ï¼šå¤§å°/é¢œè‰²)</value>
+    <value>绘制(右键点击：大小/颜色)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>ä½ç½®æ–‡æœ¬(å³é”®ç‚¹å‡»ï¼šé¢œè‰²/å¤§å°)</value>
+    <value>位置文本(右键点击：颜色/大小)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>ä½ç½®å›¾æ ‡(å³é”®ç‚¹å‡»ï¼šé€‰æ‹©å›¾æ ‡)</value>
+    <value>位置图标(右键点击：选择图标)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>æ“¦é™¤ (æŒ‰ä½æˆ–ç‚¹å‡»)</value>
+    <value>擦除 (按住或点击)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>åˆ é™¤è‡ªå·±çš„å åŠ </value>
+    <value>删除自己的叠加</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>ä¸Šä¼ è‡ªå·±çš„å åŠ å±‚</value>
+    <value>上传自己的叠加层</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>ç›´æŽ¥å¥—è£…å•†ä¸šæœºä¼š | è´­ä¹°è¾ƒä½Žçš„ â†’ å–å¾—å¾ˆé«˜ã€‚</value>
+    <value>直接套装商业机会 | 购买较低的 → 卖得很高。</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>è´­ä¹° X ä¸º Y</value>
+    <value>购买 X 为 Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>åˆ†æž</value>
+    <value>分析</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>æˆ‘æƒ³è¦èŽ·å–</value>
+    <value>我想要获取</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>æˆ‘å¯ä»¥ä½¿ç”¨</value>
+    <value>我可以使用</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>å›¢é˜ŸèŠå¤©</value>
+    <value>团队聊天</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>å‘é€</value>
+    <value>发送</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>FCM å‡­æ®</value>
+    <value>FCM 凭据</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>ç‚¹å‡»å³é”®é…ç½®</value>
+    <value>点击右键配置</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>é‡ç½®åœ°å›¾ç¼©æ”¾å’Œä½ç½®</value>
+    <value>重置地图缩放和位置</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
     <value>Mini</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>åå­—å…‰æ ‡å¼€/å…³ (å³å‡»é€‰é¡¹)</value>
+    <value>十字光标开/关 (右击选项)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>è·Ÿè¸ªçŽ©å®¶</value>
+    <value>跟踪玩家</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>å…³é—­æˆ˜æ–—è®¡æ•°æµè§ˆå™¨</value>
+    <value>关闭战斗计数浏览器</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>æ˜¾ç¤ºæœç´¢</value>
+    <value>显示搜索</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>å…³é—­æœç´¢</value>
+    <value>关闭搜索</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>è¯·å…ˆæ¿€æ´»å•†åº—ã€‚</value>
+    <value>请先激活商店。</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>æ¿€æ´»å•†åº—æŠ•ç¥¨</value>
+    <value>激活商店投票</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>å›¢é˜ŸèŠå¤©</value>
+    <value>团队聊天</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>å…³é—­èŠå¤©</value>
+    <value>关闭聊天</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>èŠå¤©å‘½ä»¤è®¾ç½®</value>
+    <value>聊天命令设置</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>èŠå¤©å‘½ä»¤</value>
+    <value>聊天命令</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>åŽé€€</value>
+    <value>后退</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>è½¬å‘æ–¹å¼</value>
+    <value>转发方式</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>åœ¨å¤–éƒ¨æµè§ˆå™¨æ‰“å¼€</value>
+    <value>在外部浏览器打开</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>æœç´¢ BM...</value>
+    <value>搜索 BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>æœç´¢</value>
+    <value>搜索</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>é€‰æ‹©æœåŠ¡å™¨</value>
+    <value>选择服务器</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>æ–­å¼€è¿žæŽ¥</value>
+    <value>断开连接</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>æ­£åœ¨è¿žæŽ¥...</value>
+    <value>正在连接...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
     <value>INITIALizing...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>è®¾å¤‡æ¿€æ´»</value>
+    <value>设备激活</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>å·²è¿žæŽ¥</value>
+    <value>已连接</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>æœªçŸ¥çš„</value>
+    <value>未知的</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>è¿™å¯èƒ½éœ€è¦ä¸€æ®µæ—¶é—´...</value>
+    <value>这可能需要一段时间...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>åº”ç”¨ç¨‹åºè®¾ç½®</value>
+    <value>应用程序设置</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>A. æ¦‚å†µ</value>
+    <value>A. 概况</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>ä½¿ç”¨ Windows å¯åŠ¨(æœ€å°åŒ–)</value>
+    <value>使用 Windows 启动(最小化)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>å¼€å§‹æœ€å°åŒ–(æ€»æ˜¯)</value>
+    <value>开始最小化(总是)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>å¯åŠ¨æ—¶è‡ªåŠ¨è¿žæŽ¥åˆ°æœ€åŽä¸€ä¸ªæœåŠ¡å™¨</value>
+    <value>启动时自动连接到最后一个服务器</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>è‡ªåŠ¨é‡æ–°è¿žæŽ¥åˆ°æœ€åŽä¸€ä¸ªæœåŠ¡å™¨å¹¶åŠ è½½åœ°å›¾ã€‚</value>
+    <value>自动重新连接到最后一个服务器并加载地图。</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>è¡Œä¸º</value>
+    <value>行为</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>æœ€å°åŒ–åˆ°æ‰˜ç›˜è€Œä¸æ˜¯å…³é—­</value>
+    <value>最小化到托盘而不是关闭</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>å¯ç”¨èƒŒæ™¯æ’­æ”¾å™¨è·Ÿè¸ª</value>
+    <value>启用背景播放器跟踪</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>å³ä½¿åœ¨æœ€å°åŒ–æ—¶ä¹Ÿé€šè¿‡æˆ˜æ–—è®¡è·Ÿè¸ªçŽ©å®¶ã€‚</value>
+    <value>即使在最小化时也通过战斗计跟踪玩家。</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>éšè—ç³»ç»ŸæŽ§åˆ¶å°(åŽ»é™¤)</value>
+    <value>隐藏系统控制台(去除)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>éšè—åº•éƒ¨æ—¥å¿—/æŽ§åˆ¶å°é¢æ¿ä»¥ä¿å­˜åœ°å›¾ç©ºé—´ã€‚</value>
+    <value>隐藏底部日志/控制台面板以保存地图空间。</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>åœ°å›¾è®¾ç½®</value>
+    <value>地图设置</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>è¿žæŽ¥æ—¶è‡ªåŠ¨åŠ è½½å•†åº—</value>
+    <value>连接时自动加载商店</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>è¿žæŽ¥åˆ°æœåŠ¡å™¨æ—¶è‡ªåŠ¨å¯åŠ¨æŠ•ç¥¨ç«™å’Œè­¦æŠ¥ã€‚</value>
+    <value>连接到服务器时自动启动投票站和警报。</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>ä½¿ç”¨çºªå¿µç¢‘æ–‡æœ¬æ ‡ç­¾ä»£æ›¿å›¾æ ‡</value>
+    <value>使用纪念碑文本标签代替图标</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>å¯ç”¨åŽï¼ŒRust åœ°å›¾çºªå¿µç¢‘åç§°å°†ä½¿ç”¨æ°¸ä¹…æ ‡è®°å­—ä½“æ˜¾ç¤ºä¸ºæ–‡æœ¬ï¼Œè€Œä¸æ˜¯å›¾æ ‡ã€‚</value>
+    <value>启用后，Rust 地图纪念碑名称将使用永久标记字体显示为文本，而不是图标。</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
-    <value>çºªå¿µç¢‘é£Žæ ¼ï¼š</value>
+    <value>纪念碑风格：</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>çºªå¿µç¢‘è§„æ¨¡ï¼š</value>
+    <value>纪念碑规模：</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>ä¸é€æ˜Žçºªå¿µç¢‘ï¼š</value>
+    <value>不透明纪念碑：</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
-    <value>å›¾æ ‡ by rustmaps.com</value>
+    <value>图标 by rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>åŽŸæ–‡çºªå¿µç¢‘åç§°</value>
+    <value>原文纪念碑名称</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
-    <value>è£èª‰</value>
+    <value>荣誉</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>åœ°å›¾çºªå¿µç¢‘å›¾æ ‡ç”± </value>
+    <value>地图纪念碑图标由 </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> - ç»è®¸å¯ä½¿ç”¨ã€‚</value>
+    <value> - 经许可使用。</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>æ‰€æœ‰çºªå¿µç¢‘å›¾æ ‡å’Œç›¸å…³è‰ºæœ¯å“å‡å±ž rustmaps.com æ‰€æœ‰ã€‚æ„Ÿè°¢æ‚¨å¯¹ Rust ç¤¾åŒºçš„æ”¯æŒï¼</value>
+    <value>所有纪念碑图标和相关艺术品均属 rustmaps.com 所有。感谢您对 Rust 社区的支持！</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>èŠå¤©</value>
+    <value>聊天</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>ä¿®æ”¹èŠå¤©æé†’</value>
+    <value>修改聊天提醒</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>åœ¨ä¸»çª—å£ç®¡ç†æ‚¨é“¾æŽ¥çš„ Steam è´¦æˆ·ã€‚</value>
+    <value>在主窗口管理您链接的 Steam 账户。</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>å…³é—­</value>
+    <value>关闭</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>INCOMING é—¹é’Ÿ</value>
+    <value>INCOMING 闹钟</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>æ“¦é™¤</value>
+    <value>擦除</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>çŽ©å®¶</value>
+    <value>玩家</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>çŽ©å®¶</value>
+    <value>玩家</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>æˆ‘æƒ³è¦GET(ä¾‹å¦‚åŽŸæ²¹)</value>
+    <value>我想要GET(例如原油)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>æˆ‘æƒ³è¦ä»˜è´¹(ä¾‹å¦‚åºŸæ–™)</value>
+    <value>我想要付费(例如废料)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>æ‚¨ç¡®å®šè¦åˆ é™¤æœåŠ¡å™¨ "{0}å—ï¼Ÿæ­¤æ“ä½œæ— æ³•æ’¤æ¶ˆã€‚</value>
+    <value>您确定要删除服务器 "{0}吗？此操作无法撤消。</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>é…å¯¹ï¼šå¼€å§‹...</value>
+    <value>配对：开始...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>æ­£åœ¨å¯åŠ¨é…å¯¹åˆ—è¡¨...</value>
+    <value>正在启动配对列表...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>å·²ç™»å½•</value>
+    <value>已登录</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>åº“å­˜</value>
+    <value>库存</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>ä»·æ ¼</value>
+    <value>价格</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>å¼€å¯</value>
+    <value>开启</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>å…³é—­</value>
+    <value>关闭</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>æ¿€æ´»</value>
+    <value>激活</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>æœªæ¿€æ´»</value>
+    <value>未激活</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>ç¾¤çµ„</value>
+    <value>群組</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+æ¡Œé¢â€”â€”å¯¼å…¥è®¾å¤‡</value>
+    <value>Rust+桌面——导入设备</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>å¯¼å…¥è®¾å¤‡</value>
+    <value>导入设备</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>é€‰æ‹©è¦å¯¼å…¥æ­¤æœåŠ¡å™¨çš„è®¾å¤‡ã€‚</value>
+    <value>选择要导入此服务器的设备。</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>æ£€æŸ¥è®¾å¤‡çŠ¶æ€</value>
+    <value>检查设备状态</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>å¯¼å…¥é€‰ä¸­çš„</value>
+    <value>导入选中的</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>BM å¿«æ·é”®</value>
+    <value>BM 快捷键</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>é…å¯¹ï¼šé…ç½®å·²åˆ é™¤</value>
+    <value>配对：配置已删除</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rust+æ¡Œé¢è·Ÿè¸ªå™¨</value>
+    <value>Rust+桌面跟踪器</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>Rust+æ¡Œé¢(tracking {0})</value>
+    <value>Rust+桌面(tracking {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>é‡å‘½åç¾¤ç»„</value>
+    <value>重命名群组</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>ç»„çš„æ–°åç§°ï¼š</value>
+    <value>组的新名称：</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>#{0}çš„æ–°åç§°ï¼š</value>
+    <value>#{0}的新名称：</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>è¾“å…¥"{0}"çš„ Battlemetrics æœåŠ¡å™¨ IDï¼š</value>
+    <value>输入"{0}"的 Battlemetrics 服务器 ID：</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>è¿½è¸ª: {0}</value>
+    <value>追踪: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>ä¸Šæ¬¡æ›´æ–°: {0}</value>
+    <value>上次更新: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>æ‰“å¼€ Rust+ æ¡Œé¢</value>
+    <value>打开 Rust+ 桌面</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>é€€å‡º</value>
+    <value>退出</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>æè¿°</value>
+    <value>描述</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>æ‘„åƒå¤´</value>
+    <value>摄像头</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>é—¹é’Ÿ</value>
+    <value>闹钟</value>
   </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifier:</value>
   </data>
   <data name="FPS" xml:space="preserve">
-    <value>FPSï¼š</value>
+    <value>FPS：</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>æ³¨æ„ï¼šæŽ¨èä½¿ç”¨2ä¸ªfpsã€‚è¾ƒé«˜çš„ FPS å¯èƒ½ä¼šå…³é—­æ‚¨ä¸ŽæœåŠ¡å™¨çš„è¿žæŽ¥</value>
+    <value>注意：推荐使用2个fps。较高的 FPS 可能会关闭您与服务器的连接</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>åƒç´ </value>
+    <value>像素</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>å½­æ–‡</value>
+    <value>彭文</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>ç›´çº¿</value>
+    <value>直线</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>æ–¹å½¢</value>
+    <value>方形</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>åœ†åœˆ</value>
+    <value>圆圈</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>åŽšåº¦ï¼š</value>
+    <value>厚度：</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>ä¸é€æ˜Žåº¦ï¼š</value>
+    <value>不透明度：</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>ä¸Šä¼  PNG</value>
+    <value>上传 PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>æ¸…ç©º</value>
+    <value>清空</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>ä¿å­˜</value>
+    <value>保存</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>å°†å…¨å±€çƒ­é”®åˆ†é…åˆ°æ™ºèƒ½å¼€å…³ã€‚å¤šä¸ªè®¾å¤‡å¯ä»¥å…±äº«ä¸€ä¸ªçƒ­é”®(å°†æŒ‰é¡ºåºå¼€å…³)ã€‚</value>
+    <value>将全局热键分配到智能开关。多个设备可以共享一个热键(将按顺序开关)。</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>è®¾å¤‡</value>
+    <value>设备</value>
   </data>
   <data name="EntityId" xml:space="preserve">
     <value>EntityId</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>çƒ­é”®</value>
+    <value>热键</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>è®¾ç½®</value>
+    <value>设置</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>å…³é—­å¹¶åœç”¨</value>
+    <value>关闭并停用</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>å…³é—­å¹¶æ¿€æ´»</value>
+    <value>关闭并激活</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Upde, Minimap &amp; Trackæ›´æ–°</value>
+    <value>Upde, Minimap &amp; Track更新</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>åŠŸèƒ½æ‘˜è¦ä¸Žè°ƒæ•´</value>
+    <value>功能摘要与调整</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>ä¸å†æ˜¾ç¤º</value>
+    <value>不再显示</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>å¤ªæ£’äº†ï¼Œè®©æˆ‘ä»¬å¼€å§‹å§ï¼</value>
+    <value>太棒了，让我们开始吧！</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>å°åœ°å›¾è®¾ç½®</value>
+    <value>小地图设置</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>å½¢çŠ¶</value>
+    <value>形状</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>çŸ©å½¢</value>
+    <value>矩形</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>é€æ˜Žåº¦: {0}%</value>
+    <value>透明度: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>å¤§å°ï¼š {0}% (SHIFT+Mousewheel)</value>
+    <value>大小： {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>æ˜¾ç¤ºæœåŠ¡å™¨æ—¶é—´</value>
+    <value>显示服务器时间</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>æœåŠ¡å™¨ä¿¡æ¯</value>
+    <value>服务器信息</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>æ— å¯ç”¨æè¿°ã€‚</value>
+    <value>无可用描述。</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>å½“å‰ç‰ˆæœ¬: {0}</value>
+    <value>当前版本: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>è¡¥ä¸ç¬”è®°å’Œç‰ˆæœ¬åŽ†å²</value>
+    <value>补丁笔记和版本历史</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>å¯ç”¨èŠå¤©å‘½ä»¤</value>
+    <value>启用聊天命令</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>å‰ç¼€ï¼š</value>
+    <value>前缀：</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>æ ‡å‡†å‘½ä»¤</value>
+    <value>标准命令</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>äººå£ï¼š</value>
+    <value>人口：</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>æ—¶é—´ï¼š</value>
+    <value>时间：</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>ä¿ƒé”€ï¼š</value>
+    <value>促销：</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>æ·±æµ·ï¼š</value>
+    <value>深海：</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>è´§è¿èˆ¹ï¼š</value>
+    <value>货运船：</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>æ²¹é›¨é‡ï¼š</value>
+    <value>油雨量：</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>å·¡æŸ¥ç›´å‡æœºï¼š</value>
+    <value>巡查直升机：</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>æ—…è¡Œé”€å”®å•†ï¼š</value>
+    <value>旅行销售商：</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>æ›´æ–°è¯¦ç»†ä¿¡æ¯ï¼š</value>
+    <value>更新详细信息：</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>å‘½ä»¤å»¶è¿Ÿï¼š</value>
+    <value>命令延迟：</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>è¯­è¨€</value>
+    <value>语言</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>é€‰æ‹©è¯­è¨€</value>
+    <value>选择语言</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>æ›´æ”¹è¯­è¨€éœ€è¦é‡æ–°å¯åŠ¨æ‰èƒ½å®Œå…¨ç”Ÿæ•ˆã€‚</value>
+    <value>更改语言需要重新启动才能完全生效。</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>æ™ºèƒ½å¼€å…³</value>
+    <value>智能开关</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
     <value>Upding (TC) Monitors</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>æœªæ‰¾åˆ°TC æ˜¾ç¤ºå™¨ã€‚</value>
+    <value>未找到TC 显示器。</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>ä¿å­˜å¹¶å…³é—­</value>
+    <value>保存并关闭</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>ç•™è¨€...</value>
+    <value>留言...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>æ­¤å¤„çš„é”™è¯¯ä¿¡æ¯</value>
+    <value>此处的错误信息</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœº</value>
+    <value>巡逻直升机</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>çŽ°å½¹å·¡é€»ç›´å‡æœº - è¿è¡Œ {0}</value>
+    <value>现役巡逻直升机 - 运行 {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>æ´»åŠ¨ä¸­æœŸè¿žæŽ¥ - ç”Ÿæˆæ—¶é—´æœªçŸ¥</value>
+    <value>活动中期连接 - 生成时间未知</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºå·²å¯åŠ¨ï¼ˆç”Ÿæˆæ—¶é—´æœªçŸ¥ï¼‰</value>
+    <value>巡逻直升机已启动（生成时间未知）</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºåœ¨æœ¬å±Šä¼šè®® {0} å‰è¢«å‡»è½</value>
+    <value>巡逻直升机在本届会议 {0} 前被击落</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Patrol Heli äºŽ {0} å‰ç¦»å¼€åœ°å›¾</value>
+    <value>Patrol Heli 于 {0} 前离开地图</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>åœé  {0} - å‡ºå‘æ—¶é—´ ~{1}</value>
+    <value>停靠 {0} - 出发时间 ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>æ¸¯æ¹¾</value>
+    <value>港湾</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>å·²åœé åœ¨è¿žæŽ¥ç‚¹ä¸Š - å‡ºå‘æ—¶é—´æœªçŸ¥</value>
+    <value>已停靠在连接点上 - 出发时间未知</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>åœé åœ¨ {0} ï¼ˆåœé æ—¶é—´å°šæœªå¾—çŸ¥ï¼‰</value>
+    <value>停靠在 {0} （停靠时间尚未得知）</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>åœ°å›¾ä¸Šçš„å‰©ä½™æ—¶é—´ï¼ˆä»Žäº§åµå¼€å§‹ï¼‰</value>
+    <value>地图上的剩余时间（从产卵开始）</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>ä¸­é€”è¿žæŽ¥ - æ—¶é—´æœªçŸ¥</value>
+    <value>中途连接 - 时间未知</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>ä¸­é€”è¿žæŽ¥ - æ—¶é—´ä¸è¯¦ï¼ˆè·¯çº¿ ~{0}m æ€»è®¡ï¼‰</value>
+    <value>中途连接 - 时间不详（路线 ~{0}m 总计）</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>è´§èˆ¹äºŽæœ¬æ—¶æ®µå‰ {0}m {1}s ç»è¿¹</value>
+    <value>货船于本时段前 {0}m {1}s 绝迹</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>æ´»è·ƒçš„æ—…è¡Œä¾›åº”å•† - ä¸º {0} å¥”è·‘</value>
+    <value>活跃的旅行供应商 - 为 {0} 奔跑</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>æ´»è·ƒçš„æ—…è¡Œä¾›åº”å•†ï¼ˆç”Ÿæˆæ—¶é—´æœªçŸ¥ï¼‰</value>
+    <value>活跃的旅行供应商（生成时间未知）</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>æ—…è¡Œå•†è´©å·²äºŽ {0} å‰å¤±æ•ˆ</value>
+    <value>旅行商贩已于 {0} 前失效</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>æ·±æµ·æ´»è·ƒåˆ†å­ - ç«žé€‰ {0}</value>
+    <value>深海活跃分子 - 竞选 {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>æ·±æµ·æ´»åŠ¨ï¼ˆäº§åµæ—¶é—´æœªçŸ¥ï¼‰</value>
+    <value>深海活动（产卵时间未知）</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>æ·±æµ·ã€‹äºŽ {0} å‰ç»“æŸæœ¬å±Šä¼šè®®</value>
+    <value>深海》于 {0} 前结束本届会议</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1286,277 +1286,277 @@
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} ç›®å‰åœ¨çº¿çš„çŽ©å®¶{1}</value>
+    <value>{0} 目前在线的玩家{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> é˜Ÿåˆ—ï¼š {0} çŽ©å®¶ã€‚</value>
+    <value> 队列： {0} 玩家。</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>å½“å‰æ¸¸æˆæ—¶é—´ï¼š {0}ã€‚</value>
+    <value>当前游戏时间： {0}。</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} æ™‹å‡ä¸ºé¢†å¯¼ã€‚</value>
+    <value>{0} 晋升为领导。</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea æ­£åœ¨è¿è¡Œï¼ç«žé€‰ {0}.</value>
+    <value>Deep Sea 正在运行！竞选 {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>æ·±æµ·ç›®å‰å¤„äºŽæ´»åŠ¨çŠ¶æ€ï¼ˆæ´»åŠ¨ä¸­æœŸè¿žæŽ¥ - äº§åµæ—¶é—´æœªçŸ¥ï¼‰ã€‚</value>
+    <value>深海目前处于活动状态（活动中期连接 - 产卵时间未知）。</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>æ·±æµ· {0} åˆ†é’Ÿå‰ç»“æŸã€‚</value>
+    <value>深海 {0} 分钟前结束。</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>æ·±æµ·äº‹ä»¶çŠ¶æ€ä¸æ˜Žï¼ˆæœ¬èŠ‚æ²¡æœ‰çœ‹åˆ°ï¼‰ã€‚</value>
+    <value>深海事件状态不明（本节没有看到）。</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>è´§èˆ¹æœªå¯ç”¨ã€‚</value>
+    <value>货船未启用。</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>è´§èˆ¹åœé åœ¨ {0}ã€‚çº¦ {1} åˆ†é’ŸåŽå‡ºå‘ã€‚</value>
+    <value>货船停靠在 {0}。约 {1} 分钟后出发。</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>è´§èˆ¹åœé åœ¨ {0} ï¼Œå‡†å¤‡å‡ºå‘ã€‚</value>
+    <value>货船停靠在 {0} ，准备出发。</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>è´§èˆ¹åœé åœ¨ {0} ï¼ˆå‡ºå‘æ—¶é—´ä¸è¯¦ï¼‰ã€‚</value>
+    <value>货船停靠在 {0} （出发时间不详）。</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>è´§èˆ¹å·²å¯åŠ¨ã€‚çº¦ {0} åˆ†é’ŸåŽå‡ºå‘ã€‚</value>
+    <value>货船已启动。约 {0} 分钟后出发。</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>è´§èˆ¹å·²å¯åŠ¨ï¼Œå‡†å¤‡å¾ˆå¿«ç¦»å¼€ã€‚</value>
+    <value>货船已启动，准备很快离开。</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>è´§èˆ¹å¤„äºŽæ´»åŠ¨çŠ¶æ€ï¼ˆè·¯ç”±æŒç»­æ—¶é—´å°šæœªå­¦ä¹ åˆ°è¯¥æœåŠ¡å™¨ï¼‰ã€‚</value>
+    <value>货船处于活动状态（路由持续时间尚未学习到该服务器）。</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>è´§èˆ¹æ¿€æ´»ï¼ˆäº§åµåŽè¿žæŽ¥ - å‰©ä½™æ—¶é—´æœªçŸ¥ï¼‰ã€‚</value>
+    <value>货船激活（产卵后连接 - 剩余时间未知）。</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>è´§èˆ¹æœªæ¿€æ´»ã€‚ {0} åˆ†é’Ÿå‰å·²è§£ä½“ã€‚</value>
+    <value>货船未激活。 {0} 分钟前已解体。</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}ï¼š {1}m {2}s ä¸­çš„æ¿æ¡ç®±</value>
+    <value>{0}： {1}m {2}s 中的板条箱</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}ï¼šä¸Šæ¬¡å‘¼å« {1}m å‰</value>
+    <value>{0}：上次呼叫 {1}m 前</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}ï¼šæœ¬å±Šä¼šè®®æœªè°ƒç”¨</value>
+    <value>{0}：本届会议未调用</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºæ­£åœ¨è¿è¡Œï¼ç«žé€‰ {0}.</value>
+    <value>巡逻直升机正在运行！竞选 {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºç›®å‰å¤„äºŽæ´»åŠ¨çŠ¶æ€ï¼ˆæ´»åŠ¨ä¸­æœŸè¿žæŽ¥ - ç”Ÿæˆæ—¶é—´æœªçŸ¥ï¼‰ã€‚</value>
+    <value>巡逻直升机目前处于活动状态（活动中期连接 - 生成时间未知）。</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºæœªæ¿€æ´»ã€‚ {0} {1} å‰ã€‚</value>
+    <value>巡逻直升机未激活。 {0} {1} 前。</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>å‡»è½</value>
+    <value>击落</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>ç¦»å¼€åœ°å›¾</value>
+    <value>离开地图</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºæ´»åŠ¨çŠ¶æ€ä¸æ˜Žï¼ˆæœ¬èŠ‚æœªè§ï¼‰ã€‚</value>
+    <value>巡逻直升机活动状态不明（本节未见）。</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Travelling Vendor æ­£åœ¨è¿è¡Œï¼ç«žé€‰ {0}.</value>
+    <value>Travelling Vendor 正在运行！竞选 {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>æ—…è¡Œå•†è´©å½“å‰å¤„äºŽæ´»åŠ¨çŠ¶æ€ï¼ˆæ´»åŠ¨ä¸­æœŸè¿žæŽ¥ - ç”Ÿæˆæ—¶é—´æœªçŸ¥ï¼‰ã€‚</value>
+    <value>旅行商贩当前处于活动状态（活动中期连接 - 生成时间未知）。</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>æ—…è¡Œä¾›åº”å•†æœªæ¿€æ´»ã€‚å·²äºŽ {0} å‰æ¶ˆäº¡ã€‚</value>
+    <value>旅行供应商未激活。已于 {0} 前消亡。</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>æ—…è¡Œä¾›åº”å•†äº‹ä»¶çŠ¶æ€æœªçŸ¥ï¼ˆæœ¬çŽ¯èŠ‚æœªè§ï¼‰ã€‚</value>
+    <value>旅行供应商事件状态未知（本环节未见）。</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>æ²¡æœ‰ä¸ºç»´æŠ¤å‘½ä»¤æ˜ å°„å·¥å…·ç®±ã€‚</value>
+    <value>没有为维护命令映射工具箱。</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>{0} TC ä¸­çš„ç»´æŠ¤ï¼šç©ºç½®æˆ–è¿‡æœŸã€‚</value>
+    <value>{0} TC 中的维护：空置或过期。</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> éœ€æ±‚/24 å°æ—¶ï¼š {0}.</value>
+    <value> 需求/24 小时： {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>{0} TC ä¸­çš„ç»´æŠ¤ï¼š {1}ã€‚</value>
+    <value>{0} TC 中的维护： {1}。</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} å¤©æ•°</value>
+    <value>{0} 天数</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} æ—¶æ•°</value>
+    <value>{0} 时数</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} åˆ†é’Ÿ</value>
+    <value>{0} 分钟</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}ï¼šç©º/å·²è¿‡æœŸ</value>
+    <value>{0}：空/已过期</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
-    <value>{0}ï¼š {1}d, {2}h</value>
+    <value>{0}： {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>ç»´æŠ¤ï¼š {0}</value>
+    <value>维护： {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>æœªæ‰¾åˆ°ç»‘å®šçš„å·¥å…·æŸœæ˜¾ç¤ºå™¨æˆ–æœªé…å¯¹ã€‚</value>
+    <value>未找到绑定的工具柜显示器或未配对。</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>æœªæ‰¾åˆ°ç»‘å®šçš„å·¥å…·æŸœç›‘è§†å™¨æˆ–æœªé…å¯¹ã€‚</value>
+    <value>未找到绑定的工具柜监视器或未配对。</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} {1}ã€‚</value>
+    <value>{0} {1}。</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>å…³äºŽ</value>
+    <value>关于</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>å…³é—­</value>
+    <value>关闭</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>æœªæ‰¾åˆ°ç»‘å®šçš„æ™ºèƒ½å¼€å…³æˆ–æœªé…å¯¹ã€‚</value>
+    <value>未找到绑定的智能开关或未配对。</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>æœ¨æ</value>
+    <value>木材</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>çŸ³æ</value>
+    <value>石材</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>é‡‘å±ž</value>
+    <value>金属</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
-    <value>æ€»éƒ¨</value>
+    <value>总部</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>å°åž‹çŸ³æ²¹é’»äº•å¹³å°</value>
+    <value>小型石油钻井平台</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>å¤§åž‹çŸ³æ²¹é’»äº•å¹³å°</value>
+    <value>大型石油钻井平台</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>å•†åº—</value>
+    <value>商店</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>è´§èˆ¹</value>
+    <value>货船</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>æ—…è¡Œä¾›åº”å•†</value>
+    <value>旅行供应商</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœº</value>
+    <value>巡逻直升机</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>çŸ³æ²¹é’»äº•å¹³å°</value>
+    <value>石油钻井平台</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>çˆ†ç‚¸</value>
+    <value>爆炸</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>å»ºç­‘å—é˜»</value>
+    <value>建筑受阻</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>æ´»åŠ¨</value>
+    <value>活动</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] å·²è§¦å‘ï¼ç®±å­åœ¨ {1} ä¸­è§£é”ã€‚</value>
+    <value>[{0}] 已触发！箱子在 {1} 中解锁。</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>è­¦æŠ¥ï¼š {0} å·²è§¦å‘ï¼</value>
+    <value>警报： {0} 已触发！</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] 10 åˆ†é’ŸåŽç®±å­è§£é”ï¼</value>
+    <value>[{0}] 10 分钟后箱子解锁！</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] 5 åˆ†é’ŸåŽç®±å­è§£é”ï¼</value>
+    <value>[{0}] 5 分钟后箱子解锁！</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>æ·±æµ·å·²å¯åŠ¨</value>
+    <value>深海已启动</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>æ–°åº— {0} [{1}]: {2}</value>
+    <value>新店 {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>å¯ç–‘å•†åº— {0} [{1}] åœ¨çº¿ {2}sï¼Œå‡ºå”® {3}</value>
+    <value>可疑商店 {0} [{1}] 在线 {2}s，出售 {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>è´§èˆ¹äº§ç”Ÿ {0}</value>
+    <value>货船产生 {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>è¿œæ´‹ (è¿‘ {0})</value>
+    <value>远洋 (近 {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>è´§èˆ¹åœé åœ¨ {0} ({1})</value>
+    <value>货船停靠在 {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>è´§èˆ¹é¢„è®¡å°†åœ¨å¤§çº¦ 5 åˆ†é’ŸåŽåœé  {0} ({1})ã€‚</value>
+    <value>货船预计将在大约 5 分钟后停靠 {0} ({1})。</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>è´§èˆ¹ 5 åˆ†é’ŸåŽä»Ž {0} å‡ºå‘ ({1})</value>
+    <value>货船 5 分钟后从 {0} 出发 ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>ç”±äºŽæœåŠ¡å™¨å»¶è¿Ÿè€Œæ£€æµ‹åˆ°å´©æºƒ - Heli ä»åœ¨åœ°å›¾ä¸Š {0}</value>
+    <value>由于服务器延迟而检测到崩溃 - Heli 仍在地图上 {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} åœ¨ {1}</value>
+    <value>{0} 在 {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>å·¡é€»ç›´å‡æœºåœ¨ {0} è¢«å‡»è½</value>
+    <value>巡逻直升机在 {0} 被击落</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>æœªçŸ¥</value>
+    <value>未知</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} ä¸Šçº¿ @ {1}</value>
+    <value>{0} 上线 @ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} ä¸‹çº¿</value>
+    <value>{0} 下线</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} æ­»äºŽ {1}</value>
+    <value>{0} 死于 {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} é‡ç”Ÿ @ {1}</value>
+    <value>{0} 重生 @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[Tracking] {0}{1} å·²ä¸Šçº¿</value>
+    <value>[Tracking] {0}{1} 已上线</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[Tracking] {0}{1} çŽ°åœ¨å¤„äºŽè„±æœºçŠ¶æ€</value>
+    <value>[Tracking] {0}{1} 现在处于脱机状态</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[è·Ÿè¸ª] {0}{1} æ›´åä¸º {2}ï¼</value>
+    <value>[跟踪] {0}{1} 更名为 {2}！</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>é”€å”®</value>
+    <value>销售</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>è´­ä¹°</value>
+    <value>购买</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>å•†åº—</value>
+    <value>商店</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
     <value>{0} [{1}] {2} x{3} {4} (Stock {5}) for {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>èŠå¤©å‘½ä»¤åˆ—è¡¨</value>
+    <value>聊天命令列表</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
-    <value>å‘½ä»¤ï¼š {0}</value>
+    <value>命令： {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>æœ¬åœ°åŒ–ã€ç”¨æˆ·ç•Œé¢çŽ°ä»£åŒ–å’Œå­˜å‚¨</value>
+    <value>本地化、用户界面现代化和存储</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
     <value>Custom Alerts</value>
@@ -1568,792 +1568,792 @@
     <value>Mini Map</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - æœ€å°åŒ–æ—¶å·¥ä½œ</value>
+    <value> - 最小化时工作</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
     <value>Shop Overhaul</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - å…¨æ–°å•†åº— UI</value>
+    <value> - 全新商店 UI</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>ç§»é™¤ BattleMetrics è·Ÿè¸ª</value>
+    <value>移除 BattleMetrics 跟踪</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>ä½ çš„åŸºåœ°å—åˆ°æ”»å‡»ï¼</value>
+    <value>你的基地受到攻击！</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>è¯·å…ˆè¿žæŽ¥æœåŠ¡å™¨ã€‚</value>
+    <value>请先连接服务器。</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>æ‚¨æ²¡æœ‰è¿žæŽ¥åˆ°ä»»ä½•æœåŠ¡å™¨ã€‚</value>
+    <value>您没有连接到任何服务器。</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>èŠå¤©åŠŸèƒ½æš‚ä¸å¯ç”¨ã€‚</value>
+    <value>聊天功能暂不可用。</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>è¯·å…ˆé€‰æ‹©æœåŠ¡å™¨ã€‚</value>
+    <value>请先选择服务器。</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
-    <value>è¿žæŽ¥</value>
+    <value>连接</value>
   </data>
   <data name="SnackbarTitleChat" xml:space="preserve">
-    <value>èŠå¤©</value>
+    <value>聊天</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>å¦‚ä½•è¿½è¸ªçƒå‘˜</value>
+    <value>如何追踪球员</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>æœ¬åœ° UDP è·Ÿè¸ª</value>
+    <value>本地 UDP 跟踪</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>è¿½è¸ªæŒ‡å—ç›®å‰åªæœ‰è‹±æ–‡ç‰ˆï¼Œå› ä¸ºåœ¨ä¸ä¹…çš„å°†æ¥ä¼šæœ‰æ”¹åŠ¨ã€‚è¯·è€å¿ƒç­‰å¾…ã€‚</value>
+    <value>追踪指南目前只有英文版，因为在不久的将来会有改动。请耐心等待。</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>æ‚¨å¯ä»¥éšæ—¶å…³é—­è¯¥çª—å£ï¼Œä¹Ÿå¯ä»¥ä½¿ç”¨ â“ å¦‚ä½•è·Ÿè¸ªæŒ‰é’®é‡æ–°æ‰“å¼€ã€‚</value>
+    <value>您可以随时关闭该窗口，也可以使用 ❓ 如何跟踪按钮重新打开。</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>ç»´æŠ¤</value>
+    <value>维护</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>æ“¦é™¤ã€å¤‡ä»½æˆ–æ¢å¤åº”ç”¨ç¨‹åºè®¾ç½®ã€é…ç½®æ–‡ä»¶å’Œè‡ªå®šä¹‰å›¾çº¸ã€‚</value>
+    <value>擦除、备份或恢复应用程序设置、配置文件和自定义图纸。</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>é‡ç½®åº”ç”¨ç¨‹åºæ•°æ®...</value>
+    <value>重置应用程序数据...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>å¤‡ä»½æ•°æ®...</value>
+    <value>备份数据...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>æ¢å¤æ•°æ®...</value>
+    <value>恢复数据...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>é‡ç½®åº”ç”¨æ•°æ®</value>
+    <value>重置应用数据</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>é€‰æ‹©è¦ä»Žè¯¥è®¾å¤‡ä¸Šæ¸…é™¤çš„ç»„ä»¶ã€‚æ‰€æœ‰é€‰ä¸­çš„é€‰é¡¹éƒ½å°†è¢«æ°¸ä¹…åˆ é™¤ã€‚</value>
+    <value>选择要从该设备上清除的组件。所有选中的选项都将被永久删除。</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>æ´»åŠ¨æœåŠ¡å™¨è¿žæŽ¥ï¼ˆæ–­å¼€ï¼‰</value>
+    <value>活动服务器连接（断开）</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>ä¿å­˜çš„æœåŠ¡å™¨é…ç½®æ–‡ä»¶ï¼ˆåˆ é™¤é…å¯¹çš„æœåŠ¡å™¨é…ç½®ï¼‰</value>
+    <value>保存的服务器配置文件（删除配对的服务器配置）</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>è’¸æ±½è´¦æˆ·å‡­æ®ï¼ˆæ³¨é”€ï¼‰</value>
+    <value>蒸汽账户凭据（注销）</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>è®¾å¤‡é…å¯¹é…ç½®ï¼ˆé‡ç½®æ³¨å†Œä»¤ç‰Œï¼‰</value>
+    <value>设备配对配置（重置注册令牌）</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>è‡ªå®šä¹‰åå­—å‡†çº¿ï¼ˆæ“¦é™¤é…ç½®ï¼‰</value>
+    <value>自定义十字准线（擦除配置）</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>æœ¬åœ°ç¼“å­˜å’Œç»˜å›¾ï¼ˆæ“¦é™¤å·²ä¿å­˜çš„åœ°å›¾/çº¿æ¡ï¼‰</value>
+    <value>本地缓存和绘图（擦除已保存的地图/线条）</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>è¯¥æ“ä½œæ˜¯æ°¸ä¹…æ€§çš„ï¼Œæ— æ³•æ’¤é”€ã€‚</value>
+    <value>该操作是永久性的，无法撤销。</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>ç¡®è®¤é‡ç½®</value>
+    <value>确认重置</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>å¤‡ä»½å¯†ç </value>
+    <value>备份密码</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>å¤‡ä»½ä¿æŠ¤</value>
+    <value>备份保护</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>è¾“å…¥å¯†ç ä»¥åŠ å¯†è¯¥å¤‡ä»½æ–‡ä»¶ã€‚å¦‚æžœç•™ç©ºï¼Œå¤‡ä»½å°†ä¸ä¼šåŠ å¯†ã€‚</value>
+    <value>输入密码以加密该备份文件。如果留空，备份将不会加密。</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>æ¢å¤å¤‡ä»½</value>
+    <value>恢复备份</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>è¯¥å¤‡ä»½å—å¯†ç ä¿æŠ¤ã€‚è¾“å…¥å¯†ç å³å¯è§£å¯†ï¼š</value>
+    <value>该备份受密码保护。输入密码即可解密：</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>åŠ å¯†</value>
+    <value>加密</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>è§£å¯†</value>
+    <value>解密</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>å¥½çš„</value>
+    <value>好的</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>å¤‡ä»½åº”ç”¨ç¨‹åºæ•°æ®</value>
+    <value>备份应用程序数据</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[ç³»ç»Ÿ] åœ¨ä»¥ä¸‹ä½ç½®æˆåŠŸåˆ›å»ºå¤‡ä»½ï¼š {0}</value>
+    <value>[系统] 在以下位置成功创建备份： {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>å¤‡ä»½åˆ›å»ºæˆåŠŸï¼</value>
+    <value>备份创建成功！</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>å¤‡ä»½å·²å®Œæˆ</value>
+    <value>备份已完成</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[SYSTEM] å¤‡ä»½é”™è¯¯ï¼š {0}</value>
+    <value>[SYSTEM] 备份错误： {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>åˆ›å»ºå¤‡ä»½æ—¶å‡ºé”™ï¼š {0}</value>
+    <value>创建备份时出错： {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>å¤‡ä»½å¤±è´¥</value>
+    <value>备份失败</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>æ¢å¤æ•°æ®å°†è¦†ç›–æ‚¨å½“å‰çš„æœåŠ¡å™¨é…ç½®æ–‡ä»¶ã€è‡ªå®šä¹‰åå­—å‡†çº¿ã€ç»˜å›¾è¦†ç›–å’Œæœ€å°åœ°å›¾é…ç½®ã€‚
+    <value>恢复数据将覆盖您当前的服务器配置文件、自定义十字准线、绘图覆盖和最小地图配置。
 
-æ‚¨ç¡®å®šè¦ç»§ç»­å—ï¼Ÿ</value>
+您确定要继续吗？</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>æ¢å¤å¤‡ä»½ç¡®è®¤</value>
+    <value>恢复备份确认</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>æ¢å¤åº”ç”¨ç¨‹åºæ•°æ®</value>
+    <value>恢复应用程序数据</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>åº”ç”¨ç¨‹åºæ•°æ®å·²æˆåŠŸæ¢å¤ï¼</value>
+    <value>应用程序数据已成功恢复！</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>æ¢å¤å·²å®Œæˆ</value>
+    <value>恢复已完成</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[ç³»ç»Ÿ] è¿˜åŽŸé”™è¯¯ï¼šæä¾›çš„å¯†ç æ— æ•ˆã€‚</value>
+    <value>[系统] 还原错误：提供的密码无效。</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>è§£å¯†å¤±è´¥ã€‚å¯†ç æ— æ•ˆæˆ–å¤‡ä»½æ–‡ä»¶æŸåã€‚</value>
+    <value>解密失败。密码无效或备份文件损坏。</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>æ¢å¤å¤±è´¥</value>
+    <value>恢复失败</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[SYSTEM] æ¢å¤é”™è¯¯ï¼š {0}</value>
+    <value>[SYSTEM] 恢复错误： {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>æ¢å¤å¤‡ä»½å‡ºé”™ï¼š {0}</value>
+    <value>恢复备份出错： {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>å¤‡ä»½æ–‡ä»¶æ ¼å¼æ— æ•ˆæˆ–ç¼ºå°‘ç­¾åã€‚</value>
+    <value>备份文件格式无效或缺少签名。</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] å¼€å§‹é€‰æ‹©æ€§å¤ä½æ“ä½œ...</value>
+    <value>[WIPE] 开始选择性复位操作...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[WIPE]æ–­å¼€æ´»åŠ¨æœåŠ¡å™¨è¿žæŽ¥...</value>
+    <value>[WIPE]断开活动服务器连接...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] è¿žæŽ¥é‡ç½®å®Œæˆã€‚</value>
+    <value>[WIPE] 连接重置完成。</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] æ¸…é™¤ä¿å­˜çš„æœåŠ¡å™¨é…ç½®æ–‡ä»¶...</value>
+    <value>[WIPE] 清除保存的服务器配置文件...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[æ¸…é™¤] å·²ä¿å­˜çš„æœåŠ¡å™¨é…ç½®æ–‡ä»¶ã€‚</value>
+    <value>[清除] 已保存的服务器配置文件。</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[WIPE]åˆ é™¤ Steam å¸æˆ·å‡­è¯...</value>
+    <value>[WIPE]删除 Steam 帐户凭证...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[æ¸…é™¤] è’¸æ±½è¯ä¹¦å·²æ¸…é™¤ã€‚</value>
+    <value>[清除] 蒸汽证书已清除。</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[WIPE] æ“¦é™¤è®¾å¤‡é…å¯¹é…ç½®...</value>
+    <value>[WIPE] 擦除设备配对配置...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[WIPE] è®¾å¤‡é…å¯¹é…ç½®å·²åˆ é™¤ã€‚</value>
+    <value>[WIPE] 设备配对配置已删除。</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[æ“¦é™¤] æ“¦é™¤è‡ªå®šä¹‰åå­—å‡†çº¿...</value>
+    <value>[擦除] 擦除自定义十字准线...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] æ¸…é™¤è‡ªå®šä¹‰åå­—å‡†çº¿æ—¶å‡ºé”™ï¼š {0}</value>
+    <value>[WIPE] 清除自定义十字准线时出错： {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[æ¸…é™¤] è‡ªå®šä¹‰åå­—å‡†çº¿å·²æ¸…é™¤ã€‚</value>
+    <value>[清除] 自定义十字准线已清除。</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] æ¸…é™¤æœ¬åœ°ç¼“å­˜æ–‡ä»¶å’Œå åŠ ç»˜å›¾...</value>
+    <value>[WIPE] 清除本地缓存文件和叠加绘图...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] æ¸…ç†ç¼“å­˜æ–‡ä»¶å¤¹å‡ºé”™ï¼š {0}</value>
+    <value>[WIPE] 清理缓存文件夹出错： {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[WIPE] å·²æ¸…é™¤ç¼“å­˜æ–‡ä»¶å¤¹ã€‚</value>
+    <value>[WIPE] 已清除缓存文件夹。</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] é‡æ–°æ³¨å†Œç›‘å¬å™¨å’Œ FCM å‡­æ®...</value>
+    <value>[WIPE] 重新注册监听器和 FCM 凭据...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] é€‰æ‹©æ€§é‡ç½®æ“ä½œæˆåŠŸå®Œæˆã€‚</value>
+    <value>[WIPE] 选择性重置操作成功完成。</value>
   </data>
   <data name="KeepActive" xml:space="preserve">
-    <value>ä¸ï¼Œä¿æŒå¼€å¯</value>
+    <value>不，保持开启</value>
   </data>
   <data name="LoopAudioPrompt" xml:space="preserve">
-    <value>æ‚¨è¦å…³é—­éŸ³é¢‘è­¦æŠ¥å¾ªçŽ¯å—ï¼Ÿ</value>
+    <value>您要关闭音频警报循环吗？</value>
   </data>
   <data name="LoopAudioTillPopupClose" xml:space="preserve">
-    <value>å¾ªçŽ¯æ’­æ”¾éŸ³é¢‘ç›´åˆ°å¼¹çª—å…³é—­</value>
+    <value>循环播放音频直到弹窗关闭</value>
   </data>
   <data name="LoopAudioGlobalPrompt" xml:space="preserve">
-    <value>è¿™éœ€è¦å…³é—­æ‰€æœ‰æ™ºèƒ½è­¦æŠ¥çš„éŸ³é¢‘è­¦æŠ¥å¾ªçŽ¯ã€‚</value>
+    <value>这需要关闭所有智能警报的音频警报循环。</value>
   </data>
   <data name="TurnOffNow" xml:space="preserve">
-    <value>çŽ°åœ¨å…³é—­</value>
+    <value>现在关闭</value>
   </data>
   <data name="MigrationAlertCheckDesc" xml:space="preserve">
-    <value>è¯·æ£€æŸ¥è‡ªå®šä¹‰è®¡æ—¶å™¨çš„Chat-Alertè®¾ç½®ã€‚æ­»äº¡æ ‡è®°çŽ°åœ¨å°†å§‹ç»ˆä¿å­˜åœ¨æœ¬åœ°ã€‚è¿·ä½ åœ°å›¾çŽ°åœ¨åœ¨æœ€å°åŒ–æ—¶ä¹Ÿä¼šæ›´æ–°ã€‚</value>
+    <value>请检查自定义计时器的Chat-Alert设置。死亡标记现在将始终保存在本地。迷你地图现在在最小化时也会更新。</value>
   </data>
   <data name="MigrationAlertCheckTitle" xml:space="preserve">
-    <value>è¯·æ³¨æ„</value>
+    <value>请注意</value>
   </data>
   <data name="FeatureAudioLoopTitle" xml:space="preserve">
     <value>Death Marker</value>
   </data>
   <data name="FeatureAudioLoopDesc" xml:space="preserve">
-    <value> - å›¢é˜Ÿè‡ªå®šä¹‰æ ‡è®°</value>
+    <value> - 团队自定义标记</value>
   </data>
   <data name="DeleteDeathMarker" xml:space="preserve">
-    <value>æ¸…é™¤æ­»äº¡æ ‡è®°</value>
+    <value>清除死亡标记</value>
   </data>
   <data name="RenameDeathMarker" xml:space="preserve">
-    <value>é‡å‘½åæ­»äº¡æ ‡è®°</value>
+    <value>重命名死亡标记</value>
   </data>
   <data name="PlayerDirectionArrow" xml:space="preserve">
-    <value>æ–¹å‘</value>
+    <value>方向</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>ä¸ªäººèµ„æ–™</value>
+    <value>个人资料</value>
   </data>
   <data name="Death" xml:space="preserve">
-    <value>æ­»äº¡</value>
+    <value>死亡</value>
   </data>
   <data name="Markers" xml:space="preserve">
-    <value>æ ‡è®°:</value>
+    <value>标记:</value>
   </data>
   <data name="WipeDeathMarkers" xml:space="preserve">
-    <value>æ¸…é™¤æ‰€æœ‰</value>
+    <value>清除所有</value>
   </data>
   <data name="Accept" xml:space="preserve">
-    <value>æŽ¥å—</value>
+    <value>接受</value>
   </data>
   <data name="CustomTimerCategory" xml:space="preserve">
-    <value>è‡ªå®šä¹‰è®¡æ—¶å™¨</value>
+    <value>自定义计时器</value>
   </data>
   <data name="TimerCreated" xml:space="preserve">
     <value>Timer {0} created for {1}h {2}m {3}s</value>
   </data>
   <data name="HoverCustomTimer" xml:space="preserve">
-    <value>è‡ªå®šä¹‰è®¡æ—¶å™¨</value>
+    <value>自定义计时器</value>
   </data>
   <data name="ActiveTimersCategory" xml:space="preserve">
-    <value>æ´»åŠ¨è®¡æ—¶å™¨</value>
+    <value>活动计时器</value>
   </data>
   <data name="AddTimer" xml:space="preserve">
-    <value>æ·»åŠ è®¡æ—¶å™¨</value>
+    <value>添加计时器</value>
   </data>
   <data name="TimerName" xml:space="preserve">
-    <value>åç§°</value>
+    <value>名称</value>
   </data>
   <data name="TimerCreateCmdLabel" xml:space="preserve">
-    <value>å‘½ä»¤:</value>
+    <value>命令:</value>
   </data>
   <data name="CheckTimerStatusInfo" xml:space="preserve">
-    <value>ä½¿ç”¨ä¸‹æ–¹å‘½ä»¤æŸ¥çœ‹çŠ¶æ€ã€‚</value>
+    <value>使用下方命令查看状态。</value>
   </data>
   <data name="ChatCmdTimerMaxReached" xml:space="preserve">
-    <value>æœ€å¤šå…è®¸ 5 ä¸ªè®¡æ—¶å™¨ã€‚</value>
+    <value>最多允许 5 个计时器。</value>
   </data>
   <data name="TimerDurationRequired" xml:space="preserve">
-    <value>è¯·è¾“å…¥è®¡æ—¶å™¨æŒç»­æ—¶é—´ï¼ˆå°æ—¶ã€åˆ†é’Ÿæˆ–ç§’ï¼‰ã€‚</value>
+    <value>请输入计时器持续时间（小时、分钟或秒）。</value>
   </data>
   <data name="TimerNameMustStartWithLetter" xml:space="preserve">
-    <value>è®¡æ—¶å™¨åç§°å¿…é¡»ä»¥å­—æ¯å¼€å¤´ã€‚</value>
+    <value>计时器名称必须以字母开头。</value>
   </data>
   <data name="FeatureTimerAlerts" xml:space="preserve">
     <value>Timer Alerts</value>
   </data>
   <data name="FeatureTimerAlertsDesc" xml:space="preserve">
-    <value> - ç»“æŸå‰ 60,30,10,3 åˆ†é’Ÿ</value>
+    <value> - 结束前 60,30,10,3 分钟</value>
   </data>
   <data name="TranslationConsentTitle" xml:space="preserve">
-    <value>ç¿»è¯‘åŒæ„</value>
+    <value>翻译同意</value>
   </data>
   <data name="TranslationConsentText" xml:space="preserve">
-    <value>ç‚¹å‡»æŽ¥å—ï¼Œè¡¥ä¸è¯´æ˜Žçš„å†…å®¹å°†è¢«å‘é€åˆ°Google Translateï¼ˆç¾Žå›½ï¼‰è¿›è¡Œç¿»è¯‘ã€‚æ‚¨æ˜¯å¦æŽ¥å—ï¼Ÿ</value>
+    <value>点击接受，补丁说明的内容将被发送到Google Translate（美国）进行翻译。您是否接受？</value>
   </data>
   <data name="TranslationApiLinkText" xml:space="preserve">
-    <value>Google Translate API æ¡æ¬¾</value>
+    <value>Google Translate API 条款</value>
   </data>
   <data name="TranslateViaGoogle" xml:space="preserve">
-    <value>é€šè¿‡ Google ç¿»è¯‘</value>
+    <value>通过 Google 翻译</value>
   </data>
   <data name="PremiumFeatures" xml:space="preserve">
-    <value>Supporter ä¸“å±žç¦åˆ©</value>
+    <value>Supporter 专属福利</value>
   </data>
   <data name="PremiumInfoDevicesDesc" xml:space="preserve">
-    <value>æœ¬åœ°æˆ–å¯¼å…¥ä¸­æœ‰è¶…è¿‡ 10 ä¸ªè®¾å¤‡ã€‚å…è´¹äº‘åŒæ­¥ä¼šä¿ç•™å‰ 10 ä¸ªè®¾å¤‡ï¼›Supporter å¯åŒæ­¥æ— é™æ•°é‡çš„è®¾å¤‡ã€‚</value>
+    <value>本地或导入中有超过 10 个设备。免费云同步会保留前 10 个设备；Supporter 可同步无限数量的设备。</value>
   </data>
   <data name="PremiumInfoMapDesc" xml:space="preserve">
-    <value>æ­¤åœ°å›¾è¦†ç›–å·²è¶…è¿‡å…è´¹äº‘åŒæ­¥é™åˆ¶ã€‚Supporter å¯èŽ·å¾— 10 å€æ›´é«˜çš„è¦†ç›–å¤§å°ã€æ›´å¤šåœ°å›¾æ ‡è®°å’Œæ›´å¤šæˆªå›¾ã€‚</value>
+    <value>此地图覆盖已超过免费云同步限制。Supporter 可获得 10 倍更高的覆盖大小、更多地图标记和更多截图。</value>
   </data>
   <data name="PrivacyDisclaimerTitle" xml:space="preserve">
-    <value>éšç§ä¸Žäº‘åŒæ­¥</value>
+    <value>隐私与云同步</value>
   </data>
   <data name="PrivacyDisclaimerDesc" xml:space="preserve">
-    <value>è¦å¯ç”¨åœ°å›¾è¦†ç›–å’Œæ™ºèƒ½è®¾å¤‡çš„å®žæ—¶åŒæ­¥ï¼Œå¿…é¡»å°†æ•°æ®å‘é€åˆ°æˆ‘ä»¬å®‰å…¨çš„äº‘ä¸­ã€‚æˆ‘ä»¬è¿˜ä¼šæ”¶é›†åŒ¿åçš„ä½¿ç”¨é¥æµ‹æ•°æ®ã€‚</value>
+    <value>要启用地图覆盖和智能设备的实时同步，必须将数据发送到我们安全的云中。我们还会收集匿名的使用遥测数据。</value>
   </data>
   <data name="AcceptCloud" xml:space="preserve">
-    <value>æŽ¥å—å¹¶å¯ç”¨äº‘</value>
+    <value>接受并启用云</value>
   </data>
   <data name="DeclineCloud" xml:space="preserve">
-    <value>æ‹’ç»äº‘</value>
+    <value>拒绝云</value>
   </data>
   <data name="ConnectDiscord" xml:space="preserve">
-    <value>è¿žæŽ¥ Discord ä»¥èŽ·å¾—æ”¯æŒè€…æƒç›Š</value>
+    <value>连接 Discord 以获得支持者权益</value>
   </data>
   <data name="DisconnectDiscord" xml:space="preserve">
-    <value>æ–­å¼€ Discord è¿žæŽ¥</value>
+    <value>断开 Discord 连接</value>
   </data>
   <data name="DiscordConnecting" xml:space="preserve">
-    <value>æ­£åœ¨è¿žæŽ¥...</value>
+    <value>正在连接...</value>
   </data>
   <data name="CloudSync" xml:space="preserve">
-    <value>äº‘åŒæ­¥å’Œå®žæ—¶ä¸Šä¼ </value>
+    <value>云同步和实时上传</value>
   </data>
   <data name="CloudSyncDesc" xml:space="preserve">
-    <value>åœ¨äº‘ä¸­å®‰å…¨åœ°å®žæ—¶ä¸Šä¼ å’ŒåŒæ­¥æ™ºèƒ½è®¾å¤‡åŠåœ°å›¾è¦†ç›–ã€‚</value>
+    <value>在云中安全地实时上传和同步智能设备及地图覆盖。</value>
   </data>
   <data name="SupporterSettingsHeader" xml:space="preserve">
-    <value>æ”¯æŒè€…è®¾ç½®</value>
+    <value>支持者设置</value>
   </data>
   <data name="SupporterDescription" xml:space="preserve">
-    <value>è¿™äº›åŠŸèƒ½ä¸“ä¾›æˆ‘ä»¬çš„æ”¯æŒè€… and å¼€å‘äººå‘˜é€šè¿‡ Discord ç™»å½•ä½¿ç”¨ã€‚</value>
+    <value>这些功能专供我们的支持者 and 开发人员通过 Discord 登录使用。</value>
   </data>
   <data name="AdvancedDiscordIntegration" xml:space="preserve">
-    <value>é«˜çº§ Discord é›†æˆï¼ˆWebhookã€éŸ³é¢‘è­¦æŠ¥ï¼‰</value>
+    <value>高级 Discord 集成（Webhook、音频警报）</value>
   </data>
   <data name="TelegramIntegration" xml:space="preserve">
-    <value>Telegram è­¦æŠ¥é›†æˆ</value>
+    <value>Telegram 警报集成</value>
   </data>
   <data name="PremiumStopSync">
-    <value>åœæ­¢åŒæ­¥</value>
+    <value>停止同步</value>
   </data>
   <data name="PremiumStayFree">
-    <value>ç»§ç»­å…è´¹</value>
+    <value>继续免费</value>
   </data>
   <data name="PremiumSupportNow">
-    <value>ç«‹å³æ”¯æŒ</value>
+    <value>立即支持</value>
   </data>
   <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
-    <value>åœ°å›¾è¦†ç›–å·²åŒæ­¥ {0} KB {1}</value>
+    <value>地图覆盖已同步 {0} KB {1}</value>
   </data>
   <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
-    <value>å…è´¹å±‚æœ€å¤š 10 ä¸ªè®¾å¤‡</value>
+    <value>免费层最多 10 个设备</value>
   </data>
   <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
-    <value>å·²åŒæ­¥ {0} ä¸ªè®¾å¤‡ {1}</value>
+    <value>已同步 {0} 个设备 {1}</value>
   </data>
   <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
-    <value>åœ°å›¾è¦†ç›–è¿‡å¤§ï¼Œæ— æ³•åŒæ­¥ï¼ˆ{0} KBï¼‰</value>
+    <value>地图覆盖过大，无法同步（{0} KB）</value>
   </data>
   <data name="CloudTooltipActivate" xml:space="preserve">
-    <value>å¯ç”¨äº‘åŒæ­¥</value>
+    <value>启用云同步</value>
   </data>
   <data name="CloudTooltipActive" xml:space="preserve">
-    <value>äº‘åŒæ­¥å·²å¯ç”¨</value>
+    <value>云同步已启用</value>
   </data>
   <data name="CloudAccountTitle" xml:space="preserve">
-    <value>äº‘è´¦æˆ·</value>
+    <value>云账户</value>
   </data>
   <data name="EmailLoginWindowTitle" xml:space="preserve">
-    <value>äº‘è´¦æˆ·ç™»å½•</value>
+    <value>云账户登录</value>
   </data>
   <data name="EmailSignInTab" xml:space="preserve">
-    <value>ç™»å½•</value>
+    <value>登录</value>
   </data>
   <data name="EmailSignUpTab" xml:space="preserve">
-    <value>åˆ›å»ºè´¦æˆ·</value>
+    <value>创建账户</value>
   </data>
   <data name="EmailAddressLabel" xml:space="preserve">
-    <value>ç”µå­é‚®ä»¶åœ°å€</value>
+    <value>电子邮件地址</value>
   </data>
   <data name="PasswordLabel" xml:space="preserve">
-    <value>å¯†ç </value>
+    <value>密码</value>
   </data>
   <data name="PasswordMinCharsLabel" xml:space="preserve">
-    <value>å¯†ç ï¼ˆè‡³å°‘ 6 ä¸ªå­—ç¬¦ï¼‰</value>
+    <value>密码（至少 6 个字符）</value>
   </data>
   <data name="ConfirmPasswordLabel" xml:space="preserve">
-    <value>ç¡®è®¤å¯†ç </value>
+    <value>确认密码</value>
   </data>
   <data name="EmailSignInButton" xml:space="preserve">
-    <value>ç™»å½•</value>
+    <value>登录</value>
   </data>
   <data name="EmailCreateAccountButton" xml:space="preserve">
-    <value>åˆ›å»ºè´¦æˆ·</value>
+    <value>创建账户</value>
   </data>
   <data name="EmailConfirmationSentTitle" xml:space="preserve">
-    <value>ç¡®è®¤é‚®ä»¶å·²å‘é€ï¼</value>
+    <value>确认邮件已发送！</value>
   </data>
   <data name="EmailConfirmationSentMessage" xml:space="preserve">
-    <value>è¯·ç‚¹å‡»é‚®ä»¶ä¸­çš„é“¾æŽ¥ã€‚åº”ç”¨ä¼šæ¯éš”å‡ ç§’è‡ªåŠ¨æ£€æŸ¥ä¸€æ¬¡...</value>
+    <value>请点击邮件中的链接。应用会每隔几秒自动检查一次...</value>
   </data>
   <data name="EmailWaitingForConfirmation" xml:space="preserve">
-    <value>æ­£åœ¨ç­‰å¾…ç¡®è®¤...</value>
+    <value>正在等待确认...</value>
   </data>
   <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
-    <value>æ­£åœ¨ç­‰å¾…ç¡®è®¤...ï¼ˆ{0}sï¼‰</value>
+    <value>正在等待确认...（{0}s）</value>
   </data>
   <data name="EmailProblemsPrefix" xml:space="preserve">
-    <value>é‡åˆ°é—®é¢˜ï¼Ÿ</value>
+    <value>遇到问题？</value>
   </data>
   <data name="EmailOpenInBrowser" xml:space="preserve">
-    <value>åœ¨æµè§ˆå™¨ä¸­æ‰“å¼€</value>
+    <value>在浏览器中打开</value>
   </data>
   <data name="EmailPasswordRequiredError" xml:space="preserve">
-    <value>è¯·è¾“å…¥ç”µå­é‚®ä»¶å’Œå¯†ç ã€‚</value>
+    <value>请输入电子邮件和密码。</value>
   </data>
   <data name="EmailRequiredError" xml:space="preserve">
-    <value>è¯·è¾“å…¥ç”µå­é‚®ä»¶åœ°å€ã€‚</value>
+    <value>请输入电子邮件地址。</value>
   </data>
   <data name="EmailPasswordTooShortError" xml:space="preserve">
-    <value>å¯†ç é•¿åº¦è‡³å°‘ä¸º 6 ä¸ªå­—ç¬¦ã€‚</value>
+    <value>密码长度至少为 6 个字符。</value>
   </data>
   <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
-    <value>ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´ã€‚</value>
+    <value>两次输入的密码不一致。</value>
   </data>
   <data name="EmailSigningInStatus" xml:space="preserve">
-    <value>æ­£åœ¨ç™»å½•...</value>
+    <value>正在登录...</value>
   </data>
   <data name="EmailSignedInSuccess" xml:space="preserve">
-    <value>ç™»å½•æˆåŠŸï¼</value>
+    <value>登录成功！</value>
   </data>
   <data name="EmailSignInFailed" xml:space="preserve">
-    <value>ç™»å½•å¤±è´¥ã€‚</value>
+    <value>登录失败。</value>
   </data>
   <data name="EmailRegistrationRunningStatus" xml:space="preserve">
-    <value>æ­£åœ¨æ³¨å†Œ...</value>
+    <value>正在注册...</value>
   </data>
   <data name="EmailRegistrationFailed" xml:space="preserve">
-    <value>æ³¨å†Œå¤±è´¥ã€‚</value>
+    <value>注册失败。</value>
   </data>
   <data name="EmailConfirmationTimeout" xml:space="preserve">
-    <value>è¶…æ—¶ï¼š5 åˆ†é’Ÿå†…æœªç¡®è®¤ç”µå­é‚®ä»¶ã€‚ä½ å¯ä»¥ç¨åŽå†ç™»å½•ã€‚</value>
+    <value>超时：5 分钟内未确认电子邮件。你可以稍后再登录。</value>
   </data>
   <data name="EmailInvalidCredentialsError" xml:space="preserve">
-    <value>å‡­æ®æ— æ•ˆã€‚è¯·æ£€æŸ¥ç”µå­é‚®ä»¶å’Œå¯†ç ã€‚</value>
+    <value>凭据无效。请检查电子邮件和密码。</value>
   </data>
   <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
-    <value>å‡­æ®æ— æ•ˆã€‚</value>
+    <value>凭据无效。</value>
   </data>
   <data name="EmailNotConfirmedError" xml:space="preserve">
-    <value>ç”µå­é‚®ä»¶åœ°å€å°šæœªç¡®è®¤ã€‚è¯·ç‚¹å‡»æ”¶ä»¶ç®±ä¸­çš„ç¡®è®¤é“¾æŽ¥ã€‚</value>
+    <value>电子邮件地址尚未确认。请点击收件箱中的确认链接。</value>
   </data>
   <data name="EmailAlreadyRegisteredError" xml:space="preserve">
-    <value>æ­¤ç”µå­é‚®ä»¶åœ°å€å·²æ³¨å†Œã€‚è¯·ç™»å½•ã€‚</value>
+    <value>此电子邮件地址已注册。请登录。</value>
   </data>
   <data name="AuthDiscordDisconnectButton" xml:space="preserve">
-    <value>æ–­å¼€ Discord</value>
+    <value>断开 Discord</value>
   </data>
   <data name="AuthDiscordConnectedFormat" xml:space="preserve">
-    <value>Discord å·²è¿žæŽ¥ - ç­‰çº§ï¼š{0}</value>
+    <value>Discord 已连接 - 等级：{0}</value>
   </data>
   <data name="AuthEmailConnectedFormat" xml:space="preserve">
-    <value>ç”µå­é‚®ä»¶å·²è¿žæŽ¥ï¼š{0} - ç­‰çº§ï¼š{1}</value>
+    <value>电子邮件已连接：{0} - 等级：{1}</value>
   </data>
   <data name="AuthNotConnectedStatus" xml:space="preserve">
-    <value>æœªè¿žæŽ¥ - ç™»å½•åŽå¯ä½¿ç”¨äº‘åŒæ­¥å’Œå¤‡ä»½</value>
+    <value>未连接 - 登录后可使用云同步和备份</value>
   </data>
   <data name="AuthDisconnectingStatus" xml:space="preserve">
-    <value>æ­£åœ¨æ–­å¼€...</value>
+    <value>正在断开...</value>
   </data>
   <data name="AuthConnectingStatus" xml:space="preserve">
-    <value>æ­£åœ¨è¿žæŽ¥...</value>
+    <value>正在连接...</value>
   </data>
   <data name="EmailAccountButton" xml:space="preserve">
-    <value>ç”µå­é‚®ä»¶ / è´¦æˆ·</value>
+    <value>电子邮件 / 账户</value>
   </data>
   <data name="EmailLogoutConfirmMessage" xml:space="preserve">
-    <value>è¦é€€å‡ºç”µå­é‚®ä»¶è´¦æˆ·å—ï¼Ÿ</value>
+    <value>要退出电子邮件账户吗？</value>
   </data>
   <data name="CloudLoginPromptTitle" xml:space="preserve">
-    <value>äº‘åŒæ­¥</value>
+    <value>云同步</value>
   </data>
   <data name="CloudLoginPromptHeading" xml:space="preserve">
-    <value>äº‘åŒæ­¥éœ€è¦è´¦æˆ·</value>
+    <value>云同步需要账户</value>
   </data>
   <data name="CloudLoginPromptDescription" xml:space="preserve">
-    <value>åŒæ­¥å’Œå¤‡ä»½å­˜å‚¨ç­‰äº‘æœåŠ¡éœ€è¦ä¸€ä¸ªå…è´¹è´¦æˆ·ã€‚è¯·é€‰æ‹©ç”µå­é‚®ä»¶æˆ– Discordï¼Œä»¥ç»§ç»­åŒæ­¥è®¾å¤‡ã€è¦†ç›–å±‚å’Œå¤‡ä»½ã€‚</value>
+    <value>同步和备份存储等云服务需要一个免费账户。请选择电子邮件或 Discord，以继续同步设备、覆盖层和备份。</value>
   </data>
   <data name="CloudLoginPromptEmailButton" xml:space="preserve">
-    <value>é€šè¿‡ç”µå­é‚®ä»¶åŒæ­¥</value>
+    <value>通过电子邮件同步</value>
   </data>
   <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
-    <value>é€šè¿‡ Discord åŒæ­¥</value>
+    <value>通过 Discord 同步</value>
   </data>
   <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
-    <value>ä¸ç”¨äº†</value>
+    <value>不用了</value>
   </data>
   <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
-    <value>å·²è¾¾åˆ°åŒæ­¥é™åˆ¶</value>
+    <value>已达到同步限制</value>
   </data>
   <data name="CloudTooltipBaseLimit" xml:space="preserve">
-    <value>å·²è¾¾åˆ°åŸºåœ°é™åˆ¶ï¼ˆå…è´¹ï¼šæœ€å¤š 2 ä¸ªåŸºåœ°ï¼ŒPremiumï¼šæœ€å¤š 10 ä¸ªåŸºåœ°ï¼‰</value>
+    <value>已达到基地限制（免费：最多 2 个基地，Premium：最多 10 个基地）</value>
   </data>
   <data name="BaseAddScreenshot" xml:space="preserve">
-    <value>æ·»åŠ æˆªå›¾</value>
+    <value>添加截图</value>
   </data>
   <data name="BaseScreenshotDragDrop" xml:space="preserve">
-    <value>å°†å›¾ç‰‡æ‹–æ”¾åˆ°è¿™é‡Œ</value>
+    <value>将图片拖放到这里</value>
   </data>
   <data name="BaseScreenshotPasteHint" xml:space="preserve">
-    <value>æˆ–æŒ‰ CTRL+V ç²˜è´´æˆªå›¾</value>
+    <value>或按 CTRL+V 粘贴截图</value>
   </data>
   <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
-    <value>å‰ªè´´æ¿ä¸­æ²¡æœ‰æ‰¾åˆ°å›¾ç‰‡ã€‚</value>
+    <value>剪贴板中没有找到图片。</value>
   </data>
   <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
-    <value>ç²˜è´´é”™è¯¯</value>
+    <value>粘贴错误</value>
   </data>
   <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
-    <value>ç²˜è´´å›¾ç‰‡å¤±è´¥ï¼š{0}</value>
+    <value>粘贴图片失败：{0}</value>
   </data>
   <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
-    <value>åŠ è½½å›¾ç‰‡æ–‡ä»¶å¤±è´¥ï¼š{0}</value>
+    <value>加载图片文件失败：{0}</value>
   </data>
   <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
-    <value>åŽ‹ç¼©é”™è¯¯</value>
+    <value>压缩错误</value>
   </data>
   <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
-    <value>åŽ‹ç¼©å›¾ç‰‡æ—¶å‡ºé”™ï¼š{0}</value>
+    <value>压缩图片时出错：{0}</value>
   </data>
   <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
-    <value>åˆ†è¾¨çŽ‡ï¼š{0}x{1} | å¤§å°ï¼š{2} KBï¼ˆè´¨é‡ 25%ï¼‰</value>
+    <value>分辨率：{0}x{1} | 大小：{2} KB（质量 25%）</value>
   </data>
   <data name="BaseNoteWindowTitle" xml:space="preserve">
-    <value>ç¼–è¾‘åŸºåœ°å¤‡æ³¨</value>
+    <value>编辑基地备注</value>
   </data>
   <data name="BaseNoteTitle" xml:space="preserve">
-    <value>åŸºåœ°å¤‡æ³¨</value>
+    <value>基地备注</value>
   </data>
   <data name="BaseAddNote" xml:space="preserve">
-    <value>æ·»åŠ å¤‡æ³¨</value>
+    <value>添加备注</value>
   </data>
   <data name="BaseEditNote" xml:space="preserve">
-    <value>ç¼–è¾‘å¤‡æ³¨</value>
+    <value>编辑备注</value>
   </data>
   <data name="BaseDeleteNote" xml:space="preserve">
-    <value>åˆ é™¤å¤‡æ³¨</value>
+    <value>删除备注</value>
   </data>
   <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
-    <value>åˆ é™¤æˆªå›¾ {0}</value>
+    <value>删除截图 {0}</value>
   </data>
   <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
-    <value>æ·»åŠ æˆªå›¾ {0}ï¼ˆéœ€è¦ Premiumï¼‰</value>
+    <value>添加截图 {0}（需要 Premium）</value>
   </data>
   <data name="BaseNoNotesYet" xml:space="preserve">
-    <value>å°šæœªæ·»åŠ å¤‡æ³¨ã€‚</value>
+    <value>尚未添加备注。</value>
   </data>
   <data name="BaseNoScreenshotsYet" xml:space="preserve">
-    <value>å°šæœªæ·»åŠ æˆªå›¾</value>
+    <value>尚未添加截图</value>
   </data>
   <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
-    <value>Chat Master åœ¨çº¿</value>
+    <value>Chat Master 在线</value>
   </data>
   <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
-    <value>{0} æ­£åœ¨æŽ§åˆ¶æ­¤é˜Ÿä¼çš„èŠå¤©æé†’å’ŒèŠå¤©å‘½ä»¤ã€‚</value>
+    <value>{0} 正在控制此队伍的聊天提醒和聊天命令。</value>
   </data>
   <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
-    <value>Chat Master {0} åœ¨çº¿ã€‚æ­¤è®¾å¤‡ä¸Šçš„èŠå¤©æé†’å’ŒèŠå¤©å‘½ä»¤å·²æš‚åœã€‚</value>
+    <value>Chat Master {0} 在线。此设备上的聊天提醒和聊天命令已暂停。</value>
   </data>
   <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
-    <value>ä½ æ˜¯ Chat Master</value>
+    <value>你是 Chat Master</value>
   </data>
   <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
-    <value>æ­¤è®¾å¤‡çŽ°åœ¨è´Ÿè´£æŽ§åˆ¶ä½ é˜Ÿä¼çš„èŠå¤©æé†’å’ŒèŠå¤©å‘½ä»¤ã€‚</value>
+    <value>此设备现在负责控制你队伍的聊天提醒和聊天命令。</value>
   </data>
   <data name="ChatFeatureMasterAccept" xml:space="preserve">
-    <value>æŽ¥å—</value>
+    <value>接受</value>
   </data>
   <data name="ChatFeatureMasterDeny" xml:space="preserve">
-    <value>æ‹’ç»</value>
+    <value>拒绝</value>
   </data>
   <data name="Update600Title" xml:space="preserve">
-    <value>v6.0.0 æ›´æ–°</value>
+    <value>v6.0.0 更新</value>
   </data>
   <data name="CompareCloudFeatures" xml:space="preserve">
-    <value>æ¯”è¾ƒäº‘åŠŸèƒ½</value>
+    <value>比较云功能</value>
   </data>
   <data name="CloudFeaturesTitle" xml:space="preserve">
-    <value>äº‘åŠŸèƒ½æ¯”è¾ƒ</value>
+    <value>云功能比较</value>
   </data>
   <data name="CloudFeaturesMainHeader" xml:space="preserve">
-    <value>æ¬¢è¿Žæ¥åˆ°äº‘ç«¯</value>
+    <value>欢迎来到云端</value>
   </data>
   <data name="CloudFeaturesSubHeader" xml:space="preserve">
-    <value>é€‰æ‹©æœ€é€‚åˆæ‚¨çš„å±‚çº§ã€‚</value>
+    <value>选择最适合您的层级。</value>
   </data>
   <data name="TierNoAccountTitle" xml:space="preserve">
-    <value>æ— è´¦æˆ·</value>
+    <value>无账户</value>
   </data>
   <data name="TierNoAccountDesc" xml:space="preserve">
-    <value>æ‚¨çš„æ•°æ®100%ä¿ç•™åœ¨æœ¬åœ°ã€‚æœ€é€‚åˆå•äººçŽ©å®¶ã€‚</value>
+    <value>您的数据100%保留在本地。最适合单人玩家。</value>
   </data>
   <data name="FeatNoCloudSync" xml:space="preserve">
-    <value>æ— äº‘åŒæ­¥æˆ–å¤‡ä»½</value>
+    <value>无云同步或备份</value>
   </data>
   <data name="FeatNoDeviceSharing" xml:space="preserve">
-    <value>æ— è®¾å¤‡å…±äº«</value>
+    <value>无设备共享</value>
   </data>
   <data name="FeatNoPortal" xml:space="preserve">
-    <value>æ— äº‘é—¨æˆ·è®¿é—®æƒé™</value>
+    <value>无云门户访问权限</value>
   </data>
   <data name="TierFreeAccountTitle" xml:space="preserve">
-    <value>å…è´¹äº‘è´¦æˆ·</value>
+    <value>免费云账户</value>
   </data>
   <data name="TierFreeAccountDesc" xml:space="preserve">
-    <value>åŸºæœ¬çš„äº‘åŠŸèƒ½ï¼Œè®©æ‚¨å¼€å§‹å…±äº«ã€‚</value>
+    <value>基本的云功能，让您开始共享。</value>
   </data>
   <data name="FeatBasicDiscord" xml:space="preserve">
-    <value>åŸºç¡€ Discord Webhook è­¦æŠ¥</value>
+    <value>基础 Discord Webhook 警报</value>
   </data>
   <data name="FeatDeviceSharingFree" xml:space="preserve">
-    <value>æœ€å¤šå…±äº« 10 å°è®¾å¤‡</value>
+    <value>最多共享 10 台设备</value>
   </data>
   <data name="FeatMapSharingFree" xml:space="preserve">
-    <value>åœ°å›¾å…±äº« (300 KB, 2 ä¸ªåŸºåœ°, 1 å¼ æˆªå›¾)</value>
+    <value>地图共享 (300 KB, 2 个基地, 1 张截图)</value>
   </data>
   <data name="FeatSupporterHelper" xml:space="preserve">
-    <value>ä½œä¸ºæ”¯æŒè€…åŠ©æ‰‹ (Supporter Helper)</value>
+    <value>作为支持者助手 (Supporter Helper)</value>
   </data>
   <data name="FeatPortalAccess" xml:space="preserve">
-    <value>è®¿é—®äº‘é—¨æˆ·</value>
+    <value>访问云门户</value>
   </data>
   <data name="TierSupporterTitle" xml:space="preserve">
-    <value>æ”¯æŒè€… (Supporter) äº‘</value>
+    <value>支持者 (Supporter) 云</value>
   </data>
   <data name="TierSupporterDesc" xml:space="preserve">
-    <value>ä¸ºéƒ¨è½å’Œé«˜çº§ç”¨æˆ·æä¾›çš„ç»ˆæž Rust+ ä½“éªŒã€‚</value>
+    <value>为部落和高级用户提供的终极 Rust+ 体验。</value>
   </data>
   <data name="FeatMapSharingPro" xml:space="preserve">
-    <value>ä¸“ä¸šåœ°å›¾å…±äº« (3 MB, 10 ä¸ªåŸºåœ°, 5 å¼ æˆªå›¾)</value>
+    <value>专业地图共享 (3 MB, 10 个基地, 5 张截图)</value>
   </data>
   <data name="FeatChatMaster" xml:space="preserve">
-    <value>Chat Master ç³»ç»Ÿ</value>
+    <value>Chat Master 系统</value>
   </data>
   <data name="FeatAdvDiscord" xml:space="preserve">
-    <value>é«˜çº§åŒå‘ Discord æœºå™¨äºº</value>
+    <value>高级双向 Discord 机器人</value>
   </data>
   <data name="FeatBetaAccess" xml:space="preserve">
-    <value>é€šè¿‡ Discord è®¿é—®æ—©æœŸ Beta å’Œæµ‹è¯•ç‰ˆæœ¬</value>
+    <value>通过 Discord 访问早期 Beta 和测试版本</value>
   </data>
   <data name="BecomeSupporterTitle" xml:space="preserve">
-    <value>æˆä¸ºæ”¯æŒè€…</value>
+    <value>成为支持者</value>
   </data>
   <data name="SupportViaPatreon" xml:space="preserve">
-    <value>åœ¨ </value>
+    <value>在 </value>
   </data>
   <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> ä¸Šæ”¯æŒæˆ‘ä»¬ - å°† Patreon ä¸Ž Discord é“¾æŽ¥ä»¥å®žçŽ°è‡ªåŠ¨è§’è‰²æ£€æµ‹ã€‚</value>
+    <value> 上支持我们 - 将 Patreon 与 Discord 链接以实现自动角色检测。</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
-    <value>é€šè¿‡ </value>
+    <value>通过 </value>
   </data>
   <data name="SupportViaSEDesc" xml:space="preserve">
-    <value> ç»™å°è´¹ - åœ¨ Discord ä¸­è”ç³» Jawad æˆ– Pronwan ä»¥èŽ·å¾—æ‰‹åŠ¨è§’è‰²ã€‚</value>
+    <value> 给小费 - 在 Discord 中联系 Jawad 或 Pronwan 以获得手动角色。</value>
   </data>
   <data name="OpenCloudWebPortal" xml:space="preserve">
-    <value>æ‰“å¼€äº‘é—¨æˆ·</value>
+    <value>打开云门户</value>
   </data>
   <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
-    <value>è¿žæŽ¥å¤±è´¥ï¼šæ— æ³•è®¿é—® Rust+ã€‚</value>
+    <value>连接失败：无法访问 Rust+。</value>
   </data>
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
-    <value>å¯èƒ½æ˜¯æ‚¨çš„é˜²ç«å¢™é˜»æ­¢äº†è¿žæŽ¥ï¼Œæˆ–è€…æ˜¯æœåŠ¡å™¨ä¸Šçš„ Rust+ API æœªæ­£å¸¸è¿è¡Œã€‚</value>
+    <value>可能是您的防火墙阻止了连接，或者是服务器上的 Rust+ API 未正常运行。</value>
   </data>
   <data name="WordYou" xml:space="preserve">
-    <value>ä½ </value>
+    <value>你</value>
   </data>
   <data name="StateOn" xml:space="preserve">
-    <value>å¼€å¯</value>
+    <value>开启</value>
   </data>
   <data name="StateOff" xml:space="preserve">
-    <value>å…³é—­</value>
+    <value>关闭</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: å·²åˆ‡æ¢è‡³ {1} (ç”± {2} è§¦å‘)</value>
+    <value>[Hotkey] {0}: 已切换至 {1} (由 {2} 触发)</value>
   </data>
   <data name="OfflineDeathTitle" xml:space="preserve">
-    <value>ç¦»çº¿æ­»äº¡</value>
+    <value>离线死亡</value>
   </data>
   <data name="OfflineDeathMessage" xml:space="preserve">
-    <value>ä½ è¢« {0} åœ¨ {1} æ€æ­»äº†ã€‚</value>
+    <value>你被 {0} 在 {1} 杀死了。</value>
   </data>
   <data name="StopSound" xml:space="preserve">
-    <value>åœæ­¢å£°éŸ³</value>
+    <value>停止声音</value>
   </data>
   <data name="OfflineDeathNotifications" xml:space="preserve">
-    <value>ç¦»çº¿æ­»äº¡é€šçŸ¥</value>
+    <value>离线死亡通知</value>
   </data>
   <data name="EnableOfflineDeathAlerts" xml:space="preserve">
-    <value>å¯ç”¨ç¦»çº¿æ­»äº¡è­¦æŠ¥</value>
+    <value>启用离线死亡警报</value>
   </data>
   <data name="AlertSound" xml:space="preserve">
-    <value>è­¦æŠ¥å£°éŸ³</value>
+    <value>警报声音</value>
   </data>
   <data name="DefaultSoundLabel" xml:space="preserve">
-    <value>é»˜è®¤ï¼šdeath.mp3</value>
+    <value>默认：death.mp3</value>
   </data>
   <data name="SelectEllipsis" xml:space="preserve">
-    <value>é€‰æ‹©...</value>
+    <value>选择...</value>
   </data>
   <data name="LoopAlertSound" xml:space="preserve">
-    <value>å¾ªçŽ¯è­¦æŠ¥å£°éŸ³</value>
+    <value>循环警报声音</value>
   </data>
   <data name="SendToDiscordRaidAlerts" xml:space="preserve">
-    <value>å‘é€åˆ° Discord çªè¢­è­¦æŠ¥ (èµžåŠ©è€…)</value>
+    <value>发送到 Discord 突袭警报 (赞助者)</value>
   </data>
   <data name="OpenOfflineDeathsLog" xml:space="preserve">
-    <value>æ‰“å¼€ç¦»çº¿æ­»äº¡æ—¥å¿—</value>
+    <value>打开离线死亡日志</value>
   </data>
   <data name="OfflineDeathLogTitle" xml:space="preserve">
-    <value>ç¦»çº¿æ­»äº¡æ—¥å¿—</value>
+    <value>离线死亡日志</value>
   </data>
   <data name="ClearLog" xml:space="preserve">
-    <value>æ¸…é™¤æ—¥å¿—</value>
+    <value>清除日志</value>
   </data>
   <data name="NoOfflineDeathsRecorded" xml:space="preserve">
-    <value>æ²¡æœ‰è®°å½•åˆ°ç¦»çº¿æ­»äº¡ã€‚</value>
+    <value>没有记录到离线死亡。</value>
   </data>
   <data name="KilledBy" xml:space="preserve">
-    <value>è¢«...æ€æ­»</value>
+    <value>被...杀死</value>
   </data>
   <data name="CustomAlertsTitle" xml:space="preserve">
-    <value>è‡ªå®šä¹‰èŠå¤©è­¦æŠ¥</value>
+    <value>自定义聊天警报</value>
   </data>
   <data name="CustomAlertsHeader" xml:space="preserve">
-    <value>è‡ªå®šä¹‰èŠå¤©è­¦æŠ¥æ¨¡æ¿</value>
+    <value>自定义聊天警报模板</value>
   </data>
   <data name="CustomAlertsDesc" xml:space="preserve">
-    <value>æ‚¨å¯ä»¥åœ¨æ­¤å¤„ç¼–è¾‘è‡ªåŠ¨èŠå¤©è­¦æŠ¥çš„æ¨¡æ¿ã€‚å˜é‡ï¼ˆå¦‚ {0}ã€{1}ï¼‰å°†è¢«è‡ªåŠ¨æ›¿æ¢ã€‚</value>
+    <value>您可以在此处编辑自动聊天警报的模板。变量（如 {0}、{1}）将被自动替换。</value>
   </data>
   <data name="VariablesLabel" xml:space="preserve">
-    <value>å˜é‡: {0}</value>
+    <value>变量: {0}</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>â€˜{0}â€™ çš„æ¨¡æ¿å·²æˆåŠŸä¿å­˜ã€‚</value>
+    <value>‘{0}’ 的模板已成功保存。</value>
   </data>
   <data name="ResetSuccess" xml:space="preserve">
-    <value>â€˜{0}â€™ çš„æ¨¡æ¿å·²é‡ç½®ä¸ºé»˜è®¤å€¼ã€‚</value>
+    <value>‘{0}’ 的模板已重置为默认值。</value>
   </data>
   <data name="SaveSuccessTitle" xml:space="preserve">
-    <value>ä¿å­˜æˆåŠŸ</value>
+    <value>保存成功</value>
   </data>
   <data name="ResetSuccessTitle" xml:space="preserve">
-    <value>é‡ç½®</value>
+    <value>重置</value>
   </data>
   <data name="AlertOilRigTriggeredName" xml:space="preserve">
     <value>Oil Rig Triggered</value>
@@ -2554,84 +2554,62 @@
     <value>{0}: Old Name, {1}: Group Info, {2}: New Name</value>
   </data>
   <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
-    <value>è‡ªå®šä¹‰èŠå¤©è­¦æŠ¥</value>
+    <value>自定义聊天警报</value>
   </data>
   <data name="AfkCommand" xml:space="preserve">
-    <value>AFK çŽ©å®¶</value>
+    <value>AFK 玩家</value>
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
-    <value>æ²¡æœ‰äºº AFKã€‚</value>
+    <value>没有人 AFK。</value>
   </data>
   <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>çŽ©å®¶ AFK</value>
+    <value>玩家 AFK</value>
   </data>
   <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>å½“å›¢é˜Ÿæˆå‘˜ AFK æ—¶é—´è¿‡é•¿æ—¶å‘é€ã€‚</value>
+    <value>当团队成员 AFK 时间过长时发送。</value>
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: çŽ©å®¶åç§°, {1}: æ—¶é—´</value>
+    <value>{0}: 玩家名称, {1}: 时间</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>æœç´¢å¹¶é€‰æ‹©æ­¤è®¾å¤‡çš„ç‰©å“å›¾æ ‡ã€‚</value>
+    <value>搜索并选择此设备的物品图标。</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>æ›´æ”¹è®¾å¤‡å›¾æ ‡</value>
+    <value>更改设备图标</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>æœç´¢å¹¶é€‰æ‹©æ­¤è§„åˆ™çš„ç‰©å“å›¾æ ‡ã€‚</value>
+    <value>搜索并选择此规则的物品图标。</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
-    <value>æ›´æ”¹è§„åˆ™å›¾æ ‡</value>
+    <value>更改规则图标</value>
   </data>
   <data name="ResetToDefaultIcon" xml:space="preserve">
-    <value>é‡ç½®ä¸ºé»˜è®¤å›¾æ ‡</value>
+    <value>重置为默认图标</value>
   </data>
   <data name="Rule" xml:space="preserve">
-    <value>è§„åˆ™</value>
+    <value>规则</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>æœç´¢å›¾æ ‡ï¼ˆä¾‹å¦‚ï¼šç‚®å¡”ã€å¼€å…³ï¼‰...</value>
+    <value>搜索图标（例如：炮塔、开关）...</value>
   </data>
   <data name="NotificationRetentionDays" xml:space="preserve">
-    <value>{0} å¤©</value>
+    <value>{0} 天</value>
   </data>
-  <data name="Update700Desc1" xml:space="preserve">
-    <value>体验前所未有的全交互式3D地图，探索您的Rust服务器！包含实时玩家位置和死亡标记，帮助您制定策略和寻找战利品。</value>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>删除所有3D地图数据</value>
   </data>
-  <data name="Delete3DMapDataTooltip" xml:space="preserve">
-    <value>删除 3D 地图查看器使用的所有已解析本地地图几何图形。</value>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>组件等回收计算器。立即查看安全区和常规回收之间的区别。</value>
   </data>
-  <data name="Delete3DMapData" xml:space="preserve">
-    <value>删除所有 3D 地图数据</value>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>7.0版本 - 主要变化</value>
   </data>
-  <data name="Update700Title" xml:space="preserve">
-    <value>Rust+ Desktop v7.0.0 更新</value>
-  </data>
-  <data name="Update700Desc3" xml:space="preserve">
-    <value>计划建造新基地？使用 3D 地图中的新占地生成器来准确预览基地的布局。在游戏中建造之前，测试它是否适合在禁建区之间，检查坡度或验证水深。</value>
-  </data>
-  <data name="ThreeDMapSectionTitle" xml:space="preserve">
-    <value>3D 地图</value>
-  </data>
-  <data name="Update700Desc2" xml:space="preserve">
-    <value>您现在可以通过单击 3D 地图按钮选择性地读取本地 .map 文件（安全且只读），以提取精确的游戏细节。这会将确切的禁止建筑区、洞穴、冰山等直接带到您的 3D 和 2D 地图上！关闭时 3D 地图会完全从内存中卸载。</value>
-  </data>
-  <data name="Update700DontShowAgain" xml:space="preserve">
-    <value>不再显示此内容</value>
-  </data>
-  <data name="Update700Desc4" xml:space="preserve">
-    <value>您的组件等回收计算器。立即查看安全区与常规回收之间的差异。</value>
-  </data>
-  <data name="Update700Title1" xml:space="preserve">
-    <value>交互式 3D 地图</value>
-  </data>
-  <data name="Update700Title2" xml:space="preserve">
-    <value>可选的地图文件解析</value>
-  </data>
-  <data name="Update700Title3" xml:space="preserve">
-    <value>基地占地生成器</value>
-  </data>
-  <data name="Update700Title4" xml:space="preserve">
-    <value>回收计算器</value>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 带有实时玩家位置和死亡标记的3D地图
+• 地图从本地地图文件构建，获取额外信息（如建筑封锁区、冰山、洞穴）并显示在2D地图上
+• 集成了3D基地脚印构建器
+• 改进的逻辑引擎
+• 游戏内团队标记现在显示在2D地图上
+• 智能设备的自定义图标</value>
   </data>
 </root>
