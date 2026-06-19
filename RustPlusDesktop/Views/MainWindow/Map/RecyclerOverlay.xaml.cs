@@ -20,11 +20,12 @@ namespace RustPlusDesk.Views
         public ObservableCollection<RecyclerOutputViewModel> Outputs { get; } = new();
 
         private List<RecyclerItemViewModel> _allRecyclerItems = new();
-        private List<RecyclerItemViewModel> _filteredItems    = new();
 
-        // Incremental loading — render 25 items at a time
-        private const int PageSize    = 25;
-        private int       _loadedCount = 0;
+        // Chunked loading — render first 30 instantly, rest in background chunks
+        private const int  InitialChunk  = 30;
+        private const int  ChunkSize     = 30;
+        private Queue<RecyclerItemViewModel> _pendingItems = new();
+        private System.Windows.Threading.DispatcherTimer _loadTimer;
 
         public RecyclerOverlay()
         {
@@ -148,57 +149,58 @@ namespace RustPlusDesk.Views
         {
             if (_allRecyclerItems == null) return;
 
+            // Stop any in-progress chunk loading
+            _loadTimer?.Stop();
+            _pendingItems.Clear();
+
             string filterText       = SearchTextBox?.Text ?? "";
             string selectedCategory = CategoryComboBox?.SelectedItem as string ?? "All Categories";
 
-            _filteredItems = _allRecyclerItems.Where(item =>
+            var matched = _allRecyclerItems.Where(item =>
             {
                 bool matchesSearch = string.IsNullOrEmpty(filterText) ||
                                      item.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
                                      item.ShortName.Contains(filterText, StringComparison.OrdinalIgnoreCase);
-
                 bool matchesCategory = selectedCategory == "All Categories" ||
                                        item.Data.category == selectedCategory;
-
                 return matchesSearch && matchesCategory;
             }).ToList();
 
-            LoadFirstPage();
-        }
-
-        /// <summary>Resets the visible list to the first <see cref="PageSize"/> items from the current filter.</summary>
-        private void LoadFirstPage()
-        {
             Items.Clear();
-            _loadedCount = 0;
-            LoadNextPage();
+            InputsScrollViewer?.ScrollToTop();
 
-            // Scroll back to top when filter changes
-            if (InputsScrollViewer != null)
-                InputsScrollViewer.ScrollToTop();
-        }
+            // Load first chunk immediately so UI appears instantly
+            int firstBatch = Math.Min(InitialChunk, matched.Count);
+            for (int i = 0; i < firstBatch; i++)
+                Items.Add(matched[i]);
 
-        /// <summary>Appends the next batch of filtered items to the visible list.</summary>
-        private void LoadNextPage()
-        {
-            int take = Math.Min(PageSize, _filteredItems.Count - _loadedCount);
-            if (take <= 0) return;
+            // Queue the remaining items for deferred loading
+            for (int i = firstBatch; i < matched.Count; i++)
+                _pendingItems.Enqueue(matched[i]);
 
-            for (int i = _loadedCount; i < _loadedCount + take; i++)
-                Items.Add(_filteredItems[i]);
-
-            _loadedCount += take;
-        }
-
-        private void InputsScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            // Trigger load-more when within 150px of the bottom
-            if (sender is ScrollViewer sv &&
-                sv.ScrollableHeight > 0 &&
-                sv.VerticalOffset >= sv.ScrollableHeight - 150)
+            if (_pendingItems.Count > 0)
             {
-                LoadNextPage();
+                _loadTimer = new System.Windows.Threading.DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(16) // ~1 frame
+                };
+                _loadTimer.Tick += (s, e) => ProcessNextChunk();
+                _loadTimer.Start();
             }
+        }
+
+        /// <summary>Loads the next <see cref="ChunkSize"/> pending items on each timer tick.</summary>
+        private void ProcessNextChunk()
+        {
+            int loaded = 0;
+            while (_pendingItems.Count > 0 && loaded < ChunkSize)
+            {
+                Items.Add(_pendingItems.Dequeue());
+                loaded++;
+            }
+
+            if (_pendingItems.Count == 0)
+                _loadTimer?.Stop();
         }
 
         private void LoadItems()

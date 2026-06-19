@@ -71,8 +71,7 @@
                                   SelectionChanged="CategoryComboBox_SelectionChanged" />
                     </Grid>
 
-                    <ScrollViewer x:Name="InputsScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                                  ScrollChanged="InputsScrollViewer_ScrollChanged">
+                    <ScrollViewer x:Name="InputsScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl x:Name="InputsControl" Margin="0,0,4,0">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
