@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>6.3.2</Version>
+		<Version>7.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>6.3.2</AssemblyVersion>
-		<FileVersion>6.3.2</FileVersion>
-		<InformationalVersion>6.3.2</InformationalVersion>
+		<AssemblyVersion>7.0.0</AssemblyVersion>
+		<FileVersion>7.0.0</FileVersion>
+		<InformationalVersion>7.0.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -201,6 +201,13 @@
 	  <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
 	  <None Remove="Assets\Images\6.3.1\Logic-Engine.png" />
 	  <None Remove="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
+	  <None Remove="Assets\Images\7.0\3D-Base-Footprint.png" />
+	  <None Remove="Assets\Images\7.0\custom-icons-smart.png" />
+	  <None Remove="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
+	  <None Remove="Assets\Images\7.0\Live-Following-3D.png" />
+	  <None Remove="Assets\Images\7.0\Logic-Engine.png" />
+	  <None Remove="Assets\Images\7.0\No-Build-Zones-3D.png" />
+	  <None Remove="Assets\Images\7.0\Recycling-Calculator.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -420,6 +427,13 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
     <Resource Include="Assets\Images\6.3.1\Logic-Engine.png" />
     <Resource Include="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
+    <Resource Include="Assets\Images\7.0\3D-Base-Footprint.png" />
+    <Resource Include="Assets\Images\7.0\custom-icons-smart.png" />
+    <Resource Include="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
+    <Resource Include="Assets\Images\7.0\Live-Following-3D.png" />
+    <Resource Include="Assets\Images\7.0\Logic-Engine.png" />
+    <Resource Include="Assets\Images\7.0\No-Build-Zones-3D.png" />
+    <Resource Include="Assets\Images\7.0\Recycling-Calculator.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
@@ -532,6 +546,7 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />
+    <Resource Include="Assets\Data\monument_bounds.json" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-2.png" />
     <Resource Include="Assets\Images\5.3.0\NewLanguageSelector.png" />

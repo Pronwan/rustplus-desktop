@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -145,15 +145,15 @@
     <value>Caricare il consenso</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>Facendo clic su "Accetta", i dispositivi intelligenti (e potenzialmente i disegni delle mappe) per questo server verranno caricati sul server del creatore. Ciò consente ai compagni di squadra di scaricarli e sincronizzarli. Solo il proprio ID Steam viene trasmesso per identificare i compagni di squadra. Solo i giocatori autorizzati dall'Armadio degli strumenti possono controllare i dispositivi.
+    <value>Facendo clic su "Accetta", i dispositivi intelligenti (e potenzialmente i disegni delle mappe) per questo server verranno caricati sul server del creatore. CiÃ² consente ai compagni di squadra di scaricarli e sincronizzarli. Solo il proprio ID Steam viene trasmesso per identificare i compagni di squadra. Solo i giocatori autorizzati dall'Armadio degli strumenti possono controllare i dispositivi.
 
-Nota: questo metodo di trasmissione sarà ottimizzato in futuro. Se i compagni di squadra non riescono a scaricare i dati, provare a cancellare i disegni delle mappe e a caricarli di nuovo.</value>
+Nota: questo metodo di trasmissione sarÃ  ottimizzato in futuro. Se i compagni di squadra non riescono a scaricare i dati, provare a cancellare i disegni delle mappe e a caricarli di nuovo.</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Elimina</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>È possibile eliminare solo i dispositivi mancanti</value>
+    <value>Ãˆ possibile eliminare solo i dispositivi mancanti</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
     <value>Rinomina dispositivo</value>
@@ -198,25 +198,25 @@ Nota: questo metodo di trasmissione sarà ottimizzato in futuro. Se i compagni d
     <value>Reimposta + Ascolta con il bordo</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Ricarica ID Battlemetrics…</value>
+    <value>Ricarica ID Battlemetricsâ€¦</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Elimina server…</value>
+    <value>Elimina serverâ€¦</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten …</value>
+    <value>Bitte warten â€¦</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
     <value>Attiva/Disattiva Area Server</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>Modalità Streamer</value>
+    <value>ModalitÃ  Streamer</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
     <value>Scala:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>Abilita La Modalità Streamer (Abbreviates Names)</value>
+    <value>Abilita La ModalitÃ  Streamer (Abbreviates Names)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
     <value>Abbrevia i nomi e gli ID di Steam per proteggere la privacy durante gli streams. Nascondi automaticamente la console e la lista dei server.</value>
@@ -231,7 +231,7 @@ Nota: questo metodo di trasmissione sarà ottimizzato in futuro. Se i compagni d
     <value>Inserisci un nome di gruppo.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>Il messaggio non può essere inviato. Riprova. (Controlla se sei in una squadra!)</value>
+    <value>Il messaggio non puÃ² essere inviato. Riprova. (Controlla se sei in una squadra!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
     <value>Errore: </value>
@@ -255,16 +255,16 @@ Nota: questo metodo di trasmissione sarà ottimizzato in futuro. Se i compagni d
     <value>Salva Modifiche</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>Analisi &amp; Previsioni Dell'Attività Del Giocatore</value>
+    <value>Analisi &amp; Previsioni Dell'AttivitÃ  Del Giocatore</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
     <value>Giocatori</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>Modalità Streamer-&amp; Mini Riforma Della Mappa</value>
+    <value>ModalitÃ  Streamer-&amp; Mini Riforma Della Mappa</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>Modalità Streamer</value>
+    <value>ModalitÃ  Streamer</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
     <value>Scala Marcatore Giocatore</value>
@@ -333,7 +333,7 @@ Nota: questo metodo di trasmissione sarà ottimizzato in futuro. Se i compagni d
     <value>Segui {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Accoppiamento: ascolto…</value>
+    <value>Accoppiamento: ascoltoâ€¦</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>Abbinamento: fermato</value>
@@ -419,10 +419,10 @@ Scarica e installa ora?</value>
     <value>Altre Opzioni</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Ricarica ID Battlemetrics…</value>
+    <value>Ricarica ID Battlemetricsâ€¦</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Elimina server…</value>
+    <value>Elimina serverâ€¦</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>Click destro per rinominare</value>
@@ -566,7 +566,7 @@ Scarica e installa ora?</value>
     <value>Eliminare Il Server?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Sei sicuro di voler eliminare questo server? Questa azione non può essere annullata.</value>
+    <value>Sei sicuro di voler eliminare questo server? Questa azione non puÃ² essere annullata.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annulla</value>
@@ -650,7 +650,7 @@ Scarica e installa ora?</value>
     <value>Notifiche Di Monitoraggio</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Morte Di Sé</value>
+    <value>Morte Di SÃ©</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
     <value>Morte Della Squadra</value>
@@ -728,7 +728,7 @@ Scarica e installa ora?</value>
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Opportunità di arbitraggio diretto &lt;unk&gt; comprare basso → vendere alto.</value>
+    <value>OpportunitÃ  di arbitraggio diretto &lt;unk&gt; comprare basso â†’ vendere alto.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
     <value>Acquista X per Y</value>
@@ -833,7 +833,7 @@ Scarica e installa ora?</value>
     <value>SCONOSCIUTO</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Questo può richiedere un momento...</value>
+    <value>Questo puÃ² richiedere un momento...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
     <value>Impostazioni Applicazione</value>
@@ -884,7 +884,7 @@ Scarica e installa ora?</value>
     <value>Utilizzare le etichette di testo del monumento al posto delle icone</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>Quando è abilitata, i nomi dei monumenti della mappa Rust vengono resi come testo utilizzando il font Permanent Marker invece delle icone.</value>
+    <value>Quando Ã¨ abilitata, i nomi dei monumenti della mappa Rust vengono resi come testo utilizzando il font Permanent Marker invece delle icone.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
     <value>Stile del monumento:</value>
@@ -893,7 +893,7 @@ Scarica e installa ora?</value>
     <value>Scala del monumento:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>Monumento Opacità:</value>
+    <value>Monumento OpacitÃ :</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
     <value>Icone di rustmaps.com</value>
@@ -911,7 +911,7 @@ Scarica e installa ora?</value>
     <value> - utilizzato con autorizzazione.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>Tutte le icone dei monumenti e le relative immagini sono di proprietà di rustmaps.com. Grazie per il supporto alla comunità di Rust!</value>
+    <value>Tutte le icone dei monumenti e le relative immagini sono di proprietÃ  di rustmaps.com. Grazie per il supporto alla comunitÃ  di Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
@@ -944,7 +944,7 @@ Scarica e installa ora?</value>
     <value>Voglio PAGARE CON (es. Scrap)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Sei sicuro di voler eliminare Server "{0}"? Questa azione non può essere annullata.</value>
+    <value>Sei sicuro di voler eliminare Server "{0}"? Questa azione non puÃ² essere annullata.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
@@ -980,7 +980,7 @@ Scarica e installa ora?</value>
     <value>GRUPPO</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Desk Rust+ – Importa Dispositivi</value>
+    <value>Desk Rust+ â€“ Importa Dispositivi</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
     <value>Importa dispositivi</value>
@@ -1046,7 +1046,7 @@ Scarica e installa ora?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Nota: è consigliata 2 fps, FPS più alto probabilmente chiudere la connessione al server</value>
+    <value>Nota: Ã¨ consigliata 2 fps, FPS piÃ¹ alto probabilmente chiudere la connessione al server</value>
   </data>
   <data name="Pixel" xml:space="preserve">
     <value>Pixel</value>
@@ -1067,7 +1067,7 @@ Scarica e installa ora?</value>
     <value>Spessore:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Opacità:</value>
+    <value>OpacitÃ :</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
     <value>Carica PNG</value>
@@ -1079,7 +1079,7 @@ Scarica e installa ora?</value>
     <value>Salva</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Assegna tasti di scelta rapida globali agli Smart Switch. Più dispositivi possono condividere un tasto di scelta rapida (attiverà/disattiva sequenzialmente).</value>
+    <value>Assegna tasti di scelta rapida globali agli Smart Switch. PiÃ¹ dispositivi possono condividere un tasto di scelta rapida (attiverÃ /disattiva sequenzialmente).</value>
   </data>
   <data name="Device" xml:space="preserve">
     <value>Dispositivo</value>
@@ -1103,10 +1103,10 @@ Scarica e installa ora?</value>
     <value>Aggiornamento, Minimap &amp; Tracciamento</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Riepilogo Delle Funzionalità E Regolazioni</value>
+    <value>Riepilogo Delle FunzionalitÃ  E Regolazioni</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>Non mostrarlo più</value>
+    <value>Non mostrarlo piÃ¹</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
     <value>Fantastico, andiamo!</value>
@@ -1121,7 +1121,7 @@ Scarica e installa ora?</value>
     <value>Rettangolo</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Opacità: {0}%</value>
+    <value>OpacitÃ : {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
     <value>Dimensioni: {0}% (SHIFT+Mousewheel)</value>
@@ -1214,7 +1214,7 @@ Scarica e installa ora?</value>
     <value>Patrol Heli attivo - in funzione per {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>Connesso a metà evento - orario di spawn sconosciuto</value>
+    <value>Connesso a metÃ  evento - orario di spawn sconosciuto</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
     <value>Elicottero di pattuglia attivo (tempo di spawn sconosciuto)</value>
@@ -1232,7 +1232,7 @@ Scarica e installa ora?</value>
     <value>porto</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Già attraccata su connect - orario di partenza sconosciuto</value>
+    <value>GiÃ  attraccata su connect - orario di partenza sconosciuto</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
     <value>Attraccato a {0} (durata dell'attracco non ancora nota)</value>
@@ -1241,13 +1241,13 @@ Scarica e installa ora?</value>
     <value>Tempo rimanente sulla mappa (dallo spawn)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>Collegato a metà percorso - tempo sconosciuto</value>
+    <value>Collegato a metÃ  percorso - tempo sconosciuto</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>Collegato a metà percorso - tempo sconosciuto (percorso ~{0}m totale)</value>
+    <value>Collegato a metÃ  percorso - tempo sconosciuto (percorso ~{0}m totale)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>La Nave da Carico è stata disfatta {0}m {1}s fa questa sessione</value>
+    <value>La Nave da Carico Ã¨ stata disfatta {0}m {1}s fa questa sessione</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
     <value>Venditore itinerante attivo - in corsa per {0}</value>
@@ -1256,7 +1256,7 @@ Scarica e installa ora?</value>
     <value>Venditore itinerante attivo (tempo di spawn sconosciuto)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Il Venditore itinerante è scomparso {0} fa in questa sessione.</value>
+    <value>Il Venditore itinerante Ã¨ scomparso {0} fa in questa sessione.</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
     <value>Deep Sea active - in corsa per {0}</value>
@@ -1265,7 +1265,7 @@ Scarica e installa ora?</value>
     <value>Attivo in mare aperto (tempo di deposizione delle uova sconosciuto)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea è terminato {0} fa questa sessione</value>
+    <value>Deep Sea Ã¨ terminato {0} fa questa sessione</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1295,16 +1295,16 @@ Scarica e installa ora?</value>
     <value>Orario attuale in gioco: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} è stato promosso a leader.</value>
+    <value>{0} Ã¨ stato promosso a leader.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea è attivo! In corsa per {0}.</value>
+    <value>Deep Sea Ã¨ attivo! In corsa per {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea è attualmente attivo (collegato a metà evento - orario di spawn sconosciuto).</value>
+    <value>Deep Sea Ã¨ attualmente attivo (collegato a metÃ  evento - orario di spawn sconosciuto).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea è terminato {0} minuti fa questa sessione.</value>
+    <value>Deep Sea Ã¨ terminato {0} minuti fa questa sessione.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
     <value>Stato dell'evento Deep Sea sconosciuto (non visto in questa sessione).</value>
@@ -1346,10 +1346,10 @@ Scarica e installa ora?</value>
     <value>{0}: non chiamato in questa sessione</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Patrol Heli è attivo! In corsa per {0}.</value>
+    <value>Patrol Heli Ã¨ attivo! In corsa per {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>La pattuglia Heli è attualmente attiva (collegata a metà evento - orario di spawn sconosciuto).</value>
+    <value>La pattuglia Heli Ã¨ attualmente attiva (collegata a metÃ  evento - orario di spawn sconosciuto).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
     <value>Pattuglia Heli non attiva. Era {0} {1} fa questa sessione.</value>
@@ -1364,10 +1364,10 @@ Scarica e installa ora?</value>
     <value>Stato dell'evento Patrol Heli sconosciuto (non visto in questa sessione).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Travelling Vendor è attivo! In corsa per {0}.</value>
+    <value>Travelling Vendor Ã¨ attivo! In corsa per {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>Il Venditore itinerante è attualmente attivo (collegato a metà evento - orario di spawn sconosciuto).</value>
+    <value>Il Venditore itinerante Ã¨ attualmente attivo (collegato a metÃ  evento - orario di spawn sconosciuto).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
     <value>Venditore itinerante non attivo. Disperso {0} fa in questa sessione.</value>
@@ -1382,7 +1382,7 @@ Scarica e installa ora?</value>
     <value>Mantenimento in {0} TC: vuoto o scaduto.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> Necessità/24h: {0}.</value>
+    <value> NecessitÃ /24h: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
     <value>Manutenzione in {0} TC: {1}.</value>
@@ -1409,7 +1409,7 @@ Scarica e installa ora?</value>
     <value>I monitor dell'armadietto degli attrezzi legati non sono stati trovati o non sono stati accoppiati.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>Il monitor dell'armadietto degli attrezzi non è stato trovato o non è stato accoppiato.</value>
+    <value>Il monitor dell'armadietto degli attrezzi non Ã¨ stato trovato o non Ã¨ stato accoppiato.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
     <value>{0} {1}.</value>
@@ -1481,7 +1481,7 @@ Scarica e installa ora?</value>
     <value>[{0}] La cassa si sblocca in 5 minuti!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Il mare profondo è attivo</value>
+    <value>Il mare profondo Ã¨ attivo</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Nuovo negozio {0} [{1}]: {2}</value>
@@ -1505,10 +1505,10 @@ Scarica e installa ora?</value>
     <value>Nave cargo in partenza da {0} in 5 minuti ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Arresto anomalo rilevato a causa del ritardo del server - Heli è ancora sulla mappa all'indirizzo {0}.</value>
+    <value>Arresto anomalo rilevato a causa del ritardo del server - Heli Ã¨ ancora sulla mappa all'indirizzo {0}.</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} si è riprodotto su {1}</value>
+    <value>{0} si Ã¨ riprodotto su {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
     <value>Elicottero di pattuglia abbattuto su {0}</value>
@@ -1517,10 +1517,10 @@ Scarica e installa ora?</value>
     <value>sconosciuto</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} è arrivato online @ {1}</value>
+    <value>{0} Ã¨ arrivato online @ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} è andato offline</value>
+    <value>{0} Ã¨ andato offline</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} morto @ {1}</value>
@@ -1529,10 +1529,10 @@ Scarica e installa ora?</value>
     <value>{0} Ripartito @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[ {0}{1} è ora ONLINE</value>
+    <value>[ {0}{1} Ã¨ ora ONLINE</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[ {0}{1} è ora OFFLINE</value>
+    <value>[ {0}{1} Ã¨ ora OFFLINE</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
     <value>[Tracking] {0}{1} rinominato in {2}!</value>
@@ -1580,16 +1580,16 @@ Scarica e installa ora?</value>
     <value>Tracciamento BattleMetrics rimosso</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>La vostra base è sotto attacco!</value>
+    <value>La vostra base Ã¨ sotto attacco!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
     <value>Collegarsi prima a un server.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>Non si è connessi ad alcun server.</value>
+    <value>Non si Ã¨ connessi ad alcun server.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>La chat non è disponibile al momento.</value>
+    <value>La chat non Ã¨ disponibile al momento.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
     <value>Selezionare prima un server.</value>
@@ -1607,10 +1607,10 @@ Scarica e installa ora?</value>
     <value>Tracciamento UDP nativo</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>La guida alla localizzazione è attualmente disponibile solo in inglese, poiché subirà delle modifiche nel prossimo futuro. Vi chiediamo di avere pazienza.</value>
+    <value>La guida alla localizzazione Ã¨ attualmente disponibile solo in inglese, poichÃ© subirÃ  delle modifiche nel prossimo futuro. Vi chiediamo di avere pazienza.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>Chiudere questa finestra in qualsiasi momento - è possibile riaprirla con il pulsante ❓ Come tracciare.</value>
+    <value>Chiudere questa finestra in qualsiasi momento - Ã¨ possibile riaprirla con il pulsante â“ Come tracciare.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
     <value>Manutenzione</value>
@@ -1652,7 +1652,7 @@ Scarica e installa ora?</value>
     <value>Cache locale e disegni (cancella le mappe/linee salvate)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>Questa azione è permanente e non può essere annullata.</value>
+    <value>Questa azione Ã¨ permanente e non puÃ² essere annullata.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
     <value>Confermare il reset</value>
@@ -1664,13 +1664,13 @@ Scarica e installa ora?</value>
     <value>Protezione di backup</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Inserire una password per crittografare questo file di backup. Se si lascia vuoto questo campo, il backup non verrà crittografato.</value>
+    <value>Inserire una password per crittografare questo file di backup. Se si lascia vuoto questo campo, il backup non verrÃ  crittografato.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
     <value>Ripristino del backup</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>Questo backup è protetto da password. Immettere la password per decifrarlo:</value>
+    <value>Questo backup Ã¨ protetto da password. Immettere la password per decifrarlo:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
     <value>Crittografare</value>
@@ -1685,10 +1685,10 @@ Scarica e installa ora?</value>
     <value>Backup dei dati dell'applicazione</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[SYSTEM] Il backup è stato creato con successo a: {0}</value>
+    <value>[SYSTEM] Il backup Ã¨ stato creato con successo a: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>Il backup è stato creato con successo!</value>
+    <value>Il backup Ã¨ stato creato con successo!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
     <value>Backup completato</value>
@@ -1703,7 +1703,7 @@ Scarica e installa ora?</value>
     <value>Backup fallito</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>Il ripristino dei dati sovrascriverà i profili server correnti, i mirini personalizzati, le sovrapposizioni dei disegni e le configurazioni della minimappa.
+    <value>Il ripristino dei dati sovrascriverÃ  i profili server correnti, i mirini personalizzati, le sovrapposizioni dei disegni e le configurazioni della minimappa.
 
 Siete sicuri di voler continuare?</value>
   </data>
@@ -1762,7 +1762,7 @@ Siete sicuri di voler continuare?</value>
     <value>[WIPE] Cancellazione della configurazione di accoppiamento del dispositivo...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[La configurazione di accoppiamento del dispositivo è stata cancellata.</value>
+    <value>[La configurazione di accoppiamento del dispositivo Ã¨ stata cancellata.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
     <value>[Cancellazione del mirino personalizzato...</value>
@@ -1786,30 +1786,30 @@ Siete sicuri di voler continuare?</value>
     <value>[WIPE] Registrare nuovamente le credenziali dell'ascoltatore e dell'FCM...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[L'operazione di reset selettivo è stata completata con successo.</value>
+    <value>[L'operazione di reset selettivo Ã¨ stata completata con successo.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Direzione</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1825,13 +1825,13 @@ Siete sicuri di voler continuare?</value>
     <value>[Hotkey] {0}: commutato {1} (attivato da {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>Cerca e seleziona un&apos;icona oggetto per questo dispositivo.</value>
+    <value>Cerca e seleziona un'icona oggetto per questo dispositivo.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
     <value>Cambia icona dispositivo</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>Cerca e seleziona un&apos;icona oggetto per questa regola.</value>
+    <value>Cerca e seleziona un'icona oggetto per questa regola.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
     <value>Cambia icona regola</value>
@@ -1845,11 +1845,31 @@ Siete sicuri di voler continuare?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Cerca icone (es. torretta, interruttore)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} giorni</value>
   </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
+  </data>
+  <data name="Delete3DMapData" xml:space="preserve">
+    <value>Delete all 3D Map Data</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
 </root>
-
-
-

@@ -255,7 +255,9 @@ public partial class MainWindow
             }
             int s = map.WorldSize;
             _monData = filteredMons;
+            MergeCachedExtraMonumentsForCurrentMap();
             BuildMonumentOverlays();
+            LoadCachedBuildingBlockedZonesForCurrentServer();
             var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
             AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");
 
@@ -479,7 +481,7 @@ public partial class MainWindow
             state.AnnouncedArrivalWarning = false; // Reset for next harbor
         }
 
-        // Docking announcement with 5s delay — only from real markers to avoid rate-limiting from ghost false-positives
+        // Docking announcement with 5s delay â€” only from real markers to avoid rate-limiting from ghost false-positives
         if (!isGhost && state.IsDocked && !state.AnnouncedDock && TrackingService.AnnounceCargoDocking && _announceSpawns && state.DockTime.HasValue)
         {
             if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
@@ -492,7 +494,7 @@ public partial class MainWindow
             }
         }
 
-        // Arrival Warning — only from real markers
+        // Arrival Warning â€” only from real markers
         if (!isGhost && !state.IsDocked && !state.AnnouncedArrivalWarning && TrackingService.AnnounceCargoArrival && _announceSpawns)
         {
             var harbors = _monData.Where(mon => mon.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true);
@@ -522,7 +524,7 @@ public partial class MainWindow
             }
         }
 
-        // Egress warning — only from real markers
+        // Egress warning â€” only from real markers
         if (!isGhost && state.IsDocked && state.DockTime.HasValue && !state.AnnouncedEgressWarning && _announceSpawns)
         {
             int duration = TrackingService.GetLearnedDockingDuration(host);
@@ -571,7 +573,7 @@ public partial class MainWindow
             if ((now - state.LastSeen).TotalSeconds > 60)
             {
                 _cargoLastDespawnUtc = now;
-                AppendLog($"[cargo] Despawn detected – last seen {(now - state.LastSeen).TotalSeconds:F0}s ago.");
+                AppendLog($"[cargo] Despawn detected â€“ last seen {(now - state.LastSeen).TotalSeconds:F0}s ago.");
 
                 if (state.FirstSeen.HasValue && state.HarborCount >= 1 && state.SeenAtEdge) 
                 {
@@ -590,7 +592,7 @@ public partial class MainWindow
                     var warnToDock = (state.DockTime.Value - state.ArrivalWarnedAt.Value).TotalMinutes;
                     if (warnToDock < 2.0 || warnToDock > 8.0)
                     {
-                        // Warning fired too early (<2m) or too late (>8m) — discard the trigger point
+                        // Warning fired too early (<2m) or too late (>8m) â€” discard the trigger point
                         AppendLog($"[cargo] Trigger point for {state.HarborName} discarded (warn-to-dock: {warnToDock:F1}m, expected ~5m). Will re-learn on next run.");
                         TrackingService.SetCargoTriggerPoint(host, state.HarborName, 0, 0); // Clear
                     }
@@ -668,12 +670,12 @@ public partial class MainWindow
         {
             _pollFailCount++;
             OnApiPollTimeout();
-            // After 5 consecutive failures the WebSocket is likely dead — auto-reconnect
+            // After 5 consecutive failures the WebSocket is likely dead â€” auto-reconnect
             if (_pollFailCount >= 5 && !_isAutoReconnecting && _vm?.Selected != null)
             {
                 _isAutoReconnecting = true;
                 _pollFailCount = 0;
-                AppendLog("[AutoReconnect] Connection lost — reconnecting...");
+                AppendLog("[AutoReconnect] Connection lost â€” reconnecting...");
                 _ = Dispatcher.InvokeAsync(async () =>
                 {
                     await PerformConnectAsync(true);
@@ -797,7 +799,7 @@ public partial class MainWindow
             }
             else if (ds.SeenAtEdge && cargoLife > 0 && ds.FirstSeen.HasValue)
             {
-                // Spawned fresh this session – show accurate countdown
+                // Spawned fresh this session â€“ show accurate countdown
                 var remain = TimeSpan.FromMinutes(cargoLife) - (DateTime.UtcNow - ds.FirstSeen.Value);
                 if (remain.TotalSeconds > 0)
                 {
@@ -808,7 +810,7 @@ public partial class MainWindow
             else if (!ds.SeenAtEdge)
             {
                 // Connected mid-route: we don't know how long it's been on the map
-                cargoTimer = null; // No timer — we can't know
+                cargoTimer = null; // No timer â€” we can't know
                 cargoTip = cargoLife > 0
                     ? string.Format(Properties.Resources.CargoConnectedMidRouteTimeUnknownFormatted, cargoLife)
                     : Properties.Resources.CargoConnectedMidRouteTimeUnknown;
@@ -1285,7 +1287,7 @@ public partial class MainWindow
                         _ = SendTeamChatSafeAsync(msg, false, true);
                         _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                     }
-                    AppendLog($"[HeliCrash] False alarm retracted — Heli {key} reappeared at {GetGridLabel(m.X, m.Y)}");
+                    AppendLog($"[HeliCrash] False alarm retracted â€” Heli {key} reappeared at {GetGridLabel(m.X, m.Y)}");
                 }
             }
 
@@ -1762,6 +1764,7 @@ public partial class MainWindow
 
         CleanupCargoDockStates();
         UpdateHeliCrashSites();
+        SyncLiveMarkersTo3DMap();
     }
 
     private void AttachTrackingHandler(FrameworkElement el, uint id)
@@ -1977,3 +1980,5 @@ public partial class MainWindow
         }
     }
 }
+
+

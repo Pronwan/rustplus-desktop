@@ -1,4 +1,4 @@
-using RustPlusDesk.Services;
+﻿using RustPlusDesk.Services;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +17,7 @@ public partial class MainWindow
     private void RedrawGrid()
     {
         GridLayer.Children.Clear();
+        RedrawBuildingBlockedZones();
         if (ChkGrid.IsChecked != true || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
         int cells = Math.Max(1, (int)Math.Round(_worldSizeS / 150.0));
@@ -119,3 +120,5 @@ public partial class MainWindow
     private string GetGridLabel(double x, double y)
         => TryGetGridRef(x, y, out var g) ? g : "off-grid";
 }
+
+

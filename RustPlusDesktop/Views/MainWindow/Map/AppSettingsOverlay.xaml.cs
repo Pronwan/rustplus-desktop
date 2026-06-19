@@ -325,7 +325,23 @@ namespace RustPlusDesk.Views
                 );
             }
         }
+      
+        private void BtnDelete3DMapData_Click(object sender, RoutedEventArgs e)
+        {
+            var owner = ParentWindow ?? Window.GetWindow(this);
+            var result = MessageBox.Show(
+                "Delete all cached 3D map data for every server? This removes parsed map files and generated viewer JSON, but keeps app assets and icons.",
+                "Delete 3D Map Data",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
 
+            if (result != MessageBoxResult.Yes) return;
+
+            var deleted = Map3DLocalBuildService.DeleteAllCachedMapData();
+            ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
+            ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
+            MessageBox.Show(owner, "Cached 3D map data deleted. It will be rebuilt when you open a 3D map again.", "3D Map Data", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
         private void BtnBackupData_Click(object sender, RoutedEventArgs e)
         {
             if (ParentWindow == null) return;
@@ -926,5 +942,7 @@ namespace RustPlusDesk.Views
                 PnlMutedServers.Children.Add(grid);
             }
         }
+
+      
     }
 }

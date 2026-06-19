@@ -511,7 +511,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "6.3.0";
+        const string AppVersion = "7.0.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -559,11 +559,38 @@ public partial class MainWindow : WpfUi.FluentWindow
                     
                     if (dlg.HasMadeChoice)
                     {
-                        TrackingService.LastSeenVersion = AppVersion;
                         TrackingService.CloudSyncEnabled = dlg.CloudSyncAccepted;
                         TrackingService.UploadConsentGiven = dlg.CloudSyncAccepted;
                         _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(dlg.CloudSyncAccepted);
                     }
+                    
+                    if (!TrackingService.SuppressVersion7Notice)
+                    {
+                        var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
+                        dlg7.ShowDialog();
+                        if (dlg7.DontShowAgain)
+                        {
+                            TrackingService.SuppressVersion7Notice = true;
+                        }
+                    }
+
+                    TrackingService.LastSeenVersion = AppVersion;
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
+            else if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "6.9.9"))
+            {
+                Dispatcher.InvokeAsync(() =>
+                {
+                    if (!TrackingService.SuppressVersion7Notice)
+                    {
+                        var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
+                        dlg7.ShowDialog();
+                        if (dlg7.DontShowAgain)
+                        {
+                            TrackingService.SuppressVersion7Notice = true;
+                        }
+                    }
+                    TrackingService.LastSeenVersion = AppVersion;
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
             else
@@ -1670,6 +1697,15 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
     { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
     { "jungle ziggurat",         "pack://application:,,,/Assets/icons/jungle.png" },
+    { "jungle ruins",            "pack://application:,,,/Assets/icons/jungle.png" },
+    { "cave",                    "pack://application:,,,/Assets/icons/cave.png" },
+    { "iceberg",                 "pack://application:,,,/Assets/icons/iceberg.png" },
+    { "water well",              "pack://application:,,,/Assets/icons/waterwell.png" },
+    { "ice lake",                "pack://application:,,,/Assets/icons/ice_lake.png" },
+    { "god rock",                "pack://application:,,,/Assets/icons/godrock.png" },
+    { "large god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
+    { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
+    { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
 };
 
     private static double CalcOverlayScale(double effZoom, double exp, double baseMult = 1.0)
@@ -1763,7 +1799,19 @@ public partial class MainWindow : WpfUi.FluentWindow
              .Replace("missile silo monument", "missile silo")
              .Replace("military tunnels display name", "military tunnel")
              .Replace("oil rig small", "small oil rig")
-            .Replace("module 900x900 2way moonpool", "Moon Pool");
+            .Replace("module 900x900 2way moonpool", "Moon Pool")
+            .Replace("water well", "water well")
+            .Replace("water well a", "water well")
+            .Replace("water well b", "water well")
+            .Replace("water well c", "water well")
+            .Replace("water well d", "water well")
+            .Replace("water well e", "water well")
+            .Replace("ice lake 1", "ice lake")
+            .Replace("ice lake 2", "ice lake")
+            .Replace("ice lake 3", "ice lake")
+            .Replace("ice lake 4", "ice lake")
+            .Replace("large god rock", "god rock")
+            .Replace("train tunnel entrance", "tunnel entrance");
 
         return s;
     }

@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,1217 +58,1217 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>RUST+ למחשב שולחני</value>
+    <value>RUST+ ×œ×ž×—×©×‘ ×©×•×œ×—× ×™</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>חשבון Steam</value>
+    <value>×—×©×‘×•×Ÿ Steam</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>לא מחובר</value>
+    <value>×œ× ×ž×—×•×‘×¨</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>בדוק אם יש עדכונים</value>
+    <value>×‘×“×•×§ ×× ×™×© ×¢×“×›×•× ×™×</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>הורדה...</value>
+    <value>×”×•×¨×“×”...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>הצטרפו ל-Discord</value>
+    <value>×”×¦×˜×¨×¤×• ×œ-Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>הערות לעדכון</value>
+    <value>×”×¢×¨×•×ª ×œ×¢×“×›×•×Ÿ</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>הגדרות</value>
+    <value>×”×’×“×¨×•×ª</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>שרתים משולבים</value>
+    <value>×©×¨×ª×™× ×ž×©×•×œ×‘×™×</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>עדיין לא הותאמו שרתים</value>
+    <value>×¢×“×™×™×Ÿ ×œ× ×”×•×ª××ž×• ×©×¨×ª×™×</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>התאמה ותחזוקה</value>
+    <value>×”×ª××ž×” ×•×ª×—×–×•×§×”</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
-    <value>התאמה: במצב המתנה</value>
+    <value>×”×ª××ž×”: ×‘×ž×¦×‘ ×”×ž×ª× ×”</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>לחץ לחיצה ימנית כדי להציג אפשרויות</value>
+    <value>×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª ×›×“×™ ×œ×”×¦×™×’ ××¤×©×¨×•×™×•×ª</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>מעקב פעיל</value>
+    <value>×ž×¢×§×‘ ×¤×¢×™×œ</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>הורדה אחרונה: {0}</value>
+    <value>×”×•×¨×“×” ××—×¨×•× ×”: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>לתרום</value>
+    <value>×œ×ª×¨×•×</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>תמכו במפתח</value>
+    <value>×ª×ž×›×• ×‘×ž×¤×ª×—</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>איפוס</value>
+    <value>××™×¤×•×¡</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>איפוס חיבור WebSocket</value>
+    <value>××™×¤×•×¡ ×—×™×‘×•×¨ WebSocket</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>שחקנים:</value>
+    <value>×©×—×§× ×™×:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>הצג את הכרטיסייה 'שחקנים מקוונים'</value>
+    <value>×”×¦×’ ××ª ×”×›×¨×˜×™×¡×™×™×” '×©×—×§× ×™× ×ž×§×•×•× ×™×'</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>תור:</value>
+    <value>×ª×•×¨:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>מכשירים</value>
+    <value>×ž×›×©×™×¨×™×</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>מקשי קיצור</value>
+    <value>×ž×§×©×™ ×§×™×¦×•×¨</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>ייבא מכשירים מחברי הצוות</value>
+    <value>×™×™×‘× ×ž×›×©×™×¨×™× ×ž×—×‘×¨×™ ×”×¦×•×•×ª</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>ייצא מכשירים לחברי הצוות</value>
+    <value>×™×™×¦× ×ž×›×©×™×¨×™× ×œ×—×‘×¨×™ ×”×¦×•×•×ª</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>רענן</value>
+    <value>×¨×¢× ×Ÿ</value>
   </data>
   <data name="Decline" xml:space="preserve">
-    <value>ירידה</value>
+    <value>×™×¨×™×“×”</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>הסכמה להעלאה</value>
+    <value>×”×¡×›×ž×” ×œ×”×¢×œ××”</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>בלחיצה על 'קבל', המכשירים החכמים (ואולי גם ציורי המפה) של שרת זה יועלו לשרת של היוצר. כך יוכלו חברי הצוות להוריד אותם ולסנכרן אותם. רק מזהה ה-Steam שלך מועבר לצורך זיהוי חברי הצוות. רק שחקנים שהוסמכו ב-Tool Cupboard יכולים לשלוט במכשירים.
+    <value>×‘×œ×—×™×¦×” ×¢×œ '×§×‘×œ', ×”×ž×›×©×™×¨×™× ×”×—×›×ž×™× (×•××•×œ×™ ×’× ×¦×™×•×¨×™ ×”×ž×¤×”) ×©×œ ×©×¨×ª ×–×” ×™×•×¢×œ×• ×œ×©×¨×ª ×©×œ ×”×™×•×¦×¨. ×›×š ×™×•×›×œ×• ×—×‘×¨×™ ×”×¦×•×•×ª ×œ×”×•×¨×™×“ ××•×ª× ×•×œ×¡× ×›×¨×Ÿ ××•×ª×. ×¨×§ ×ž×–×”×” ×”-Steam ×©×œ×š ×ž×•×¢×‘×¨ ×œ×¦×•×¨×š ×–×™×”×•×™ ×—×‘×¨×™ ×”×¦×•×•×ª. ×¨×§ ×©×—×§× ×™× ×©×”×•×¡×ž×›×• ×‘-Tool Cupboard ×™×›×•×œ×™× ×œ×©×œ×•×˜ ×‘×ž×›×©×™×¨×™×.
 
-הערה: שיטת העברה זו תעבור אופטימיזציה בעתיד. אם חברי הצוות אינם מצליחים להוריד את הנתונים, אנא נסה למחוק את ציורי המפה שלך ולהעלות אותם שוב.</value>
+×”×¢×¨×”: ×©×™×˜×ª ×”×¢×‘×¨×” ×–×• ×ª×¢×‘×•×¨ ××•×¤×˜×™×ž×™×–×¦×™×” ×‘×¢×ª×™×“. ×× ×—×‘×¨×™ ×”×¦×•×•×ª ××™× × ×ž×¦×œ×™×—×™× ×œ×”×•×¨×™×“ ××ª ×”× ×ª×•× ×™×, ×× × × ×¡×” ×œ×ž×—×•×§ ××ª ×¦×™×•×¨×™ ×”×ž×¤×” ×©×œ×š ×•×œ×”×¢×œ×•×ª ××•×ª× ×©×•×‘.</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>מחק</value>
+    <value>×ž×—×§</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>ניתן למחוק רק מכשירים חסרים</value>
+    <value>× ×™×ª×Ÿ ×œ×ž×—×•×§ ×¨×§ ×ž×›×©×™×¨×™× ×—×¡×¨×™×</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>שינוי שם המכשיר</value>
+    <value>×©×™× ×•×™ ×©× ×”×ž×›×©×™×¨</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>מקוון</value>
+    <value>×ž×§×•×•×Ÿ</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>מחוץ לרשת</value>
+    <value>×ž×—×•×¥ ×œ×¨×©×ª</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>התחבר</value>
+    <value>×”×ª×—×‘×¨</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>חיבור מלא</value>
+    <value>×—×™×‘×•×¨ ×ž×œ×</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>טען מפה וצוות</value>
+    <value>×˜×¢×Ÿ ×ž×¤×” ×•×¦×•×•×ª</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>התנתק</value>
+    <value>×”×ª× ×ª×§</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>פרטי השרת</value>
+    <value>×¤×¨×˜×™ ×”×©×¨×ª</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>האזינו</value>
+    <value>×”××–×™× ×•</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>עצור</value>
+    <value>×¢×¦×•×¨</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>נסה לשלב עם Edge</value>
+    <value>× ×¡×” ×œ×©×œ×‘ ×¢× Edge</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
-    <value>איפוס הצימוד (מחיקת ההגדרות)</value>
+    <value>××™×¤×•×¡ ×”×¦×™×ž×•×“ (×ž×—×™×§×ª ×”×”×’×“×¨×•×ª)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>איפוס + האזנה (צימוד מחדש)</value>
+    <value>××™×¤×•×¡ + ×”××–× ×” (×¦×™×ž×•×“ ×ž×—×“×©)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>איפוס + האזנה עם Edge</value>
+    <value>××™×¤×•×¡ + ×”××–× ×” ×¢× Edge</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>קישור מחדש למזהה Battlemetrics…</value>
+    <value>×§×™×©×•×¨ ×ž×—×“×© ×œ×ž×–×”×” Battlemetricsâ€¦</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>מחק את השרת…</value>
+    <value>×ž×—×§ ××ª ×”×©×¨×ªâ€¦</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>אנא המתן...</value>
+    <value>×× × ×”×ž×ª×Ÿ...</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>החלף בין אזורי השרת</value>
+    <value>×”×—×œ×£ ×‘×™×Ÿ ××–×•×¨×™ ×”×©×¨×ª</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>מצב סטרימר</value>
+    <value>×ž×¦×‘ ×¡×˜×¨×™×ž×¨</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>קנה מידה:</value>
+    <value>×§× ×” ×ž×™×“×”:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>הפעל את מצב הסטרימר (מקצר שמות)</value>
+    <value>×”×¤×¢×œ ××ª ×ž×¦×‘ ×”×¡×˜×¨×™×ž×¨ (×ž×§×¦×¨ ×©×ž×•×ª)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>מקצר שמות ומזהים ב-Steam כדי להגן על הפרטיות במהלך שידורים. מסתיר אוטומטית את רשימת הקונסולות והשרתים.</value>
+    <value>×ž×§×¦×¨ ×©×ž×•×ª ×•×ž×–×”×™× ×‘-Steam ×›×“×™ ×œ×”×’×Ÿ ×¢×œ ×”×¤×¨×˜×™×•×ª ×‘×ž×”×œ×š ×©×™×“×•×¨×™×. ×ž×¡×ª×™×¨ ××•×˜×•×ž×˜×™×ª ××ª ×¨×©×™×ž×ª ×”×§×•× ×¡×•×œ×•×ª ×•×”×©×¨×ª×™×.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>אין עמדה זמינה (מחוץ לרשת או שלא נוצרה).</value>
+    <value>××™×Ÿ ×¢×ž×“×” ×–×ž×™× ×” (×ž×—×•×¥ ×œ×¨×©×ª ××• ×©×œ× × ×•×¦×¨×”).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>שמור קבוצה</value>
+    <value>×©×ž×•×¨ ×§×‘×•×¦×”</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>אנא הזן שם לקבוצה.</value>
+    <value>×× × ×”×–×Ÿ ×©× ×œ×§×‘×•×¦×”.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>לא ניתן לשלוח את ההודעה. אנא נסה שוב. (בדוק אם אתה חבר בצוות!)</value>
+    <value>×œ× × ×™×ª×Ÿ ×œ×©×œ×•×— ××ª ×”×”×•×“×¢×”. ×× × × ×¡×” ×©×•×‘. (×‘×“×•×§ ×× ××ª×” ×—×‘×¨ ×‘×¦×•×•×ª!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>שגיאה: </value>
+    <value>×©×’×™××”: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>הקצאת קבוצה</value>
+    <value>×”×§×¦××ª ×§×‘×•×¦×”</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>הגדרות קבוצתיות: {0}</value>
+    <value>×”×’×“×¨×•×ª ×§×‘×•×¦×ª×™×•×ª: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>שם הקבוצה</value>
+    <value>×©× ×”×§×‘×•×¦×”</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>הזן שם קבוצה...</value>
+    <value>×”×–×Ÿ ×©× ×§×‘×•×¦×”...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>צבע הקבוצה</value>
+    <value>×¦×‘×¢ ×”×§×‘×•×¦×”</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>שמור שינויים</value>
+    <value>×©×ž×•×¨ ×©×™× ×•×™×™×</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>ניתוח פעילות שחקנים ותחזיות</value>
+    <value>× ×™×ª×•×— ×¤×¢×™×œ×•×ª ×©×—×§× ×™× ×•×ª×—×–×™×•×ª</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>שחקנים</value>
+    <value>×©×—×§× ×™×</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>שיפור מצב הסטרימר ומפת המיני</value>
+    <value>×©×™×¤×•×¨ ×ž×¦×‘ ×”×¡×˜×¨×™×ž×¨ ×•×ž×¤×ª ×”×ž×™× ×™</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>מצב סטרימר</value>
+    <value>×ž×¦×‘ ×¡×˜×¨×™×ž×¨</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>התאמת גודל סמן השחקן</value>
+    <value>×”×ª××ž×ª ×’×•×“×œ ×¡×ž×Ÿ ×”×©×—×§×Ÿ</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>מפת מיני - פולנית</value>
+    <value>×ž×¤×ª ×ž×™× ×™ - ×¤×•×œ× ×™×ª</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>נדרשת פעולה:</value>
+    <value>× ×“×¨×©×ª ×¤×¢×•×œ×”:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>מעקב BattleMetrics הוסר</value>
+    <value>×ž×¢×§×‘ BattleMetrics ×”×•×¡×¨</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>שיפוץ מקיף של מערכת מעקב השחקנים</value>
+    <value>×©×™×¤×•×¥ ×ž×§×™×£ ×©×œ ×ž×¢×¨×›×ª ×ž×¢×§×‘ ×”×©×—×§× ×™×</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>כיצד פועל מעקב אחר שחקנים</value>
+    <value>×›×™×¦×“ ×¤×•×¢×œ ×ž×¢×§×‘ ××—×¨ ×©×—×§× ×™×</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>הוסף שחקנים למעקב כדי להתחיל לעקוב</value>
+    <value>×”×•×¡×£ ×©×—×§× ×™× ×œ×ž×¢×§×‘ ×›×“×™ ×œ×”×ª×—×™×œ ×œ×¢×§×•×‘</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>מעקב פעיל</value>
+    <value>×ž×¢×§×‘ ×¤×¢×™×œ</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>מעקב אחר זמן סרק</value>
+    <value>×ž×¢×§×‘ ××—×¨ ×–×ž×Ÿ ×¡×¨×§</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>לסנן שחקנים...</value>
+    <value>×œ×¡× ×Ÿ ×©×—×§× ×™×...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>התחבר לשרת כדי לטעון את רשימת השחקנים</value>
+    <value>×”×ª×—×‘×¨ ×œ×©×¨×ª ×›×“×™ ×œ×˜×¢×•×Ÿ ××ª ×¨×©×™×ž×ª ×”×©×—×§× ×™×</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>מאתר שחקנים באמצעות Steam Query...</value>
+    <value>×ž××ª×¨ ×©×—×§× ×™× ×‘××ž×¦×¢×•×ª Steam Query...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>מספר רצועה</value>
+    <value>×ž×¡×¤×¨ ×¨×¦×•×¢×”</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>שם רצועה ידני...</value>
+    <value>×©× ×¨×¦×•×¢×” ×™×“× ×™...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>אין מכשירים.</value>
+    <value>××™×Ÿ ×ž×›×©×™×¨×™×.</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>אין אסימון רשום</value>
+    <value>××™×Ÿ ××¡×™×ž×•×Ÿ ×¨×©×•×</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>תוקף האסימון פג!</value>
+    <value>×ª×•×§×£ ×”××¡×™×ž×•×Ÿ ×¤×’!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>תוקף יפוג בעוד {0} ימים</value>
+    <value>×ª×•×§×£ ×™×¤×•×’ ×‘×¢×•×“ {0} ×™×ž×™×</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} עד הלילה</value>
+    <value>{0} ×¢×“ ×”×œ×™×œ×”</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} עד היום</value>
+    <value>{0} ×¢×“ ×”×™×•×</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>עקבו אחרי</value>
+    <value>×¢×§×‘×• ××—×¨×™</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>עקבו אחרי {0}</value>
+    <value>×¢×§×‘×• ××—×¨×™ {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>התאמה: האזנה ל-…</value>
+    <value>×”×ª××ž×”: ×”××–× ×” ×œ-â€¦</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>התאמה: הופסקה</value>
+    <value>×”×ª××ž×”: ×”×•×¤×¡×§×”</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>התאמה: נכשלה</value>
+    <value>×”×ª××ž×”: × ×›×©×œ×”</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>האזעקה הופעלה!</value>
+    <value>×”××–×¢×§×” ×”×•×¤×¢×œ×”!</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>שרת</value>
+    <value>×©×¨×ª</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>אזעקה חכמה</value>
+    <value>××–×¢×§×” ×—×›×ž×”</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>לא ניתן לקרוא את RustPlus-Link: {0}
-פורמט: rustplus://IP:PORT</value>
+    <value>×œ× × ×™×ª×Ÿ ×œ×§×¨×•× ××ª RustPlus-Link: {0}
+×¤×•×¨×ž×˜: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
-    <value>איפוס הצימוד</value>
+    <value>××™×¤×•×¡ ×”×¦×™×ž×•×“</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>האם למחוק את תצורת הצימוד הקיימת?
-יהיה עליך לבצע צימוד מחדש בהפעלה הבאה.</value>
+    <value>×”×× ×œ×ž×—×•×§ ××ª ×ª×¦×•×¨×ª ×”×¦×™×ž×•×“ ×”×§×™×™×ž×ª?
+×™×”×™×” ×¢×œ×™×š ×œ×‘×¦×¢ ×¦×™×ž×•×“ ×ž×—×“×© ×‘×”×¤×¢×œ×” ×”×‘××”.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
-    <value>איפוס + האזנה</value>
+    <value>××™×¤×•×¡ + ×”××–× ×”</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>למחוק את תצורת הצימוד ולבצע צימוד מחדש/להתחיל להאזין מיד?</value>
+    <value>×œ×ž×—×•×§ ××ª ×ª×¦×•×¨×ª ×”×¦×™×ž×•×“ ×•×œ×‘×¦×¢ ×¦×™×ž×•×“ ×ž×—×“×©/×œ×”×ª×—×™×œ ×œ×”××–×™×Ÿ ×ž×™×“?</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>איפוס + האזנה (Edge)</value>
+    <value>××™×¤×•×¡ + ×”××–× ×” (Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>למחוק את תצורת הצימוד ולבצע צימוד מחדש/להתחבר מיד באמצעות Edge?</value>
+    <value>×œ×ž×—×•×§ ××ª ×ª×¦×•×¨×ª ×”×¦×™×ž×•×“ ×•×œ×‘×¦×¢ ×¦×™×ž×•×“ ×ž×—×“×©/×œ×”×ª×—×‘×¨ ×ž×™×“ ×‘××ž×¦×¢×•×ª Edge?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>לא ניתן היה לבדוק את הגרסה האחרונה. אנא נסה שוב או פתח את דף הגרסאות.</value>
+    <value>×œ× × ×™×ª×Ÿ ×”×™×” ×œ×‘×“×•×§ ××ª ×”×’×¨×¡×” ×”××—×¨×•× ×”. ×× × × ×¡×” ×©×•×‘ ××• ×¤×ª×— ××ª ×“×£ ×”×’×¨×¡××•×ª.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>אתה מעודכן.</value>
+    <value>××ª×” ×ž×¢×•×“×›×Ÿ.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>קיים עדכון</value>
+    <value>×§×™×™× ×¢×“×›×•×Ÿ</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>גרסה חדשה זמינה: {0}
-לפתוח את דף הגרסאות?</value>
+    <value>×’×¨×¡×” ×—×“×©×” ×–×ž×™× ×”: {0}
+×œ×¤×ª×•×— ××ª ×“×£ ×”×’×¨×¡××•×ª?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>גרסה חדשה זמינה: {0}
-להוריד ולהתקין עכשיו?</value>
+    <value>×’×¨×¡×” ×—×“×©×” ×–×ž×™× ×”: {0}
+×œ×”×•×¨×™×“ ×•×œ×”×ª×§×™×Ÿ ×¢×›×©×™×•?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>ההורדה נכשלה.</value>
+    <value>×”×”×•×¨×“×” × ×›×©×œ×”.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>בדיקת העדכונים נכשלה.
+    <value>×‘×“×™×§×ª ×”×¢×“×›×•× ×™× × ×›×©×œ×”.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>אין מכשירים.</value>
+    <value>××™×Ÿ ×ž×›×©×™×¨×™×.</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>הצג פרופיל</value>
+    <value>×”×¦×’ ×¤×¨×•×¤×™×œ</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>שנה קבוצה</value>
+    <value>×©× ×” ×§×‘×•×¦×”</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>שינוי שם</value>
+    <value>×©×™× ×•×™ ×©×</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>הסר מעקב</value>
+    <value>×”×¡×¨ ×ž×¢×§×‘</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>הצג</value>
+    <value>×”×¦×’</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>אפשרויות נוספות</value>
+    <value>××¤×©×¨×•×™×•×ª × ×•×¡×¤×•×ª</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>קישור מחדש למזהה Battlemetrics…</value>
+    <value>×§×™×©×•×¨ ×ž×—×“×© ×œ×ž×–×”×” Battlemetricsâ€¦</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>מחק את השרת…</value>
+    <value>×ž×—×§ ××ª ×”×©×¨×ªâ€¦</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>לחץ לחיצה ימנית כדי לשנות את השם</value>
+    <value>×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª ×›×“×™ ×œ×©× ×•×ª ××ª ×”×©×</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>החלף</value>
+    <value>×”×—×œ×£</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>חלון קופץ</value>
+    <value>×—×œ×•×Ÿ ×§×•×¤×¥</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>התראה בתוך האפליקציה</value>
+    <value>×”×ª×¨××” ×‘×ª×•×š ×”××¤×œ×™×§×¦×™×”</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>התראה קולית</value>
+    <value>×”×ª×¨××” ×§×•×œ×™×ª</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>קובץ אודיו מותאם אישית...</value>
+    <value>×§×•×‘×¥ ××•×“×™×• ×ž×•×ª×× ××™×©×™×ª...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>איפוס להגדרות ברירת המחדל</value>
+    <value>××™×¤×•×¡ ×œ×”×’×“×¨×•×ª ×‘×¨×™×¨×ª ×”×ž×—×“×œ</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
-    <value>תמונת מצב: </value>
+    <value>×ª×ž×•× ×ª ×ž×¦×‘: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> פריטים, תחזוקה=</value>
+    <value> ×¤×¨×™×˜×™×, ×ª×—×–×•×§×”=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>לא נמצאו מכשירים</value>
+    <value>×œ× × ×ž×¦××• ×ž×›×©×™×¨×™×</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>חבר מכשיר חכם, מתג או אזעקה כדי לראות זאת כאן</value>
+    <value>×—×‘×¨ ×ž×›×©×™×¨ ×—×›×, ×ž×ª×’ ××• ××–×¢×§×” ×›×“×™ ×œ×¨××•×ª ×–××ª ×›××Ÿ</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>הצוות</value>
+    <value>×”×¦×•×•×ª</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>מרכז על המפה</value>
+    <value>×ž×¨×›×– ×¢×œ ×”×ž×¤×”</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>עקוב במפה</value>
+    <value>×¢×§×•×‘ ×‘×ž×¤×”</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>פתח את פרופיל Steam</value>
+    <value>×¤×ª×— ××ª ×¤×¨×•×¤×™×œ Steam</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>לקדם לתפקיד מנהיג</value>
+    <value>×œ×§×“× ×œ×ª×¤×§×™×“ ×ž× ×”×™×’</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>בעיטה מצד הקבוצה</value>
+    <value>×‘×¢×™×˜×” ×ž×¦×“ ×”×§×‘×•×¦×”</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>סמני פרופיל</value>
+    <value>×¡×ž× ×™ ×¤×¨×•×¤×™×œ</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>סימני מוות</value>
+    <value>×¡×™×ž× ×™ ×ž×•×•×ª</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>מצלמות</value>
+    <value>×ž×¦×œ×ž×•×ª</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>הוסף מצלמה</value>
+    <value>×”×•×¡×£ ×ž×¦×œ×ž×”</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>לא נמצאו מצלמות</value>
+    <value>×œ× × ×ž×¦××• ×ž×¦×œ×ž×•×ª</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>חבר מצלמה כדי לראות את התצוגה המקדימה שלה כאן</value>
+    <value>×—×‘×¨ ×ž×¦×œ×ž×” ×›×“×™ ×œ×¨××•×ª ××ª ×”×ª×¦×•×’×” ×”×ž×§×“×™×ž×” ×©×œ×” ×›××Ÿ</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>שחקנים</value>
+    <value>×©×—×§× ×™×</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>כיצד לעקוב</value>
+    <value>×›×™×¦×“ ×œ×¢×§×•×‘</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>למד כיצד פועל מעקב אחר שחקנים</value>
+    <value>×œ×ž×“ ×›×™×¦×“ ×¤×•×¢×œ ×ž×¢×§×‘ ××—×¨ ×©×—×§× ×™×</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>באינטרנט</value>
+    <value>×‘××™× ×˜×¨× ×˜</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>שחקנים מקוונים</value>
+    <value>×©×—×§× ×™× ×ž×§×•×•× ×™×</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>חיפוש ב-BM</value>
+    <value>×—×™×¤×•×© ×‘-BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>חפש את השרת הנוכחי ב-BattleMetrics</value>
+    <value>×—×¤×© ××ª ×”×©×¨×ª ×”× ×•×›×—×™ ×‘-BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>חלון קופץ</value>
+    <value>×—×œ×•×Ÿ ×§×•×¤×¥</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>פתח את השחקנים בחלון נפרד</value>
+    <value>×¤×ª×— ××ª ×”×©×—×§× ×™× ×‘×—×œ×•×Ÿ × ×¤×¨×“</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>מסלול</value>
+    <value>×ž×¡×œ×•×œ</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>שם מסלול ידני או מזהה Steam...</value>
+    <value>×©× ×ž×¡×œ×•×œ ×™×“× ×™ ××• ×ž×–×”×” Steam...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>לסנן שחקנים...</value>
+    <value>×œ×¡× ×Ÿ ×©×—×§× ×™×...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>טוען שחקנים...</value>
+    <value>×˜×•×¢×Ÿ ×©×—×§× ×™×...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>מעקב</value>
+    <value>×ž×¢×§×‘</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>שחקנים במעקב</value>
+    <value>×©×—×§× ×™× ×‘×ž×¢×§×‘</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>ניהול קבוצות</value>
+    <value>× ×™×”×•×œ ×§×‘×•×¦×•×ª</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>צפה בדוח הניתוח המלא</value>
+    <value>×¦×¤×” ×‘×“×•×— ×”× ×™×ª×•×— ×”×ž×œ×</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>מוכנים לחקור את המפה?</value>
+    <value>×ž×•×›× ×™× ×œ×—×§×•×¨ ××ª ×”×ž×¤×”?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>התחבר לשרת שנבחר כדי לטעון את מפת Rust והקבוצה בזמן אמת.</value>
+    <value>×”×ª×—×‘×¨ ×œ×©×¨×ª ×©× ×‘×—×¨ ×›×“×™ ×œ×˜×¢×•×Ÿ ××ª ×ž×¤×ª Rust ×•×”×§×‘×•×¦×” ×‘×–×ž×Ÿ ××ž×ª.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>מוכנים לשלוט ב-Rust?</value>
+    <value>×ž×•×›× ×™× ×œ×©×œ×•×˜ ×‘-Rust?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>חבר את החשבון שלך כדי להתחיל לעקוב אחר שחקנים, לקבל התראות על פשיטות בסיס ולשלוט במכשירים החכמים שלך באופן מיידי.</value>
+    <value>×—×‘×¨ ××ª ×”×—×©×‘×•×Ÿ ×©×œ×š ×›×“×™ ×œ×”×ª×—×™×œ ×œ×¢×§×•×‘ ××—×¨ ×©×—×§× ×™×, ×œ×§×‘×œ ×”×ª×¨××•×ª ×¢×œ ×¤×©×™×˜×•×ª ×‘×¡×™×¡ ×•×œ×©×œ×•×˜ ×‘×ž×›×©×™×¨×™× ×”×—×›×ž×™× ×©×œ×š ×‘××•×¤×Ÿ ×ž×™×™×“×™.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>התחברות וצימוד חשבון</value>
+    <value>×”×ª×—×‘×¨×•×ª ×•×¦×™×ž×•×“ ×—×©×‘×•×Ÿ</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>נדרשת כניסה ל-Steam בדפדפן המוגדר כברירת מחדל.</value>
+    <value>× ×“×¨×©×ª ×›× ×™×¡×” ×œ-Steam ×‘×“×¤×“×¤×Ÿ ×”×ž×•×’×“×¨ ×›×‘×¨×™×¨×ª ×ž×—×“×œ.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>למחוק את השרת?</value>
+    <value>×œ×ž×—×•×§ ××ª ×”×©×¨×ª?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>האם אתה בטוח שברצונך למחוק את השרת הזה? לא ניתן לבטל פעולה זו.</value>
+    <value>×”×× ××ª×” ×‘×˜×•×— ×©×‘×¨×¦×•× ×š ×œ×ž×—×•×§ ××ª ×”×©×¨×ª ×”×–×”? ×œ× × ×™×ª×Ÿ ×œ×‘×˜×œ ×¤×¢×•×œ×” ×–×•.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>בטל</value>
+    <value>×‘×˜×œ</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>מחק</value>
+    <value>×ž×—×§</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>הסתרה אוטומטית לאחר 3 שניות</value>
+    <value>×”×¡×ª×¨×” ××•×˜×•×ž×˜×™×ª ×œ××—×¨ 3 ×©× ×™×•×ª</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>מסנני מפה</value>
+    <value>×ž×¡× × ×™ ×ž×¤×”</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>רשת</value>
+    <value>×¨×©×ª</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>אנדרטאות</value>
+    <value>×× ×“×¨×˜××•×ª</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>חנויות</value>
+    <value>×—× ×•×™×•×ª</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>התראות צ'אט</value>
+    <value>×”×ª×¨××•×ª ×¦'××˜</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>התראות</value>
+    <value>×”×ª×¨××•×ª</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>הגדר</value>
+    <value>×”×’×“×¨</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>בחר הכל</value>
+    <value>×‘×—×¨ ×”×›×œ</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>בטל את הבחירה של הכל</value>
+    <value>×‘×˜×œ ××ª ×”×‘×—×™×¨×” ×©×œ ×”×›×œ</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>אירועים</value>
+    <value>××™×¨×•×¢×™×</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>אוניית משא</value>
+    <value>××•× ×™×™×ª ×ž×©×</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>ספאוון</value>
+    <value>×¡×¤××•×•×Ÿ</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>עגינה בנמל</value>
+    <value>×¢×’×™× ×” ×‘× ×ž×œ</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>יציאה (התראה 5 דקות)</value>
+    <value>×™×¦×™××” (×”×ª×¨××” 5 ×“×§×•×ª)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>התראה על הגעה (5 מטר לפני הרציף)</value>
+    <value>×”×ª×¨××” ×¢×œ ×”×’×¢×” (5 ×ž×˜×¨ ×œ×¤× ×™ ×”×¨×¦×™×£)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>מסוק סיור</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨</value>
   </data>
   <data name="Chinook" xml:space="preserve">
-    <value>צ'ינוק (CH47)</value>
+    <value>×¦'×™× ×•×§ (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>רוכל נודד</value>
+    <value>×¨×•×›×œ × ×•×“×“</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>מנגנון ההפעלה של אסדת נפט</value>
+    <value>×ž× ×’× ×•×Ÿ ×”×”×¤×¢×œ×” ×©×œ ××¡×“×ª × ×¤×˜</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>אירוע במעמקי הים</value>
+    <value>××™×¨×•×¢ ×‘×ž×¢×ž×§×™ ×”×™×</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>התראות חכמות</value>
+    <value>×”×ª×¨××•×ª ×—×›×ž×•×ª</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>סטטוס מקוון</value>
+    <value>×¡×˜×˜×•×¡ ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>מצב לא מקוון</value>
+    <value>×ž×¦×‘ ×œ× ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>התראות מעקב</value>
+    <value>×”×ª×¨××•×ª ×ž×¢×§×‘</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>מוות עצמי</value>
+    <value>×ž×•×•×ª ×¢×¦×ž×™</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>קבוצת המוות</value>
+    <value>×§×‘×•×¦×ª ×”×ž×•×•×ª</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>תחייה עצמית</value>
+    <value>×ª×—×™×™×” ×¢×¦×ž×™×ª</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>צוות Respawn</value>
+    <value>×¦×•×•×ª Respawn</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>חנויות חדשות</value>
+    <value>×—× ×•×™×•×ª ×—×“×©×•×ª</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>חנויות חשודות</value>
+    <value>×—× ×•×™×•×ª ×—×©×•×“×•×ª</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>התראות מסחר</value>
+    <value>×”×ª×¨××•×ª ×ž×¡×—×¨</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>סגנון כוונת</value>
+    <value>×¡×’× ×•×Ÿ ×›×•×•× ×ª</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>נקודה ירוקה</value>
+    <value>× ×§×•×“×” ×™×¨×•×§×”</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>מיני גרין</value>
+    <value>×ž×™× ×™ ×’×¨×™×Ÿ</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>פתח כוונת (ימין/שמאל)</value>
+    <value>×¤×ª×— ×›×•×•× ×ª (×™×ž×™×Ÿ/×©×ž××œ)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>המעגל האדום הדק</value>
+    <value>×”×ž×¢×’×œ ×”××“×•× ×”×“×§</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>ריבוע + נקודה</value>
+    <value>×¨×™×‘×•×¢ + × ×§×•×“×”</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>נקודה מג'נטה</value>
+    <value>× ×§×•×“×” ×ž×’'× ×˜×”</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>מג'נטה אופן קרוס</value>
+    <value>×ž×’'× ×˜×” ××•×¤×Ÿ ×§×¨×•×¡</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>קו טווח (נקודות)</value>
+    <value>×§×• ×˜×•×•×— (× ×§×•×“×•×ª)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>צייר כוונת...</value>
+    <value>×¦×™×™×¨ ×›×•×•× ×ª...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>בחר צג</value>
+    <value>×‘×—×¨ ×¦×’</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>צייר שכבת-על</value>
+    <value>×¦×™×™×¨ ×©×›×‘×ª-×¢×œ</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>צייר (לחץ לחיצה ימנית: גודל / צבע)</value>
+    <value>×¦×™×™×¨ (×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª: ×’×•×“×œ / ×¦×‘×¢)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>הוסף טקסט (לחץ לחיצה ימנית: צבע / גודל)</value>
+    <value>×”×•×¡×£ ×˜×§×¡×˜ (×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª: ×¦×‘×¢ / ×’×•×“×œ)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>סמל מיקום (לחץ לחיצה ימנית: בחר סמל)</value>
+    <value>×¡×ž×œ ×ž×™×§×•× (×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª: ×‘×—×¨ ×¡×ž×œ)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>מחק (החזק או לחץ)</value>
+    <value>×ž×—×§ (×”×—×–×§ ××• ×œ×—×¥)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>מחיקת שכבת-על משלך</value>
+    <value>×ž×—×™×§×ª ×©×›×‘×ª-×¢×œ ×ž×©×œ×š</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>העלה שכבת-על משלך / שתף</value>
+    <value>×”×¢×œ×” ×©×›×‘×ª-×¢×œ ×ž×©×œ×š / ×©×ª×£</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
-    <value>עסקאות רווחיות</value>
+    <value>×¢×¡×§××•×ª ×¨×•×•×—×™×•×ª</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>הזדמנויות ארביטראז' ישירות | קנה בזול → מכור ביוקר.</value>
+    <value>×”×–×“×ž× ×•×™×•×ª ××¨×‘×™×˜×¨××–' ×™×©×™×¨×•×ª | ×§× ×” ×‘×–×•×œ â†’ ×ž×›×•×¨ ×‘×™×•×§×¨.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>קנו X תמורת Y</value>
+    <value>×§× ×• X ×ª×ž×•×¨×ª Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>לנתח</value>
+    <value>×œ× ×ª×—</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>אני רוצה לקבל</value>
+    <value>×× ×™ ×¨×•×¦×” ×œ×§×‘×œ</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>אני יכול לשלם באמצעות</value>
+    <value>×× ×™ ×™×›×•×œ ×œ×©×œ× ×‘××ž×¦×¢×•×ª</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>צ'אט קבוצתי</value>
+    <value>×¦'××˜ ×§×‘×•×¦×ª×™</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>שלח</value>
+    <value>×©×œ×—</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>אישורי FCM</value>
+    <value>××™×©×•×¨×™ FCM</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>לחץ לחיצה ימנית כדי להגדיר</value>
+    <value>×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª ×›×“×™ ×œ×”×’×“×™×¨</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
-    <value>איפוס</value>
+    <value>××™×¤×•×¡</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>איפוס זום המפה ומיקומה</value>
+    <value>××™×¤×•×¡ ×–×•× ×”×ž×¤×” ×•×ž×™×§×•×ž×”</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>מיני</value>
+    <value>×ž×™× ×™</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>הפעלה/כיבוי של הכוונת (לחץ לחיצה ימנית לאפשרויות)</value>
+    <value>×”×¤×¢×œ×”/×›×™×‘×•×™ ×©×œ ×”×›×•×•× ×ª (×œ×—×¥ ×œ×—×™×¦×” ×™×ž× ×™×ª ×œ××¤×©×¨×•×™×•×ª)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>נגן רצועות</value>
+    <value>× ×’×Ÿ ×¨×¦×•×¢×•×ª</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>סגור את דפדפן BattleMetrics</value>
+    <value>×¡×’×•×¨ ××ª ×“×¤×“×¤×Ÿ BattleMetrics</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>חיפוש בחנות</value>
+    <value>×—×™×¤×•×© ×‘×—× ×•×ª</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>סגור חיפוש</value>
+    <value>×¡×’×•×¨ ×—×™×¤×•×©</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>אנא הפעל תחילה את 'חנויות'</value>
+    <value>×× × ×”×¤×¢×œ ×ª×—×™×œ×” ××ª '×—× ×•×™×•×ª'</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>הפעל סקר בחנות</value>
+    <value>×”×¤×¢×œ ×¡×§×¨ ×‘×—× ×•×ª</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>צ'אט קבוצתי</value>
+    <value>×¦'××˜ ×§×‘×•×¦×ª×™</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>סגור צ'אט</value>
+    <value>×¡×’×•×¨ ×¦'××˜</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>הגדרות פקודות צ'אט</value>
+    <value>×”×’×“×¨×•×ª ×¤×§×•×“×•×ª ×¦'××˜</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>פקודות צ'אט</value>
+    <value>×¤×§×•×“×•×ª ×¦'××˜</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>חזרה</value>
+    <value>×—×–×¨×”</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>קדימה</value>
+    <value>×§×“×™×ž×”</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>פתח בדפדפן חיצוני</value>
+    <value>×¤×ª×— ×‘×“×¤×“×¤×Ÿ ×—×™×¦×•× ×™</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>חפש ב-BM...</value>
+    <value>×—×¤×© ×‘-BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>חיפוש</value>
+    <value>×—×™×¤×•×©</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>בחר שרת</value>
+    <value>×‘×—×¨ ×©×¨×ª</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>מנותק</value>
+    <value>×ž× ×•×ª×§</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>מתחבר...</value>
+    <value>×ž×ª×—×‘×¨...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>מתבצע אתחול...</value>
+    <value>×ž×ª×‘×¦×¢ ××ª×—×•×œ...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>מכשירים פעילים</value>
+    <value>×ž×›×©×™×¨×™× ×¤×¢×™×œ×™×</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>מחובר לחלוטין</value>
+    <value>×ž×—×•×‘×¨ ×œ×—×œ×•×˜×™×Ÿ</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>לא ידוע</value>
+    <value>×œ× ×™×“×•×¢</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>זה עלול לקחת רגע...</value>
+    <value>×–×” ×¢×œ×•×œ ×œ×§×—×ª ×¨×’×¢...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>הגדרות היישום</value>
+    <value>×”×’×“×¨×•×ª ×”×™×™×©×•×</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>כללי</value>
+    <value>×›×œ×œ×™</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>הפעל עם Windows (במצב ממוזער)</value>
+    <value>×”×¤×¢×œ ×¢× Windows (×‘×ž×¦×‘ ×ž×ž×•×–×¢×¨)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>התחל במצב ממוזער (תמיד)</value>
+    <value>×”×ª×—×œ ×‘×ž×¦×‘ ×ž×ž×•×–×¢×¨ (×ª×ž×™×“)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>התחברות אוטומטית לשרת האחרון בעת ההפעלה</value>
+    <value>×”×ª×—×‘×¨×•×ª ××•×˜×•×ž×˜×™×ª ×œ×©×¨×ª ×”××—×¨×•×Ÿ ×‘×¢×ª ×”×”×¤×¢×œ×”</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>מתחבר מחדש באופן אוטומטי לשרת האחרון ומטען את המפה.</value>
+    <value>×ž×ª×—×‘×¨ ×ž×—×“×© ×‘××•×¤×Ÿ ××•×˜×•×ž×˜×™ ×œ×©×¨×ª ×”××—×¨×•×Ÿ ×•×ž×˜×¢×Ÿ ××ª ×”×ž×¤×”.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>התנהגות</value>
+    <value>×”×ª× ×”×’×•×ª</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>לצמצם למגש במקום לסגור</value>
+    <value>×œ×¦×ž×¦× ×œ×ž×’×© ×‘×ž×§×•× ×œ×¡×’×•×¨</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>הפעל מעקב אחר נגן ברקע</value>
+    <value>×”×¤×¢×œ ×ž×¢×§×‘ ××—×¨ × ×’×Ÿ ×‘×¨×§×¢</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>ממשיך לעקוב אחר השחקנים באמצעות BattleMetrics גם כשהחלון ממוזער.</value>
+    <value>×ž×ž×©×™×š ×œ×¢×§×•×‘ ××—×¨ ×”×©×—×§× ×™× ×‘××ž×¦×¢×•×ª BattleMetrics ×’× ×›×©×”×—×œ×•×Ÿ ×ž×ž×•×–×¢×¨.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>הסתר את מסך הקונסולה של המערכת (לצמצום העומס)</value>
+    <value>×”×¡×ª×¨ ××ª ×ž×¡×š ×”×§×•× ×¡×•×œ×” ×©×œ ×”×ž×¢×¨×›×ª (×œ×¦×ž×¦×•× ×”×¢×•×ž×¡)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>מסתיר את לוח היומן/הקונסולה התחתון כדי לחסוך מקום במפה.</value>
+    <value>×ž×¡×ª×™×¨ ××ª ×œ×•×— ×”×™×•×ž×Ÿ/×”×§×•× ×¡×•×œ×” ×”×ª×—×ª×•×Ÿ ×›×“×™ ×œ×—×¡×•×š ×ž×§×•× ×‘×ž×¤×”.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>הגדרות מפה</value>
+    <value>×”×’×“×¨×•×ª ×ž×¤×”</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>טען אוטומטית את החנויות עם ההתחברות</value>
+    <value>×˜×¢×Ÿ ××•×˜×•×ž×˜×™×ª ××ª ×”×—× ×•×™×•×ª ×¢× ×”×”×ª×—×‘×¨×•×ª</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>מתחיל באופן אוטומטי לסרוק חנויות ולשלוח התראות ברגע שמתחבר לשרת.</value>
+    <value>×ž×ª×—×™×œ ×‘××•×¤×Ÿ ××•×˜×•×ž×˜×™ ×œ×¡×¨×•×§ ×—× ×•×™×•×ª ×•×œ×©×œ×•×— ×”×ª×¨××•×ª ×‘×¨×’×¢ ×©×ž×ª×—×‘×¨ ×œ×©×¨×ª.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>השתמש בתוויות טקסט במקום בסמלים</value>
+    <value>×”×©×ª×ž×© ×‘×ª×•×•×™×•×ª ×˜×§×¡×˜ ×‘×ž×§×•× ×‘×¡×ž×œ×™×</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>כאשר האפשרות מופעלת, שמות האנדרטאות במפת Rust מוצגים כטקסט בגופן Permanent Marker במקום כאייקונים.</value>
+    <value>×›××©×¨ ×”××¤×©×¨×•×ª ×ž×•×¤×¢×œ×ª, ×©×ž×•×ª ×”×× ×“×¨×˜××•×ª ×‘×ž×¤×ª Rust ×ž×•×¦×’×™× ×›×˜×§×¡×˜ ×‘×’×•×¤×Ÿ Permanent Marker ×‘×ž×§×•× ×›××™×™×§×•× ×™×.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
-    <value>סגנון האנדרטה:</value>
+    <value>×¡×’× ×•×Ÿ ×”×× ×“×¨×˜×”:</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>קנה המידה של האנדרטה:</value>
+    <value>×§× ×” ×”×ž×™×“×” ×©×œ ×”×× ×“×¨×˜×”:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>אטימות האנדרטה:</value>
+    <value>××˜×™×ž×•×ª ×”×× ×“×¨×˜×”:</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
-    <value>סמלים מאת rustmaps.com</value>
+    <value>×¡×ž×œ×™× ×ž××ª rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>שמות האנדרטאות בטקסט המקורי</value>
+    <value>×©×ž×•×ª ×”×× ×“×¨×˜××•×ª ×‘×˜×§×¡×˜ ×”×ž×§×•×¨×™</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
-    <value>קרדיטים</value>
+    <value>×§×¨×“×™×˜×™×</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>סמלי האנדרטאות במפה באדיבות </value>
+    <value>×¡×ž×œ×™ ×”×× ×“×¨×˜××•×ª ×‘×ž×¤×” ×‘××“×™×‘×•×ª </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> — בשימוש באישור.</value>
+    <value> â€” ×‘×©×™×ž×•×© ×‘××™×©×•×¨.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>כל סמלי האנדרטאות והגרפיקה הנלווית הם בבעלות rustmaps.com. תודה על תמיכתכם בקהילת Rust!</value>
+    <value>×›×œ ×¡×ž×œ×™ ×”×× ×“×¨×˜××•×ª ×•×”×’×¨×¤×™×§×” ×”× ×œ×•×•×™×ª ×”× ×‘×‘×¢×œ×•×ª rustmaps.com. ×ª×•×“×” ×¢×œ ×ª×ž×™×›×ª×›× ×‘×§×”×™×œ×ª Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>צ'אט</value>
+    <value>×¦'××˜</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>שינוי התראות צ'אט</value>
+    <value>×©×™× ×•×™ ×”×ª×¨××•×ª ×¦'××˜</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>נהל את חשבון Steam המקושר שלך בחלון הראשי.</value>
+    <value>× ×”×œ ××ª ×—×©×‘×•×Ÿ Steam ×”×ž×§×•×©×¨ ×©×œ×š ×‘×—×œ×•×Ÿ ×”×¨××©×™.</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>סגור</value>
+    <value>×¡×’×•×¨</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>התראות נכנסות</value>
+    <value>×”×ª×¨××•×ª × ×›× ×¡×•×ª</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>לנגב</value>
+    <value>×œ× ×’×‘</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>שחקנים</value>
+    <value>×©×—×§× ×™×</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>שחקנים</value>
+    <value>×©×—×§× ×™×</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>אני רוצה לקנות (למשל, נפט גולמי)</value>
+    <value>×× ×™ ×¨×•×¦×” ×œ×§× ×•×ª (×œ×ž×©×œ, × ×¤×˜ ×’×•×œ×ž×™)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>אני רוצה לשלם באמצעות (למשל, גרוטאות)</value>
+    <value>×× ×™ ×¨×•×¦×” ×œ×©×œ× ×‘××ž×¦×¢×•×ª (×œ×ž×©×œ, ×’×¨×•×˜××•×ª)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>האם אתה בטוח שברצונך למחוק את השרת "{0}"? לא ניתן לבטל פעולה זו.</value>
+    <value>×”×× ××ª×” ×‘×˜×•×— ×©×‘×¨×¦×•× ×š ×œ×ž×—×•×§ ××ª ×”×©×¨×ª "{0}"? ×œ× × ×™×ª×Ÿ ×œ×‘×˜×œ ×¤×¢×•×œ×” ×–×•.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
-    <value>התאמה: שגיאה</value>
+    <value>×”×ª××ž×”: ×©×’×™××”</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>התאמה: מתחילים...</value>
+    <value>×”×ª××ž×”: ×ž×ª×—×™×œ×™×...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>הפעלת Pairing-Listener...</value>
+    <value>×”×¤×¢×œ×ª Pairing-Listener...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>מחובר</value>
+    <value>×ž×—×•×‘×¨</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>מלאי</value>
+    <value>×ž×œ××™</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>מחיר</value>
+    <value>×ž×—×™×¨</value>
   </data>
   <data name="On" xml:space="preserve">
     <value>ON</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>כבוי</value>
+    <value>×›×‘×•×™</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>פעיל</value>
+    <value>×¤×¢×™×œ</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>לא פעיל</value>
+    <value>×œ× ×¤×¢×™×œ</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>קבוצה</value>
+    <value>×§×‘×•×¦×”</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>שולחן Rust+ – ייבוא מכשירים</value>
+    <value>×©×•×œ×—×Ÿ Rust+ â€“ ×™×™×‘×•× ×ž×›×©×™×¨×™×</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>ייבוא מכשירים</value>
+    <value>×™×™×‘×•× ×ž×›×©×™×¨×™×</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>בחר את המכשירים שברצונך לייבא לשרת זה.</value>
+    <value>×‘×—×¨ ××ª ×”×ž×›×©×™×¨×™× ×©×‘×¨×¦×•× ×š ×œ×™×™×‘× ×œ×©×¨×ª ×–×”.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>בדוק את מצב המכשיר</value>
+    <value>×‘×“×•×§ ××ª ×ž×¦×‘ ×”×ž×›×©×™×¨</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>ייבא את הנבחר</value>
+    <value>×™×™×‘× ××ª ×”× ×‘×—×¨</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>קיצורי דרך ב-BM</value>
+    <value>×§×™×¦×•×¨×™ ×“×¨×š ×‘-BM</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>התאמה: הקובץ config נמחק</value>
+    <value>×”×ª××ž×”: ×”×§×•×‘×¥ config × ×ž×—×§</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Rust+ מעקב שולחני</value>
+    <value>Rust+ ×ž×¢×§×‘ ×©×•×œ×—× ×™</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
-    <value>שולחן Rust+ (מעקב {0})</value>
+    <value>×©×•×œ×—×Ÿ Rust+ (×ž×¢×§×‘ {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>שינוי שם הקבוצה</value>
+    <value>×©×™× ×•×™ ×©× ×”×§×‘×•×¦×”</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>שם חדש לקבוצה:</value>
+    <value>×©× ×—×“×© ×œ×§×‘×•×¦×”:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>שם חדש ל- #{0}:</value>
+    <value>×©× ×—×“×© ×œ- #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>הזן את מזהה השרת של Battlemetrics עבור "{0}":</value>
+    <value>×”×–×Ÿ ××ª ×ž×–×”×” ×”×©×¨×ª ×©×œ Battlemetrics ×¢×‘×•×¨ "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>מעקב: {0}</value>
+    <value>×ž×¢×§×‘: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>עדכון אחרון: {0}</value>
+    <value>×¢×“×›×•×Ÿ ××—×¨×•×Ÿ: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>שולחן Rust+ פתוח</value>
+    <value>×©×•×œ×—×Ÿ Rust+ ×¤×ª×•×—</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>יציאה</value>
+    <value>×™×¦×™××”</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>תיאור</value>
+    <value>×ª×™××•×¨</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>מצלמה</value>
+    <value>×ž×¦×œ×ž×”</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>אזעקות</value>
+    <value>××–×¢×§×•×ª</value>
   </data>
   <data name="Identifier" xml:space="preserve">
-    <value>מזהה:</value>
+    <value>×ž×–×”×”:</value>
   </data>
   <data name="FPS" xml:space="preserve">
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>הערה: מומלץ להשתמש ב-2 fps; קצב פריימים גבוה יותר עלול לגרום לניתוק החיבור לשרת</value>
+    <value>×”×¢×¨×”: ×ž×•×ž×œ×¥ ×œ×”×©×ª×ž×© ×‘-2 fps; ×§×¦×‘ ×¤×¨×™×™×ž×™× ×’×‘×•×” ×™×•×ª×¨ ×¢×œ×•×œ ×œ×’×¨×•× ×œ× ×™×ª×•×§ ×”×—×™×‘×•×¨ ×œ×©×¨×ª</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>פיקסל</value>
+    <value>×¤×™×§×¡×œ</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>עט</value>
+    <value>×¢×˜</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>שורה</value>
+    <value>×©×•×¨×”</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>ריבוע</value>
+    <value>×¨×™×‘×•×¢</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>מעגל</value>
+    <value>×ž×¢×’×œ</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>עובי:</value>
+    <value>×¢×•×‘×™:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>אטימות:</value>
+    <value>××˜×™×ž×•×ª:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>העלה קובץ PNG</value>
+    <value>×”×¢×œ×” ×§×•×‘×¥ PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>נקי</value>
+    <value>× ×§×™</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>שמור</value>
+    <value>×©×ž×•×¨</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>הקצו מקשי קיצור גלובליים למתגי Smart Switches. מספר מכשירים יכולים לחלוק מקש קיצור אחד (הם יופעלו בזה אחר זה).</value>
+    <value>×”×§×¦×• ×ž×§×©×™ ×§×™×¦×•×¨ ×’×œ×•×‘×œ×™×™× ×œ×ž×ª×’×™ Smart Switches. ×ž×¡×¤×¨ ×ž×›×©×™×¨×™× ×™×›×•×œ×™× ×œ×—×œ×•×§ ×ž×§×© ×§×™×¦×•×¨ ××—×“ (×”× ×™×•×¤×¢×œ×• ×‘×–×” ××—×¨ ×–×”).</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>מכשיר</value>
+    <value>×ž×›×©×™×¨</value>
   </data>
   <data name="EntityId" xml:space="preserve">
-    <value>מזהה ישות</value>
+    <value>×ž×–×”×” ×™×©×•×ª</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>מקש קיצור</value>
+    <value>×ž×§×© ×§×™×¦×•×¨</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>סט</value>
+    <value>×¡×˜</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>סגור והשבית</value>
+    <value>×¡×’×•×¨ ×•×”×©×‘×™×ª</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>סגור והפעל</value>
+    <value>×¡×’×•×¨ ×•×”×¤×¢×œ</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>עדכון בנושא תחזוקה, מפת מיני ומעקב</value>
+    <value>×¢×“×›×•×Ÿ ×‘× ×•×©× ×ª×—×–×•×§×”, ×ž×¤×ª ×ž×™× ×™ ×•×ž×¢×§×‘</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>סיכום התכונות והתאמות</value>
+    <value>×¡×™×›×•× ×”×ª×›×•× ×•×ª ×•×”×ª××ž×•×ª</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>אל תציג זאת שוב</value>
+    <value>××œ ×ª×¦×™×’ ×–××ª ×©×•×‘</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>מדהים, בוא נלך!</value>
+    <value>×ž×“×”×™×, ×‘×•× × ×œ×š!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>הגדרות המפה הקטנה</value>
+    <value>×”×’×“×¨×•×ª ×”×ž×¤×” ×”×§×˜× ×”</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>צורה</value>
+    <value>×¦×•×¨×”</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>מלבן</value>
+    <value>×ž×œ×‘×Ÿ</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>אטימות: {0}%</value>
+    <value>××˜×™×ž×•×ª: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>גודל: {0}% (SHIFT+גלגל העכבר)</value>
+    <value>×’×•×“×œ: {0}% (SHIFT+×’×œ×’×œ ×”×¢×›×‘×¨)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>הצג את שעת השרת</value>
+    <value>×”×¦×’ ××ª ×©×¢×ª ×”×©×¨×ª</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>פרטי השרת</value>
+    <value>×¤×¨×˜×™ ×”×©×¨×ª</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>אין תיאור זמין.</value>
+    <value>××™×Ÿ ×ª×™××•×¨ ×–×ž×™×Ÿ.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>הגרסה הנוכחית: {0}</value>
+    <value>×”×’×¨×¡×” ×”× ×•×›×—×™×ª: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>הערות עדכון והיסטוריית גרסאות</value>
+    <value>×”×¢×¨×•×ª ×¢×“×›×•×Ÿ ×•×”×™×¡×˜×•×¨×™×™×ª ×’×¨×¡××•×ª</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>הפעל פקודות צ'אט</value>
+    <value>×”×¤×¢×œ ×¤×§×•×“×•×ª ×¦'××˜</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>קידומת:</value>
+    <value>×§×™×“×•×ž×ª:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>פקודות סטנדרטיות</value>
+    <value>×¤×§×•×“×•×ª ×¡×˜× ×“×¨×˜×™×•×ª</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>אוכלוסייה:</value>
+    <value>××•×›×œ×•×¡×™×™×”:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>שעה:</value>
+    <value>×©×¢×”:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>לקידום:</value>
+    <value>×œ×§×™×“×•×:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>מעמקי הים:</value>
+    <value>×ž×¢×ž×§×™ ×”×™×:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>אוניית משא:</value>
+    <value>××•× ×™×™×ª ×ž×©×:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>אסדת נפט:</value>
+    <value>××¡×“×ª × ×¤×˜:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>מסוק סיור:</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>רוכל נודד:</value>
+    <value>×¨×•×›×œ × ×•×“×“:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>פרטי תחזוקה:</value>
+    <value>×¤×¨×˜×™ ×ª×—×–×•×§×”:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>עיכוב פקודה:</value>
+    <value>×¢×™×›×•×‘ ×¤×§×•×“×”:</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>שפה</value>
+    <value>×©×¤×”</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>בחר שפה</value>
+    <value>×‘×—×¨ ×©×¤×”</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>כדי שהשינוי בשפה ייכנס לתוקף במלואו, יש להפעיל מחדש את המחשב.</value>
+    <value>×›×“×™ ×©×”×©×™× ×•×™ ×‘×©×¤×” ×™×™×›× ×¡ ×œ×ª×•×§×£ ×‘×ž×œ×•××•, ×™×© ×œ×”×¤×¢×™×œ ×ž×—×“×© ××ª ×”×ž×—×©×‘.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>מתגים חכמים</value>
+    <value>×ž×ª×’×™× ×—×›×ž×™×</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>צגי תחזוקה (TC)</value>
+    <value>×¦×’×™ ×ª×—×–×•×§×” (TC)</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>לא נמצאו צגים מסוג TC.</value>
+    <value>×œ× × ×ž×¦××• ×¦×’×™× ×ž×¡×•×’ TC.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>שמור וסגור</value>
+    <value>×©×ž×•×¨ ×•×¡×’×•×¨</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>הודעה...</value>
+    <value>×”×•×“×¢×”...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>הודעת שגיאה כאן</value>
+    <value>×”×•×“×¢×ª ×©×’×™××” ×›××Ÿ</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>מסוק סיור</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>מסוק סיור בפעולה – פועל עבור {0}</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨ ×‘×¤×¢×•×œ×” â€“ ×¤×•×¢×œ ×¢×‘×•×¨ {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>התחבר במהלך האירוע – זמן ההופעה לא ידוע</value>
+    <value>×”×ª×—×‘×¨ ×‘×ž×”×œ×š ×”××™×¨×•×¢ â€“ ×–×ž×Ÿ ×”×”×•×¤×¢×” ×œ× ×™×“×•×¢</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>מסוק סיור פעיל (זמן ההופעה לא ידוע)</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨ ×¤×¢×™×œ (×–×ž×Ÿ ×”×”×•×¤×¢×” ×œ× ×™×“×•×¢)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>מסוק סיור הופל {0} לפני זמן קצר במהלך המפגש הזה</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨ ×”×•×¤×œ {0} ×œ×¤× ×™ ×–×ž×Ÿ ×§×¦×¨ ×‘×ž×”×œ×š ×”×ž×¤×’×© ×”×–×”</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>מסוק הסיור עזב את המפה {0} לפני זמן מה במהלך המפגש הזה</value>
+    <value>×ž×¡×•×§ ×”×¡×™×•×¨ ×¢×–×‘ ××ª ×”×ž×¤×” {0} ×œ×¤× ×™ ×–×ž×Ÿ ×ž×” ×‘×ž×”×œ×š ×”×ž×¤×’×© ×”×–×”</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>עוגנת ב- {0} – יוצאת בעוד כ-{1}</value>
+    <value>×¢×•×’× ×ª ×‘- {0} â€“ ×™×•×¦××ª ×‘×¢×•×“ ×›-{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>נמל</value>
+    <value>× ×ž×œ</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>כבר עוגן בנמל – שעת היציאה לא ידועה</value>
+    <value>×›×‘×¨ ×¢×•×’×Ÿ ×‘× ×ž×œ â€“ ×©×¢×ª ×”×™×¦×™××” ×œ× ×™×“×•×¢×”</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>עוגנת ב- {0} (משך העגינה עדיין לא ידוע)</value>
+    <value>×¢×•×’× ×ª ×‘- {0} (×ž×©×š ×”×¢×’×™× ×” ×¢×“×™×™×Ÿ ×œ× ×™×“×•×¢)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>הזמן שנותר במפה (מהרגע שהופעת)</value>
+    <value>×”×–×ž×Ÿ ×©× ×•×ª×¨ ×‘×ž×¤×” (×ž×”×¨×’×¢ ×©×”×•×¤×¢×ª)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>התחבר באמצע הדרך – זמן לא ידוע</value>
+    <value>×”×ª×—×‘×¨ ×‘××ž×¦×¢ ×”×“×¨×š â€“ ×–×ž×Ÿ ×œ× ×™×“×•×¢</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>התחבר באמצע המסלול – זמן לא ידוע (אורך המסלול הכולל: כ-{0})</value>
+    <value>×”×ª×—×‘×¨ ×‘××ž×¦×¢ ×”×ž×¡×œ×•×œ â€“ ×–×ž×Ÿ ×œ× ×™×“×•×¢ (××•×¨×š ×”×ž×¡×œ×•×œ ×”×›×•×œ×œ: ×›-{0})</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>ספינת המטען נעלמה {0}דקות {1}שניות לפני כן, במהלך ההפעלה הנוכחית</value>
+    <value>×¡×¤×™× ×ª ×”×ž×˜×¢×Ÿ × ×¢×œ×ž×” {0}×“×§×•×ª {1}×©× ×™×•×ª ×œ×¤× ×™ ×›×Ÿ, ×‘×ž×”×œ×š ×”×”×¤×¢×œ×” ×”× ×•×›×—×™×ª</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>מוכר נודד פעיל – מתמודד בבחירות ל- {0}</value>
+    <value>×ž×•×›×¨ × ×•×“×“ ×¤×¢×™×œ â€“ ×ž×ª×ž×•×“×“ ×‘×‘×—×™×¨×•×ª ×œ- {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>רוכל נודד פעיל (זמן ההופעה לא ידוע)</value>
+    <value>×¨×•×›×œ × ×•×“×“ ×¤×¢×™×œ (×–×ž×Ÿ ×”×”×•×¤×¢×” ×œ× ×™×“×•×¢)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>המוכר הנודד נעלם {0} לפני זמן מה במהלך ההפעלה הנוכחית</value>
+    <value>×”×ž×•×›×¨ ×”× ×•×“×“ × ×¢×œ× {0} ×œ×¤× ×™ ×–×ž×Ÿ ×ž×” ×‘×ž×”×œ×š ×”×”×¤×¢×œ×” ×”× ×•×›×—×™×ª</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active – רצים למען {0}</value>
+    <value>Deep Sea active â€“ ×¨×¦×™× ×œ×ž×¢×Ÿ {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>פעיל במעמקי הים (זמן ההטלה לא ידוע)</value>
+    <value>×¤×¢×™×œ ×‘×ž×¢×ž×§×™ ×”×™× (×–×ž×Ÿ ×”×”×˜×œ×” ×œ× ×™×“×•×¢)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>"Deep Sea" הסתיים לפני {0} במהלך המפגש הזה</value>
+    <value>"Deep Sea" ×”×¡×ª×™×™× ×œ×¤× ×™ {0} ×‘×ž×”×œ×š ×”×ž×¤×’×© ×”×–×”</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
-    <value>{0}שעות {1:D2} דקות</value>
+    <value>{0}×©×¢×•×ª {1:D2} ×“×§×•×ª</value>
   </data>
   <data name="TimerMinutesSeconds" xml:space="preserve">
     <value>{0}m {1:D2}s</value>
@@ -1277,7 +1277,7 @@
     <value>{0}h {1}m</value>
   </data>
   <data name="AgoMinutes" xml:space="preserve">
-    <value>{0}מ</value>
+    <value>{0}×ž</value>
   </data>
   <data name="DurationMinutesSeconds" xml:space="preserve">
     <value>{0}m {1}s</value>
@@ -1286,615 +1286,635 @@
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} שחקנים מחוברים כרגע.{1}</value>
+    <value>{0} ×©×—×§× ×™× ×ž×—×•×‘×¨×™× ×›×¨×’×¢.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> תור: {0} שחקנים.</value>
+    <value> ×ª×•×¨: {0} ×©×—×§× ×™×.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>הזמן הנוכחי במשחק: {0}.</value>
+    <value>×”×–×ž×Ÿ ×”× ×•×›×—×™ ×‘×ž×©×—×§: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} הועלה לדרגת מפקד.</value>
+    <value>{0} ×”×•×¢×œ×” ×œ×“×¨×’×ª ×ž×¤×§×“.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea פעיל! מתמודד בבחירות ל- {0}.</value>
+    <value>Deep Sea ×¤×¢×™×œ! ×ž×ª×ž×•×“×“ ×‘×‘×—×™×¨×•×ª ×œ- {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea פעיל כרגע (התחבר באמצע האירוע – זמן ההופעה לא ידוע).</value>
+    <value>Deep Sea ×¤×¢×™×œ ×›×¨×’×¢ (×”×ª×—×‘×¨ ×‘××ž×¦×¢ ×”××™×¨×•×¢ â€“ ×–×ž×Ÿ ×”×”×•×¤×¢×” ×œ× ×™×“×•×¢).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea סיים את {0} לפני מספר דקות את ההפעלה הזו.</value>
+    <value>Deep Sea ×¡×™×™× ××ª {0} ×œ×¤× ×™ ×ž×¡×¤×¨ ×“×§×•×ª ××ª ×”×”×¤×¢×œ×” ×”×–×•.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>סטטוס האירוע בים העמוק אינו ידוע (לא נצפה במושב זה).</value>
+    <value>×¡×˜×˜×•×¡ ×”××™×¨×•×¢ ×‘×™× ×”×¢×ž×•×§ ××™× ×• ×™×“×•×¢ (×œ× × ×¦×¤×” ×‘×ž×•×©×‘ ×–×”).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>ספינת משא אינה פעילה.</value>
+    <value>×¡×¤×™× ×ª ×ž×©× ××™× ×” ×¤×¢×™×œ×”.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>אוניית משא עגנה ב- {0}. יוצאת בעוד כ- {1} דקות.</value>
+    <value>××•× ×™×™×ª ×ž×©× ×¢×’× ×” ×‘- {0}. ×™×•×¦××ª ×‘×¢×•×“ ×›- {1} ×“×§×•×ª.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>אוניית משא עגנה ב- {0} והיא מתכוננת לצאת לדרכה.</value>
+    <value>××•× ×™×™×ª ×ž×©× ×¢×’× ×” ×‘- {0} ×•×”×™× ×ž×ª×›×•× × ×ª ×œ×¦××ª ×œ×“×¨×›×”.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>אוניית משא עגנה ב- {0} (שעת היציאה לא ידועה).</value>
+    <value>××•× ×™×™×ª ×ž×©× ×¢×’× ×” ×‘- {0} (×©×¢×ª ×”×™×¦×™××” ×œ× ×™×“×•×¢×”).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>ספינת משא פעילה. יוצאת בעוד כ- {0} דקות.</value>
+    <value>×¡×¤×™× ×ª ×ž×©× ×¤×¢×™×œ×”. ×™×•×¦××ª ×‘×¢×•×“ ×›- {0} ×“×§×•×ª.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>ספינת המטען פועלת ומתכוננת לצאת לדרך בקרוב.</value>
+    <value>×¡×¤×™× ×ª ×”×ž×˜×¢×Ÿ ×¤×•×¢×œ×ª ×•×ž×ª×›×•× × ×ª ×œ×¦××ª ×œ×“×¨×š ×‘×§×¨×•×‘.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>אוניית משא פעילה (משך המסלול עבור שרת זה טרם נלמד).</value>
+    <value>××•× ×™×™×ª ×ž×©× ×¤×¢×™×œ×” (×ž×©×š ×”×ž×¡×œ×•×œ ×¢×‘×•×¨ ×©×¨×ª ×–×” ×˜×¨× × ×œ×ž×“).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>ספינת משא פעילה (מחוברת לאחר ההופעה – משך הזמן הנותר אינו ידוע).</value>
+    <value>×¡×¤×™× ×ª ×ž×©× ×¤×¢×™×œ×” (×ž×—×•×‘×¨×ª ×œ××—×¨ ×”×”×•×¤×¢×” â€“ ×ž×©×š ×”×–×ž×Ÿ ×”× ×•×ª×¨ ××™× ×• ×™×“×•×¢).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>ספינת משא אינה פעילה. נעלמה {0} לפני מספר דקות במהלך ההפעלה הנוכחית.</value>
+    <value>×¡×¤×™× ×ª ×ž×©× ××™× ×” ×¤×¢×™×œ×”. × ×¢×œ×ž×” {0} ×œ×¤× ×™ ×ž×¡×¤×¨ ×“×§×•×ª ×‘×ž×”×œ×š ×”×”×¤×¢×œ×” ×”× ×•×›×—×™×ª.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: crate ב- {1}, {2}</value>
+    <value>{0}: crate ×‘- {1}, {2}</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: התקשר לאחרונה לפני {1}דקות</value>
+    <value>{0}: ×”×ª×§×©×¨ ×œ××—×¨×•× ×” ×œ×¤× ×™ {1}×“×§×•×ª</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: לא נקרא במושב זה</value>
+    <value>{0}: ×œ× × ×§×¨× ×‘×ž×•×©×‘ ×–×”</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>מסוק הסיור פועל! פועל עבור {0}.</value>
+    <value>×ž×¡×•×§ ×”×¡×™×•×¨ ×¤×•×¢×œ! ×¤×•×¢×œ ×¢×‘×•×¨ {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>מסוק הסיור פועל כרגע (התחבר באמצע האירוע – זמן ההופעה לא ידוע).</value>
+    <value>×ž×¡×•×§ ×”×¡×™×•×¨ ×¤×•×¢×œ ×›×¨×’×¢ (×”×ª×—×‘×¨ ×‘××ž×¦×¢ ×”××™×¨×•×¢ â€“ ×–×ž×Ÿ ×”×”×•×¤×¢×” ×œ× ×™×“×•×¢).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>מסוק הסיור אינו פעיל. הוא היה פעיל לפני {0} {1} במהלך ההפעלה הנוכחית.</value>
+    <value>×ž×¡×•×§ ×”×¡×™×•×¨ ××™× ×• ×¤×¢×™×œ. ×”×•× ×”×™×” ×¤×¢×™×œ ×œ×¤× ×™ {0} {1} ×‘×ž×”×œ×š ×”×”×¤×¢×œ×” ×”× ×•×›×—×™×ª.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>הופל</value>
+    <value>×”×•×¤×œ</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>יצא מהמפה</value>
+    <value>×™×¦× ×ž×”×ž×¤×”</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>סטטוס האירוע של מסוק הסיור אינו ידוע (לא נצפה במושב זה).</value>
+    <value>×¡×˜×˜×•×¡ ×”××™×¨×•×¢ ×©×œ ×ž×¡×•×§ ×”×¡×™×•×¨ ××™× ×• ×™×“×•×¢ (×œ× × ×¦×¤×” ×‘×ž×•×©×‘ ×–×”).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>"הרוכל הנודד" פעיל! מתמודד בבחירות ל- {0}.</value>
+    <value>"×”×¨×•×›×œ ×”× ×•×“×“" ×¤×¢×™×œ! ×ž×ª×ž×•×“×“ ×‘×‘×—×™×¨×•×ª ×œ- {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>הרוכל הנודד פעיל כרגע (התחבר באמצע האירוע – זמן ההופעה לא ידוע).</value>
+    <value>×”×¨×•×›×œ ×”× ×•×“×“ ×¤×¢×™×œ ×›×¨×’×¢ (×”×ª×—×‘×¨ ×‘××ž×¦×¢ ×”××™×¨×•×¢ â€“ ×–×ž×Ÿ ×”×”×•×¤×¢×” ×œ× ×™×“×•×¢).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>המוכר הנודד אינו פעיל. נעלם מהמסך לפני {0} במהלך ההפעלה הנוכחית.</value>
+    <value>×”×ž×•×›×¨ ×”× ×•×“×“ ××™× ×• ×¤×¢×™×œ. × ×¢×œ× ×ž×”×ž×¡×š ×œ×¤× ×™ {0} ×‘×ž×”×œ×š ×”×”×¤×¢×œ×” ×”× ×•×›×—×™×ª.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>סטטוס האירוע של "המוכר הנודד" אינו ידוע (לא נצפה במושב זה).</value>
+    <value>×¡×˜×˜×•×¡ ×”××™×¨×•×¢ ×©×œ "×”×ž×•×›×¨ ×”× ×•×“×“" ××™× ×• ×™×“×•×¢ (×œ× × ×¦×¤×” ×‘×ž×•×©×‘ ×–×”).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>לא הוקצו ארונות כלים לפקודות תחזוקה.</value>
+    <value>×œ× ×”×•×§×¦×• ××¨×•× ×•×ª ×›×œ×™× ×œ×¤×§×•×“×•×ª ×ª×—×–×•×§×”.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>תחזוקה ב- {0} TC: ריק או פג תוקף.</value>
+    <value>×ª×—×–×•×§×” ×‘- {0} TC: ×¨×™×§ ××• ×¤×’ ×ª×•×§×£.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> צורך/24 שעות ביממה: {0}.</value>
+    <value> ×¦×•×¨×š/24 ×©×¢×•×ª ×‘×™×ž×ž×”: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>תחזוקה ב- {0} TC: {1}.</value>
+    <value>×ª×—×–×•×§×” ×‘- {0} TC: {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} ימים</value>
+    <value>{0} ×™×ž×™×</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} שעות</value>
+    <value>{0} ×©×¢×•×ª</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} דקות</value>
+    <value>{0} ×“×§×•×ª</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: ריק/פג תוקף</value>
+    <value>{0}: ×¨×™×§/×¤×’ ×ª×•×§×£</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
     <value>{0}: {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>תחזוקה: {0}</value>
+    <value>×ª×—×–×•×§×”: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>לא נמצאו או לא הותאמו צגים של ארון הכלים Bound.</value>
+    <value>×œ× × ×ž×¦××• ××• ×œ× ×”×•×ª××ž×• ×¦×’×™× ×©×œ ××¨×•×Ÿ ×”×›×œ×™× Bound.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>לא נמצא או לא הותאם צג ארון הכלים של Bound.</value>
+    <value>×œ× × ×ž×¦× ××• ×œ× ×”×•×ª×× ×¦×’ ××¨×•×Ÿ ×”×›×œ×™× ×©×œ Bound.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} הפך ל- {1}.</value>
+    <value>{0} ×”×¤×š ×œ- {1}.</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
     <value>ON</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>כבוי</value>
+    <value>×›×‘×•×™</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>לא נמצא מתג חכם Bound או שהוא לא מזוהה.</value>
+    <value>×œ× × ×ž×¦× ×ž×ª×’ ×—×›× Bound ××• ×©×”×•× ×œ× ×ž×–×•×”×”.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>עץ</value>
+    <value>×¢×¥</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>אבן</value>
+    <value>××‘×Ÿ</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>מתכת</value>
+    <value>×ž×ª×›×ª</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
     <value>HQM</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>אסדת נפט קטנה</value>
+    <value>××¡×“×ª × ×¤×˜ ×§×˜× ×”</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>אסדת נפט גדולה</value>
+    <value>××¡×“×ª × ×¤×˜ ×’×“×•×œ×”</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>חנות</value>
+    <value>×—× ×•×ª</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>אוניית משא</value>
+    <value>××•× ×™×™×ª ×ž×©×</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>רוכל נודד</value>
+    <value>×¨×•×›×œ × ×•×“×“</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>מסוק סיור</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>ארגז אסדת נפט</value>
+    <value>××¨×’×– ××¡×“×ª × ×¤×˜</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>פיצוץ</value>
+    <value>×¤×™×¦×•×¥</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>הבנייה נחסמה</value>
+    <value>×”×‘× ×™×™×” × ×—×¡×ž×”</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>אירוע</value>
+    <value>××™×¨×•×¢</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] הופעל! ארגז נפתח ב- {1}.</value>
+    <value>[{0}] ×”×•×¤×¢×œ! ××¨×’×– × ×¤×ª×— ×‘- {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>התראה: {0} הופעלה!</value>
+    <value>×”×ª×¨××”: {0} ×”×•×¤×¢×œ×”!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] התיבה תיפתח בעוד 10 דקות!</value>
+    <value>[{0}] ×”×ª×™×‘×” ×ª×™×¤×ª×— ×‘×¢×•×“ 10 ×“×§×•×ª!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] התיבה תיפתח בעוד 5 דקות!</value>
+    <value>[{0}] ×”×ª×™×‘×” ×ª×™×¤×ª×— ×‘×¢×•×“ 5 ×“×§×•×ª!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>"Deep Sea" עלה לאוויר</value>
+    <value>"Deep Sea" ×¢×œ×” ×œ××•×•×™×¨</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>חנות חדשה {0} [{1}]: {2}</value>
+    <value>×—× ×•×ª ×—×“×©×” {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>חנות חשודה {0} [{1}] הייתה מקוונת {2}, מכרה {3}</value>
+    <value>×—× ×•×ª ×—×©×•×“×” {0} [{1}] ×”×™×™×ª×” ×ž×§×•×•× ×ª {2}, ×ž×›×¨×” {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>ספינת משא הופיעה {0}</value>
+    <value>×¡×¤×™× ×ª ×ž×©× ×”×•×¤×™×¢×” {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>במרחק רב בים (ליד {0})</value>
+    <value>×‘×ž×¨×—×§ ×¨×‘ ×‘×™× (×œ×™×“ {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>אוניית משא עגנה ב- {0} ({1})</value>
+    <value>××•× ×™×™×ª ×ž×©× ×¢×’× ×” ×‘- {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>אוניית משא צפויה לעגון ב- {0} ({1}) בעוד כ-5 דקות.</value>
+    <value>××•× ×™×™×ª ×ž×©× ×¦×¤×•×™×” ×œ×¢×’×•×Ÿ ×‘- {0} ({1}) ×‘×¢×•×“ ×›-5 ×“×§×•×ª.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>אוניית משא תצא מ- {0} בעוד 5 דקות ({1})</value>
+    <value>××•× ×™×™×ª ×ž×©× ×ª×¦× ×ž- {0} ×‘×¢×•×“ 5 ×“×§×•×ª ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>זוהתה תקלה עקב עיכוב בשרת — המסוק עדיין נמצא במפה בכתובת {0}</value>
+    <value>×–×•×”×ª×” ×ª×§×œ×” ×¢×§×‘ ×¢×™×›×•×‘ ×‘×©×¨×ª â€” ×”×ž×¡×•×§ ×¢×“×™×™×Ÿ × ×ž×¦× ×‘×ž×¤×” ×‘×›×ª×•×‘×ª {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} נוצר בכתובת {1}</value>
+    <value>{0} × ×•×¦×¨ ×‘×›×ª×•×‘×ª {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>מסוק סיור הופל ב- {0}</value>
+    <value>×ž×¡×•×§ ×¡×™×•×¨ ×”×•×¤×œ ×‘- {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>לא ידוע</value>
+    <value>×œ× ×™×“×•×¢</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} פורסם באתר {1}</value>
+    <value>{0} ×¤×•×¨×¡× ×‘××ª×¨ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} התנתק</value>
+    <value>{0} ×”×ª× ×ª×§</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} נפטר ב- {1}</value>
+    <value>{0} × ×¤×˜×¨ ×‘- {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} פורסם מחדש ב- {1}</value>
+    <value>{0} ×¤×•×¨×¡× ×ž×—×“×© ×‘- {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[מעקב] {0}{1} כעת באתר</value>
+    <value>[×ž×¢×§×‘] {0}{1} ×›×¢×ª ×‘××ª×¨</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[מעקב] {0}{1} כעת לא זמין</value>
+    <value>[×ž×¢×§×‘] {0}{1} ×›×¢×ª ×œ× ×–×ž×™×Ÿ</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[מעקב] {0}{1} שמו שונה ל- {2}!</value>
+    <value>[×ž×¢×§×‘] {0}{1} ×©×ž×• ×©×•× ×” ×œ- {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>מוכר</value>
+    <value>×ž×•×›×¨</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>קונה</value>
+    <value>×§×•× ×”</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>חנות</value>
+    <value>×—× ×•×ª</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (מלאי {5}) עבור {6} {7}</value>
+    <value>{0} [{1}] {2} x{3} {4} (×ž×œ××™ {5}) ×¢×‘×•×¨ {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>רשימת פקודות צ'אט</value>
+    <value>×¨×©×™×ž×ª ×¤×§×•×“×•×ª ×¦'××˜</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
-    <value>פקודות: {0}</value>
+    <value>×¤×§×•×“×•×ª: {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>לוקליזציה, מודרניזציה של ממשק המשתמש ואחסון</value>
+    <value>×œ×•×§×œ×™×–×¦×™×”, ×ž×•×“×¨× ×™×–×¦×™×” ×©×œ ×ž×ž×©×§ ×”×ž×©×ª×ž×© ×•××—×¡×•×Ÿ</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>מעבר דינמי בין הגדרות אזוריות</value>
+    <value>×ž×¢×‘×¨ ×“×™× ×ž×™ ×‘×™×Ÿ ×”×’×“×¨×•×ª ××–×•×¨×™×•×ª</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> — יותר מ-30 שפות לבחירה</value>
+    <value> â€” ×™×•×ª×¨ ×ž-30 ×©×¤×•×ª ×œ×‘×—×™×¨×”</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>ממשק המשתמש של פקודות הצ'אט</value>
+    <value>×ž×ž×©×§ ×”×ž×©×ª×ž×© ×©×œ ×¤×§×•×“×•×ª ×”×¦'××˜</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> — תצוגה מבודדת למראה נקי</value>
+    <value> â€” ×ª×¦×•×’×” ×ž×‘×•×“×“×ª ×œ×ž×¨××” × ×§×™</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>שכבת-על של הגדרות חדשות</value>
+    <value>×©×›×‘×ª-×¢×œ ×©×œ ×”×’×“×¨×•×ª ×—×“×©×•×ª</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> — סרגל צד נקי לכל ההגדרות</value>
+    <value> â€” ×¡×¨×’×œ ×¦×“ × ×§×™ ×œ×›×œ ×”×”×’×“×¨×•×ª</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>מעקב BattleMetrics הוסר</value>
+    <value>×ž×¢×§×‘ BattleMetrics ×”×•×¡×¨</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>הבסיס שלך נמצא תחת מתקפה!</value>
+    <value>×”×‘×¡×™×¡ ×©×œ×š × ×ž×¦× ×ª×—×ª ×ž×ª×§×¤×”!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>אנא התחבר תחילה לשרת.</value>
+    <value>×× × ×”×ª×—×‘×¨ ×ª×—×™×œ×” ×œ×©×¨×ª.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>אינך מחובר לשום שרת.</value>
+    <value>××™× ×š ×ž×—×•×‘×¨ ×œ×©×•× ×©×¨×ª.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>הצ'אט אינו זמין כרגע.</value>
+    <value>×”×¦'××˜ ××™× ×• ×–×ž×™×Ÿ ×›×¨×’×¢.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>אנא בחר תחילה שרת.</value>
+    <value>×× × ×‘×—×¨ ×ª×—×™×œ×” ×©×¨×ª.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
-    <value>חיבור</value>
+    <value>×—×™×‘×•×¨</value>
   </data>
   <data name="SnackbarTitleChat" xml:space="preserve">
-    <value>צ'אט</value>
+    <value>×¦'××˜</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>כיצד לעקוב אחר שחקנים</value>
+    <value>×›×™×¦×“ ×œ×¢×§×•×‘ ××—×¨ ×©×—×§× ×™×</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>מעקב UDP מובנה</value>
+    <value>×ž×¢×§×‘ UDP ×ž×•×‘× ×”</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>מדריך המעקב זמין כרגע באנגלית בלבד, שכן הוא עתיד לעבור שינויים בקרוב. אנו מבקשים את סבלנותכם.</value>
+    <value>×ž×“×¨×™×š ×”×ž×¢×§×‘ ×–×ž×™×Ÿ ×›×¨×’×¢ ×‘×× ×’×œ×™×ª ×‘×œ×‘×“, ×©×›×Ÿ ×”×•× ×¢×ª×™×“ ×œ×¢×‘×•×¨ ×©×™× ×•×™×™× ×‘×§×¨×•×‘. ×× ×• ×ž×‘×§×©×™× ××ª ×¡×‘×œ× ×•×ª×›×.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>ניתן לסגור חלון זה בכל עת — ניתן לפתוח אותו מחדש באמצעות הכפתור  ❓ כיצד לעקוב.</value>
+    <value>× ×™×ª×Ÿ ×œ×¡×’×•×¨ ×—×œ×•×Ÿ ×–×” ×‘×›×œ ×¢×ª â€” × ×™×ª×Ÿ ×œ×¤×ª×•×— ××•×ª×• ×ž×—×“×© ×‘××ž×¦×¢×•×ª ×”×›×¤×ª×•×¨  â“ ×›×™×¦×“ ×œ×¢×§×•×‘.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>תחזוקה</value>
+    <value>×ª×—×–×•×§×”</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>למחוק, לגבות או לשחזר הגדרות יישומים, פרופילים ושרטוטים מותאמים אישית.</value>
+    <value>×œ×ž×—×•×§, ×œ×’×‘×•×ª ××• ×œ×©×—×–×¨ ×”×’×“×¨×•×ª ×™×™×©×•×ž×™×, ×¤×¨×•×¤×™×œ×™× ×•×©×¨×˜×•×˜×™× ×ž×•×ª××ž×™× ××™×©×™×ª.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>אפס נתוני האפליקציה...</value>
+    <value>××¤×¡ × ×ª×•× ×™ ×”××¤×œ×™×§×¦×™×”...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>גיבוי נתונים...</value>
+    <value>×’×™×‘×•×™ × ×ª×•× ×™×...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>שחזור נתונים...</value>
+    <value>×©×—×–×•×¨ × ×ª×•× ×™×...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>איפוס נתוני היישום</value>
+    <value>××™×¤×•×¡ × ×ª×•× ×™ ×”×™×™×©×•×</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>בחר את הרכיבים שברצונך למחוק מהמכשיר הזה. כל האפשרויות שנבחרו יימחקו לצמיתות.</value>
+    <value>×‘×—×¨ ××ª ×”×¨×›×™×‘×™× ×©×‘×¨×¦×•× ×š ×œ×ž×—×•×§ ×ž×”×ž×›×©×™×¨ ×”×–×”. ×›×œ ×”××¤×©×¨×•×™×•×ª ×©× ×‘×—×¨×• ×™×™×ž×—×§×• ×œ×¦×ž×™×ª×•×ª.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>חיבור שרת פעיל (ניתוק)</value>
+    <value>×—×™×‘×•×¨ ×©×¨×ª ×¤×¢×™×œ (× ×™×ª×•×§)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>פרופילי שרת שמורים (מחיקת תצורות שרת משויכות)</value>
+    <value>×¤×¨×•×¤×™×œ×™ ×©×¨×ª ×©×ž×•×¨×™× (×ž×—×™×§×ª ×ª×¦×•×¨×•×ª ×©×¨×ª ×ž×©×•×™×›×•×ª)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>פרטי התחברות לחשבון Steam (התנתקות)</value>
+    <value>×¤×¨×˜×™ ×”×ª×—×‘×¨×•×ª ×œ×—×©×‘×•×Ÿ Steam (×”×ª× ×ª×§×•×ª)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>הגדרות צימוד מכשירים (איפוס אסימוני רישום)</value>
+    <value>×”×’×“×¨×•×ª ×¦×™×ž×•×“ ×ž×›×©×™×¨×™× (××™×¤×•×¡ ××¡×™×ž×•× ×™ ×¨×™×©×•×)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>כוונות מותאמות אישית (הגדרות מחיקה)</value>
+    <value>×›×•×•× ×•×ª ×ž×•×ª××ž×•×ª ××™×©×™×ª (×”×’×“×¨×•×ª ×ž×—×™×§×”)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>מטמון מקומי ושרטוטים (מחיקת מפות/קווים שנשמרו)</value>
+    <value>×ž×˜×ž×•×Ÿ ×ž×§×•×ž×™ ×•×©×¨×˜×•×˜×™× (×ž×—×™×§×ª ×ž×¤×•×ª/×§×•×•×™× ×©× ×©×ž×¨×•)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>פעולה זו היא בלתי הפיכה.</value>
+    <value>×¤×¢×•×œ×” ×–×• ×”×™× ×‘×œ×ª×™ ×”×¤×™×›×”.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>אשר איפוס</value>
+    <value>××©×¨ ××™×¤×•×¡</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>סיסמת גיבוי</value>
+    <value>×¡×™×¡×ž×ª ×’×™×‘×•×™</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>הגנה באמצעות גיבוי</value>
+    <value>×”×’× ×” ×‘××ž×¦×¢×•×ª ×’×™×‘×•×™</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>הזן סיסמה כדי להצפין את קובץ הגיבוי הזה. אם תשאיר את השדה ריק, הגיבוי לא יוצפן.</value>
+    <value>×”×–×Ÿ ×¡×™×¡×ž×” ×›×“×™ ×œ×”×¦×¤×™×Ÿ ××ª ×§×•×‘×¥ ×”×’×™×‘×•×™ ×”×–×”. ×× ×ª×©××™×¨ ××ª ×”×©×“×” ×¨×™×§, ×”×’×™×‘×•×™ ×œ× ×™×•×¦×¤×Ÿ.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>שחזור גיבוי</value>
+    <value>×©×—×–×•×¨ ×’×™×‘×•×™</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>גיבוי זה מוגן בסיסמה. הזן את הסיסמה כדי לפענח אותו:</value>
+    <value>×’×™×‘×•×™ ×–×” ×ž×•×’×Ÿ ×‘×¡×™×¡×ž×”. ×”×–×Ÿ ××ª ×”×¡×™×¡×ž×” ×›×“×™ ×œ×¤×¢× ×— ××•×ª×•:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>הצפן</value>
+    <value>×”×¦×¤×Ÿ</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>לפענח</value>
+    <value>×œ×¤×¢× ×—</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>בסדר</value>
+    <value>×‘×¡×“×¨</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>גיבוי נתוני היישום</value>
+    <value>×’×™×‘×•×™ × ×ª×•× ×™ ×”×™×™×©×•×</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[מערכת] הגיבוי נוצר בהצלחה בכתובת: {0}</value>
+    <value>[×ž×¢×¨×›×ª] ×”×’×™×‘×•×™ × ×•×¦×¨ ×‘×”×¦×œ×—×” ×‘×›×ª×•×‘×ª: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>הגיבוי נוצר בהצלחה!</value>
+    <value>×”×’×™×‘×•×™ × ×•×¦×¨ ×‘×”×¦×œ×—×”!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>הגיבוי הושלם</value>
+    <value>×”×’×™×‘×•×™ ×”×•×©×œ×</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[מערכת] שגיאה בגיבוי: {0}</value>
+    <value>[×ž×¢×¨×›×ª] ×©×’×™××” ×‘×’×™×‘×•×™: {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>שגיאה ביצירת גיבוי: {0}</value>
+    <value>×©×’×™××” ×‘×™×¦×™×¨×ª ×’×™×‘×•×™: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>הגיבוי נכשל</value>
+    <value>×”×’×™×‘×•×™ × ×›×©×œ</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>שחזור הנתונים יגרום לדריסת פרופילי השרת הנוכחיים, הכוונות המותאמות אישית, שכבות הציור ותצורות המפה המינימלית.
+    <value>×©×—×–×•×¨ ×”× ×ª×•× ×™× ×™×’×¨×•× ×œ×“×¨×™×¡×ª ×¤×¨×•×¤×™×œ×™ ×”×©×¨×ª ×”× ×•×›×—×™×™×, ×”×›×•×•× ×•×ª ×”×ž×•×ª××ž×•×ª ××™×©×™×ª, ×©×›×‘×•×ª ×”×¦×™×•×¨ ×•×ª×¦×•×¨×•×ª ×”×ž×¤×” ×”×ž×™× ×™×ž×œ×™×ª.
 
-האם אתה בטוח שברצונך להמשיך?</value>
+×”×× ××ª×” ×‘×˜×•×— ×©×‘×¨×¦×•× ×š ×œ×”×ž×©×™×š?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>אישור שחזור גיבוי</value>
+    <value>××™×©×•×¨ ×©×—×–×•×¨ ×’×™×‘×•×™</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>שחזור נתוני היישום</value>
+    <value>×©×—×–×•×¨ × ×ª×•× ×™ ×”×™×™×©×•×</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>נתוני היישום שוחזרו בהצלחה!</value>
+    <value>× ×ª×•× ×™ ×”×™×™×©×•× ×©×•×—×–×¨×• ×‘×”×¦×œ×—×”!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>השחזור הושלם</value>
+    <value>×”×©×—×–×•×¨ ×”×•×©×œ×</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[מערכת] שגיאה בשחזור: הסיסמה שהוזנה אינה חוקית.</value>
+    <value>[×ž×¢×¨×›×ª] ×©×’×™××” ×‘×©×—×–×•×¨: ×”×¡×™×¡×ž×” ×©×”×•×–× ×” ××™× ×” ×—×•×§×™×ª.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>הפענוח נכשל. סיסמה לא חוקית או קובץ גיבוי פגום.</value>
+    <value>×”×¤×¢× ×•×— × ×›×©×œ. ×¡×™×¡×ž×” ×œ× ×—×•×§×™×ª ××• ×§×•×‘×¥ ×’×™×‘×•×™ ×¤×’×•×.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>השחזור נכשל</value>
+    <value>×”×©×—×–×•×¨ × ×›×©×œ</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[מערכת] שגיאה בשחזור: {0}</value>
+    <value>[×ž×¢×¨×›×ª] ×©×’×™××” ×‘×©×—×–×•×¨: {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>שגיאה בשחזור הגיבוי: {0}</value>
+    <value>×©×’×™××” ×‘×©×—×–×•×¨ ×”×’×™×‘×•×™: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>פורמט קובץ הגיבוי אינו תקין או שהחתימה חסרה.</value>
+    <value>×¤×•×¨×ž×˜ ×§×•×‘×¥ ×”×’×™×‘×•×™ ××™× ×• ×ª×§×™×Ÿ ××• ×©×”×—×ª×™×ž×” ×—×¡×¨×”.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] מתחילים בפעולת איפוס סלקטיבי...</value>
+    <value>[WIPE] ×ž×ª×—×™×œ×™× ×‘×¤×¢×•×œ×ª ××™×¤×•×¡ ×¡×œ×§×˜×™×‘×™...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[WIPE] ניתוק החיבור לשרת הפעיל...</value>
+    <value>[WIPE] × ×™×ª×•×§ ×”×—×™×‘×•×¨ ×œ×©×¨×ª ×”×¤×¢×™×œ...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] איפוס החיבור הושלם.</value>
+    <value>[WIPE] ××™×¤×•×¡ ×”×—×™×‘×•×¨ ×”×•×©×œ×.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] מוחקים פרופילי שרת שמורים...</value>
+    <value>[WIPE] ×ž×•×—×§×™× ×¤×¨×•×¤×™×œ×™ ×©×¨×ª ×©×ž×•×¨×™×...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[WIPE] פרופילי השרת שנשמרו נמחקו.</value>
+    <value>[WIPE] ×¤×¨×•×¤×™×œ×™ ×”×©×¨×ª ×©× ×©×ž×¨×• × ×ž×—×§×•.</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[WIPE] מחיקת פרטי הכניסה לחשבון Steam...</value>
+    <value>[WIPE] ×ž×—×™×§×ª ×¤×¨×˜×™ ×”×›× ×™×¡×” ×œ×—×©×‘×•×Ÿ Steam...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[WIPE] פרטי הכניסה ל-Steam נמחקו.</value>
+    <value>[WIPE] ×¤×¨×˜×™ ×”×›× ×™×¡×” ×œ-Steam × ×ž×—×§×•.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[מחיקה] מחיקת תצורת צימוד המכשיר...</value>
+    <value>[×ž×—×™×§×”] ×ž×—×™×§×ª ×ª×¦×•×¨×ª ×¦×™×ž×•×“ ×”×ž×›×©×™×¨...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[WIPE] תצורת צימוד המכשיר נמחקה.</value>
+    <value>[WIPE] ×ª×¦×•×¨×ª ×¦×™×ž×•×“ ×”×ž×›×©×™×¨ × ×ž×—×§×”.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[WIPE] מוחק כוונות מותאמות אישית...</value>
+    <value>[WIPE] ×ž×•×—×§ ×›×•×•× ×•×ª ×ž×•×ª××ž×•×ª ××™×©×™×ª...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] שגיאה בניקוי הכוונת המותאמת אישית: {0}</value>
+    <value>[WIPE] ×©×’×™××” ×‘× ×™×§×•×™ ×”×›×•×•× ×ª ×”×ž×•×ª××ž×ª ××™×©×™×ª: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[WIPE] כוונת מותאמת אישית נמחקה.</value>
+    <value>[WIPE] ×›×•×•× ×ª ×ž×•×ª××ž×ª ××™×©×™×ª × ×ž×—×§×”.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] מחיקת קבצי המטמון המקומיים ושרטוטי השכבה...</value>
+    <value>[WIPE] ×ž×—×™×§×ª ×§×‘×¦×™ ×”×ž×˜×ž×•×Ÿ ×”×ž×§×•×ž×™×™× ×•×©×¨×˜×•×˜×™ ×”×©×›×‘×”...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] שגיאה בניקוי תיקיית המטמון: {0}</value>
+    <value>[WIPE] ×©×’×™××” ×‘× ×™×§×•×™ ×ª×™×§×™×™×ª ×”×ž×˜×ž×•×Ÿ: {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[WIPE] תיקיות המטמון נוקו.</value>
+    <value>[WIPE] ×ª×™×§×™×•×ª ×”×ž×˜×ž×•×Ÿ × ×•×§×•.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] רישום מחדש של פרטי הזיהוי של ה-Listener ו-FCM...</value>
+    <value>[WIPE] ×¨×™×©×•× ×ž×—×“×© ×©×œ ×¤×¨×˜×™ ×”×–×™×”×•×™ ×©×œ ×”-Listener ×•-FCM...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] פעולת האיפוס הסלקטיבי הושלמה בהצלחה.</value>
+    <value>[WIPE] ×¤×¢×•×œ×ª ×”××™×¤×•×¡ ×”×¡×œ×§×˜×™×‘×™ ×”×•×©×œ×ž×” ×‘×”×¦×œ×—×”.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
-  <value>כיוון</value>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>×›×™×•×•×Ÿ</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
-    <value>אתה</value>
+    <value>××ª×”</value>
   </data>
   <data name="StateOn" xml:space="preserve">
-    <value>דלוק</value>
+    <value>×“×œ×•×§</value>
   </data>
   <data name="StateOff" xml:space="preserve">
-    <value>כבוי</value>
+    <value>×›×‘×•×™</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: הועבר למצב {1} (הופעל על ידי {2})</value>
+    <value>[Hotkey] {0}: ×”×•×¢×‘×¨ ×œ×ž×¦×‘ {1} (×”×•×¤×¢×œ ×¢×œ ×™×“×™ {2})</value>
   </data>
   <data name="OfflineDeathTitle" xml:space="preserve">
-    <value>מוות במצב לא מקוון</value>
+    <value>×ž×•×•×ª ×‘×ž×¦×‘ ×œ× ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="OfflineDeathMessage" xml:space="preserve">
-    <value>נהרגת על ידי {0} ב-{1}.</value>
+    <value>× ×”×¨×’×ª ×¢×œ ×™×“×™ {0} ×‘-{1}.</value>
   </data>
   <data name="StopSound" xml:space="preserve">
-    <value>עצור צליל</value>
+    <value>×¢×¦×•×¨ ×¦×œ×™×œ</value>
   </data>
   <data name="OfflineDeathNotifications" xml:space="preserve">
-    <value>התראות מוות במצב לא מקוון</value>
+    <value>×”×ª×¨××•×ª ×ž×•×•×ª ×‘×ž×¦×‘ ×œ× ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="EnableOfflineDeathAlerts" xml:space="preserve">
-    <value>הפעל התראות מוות במצב לא מקוון</value>
+    <value>×”×¤×¢×œ ×”×ª×¨××•×ª ×ž×•×•×ª ×‘×ž×¦×‘ ×œ× ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="AlertSound" xml:space="preserve">
-    <value>צליל התראה</value>
+    <value>×¦×œ×™×œ ×”×ª×¨××”</value>
   </data>
   <data name="DefaultSoundLabel" xml:space="preserve">
-    <value>ברירת מחדל: death.mp3</value>
+    <value>×‘×¨×™×¨×ª ×ž×—×“×œ: death.mp3</value>
   </data>
   <data name="SelectEllipsis" xml:space="preserve">
-    <value>בחר...</value>
+    <value>×‘×—×¨...</value>
   </data>
   <data name="LoopAlertSound" xml:space="preserve">
-    <value>לולאת צליל התראה</value>
+    <value>×œ×•×œ××ª ×¦×œ×™×œ ×”×ª×¨××”</value>
   </data>
   <data name="SendToDiscordRaidAlerts" xml:space="preserve">
-    <value>שלח להתראות פשיטה בדיסקורד (Supporter)</value>
+    <value>×©×œ×— ×œ×”×ª×¨××•×ª ×¤×©×™×˜×” ×‘×“×™×¡×§×•×¨×“ (Supporter)</value>
   </data>
   <data name="OpenOfflineDeathsLog" xml:space="preserve">
-    <value>פתח יומן מוות לא מקוון</value>
+    <value>×¤×ª×— ×™×•×ž×Ÿ ×ž×•×•×ª ×œ× ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="OfflineDeathLogTitle" xml:space="preserve">
-    <value>יומן מוות לא מקוון</value>
+    <value>×™×•×ž×Ÿ ×ž×•×•×ª ×œ× ×ž×§×•×•×Ÿ</value>
   </data>
   <data name="ClearLog" xml:space="preserve">
-    <value>נקה יומן</value>
+    <value>× ×§×” ×™×•×ž×Ÿ</value>
   </data>
   <data name="NoOfflineDeathsRecorded" xml:space="preserve">
-    <value>לא תועדו מקרי מוות לא מקוונים.</value>
+    <value>×œ× ×ª×•×¢×“×• ×ž×§×¨×™ ×ž×•×•×ª ×œ× ×ž×§×•×•× ×™×.</value>
   </data>
   <data name="KilledBy" xml:space="preserve">
-    <value>נהרג על ידי</value>
+    <value>× ×”×¨×’ ×¢×œ ×™×“×™</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>חפש ובחר סמל פריט עבור מכשיר זה.</value>
+    <value>×—×¤×© ×•×‘×—×¨ ×¡×ž×œ ×¤×¨×™×˜ ×¢×‘×•×¨ ×ž×›×©×™×¨ ×–×”.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>שנה סמל מכשיר</value>
+    <value>×©× ×” ×¡×ž×œ ×ž×›×©×™×¨</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>חפש ובחר סמל פריט עבור כלל זה.</value>
+    <value>×—×¤×© ×•×‘×—×¨ ×¡×ž×œ ×¤×¨×™×˜ ×¢×‘×•×¨ ×›×œ×œ ×–×”.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
-    <value>שנה סמל כלל</value>
+    <value>×©× ×” ×¡×ž×œ ×›×œ×œ</value>
   </data>
   <data name="ResetToDefaultIcon" xml:space="preserve">
-    <value>אפס לסמל ברירת המחדל</value>
+    <value>××¤×¡ ×œ×¡×ž×œ ×‘×¨×™×¨×ª ×”×ž×—×“×œ</value>
   </data>
   <data name="Rule" xml:space="preserve">
-    <value>כלל</value>
+    <value>×›×œ×œ</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>חפש סמלים (למשל: צריח, מפסק)...</value>
+    <value>×—×¤×© ×¡×ž×œ×™× (×œ×ž×©×œ: ×¦×¨×™×—, ×ž×¤×¡×§)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
-    <value>{0} ימים</value>
+    <value>{0} ×™×ž×™×</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
+  </data>
+  <data name="Delete3DMapData" xml:space="preserve">
+    <value>Delete all 3D Map Data</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
   </data>
 </root>
-
-
-

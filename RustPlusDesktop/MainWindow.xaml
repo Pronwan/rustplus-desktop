@@ -1,4 +1,4 @@
-<ui:FluentWindow
+﻿<ui:FluentWindow
     x:Class="RustPlusDesk.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -671,7 +671,7 @@
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                             <MenuItem.Header>
                                                 <TextBlock>
-                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                    <Run Text="ðŸ—‘ï¸ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
                                                 </TextBlock>
                                             </MenuItem.Header>
                                         </MenuItem>
@@ -1064,7 +1064,7 @@
 
                     </Grid>
 
-                    <!--  CENTER: TabControl füllt den Rest, mit Mindesthöhe  -->
+                    <!--  CENTER: TabControl fÃ¼llt den Rest, mit MindesthÃ¶he  -->
             <TabControl
                 x:Name="MainTabs"
                 VerticalAlignment="Stretch"
@@ -1528,13 +1528,13 @@
                                                                             <Setter Property="Background" Value="#1AFFFFFF" />
                                                                             <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                             <Style.Triggers>
-                                                                                <!--  ON / ACTIVE / ONLINE Status (Grün)  -->
+                                                                                <!--  ON / ACTIVE / ONLINE Status (GrÃ¼n)  -->
                                                                                 <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                     <Setter Property="Background" Value="#1A4EB887" />
                                                                                     <Setter Property="BorderBrush" Value="#334EB887" />
                                                                                 </DataTrigger>
 
-                                                                                <!--  Storage Monitor & Others: Immer grün wenn da  -->
+                                                                                <!--  Storage Monitor & Others: Immer grÃ¼n wenn da  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
                                                                                     <Setter Property="Background" Value="#1A4EB887" />
                                                                                     <Setter Property="BorderBrush" Value="#334EB887" />
@@ -1563,7 +1563,7 @@
                                                                                 <Setter Property="Text" Value="{DynamicResource Online}" />
                                                                                 <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
                                                                                 <Style.Triggers>
-                                                                                    <!--  ON Status colors (Grün)  -->
+                                                                                    <!--  ON Status colors (GrÃ¼n)  -->
                                                                                     <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                         <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </DataTrigger>
@@ -1641,7 +1641,7 @@
                                                                 </Border>
                                                             </StackPanel>
 
-                                                            <!--  Spalte 3: Toggle NUR für SmartSwitch  -->
+                                                            <!--  Spalte 3: Toggle NUR fÃ¼r SmartSwitch  -->
                                                             <ui:ToggleSwitch
                                                                  Grid.Column="2"
                                                                  Margin="8,0,0,0"
@@ -1669,7 +1669,7 @@
                                                                  </ui:ToggleSwitch.Style>
                                                              </ui:ToggleSwitch>
 
-                                                            <!--  Spalte 3: Toggle NUR für Gruppen  -->
+                                                            <!--  Spalte 3: Toggle NUR fÃ¼r Gruppen  -->
                                                             <ui:Button
                                                                  Grid.Column="2"
                                                                  Width="60"
@@ -1712,7 +1712,7 @@
                                                                  </ui:Button.Style>
                                                              </ui:Button>
 
-                                                            <!--  Spalte 3: Toggles NUR für SmartAlarm  -->
+                                                            <!--  Spalte 3: Toggles NUR fÃ¼r SmartAlarm  -->
                                                             <StackPanel
                                                                 Grid.Column="2"
                                                                 Margin="8,0,0,0"
@@ -1901,7 +1901,7 @@
                                                                                                     CornerRadius="6"
                                                                                                     SnapsToDevicePixels="True">
                                                                                                     <Grid>
-                                                                                                        <!--  Icon groß & zentriert  -->
+                                                                                                        <!--  Icon groÃŸ & zentriert  -->
                                                                                                         <Image
                                                                                                             Width="48"
                                                                                                             Height="48"
@@ -1958,7 +1958,7 @@
                                                     </Border>
                                                     <!--  ===== Ende Zeile =====  -->
 
-                                                    <!-- ===== Klappbereich (hÃ¤ngt direkt an
+                                                    <!-- ===== Klappbereich (hÃƒÂ¤ngt direkt an
                                              ) =====
                                              <Grid Margin="0,4,0,8" Visibility="Collapsed">
                                                  <Grid.Style>
@@ -1979,7 +1979,7 @@
                     <Run Text="{DynamicResource Snapshot}"/>
                     <Run Text="{Binding Storage.ItemsCount, Mode=OneWay, FallbackValue=0}" />
                     <Run Text="{DynamicResource ItemsUpkeep}"/>
-                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=—}"/>
+                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=â€”}"/>
                                                         </TextBlock>
 
                                                         <ItemsControl ItemsSource="{Binding Storage.Items, Mode=OneWay}">
@@ -1994,7 +1994,7 @@
                                                                         <Image Width="24" Height="24" Source="{Binding Icon}" Stretch="Uniform"/>
                                                                         <TextBlock Margin="8,0,0,0" Foreground="White">
                             <Run Text="{Binding Display}"/>
-                            <Run Text=" Ã— "/>
+                            <Run Text=" Ãƒâ€” "/>
                             <Run Text="{Binding Amount}"/>
                             <Run Text="{Binding MaxStack, StringFormat={} (Stack {0})}"/>
                                                                         </TextBlock>
@@ -2105,7 +2105,7 @@
                                                 <WrapPanel />
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
-                                        <!--  Kontextmenü  -->
+                                        <!--  KontextmenÃ¼  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
                                                 <MenuItem Click="Team_Center_Click" Header="{DynamicResource CenterOnMap}" />
@@ -2146,7 +2146,7 @@
                                                                 Source="{Binding Avatar}"
                                                                 Stretch="UniformToFill" />
 
-                                                            <!--  Online (grün)  -->
+                                                            <!--  Online (grÃ¼n)  -->
                                                             <Ellipse
                                                                 Width="12"
                                                                 Height="12"
@@ -2177,7 +2177,7 @@
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
                                                             <TextBlock
-                                                                Text="💤"
+                                                                Text="ðŸ’¤"
                                                                 FontSize="16"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Top"
@@ -2192,7 +2192,7 @@
 
                                                         <!--  Textseite  -->
                                                         <StackPanel Grid.Column="2" Margin="10,0,0,0">
-                                                            <!--  Name: Standard weiß, offline leicht ausgrauen, tot = rot  -->
+                                                            <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
                                                             <TextBlock FontSize="14" FontWeight="SemiBold">
                                                                 <TextBlock.Text>
                                                                     <Binding Path="DisplayName" />
@@ -2401,7 +2401,7 @@
                                     Orientation="Horizontal">
                                     <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock VerticalAlignment="Center" Text="📷 " />
+                                            <TextBlock VerticalAlignment="Center" Text="ðŸ“· " />
                                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
                                         </StackPanel>
                                     </Button>                                </StackPanel>
@@ -2532,14 +2532,14 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="💰" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="ðŸ’°" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
                                             <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="âŸ³" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
                                         <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
@@ -2581,10 +2581,10 @@
                                         <TextBlock Text="Min profit:" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
                                         <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="11.5">
                                             <ComboBoxItem Content="Show All" Tag="0" IsSelected="True"/>
-                                            <ComboBoxItem Content="≥ 10" Tag="10"/>
-                                            <ComboBoxItem Content="≥ 50" Tag="50"/>
-                                            <ComboBoxItem Content="≥ 100" Tag="100"/>
-                                            <ComboBoxItem Content="≥ 500" Tag="500"/>
+                                            <ComboBoxItem Content="â‰¥ 10" Tag="10"/>
+                                            <ComboBoxItem Content="â‰¥ 50" Tag="50"/>
+                                            <ComboBoxItem Content="â‰¥ 100" Tag="100"/>
+                                            <ComboBoxItem Content="â‰¥ 500" Tag="500"/>
                                         </ComboBox>
                                     </StackPanel>
                                 </Grid>
@@ -2627,7 +2627,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="🔁" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="ðŸ”" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
                                             <TextBlock Text="Optimal multi-hop trade pathfinder" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
@@ -2863,11 +2863,19 @@
                                     Unchecked="Monuments_Unchecked" />
                                 <CheckBox
                                     x:Name="ChkShops"
-                                    Margin="0,0,24,0"
+                                    Margin="0,0,8,0"
                                     Checked="ChkShops_Checked"
                                     Content="{DynamicResource Shops}"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkShops_Checked" />
+                                <CheckBox
+                                    x:Name="ChkNoBuildZones"
+                                    Margin="0,0,24,0"
+                                    Checked="ChkNoBuildZones_Checked"
+                                    Content="No Build"
+                                    Style="{StaticResource PillToggleButton}"
+                                    Unchecked="ChkNoBuildZones_Checked"
+                                    Visibility="Collapsed" />
 
                                 <TextBlock
                                     Margin="0,0,16,0"
@@ -3461,7 +3469,7 @@
                                         x:Name="CrosshairContextMenu"
                                         Opened="CrosshairContextMenu_Opened"
                                         Style="{StaticResource DarkContextMenu}">
-                                        <!--  sorge dafür, dass ALLE Items (auch Submenüs) dunkel sind  -->
+                                        <!--  sorge dafÃ¼r, dass ALLE Items (auch SubmenÃ¼s) dunkel sind  -->
                                         <ContextMenu.Resources>
                                             <Style BasedOn="{StaticResource DarkMenuItem}" TargetType="MenuItem" />
                                             <Style BasedOn="{StaticResource DarkSeparator}" TargetType="Separator" />
@@ -3762,7 +3770,7 @@
                             </Border>
                         </Border>
 
-                        <!--  2) Titelbild als „contain“, zentriert, unverzerrt  -->
+                        <!--  2) Titelbild als â€žcontainâ€œ, zentriert, unverzerrt  -->
                         <Image
                             x:Name="SplashBg"
                             HorizontalAlignment="Center"
@@ -3778,6 +3786,13 @@
                             VerticalAlignment="Top"
                             RenderOptions.BitmapScalingMode="HighQuality"
                             Stretch="None" />
+                        <Grid
+                            x:Name="Map3DHost"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="#FF0E1117"
+                            Panel.ZIndex="35"
+                            Visibility="Collapsed" />
 
                         <StackPanel
                             Margin="15"
@@ -3810,7 +3825,7 @@
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="-">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="">
@@ -3843,7 +3858,7 @@
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="-">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -3870,7 +3885,7 @@
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="-">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -4050,6 +4065,23 @@
                                                 <TextBlock Text="Send to Discord" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </ui:Button>
+<ui:Button
+                                            x:Name="BtnOpen3DMap"
+                                            Margin="0,2,0,0"
+                                            Padding="6,4"
+                                            Appearance="Transparent"
+                                            BorderThickness="0"
+                                            Click="BtnOpen3DMap_Click"
+                                            ToolTip="Build and open local 3D map"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            Visibility="Collapsed">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <ui:SymbolIcon x:Name="IconOpen3DMap" Symbol="Cube20" FontSize="14" Foreground="#FF8C00" Margin="0,0,6,0" />
+                                                <TextBlock x:Name="TxtOpen3DMap" Text="3D Map" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </ui:Button>
+
                                     </StackPanel>
                                 </ui:Card>
 
@@ -4067,8 +4099,7 @@
                                     <StackPanel Orientation="Vertical">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240" HorizontalScrollBarVisibility="Disabled">
                                             <StackPanel x:Name="SubscriptionStack" Orientation="Vertical" />
-                                        </ScrollViewer>
-                                        <ui:Button
+                                        </ScrollViewer><ui:Button
                                             x:Name="DockEditSubscriptionsButton"
                                             Margin="0,4,0,0"
                                             Padding="4"
@@ -4797,7 +4828,7 @@
                                                     <TextBlock
                                                         VerticalAlignment="Center"
                                                         FontSize="11"
-                                                        Text="🛒 " />
+                                                        Text="ðŸ›’ " />
                                                     <TextBlock
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
@@ -5297,7 +5328,7 @@
 
                                     <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
 
-                                    <!--  LÃ¶schen  -->
+                                    <!--  LÃƒÂ¶schen  -->
                                     <Button
                                         x:Name="ToolTrashButton"
                                         Width="32"
@@ -5510,7 +5541,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Orientation="Horizontal">
-                                <!--  Buttons fÃ¼r Team-Mitglieder werden dynamisch in CodeBehind eingefÃ¼gt  -->
+                                <!--  Buttons fÃƒÂ¼r Team-Mitglieder werden dynamisch in CodeBehind eingefÃƒÂ¼gt  -->
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -5823,3 +5854,8 @@
         </Grid>
     </Grid>
 </ui:FluentWindow>
+
+
+
+
+

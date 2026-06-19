@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -67,7 +67,7 @@
     <value>Ikke Logget Ind</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Søg efter opdateringer</value>
+    <value>SÃ¸g efter opdateringer</value>
   </data>
   <data name="Downloading" xml:space="preserve">
     <value>Downloader...</value>
@@ -94,19 +94,19 @@
     <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Højreklik for indstillinger</value>
+    <value>HÃ¸jreklik for indstillinger</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
     <value>Sporing Aktiv</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Sidste træk: {0}</value>
+    <value>Sidste trÃ¦k: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Donér</value>
+    <value>DonÃ©r</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>Støt udvikleren</value>
+    <value>StÃ¸t udvikleren</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
@@ -121,7 +121,7 @@
     <value>Vis Fanebladet Online Spillere</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Kø:</value>
+    <value>KÃ¸:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
     <value>Enheder</value>
@@ -145,9 +145,9 @@
     <value>Upload samtykke</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>Ved at klikke på "Accept" uploades smart-enhederne (og potentielt korttegninger) for denne server til skaberens server. Dette giver holdkammerater mulighed for at downloade og synkronisere dem. Kun dit Steam-ID overføres for at identificere holdkammerater. Kun spillere, der er autoriseret i Tool Cupboard, kan styre enhederne.
+    <value>Ved at klikke pÃ¥ "Accept" uploades smart-enhederne (og potentielt korttegninger) for denne server til skaberens server. Dette giver holdkammerater mulighed for at downloade og synkronisere dem. Kun dit Steam-ID overfÃ¸res for at identificere holdkammerater. Kun spillere, der er autoriseret i Tool Cupboard, kan styre enhederne.
 
-Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkammeraterne ikke kan downloade dataene, kan du prøve at rydde dine korttegninger og uploade dem igen.</value>
+BemÃ¦rk: Denne overfÃ¸rselsmetode vil blive optimeret i fremtiden. Hvis holdkammeraterne ikke kan downloade dataene, kan du prÃ¸ve at rydde dine korttegninger og uploade dem igen.</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Slet</value>
@@ -156,7 +156,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Du kan kun slette manglende enheder</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>Omdøb enhed</value>
+    <value>OmdÃ¸b enhed</value>
   </data>
   <data name="Online" xml:space="preserve">
     <value>ONLINE</value>
@@ -171,7 +171,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Fuld Forbindelse</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>Indlæs Kort &amp; Hold</value>
+    <value>IndlÃ¦s Kort &amp; Hold</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
     <value>Afbryd</value>
@@ -186,7 +186,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Stop</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>Prøv parring med kant</value>
+    <value>PrÃ¸v parring med kant</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
     <value>Reset pairing (delete config)</value>
@@ -198,16 +198,16 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Nulstil + Lyt med kant</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Genoplev Battlemetrik ID…</value>
+    <value>Genoplev Battlemetrik IDâ€¦</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Slet server…</value>
+    <value>Slet serverâ€¦</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten …</value>
+    <value>Bitte warten â€¦</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>Skift Serverområde</value>
+    <value>Skift ServeromrÃ¥de</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
     <value>Streamer Tilstand</value>
@@ -222,7 +222,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Forkorter Steam-navne og -id'er for at beskytte privatlivets fred under streams. Auto-skjuler konsol og serverliste.</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Ingen position tilgængelig (offline eller ikke spawnet).</value>
+    <value>Ingen position tilgÃ¦ngelig (offline eller ikke spawnet).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
     <value>Gem Gruppe</value>
@@ -231,7 +231,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Please enter a group name. (Automatic Copy)</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>Beskeden kunne ikke sendes. Prøv igen. (Tjek om du er i et team!)</value>
+    <value>Beskeden kunne ikke sendes. PrÃ¸v igen. (Tjek om du er i et team!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
     <value>Fejl: </value>
@@ -252,7 +252,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Gruppe Farve</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Gem Ændringer</value>
+    <value>Gem Ã†ndringer</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
     <value>Spiller Aktivitetsanalyse &amp; Prognoser</value>
@@ -267,25 +267,25 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Streamer Tilstand</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Spiller Markør Skalering</value>
+    <value>Spiller MarkÃ¸r Skalering</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
     <value>Mini Kort Polsk</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>Handling Påkrævet:</value>
+    <value>Handling PÃ¥krÃ¦vet:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
     <value>BattleMetrics-sporing fjernet</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Overtrædelse Af Spillersporingssystemet</value>
+    <value>OvertrÃ¦delse Af Spillersporingssystemet</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
     <value>Hvordan Spiller Sporing Virker</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Føj spillere til tracker for at starte sporing</value>
+    <value>FÃ¸j spillere til tracker for at starte sporing</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
     <value>Sporing Aktiv</value>
@@ -297,10 +297,10 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Filtrer spillere...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>Opret forbindelse til en server for at indlæse listen over spillere</value>
+    <value>Opret forbindelse til en server for at indlÃ¦se listen over spillere</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Henter spillere via Steam-forespørgsel...</value>
+    <value>Henter spillere via Steam-forespÃ¸rgsel...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
     <value>Spor ID</value>
@@ -315,10 +315,10 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Intet token registreret</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Token udløbet!</value>
+    <value>Token udlÃ¸bet!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Udløber om {0} dage</value>
+    <value>UdlÃ¸ber om {0} dage</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
     <value>{0} indtil nat</value>
@@ -327,13 +327,13 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>{0} indtil dag</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Følg Mig</value>
+    <value>FÃ¸lg Mig</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>Følg {0}</value>
+    <value>FÃ¸lg {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Parnering: lytter…</value>
+    <value>Parnering: lytterâ€¦</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>Parring: stoppet</value>
@@ -351,7 +351,7 @@ Bemærk: Denne overførselsmetode vil blive optimeret i fremtiden. Hvis holdkamm
     <value>Smart Alarm</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>Kan ikke læse RustPlus-Link: {0}
+    <value>Kan ikke lÃ¦se RustPlus-Link: {0}
 Format: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
@@ -359,7 +359,7 @@ Format: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
     <value>Slet eksisterende parringskonfigur?
-Du skal parre igen ved næste start.</value>
+Du skal parre igen ved nÃ¦ste start.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
@@ -371,23 +371,23 @@ Du skal parre igen ved næste start.</value>
     <value>Nulstil + Lyt (Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Slet parring config og straks re-par/lyt ved hjælp af Edge?</value>
+    <value>Slet parring config og straks re-par/lyt ved hjÃ¦lp af Edge?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>Kunne ikke forespørge seneste udgivelse. Prøv igen eller åbn udgivelser.</value>
+    <value>Kunne ikke forespÃ¸rge seneste udgivelse. PrÃ¸v igen eller Ã¥bn udgivelser.</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
     <value>Du er opdateret.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Opdatering tilgængelig</value>
+    <value>Opdatering tilgÃ¦ngelig</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Ny version tilgængelig: {0}
-Åbne udgivelser side?</value>
+    <value>Ny version tilgÃ¦ngelig: {0}
+Ã…bne udgivelser side?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Ny version tilgængelig: {0}
+    <value>Ny version tilgÃ¦ngelig: {0}
 Download og installer nu?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
@@ -407,7 +407,7 @@ Download og installer nu?</value>
     <value>Skift Gruppe</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Omdøb</value>
+    <value>OmdÃ¸b</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
     <value>Fjern Tracked</value>
@@ -419,13 +419,13 @@ Download og installer nu?</value>
     <value>Flere Muligheder</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Genoplev Battlemetrik ID…</value>
+    <value>Genoplev Battlemetrik IDâ€¦</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Slet server…</value>
+    <value>Slet serverâ€¦</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Højreklik for at omdøbe</value>
+    <value>HÃ¸jreklik for at omdÃ¸be</value>
   </data>
   <data name="Toggle" xml:space="preserve">
     <value>TOGGLE</value>
@@ -461,13 +461,13 @@ Download og installer nu?</value>
     <value>Hold</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Centrér på kort</value>
+    <value>CentrÃ©r pÃ¥ kort</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>Følg på kort</value>
+    <value>FÃ¸lg pÃ¥ kort</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>Åbn Steam profil</value>
+    <value>Ã…bn Steam profil</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
     <value>Promover til leder</value>
@@ -476,31 +476,31 @@ Download og installer nu?</value>
     <value>Spark ud fra hold</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Profil markører</value>
+    <value>Profil markÃ¸rer</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>Dødsmarkører</value>
+    <value>DÃ¸dsmarkÃ¸rer</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
     <value>Kameraer</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Tilføj Kamera</value>
+    <value>TilfÃ¸j Kamera</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
     <value>Ingen kameraer fundet</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>Parre et kamera for at se dets forhåndsvisning her</value>
+    <value>Parre et kamera for at se dets forhÃ¥ndsvisning her</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
     <value>Spillere</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Sådan spores</value>
+    <value>SÃ¥dan spores</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Lær hvordan sporing af afspiller fungerer</value>
+    <value>LÃ¦r hvordan sporing af afspiller fungerer</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
     <value>Online</value>
@@ -509,28 +509,28 @@ Download og installer nu?</value>
     <value>Online Spillere</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>Søg BM</value>
+    <value>SÃ¸g BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Søg i nuværende server på BattleMetrics</value>
+    <value>SÃ¸g i nuvÃ¦rende server pÃ¥ BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
     <value>Popout</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>Åbn Spillere i separat vindue</value>
+    <value>Ã…bn Spillere i separat vindue</value>
   </data>
   <data name="Track" xml:space="preserve">
     <value>Spor</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Manuelt navn på spor eller Steam ID...</value>
+    <value>Manuelt navn pÃ¥ spor eller Steam ID...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
     <value>Filtrer spillere...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Indlæser spillere...</value>
+    <value>IndlÃ¦ser spillere...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
     <value>Tracket</value>
@@ -548,7 +548,7 @@ Download og installer nu?</value>
     <value>Klar til at udforske kortet?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Opret forbindelse til en valgt server for at indlæse det levende Rust kort og team.</value>
+    <value>Opret forbindelse til en valgt server for at indlÃ¦se det levende Rust kort og team.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
     <value>Klar til at dominere Rust?</value>
@@ -557,16 +557,16 @@ Download og installer nu?</value>
     <value>Parre din konto for at starte tracking spillere, modtage basen raid alarmer, og kontrollere dine smarte enheder med det samme.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Log På &amp; Par Konto</value>
+    <value>Log PÃ¥ &amp; Par Konto</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>Kræver Steam login i din standardbrowser.</value>
+    <value>KrÃ¦ver Steam login i din standardbrowser.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
     <value>Slet Server?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Er du sikker på, at du vil slette denne server? Denne handling kan ikke fortrydes.</value>
+    <value>Er du sikker pÃ¥, at du vil slette denne server? Denne handling kan ikke fortrydes.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuller</value>
@@ -599,10 +599,10 @@ Download og installer nu?</value>
     <value>Konfigurer</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Vælg Alle</value>
+    <value>VÃ¦lg Alle</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Fravælg Alle</value>
+    <value>FravÃ¦lg Alle</value>
   </data>
   <data name="Events" xml:space="preserve">
     <value>BEGRUNDELSE</value>
@@ -620,7 +620,7 @@ Download og installer nu?</value>
     <value>Afgang (5m Advarsel)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Ankomst Advarsel (5m før Dock)</value>
+    <value>Ankomst Advarsel (5m fÃ¸r Dock)</value>
   </data>
   <data name="Heli" xml:space="preserve">
     <value>Patruljehelikopter</value>
@@ -629,10 +629,10 @@ Download og installer nu?</value>
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Rejser Leverandør</value>
+    <value>Rejser LeverandÃ¸r</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Olie Rig Udløser</value>
+    <value>Olie Rig UdlÃ¸ser</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
     <value>Dyb Havbegivenhed</value>
@@ -650,10 +650,10 @@ Download og installer nu?</value>
     <value>Sporing Notifikationer</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Selvdøden</value>
+    <value>SelvdÃ¸den</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Hold Døden</value>
+    <value>Hold DÃ¸den</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
     <value>Self Respawn</value>
@@ -665,7 +665,7 @@ Download og installer nu?</value>
     <value>Nye Butikker</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Mistænkelige Butikker</value>
+    <value>MistÃ¦nkelige Butikker</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
     <value>Handel Advarsler</value>
@@ -674,49 +674,49 @@ Download og installer nu?</value>
     <value>Crosshair Stil</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Grøn Dot</value>
+    <value>GrÃ¸n Dot</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Mini Grøn</value>
+    <value>Mini GrÃ¸n</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>Åbn Crosshair (R/G)</value>
+    <value>Ã…bn Crosshair (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Tynd Rød Cirkel</value>
+    <value>Tynd RÃ¸d Cirkel</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
     <value>Kvadrat + Dot</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>Magentarød Dot</value>
+    <value>MagentarÃ¸d Dot</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Magenta Åben Kors</value>
+    <value>Magenta Ã…ben Kors</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Rækkevidde Linje (ticks)</value>
+    <value>RÃ¦kkevidde Linje (ticks)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
     <value>Tegn Crosshair...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Vælg skærm</value>
+    <value>VÃ¦lg skÃ¦rm</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
     <value>Tegn Overlay</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Tegn (Højreklik: Størrelse / Farve)</value>
+    <value>Tegn (HÃ¸jreklik: StÃ¸rrelse / Farve)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Placer Tekst (Højreklik: Farve / Størrelse)</value>
+    <value>Placer Tekst (HÃ¸jreklik: Farve / StÃ¸rrelse)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Placer Ikon (Højreklik: Vælg Ikon)</value>
+    <value>Placer Ikon (HÃ¸jreklik: VÃ¦lg Ikon)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Viskelæder (hold eller klik)</value>
+    <value>ViskelÃ¦der (hold eller klik)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
     <value>Slet eget overlay</value>
@@ -728,16 +728,16 @@ Download og installer nu?</value>
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Direkte arbitragemuligheder: Køb lav → sælge højt.</value>
+    <value>Direkte arbitragemuligheder: KÃ¸b lav â†’ sÃ¦lge hÃ¸jt.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>Køb X til Y</value>
+    <value>KÃ¸b X til Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>Analysér</value>
+    <value>AnalysÃ©r</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Jeg ønsker at FÅ</value>
+    <value>Jeg Ã¸nsker at FÃ…</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
     <value>Jeg kan betale med</value>
@@ -752,7 +752,7 @@ Download og installer nu?</value>
     <value>FCM Legitimationsoplysninger</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Højreklik for at konfigurere</value>
+    <value>HÃ¸jreklik for at konfigurere</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
     <value>Reset</value>
@@ -773,13 +773,13 @@ Download og installer nu?</value>
     <value>Luk BattleMetrics Browser</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>SØG SØG</value>
+    <value>SÃ˜G SÃ˜G</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Luk Søgning</value>
+    <value>Luk SÃ¸gning</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Aktiver venligst først Butikker</value>
+    <value>Aktiver venligst fÃ¸rst Butikker</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
     <value>Aktiver Butiksafstemning</value>
@@ -803,16 +803,16 @@ Download og installer nu?</value>
     <value>Fremad</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>Åbn i ekstern browser</value>
+    <value>Ã…bn i ekstern browser</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>Søg I BM...</value>
+    <value>SÃ¸g I BM...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Søg</value>
+    <value>SÃ¸g</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Vælg en server</value>
+    <value>VÃ¦lg en server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
     <value>DETKONNEKTET</value>
@@ -833,7 +833,7 @@ Download og installer nu?</value>
     <value>UKENDT</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Dette kan tage et øjeblik...</value>
+    <value>Dette kan tage et Ã¸jeblik...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
     <value>Applikations Indstillinger</value>
@@ -851,19 +851,19 @@ Download og installer nu?</value>
     <value>Auto-forbindelse til sidste server ved opstart</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Genopretter automatisk forbindelse til den sidste server og indlæser kortet.</value>
+    <value>Genopretter automatisk forbindelse til den sidste server og indlÃ¦ser kortet.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>Opførsel</value>
+    <value>OpfÃ¸rsel</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Minimér til bakke i stedet for at lukke</value>
+    <value>MinimÃ©r til bakke i stedet for at lukke</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
     <value>Aktiver Background Player Tracking</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Holder sporing spillere via BattleMetrics selv når minimeret.</value>
+    <value>Holder sporing spillere via BattleMetrics selv nÃ¥r minimeret.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Skjul Systemkonsol (Declutter)</value>
@@ -875,16 +875,16 @@ Download og installer nu?</value>
     <value>Kort Indstillinger</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>Auto indlæse butikker ved tilslutning</value>
+    <value>Auto indlÃ¦se butikker ved tilslutning</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Start automatisk valg af butikker og advarsler, når de er tilsluttet en server.</value>
+    <value>Start automatisk valg af butikker og advarsler, nÃ¥r de er tilsluttet en server.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
     <value>Brug monument-tekstlabels i stedet for ikoner</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>Når det er aktiveret, gengives Rust-kortets monumentnavne som tekst med skrifttypen Permanent Marker i stedet for ikoner.</value>
+    <value>NÃ¥r det er aktiveret, gengives Rust-kortets monumentnavne som tekst med skrifttypen Permanent Marker i stedet for ikoner.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
     <value>Monumentets stil:</value>
@@ -911,13 +911,13 @@ Download og installer nu?</value>
     <value> - brugt med tilladelse.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>Alle monumentikoner og relaterede illustrationer tilhører rustmaps.com. Tak, fordi du støtter Rust-fællesskabet!</value>
+    <value>Alle monumentikoner og relaterede illustrationer tilhÃ¸rer rustmaps.com. Tak, fordi du stÃ¸tter Rust-fÃ¦llesskabet!</value>
   </data>
   <data name="Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Ændre Chat Advarsler</value>
+    <value>Ã†ndre Chat Advarsler</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
     <value>Administrer din linkede Steam-konto i hovedvinduet.</value>
@@ -938,13 +938,13 @@ Download og installer nu?</value>
     <value>Spillere</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Jeg vil gerne GET (f.eks. råolie)</value>
+    <value>Jeg vil gerne GET (f.eks. rÃ¥olie)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Jeg ønsker at betale med (f.eks. Scrap)</value>
+    <value>Jeg Ã¸nsker at betale med (f.eks. Scrap)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Er du sikker på, at du vil slette Server"{0}"? Denne handling kan ikke fortrydes.</value>
+    <value>Er du sikker pÃ¥, at du vil slette Server"{0}"? Denne handling kan ikke fortrydes.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
@@ -980,13 +980,13 @@ Download og installer nu?</value>
     <value>GRUPPE</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Skrivebord – Importenheder</value>
+    <value>Rust+ Skrivebord â€“ Importenheder</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
     <value>Importer enheder</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Vælg hvilke enheder du vil importere til denne server.</value>
+    <value>VÃ¦lg hvilke enheder du vil importere til denne server.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
     <value>Tjek enhedens status</value>
@@ -1007,7 +1007,7 @@ Download og installer nu?</value>
     <value>Rust+ Skrivebord (Tracking {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>Omdøb Gruppe</value>
+    <value>OmdÃ¸b Gruppe</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
     <value>Nyt navn for gruppe:</value>
@@ -1025,7 +1025,7 @@ Download og installer nu?</value>
     <value>Seneste opdatering: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>Åben Rust+ Skrivebord</value>
+    <value>Ã…ben Rust+ Skrivebord</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Afslut</value>
@@ -1046,7 +1046,7 @@ Download og installer nu?</value>
     <value>FPS:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Bemærk: 2 fps anbefales, højere FPS vil sandsynligvis lukke din forbindelse til serveren</value>
+    <value>BemÃ¦rk: 2 fps anbefales, hÃ¸jere FPS vil sandsynligvis lukke din forbindelse til serveren</value>
   </data>
   <data name="Pixel" xml:space="preserve">
     <value>Pixel</value>
@@ -1097,19 +1097,19 @@ Download og installer nu?</value>
     <value>Luk &amp; Deaktiver</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Luk &amp; Aktivér</value>
+    <value>Luk &amp; AktivÃ©r</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
     <value>Upkeep, Minimap &amp; Tracking Opdatering</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Indstilling Af Resumé Og Justeringer</value>
+    <value>Indstilling Af ResumÃ© Og Justeringer</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
     <value>Vis ikke dette igen</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Fantastisk, lad os gå!</value>
+    <value>Fantastisk, lad os gÃ¥!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
     <value>Mini-Map Indstillinger</value>
@@ -1124,7 +1124,7 @@ Download og installer nu?</value>
     <value>Ugennemsigtighed: {0}%</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Størrelse: {0}% (SHIFT+Mousewheel)</value>
+    <value>StÃ¸rrelse: {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
     <value>Vis Servertid</value>
@@ -1133,7 +1133,7 @@ Download og installer nu?</value>
     <value>Server Information</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Ingen beskrivelse tilgængelig.</value>
+    <value>Ingen beskrivelse tilgÃ¦ngelig.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
     <value>Aktuel Version: {0}</value>
@@ -1145,7 +1145,7 @@ Download og installer nu?</value>
     <value>Aktiver Chatkommandoer</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>Præfiks:</value>
+    <value>PrÃ¦fiks:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
     <value>Standard Kommandoer</value>
@@ -1184,19 +1184,19 @@ Download og installer nu?</value>
     <value>Sprog</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Vælg Sprog</value>
+    <value>VÃ¦lg Sprog</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Ændring af sprog kræver en genstart for at få fuld virkning.</value>
+    <value>Ã†ndring af sprog krÃ¦ver en genstart for at fÃ¥ fuld virkning.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
     <value>Smarte Kontakter</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Vedligehold (TC) Overvågning</value>
+    <value>Vedligehold (TC) OvervÃ¥gning</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Ingen TC skærme fundet.</value>
+    <value>Ingen TC skÃ¦rme fundet.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
     <value>Gem Og Luk</value>
@@ -1211,7 +1211,7 @@ Download og installer nu?</value>
     <value>Patruljehelikopter</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Patruljeheli aktiv - kører for {0}</value>
+    <value>Patruljeheli aktiv - kÃ¸rer for {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
     <value>Forbundet midt i begivenheden - spawn-tidspunkt ukendt</value>
@@ -1226,40 +1226,40 @@ Download og installer nu?</value>
     <value>Patrol Heli forlod kortet {0} for denne session</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Lagt til kaj på {0} - afgår i ~{1}</value>
+    <value>Lagt til kaj pÃ¥ {0} - afgÃ¥r i ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
     <value>havn</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Allerede dokket på connect - afgangstidspunkt ukendt</value>
+    <value>Allerede dokket pÃ¥ connect - afgangstidspunkt ukendt</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Dokket på {0} (dokningens varighed er endnu ikke kendt)</value>
+    <value>Dokket pÃ¥ {0} (dokningens varighed er endnu ikke kendt)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Resterende tid på kortet (fra spawn)</value>
+    <value>Resterende tid pÃ¥ kortet (fra spawn)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>Forbundet midt på ruten - tidspunkt ukendt</value>
+    <value>Forbundet midt pÃ¥ ruten - tidspunkt ukendt</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>Forbundet midt på ruten - tid ukendt (rute ~{0}m i alt)</value>
+    <value>Forbundet midt pÃ¥ ruten - tid ukendt (rute ~{0}m i alt)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
     <value>Cargo Ship despawned {0}m {1}s ago this session</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Rejsende sælger aktiv - løber for {0}</value>
+    <value>Rejsende sÃ¦lger aktiv - lÃ¸ber for {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Rejsende sælger aktiv (spawn-tidspunkt ukendt)</value>
+    <value>Rejsende sÃ¦lger aktiv (spawn-tidspunkt ukendt)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
     <value>Travelling Vendor despawnede for {0} siden denne session</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active - løber for {0}</value>
+    <value>Deep Sea active - lÃ¸ber for {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
     <value>Deep Sea active (gydetidspunkt ukendt)</value>
@@ -1286,10 +1286,10 @@ Download og installer nu?</value>
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} spillere, der er online i øjeblikket.{1}</value>
+    <value>{0} spillere, der er online i Ã¸jeblikket.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Kø: {0} spillere.</value>
+    <value> KÃ¸: {0} spillere.</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
     <value>Aktuel tid i spillet: {0}.</value>
@@ -1298,10 +1298,10 @@ Download og installer nu?</value>
     <value>{0} blev forfremmet til leder.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Deep Sea er aktiv! Kører for {0}.</value>
+    <value>Deep Sea er aktiv! KÃ¸rer for {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Deep Sea er i øjeblikket aktiv (forbundet midt i begivenheden - yngletidspunkt ukendt).</value>
+    <value>Deep Sea er i Ã¸jeblikket aktiv (forbundet midt i begivenheden - yngletidspunkt ukendt).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
     <value>Deep Sea sluttede for {0} minutter siden i denne session.</value>
@@ -1313,22 +1313,22 @@ Download og installer nu?</value>
     <value>Fragtskib ikke aktivt.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Fragtskib lagt til kaj på {0}. Afgår om ca. {1} minutter.</value>
+    <value>Fragtskib lagt til kaj pÃ¥ {0}. AfgÃ¥r om ca. {1} minutter.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Fragtskib lagt til kaj på {0} og gør klar til afgang.</value>
+    <value>Fragtskib lagt til kaj pÃ¥ {0} og gÃ¸r klar til afgang.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Fragtskib lagt til kaj på {0} (afgangstidspunkt ukendt).</value>
+    <value>Fragtskib lagt til kaj pÃ¥ {0} (afgangstidspunkt ukendt).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Fragtskib aktivt. Afgår om ca. {0} minutter.</value>
+    <value>Fragtskib aktivt. AfgÃ¥r om ca. {0} minutter.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
     <value>Fragtskib aktivt og klar til at sejle snart.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Cargo Ship aktiv (rutens varighed er endnu ikke lært for denne server).</value>
+    <value>Cargo Ship aktiv (rutens varighed er endnu ikke lÃ¦rt for denne server).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
     <value>Cargo Ship aktiv (forbundet efter spawn - resterende tid ukendt).</value>
@@ -1346,10 +1346,10 @@ Download og installer nu?</value>
     <value>{0}: ikke kaldt i denne session</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Patrulje Heli er aktiv! Kører for {0}.</value>
+    <value>Patrulje Heli er aktiv! KÃ¸rer for {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>Patrol Heli er i øjeblikket aktiv (tilsluttet midt i begivenheden - spawn-tidspunkt ukendt).</value>
+    <value>Patrol Heli er i Ã¸jeblikket aktiv (tilsluttet midt i begivenheden - spawn-tidspunkt ukendt).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
     <value>Patrol Heli er ikke aktiv. Det var {0} {1} for denne session.</value>
@@ -1364,22 +1364,22 @@ Download og installer nu?</value>
     <value>Status for Patrol Heli-event ukendt (ikke set i denne session).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Travelling Vendor er aktiv! Kører for {0}.</value>
+    <value>Travelling Vendor er aktiv! KÃ¸rer for {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>Travelling Vendor er i øjeblikket aktiv (forbundet midt i begivenheden - spawn-tidspunkt ukendt).</value>
+    <value>Travelling Vendor er i Ã¸jeblikket aktiv (forbundet midt i begivenheden - spawn-tidspunkt ukendt).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Rejsende sælger er ikke aktiv. Despawnede for {0} siden i denne session.</value>
+    <value>Rejsende sÃ¦lger er ikke aktiv. Despawnede for {0} siden i denne session.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
     <value>Travelling Vendor event status ukendt (ikke set i denne session).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Der er ikke kortlagt nogen værktøjsskabe til vedligeholdelseskommandoer.</value>
+    <value>Der er ikke kortlagt nogen vÃ¦rktÃ¸jsskabe til vedligeholdelseskommandoer.</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Upkeep i {0} TC: Tom eller udløbet.</value>
+    <value>Upkeep i {0} TC: Tom eller udlÃ¸bet.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
     <value> Behov/24h: {0}.</value>
@@ -1397,7 +1397,7 @@ Download og installer nu?</value>
     <value>{0} minutter</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: Tom/udløbet</value>
+    <value>{0}: Tom/udlÃ¸bet</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
     <value>{0}: {1}d, {2}h</value>
@@ -1406,10 +1406,10 @@ Download og installer nu?</value>
     <value>Vedligeholdelse: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>Bound Tool Cupboard-skærme ikke fundet eller ikke parret.</value>
+    <value>Bound Tool Cupboard-skÃ¦rme ikke fundet eller ikke parret.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>Bound Tool Cupboard-skærm ikke fundet eller ikke parret.</value>
+    <value>Bound Tool Cupboard-skÃ¦rm ikke fundet eller ikke parret.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
     <value>{0} vendte {1}.</value>
@@ -1424,7 +1424,7 @@ Download og installer nu?</value>
     <value>Bound Smart Switch ikke fundet eller ikke parret.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Træ</value>
+    <value>TrÃ¦</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
     <value>Sten</value>
@@ -1448,7 +1448,7 @@ Download og installer nu?</value>
     <value>Fragtskib</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Rejsende sælger</value>
+    <value>Rejsende sÃ¦lger</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
@@ -1469,16 +1469,16 @@ Download og installer nu?</value>
     <value>Begivenhed</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] udløst! Kassen låses op i {1}.</value>
+    <value>[{0}] udlÃ¸st! Kassen lÃ¥ses op i {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ALARM: {0} udløst!</value>
+    <value>ALARM: {0} udlÃ¸st!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] Kassen låses op om 10 minutter!</value>
+    <value>[{0}] Kassen lÃ¥ses op om 10 minutter!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] Kassen låses op om 5 minutter!</value>
+    <value>[{0}] Kassen lÃ¥ses op om 5 minutter!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
     <value>Deep Sea er oppe</value>
@@ -1487,46 +1487,46 @@ Download og installer nu?</value>
     <value>Ny butik {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Mistænkelig butik {0} [{1}] var online {2}s, solgte {3}</value>
+    <value>MistÃ¦nkelig butik {0} [{1}] var online {2}s, solgte {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
     <value>Fragtskib skabte {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>langt ude på havet (nær {0})</value>
+    <value>langt ude pÃ¥ havet (nÃ¦r {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Fragtskib lagt til kaj på {0} ({1})</value>
+    <value>Fragtskib lagt til kaj pÃ¥ {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>Fragtskibet forventes at lægge til på {0} ({1}) om ca. 5 minutter.</value>
+    <value>Fragtskibet forventes at lÃ¦gge til pÃ¥ {0} ({1}) om ca. 5 minutter.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
     <value>Fragtskib med afgang fra {0} om 5 minutter ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Crash opdaget på grund af serverforsinkelse - Heli er stadig på kortet på {0}</value>
+    <value>Crash opdaget pÃ¥ grund af serverforsinkelse - Heli er stadig pÃ¥ kortet pÃ¥ {0}</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} spawnet ind på {1}</value>
+    <value>{0} spawnet ind pÃ¥ {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>Patruljehelikopter skudt ned på {0}</value>
+    <value>Patruljehelikopter skudt ned pÃ¥ {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>ukendt</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} kom online på {1}</value>
+    <value>{0} kom online pÃ¥ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} gik offline</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} døde på {1}</value>
+    <value>{0} dÃ¸de pÃ¥ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
-    <value>{0} genopstået på {1}</value>
+    <value>{0} genopstÃ¥et pÃ¥ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
     <value>[Tracking] {0}{1} er nu ONLINE</value>
@@ -1535,13 +1535,13 @@ Download og installer nu?</value>
     <value>[Tracking] {0}{1} er nu OFFLINE</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[Sporing] {0}{1} omdøbt til {2}!</value>
+    <value>[Sporing] {0}{1} omdÃ¸bt til {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>sælger</value>
+    <value>sÃ¦lger</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>køber</value>
+    <value>kÃ¸ber</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
     <value>Butik</value>
@@ -1562,10 +1562,10 @@ Download og installer nu?</value>
     <value>Dynamisk skift af lokalitet</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - 30+ sprog at vælge imellem</value>
+    <value> - 30+ sprog at vÃ¦lge imellem</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Brugergrænseflade til chatkommandoer</value>
+    <value>BrugergrÃ¦nseflade til chatkommandoer</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
     <value> - Isoleret visning for et rent look</value>
@@ -1583,16 +1583,16 @@ Download og installer nu?</value>
     <value>Din base er under angreb!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>Opret venligst forbindelse til en server først.</value>
+    <value>Opret venligst forbindelse til en server fÃ¸rst.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
     <value>Du har ikke forbindelse til nogen server.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>Chat er ikke tilgængelig lige nu.</value>
+    <value>Chat er ikke tilgÃ¦ngelig lige nu.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>Vælg venligst en server først.</value>
+    <value>VÃ¦lg venligst en server fÃ¸rst.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
     <value>Forbindelse</value>
@@ -1601,16 +1601,16 @@ Download og installer nu?</value>
     <value>Chat</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>Sådan sporer du spillere</value>
+    <value>SÃ¥dan sporer du spillere</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
     <value>Indbygget UDP-sporing</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>Sporingsguiden er i øjeblikket kun tilgængelig på engelsk, da den vil undergå ændringer i den nærmeste fremtid. Vi beder om din tålmodighed.</value>
+    <value>Sporingsguiden er i Ã¸jeblikket kun tilgÃ¦ngelig pÃ¥ engelsk, da den vil undergÃ¥ Ã¦ndringer i den nÃ¦rmeste fremtid. Vi beder om din tÃ¥lmodighed.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>Luk dette vindue når som helst - du kan åbne det igen med ❓ How to Track-knappen.</value>
+    <value>Luk dette vindue nÃ¥r som helst - du kan Ã¥bne det igen med â“ How to Track-knappen.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
     <value>Vedligeholdelse</value>
@@ -1631,7 +1631,7 @@ Download og installer nu?</value>
     <value>Nulstil applikationsdata</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>Vælg de komponenter, du vil slette fra denne enhed. Alle valgte indstillinger vil blive slettet permanent.</value>
+    <value>VÃ¦lg de komponenter, du vil slette fra denne enhed. Alle valgte indstillinger vil blive slettet permanent.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
     <value>Aktiv serverforbindelse (afbryd)</value>
@@ -1646,7 +1646,7 @@ Download og installer nu?</value>
     <value>Device Pairing Config (Nulstil registreringstokens)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>Brugerdefineret trådkors (Wipe-konfigurationer)</value>
+    <value>Brugerdefineret trÃ¥dkors (Wipe-konfigurationer)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
     <value>Lokal cache og tegninger (slet gemte kort/linjer)</value>
@@ -1655,7 +1655,7 @@ Download og installer nu?</value>
     <value>Denne handling er permanent og kan ikke fortrydes.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>Bekræft nulstilling</value>
+    <value>BekrÃ¦ft nulstilling</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
     <value>Backup-adgangskode</value>
@@ -1664,7 +1664,7 @@ Download og installer nu?</value>
     <value>Beskyttelse af backup</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Indtast en adgangskode for at kryptere denne backup-fil. Hvis du lader den stå tom, bliver sikkerhedskopien ikke krypteret.</value>
+    <value>Indtast en adgangskode for at kryptere denne backup-fil. Hvis du lader den stÃ¥ tom, bliver sikkerhedskopien ikke krypteret.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
     <value>Gendan sikkerhedskopi</value>
@@ -1685,7 +1685,7 @@ Download og installer nu?</value>
     <value>Sikkerhedskopiering af applikationsdata</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[SYSTEM] Backup oprettet med succes på: {0}</value>
+    <value>[SYSTEM] Backup oprettet med succes pÃ¥: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
     <value>Backup oprettet med succes!</value>
@@ -1703,12 +1703,12 @@ Download og installer nu?</value>
     <value>Backup mislykkedes</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>Gendannelse af data vil overskrive dine nuværende serverprofiler, brugerdefinerede trådkors, tegneoverlejringer og minimap-konfigurationer.
+    <value>Gendannelse af data vil overskrive dine nuvÃ¦rende serverprofiler, brugerdefinerede trÃ¥dkors, tegneoverlejringer og minimap-konfigurationer.
 
-Er du sikker på, at du vil fortsætte?</value>
+Er du sikker pÃ¥, at du vil fortsÃ¦tte?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>Bekræftelse af gendannelse af sikkerhedskopi</value>
+    <value>BekrÃ¦ftelse af gendannelse af sikkerhedskopi</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
     <value>Gendan programdata</value>
@@ -1744,7 +1744,7 @@ Er du sikker på, at du vil fortsætte?</value>
     <value>[WIPE] Afbryder aktiv serverforbindelse...</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[WIPE] Nulstilling af forbindelse fuldført.</value>
+    <value>[WIPE] Nulstilling af forbindelse fuldfÃ¸rt.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
     <value>[WIPE] Rydder gemte serverprofiler...</value>
@@ -1765,13 +1765,13 @@ Er du sikker på, at du vil fortsætte?</value>
     <value>[WIPE] Konfiguration af enhedsparring slettet.</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[WIPE] Tørring af brugerdefineret trådkors ...</value>
+    <value>[WIPE] TÃ¸rring af brugerdefineret trÃ¥dkors ...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[WIPE] Fejl ved rydning af brugerdefineret trådkors: {0}</value>
+    <value>[WIPE] Fejl ved rydning af brugerdefineret trÃ¥dkors: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[WIPE] Brugerdefineret trådkors ryddet.</value>
+    <value>[WIPE] Brugerdefineret trÃ¥dkors ryddet.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
     <value>[WIPE] Rydning af lokale cache-filer og overlay-tegninger ...</value>
@@ -1786,30 +1786,30 @@ Er du sikker på, at du vil fortsætte?</value>
     <value>[WIPE] Genregistrering af lytter- og FCM-legitimationsoplysninger ...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] Selektiv nulstilling gennemført med succes.</value>
+    <value>[WIPE] Selektiv nulstilling gennemfÃ¸rt med succes.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Retning</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1822,16 +1822,16 @@ Er du sikker på, at du vil fortsætte?</value>
     <value>FRA</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: slået {1} (udløst af {2})</value>
+    <value>[Hotkey] {0}: slÃ¥et {1} (udlÃ¸st af {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>Søg og vælg et genstandsikon for denne enhed.</value>
+    <value>SÃ¸g og vÃ¦lg et genstandsikon for denne enhed.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
     <value>Skift enhedsikon</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>Søg og vælg et genstandsikon for denne regel.</value>
+    <value>SÃ¸g og vÃ¦lg et genstandsikon for denne regel.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
     <value>Skift regelikon</value>
@@ -1843,13 +1843,33 @@ Er du sikker på, at du vil fortsætte?</value>
     <value>Regel</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>Søg ikoner (f.eks. tårn, kontakt)...</value>
+    <value>SÃ¸g ikoner (f.eks. tÃ¥rn, kontakt)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dage</value>
   </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
+  </data>
+  <data name="Delete3DMapData" xml:space="preserve">
+    <value>Delete all 3D Map Data</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
 </root>
-
-
-
