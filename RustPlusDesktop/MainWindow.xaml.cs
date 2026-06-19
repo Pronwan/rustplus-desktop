@@ -2286,10 +2286,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
             AppendLog($"[alarm/debug] ({source}) Settings: AudioEnabled={dev.AudioEnabled}, PopupEnabled={dev.PopupEnabled}");
             
-            // Wenn der Alarm via FCM kommt, setzen wir den UI-Zustand manuell auf "ACTIVE" (10s Puls)
+            // Wenn der Alarm via FCM kommt, setzen wir den UI-Zustand manuell auf "ACTIVE" (10s Puls) und triggern die Logic Engine
             if (source != "WS")
             {
                 dev.IsOn = true;
+                TriggerLogicEngineOnDeviceEvent(dev.EntityId, true);
                 _ = Task.Run(async () =>
                 {
                     await Task.Delay(10000);

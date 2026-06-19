@@ -24,7 +24,6 @@ namespace RustPlusDesk.Views
             {
                 var profile = _vm?.Selected;
                 if (profile == null || !profile.IsLogicEngineActive) return false;
-                if (_chatFeaturesBlockedByMaster) return false;
                 return true;
             }
         }
@@ -67,6 +66,7 @@ namespace RustPlusDesk.Views
         public void TriggerLogicEngineOnChatCommand(string cmdText)
         {
             if (!IsLogicEngineActiveAndWaiting) return;
+            if (_chatFeaturesBlockedByMaster) return;
 
             var profile = _vm?.Selected;
             if (profile == null || profile.LogicRules == null) return;
@@ -146,7 +146,7 @@ namespace RustPlusDesk.Views
             {
                 runtime.PendingRules.Remove(rule.Name);
 
-                if (_chatFeaturesBlockedByMaster)
+                if (_chatFeaturesBlockedByMaster && rule.TriggerType == "ChatCommand")
                 {
                     AppendLog($"[LogicEngine] Rule '{rule.Name}' execution aborted: Blocked by active Chat Master: {_chatFeatureMasterName}");
                     return;
