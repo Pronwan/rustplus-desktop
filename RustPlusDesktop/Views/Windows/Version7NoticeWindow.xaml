@@ -89,9 +89,9 @@
 
             <!-- Footer -->
             <StackPanel Grid.Row="2" Margin="22,0,22,10">
-                <CheckBox x:Name="ChkDontShowAgain" Content="{DynamicResource Update700DontShowAgain}" IsChecked="False" Margin="0,0,0,15" Foreground="#A0A0A0"/>
+                <CheckBox x:Name="ChkDontShowAgain" Content="{DynamicResource Update700DontShowAgain}" IsChecked="False" Margin="0,0,0,15" Foreground="#A0A0A0" Style="{StaticResource DotCheckBox}"/>
 
-                <Button Content="{DynamicResource GenericClose}" Width="150" HorizontalAlignment="Right" Click="BtnClose_Click" Style="{DynamicResource AccentButtonStyle}"/>
+                <ui:Button Content="{DynamicResource GenericClose}" Width="150" HorizontalAlignment="Right" Click="BtnClose_Click" Appearance="Primary" Height="36" Cursor="Hand"/>
             </StackPanel>
         </Grid>
     </Border>
