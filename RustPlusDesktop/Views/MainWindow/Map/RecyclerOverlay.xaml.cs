@@ -20,6 +20,11 @@ namespace RustPlusDesk.Views
         public ObservableCollection<RecyclerOutputViewModel> Outputs { get; } = new();
 
         private List<RecyclerItemViewModel> _allRecyclerItems = new();
+        private List<RecyclerItemViewModel> _filteredItems    = new();
+
+        // Incremental loading — render 25 items at a time
+        private const int PageSize    = 25;
+        private int       _loadedCount = 0;
 
         public RecyclerOverlay()
         {
@@ -143,23 +148,56 @@ namespace RustPlusDesk.Views
         {
             if (_allRecyclerItems == null) return;
 
-            string filterText = SearchTextBox?.Text ?? "";
+            string filterText       = SearchTextBox?.Text ?? "";
             string selectedCategory = CategoryComboBox?.SelectedItem as string ?? "All Categories";
 
-            Items.Clear();
-            foreach (var item in _allRecyclerItems)
+            _filteredItems = _allRecyclerItems.Where(item =>
             {
-                bool matchesSearch = string.IsNullOrEmpty(filterText) || 
-                                     item.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase) || 
+                bool matchesSearch = string.IsNullOrEmpty(filterText) ||
+                                     item.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
                                      item.ShortName.Contains(filterText, StringComparison.OrdinalIgnoreCase);
 
-                bool matchesCategory = selectedCategory == "All Categories" || 
+                bool matchesCategory = selectedCategory == "All Categories" ||
                                        item.Data.category == selectedCategory;
 
-                if (matchesSearch && matchesCategory)
-                {
-                    Items.Add(item);
-                }
+                return matchesSearch && matchesCategory;
+            }).ToList();
+
+            LoadFirstPage();
+        }
+
+        /// <summary>Resets the visible list to the first <see cref="PageSize"/> items from the current filter.</summary>
+        private void LoadFirstPage()
+        {
+            Items.Clear();
+            _loadedCount = 0;
+            LoadNextPage();
+
+            // Scroll back to top when filter changes
+            if (InputsScrollViewer != null)
+                InputsScrollViewer.ScrollToTop();
+        }
+
+        /// <summary>Appends the next batch of filtered items to the visible list.</summary>
+        private void LoadNextPage()
+        {
+            int take = Math.Min(PageSize, _filteredItems.Count - _loadedCount);
+            if (take <= 0) return;
+
+            for (int i = _loadedCount; i < _loadedCount + take; i++)
+                Items.Add(_filteredItems[i]);
+
+            _loadedCount += take;
+        }
+
+        private void InputsScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // Trigger load-more when within 150px of the bottom
+            if (sender is ScrollViewer sv &&
+                sv.ScrollableHeight > 0 &&
+                sv.VerticalOffset >= sv.ScrollableHeight - 150)
+            {
+                LoadNextPage();
             }
         }
 
