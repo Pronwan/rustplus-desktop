@@ -663,7 +663,7 @@
                             <TextBlock Text="Manually add players to your trackers list using their BattleMetrics ID. The app fetches their last seen status and allows you to rename them for better organization." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
                             <TextBlock Text="&#x2022; Optimized Item Icon Downloads" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock Text="Icons are now fetched from RustClash CDN in 40x40 size, reducing download size by 12.9x (totaling 151KB). Existing high-res icons remain cached; only missing ones are fetched in the new optimized format." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="Icons are now fetched from RustHelp optimized CDN in 40x40 size, reducing download size by 12.9x (totaling 151KB). Existing high-res icons remain cached; only missing ones are fetched in the new optimized format." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
                             <TextBlock Text="&#x2022; Progress Tracking" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock Text="Added a download progress bar to show visual status when the app is fetching item icons or updates." TextWrapping="Wrap" Margin="0,0,0,8"/>

@@ -415,6 +415,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
         AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+        StartIconAutoDownload();
 
         // NEU: Hintergrund-Update der Item-Liste von rusthelp.com
         _ = Task.Run(async () =>
@@ -424,6 +425,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 Dispatcher.Invoke(() => {
                     EnsureNewItemDbLoaded(force: true);
                     AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+                    StartIconAutoDownload();
                 });
             }
         });
@@ -1405,6 +1407,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     internal static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> sPendingDownloads = new();
+    private static readonly SemaphoreSlim sDownloadSemaphore = new SemaphoreSlim(10, 10);
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
 
@@ -3753,30 +3756,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (string.IsNullOrWhiteSpace(shortName) && itemId != 0 && sItemsById.TryGetValue(itemId, out var ii0))
             shortName = ii0.ShortName;
 
-        // Fallback-URL (rusthelp)
+        // Original-URL (rusthelp)
         string? rusthelpUrl = null;
         if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) rusthelpUrl = ii1.IconUrl;
         if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
             rusthelpUrl = ii2.IconUrl;
 
-        // PrimÃƒÂ¤r-URL (rustclash)
-        string? rustclashUrl = !string.IsNullOrWhiteSpace(shortName)
-            ? $"https://wiki.rustclash.com/img/items40/{shortName}.png"
+        // Primär-URL (rusthelp optimized to 40px)
+        string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
+            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=40&q=90"
             : null;
 
-        // 1) Versuche RustClash (PrimÃƒÂ¤r)
-        if (rustclashUrl != null)
+        // 1) Versuche Optimierte URL
+        if (optimizedUrl != null)
         {
-            if (sIconCache.TryGetValue(rustclashUrl, out var ready)) return ready;
-            var path = GetIconCachePath(rustclashUrl);
+            if (sIconCache.TryGetValue(optimizedUrl, out var ready)) return ready;
+            var path = GetIconCachePath(optimizedUrl);
             if (System.IO.File.Exists(path))
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
-                if (img != null) { sIconCache[rustclashUrl] = img; return img; }
+                if (img != null) { sIconCache[optimizedUrl] = img; return img; }
             }
         }
 
-        // 2) Versuche RustHelp (Fallback/DB)
+        // 2) Versuche Original URL (Fallback/DB)
         if (rusthelpUrl != null)
         {
             if (sIconCache.TryGetValue(rusthelpUrl, out var ready)) return ready;
@@ -3788,9 +3791,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
-        // 3) Nichts da -> Download (RustClash bevorzugt, RustHelp als Fallback)
-        if (rustclashUrl != null)
-            QueueIconDownload(rustclashUrl, GetIconCachePath(rustclashUrl), rusthelpUrl);
+        // 3) Nichts da -> Download (Optimiert bevorzugt, Original als Fallback)
+        if (optimizedUrl != null)
+            QueueIconDownload(optimizedUrl, GetIconCachePath(optimizedUrl), rusthelpUrl);
         else if (rusthelpUrl != null)
             QueueIconDownload(rusthelpUrl, GetIconCachePath(rusthelpUrl), null);
 
@@ -3821,6 +3824,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch { return null; }
     }
 
+    private static void LogMessage(string message)
+    {
+        System.Diagnostics.Debug.WriteLine(message);
+    }
+
     private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl)
     {
         lock (sPendingDownloads)
@@ -3828,36 +3836,81 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!sPendingDownloads.Add(url)) return;
         }
 
-        UpdateIconProgress(-1); // Total erhÃƒÂ¶hen
+        UpdateIconProgress(-1); // Total erhöhen
 
         _ = Task.Run(async () =>
         {
+            await sDownloadSemaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
                 using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
 
-                // 1) PrimÃƒÂ¤r versuchen
-                var resp = await http.GetAsync(url).ConfigureAwait(false);
-                if (resp.IsSuccessStatusCode)
+                HttpResponseMessage? resp = null;
+                try
+                {
+                    resp = await http.GetAsync(url).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"[icon-download] Download failed (exception): {url} -> {ex.Message}");
+                }
+
+                if (resp != null && resp.IsSuccessStatusCode)
                 {
                     var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                    LogMessage($"[icon-download] Successfully downloaded optimized icon: {url}");
                 }
-                else if (fallbackUrl != null)
+                else
                 {
-                    // 2) Fallback versuchen
-                    var respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
-                    if (respF.IsSuccessStatusCode)
+                    if (resp != null)
                     {
-                        var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-                        await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                        LogMessage($"[icon-download] Download failed (status): {url} -> {resp.StatusCode} ({(int)resp.StatusCode})");
+                    }
+                    else
+                    {
+                        LogMessage($"[icon-download] Download failed: {url} -> No response");
+                    }
+
+                    if (fallbackUrl != null)
+                    {
+                        LogMessage($"[icon-download] Falling back to original for {fallbackUrl}");
+                        HttpResponseMessage? respF = null;
+                        try
+                        {
+                            respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
+                        }
+                        catch (Exception exF)
+                        {
+                            LogMessage($"[icon-download] Fallback failed (exception): {fallbackUrl} -> {exF.Message}");
+                        }
+
+                        if (respF != null && respF.IsSuccessStatusCode)
+                        {
+                            var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                            await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                            LogMessage($"[icon-download] Successfully downloaded fallback icon: {fallbackUrl}");
+                        }
+                        else if (respF != null)
+                        {
+                            LogMessage($"[icon-download] Fallback failed (status): {fallbackUrl} -> {respF.StatusCode} ({(int)respF.StatusCode})");
+                        }
                     }
                 }
             }
-            catch { }
+            catch (Exception exOverall)
+            {
+                LogMessage($"[icon-download] Overall download process error: {exOverall.Message}");
+            }
             finally
             {
+                sDownloadSemaphore.Release();
+                lock (sPendingDownloads)
+                {
+                    sPendingDownloads.Remove(url);
+                }
                 UpdateIconProgress(1); // Fertig
             }
         });
@@ -3869,8 +3922,72 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (Application.Current?.MainWindow is MainWindow mw)
             {
-                if (deltaFinish > 0) mw._vm.IconsDownloaded++;
-                else mw._vm.IconsTotal++;
+                if (deltaFinish > 0)
+                {
+                    mw._vm.IconsDownloaded++;
+                    if (mw._vm.IconsDownloaded == mw._vm.IconsTotal && mw._vm.IconsTotal > 0)
+                    {
+                        mw.AppendLog($"[icon-download] All icons downloaded ({mw._vm.IconsDownloaded}/{mw._vm.IconsTotal})");
+                    }
+                }
+                else
+                {
+                    mw._vm.IconsTotal++;
+                }
+            }
+        });
+    }
+
+    private static void StartIconAutoDownload()
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(1000).ConfigureAwait(false);
+
+                List<ItemInfo> items;
+                lock (sItemsById)
+                {
+                    items = sItemsById.Values.ToList();
+                }
+
+                var toDownload = new List<(string url, string path, string? fallback)>();
+                foreach (var ii in items)
+                {
+                    if (string.IsNullOrWhiteSpace(ii.IconUrl)) continue;
+
+                    string rusthelpUrl = ii.IconUrl;
+                    string optimizedUrl = $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl)}&w=40&q=90";
+                    string path = GetIconCachePath(optimizedUrl);
+
+                    if (!System.IO.File.Exists(path))
+                    {
+                        toDownload.Add((optimizedUrl, path, rusthelpUrl));
+                    }
+                }
+
+                if (toDownload.Count > 0)
+                {
+                    Application.Current?.Dispatcher?.Invoke(() =>
+                    {
+                        if (Application.Current?.MainWindow is MainWindow mw)
+                        {
+                            mw._vm.IconsTotal = 0;
+                            mw._vm.IconsDownloaded = 0;
+                            mw.AppendLog($"[icon-download] Auto-downloading {toDownload.Count} missing icons...");
+                        }
+                    });
+
+                    foreach (var (url, path, fallback) in toDownload)
+                    {
+                        QueueIconDownload(url, path, fallback);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[icon-download] Auto-download error: {ex.Message}");
             }
         });
     }

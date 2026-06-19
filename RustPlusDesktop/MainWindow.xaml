@@ -1049,6 +1049,16 @@
                                         Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico"
                                         Stretch="UniformToFill" />
                                 </ui:Button>
+
+                                <StackPanel Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center" Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
+                                    <ui:SymbolIcon Symbol="ArrowDownload24" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource SystemAccentBrush}"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                        <Run Text="Icons: "/>
+                                        <Run Text="{Binding IconsDownloaded, Mode=OneWay}"/>
+                                        <Run Text="/"/>
+                                        <Run Text="{Binding IconsTotal, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 
