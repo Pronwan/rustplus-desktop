@@ -258,6 +258,14 @@
                             </ComboBox>
                         </Grid>
 
+                        <ui:Button x:Name="BtnDelete3DMapData"
+                                   Content="Delete all 3D Map Data"
+                                   Icon="{ui:SymbolIcon Symbol=Delete24}"
+                                   Appearance="Secondary"
+                                   HorizontalAlignment="Stretch"
+                                   Height="34"
+                                   Margin="0,2,0,12"
+                                   Click="BtnDelete3DMapData_Click"/>
                         <!-- Monument Text Scale Slider -->
                         <Grid Margin="0,12,0,0">
                             <Grid.ColumnDefinitions>
@@ -620,6 +628,15 @@
                                        Margin="4,0,0,0"
                                        Click="BtnRestoreData_Click"/>
                         </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 3D Map Section -->
+                <TextBlock Text="{DynamicResource ThreeDMapSectionTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <!-- Delete 3D Map Data button -->
+                        <ui:Button Appearance="Danger" HorizontalAlignment="Left" Padding="12,6" Click="BtnDelete3DMapData_Click" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="{DynamicResource Delete3DMapData}" ToolTip="{DynamicResource Delete3DMapDataTooltip}"/>
                     </StackPanel>
                 </Border>
 

@@ -1,0 +1,45 @@
+﻿<Window x:Class="RustPlusDesk.Views.Windows.Map3DConsentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Build 3D Map"
+        Width="520"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#0F1215"
+        Foreground="White"
+        FontFamily="Segoe UI"
+        AllowsTransparency="True"
+        WindowStyle="None">
+    <Border Background="#0F1215" CornerRadius="12" BorderBrush="#2A2D32" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" Opacity="0.55" ShadowDepth="0" Color="Black"/>
+        </Border.Effect>
+        <StackPanel>
+            <Border Height="8" Background="Transparent" MouseLeftButtonDown="DragHandle_MouseLeftButtonDown"/>
+            <Grid Margin="24,16,24,0">
+                <Button Content="&#x00D7;" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Width="28" Height="28" FontSize="16" FontWeight="Bold"
+                        Background="Transparent" Foreground="#666" BorderThickness="0"
+                        Cursor="Hand" Click="BtnCancel_Click"/>
+            </Grid>
+
+            <ui:SymbolIcon Symbol="Cube24" FontSize="42" Foreground="#FF8C00" HorizontalAlignment="Center" Margin="0,8,0,14"/>
+            <TextBlock Text="Build local 3D map" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="12" Foreground="#B8BDC7" Margin="32,0,32,18" LineHeight="20"
+                       Text="We can automatically locate the map in your Steam installation folder, extract it, and build a 3D map with heat maps and richer monument overlays. No data will be altered, and no unrelated Steam folder data will be accessed."/>
+            <Border Background="#1E2126" Height="1" Margin="24,0"/>
+            <Grid Margin="24,20,24,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ui:Button Grid.Column="0" Content="Cancel" Appearance="Secondary" Margin="0,0,8,0" Height="38" Click="BtnCancel_Click"/>
+                <ui:Button Grid.Column="1" Content="Accept" Appearance="Secondary" Margin="0,0,8,0" Height="38" Click="BtnAccept_Click"/>
+                <ui:Button Grid.Column="2" Content="Accept and Remember" Appearance="Primary" Height="38" Click="BtnAcceptRemember_Click"/>
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>

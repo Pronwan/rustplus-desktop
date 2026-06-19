@@ -353,6 +353,8 @@ public partial class MainWindow
             return false;
         }
 
+        ResetBuildingBlockedZonesForServerChange();
+
         try
         {
             if (showBusy)

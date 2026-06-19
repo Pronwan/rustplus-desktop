@@ -56,3 +56,35 @@ RustPlusDesktop/supabase/.temp/
 .env-backup
 env
 
+
+# MapParser migration runtime/prototype assets
+/MapParser/app.js
+/MapParser/index.html
+/MapParser/style.css
+/MapParser/map_raw_normalized.png
+/MapParser/maps/
+/MapParser/Rust_Assets/
+/MapParser/*.map
+/MapParser/*.rgt_map
+
+# Local 3D MapParser workspace and generated parser payloads
+/MapParser/
+/node_modules/
+/package.json
+/package-lock.json
+/logger.js
+/logger.py
+/test_*.js
+/test_*.html
+/build_*.js
+/match_bounds*.js
+/patch_*.ps1
+*.rgt_map
+**/Rust_Assets/
+**/AssetRipper_*/
+**/AssetStudio/
+**/RustEdit/
+**/unneeded Object LODs/
+**/*.fbx
+**/*.glb
+**/*.gltf

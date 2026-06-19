@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,1214 +58,1214 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppTitle" xml:space="preserve">
-    <value>КОРИСТУВАЦЬКІ + РОБОЛИЦЯ</value>
+    <value>ÐšÐžÐ Ð˜Ð¡Ð¢Ð£Ð’ÐÐ¦Ð¬ÐšÐ† + Ð ÐžÐ‘ÐžÐ›Ð˜Ð¦Ð¯</value>
   </data>
   <data name="SteamAccount" xml:space="preserve">
-    <value>Обліковий запис Steam</value>
+    <value>ÐžÐ±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ Steam</value>
   </data>
   <data name="NotLoggedIn" xml:space="preserve">
-    <value>Вхід не здійснено</value>
+    <value>Ð’Ñ…Ñ–Ð´ Ð½Ðµ Ð·Ð´Ñ–Ð¹ÑÐ½ÐµÐ½Ð¾</value>
   </data>
   <data name="CheckForUpdates" xml:space="preserve">
-    <value>Перевірити наявність оновлень</value>
+    <value>ÐŸÐµÑ€ÐµÐ²Ñ–Ñ€Ð¸Ñ‚Ð¸ Ð½Ð°ÑÐ²Ð½Ñ–ÑÑ‚ÑŒ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½ÑŒ</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>Завантаження...</value>
+    <value>Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ...</value>
   </data>
   <data name="JoinDiscord" xml:space="preserve">
-    <value>Приєднатися до Discord</value>
+    <value>ÐŸÑ€Ð¸Ñ”Ð´Ð½Ð°Ñ‚Ð¸ÑÑ Ð´Ð¾ Discord</value>
   </data>
   <data name="PatchNotes" xml:space="preserve">
-    <value>Примітки до виправлень</value>
+    <value>ÐŸÑ€Ð¸Ð¼Ñ–Ñ‚ÐºÐ¸ Ð´Ð¾ Ð²Ð¸Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½ÑŒ</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Налаштування</value>
+    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="PairedServers" xml:space="preserve">
-    <value>З'ЄДНАНІ СЕРВЕРИ</value>
+    <value>Ð—'Ð„Ð”ÐÐÐÐ† Ð¡Ð•Ð Ð’Ð•Ð Ð˜</value>
   </data>
   <data name="NoServersPaired" xml:space="preserve">
-    <value>Поки немає пов'язаних серверів</value>
+    <value>ÐŸÐ¾ÐºÐ¸ Ð½ÐµÐ¼Ð°Ñ” Ð¿Ð¾Ð²'ÑÐ·Ð°Ð½Ð¸Ñ… ÑÐµÑ€Ð²ÐµÑ€Ñ–Ð²</value>
   </data>
   <data name="PairingMaintenance" xml:space="preserve">
-    <value>ПАРАМЕТРИ та ПОШУК</value>
+    <value>ÐŸÐÐ ÐÐœÐ•Ð¢Ð Ð˜ Ñ‚Ð° ÐŸÐžÐ¨Ð£Ðš</value>
   </data>
   <data name="PairingIdle" xml:space="preserve">
     <value>Pairing: idle</value>
   </data>
   <data name="RightClickOptions" xml:space="preserve">
-    <value>Клацніть правою кнопкою миші для опцій</value>
+    <value>ÐšÐ»Ð°Ñ†Ð½Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¾ÑŽ ÐºÐ½Ð¾Ð¿ÐºÐ¾ÑŽ Ð¼Ð¸ÑˆÑ– Ð´Ð»Ñ Ð¾Ð¿Ñ†Ñ–Ð¹</value>
   </data>
   <data name="TrackingActive" xml:space="preserve">
-    <value>Відстеження активоване</value>
+    <value>Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ Ð°ÐºÑ‚Ð¸Ð²Ð¾Ð²Ð°Ð½Ðµ</value>
   </data>
   <data name="LastPull" xml:space="preserve">
-    <value>Останній розіграш: {0}</value>
+    <value>ÐžÑÑ‚Ð°Ð½Ð½Ñ–Ð¹ Ñ€Ð¾Ð·Ñ–Ð³Ñ€Ð°Ñˆ: {0}</value>
   </data>
   <data name="Donate" xml:space="preserve">
-    <value>Пожертвувати</value>
+    <value>ÐŸÐ¾Ð¶ÐµÑ€Ñ‚Ð²ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="SupportDeveloper" xml:space="preserve">
-    <value>Підтримати розробника</value>
+    <value>ÐŸÑ–Ð´Ñ‚Ñ€Ð¸Ð¼Ð°Ñ‚Ð¸ Ñ€Ð¾Ð·Ñ€Ð¾Ð±Ð½Ð¸ÐºÐ°</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetWebSocket" xml:space="preserve">
-    <value>Скинути підключення WebSocket</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ WebSocket</value>
   </data>
   <data name="Players" xml:space="preserve">
-    <value>Гравці:</value>
+    <value>Ð“Ñ€Ð°Ð²Ñ†Ñ–:</value>
   </data>
   <data name="ShowOnlinePlayers" xml:space="preserve">
-    <value>Показувати вкладку "Гравці онлайн</value>
+    <value>ÐŸÐ¾ÐºÐ°Ð·ÑƒÐ²Ð°Ñ‚Ð¸ Ð²ÐºÐ»Ð°Ð´ÐºÑƒ "Ð“Ñ€Ð°Ð²Ñ†Ñ– Ð¾Ð½Ð»Ð°Ð¹Ð½</value>
   </data>
   <data name="Queue" xml:space="preserve">
-    <value>Черга:</value>
+    <value>Ð§ÐµÑ€Ð³Ð°:</value>
   </data>
   <data name="DevicesTab" xml:space="preserve">
-    <value>Пристрої</value>
+    <value>ÐŸÑ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—</value>
   </data>
   <data name="Hotkeys" xml:space="preserve">
-    <value>Гарячі клавіші</value>
+    <value>Ð“Ð°Ñ€ÑÑ‡Ñ– ÐºÐ»Ð°Ð²Ñ–ÑˆÑ–</value>
   </data>
   <data name="ImportDevices" xml:space="preserve">
-    <value>Імпорт пристроїв з союзників по команді</value>
+    <value>Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð² Ð· ÑÐ¾ÑŽÐ·Ð½Ð¸ÐºÑ–Ð² Ð¿Ð¾ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ–</value>
   </data>
   <data name="ExportDevices" xml:space="preserve">
-    <value>Експортувати пристрої до товаришів по команді</value>
+    <value>Ð•ÐºÑÐ¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ— Ð´Ð¾ Ñ‚Ð¾Ð²Ð°Ñ€Ð¸ÑˆÑ–Ð² Ð¿Ð¾ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ–</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Оновити</value>
+    <value>ÐžÐ½Ð¾Ð²Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="Decline" xml:space="preserve">
-    <value>Занепад</value>
+    <value>Ð—Ð°Ð½ÐµÐ¿Ð°Ð´</value>
   </data>
   <data name="UploadConsentTitle" xml:space="preserve">
-    <value>Завантажити Згоду</value>
+    <value>Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð—Ð³Ð¾Ð´Ñƒ</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>Натиснувши кнопку "Прийняти", смарт-пристрої (і, можливо, креслення мапи) для цього сервера будуть завантажені на сервер творця. Це дозволить товаришам по команді завантажити їх і синхронізувати. Для ідентифікації товаришів по команді передається лише ваш Steam ID. Керувати пристроями можуть лише гравці, авторизовані в шафі з інструментами.
+    <value>ÐÐ°Ñ‚Ð¸ÑÐ½ÑƒÐ²ÑˆÐ¸ ÐºÐ½Ð¾Ð¿ÐºÑƒ "ÐŸÑ€Ð¸Ð¹Ð½ÑÑ‚Ð¸", ÑÐ¼Ð°Ñ€Ñ‚-Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ— (Ñ–, Ð¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾, ÐºÑ€ÐµÑÐ»ÐµÐ½Ð½Ñ Ð¼Ð°Ð¿Ð¸) Ð´Ð»Ñ Ñ†ÑŒÐ¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð° Ð±ÑƒÐ´ÑƒÑ‚ÑŒ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ñ– Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€ Ñ‚Ð²Ð¾Ñ€Ñ†Ñ. Ð¦Ðµ Ð´Ð¾Ð·Ð²Ð¾Ð»Ð¸Ñ‚ÑŒ Ñ‚Ð¾Ð²Ð°Ñ€Ð¸ÑˆÐ°Ð¼ Ð¿Ð¾ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ– Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ñ—Ñ… Ñ– ÑÐ¸Ð½Ñ…Ñ€Ð¾Ð½Ñ–Ð·ÑƒÐ²Ð°Ñ‚Ð¸. Ð”Ð»Ñ Ñ–Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ñ— Ñ‚Ð¾Ð²Ð°Ñ€Ð¸ÑˆÑ–Ð² Ð¿Ð¾ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ– Ð¿ÐµÑ€ÐµÐ´Ð°Ñ”Ñ‚ÑŒÑÑ Ð»Ð¸ÑˆÐµ Ð²Ð°Ñˆ Steam ID. ÐšÐµÑ€ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾ÑÐ¼Ð¸ Ð¼Ð¾Ð¶ÑƒÑ‚ÑŒ Ð»Ð¸ÑˆÐµ Ð³Ñ€Ð°Ð²Ñ†Ñ–, Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð¾Ð²Ð°Ð½Ñ– Ð² ÑˆÐ°Ñ„Ñ– Ð· Ñ–Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ð°Ð¼Ð¸.
 
-Примітка: Цей спосіб передачі даних буде оптимізовано в майбутньому. Якщо товариші по команді не можуть завантажити дані, спробуйте очистити малюнки мапи і завантажити їх знову.</value>
+ÐŸÑ€Ð¸Ð¼Ñ–Ñ‚ÐºÐ°: Ð¦ÐµÐ¹ ÑÐ¿Ð¾ÑÑ–Ð± Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ñ– Ð´Ð°Ð½Ð¸Ñ… Ð±ÑƒÐ´Ðµ Ð¾Ð¿Ñ‚Ð¸Ð¼Ñ–Ð·Ð¾Ð²Ð°Ð½Ð¾ Ð² Ð¼Ð°Ð¹Ð±ÑƒÑ‚Ð½ÑŒÐ¾Ð¼Ñƒ. Ð¯ÐºÑ‰Ð¾ Ñ‚Ð¾Ð²Ð°Ñ€Ð¸ÑˆÑ– Ð¿Ð¾ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ– Ð½Ðµ Ð¼Ð¾Ð¶ÑƒÑ‚ÑŒ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð´Ð°Ð½Ñ–, ÑÐ¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ Ð¾Ñ‡Ð¸ÑÑ‚Ð¸Ñ‚Ð¸ Ð¼Ð°Ð»ÑŽÐ½ÐºÐ¸ Ð¼Ð°Ð¿Ð¸ Ñ– Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ñ—Ñ… Ð·Ð½Ð¾Ð²Ñƒ.</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Видалити</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="DeleteMissingOnly" xml:space="preserve">
-    <value>Ви можете видалити лише відсутні пристрої</value>
+    <value>Ð’Ð¸ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð»Ð¸ÑˆÐµ Ð²Ñ–Ð´ÑÑƒÑ‚Ð½Ñ– Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—</value>
   </data>
   <data name="RenameDevice" xml:space="preserve">
-    <value>Перейменувати пристрій</value>
+    <value>ÐŸÐµÑ€ÐµÐ¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ñ–Ð¹</value>
   </data>
   <data name="Online" xml:space="preserve">
-    <value>У режимі онлайн</value>
+    <value>Ð£ Ñ€ÐµÐ¶Ð¸Ð¼Ñ– Ð¾Ð½Ð»Ð°Ð¹Ð½</value>
   </data>
   <data name="Offline" xml:space="preserve">
-    <value>ЗАЛИШИТИ</value>
+    <value>Ð—ÐÐ›Ð˜Ð¨Ð˜Ð¢Ð˜</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Підключитися</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ÑÑ</value>
   </data>
   <data name="FullConnect" xml:space="preserve">
-    <value>Повне підключення</value>
+    <value>ÐŸÐ¾Ð²Ð½Ðµ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="LoadMapTeam" xml:space="preserve">
-    <value>Завантажити карту та команду</value>
+    <value>Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ ÐºÐ°Ñ€Ñ‚Ñƒ Ñ‚Ð° ÐºÐ¾Ð¼Ð°Ð½Ð´Ñƒ</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Від'єднатись</value>
+    <value>Ð’Ñ–Ð´'Ñ”Ð´Ð½Ð°Ñ‚Ð¸ÑÑŒ</value>
   </data>
   <data name="ServerDetails" xml:space="preserve">
-    <value>Деталі сервера</value>
+    <value>Ð”ÐµÑ‚Ð°Ð»Ñ– ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
   </data>
   <data name="Listen" xml:space="preserve">
-    <value>Слухати</value>
+    <value>Ð¡Ð»ÑƒÑ…Ð°Ñ‚Ð¸</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Зупинити</value>
+    <value>Ð—ÑƒÐ¿Ð¸Ð½Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="TryPairingEdge" xml:space="preserve">
-    <value>Спробувати створити пари з межею</value>
+    <value>Ð¡Ð¿Ñ€Ð¾Ð±ÑƒÐ²Ð°Ñ‚Ð¸ ÑÑ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð¿Ð°Ñ€Ð¸ Ð· Ð¼ÐµÐ¶ÐµÑŽ</value>
   </data>
   <data name="ResetPairingConfig" xml:space="preserve">
     <value>Reset pairing (delete config)</value>
   </data>
   <data name="ResetListenPairing" xml:space="preserve">
-    <value>Скинути + Слухати (повторно пiрка)</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ + Ð¡Ð»ÑƒÑ…Ð°Ñ‚Ð¸ (Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾ Ð¿iÑ€ÐºÐ°)</value>
   </data>
   <data name="ResetListenEdge" xml:space="preserve">
-    <value>Скинути + Слухати з Edge</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ + Ð¡Ð»ÑƒÑ…Ð°Ñ‚Ð¸ Ð· Edge</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Відчитись від ІД Боєздатності…</value>
+    <value>Ð’Ñ–Ð´Ñ‡Ð¸Ñ‚Ð¸ÑÑŒ Ð²Ñ–Ð´ Ð†Ð” Ð‘Ð¾Ñ”Ð·Ð´Ð°Ñ‚Ð½Ð¾ÑÑ‚Ñ–â€¦</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Видалити сервер…</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ ÑÐµÑ€Ð²ÐµÑ€â€¦</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten …</value>
+    <value>Bitte warten â€¦</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
-    <value>Змінити область сервера</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð¾Ð±Ð»Ð°ÑÑ‚ÑŒ ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
   </data>
   <data name="StreamerMode" xml:space="preserve">
-    <value>Режим стрімера</value>
+    <value>Ð ÐµÐ¶Ð¸Ð¼ ÑÑ‚Ñ€Ñ–Ð¼ÐµÑ€Ð°</value>
   </data>
   <data name="ScaleLabel" xml:space="preserve">
-    <value>Кількість:</value>
+    <value>ÐšÑ–Ð»ÑŒÐºÑ–ÑÑ‚ÑŒ:</value>
   </data>
   <data name="EnableStreamerMode" xml:space="preserve">
-    <value>Увімкнути режим стрімера (назви абревіатури)</value>
+    <value>Ð£Ð²Ñ–Ð¼ÐºÐ½ÑƒÑ‚Ð¸ Ñ€ÐµÐ¶Ð¸Ð¼ ÑÑ‚Ñ€Ñ–Ð¼ÐµÑ€Ð° (Ð½Ð°Ð·Ð²Ð¸ Ð°Ð±Ñ€ÐµÐ²Ñ–Ð°Ñ‚ÑƒÑ€Ð¸)</value>
   </data>
   <data name="StreamerModeToolTip" xml:space="preserve">
-    <value>Скорочує імена та ідентифікатори Steam для захисту конфіденційності під час потоків. Авто-приховує список консолі і серверів.</value>
+    <value>Ð¡ÐºÐ¾Ñ€Ð¾Ñ‡ÑƒÑ” Ñ–Ð¼ÐµÐ½Ð° Ñ‚Ð° Ñ–Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ‚Ð¾Ñ€Ð¸ Steam Ð´Ð»Ñ Ð·Ð°Ñ…Ð¸ÑÑ‚Ñƒ ÐºÐ¾Ð½Ñ„Ñ–Ð´ÐµÐ½Ñ†Ñ–Ð¹Ð½Ð¾ÑÑ‚Ñ– Ð¿Ñ–Ð´ Ñ‡Ð°Ñ Ð¿Ð¾Ñ‚Ð¾ÐºÑ–Ð². ÐÐ²Ñ‚Ð¾-Ð¿Ñ€Ð¸Ñ…Ð¾Ð²ÑƒÑ” ÑÐ¿Ð¸ÑÐ¾Ðº ÐºÐ¾Ð½ÑÐ¾Ð»Ñ– Ñ– ÑÐµÑ€Ð²ÐµÑ€Ñ–Ð².</value>
   </data>
   <data name="NoPositionAvailable" xml:space="preserve">
-    <value>Немає доступної позиції (офлайн або не працює).</value>
+    <value>ÐÐµÐ¼Ð°Ñ” Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¾Ñ— Ð¿Ð¾Ð·Ð¸Ñ†Ñ–Ñ— (Ð¾Ñ„Ð»Ð°Ð¹Ð½ Ð°Ð±Ð¾ Ð½Ðµ Ð¿Ñ€Ð°Ñ†ÑŽÑ”).</value>
   </data>
   <data name="SaveGroup" xml:space="preserve">
-    <value>Зберегти групу</value>
+    <value>Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
   </data>
   <data name="EnterGroupName" xml:space="preserve">
-    <value>Будь ласка, введіть назву групи.</value>
+    <value>Ð‘ÑƒÐ´ÑŒ Ð»Ð°ÑÐºÐ°, Ð²Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð½Ð°Ð·Ð²Ñƒ Ð³Ñ€ÑƒÐ¿Ð¸.</value>
   </data>
   <data name="MessageNotSentError" xml:space="preserve">
-    <value>Повідомлення не може бути надіслано. Будь ласка, спробуйте ще раз. (Перевірте чи ви перебуваєте в команді!)</value>
+    <value>ÐŸÐ¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ Ð½Ð°Ð´Ñ–ÑÐ»Ð°Ð½Ð¾. Ð‘ÑƒÐ´ÑŒ Ð»Ð°ÑÐºÐ°, ÑÐ¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ Ñ‰Ðµ Ñ€Ð°Ð·. (ÐŸÐµÑ€ÐµÐ²Ñ–Ñ€Ñ‚Ðµ Ñ‡Ð¸ Ð²Ð¸ Ð¿ÐµÑ€ÐµÐ±ÑƒÐ²Ð°Ñ”Ñ‚Ðµ Ð² ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ–!)</value>
   </data>
   <data name="ErrorPrefix" xml:space="preserve">
-    <value>Помилка: </value>
+    <value>ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ°: </value>
   </data>
   <data name="AssignGroup" xml:space="preserve">
-    <value>Призначити групу</value>
+    <value>ÐŸÑ€Ð¸Ð·Ð½Ð°Ñ‡Ð¸Ñ‚Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
   </data>
   <data name="GroupSettingsTitle" xml:space="preserve">
-    <value>Налаштування групи: {0}</value>
+    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð³Ñ€ÑƒÐ¿Ð¸: {0}</value>
   </data>
   <data name="GroupName" xml:space="preserve">
-    <value>Назва групи</value>
+    <value>ÐÐ°Ð·Ð²Ð° Ð³Ñ€ÑƒÐ¿Ð¸</value>
   </data>
   <data name="EnterGroupNamePlaceholder" xml:space="preserve">
-    <value>Введіть назву групи...</value>
+    <value>Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð½Ð°Ð·Ð²Ñƒ Ð³Ñ€ÑƒÐ¿Ð¸...</value>
   </data>
   <data name="GroupColor" xml:space="preserve">
-    <value>Колір групи</value>
+    <value>ÐšÐ¾Ð»Ñ–Ñ€ Ð³Ñ€ÑƒÐ¿Ð¸</value>
   </data>
   <data name="SaveChanges" xml:space="preserve">
-    <value>Зберегти зміни</value>
+    <value>Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ð·Ð¼Ñ–Ð½Ð¸</value>
   </data>
   <data name="PlayerAnalyticsTitle" xml:space="preserve">
-    <value>Аналітика діяльності гравця і прогнози</value>
+    <value>ÐÐ½Ð°Ð»Ñ–Ñ‚Ð¸ÐºÐ° Ð´Ñ–ÑÐ»ÑŒÐ½Ð¾ÑÑ‚Ñ– Ð³Ñ€Ð°Ð²Ñ†Ñ Ñ– Ð¿Ñ€Ð¾Ð³Ð½Ð¾Ð·Ð¸</value>
   </data>
   <data name="PlayersTitle" xml:space="preserve">
-    <value>Гравці</value>
+    <value>Ð“Ñ€Ð°Ð²Ñ†Ñ–</value>
   </data>
   <data name="StreamerModeMiniMapOverhaul" xml:space="preserve">
-    <value>Зміна режиму передачі та Мінних карт</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð° Ñ€ÐµÐ¶Ð¸Ð¼Ñƒ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ñ– Ñ‚Ð° ÐœÑ–Ð½Ð½Ð¸Ñ… ÐºÐ°Ñ€Ñ‚</value>
   </data>
   <data name="StreamerModeTitle" xml:space="preserve">
-    <value>Режим стрімера</value>
+    <value>Ð ÐµÐ¶Ð¸Ð¼ ÑÑ‚Ñ€Ñ–Ð¼ÐµÑ€Ð°</value>
   </data>
   <data name="PlayerMarkerScalingTitle" xml:space="preserve">
-    <value>Масштабування міток гравця</value>
+    <value>ÐœÐ°ÑÑˆÑ‚Ð°Ð±ÑƒÐ²Ð°Ð½Ð½Ñ Ð¼Ñ–Ñ‚Ð¾Ðº Ð³Ñ€Ð°Ð²Ñ†Ñ</value>
   </data>
   <data name="MiniMapPolishTitle" xml:space="preserve">
-    <value>Польська карта Міні</value>
+    <value>ÐŸÐ¾Ð»ÑŒÑÑŒÐºÐ° ÐºÐ°Ñ€Ñ‚Ð° ÐœÑ–Ð½Ñ–</value>
   </data>
   <data name="ActionRequiredTitle" xml:space="preserve">
-    <value>Потрібна дія:</value>
+    <value>ÐŸÐ¾Ñ‚Ñ€Ñ–Ð±Ð½Ð° Ð´Ñ–Ñ:</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Видалено відстеження BattleMetrics</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ BattleMetrics</value>
   </data>
   <data name="PlayerTrackingOverhaulTitle" xml:space="preserve">
-    <value>Перебудова системи відстежування</value>
+    <value>ÐŸÐµÑ€ÐµÐ±ÑƒÐ´Ð¾Ð²Ð° ÑÐ¸ÑÑ‚ÐµÐ¼Ð¸ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="HowPlayerTrackingWorks" xml:space="preserve">
-    <value>Як працює гравець відстеження</value>
+    <value>Ð¯Ðº Ð¿Ñ€Ð°Ñ†ÑŽÑ” Ð³Ñ€Ð°Ð²ÐµÑ†ÑŒ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="AddPlayersToStartTracking" xml:space="preserve">
-    <value>Для початку відстеження потрібно додати гравців</value>
+    <value>Ð”Ð»Ñ Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð´Ð¾Ð´Ð°Ñ‚Ð¸ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð²</value>
   </data>
   <data name="TrackingActiveStatus" xml:space="preserve">
-    <value>Відстеження активоване</value>
+    <value>Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ Ð°ÐºÑ‚Ð¸Ð²Ð¾Ð²Ð°Ð½Ðµ</value>
   </data>
   <data name="TrackingIdleStatus" xml:space="preserve">
-    <value>Очікування відстеження</value>
+    <value>ÐžÑ‡Ñ–ÐºÑƒÐ²Ð°Ð½Ð½Ñ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="FilterPlayers" xml:space="preserve">
-    <value>Фільтр гравців...</value>
+    <value>Ð¤Ñ–Ð»ÑŒÑ‚Ñ€ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð²...</value>
   </data>
   <data name="ConnectToLoadPlayers" xml:space="preserve">
-    <value>Підключіться до сервера для завантаження списку гравців</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡Ñ–Ñ‚ÑŒÑÑ Ð´Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð° Ð´Ð»Ñ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ ÑÐ¿Ð¸ÑÐºÑƒ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð²</value>
   </data>
   <data name="FetchingPlayersSteam" xml:space="preserve">
-    <value>Отримання гравців за допомогою Steam Query...</value>
+    <value>ÐžÑ‚Ñ€Ð¸Ð¼Ð°Ð½Ð½Ñ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð² Ð·Ð° Ð´Ð¾Ð¿Ð¾Ð¼Ð¾Ð³Ð¾ÑŽ Steam Query...</value>
   </data>
   <data name="TrackID" xml:space="preserve">
-    <value>ID пісні</value>
+    <value>ID Ð¿Ñ–ÑÐ½Ñ–</value>
   </data>
   <data name="ManualTrackNamePlaceholder" xml:space="preserve">
-    <value>Назва маршруту вручну...</value>
+    <value>ÐÐ°Ð·Ð²Ð° Ð¼Ð°Ñ€ÑˆÑ€ÑƒÑ‚Ñƒ Ð²Ñ€ÑƒÑ‡Ð½Ñƒ...</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Немає пристроїв.</value>
+    <value>ÐÐµÐ¼Ð°Ñ” Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð².</value>
   </data>
   <data name="NoTokenRegistered" xml:space="preserve">
-    <value>Немає зареєстрованого маркера</value>
+    <value>ÐÐµÐ¼Ð°Ñ” Ð·Ð°Ñ€ÐµÑ”ÑÑ‚Ñ€Ð¾Ð²Ð°Ð½Ð¾Ð³Ð¾ Ð¼Ð°Ñ€ÐºÐµÑ€Ð°</value>
   </data>
   <data name="TokenExpired" xml:space="preserve">
-    <value>Термін дії токена минув!</value>
+    <value>Ð¢ÐµÑ€Ð¼Ñ–Ð½ Ð´Ñ–Ñ— Ñ‚Ð¾ÐºÐµÐ½Ð° Ð¼Ð¸Ð½ÑƒÐ²!</value>
   </data>
   <data name="ExpiresInDays" xml:space="preserve">
-    <value>Термін дії закінчується через {0} днів</value>
+    <value>Ð¢ÐµÑ€Ð¼Ñ–Ð½ Ð´Ñ–Ñ— Ð·Ð°ÐºÑ–Ð½Ñ‡ÑƒÑ”Ñ‚ÑŒÑÑ Ñ‡ÐµÑ€ÐµÐ· {0} Ð´Ð½Ñ–Ð²</value>
   </data>
   <data name="UntilNight" xml:space="preserve">
-    <value>{0} до ночі</value>
+    <value>{0} Ð´Ð¾ Ð½Ð¾Ñ‡Ñ–</value>
   </data>
   <data name="UntilDay" xml:space="preserve">
-    <value>{0} до дня</value>
+    <value>{0} Ð´Ð¾ Ð´Ð½Ñ</value>
   </data>
   <data name="FollowMe" xml:space="preserve">
-    <value>Слідкуйте за мною</value>
+    <value>Ð¡Ð»Ñ–Ð´ÐºÑƒÐ¹Ñ‚Ðµ Ð·Ð° Ð¼Ð½Ð¾ÑŽ</value>
   </data>
   <data name="FollowPlayer" xml:space="preserve">
-    <value>Підписатись на {0}</value>
+    <value>ÐŸÑ–Ð´Ð¿Ð¸ÑÐ°Ñ‚Ð¸ÑÑŒ Ð½Ð° {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Парування: слухати…</value>
+    <value>ÐŸÐ°Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ: ÑÐ»ÑƒÑ…Ð°Ñ‚Ð¸â€¦</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
-    <value>Спаровування: зупинено</value>
+    <value>Ð¡Ð¿Ð°Ñ€Ð¾Ð²ÑƒÐ²Ð°Ð½Ð½Ñ: Ð·ÑƒÐ¿Ð¸Ð½ÐµÐ½Ð¾</value>
   </data>
   <data name="PairingFailed" xml:space="preserve">
-    <value>Парування: не вдалося</value>
+    <value>ÐŸÐ°Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ: Ð½Ðµ Ð²Ð´Ð°Ð»Ð¾ÑÑ</value>
   </data>
   <data name="AlarmActivated" xml:space="preserve">
-    <value>Сигнал активовано!</value>
+    <value>Ð¡Ð¸Ð³Ð½Ð°Ð» Ð°ÐºÑ‚Ð¸Ð²Ð¾Ð²Ð°Ð½Ð¾!</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>Сервер</value>
+    <value>Ð¡ÐµÑ€Ð²ÐµÑ€</value>
   </data>
   <data name="SmartAlarm" xml:space="preserve">
-    <value>Розумний будильник</value>
+    <value>Ð Ð¾Ð·ÑƒÐ¼Ð½Ð¸Ð¹ Ð±ÑƒÐ´Ð¸Ð»ÑŒÐ½Ð¸Ðº</value>
   </data>
   <data name="UnableToReadLink" xml:space="preserve">
-    <value>Неможливо прочитати RustPlus-Link: {0}
-Формат: rustplus://IP:PORT</value>
+    <value>ÐÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚Ð¸ RustPlus-Link: {0}
+Ð¤Ð¾Ñ€Ð¼Ð°Ñ‚: rustplus://IP:PORT</value>
   </data>
   <data name="DeletePairingConfigHeader" xml:space="preserve">
     <value>Reset pairing</value>
   </data>
   <data name="DeletePairingConfigBody" xml:space="preserve">
-    <value>Видалити існуючу конфігурацію парування?
-Вам потрібно буде знову створити пару під час наступного запуску.</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ–ÑÐ½ÑƒÑŽÑ‡Ñƒ ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–ÑŽ Ð¿Ð°Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ?
+Ð’Ð°Ð¼ Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ð±ÑƒÐ´Ðµ Ð·Ð½Ð¾Ð²Ñƒ ÑÑ‚Ð²Ð¾Ñ€Ð¸Ñ‚Ð¸ Ð¿Ð°Ñ€Ñƒ Ð¿Ñ–Ð´ Ñ‡Ð°Ñ Ð½Ð°ÑÑ‚ÑƒÐ¿Ð½Ð¾Ð³Ð¾ Ð·Ð°Ð¿ÑƒÑÐºÑƒ.</value>
   </data>
   <data name="ResetListenHeader" xml:space="preserve">
     <value>Reset + Listen</value>
   </data>
   <data name="ResetListenBody" xml:space="preserve">
-    <value>Видалити конфігурацію підключення і відразу повторно парувати/слухати?</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–ÑŽ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ Ñ– Ð²Ñ–Ð´Ñ€Ð°Ð·Ñƒ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾ Ð¿Ð°Ñ€ÑƒÐ²Ð°Ñ‚Ð¸/ÑÐ»ÑƒÑ…Ð°Ñ‚Ð¸?</value>
   </data>
   <data name="ResetListenEdgeHeader" xml:space="preserve">
-    <value>Скинути + Слухати (Edge)</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ + Ð¡Ð»ÑƒÑ…Ð°Ñ‚Ð¸ (Edge)</value>
   </data>
   <data name="ResetListenEdgeBody" xml:space="preserve">
-    <value>Видалити конфігурацію підключення і відразу перепідключити до сервера?</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–ÑŽ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ Ñ– Ð²Ñ–Ð´Ñ€Ð°Ð·Ñƒ Ð¿ÐµÑ€ÐµÐ¿Ñ–Ð´ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ð¸ Ð´Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°?</value>
   </data>
   <data name="UpdateQueryFailed" xml:space="preserve">
-    <value>Не вдалося надіслати запит на останній реліз. Будь ласка, спробуйте ще раз або відкрийте сторінку Релізів</value>
+    <value>ÐÐµ Ð²Ð´Ð°Ð»Ð¾ÑÑ Ð½Ð°Ð´Ñ–ÑÐ»Ð°Ñ‚Ð¸ Ð·Ð°Ð¿Ð¸Ñ‚ Ð½Ð° Ð¾ÑÑ‚Ð°Ð½Ð½Ñ–Ð¹ Ñ€ÐµÐ»Ñ–Ð·. Ð‘ÑƒÐ´ÑŒ Ð»Ð°ÑÐºÐ°, ÑÐ¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ Ñ‰Ðµ Ñ€Ð°Ð· Ð°Ð±Ð¾ Ð²Ñ–Ð´ÐºÑ€Ð¸Ð¹Ñ‚Ðµ ÑÑ‚Ð¾Ñ€Ñ–Ð½ÐºÑƒ Ð ÐµÐ»Ñ–Ð·Ñ–Ð²</value>
   </data>
   <data name="UpdateUpToDate" xml:space="preserve">
-    <value>Ви оновлені.</value>
+    <value>Ð’Ð¸ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ñ–.</value>
   </data>
   <data name="UpdateAvailableHeader" xml:space="preserve">
-    <value>Доступне оновлення</value>
+    <value>Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ðµ Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="UpdateAvailableBody" xml:space="preserve">
-    <value>Нова версія доступна: {0}
-Відкрити сторінку релізів?</value>
+    <value>ÐÐ¾Ð²Ð° Ð²ÐµÑ€ÑÑ–Ñ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð°: {0}
+Ð’Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸ ÑÑ‚Ð¾Ñ€Ñ–Ð½ÐºÑƒ Ñ€ÐµÐ»Ñ–Ð·Ñ–Ð²?</value>
   </data>
   <data name="DownloadAndInstallBody" xml:space="preserve">
-    <value>Доступна нова версія: {0}
-Завантажити та встановити зараз?</value>
+    <value>Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð° Ð½Ð¾Ð²Ð° Ð²ÐµÑ€ÑÑ–Ñ: {0}
+Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ñ‚Ð° Ð²ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð·Ð°Ñ€Ð°Ð·?</value>
   </data>
   <data name="DownloadFailed" xml:space="preserve">
-    <value>Помилка завантаження.</value>
+    <value>ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ.</value>
   </data>
   <data name="UpdateCheckFailed" xml:space="preserve">
-    <value>Перевірка оновлення не вдалася.
+    <value>ÐŸÐµÑ€ÐµÐ²Ñ–Ñ€ÐºÐ° Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ Ð½Ðµ Ð²Ð´Ð°Ð»Ð°ÑÑ.
 {0}</value>
   </data>
   <data name="NoDevices" xml:space="preserve">
-    <value>Немає пристроїв.</value>
+    <value>ÐÐµÐ¼Ð°Ñ” Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð².</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
-    <value>Дивитись профіль</value>
+    <value>Ð”Ð¸Ð²Ð¸Ñ‚Ð¸ÑÑŒ Ð¿Ñ€Ð¾Ñ„Ñ–Ð»ÑŒ</value>
   </data>
   <data name="ChangeGroup" xml:space="preserve">
-    <value>Змінити групу</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Перейменувати</value>
+    <value>ÐŸÐµÑ€ÐµÐ¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="RemoveTracked" xml:space="preserve">
-    <value>Видалити відстежуване</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ð½Ðµ</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Дивитись</value>
+    <value>Ð”Ð¸Ð²Ð¸Ñ‚Ð¸ÑÑŒ</value>
   </data>
   <data name="MoreOptions" xml:space="preserve">
-    <value>Інші налаштування</value>
+    <value>Ð†Ð½ÑˆÑ– Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Відчитись від ІД Боєздатності…</value>
+    <value>Ð’Ñ–Ð´Ñ‡Ð¸Ñ‚Ð¸ÑÑŒ Ð²Ñ–Ð´ Ð†Ð” Ð‘Ð¾Ñ”Ð·Ð´Ð°Ñ‚Ð½Ð¾ÑÑ‚Ñ–â€¦</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Видалити сервер…</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ ÑÐµÑ€Ð²ÐµÑ€â€¦</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
-    <value>Натисніть правою кнопкою миші щоб перейменувати</value>
+    <value>ÐÐ°Ñ‚Ð¸ÑÐ½Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¾ÑŽ ÐºÐ½Ð¾Ð¿ÐºÐ¾ÑŽ Ð¼Ð¸ÑˆÑ– Ñ‰Ð¾Ð± Ð¿ÐµÑ€ÐµÐ¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="Toggle" xml:space="preserve">
-    <value>ПОКАЗУВАТИ</value>
+    <value>ÐŸÐžÐšÐÐ—Ð£Ð’ÐÐ¢Ð˜</value>
   </data>
   <data name="PopupWindow" xml:space="preserve">
-    <value>Спливаюче вікно</value>
+    <value>Ð¡Ð¿Ð»Ð¸Ð²Ð°ÑŽÑ‡Ðµ Ð²Ñ–ÐºÐ½Ð¾</value>
   </data>
   <data name="InAppAlert" xml:space="preserve">
-    <value>Тривога</value>
+    <value>Ð¢Ñ€Ð¸Ð²Ð¾Ð³Ð°</value>
   </data>
   <data name="AudioAlert" xml:space="preserve">
-    <value>Звукове сповіщення</value>
+    <value>Ð—Ð²ÑƒÐºÐ¾Ð²Ðµ ÑÐ¿Ð¾Ð²Ñ–Ñ‰ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="CustomAudioFile" xml:space="preserve">
-    <value>Власний звуковий файл...</value>
+    <value>Ð’Ð»Ð°ÑÐ½Ð¸Ð¹ Ð·Ð²ÑƒÐºÐ¾Ð²Ð¸Ð¹ Ñ„Ð°Ð¹Ð»...</value>
   </data>
   <data name="ResetToDefault" xml:space="preserve">
-    <value>Відновити за замовчуванням</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð·Ð° Ð·Ð°Ð¼Ð¾Ð²Ñ‡ÑƒÐ²Ð°Ð½Ð½ÑÐ¼</value>
   </data>
   <data name="Snapshot" xml:space="preserve">
     <value>Snapshot: </value>
   </data>
   <data name="ItemsUpkeep" xml:space="preserve">
-    <value> Предмети, Upkeep=</value>
+    <value> ÐŸÑ€ÐµÐ´Ð¼ÐµÑ‚Ð¸, Upkeep=</value>
   </data>
   <data name="NoDevicesFound" xml:space="preserve">
-    <value>Пристроїв не знайдено</value>
+    <value>ÐŸÑ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð² Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾</value>
   </data>
   <data name="PairDeviceToSee" xml:space="preserve">
-    <value>Підключіть смарт-пристрій, перемкніть або будильник, щоб побачити його тут</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡Ñ–Ñ‚ÑŒ ÑÐ¼Ð°Ñ€Ñ‚-Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ñ–Ð¹, Ð¿ÐµÑ€ÐµÐ¼ÐºÐ½Ñ–Ñ‚ÑŒ Ð°Ð±Ð¾ Ð±ÑƒÐ´Ð¸Ð»ÑŒÐ½Ð¸Ðº, Ñ‰Ð¾Ð± Ð¿Ð¾Ð±Ð°Ñ‡Ð¸Ñ‚Ð¸ Ð¹Ð¾Ð³Ð¾ Ñ‚ÑƒÑ‚</value>
   </data>
   <data name="TeamTab" xml:space="preserve">
-    <value>Команда</value>
+    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð°</value>
   </data>
   <data name="CenterOnMap" xml:space="preserve">
-    <value>Центр на карті</value>
+    <value>Ð¦ÐµÐ½Ñ‚Ñ€ Ð½Ð° ÐºÐ°Ñ€Ñ‚Ñ–</value>
   </data>
   <data name="FollowOnMap" xml:space="preserve">
-    <value>Слідкувати на мапі</value>
+    <value>Ð¡Ð»Ñ–Ð´ÐºÑƒÐ²Ð°Ñ‚Ð¸ Ð½Ð° Ð¼Ð°Ð¿Ñ–</value>
   </data>
   <data name="OpenSteamProfile" xml:space="preserve">
-    <value>Відкрити профіль Steam</value>
+    <value>Ð’Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸ Ð¿Ñ€Ð¾Ñ„Ñ–Ð»ÑŒ Steam</value>
   </data>
   <data name="PromoteToLeader" xml:space="preserve">
-    <value>Підвищити до лідера команди</value>
+    <value>ÐŸÑ–Ð´Ð²Ð¸Ñ‰Ð¸Ñ‚Ð¸ Ð´Ð¾ Ð»Ñ–Ð´ÐµÑ€Ð° ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¸</value>
   </data>
   <data name="KickFromTeam" xml:space="preserve">
-    <value>Вигнати з команди</value>
+    <value>Ð’Ð¸Ð³Ð½Ð°Ñ‚Ð¸ Ð· ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¸</value>
   </data>
   <data name="ProfileMarkers" xml:space="preserve">
-    <value>Маркери профілю</value>
+    <value>ÐœÐ°Ñ€ÐºÐµÑ€Ð¸ Ð¿Ñ€Ð¾Ñ„Ñ–Ð»ÑŽ</value>
   </data>
   <data name="DeathMarkers" xml:space="preserve">
-    <value>Маркери смерті</value>
+    <value>ÐœÐ°Ñ€ÐºÐµÑ€Ð¸ ÑÐ¼ÐµÑ€Ñ‚Ñ–</value>
   </data>
   <data name="CamerasTab" xml:space="preserve">
-    <value>Камери</value>
+    <value>ÐšÐ°Ð¼ÐµÑ€Ð¸</value>
   </data>
   <data name="AddCamera" xml:space="preserve">
-    <value>Додати камеру</value>
+    <value>Ð”Ð¾Ð´Ð°Ñ‚Ð¸ ÐºÐ°Ð¼ÐµÑ€Ñƒ</value>
   </data>
   <data name="NoCamerasFound" xml:space="preserve">
-    <value>Камер не знайдено</value>
+    <value>ÐšÐ°Ð¼ÐµÑ€ Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾</value>
   </data>
   <data name="PairCameraToSee" xml:space="preserve">
-    <value>З'єднайте камеру, щоб побачити її попередній перегляд тут</value>
+    <value>Ð—'Ñ”Ð´Ð½Ð°Ð¹Ñ‚Ðµ ÐºÐ°Ð¼ÐµÑ€Ñƒ, Ñ‰Ð¾Ð± Ð¿Ð¾Ð±Ð°Ñ‡Ð¸Ñ‚Ð¸ Ñ—Ñ— Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð½Ñ–Ð¹ Ð¿ÐµÑ€ÐµÐ³Ð»ÑÐ´ Ñ‚ÑƒÑ‚</value>
   </data>
   <data name="PlayersTab" xml:space="preserve">
-    <value>Гравці</value>
+    <value>Ð“Ñ€Ð°Ð²Ñ†Ñ–</value>
   </data>
   <data name="HowToTrack" xml:space="preserve">
-    <value>Як відстежувати</value>
+    <value>Ð¯Ðº Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="LearnHowTrackingWorks" xml:space="preserve">
-    <value>Дізнайтеся, як відслідковування гравця працює</value>
+    <value>Ð”Ñ–Ð·Ð½Ð°Ð¹Ñ‚ÐµÑÑ, ÑÐº Ð²Ñ–Ð´ÑÐ»Ñ–Ð´ÐºÐ¾Ð²ÑƒÐ²Ð°Ð½Ð½Ñ Ð³Ñ€Ð°Ð²Ñ†Ñ Ð¿Ñ€Ð°Ñ†ÑŽÑ”</value>
   </data>
   <data name="OnlineTab" xml:space="preserve">
-    <value>Онлайн</value>
+    <value>ÐžÐ½Ð»Ð°Ð¹Ð½</value>
   </data>
   <data name="OnlinePlayers" xml:space="preserve">
-    <value>Гравці онлайн</value>
+    <value>Ð“Ñ€Ð°Ð²Ñ†Ñ– Ð¾Ð½Ð»Ð°Ð¹Ð½</value>
   </data>
   <data name="SearchBM" xml:space="preserve">
-    <value>Шукати у BM</value>
+    <value>Ð¨ÑƒÐºÐ°Ñ‚Ð¸ Ñƒ BM</value>
   </data>
   <data name="SearchServerBM" xml:space="preserve">
-    <value>Пошук поточного сервера на метриках BattleMetrics</value>
+    <value>ÐŸÐ¾ÑˆÑƒÐº Ð¿Ð¾Ñ‚Ð¾Ñ‡Ð½Ð¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð° Ð½Ð° Ð¼ÐµÑ‚Ñ€Ð¸ÐºÐ°Ñ… BattleMetrics</value>
   </data>
   <data name="Popout" xml:space="preserve">
-    <value>Мак</value>
+    <value>ÐœÐ°Ðº</value>
   </data>
   <data name="OpenPlayersSeparateWindow" xml:space="preserve">
-    <value>Відкривати гравців в окремому вікні</value>
+    <value>Ð’Ñ–Ð´ÐºÑ€Ð¸Ð²Ð°Ñ‚Ð¸ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð² Ð² Ð¾ÐºÑ€ÐµÐ¼Ð¾Ð¼Ñƒ Ð²Ñ–ÐºÐ½Ñ–</value>
   </data>
   <data name="Track" xml:space="preserve">
-    <value>Доріжка</value>
+    <value>Ð”Ð¾Ñ€Ñ–Ð¶ÐºÐ°</value>
   </data>
   <data name="ManualTrackPlaceholder" xml:space="preserve">
-    <value>Ім'я треку або Steam вручну...</value>
+    <value>Ð†Ð¼'Ñ Ñ‚Ñ€ÐµÐºÑƒ Ð°Ð±Ð¾ Steam Ð²Ñ€ÑƒÑ‡Ð½Ñƒ...</value>
   </data>
   <data name="FilterPlayersPlaceholder" xml:space="preserve">
-    <value>Фільтр гравців...</value>
+    <value>Ð¤Ñ–Ð»ÑŒÑ‚Ñ€ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð²...</value>
   </data>
   <data name="LoadingPlayers" xml:space="preserve">
-    <value>Завантаження гравців...</value>
+    <value>Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð²...</value>
   </data>
   <data name="TrackedTab" xml:space="preserve">
-    <value>З відстеженням</value>
+    <value>Ð— Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½ÑÐ¼</value>
   </data>
   <data name="TrackedPlayers" xml:space="preserve">
-    <value>Відстежувані гравці</value>
+    <value>Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ð½Ñ– Ð³Ñ€Ð°Ð²Ñ†Ñ–</value>
   </data>
   <data name="ManageGroups" xml:space="preserve">
-    <value>Керування групами</value>
+    <value>ÐšÐµÑ€ÑƒÐ²Ð°Ð½Ð½Ñ Ð³Ñ€ÑƒÐ¿Ð°Ð¼Ð¸</value>
   </data>
   <data name="ViewFullAnalysisReport" xml:space="preserve">
-    <value>Переглянути звіт повного аналізу</value>
+    <value>ÐŸÐµÑ€ÐµÐ³Ð»ÑÐ½ÑƒÑ‚Ð¸ Ð·Ð²Ñ–Ñ‚ Ð¿Ð¾Ð²Ð½Ð¾Ð³Ð¾ Ð°Ð½Ð°Ð»Ñ–Ð·Ñƒ</value>
   </data>
   <data name="ReadyToExploreMap" xml:space="preserve">
-    <value>Чи готові вони вивчити карту?</value>
+    <value>Ð§Ð¸ Ð³Ð¾Ñ‚Ð¾Ð²Ñ– Ð²Ð¾Ð½Ð¸ Ð²Ð¸Ð²Ñ‡Ð¸Ñ‚Ð¸ ÐºÐ°Ñ€Ñ‚Ñƒ?</value>
   </data>
   <data name="ConnectToLoadMap" xml:space="preserve">
-    <value>Підключіться до вибраного сервера, щоб завантажити оперативну карту Rust і команду.</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡Ñ–Ñ‚ÑŒÑÑ Ð´Ð¾ Ð²Ð¸Ð±Ñ€Ð°Ð½Ð¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°, Ñ‰Ð¾Ð± Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð¾Ð¿ÐµÑ€Ð°Ñ‚Ð¸Ð²Ð½Ñƒ ÐºÐ°Ñ€Ñ‚Ñƒ Rust Ñ– ÐºÐ¾Ð¼Ð°Ð½Ð´Ñƒ.</value>
   </data>
   <data name="ReadyToDominate" xml:space="preserve">
-    <value>Готові домінувати над іржам?</value>
+    <value>Ð“Ð¾Ñ‚Ð¾Ð²Ñ– Ð´Ð¾Ð¼Ñ–Ð½ÑƒÐ²Ð°Ñ‚Ð¸ Ð½Ð°Ð´ Ñ–Ñ€Ð¶Ð°Ð¼?</value>
   </data>
   <data name="PairAccountBenefits" xml:space="preserve">
-    <value>Підключіть ваш обліковий запис, щоб почати відстежувати гравців, отримувати сповіщення про базові тарифи та контролюйте розумні пристрої.</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡Ñ–Ñ‚ÑŒ Ð²Ð°Ñˆ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ, Ñ‰Ð¾Ð± Ð¿Ð¾Ñ‡Ð°Ñ‚Ð¸ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ñ‚Ð¸ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð², Ð¾Ñ‚Ñ€Ð¸Ð¼ÑƒÐ²Ð°Ñ‚Ð¸ ÑÐ¿Ð¾Ð²Ñ–Ñ‰ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¾ Ð±Ð°Ð·Ð¾Ð²Ñ– Ñ‚Ð°Ñ€Ð¸Ñ„Ð¸ Ñ‚Ð° ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŽÐ¹Ñ‚Ðµ Ñ€Ð¾Ð·ÑƒÐ¼Ð½Ñ– Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—.</value>
   </data>
   <data name="LoginPairAccount" xml:space="preserve">
-    <value>Логін і відповідний обліковий запис</value>
+    <value>Ð›Ð¾Ð³Ñ–Ð½ Ñ– Ð²Ñ–Ð´Ð¿Ð¾Ð²Ñ–Ð´Ð½Ð¸Ð¹ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ð¹ Ð·Ð°Ð¿Ð¸Ñ</value>
   </data>
   <data name="RequiresSteamLogin" xml:space="preserve">
-    <value>Для браузера потрібен вхід в Steam за замовчуванням.</value>
+    <value>Ð”Ð»Ñ Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€Ð° Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±ÐµÐ½ Ð²Ñ…Ñ–Ð´ Ð² Steam Ð·Ð° Ð·Ð°Ð¼Ð¾Ð²Ñ‡ÑƒÐ²Ð°Ð½Ð½ÑÐ¼.</value>
   </data>
   <data name="DeleteServerHeader" xml:space="preserve">
-    <value>Видалити сервер?</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ ÑÐµÑ€Ð²ÐµÑ€?</value>
   </data>
   <data name="DeleteServerConfirm" xml:space="preserve">
-    <value>Ви впевнені, що хочете видалити цей сервер? Цю дію неможливо скасувати.</value>
+    <value>Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ñ†ÐµÐ¹ ÑÐµÑ€Ð²ÐµÑ€? Ð¦ÑŽ Ð´Ñ–ÑŽ Ð½ÐµÐ¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ ÑÐºÐ°ÑÑƒÐ²Ð°Ñ‚Ð¸.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Ð¡ÐºÐ°ÑÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="DeleteAction" xml:space="preserve">
-    <value>Видалити</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="AutoHideAfter3s" xml:space="preserve">
-    <value>Автоматично приховувати після 3-х секунд</value>
+    <value>ÐÐ²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡Ð½Ð¾ Ð¿Ñ€Ð¸Ñ…Ð¾Ð²ÑƒÐ²Ð°Ñ‚Ð¸ Ð¿Ñ–ÑÐ»Ñ 3-Ñ… ÑÐµÐºÑƒÐ½Ð´</value>
   </data>
   <data name="MapFilters" xml:space="preserve">
-    <value>ФІЛЬТРИ МАП</value>
+    <value>Ð¤Ð†Ð›Ð¬Ð¢Ð Ð˜ ÐœÐÐŸ</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Сітка</value>
+    <value>Ð¡Ñ–Ñ‚ÐºÐ°</value>
   </data>
   <data name="Monuments" xml:space="preserve">
-    <value>Монументи</value>
+    <value>ÐœÐ¾Ð½ÑƒÐ¼ÐµÐ½Ñ‚Ð¸</value>
   </data>
   <data name="Shops" xml:space="preserve">
-    <value>Магазини</value>
+    <value>ÐœÐ°Ð³Ð°Ð·Ð¸Ð½Ð¸</value>
   </data>
   <data name="ChatAlerts" xml:space="preserve">
-    <value>ПОВІДОМЛЕННЯ ЧАТА</value>
+    <value>ÐŸÐžÐ’Ð†Ð”ÐžÐœÐ›Ð•ÐÐÐ¯ Ð§ÐÐ¢Ð</value>
   </data>
   <data name="Alerts" xml:space="preserve">
-    <value>Попередження</value>
+    <value>ÐŸÐ¾Ð¿ÐµÑ€ÐµÐ´Ð¶ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="Configure" xml:space="preserve">
-    <value>Настроїти</value>
+    <value>ÐÐ°ÑÑ‚Ñ€Ð¾Ñ—Ñ‚Ð¸</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Виділити все</value>
+    <value>Ð’Ð¸Ð´Ñ–Ð»Ð¸Ñ‚Ð¸ Ð²ÑÐµ</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
-    <value>Відмінити все</value>
+    <value>Ð’Ñ–Ð´Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð²ÑÐµ</value>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>ПОДІЇ</value>
+    <value>ÐŸÐžÐ”Ð†Ð‡</value>
   </data>
   <data name="CargoShip" xml:space="preserve">
-    <value>Вантажний корабель</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Спавн</value>
+    <value>Ð¡Ð¿Ð°Ð²Ð½</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
-    <value>Гарбор Докінг</value>
+    <value>Ð“Ð°Ñ€Ð±Ð¾Ñ€ Ð”Ð¾ÐºÑ–Ð½Ð³</value>
   </data>
   <data name="CargoEgress" xml:space="preserve">
-    <value>Виїзд (попередження 5 разів)</value>
+    <value>Ð’Ð¸Ñ—Ð·Ð´ (Ð¿Ð¾Ð¿ÐµÑ€ÐµÐ´Ð¶ÐµÐ½Ð½Ñ 5 Ñ€Ð°Ð·Ñ–Ð²)</value>
   </data>
   <data name="CargoArrival" xml:space="preserve">
-    <value>Попередження про відвідування (5 м до Док-стану)</value>
+    <value>ÐŸÐ¾Ð¿ÐµÑ€ÐµÐ´Ð¶ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¾ Ð²Ñ–Ð´Ð²Ñ–Ð´ÑƒÐ²Ð°Ð½Ð½Ñ (5 Ð¼ Ð´Ð¾ Ð”Ð¾Ðº-ÑÑ‚Ð°Ð½Ñƒ)</value>
   </data>
   <data name="Heli" xml:space="preserve">
-    <value>Патрульний вертоліт</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð²ÐµÑ€Ñ‚Ð¾Ð»Ñ–Ñ‚</value>
   </data>
   <data name="Chinook" xml:space="preserve">
     <value>Chinook (CH47)</value>
   </data>
   <data name="Vendor" xml:space="preserve">
-    <value>Постачальник поїздок</value>
+    <value>ÐŸÐ¾ÑÑ‚Ð°Ñ‡Ð°Ð»ÑŒÐ½Ð¸Ðº Ð¿Ð¾Ñ—Ð·Ð´Ð¾Ðº</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>Нафтовий резигер</value>
+    <value>ÐÐ°Ñ„Ñ‚Ð¾Ð²Ð¸Ð¹ Ñ€ÐµÐ·Ð¸Ð³ÐµÑ€</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
-    <value>Захід Глибоке море</value>
+    <value>Ð—Ð°Ñ…Ñ–Ð´ Ð“Ð»Ð¸Ð±Ð¾ÐºÐµ Ð¼Ð¾Ñ€Ðµ</value>
   </data>
   <data name="SmartAlerts" xml:space="preserve">
-    <value>Розумні оповіщення</value>
+    <value>Ð Ð¾Ð·ÑƒÐ¼Ð½Ñ– Ð¾Ð¿Ð¾Ð²Ñ–Ñ‰ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="PlayerOnline" xml:space="preserve">
-    <value>Стан підключення</value>
+    <value>Ð¡Ñ‚Ð°Ð½ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="PlayerOffline" xml:space="preserve">
-    <value>Автономний стан</value>
+    <value>ÐÐ²Ñ‚Ð¾Ð½Ð¾Ð¼Ð½Ð¸Ð¹ ÑÑ‚Ð°Ð½</value>
   </data>
   <data name="AnnounceTracking" xml:space="preserve">
-    <value>Відстеження сповіщень</value>
+    <value>Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ ÑÐ¿Ð¾Ð²Ñ–Ñ‰ÐµÐ½ÑŒ</value>
   </data>
   <data name="PlayerDeathSelf" xml:space="preserve">
-    <value>Сама смерть</value>
+    <value>Ð¡Ð°Ð¼Ð° ÑÐ¼ÐµÑ€Ñ‚ÑŒ</value>
   </data>
   <data name="PlayerDeathTeam" xml:space="preserve">
-    <value>Командна смерть</value>
+    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð½Ð° ÑÐ¼ÐµÑ€Ñ‚ÑŒ</value>
   </data>
   <data name="PlayerRespawnSelf" xml:space="preserve">
-    <value>Самовідне відродження</value>
+    <value>Ð¡Ð°Ð¼Ð¾Ð²Ñ–Ð´Ð½Ðµ Ð²Ñ–Ð´Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="PlayerRespawnTeam" xml:space="preserve">
-    <value>Командне відродження</value>
+    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð½Ðµ Ð²Ñ–Ð´Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="NewShops" xml:space="preserve">
-    <value>Нові магазини</value>
+    <value>ÐÐ¾Ð²Ñ– Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð¸</value>
   </data>
   <data name="SuspiciousShops" xml:space="preserve">
-    <value>Підозрілі магазини</value>
+    <value>ÐŸÑ–Ð´Ð¾Ð·Ñ€Ñ–Ð»Ñ– Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð¸</value>
   </data>
   <data name="TradeAlerts" xml:space="preserve">
-    <value>Попередження про торгівлю</value>
+    <value>ÐŸÐ¾Ð¿ÐµÑ€ÐµÐ´Ð¶ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¾ Ñ‚Ð¾Ñ€Ð³Ñ–Ð²Ð»ÑŽ</value>
   </data>
   <data name="CrosshairStyle" xml:space="preserve">
-    <value>Прицільний стиль</value>
+    <value>ÐŸÑ€Ð¸Ñ†Ñ–Ð»ÑŒÐ½Ð¸Ð¹ ÑÑ‚Ð¸Ð»ÑŒ</value>
   </data>
   <data name="GreenDot" xml:space="preserve">
-    <value>Зелений дот</value>
+    <value>Ð—ÐµÐ»ÐµÐ½Ð¸Ð¹ Ð´Ð¾Ñ‚</value>
   </data>
   <data name="MiniGreen" xml:space="preserve">
-    <value>Міні-Грін</value>
+    <value>ÐœÑ–Ð½Ñ–-Ð“Ñ€Ñ–Ð½</value>
   </data>
   <data name="OpenCrosshairRG" xml:space="preserve">
-    <value>Відкрити приціл (R/G)</value>
+    <value>Ð’Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸ Ð¿Ñ€Ð¸Ñ†Ñ–Ð» (R/G)</value>
   </data>
   <data name="ThinRedCircle" xml:space="preserve">
-    <value>Тонке червоне коло</value>
+    <value>Ð¢Ð¾Ð½ÐºÐµ Ñ‡ÐµÑ€Ð²Ð¾Ð½Ðµ ÐºÐ¾Ð»Ð¾</value>
   </data>
   <data name="SquareDot" xml:space="preserve">
-    <value>Квадратний + Крапка</value>
+    <value>ÐšÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð½Ð¸Ð¹ + ÐšÑ€Ð°Ð¿ÐºÐ°</value>
   </data>
   <data name="MagentaDot" xml:space="preserve">
-    <value>Малиновий дот</value>
+    <value>ÐœÐ°Ð»Ð¸Ð½Ð¾Ð²Ð¸Ð¹ Ð´Ð¾Ñ‚</value>
   </data>
   <data name="MagentaOpenCross" xml:space="preserve">
-    <value>Малиновий відкритий хрест</value>
+    <value>ÐœÐ°Ð»Ð¸Ð½Ð¾Ð²Ð¸Ð¹ Ð²Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸Ð¹ Ñ…Ñ€ÐµÑÑ‚</value>
   </data>
   <data name="RangeLineTicks" xml:space="preserve">
-    <value>Діапазон рядка (тікети)</value>
+    <value>Ð”Ñ–Ð°Ð¿Ð°Ð·Ð¾Ð½ Ñ€ÑÐ´ÐºÐ° (Ñ‚Ñ–ÐºÐµÑ‚Ð¸)</value>
   </data>
   <data name="DrawCrosshair" xml:space="preserve">
-    <value>Намалювати приціл...</value>
+    <value>ÐÐ°Ð¼Ð°Ð»ÑŽÐ²Ð°Ñ‚Ð¸ Ð¿Ñ€Ð¸Ñ†Ñ–Ð»...</value>
   </data>
   <data name="ChooseMonitor" xml:space="preserve">
-    <value>Виберіть монітор</value>
+    <value>Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€</value>
   </data>
   <data name="DrawOverlay" xml:space="preserve">
-    <value>Накладення</value>
+    <value>ÐÐ°ÐºÐ»Ð°Ð´ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="DrawToolTip" xml:space="preserve">
-    <value>Малювання (правий Клік: розмір / Колір)</value>
+    <value>ÐœÐ°Ð»ÑŽÐ²Ð°Ð½Ð½Ñ (Ð¿Ñ€Ð°Ð²Ð¸Ð¹ ÐšÐ»Ñ–Ðº: Ñ€Ð¾Ð·Ð¼Ñ–Ñ€ / ÐšÐ¾Ð»Ñ–Ñ€)</value>
   </data>
   <data name="PlaceTextToolTip" xml:space="preserve">
-    <value>Помістити текст (правий Клік: Колір / Розмір)</value>
+    <value>ÐŸÐ¾Ð¼Ñ–ÑÑ‚Ð¸Ñ‚Ð¸ Ñ‚ÐµÐºÑÑ‚ (Ð¿Ñ€Ð°Ð²Ð¸Ð¹ ÐšÐ»Ñ–Ðº: ÐšÐ¾Ð»Ñ–Ñ€ / Ð Ð¾Ð·Ð¼Ñ–Ñ€)</value>
   </data>
   <data name="PlaceIconToolTip" xml:space="preserve">
-    <value>Розмістити значок (правий клік: Обрати значок)</value>
+    <value>Ð Ð¾Ð·Ð¼Ñ–ÑÑ‚Ð¸Ñ‚Ð¸ Ð·Ð½Ð°Ñ‡Ð¾Ðº (Ð¿Ñ€Ð°Ð²Ð¸Ð¹ ÐºÐ»Ñ–Ðº: ÐžÐ±Ñ€Ð°Ñ‚Ð¸ Ð·Ð½Ð°Ñ‡Ð¾Ðº)</value>
   </data>
   <data name="EraserToolTip" xml:space="preserve">
-    <value>Гумка (утримати чи натиснути)</value>
+    <value>Ð“ÑƒÐ¼ÐºÐ° (ÑƒÑ‚Ñ€Ð¸Ð¼Ð°Ñ‚Ð¸ Ñ‡Ð¸ Ð½Ð°Ñ‚Ð¸ÑÐ½ÑƒÑ‚Ð¸)</value>
   </data>
   <data name="DeleteOverlayToolTip" xml:space="preserve">
-    <value>Видалити власне накладення</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð²Ð»Ð°ÑÐ½Ðµ Ð½Ð°ÐºÐ»Ð°Ð´ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="UploadOverlayToolTip" xml:space="preserve">
-    <value>Завантажити власне накладання / поділитися</value>
+    <value>Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ Ð²Ð»Ð°ÑÐ½Ðµ Ð½Ð°ÐºÐ»Ð°Ð´Ð°Ð½Ð½Ñ / Ð¿Ð¾Ð´Ñ–Ð»Ð¸Ñ‚Ð¸ÑÑ</value>
   </data>
   <data name="ProfitTrades" xml:space="preserve">
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Безпосередні арбітражні можливості | купити низько → продати висоту.</value>
+    <value>Ð‘ÐµÐ·Ð¿Ð¾ÑÐµÑ€ÐµÐ´Ð½Ñ– Ð°Ñ€Ð±Ñ–Ñ‚Ñ€Ð°Ð¶Ð½Ñ– Ð¼Ð¾Ð¶Ð»Ð¸Ð²Ð¾ÑÑ‚Ñ– | ÐºÑƒÐ¿Ð¸Ñ‚Ð¸ Ð½Ð¸Ð·ÑŒÐºÐ¾ â†’ Ð¿Ñ€Ð¾Ð´Ð°Ñ‚Ð¸ Ð²Ð¸ÑÐ¾Ñ‚Ñƒ.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
-    <value>Купити X за Y</value>
+    <value>ÐšÑƒÐ¿Ð¸Ñ‚Ð¸ X Ð·Ð° Y</value>
   </data>
   <data name="Analyze" xml:space="preserve">
-    <value>Аналізувати</value>
+    <value>ÐÐ½Ð°Ð»Ñ–Ð·ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="IWantToGet" xml:space="preserve">
-    <value>Я хочу в GET</value>
+    <value>Ð¯ Ñ…Ð¾Ñ‡Ñƒ Ð² GET</value>
   </data>
   <data name="ICanPayWith" xml:space="preserve">
-    <value>Я можу сплатити з допомогою</value>
+    <value>Ð¯ Ð¼Ð¾Ð¶Ñƒ ÑÐ¿Ð»Ð°Ñ‚Ð¸Ñ‚Ð¸ Ð· Ð´Ð¾Ð¿Ð¾Ð¼Ð¾Ð³Ð¾ÑŽ</value>
   </data>
   <data name="TeamChat" xml:space="preserve">
-    <value>Командний чат</value>
+    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð½Ð¸Ð¹ Ñ‡Ð°Ñ‚</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Відправити</value>
+    <value>Ð’Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
-    <value>Дані FCM</value>
+    <value>Ð”Ð°Ð½Ñ– FCM</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
-    <value>Клацніть правою кнопкою миші щоб налаштувати</value>
+    <value>ÐšÐ»Ð°Ñ†Ð½Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¾ÑŽ ÐºÐ½Ð¾Ð¿ÐºÐ¾ÑŽ Ð¼Ð¸ÑˆÑ– Ñ‰Ð¾Ð± Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="ResetMap" xml:space="preserve">
     <value>Reset</value>
   </data>
   <data name="ResetMapToolTip" xml:space="preserve">
-    <value>Скинути масштаб та розташування карти</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ Ð¼Ð°ÑÑˆÑ‚Ð°Ð± Ñ‚Ð° Ñ€Ð¾Ð·Ñ‚Ð°ÑˆÑƒÐ²Ð°Ð½Ð½Ñ ÐºÐ°Ñ€Ñ‚Ð¸</value>
   </data>
   <data name="MiniMap" xml:space="preserve">
-    <value>Міні</value>
+    <value>ÐœÑ–Ð½Ñ–</value>
   </data>
   <data name="CrosshairToolTip" xml:space="preserve">
-    <value>Вкл/викл приціл (Клацніть правою кнопкою миші для параметрів)</value>
+    <value>Ð’ÐºÐ»/Ð²Ð¸ÐºÐ» Ð¿Ñ€Ð¸Ñ†Ñ–Ð» (ÐšÐ»Ð°Ñ†Ð½Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¾ÑŽ ÐºÐ½Ð¾Ð¿ÐºÐ¾ÑŽ Ð¼Ð¸ÑˆÑ– Ð´Ð»Ñ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ–Ð²)</value>
   </data>
   <data name="TrackPlayer" xml:space="preserve">
-    <value>ТРЕКУВАТИ ГРАВЦЯ</value>
+    <value>Ð¢Ð Ð•ÐšÐ£Ð’ÐÐ¢Ð˜ Ð“Ð ÐÐ’Ð¦Ð¯</value>
   </data>
   <data name="CloseBMBrowser" xml:space="preserve">
-    <value>Закрити Браузер BattleMetrics</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ñ‚Ð¸ Ð‘Ñ€Ð°ÑƒÐ·ÐµÑ€ BattleMetrics</value>
   </data>
   <data name="ShopSearchTitle" xml:space="preserve">
-    <value>ПОШУК ЗУПИНЕННЯ</value>
+    <value>ÐŸÐžÐ¨Ð£Ðš Ð—Ð£ÐŸÐ˜ÐÐ•ÐÐÐ¯</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
-    <value>Закрити пошук</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ñ‚Ð¸ Ð¿Ð¾ÑˆÑƒÐº</value>
   </data>
   <data name="ActivateShopsFirst" xml:space="preserve">
-    <value>Будь ласка, спочатку активуйте Магазини</value>
+    <value>Ð‘ÑƒÐ´ÑŒ Ð»Ð°ÑÐºÐ°, ÑÐ¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð°ÐºÑ‚Ð¸Ð²ÑƒÐ¹Ñ‚Ðµ ÐœÐ°Ð³Ð°Ð·Ð¸Ð½Ð¸</value>
   </data>
   <data name="ActivateShopPolling" xml:space="preserve">
-    <value>Активувати опитування магазину</value>
+    <value>ÐÐºÑ‚Ð¸Ð²ÑƒÐ²Ð°Ñ‚Ð¸ Ð¾Ð¿Ð¸Ñ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ñƒ</value>
   </data>
   <data name="TeamChatTitle" xml:space="preserve">
-    <value>TEAM ЧАТ</value>
+    <value>TEAM Ð§ÐÐ¢</value>
   </data>
   <data name="CloseChat" xml:space="preserve">
-    <value>Закрити чат</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ñ‚Ð¸ Ñ‡Ð°Ñ‚</value>
   </data>
   <data name="ChatCommandsSettings" xml:space="preserve">
-    <value>Налаштування команд чату</value>
+    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ ÐºÐ¾Ð¼Ð°Ð½Ð´ Ñ‡Ð°Ñ‚Ñƒ</value>
   </data>
   <data name="ChatCommands" xml:space="preserve">
-    <value>Команди чату</value>
+    <value>ÐšÐ¾Ð¼Ð°Ð½Ð´Ð¸ Ñ‡Ð°Ñ‚Ñƒ</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Відмінити</value>
+    <value>Ð’Ñ–Ð´Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>Переслати</value>
+    <value>ÐŸÐµÑ€ÐµÑÐ»Ð°Ñ‚Ð¸</value>
   </data>
   <data name="OpenInExternalBrowser" xml:space="preserve">
-    <value>Відкрити у зовнішньому браузері</value>
+    <value>Ð’Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸ Ñƒ Ð·Ð¾Ð²Ð½Ñ–ÑˆÐ½ÑŒÐ¾Ð¼Ñƒ Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€Ñ–</value>
   </data>
   <data name="SearchBMPlaceholder" xml:space="preserve">
-    <value>Пошук ВМ...</value>
+    <value>ÐŸÐ¾ÑˆÑƒÐº Ð’Ðœ...</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Пошук</value>
+    <value>ÐŸÐ¾ÑˆÑƒÐº</value>
   </data>
   <data name="SelectAServer" xml:space="preserve">
-    <value>Виберіть сервер</value>
+    <value>Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ ÑÐµÑ€Ð²ÐµÑ€</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>Відключено</value>
+    <value>Ð’Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ПІДКЛЮЧЕННЯ...</value>
+    <value>ÐŸÐ†Ð”ÐšÐ›Ð®Ð§Ð•ÐÐÐ¯...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ІНІЦІАЛІЗАЦІЇ...</value>
+    <value>Ð†ÐÐ†Ð¦Ð†ÐÐ›Ð†Ð—ÐÐ¦Ð†Ð‡...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ПРИСТРОЇ АКТИВНОЇ</value>
+    <value>ÐŸÐ Ð˜Ð¡Ð¢Ð ÐžÐ‡ ÐÐšÐ¢Ð˜Ð’ÐÐžÐ‡</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>ПОВНОГО ПІДКЛЮЧЕНО</value>
+    <value>ÐŸÐžÐ’ÐÐžÐ“Ðž ÐŸÐ†Ð”ÐšÐ›Ð®Ð§Ð•ÐÐž</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
-    <value>НЕВІДОМО</value>
+    <value>ÐÐ•Ð’Ð†Ð”ÐžÐœÐž</value>
   </data>
   <data name="MayTakeAMoment" xml:space="preserve">
-    <value>Це може зайняти хвилину...</value>
+    <value>Ð¦Ðµ Ð¼Ð¾Ð¶Ðµ Ð·Ð°Ð¹Ð½ÑÑ‚Ð¸ Ñ…Ð²Ð¸Ð»Ð¸Ð½Ñƒ...</value>
   </data>
   <data name="AppSettingsTitle" xml:space="preserve">
-    <value>Налаштування додатку</value>
+    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð´Ð¾Ð´Ð°Ñ‚ÐºÑƒ</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Загальні налаштування</value>
+    <value>Ð—Ð°Ð³Ð°Ð»ÑŒÐ½Ñ– Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="LaunchWithWindows" xml:space="preserve">
-    <value>Запуск з Windows (згорнуто)</value>
+    <value>Ð—Ð°Ð¿ÑƒÑÐº Ð· Windows (Ð·Ð³Ð¾Ñ€Ð½ÑƒÑ‚Ð¾)</value>
   </data>
   <data name="StartMinimizedAlways" xml:space="preserve">
-    <value>Запускати згорнутим (завжди)</value>
+    <value>Ð—Ð°Ð¿ÑƒÑÐºÐ°Ñ‚Ð¸ Ð·Ð³Ð¾Ñ€Ð½ÑƒÑ‚Ð¸Ð¼ (Ð·Ð°Ð²Ð¶Ð´Ð¸)</value>
   </data>
   <data name="AutoConnectLastServer" xml:space="preserve">
-    <value>Автопідключення до останнього сервера при запуску</value>
+    <value>ÐÐ²Ñ‚Ð¾Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ Ð´Ð¾ Ð¾ÑÑ‚Ð°Ð½Ð½ÑŒÐ¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð° Ð¿Ñ€Ð¸ Ð·Ð°Ð¿ÑƒÑÐºÑƒ</value>
   </data>
   <data name="AutoConnectToolTip" xml:space="preserve">
-    <value>Автоматично перепідключається до останнього сервера та завантажує карту.</value>
+    <value>ÐÐ²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡Ð½Ð¾ Ð¿ÐµÑ€ÐµÐ¿Ñ–Ð´ÐºÐ»ÑŽÑ‡Ð°Ñ”Ñ‚ÑŒÑÑ Ð´Ð¾ Ð¾ÑÑ‚Ð°Ð½Ð½ÑŒÐ¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð° Ñ‚Ð° Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÑƒÑ” ÐºÐ°Ñ€Ñ‚Ñƒ.</value>
   </data>
   <data name="Behavior" xml:space="preserve">
-    <value>Поведінка</value>
+    <value>ÐŸÐ¾Ð²ÐµÐ´Ñ–Ð½ÐºÐ°</value>
   </data>
   <data name="MinimizeToTray" xml:space="preserve">
-    <value>Згорнути до лотка замість закриття</value>
+    <value>Ð—Ð³Ð¾Ñ€Ð½ÑƒÑ‚Ð¸ Ð´Ð¾ Ð»Ð¾Ñ‚ÐºÐ° Ð·Ð°Ð¼Ñ–ÑÑ‚ÑŒ Ð·Ð°ÐºÑ€Ð¸Ñ‚Ñ‚Ñ</value>
   </data>
   <data name="BackgroundTracking" xml:space="preserve">
-    <value>Увімкнути відстеження фонових плеєрів</value>
+    <value>Ð£Ð²Ñ–Ð¼ÐºÐ½ÑƒÑ‚Ð¸ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ Ñ„Ð¾Ð½Ð¾Ð²Ð¸Ñ… Ð¿Ð»ÐµÑ”Ñ€Ñ–Ð²</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Утримує гравців відстеження за допомогою метрик BattleMetrics навіть при мінімізації.</value>
+    <value>Ð£Ñ‚Ñ€Ð¸Ð¼ÑƒÑ” Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð² Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ Ð·Ð° Ð´Ð¾Ð¿Ð¾Ð¼Ð¾Ð³Ð¾ÑŽ Ð¼ÐµÑ‚Ñ€Ð¸Ðº BattleMetrics Ð½Ð°Ð²Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð¸ Ð¼Ñ–Ð½Ñ–Ð¼Ñ–Ð·Ð°Ñ†Ñ–Ñ—.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
-    <value>Сховати системну консоль (затемнення)</value>
+    <value>Ð¡Ñ…Ð¾Ð²Ð°Ñ‚Ð¸ ÑÐ¸ÑÑ‚ÐµÐ¼Ð½Ñƒ ÐºÐ¾Ð½ÑÐ¾Ð»ÑŒ (Ð·Ð°Ñ‚ÐµÐ¼Ð½ÐµÐ½Ð½Ñ)</value>
   </data>
   <data name="HideConsoleToolTip" xml:space="preserve">
-    <value>Приховати панель панелі журналу/консолі для збереження простору на карті.</value>
+    <value>ÐŸÑ€Ð¸Ñ…Ð¾Ð²Ð°Ñ‚Ð¸ Ð¿Ð°Ð½ÐµÐ»ÑŒ Ð¿Ð°Ð½ÐµÐ»Ñ– Ð¶ÑƒÑ€Ð½Ð°Ð»Ñƒ/ÐºÐ¾Ð½ÑÐ¾Ð»Ñ– Ð´Ð»Ñ Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¾ÑÑ‚Ð¾Ñ€Ñƒ Ð½Ð° ÐºÐ°Ñ€Ñ‚Ñ–.</value>
   </data>
   <data name="MapSettings" xml:space="preserve">
-    <value>Налаштування мапи</value>
+    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð¼Ð°Ð¿Ð¸</value>
   </data>
   <data name="AutoLoadShops" xml:space="preserve">
-    <value>Автоматичне завантаження магазинів при з'єднанні</value>
+    <value>ÐÐ²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡Ð½Ðµ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ñ–Ð² Ð¿Ñ€Ð¸ Ð·'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ–</value>
   </data>
   <data name="AutoLoadShopsToolTip" xml:space="preserve">
-    <value>Автоматично запускає опитування магазинів та оповіщень при підключенні до сервера.</value>
+    <value>ÐÐ²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡Ð½Ð¾ Ð·Ð°Ð¿ÑƒÑÐºÐ°Ñ” Ð¾Ð¿Ð¸Ñ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ñ–Ð² Ñ‚Ð° Ð¾Ð¿Ð¾Ð²Ñ–Ñ‰ÐµÐ½ÑŒ Ð¿Ñ€Ð¸ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ– Ð´Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°.</value>
   </data>
   <data name="UseMonumentNames" xml:space="preserve">
-    <value>Використовуйте текстові етикетки пам'яток замість піктограм</value>
+    <value>Ð’Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð¾Ð²ÑƒÐ¹Ñ‚Ðµ Ñ‚ÐµÐºÑÑ‚Ð¾Ð²Ñ– ÐµÑ‚Ð¸ÐºÐµÑ‚ÐºÐ¸ Ð¿Ð°Ð¼'ÑÑ‚Ð¾Ðº Ð·Ð°Ð¼Ñ–ÑÑ‚ÑŒ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼</value>
   </data>
   <data name="UseMonumentNamesToolTip" xml:space="preserve">
-    <value>Якщо увімкнено, назви пам'яток на мапі Rust відображаються у вигляді тексту з використанням шрифту Permanent Marker замість піктограм.</value>
+    <value>Ð¯ÐºÑ‰Ð¾ ÑƒÐ²Ñ–Ð¼ÐºÐ½ÐµÐ½Ð¾, Ð½Ð°Ð·Ð²Ð¸ Ð¿Ð°Ð¼'ÑÑ‚Ð¾Ðº Ð½Ð° Ð¼Ð°Ð¿Ñ– Rust Ð²Ñ–Ð´Ð¾Ð±Ñ€Ð°Ð¶Ð°ÑŽÑ‚ÑŒÑÑ Ñƒ Ð²Ð¸Ð³Ð»ÑÐ´Ñ– Ñ‚ÐµÐºÑÑ‚Ñƒ Ð· Ð²Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð°Ð½Ð½ÑÐ¼ ÑˆÑ€Ð¸Ñ„Ñ‚Ñƒ Permanent Marker Ð·Ð°Ð¼Ñ–ÑÑ‚ÑŒ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼.</value>
   </data>
   <data name="MonumentStyle" xml:space="preserve">
-    <value>Монументальний стиль:</value>
+    <value>ÐœÐ¾Ð½ÑƒÐ¼ÐµÐ½Ñ‚Ð°Ð»ÑŒÐ½Ð¸Ð¹ ÑÑ‚Ð¸Ð»ÑŒ:</value>
   </data>
   <data name="MonumentScale" xml:space="preserve">
-    <value>Масштаб пам'ятника:</value>
+    <value>ÐœÐ°ÑÑˆÑ‚Ð°Ð± Ð¿Ð°Ð¼'ÑÑ‚Ð½Ð¸ÐºÐ°:</value>
   </data>
   <data name="MonumentOpacity" xml:space="preserve">
-    <value>Непрозорість пам'ятника:</value>
+    <value>ÐÐµÐ¿Ñ€Ð¾Ð·Ð¾Ñ€Ñ–ÑÑ‚ÑŒ Ð¿Ð°Ð¼'ÑÑ‚Ð½Ð¸ÐºÐ°:</value>
   </data>
   <data name="MonumentStyleIcons" xml:space="preserve">
-    <value>Іконки від rustmaps.com</value>
+    <value>Ð†ÐºÐ¾Ð½ÐºÐ¸ Ð²Ñ–Ð´ rustmaps.com</value>
   </data>
   <data name="MonumentStyleText" xml:space="preserve">
-    <value>Назви пам'яток в оригінальному тексті</value>
+    <value>ÐÐ°Ð·Ð²Ð¸ Ð¿Ð°Ð¼'ÑÑ‚Ð¾Ðº Ð² Ð¾Ñ€Ð¸Ð³Ñ–Ð½Ð°Ð»ÑŒÐ½Ð¾Ð¼Ñƒ Ñ‚ÐµÐºÑÑ‚Ñ–</value>
   </data>
   <data name="CreditsTitle" xml:space="preserve">
-    <value>Кредити</value>
+    <value>ÐšÑ€ÐµÐ´Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="CreditsIconsPrefix" xml:space="preserve">
-    <value>Піктограми пам'яток на карті надані </value>
+    <value>ÐŸÑ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼Ð¸ Ð¿Ð°Ð¼'ÑÑ‚Ð¾Ðº Ð½Ð° ÐºÐ°Ñ€Ñ‚Ñ– Ð½Ð°Ð´Ð°Ð½Ñ– </value>
   </data>
   <data name="CreditsIconsSuffix" xml:space="preserve">
-    <value> - використано з дозволу.</value>
+    <value> - Ð²Ð¸ÐºÐ¾Ñ€Ð¸ÑÑ‚Ð°Ð½Ð¾ Ð· Ð´Ð¾Ð·Ð²Ð¾Ð»Ñƒ.</value>
   </data>
   <data name="CreditsIconsNote" xml:space="preserve">
-    <value>Всі іконки пам'ятників та пов'язані з ними ілюстрації є власністю rustmaps.com. Дякуємо за підтримку спільноти Rust!</value>
+    <value>Ð’ÑÑ– Ñ–ÐºÐ¾Ð½ÐºÐ¸ Ð¿Ð°Ð¼'ÑÑ‚Ð½Ð¸ÐºÑ–Ð² Ñ‚Ð° Ð¿Ð¾Ð²'ÑÐ·Ð°Ð½Ñ– Ð· Ð½Ð¸Ð¼Ð¸ Ñ–Ð»ÑŽÑÑ‚Ñ€Ð°Ñ†Ñ–Ñ— Ñ” Ð²Ð»Ð°ÑÐ½Ñ–ÑÑ‚ÑŽ rustmaps.com. Ð”ÑÐºÑƒÑ”Ð¼Ð¾ Ð·Ð° Ð¿Ñ–Ð´Ñ‚Ñ€Ð¸Ð¼ÐºÑƒ ÑÐ¿Ñ–Ð»ÑŒÐ½Ð¾Ñ‚Ð¸ Rust!</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Чат</value>
+    <value>Ð§Ð°Ñ‚</value>
   </data>
   <data name="ModifyChatAlerts" xml:space="preserve">
-    <value>Змінити оповіщення про чат</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð¾Ð¿Ð¾Ð²Ñ–Ñ‰ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¾ Ñ‡Ð°Ñ‚</value>
   </data>
   <data name="ManageSteamAccountInfo" xml:space="preserve">
-    <value>Керуйте вашим зв'язаним акаунтом Steam у головному вікні.</value>
+    <value>ÐšÐµÑ€ÑƒÐ¹Ñ‚Ðµ Ð²Ð°ÑˆÐ¸Ð¼ Ð·Ð²'ÑÐ·Ð°Ð½Ð¸Ð¼ Ð°ÐºÐ°ÑƒÐ½Ñ‚Ð¾Ð¼ Steam Ñƒ Ð³Ð¾Ð»Ð¾Ð²Ð½Ð¾Ð¼Ñƒ Ð²Ñ–ÐºÐ½Ñ–.</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Закрити</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="IncomingAlarms" xml:space="preserve">
-    <value>ВХІДНІ ДОСЛІДЖЕННЯ</value>
+    <value>Ð’Ð¥Ð†Ð”ÐÐ† Ð”ÐžÐ¡Ð›Ð†Ð”Ð–Ð•ÐÐÐ¯</value>
   </data>
   <data name="Wipe" xml:space="preserve">
-    <value>Очистити</value>
+    <value>ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="PlayersOnly" xml:space="preserve">
-    <value>Гравці</value>
+    <value>Ð“Ñ€Ð°Ð²Ñ†Ñ–</value>
   </data>
   <data name="PlayersHeader" xml:space="preserve">
-    <value>Гравці</value>
+    <value>Ð“Ñ€Ð°Ð²Ñ†Ñ–</value>
   </data>
   <data name="IWantToGetToolTip" xml:space="preserve">
-    <value>Я хочу GET (наприклад, сироя нафта)</value>
+    <value>Ð¯ Ñ…Ð¾Ñ‡Ñƒ GET (Ð½Ð°Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´, ÑÐ¸Ñ€Ð¾Ñ Ð½Ð°Ñ„Ñ‚Ð°)</value>
   </data>
   <data name="ICanPayWithToolTip" xml:space="preserve">
-    <value>Я хочу PAY WITH (напр. Scrap)</value>
+    <value>Ð¯ Ñ…Ð¾Ñ‡Ñƒ PAY WITH (Ð½Ð°Ð¿Ñ€. Scrap)</value>
   </data>
   <data name="DeleteServerConfirmFormatted" xml:space="preserve">
-    <value>Ви дійсно хочете видалити Сервер "{0}"? Ця дія не може бути скасована.</value>
+    <value>Ð’Ð¸ Ð´Ñ–Ð¹ÑÐ½Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð²Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð¡ÐµÑ€Ð²ÐµÑ€ "{0}"? Ð¦Ñ Ð´Ñ–Ñ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ ÑÐºÐ°ÑÐ¾Ð²Ð°Ð½Ð°.</value>
   </data>
   <data name="PairingError" xml:space="preserve">
     <value>Pairing: error</value>
   </data>
   <data name="PairingStarting" xml:space="preserve">
-    <value>Парування: початок...</value>
+    <value>ÐŸÐ°Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ: Ð¿Ð¾Ñ‡Ð°Ñ‚Ð¾Ðº...</value>
   </data>
   <data name="StartingPairingListener" xml:space="preserve">
-    <value>Запуск Pairing-Listener...</value>
+    <value>Ð—Ð°Ð¿ÑƒÑÐº Pairing-Listener...</value>
   </data>
   <data name="LoggedIn" xml:space="preserve">
-    <value>Вхід здійснено</value>
+    <value>Ð’Ñ…Ñ–Ð´ Ð·Ð´Ñ–Ð¹ÑÐ½ÐµÐ½Ð¾</value>
   </data>
   <data name="Stock" xml:space="preserve">
-    <value>На складі</value>
+    <value>ÐÐ° ÑÐºÐ»Ð°Ð´Ñ–</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value>Ціна</value>
+    <value>Ð¦Ñ–Ð½Ð°</value>
   </data>
   <data name="On" xml:space="preserve">
-    <value>УВІМК</value>
+    <value>Ð£Ð’Ð†ÐœÐš</value>
   </data>
   <data name="Off" xml:space="preserve">
-    <value>ВИМК</value>
+    <value>Ð’Ð˜ÐœÐš</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>АКТИВНА</value>
+    <value>ÐÐšÐ¢Ð˜Ð’ÐÐ</value>
   </data>
   <data name="Inactive" xml:space="preserve">
-    <value>НЕАКТИВНИЙ</value>
+    <value>ÐÐ•ÐÐšÐ¢Ð˜Ð’ÐÐ˜Ð™</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>ГРУПА</value>
+    <value>Ð“Ð Ð£ÐŸÐ</value>
   </data>
   <data name="ImportDevicesTitle" xml:space="preserve">
-    <value>Rust+ Desk - Імпорт пристроїв</value>
+    <value>Rust+ Desk - Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð²</value>
   </data>
   <data name="ImportDevicesHeader" xml:space="preserve">
-    <value>Імпорт пристроїв</value>
+    <value>Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð²</value>
   </data>
   <data name="ImportDevicesSelectPrompt" xml:space="preserve">
-    <value>Виберіть пристрої, які потрібно імпортувати для цього сервера.</value>
+    <value>Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—, ÑÐºÑ– Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ Ñ–Ð¼Ð¿Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ñ‚Ð¸ Ð´Ð»Ñ Ñ†ÑŒÐ¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°.</value>
   </data>
   <data name="CheckDeviceStatus" xml:space="preserve">
-    <value>Перевірте стан пристрою</value>
+    <value>ÐŸÐµÑ€ÐµÐ²Ñ–Ñ€Ñ‚Ðµ ÑÑ‚Ð°Ð½ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾ÑŽ</value>
   </data>
   <data name="ImportSelected" xml:space="preserve">
-    <value>Імпорт вибраного</value>
+    <value>Ð†Ð¼Ð¿Ð¾Ñ€Ñ‚ Ð²Ð¸Ð±Ñ€Ð°Ð½Ð¾Ð³Ð¾</value>
   </data>
   <data name="BmShortcuts" xml:space="preserve">
-    <value>Ярлики BM</value>
+    <value>Ð¯Ñ€Ð»Ð¸ÐºÐ¸ BM</value>
   </data>
   <data name="PairingConfigDeleted" xml:space="preserve">
-    <value>Спаровування: конфігурації видалено</value>
+    <value>Ð¡Ð¿Ð°Ñ€Ð¾Ð²ÑƒÐ²Ð°Ð½Ð½Ñ: ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ñ— Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾</value>
   </data>
   <data name="TrayIconDefault" xml:space="preserve">
-    <value>Трекер Rust+ Desk</value>
+    <value>Ð¢Ñ€ÐµÐºÐµÑ€ Rust+ Desk</value>
   </data>
   <data name="TrayIconTracking" xml:space="preserve">
     <value>Rust+ Desk (Tracking {0})</value>
   </data>
   <data name="RenameGroup" xml:space="preserve">
-    <value>Перейменувати групу</value>
+    <value>ÐŸÐµÑ€ÐµÐ¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ñ‚Ð¸ Ð³Ñ€ÑƒÐ¿Ñƒ</value>
   </data>
   <data name="NewNameForGroup" xml:space="preserve">
-    <value>Нова назва групи:</value>
+    <value>ÐÐ¾Ð²Ð° Ð½Ð°Ð·Ð²Ð° Ð³Ñ€ÑƒÐ¿Ð¸:</value>
   </data>
   <data name="NewNameForDevice" xml:space="preserve">
-    <value>Нове ім'я для #{0}:</value>
+    <value>ÐÐ¾Ð²Ðµ Ñ–Ð¼'Ñ Ð´Ð»Ñ #{0}:</value>
   </data>
   <data name="EnterBattlemetricsIdFor" xml:space="preserve">
-    <value>Введіть ідентифікатор сервера Battlemetrics для "{0}":</value>
+    <value>Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ñ–Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ñ–ÐºÐ°Ñ‚Ð¾Ñ€ ÑÐµÑ€Ð²ÐµÑ€Ð° Battlemetrics Ð´Ð»Ñ "{0}":</value>
   </data>
   <data name="TrayTrackingStatus" xml:space="preserve">
-    <value>Слідка: {0}</value>
+    <value>Ð¡Ð»Ñ–Ð´ÐºÐ°: {0}</value>
   </data>
   <data name="TrayLastUpdate" xml:space="preserve">
-    <value>Останнє оновлення: {0}</value>
+    <value>ÐžÑÑ‚Ð°Ð½Ð½Ñ” Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ: {0}</value>
   </data>
   <data name="OpenRustPlusDesk" xml:space="preserve">
-    <value>Відкрити Rust+ Desk</value>
+    <value>Ð’Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸ Rust+ Desk</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Вийти</value>
+    <value>Ð’Ð¸Ð¹Ñ‚Ð¸</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Опис</value>
+    <value>ÐžÐ¿Ð¸Ñ</value>
   </data>
   <data name="Camera" xml:space="preserve">
-    <value>Камера</value>
+    <value>ÐšÐ°Ð¼ÐµÑ€Ð°</value>
   </data>
   <data name="Alarms" xml:space="preserve">
-    <value>Будильники</value>
+    <value>Ð‘ÑƒÐ´Ð¸Ð»ÑŒÐ½Ð¸ÐºÐ¸</value>
   </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifier:</value>
   </data>
   <data name="FPS" xml:space="preserve">
-    <value>Кадрів в секунду:</value>
+    <value>ÐšÐ°Ð´Ñ€Ñ–Ð² Ð² ÑÐµÐºÑƒÐ½Ð´Ñƒ:</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
-    <value>Примітка: 2 кадри рекомендується, і вища частота FPS - закрити підключення до сервера</value>
+    <value>ÐŸÑ€Ð¸Ð¼Ñ–Ñ‚ÐºÐ°: 2 ÐºÐ°Ð´Ñ€Ð¸ Ñ€ÐµÐºÐ¾Ð¼ÐµÐ½Ð´ÑƒÑ”Ñ‚ÑŒÑÑ, Ñ– Ð²Ð¸Ñ‰Ð° Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ð° FPS - Ð·Ð°ÐºÑ€Ð¸Ñ‚Ð¸ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ Ð´Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>Піксель</value>
+    <value>ÐŸÑ–ÐºÑÐµÐ»ÑŒ</value>
   </data>
   <data name="Pen" xml:space="preserve">
-    <value>Ручка</value>
+    <value>Ð ÑƒÑ‡ÐºÐ°</value>
   </data>
   <data name="Line" xml:space="preserve">
-    <value>Лінія</value>
+    <value>Ð›Ñ–Ð½Ñ–Ñ</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>Квадрат</value>
+    <value>ÐšÐ²Ð°Ð´Ñ€Ð°Ñ‚</value>
   </data>
   <data name="Circle" xml:space="preserve">
-    <value>Коло</value>
+    <value>ÐšÐ¾Ð»Ð¾</value>
   </data>
   <data name="Thickness" xml:space="preserve">
-    <value>Товщина:</value>
+    <value>Ð¢Ð¾Ð²Ñ‰Ð¸Ð½Ð°:</value>
   </data>
   <data name="Opacity" xml:space="preserve">
-    <value>Прозорість:</value>
+    <value>ÐŸÑ€Ð¾Ð·Ð¾Ñ€Ñ–ÑÑ‚ÑŒ:</value>
   </data>
   <data name="UploadPNG" xml:space="preserve">
-    <value>Завантажити PNG</value>
+    <value>Ð—Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð¸Ñ‚Ð¸ PNG</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Очистити</value>
+    <value>ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Зберегти</value>
+    <value>Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Призначити глобальні гарячі клавіші для Smart Switches. Декілька пристроїв можуть поділитися одним гарячим ключем (буде переключено послідовно).</value>
+    <value>ÐŸÑ€Ð¸Ð·Ð½Ð°Ñ‡Ð¸Ñ‚Ð¸ Ð³Ð»Ð¾Ð±Ð°Ð»ÑŒÐ½Ñ– Ð³Ð°Ñ€ÑÑ‡Ñ– ÐºÐ»Ð°Ð²Ñ–ÑˆÑ– Ð´Ð»Ñ Smart Switches. Ð”ÐµÐºÑ–Ð»ÑŒÐºÐ° Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð² Ð¼Ð¾Ð¶ÑƒÑ‚ÑŒ Ð¿Ð¾Ð´Ñ–Ð»Ð¸Ñ‚Ð¸ÑÑ Ð¾Ð´Ð½Ð¸Ð¼ Ð³Ð°Ñ€ÑÑ‡Ð¸Ð¼ ÐºÐ»ÑŽÑ‡ÐµÐ¼ (Ð±ÑƒÐ´Ðµ Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾ Ð¿Ð¾ÑÐ»Ñ–Ð´Ð¾Ð²Ð½Ð¾).</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Пристрій</value>
+    <value>ÐŸÑ€Ð¸ÑÑ‚Ñ€Ñ–Ð¹</value>
   </data>
   <data name="EntityId" xml:space="preserve">
     <value>EntityId</value>
   </data>
   <data name="Hotkey" xml:space="preserve">
-    <value>Гаряча клавіша</value>
+    <value>Ð“Ð°Ñ€ÑÑ‡Ð° ÐºÐ»Ð°Ð²Ñ–ÑˆÐ°</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Сет</value>
+    <value>Ð¡ÐµÑ‚</value>
   </data>
   <data name="CloseDeactivate" xml:space="preserve">
-    <value>Закрити &amp; Деактивувати</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ñ‚Ð¸ &amp; Ð”ÐµÐ°ÐºÑ‚Ð¸Ð²ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="CloseActivate" xml:space="preserve">
-    <value>Закрити &amp; активувати</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ñ‚Ð¸ &amp; Ð°ÐºÑ‚Ð¸Ð²ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="UpkeepMinimapTrackingUpdate" xml:space="preserve">
-    <value>Upkeep, Minimap і оновлення відстеження</value>
+    <value>Upkeep, Minimap Ñ– Ð¾Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Підсумок модифікацій і коригування</value>
+    <value>ÐŸÑ–Ð´ÑÑƒÐ¼Ð¾Ðº Ð¼Ð¾Ð´Ð¸Ñ„Ñ–ÐºÐ°Ñ†Ñ–Ð¹ Ñ– ÐºÐ¾Ñ€Ð¸Ð³ÑƒÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
-    <value>Не показувати це знову</value>
+    <value>ÐÐµ Ð¿Ð¾ÐºÐ°Ð·ÑƒÐ²Ð°Ñ‚Ð¸ Ñ†Ðµ Ð·Ð½Ð¾Ð²Ñƒ</value>
   </data>
   <data name="AwesomeLetsGo" xml:space="preserve">
-    <value>Чудово, ходімо!</value>
+    <value>Ð§ÑƒÐ´Ð¾Ð²Ð¾, Ñ…Ð¾Ð´Ñ–Ð¼Ð¾!</value>
   </data>
   <data name="MiniMapSettings" xml:space="preserve">
-    <value>Налаштування міні-карти</value>
+    <value>ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð¼Ñ–Ð½Ñ–-ÐºÐ°Ñ€Ñ‚Ð¸</value>
   </data>
   <data name="Shape" xml:space="preserve">
-    <value>Форма</value>
+    <value>Ð¤Ð¾Ñ€Ð¼Ð°</value>
   </data>
   <data name="Rectangle" xml:space="preserve">
-    <value>Прямокутник</value>
+    <value>ÐŸÑ€ÑÐ¼Ð¾ÐºÑƒÑ‚Ð½Ð¸Ðº</value>
   </data>
   <data name="OpacityLabel" xml:space="preserve">
-    <value>Непрозорість: {0}%.</value>
+    <value>ÐÐµÐ¿Ñ€Ð¾Ð·Ð¾Ñ€Ñ–ÑÑ‚ÑŒ: {0}%.</value>
   </data>
   <data name="SizeLabel" xml:space="preserve">
-    <value>Розмір: {0}% (SHIFT+Mousewheel)</value>
+    <value>Ð Ð¾Ð·Ð¼Ñ–Ñ€: {0}% (SHIFT+Mousewheel)</value>
   </data>
   <data name="ShowServerTime" xml:space="preserve">
-    <value>Показати час сервера</value>
+    <value>ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ Ñ‡Ð°Ñ ÑÐµÑ€Ð²ÐµÑ€Ð°</value>
   </data>
   <data name="ServerInformation" xml:space="preserve">
-    <value>Інформація про сервер</value>
+    <value>Ð†Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–Ñ Ð¿Ñ€Ð¾ ÑÐµÑ€Ð²ÐµÑ€</value>
   </data>
   <data name="NoDescriptionAvailable" xml:space="preserve">
-    <value>Опис відсутній.</value>
+    <value>ÐžÐ¿Ð¸Ñ Ð²Ñ–Ð´ÑÑƒÑ‚Ð½Ñ–Ð¹.</value>
   </data>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Поточна версія: {0}</value>
+    <value>ÐŸÐ¾Ñ‚Ð¾Ñ‡Ð½Ð° Ð²ÐµÑ€ÑÑ–Ñ: {0}</value>
   </data>
   <data name="PatchNotesHeader" xml:space="preserve">
-    <value>Історія патчів і версій</value>
+    <value>Ð†ÑÑ‚Ð¾Ñ€Ñ–Ñ Ð¿Ð°Ñ‚Ñ‡Ñ–Ð² Ñ– Ð²ÐµÑ€ÑÑ–Ð¹</value>
   </data>
   <data name="EnableChatCommands" xml:space="preserve">
-    <value>Увімкнути команди чату</value>
+    <value>Ð£Ð²Ñ–Ð¼ÐºÐ½ÑƒÑ‚Ð¸ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¸ Ñ‡Ð°Ñ‚Ñƒ</value>
   </data>
   <data name="Prefix" xml:space="preserve">
-    <value>Префікс:</value>
+    <value>ÐŸÑ€ÐµÑ„Ñ–ÐºÑ:</value>
   </data>
   <data name="StandardCommands" xml:space="preserve">
-    <value>Стандартні команди</value>
+    <value>Ð¡Ñ‚Ð°Ð½Ð´Ð°Ñ€Ñ‚Ð½Ñ– ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¸</value>
   </data>
   <data name="Population" xml:space="preserve">
-    <value>Населення:</value>
+    <value>ÐÐ°ÑÐµÐ»ÐµÐ½Ð½Ñ:</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Час:</value>
+    <value>Ð§Ð°Ñ:</value>
   </data>
   <data name="Promote" xml:space="preserve">
-    <value>Промот:</value>
+    <value>ÐŸÑ€Ð¾Ð¼Ð¾Ñ‚:</value>
   </data>
   <data name="DeepSeaCommand" xml:space="preserve">
-    <value>Глибоке моро:</value>
+    <value>Ð“Ð»Ð¸Ð±Ð¾ÐºÐµ Ð¼Ð¾Ñ€Ð¾:</value>
   </data>
   <data name="CargoShipCommand" xml:space="preserve">
-    <value>Вантажний корабель:</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>Масляний порог:</value>
+    <value>ÐœÐ°ÑÐ»ÑÐ½Ð¸Ð¹ Ð¿Ð¾Ñ€Ð¾Ð³:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
-    <value>Патрульований Гелі:</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ¾Ð²Ð°Ð½Ð¸Ð¹ Ð“ÐµÐ»Ñ–:</value>
   </data>
   <data name="TravellingVendorCommand" xml:space="preserve">
-    <value>Постачальник:</value>
+    <value>ÐŸÐ¾ÑÑ‚Ð°Ñ‡Ð°Ð»ÑŒÐ½Ð¸Ðº:</value>
   </data>
   <data name="UpkeepDetails" xml:space="preserve">
-    <value>Детальніше:</value>
+    <value>Ð”ÐµÑ‚Ð°Ð»ÑŒÐ½Ñ–ÑˆÐµ:</value>
   </data>
   <data name="CommandDelay" xml:space="preserve">
-    <value>Затримка команди:</value>
+    <value>Ð—Ð°Ñ‚Ñ€Ð¸Ð¼ÐºÐ° ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¸:</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Мова:</value>
+    <value>ÐœÐ¾Ð²Ð°:</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
-    <value>Оберіть мову</value>
+    <value>ÐžÐ±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¼Ð¾Ð²Ñƒ</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Зміна мови вимагає перезавантаження для повного ефекту.</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð° Ð¼Ð¾Ð²Ð¸ Ð²Ð¸Ð¼Ð°Ð³Ð°Ñ” Ð¿ÐµÑ€ÐµÐ·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ Ð´Ð»Ñ Ð¿Ð¾Ð²Ð½Ð¾Ð³Ð¾ ÐµÑ„ÐµÐºÑ‚Ñƒ.</value>
   </data>
   <data name="SmartSwitches" xml:space="preserve">
-    <value>Розумні перемикачі</value>
+    <value>Ð Ð¾Ð·ÑƒÐ¼Ð½Ñ– Ð¿ÐµÑ€ÐµÐ¼Ð¸ÐºÐ°Ñ‡Ñ–</value>
   </data>
   <data name="UpkeepTcMonitors" xml:space="preserve">
-    <value>Утримувати (Монітори TC)</value>
+    <value>Ð£Ñ‚Ñ€Ð¸Ð¼ÑƒÐ²Ð°Ñ‚Ð¸ (ÐœÐ¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸ TC)</value>
   </data>
   <data name="NoTcMonitorsFound" xml:space="preserve">
-    <value>Не знайдено жодного монітора для TC.</value>
+    <value>ÐÐµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ð¶Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð° Ð´Ð»Ñ TC.</value>
   </data>
   <data name="SaveAndClose" xml:space="preserve">
-    <value>Зберегти і закрити</value>
+    <value>Ð—Ð±ÐµÑ€ÐµÐ³Ñ‚Ð¸ Ñ– Ð·Ð°ÐºÑ€Ð¸Ñ‚Ð¸</value>
   </data>
   <data name="ChatMessagePlaceholder" xml:space="preserve">
-    <value>Повідомлення...</value>
+    <value>ÐŸÐ¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ...</value>
   </data>
   <data name="ChatErrorPlaceholder" xml:space="preserve">
-    <value>Повідомлення про помилку</value>
+    <value>ÐŸÐ¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¾ Ð¿Ð¾Ð¼Ð¸Ð»ÐºÑƒ</value>
   </data>
   <data name="HeliEventName" xml:space="preserve">
-    <value>Патрульний вертоліт</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð²ÐµÑ€Ñ‚Ð¾Ð»Ñ–Ñ‚</value>
   </data>
   <data name="HeliActiveRunningFor" xml:space="preserve">
-    <value>Патрульний гелікоптер активний - балотується на {0}</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð³ÐµÐ»Ñ–ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ - Ð±Ð°Ð»Ð¾Ñ‚ÑƒÑ”Ñ‚ÑŒÑÑ Ð½Ð° {0}</value>
   </data>
   <data name="ConnectedMidEventSpawnUnknown" xml:space="preserve">
-    <value>З'єднані в середині події - час нересту невідомий</value>
+    <value>Ð—'Ñ”Ð´Ð½Ð°Ð½Ñ– Ð² ÑÐµÑ€ÐµÐ´Ð¸Ð½Ñ– Ð¿Ð¾Ð´Ñ–Ñ— - Ñ‡Ð°Ñ Ð½ÐµÑ€ÐµÑÑ‚Ñƒ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹</value>
   </data>
   <data name="HeliActiveSpawnUnknown" xml:space="preserve">
-    <value>Патрульний гелікоптер активний (час зародження невідомий)</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð³ÐµÐ»Ñ–ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ (Ñ‡Ð°Ñ Ð·Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹)</value>
   </data>
   <data name="HeliShotDownAgo" xml:space="preserve">
-    <value>Патрульний гелікоптер збитий {0} тому на цій сесії</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð³ÐµÐ»Ñ–ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð·Ð±Ð¸Ñ‚Ð¸Ð¹ {0} Ñ‚Ð¾Ð¼Ñƒ Ð½Ð° Ñ†Ñ–Ð¹ ÑÐµÑÑ–Ñ—</value>
   </data>
   <data name="HeliLeftMapAgo" xml:space="preserve">
-    <value>Патруль Heli залишив карту {0} тому в цій сесії</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒ Heli Ð·Ð°Ð»Ð¸ÑˆÐ¸Ð² ÐºÐ°Ñ€Ñ‚Ñƒ {0} Ñ‚Ð¾Ð¼Ñƒ Ð² Ñ†Ñ–Ð¹ ÑÐµÑÑ–Ñ—</value>
   </data>
   <data name="CargoDockedDepartsIn" xml:space="preserve">
-    <value>Причалює в {0} - відправляється в ~{1}</value>
+    <value>ÐŸÑ€Ð¸Ñ‡Ð°Ð»ÑŽÑ” Ð² {0} - Ð²Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»ÑÑ”Ñ‚ÑŒÑÑ Ð² ~{1}</value>
   </data>
   <data name="HarborFallback" xml:space="preserve">
-    <value>гавань</value>
+    <value>Ð³Ð°Ð²Ð°Ð½ÑŒ</value>
   </data>
   <data name="CargoAlreadyDockedOnConnect" xml:space="preserve">
-    <value>Вже пристиковано на з'єднанні - час відправлення невідомий</value>
+    <value>Ð’Ð¶Ðµ Ð¿Ñ€Ð¸ÑÑ‚Ð¸ÐºÐ¾Ð²Ð°Ð½Ð¾ Ð½Ð° Ð·'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ– - Ñ‡Ð°Ñ Ð²Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ñ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹</value>
   </data>
   <data name="CargoDockedDurationNotLearned" xml:space="preserve">
-    <value>Док-станція {0} (тривалість док-станції ще не відома)</value>
+    <value>Ð”Ð¾Ðº-ÑÑ‚Ð°Ð½Ñ†Ñ–Ñ {0} (Ñ‚Ñ€Ð¸Ð²Ð°Ð»Ñ–ÑÑ‚ÑŒ Ð´Ð¾Ðº-ÑÑ‚Ð°Ð½Ñ†Ñ–Ñ— Ñ‰Ðµ Ð½Ðµ Ð²Ñ–Ð´Ð¾Ð¼Ð°)</value>
   </data>
   <data name="CargoTimeRemainingOnMap" xml:space="preserve">
-    <value>Час, що залишився на карті (з моменту відтворення)</value>
+    <value>Ð§Ð°Ñ, Ñ‰Ð¾ Ð·Ð°Ð»Ð¸ÑˆÐ¸Ð²ÑÑ Ð½Ð° ÐºÐ°Ñ€Ñ‚Ñ– (Ð· Ð¼Ð¾Ð¼ÐµÐ½Ñ‚Ñƒ Ð²Ñ–Ð´Ñ‚Ð²Ð¾Ñ€ÐµÐ½Ð½Ñ)</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknown" xml:space="preserve">
-    <value>Підключення на півдорозі - час невідомий</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ Ð½Ð° Ð¿Ñ–Ð²Ð´Ð¾Ñ€Ð¾Ð·Ñ– - Ñ‡Ð°Ñ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹</value>
   </data>
   <data name="CargoConnectedMidRouteTimeUnknownFormatted" xml:space="preserve">
-    <value>З'єднання на півдорозі - час невідомий (маршрут ~{0}м загалом)</value>
+    <value>Ð—'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ Ð½Ð° Ð¿Ñ–Ð²Ð´Ð¾Ñ€Ð¾Ð·Ñ– - Ñ‡Ð°Ñ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹ (Ð¼Ð°Ñ€ÑˆÑ€ÑƒÑ‚ ~{0}Ð¼ Ð·Ð°Ð³Ð°Ð»Ð¾Ð¼)</value>
   </data>
   <data name="CargoDespawnedAgo" xml:space="preserve">
-    <value>Вантажне судно було спущено на воду {0}м {1}с тому на цій сесії</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð±ÑƒÐ»Ð¾ ÑÐ¿ÑƒÑ‰ÐµÐ½Ð¾ Ð½Ð° Ð²Ð¾Ð´Ñƒ {0}Ð¼ {1}Ñ Ñ‚Ð¾Ð¼Ñƒ Ð½Ð° Ñ†Ñ–Ð¹ ÑÐµÑÑ–Ñ—</value>
   </data>
   <data name="VendorActiveRunningFor" xml:space="preserve">
-    <value>Мандрівний продавець активний - балотується на {0}</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ - Ð±Ð°Ð»Ð¾Ñ‚ÑƒÑ”Ñ‚ÑŒÑÑ Ð½Ð° {0}</value>
   </data>
   <data name="VendorActiveSpawnUnknown" xml:space="preserve">
-    <value>Мандрівний продавець активний (час появи невідомий)</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ (Ñ‡Ð°Ñ Ð¿Ð¾ÑÐ²Ð¸ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹)</value>
   </data>
   <data name="VendorDespawnedAgo" xml:space="preserve">
-    <value>Мандрівний продавець був виведений з гри {0} тому в цій сесії</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ Ð±ÑƒÐ² Ð²Ð¸Ð²ÐµÐ´ÐµÐ½Ð¸Ð¹ Ð· Ð³Ñ€Ð¸ {0} Ñ‚Ð¾Ð¼Ñƒ Ð² Ñ†Ñ–Ð¹ ÑÐµÑÑ–Ñ—</value>
   </data>
   <data name="DeepSeaActiveRunningFor" xml:space="preserve">
-    <value>Deep Sea active - біг на {0}</value>
+    <value>Deep Sea active - Ð±Ñ–Ð³ Ð½Ð° {0}</value>
   </data>
   <data name="DeepSeaActiveSpawnUnknown" xml:space="preserve">
-    <value>Глибоководні активні (час нересту невідомий)</value>
+    <value>Ð“Ð»Ð¸Ð±Ð¾ÐºÐ¾Ð²Ð¾Ð´Ð½Ñ– Ð°ÐºÑ‚Ð¸Ð²Ð½Ñ– (Ñ‡Ð°Ñ Ð½ÐµÑ€ÐµÑÑ‚Ñƒ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹)</value>
   </data>
   <data name="DeepSeaEndedAgo" xml:space="preserve">
-    <value>Deep Sea закінчилася {0} тому ця сесія</value>
+    <value>Deep Sea Ð·Ð°ÐºÑ–Ð½Ñ‡Ð¸Ð»Ð°ÑÑ {0} Ñ‚Ð¾Ð¼Ñƒ Ñ†Ñ ÑÐµÑÑ–Ñ</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
     <value>{0}h {1:D2}m</value>
@@ -1286,570 +1286,590 @@
     <value>{0}s</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
-    <value>{0} гравців, які зараз онлайн.{1}</value>
+    <value>{0} Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð², ÑÐºÑ– Ð·Ð°Ñ€Ð°Ð· Ð¾Ð½Ð»Ð°Ð¹Ð½.{1}</value>
   </data>
   <data name="ChatCmdPopQueue" xml:space="preserve">
-    <value> Черга: {0} гравців.</value>
+    <value> Ð§ÐµÑ€Ð³Ð°: {0} Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð².</value>
   </data>
   <data name="ChatCmdTimeResponse" xml:space="preserve">
-    <value>Поточний ігровий час: {0}.</value>
+    <value>ÐŸÐ¾Ñ‚Ð¾Ñ‡Ð½Ð¸Ð¹ Ñ–Ð³Ñ€Ð¾Ð²Ð¸Ð¹ Ñ‡Ð°Ñ: {0}.</value>
   </data>
   <data name="ChatCmdPromoteResponse" xml:space="preserve">
-    <value>{0} був підвищений до керівника.</value>
+    <value>{0} Ð±ÑƒÐ² Ð¿Ñ–Ð´Ð²Ð¸Ñ‰ÐµÐ½Ð¸Ð¹ Ð´Ð¾ ÐºÐµÑ€Ñ–Ð²Ð½Ð¸ÐºÐ°.</value>
   </data>
   <data name="ChatCmdDeepSeaActive" xml:space="preserve">
-    <value>Глибоке море активне! Біг на {0}.</value>
+    <value>Ð“Ð»Ð¸Ð±Ð¾ÐºÐµ Ð¼Ð¾Ñ€Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ðµ! Ð‘Ñ–Ð³ Ð½Ð° {0}.</value>
   </data>
   <data name="ChatCmdDeepSeaActiveMidEvent" xml:space="preserve">
-    <value>Глибоководна зараз активна (підключена в середині події - час нересту невідомий).</value>
+    <value>Ð“Ð»Ð¸Ð±Ð¾ÐºÐ¾Ð²Ð¾Ð´Ð½Ð° Ð·Ð°Ñ€Ð°Ð· Ð°ÐºÑ‚Ð¸Ð²Ð½Ð° (Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð° Ð² ÑÐµÑ€ÐµÐ´Ð¸Ð½Ñ– Ð¿Ð¾Ð´Ñ–Ñ— - Ñ‡Ð°Ñ Ð½ÐµÑ€ÐµÑÑ‚Ñƒ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹).</value>
   </data>
   <data name="ChatCmdDeepSeaEndedMinutesAgo" xml:space="preserve">
-    <value>Deep Sea закінчилася {0} хвилин тому ця сесія.</value>
+    <value>Deep Sea Ð·Ð°ÐºÑ–Ð½Ñ‡Ð¸Ð»Ð°ÑÑ {0} Ñ…Ð²Ð¸Ð»Ð¸Ð½ Ñ‚Ð¾Ð¼Ñƒ Ñ†Ñ ÑÐµÑÑ–Ñ.</value>
   </data>
   <data name="ChatCmdDeepSeaStatusUnknown" xml:space="preserve">
-    <value>Статус глибоководної події невідомий (не бачив цієї сесії).</value>
+    <value>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ð³Ð»Ð¸Ð±Ð¾ÐºÐ¾Ð²Ð¾Ð´Ð½Ð¾Ñ— Ð¿Ð¾Ð´Ñ–Ñ— Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹ (Ð½Ðµ Ð±Ð°Ñ‡Ð¸Ð² Ñ†Ñ–Ñ”Ñ— ÑÐµÑÑ–Ñ—).</value>
   </data>
   <data name="ChatCmdCargoNotActive" xml:space="preserve">
-    <value>Вантажний корабель не активний.</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ Ð½Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹.</value>
   </data>
   <data name="ChatCmdCargoDockedDeparts" xml:space="preserve">
-    <value>Вантажне судно пришвартоване до причалу {0}. Відправлення приблизно через {1} хвилин.</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð¿Ñ€Ð¸ÑˆÐ²Ð°Ñ€Ñ‚Ð¾Ð²Ð°Ð½Ðµ Ð´Ð¾ Ð¿Ñ€Ð¸Ñ‡Ð°Ð»Ñƒ {0}. Ð’Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¸Ð±Ð»Ð¸Ð·Ð½Ð¾ Ñ‡ÐµÑ€ÐµÐ· {1} Ñ…Ð²Ð¸Ð»Ð¸Ð½.</value>
   </data>
   <data name="ChatCmdCargoDockedPreparingDepart" xml:space="preserve">
-    <value>Вантажний корабель пришвартований до {0} і готується до відплиття.</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ Ð¿Ñ€Ð¸ÑˆÐ²Ð°Ñ€Ñ‚Ð¾Ð²Ð°Ð½Ð¸Ð¹ Ð´Ð¾ {0} Ñ– Ð³Ð¾Ñ‚ÑƒÑ”Ñ‚ÑŒÑÑ Ð´Ð¾ Ð²Ñ–Ð´Ð¿Ð»Ð¸Ñ‚Ñ‚Ñ.</value>
   </data>
   <data name="ChatCmdCargoDockedUnknown" xml:space="preserve">
-    <value>Вантажне судно пришвартоване в порту {0} (час відправлення невідомий).</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð¿Ñ€Ð¸ÑˆÐ²Ð°Ñ€Ñ‚Ð¾Ð²Ð°Ð½Ðµ Ð² Ð¿Ð¾Ñ€Ñ‚Ñƒ {0} (Ñ‡Ð°Ñ Ð²Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ñ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹).</value>
   </data>
   <data name="ChatCmdCargoActiveLeaves" xml:space="preserve">
-    <value>Вантажний корабель активний. Відправлення приблизно через {0} хвилин.</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹. Ð’Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¸Ð±Ð»Ð¸Ð·Ð½Ð¾ Ñ‡ÐµÑ€ÐµÐ· {0} Ñ…Ð²Ð¸Ð»Ð¸Ð½.</value>
   </data>
   <data name="ChatCmdCargoActivePreparingLeave" xml:space="preserve">
-    <value>Вантажне судно активне і готується до відплиття.</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð°ÐºÑ‚Ð¸Ð²Ð½Ðµ Ñ– Ð³Ð¾Ñ‚ÑƒÑ”Ñ‚ÑŒÑÑ Ð´Ð¾ Ð²Ñ–Ð´Ð¿Ð»Ð¸Ñ‚Ñ‚Ñ.</value>
   </data>
   <data name="ChatCmdCargoActiveDurationNotLearned" xml:space="preserve">
-    <value>Вантажний корабель активний (тривалість маршруту ще не вивчена для цього сервера).</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ (Ñ‚Ñ€Ð¸Ð²Ð°Ð»Ñ–ÑÑ‚ÑŒ Ð¼Ð°Ñ€ÑˆÑ€ÑƒÑ‚Ñƒ Ñ‰Ðµ Ð½Ðµ Ð²Ð¸Ð²Ñ‡ÐµÐ½Ð° Ð´Ð»Ñ Ñ†ÑŒÐ¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°).</value>
   </data>
   <data name="ChatCmdCargoActiveMidRoute" xml:space="preserve">
-    <value>Вантажний корабель активний (підключено після зародження - час невідомий).</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ (Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾ Ð¿Ñ–ÑÐ»Ñ Ð·Ð°Ñ€Ð¾Ð´Ð¶ÐµÐ½Ð½Ñ - Ñ‡Ð°Ñ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹).</value>
   </data>
   <data name="ChatCmdCargoDespawnedMinutesAgo" xml:space="preserve">
-    <value>Вантажний корабель не активний. Департизовано {0} хвилин тому в цьому сеансі.</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ Ð½Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹. Ð”ÐµÐ¿Ð°Ñ€Ñ‚Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾ {0} Ñ…Ð²Ð¸Ð»Ð¸Ð½ Ñ‚Ð¾Ð¼Ñƒ Ð² Ñ†ÑŒÐ¾Ð¼Ñƒ ÑÐµÐ°Ð½ÑÑ–.</value>
   </data>
   <data name="ChatCmdOilRigCrateIn" xml:space="preserve">
-    <value>{0}: ящик в {1}м {2}с</value>
+    <value>{0}: ÑÑ‰Ð¸Ðº Ð² {1}Ð¼ {2}Ñ</value>
   </data>
   <data name="ChatCmdOilRigLastCalledAgo" xml:space="preserve">
-    <value>{0}: востаннє дзвонили {1}м тому</value>
+    <value>{0}: Ð²Ð¾ÑÑ‚Ð°Ð½Ð½Ñ” Ð´Ð·Ð²Ð¾Ð½Ð¸Ð»Ð¸ {1}Ð¼ Ñ‚Ð¾Ð¼Ñƒ</value>
   </data>
   <data name="ChatCmdOilRigNotCalled" xml:space="preserve">
-    <value>{0}: не викликав цю сесію</value>
+    <value>{0}: Ð½Ðµ Ð²Ð¸ÐºÐ»Ð¸ÐºÐ°Ð² Ñ†ÑŽ ÑÐµÑÑ–ÑŽ</value>
   </data>
   <data name="ChatCmdHeliActive" xml:space="preserve">
-    <value>Патруль Гелі активний! Балотуємось на {0}.</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒ Ð“ÐµÐ»Ñ– Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹! Ð‘Ð°Ð»Ð¾Ñ‚ÑƒÑ”Ð¼Ð¾ÑÑŒ Ð½Ð° {0}.</value>
   </data>
   <data name="ChatCmdHeliActiveMidEvent" xml:space="preserve">
-    <value>Патрульний гелікоптер наразі активний (підключений в середині події - час появи невідомий).</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð³ÐµÐ»Ñ–ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð½Ð°Ñ€Ð°Ð·Ñ– Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ (Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ð¹ Ð² ÑÐµÑ€ÐµÐ´Ð¸Ð½Ñ– Ð¿Ð¾Ð´Ñ–Ñ— - Ñ‡Ð°Ñ Ð¿Ð¾ÑÐ²Ð¸ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹).</value>
   </data>
   <data name="ChatCmdHeliNotActiveAgo" xml:space="preserve">
-    <value>Патрульний вертоліт не активний. Це було {0} {1} років тому.</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð²ÐµÑ€Ñ‚Ð¾Ð»Ñ–Ñ‚ Ð½Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹. Ð¦Ðµ Ð±ÑƒÐ»Ð¾ {0} {1} Ñ€Ð¾ÐºÑ–Ð² Ñ‚Ð¾Ð¼Ñƒ.</value>
   </data>
   <data name="ChatCmdHeliReasonShotDown" xml:space="preserve">
-    <value>збитий</value>
+    <value>Ð·Ð±Ð¸Ñ‚Ð¸Ð¹</value>
   </data>
   <data name="ChatCmdHeliReasonLeftMap" xml:space="preserve">
-    <value>залишив карту</value>
+    <value>Ð·Ð°Ð»Ð¸ÑˆÐ¸Ð² ÐºÐ°Ñ€Ñ‚Ñƒ</value>
   </data>
   <data name="ChatCmdHeliStatusUnknown" xml:space="preserve">
-    <value>Статус події "Патрульний гелікоптер" невідомий (не спостерігався під час сеансу).</value>
+    <value>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ð¿Ð¾Ð´Ñ–Ñ— "ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð³ÐµÐ»Ñ–ÐºÐ¾Ð¿Ñ‚ÐµÑ€" Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹ (Ð½Ðµ ÑÐ¿Ð¾ÑÑ‚ÐµÑ€Ñ–Ð³Ð°Ð²ÑÑ Ð¿Ñ–Ð´ Ñ‡Ð°Ñ ÑÐµÐ°Ð½ÑÑƒ).</value>
   </data>
   <data name="ChatCmdVendorActive" xml:space="preserve">
-    <value>Мандрівний продавець активний! Балотується на {0}.</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹! Ð‘Ð°Ð»Ð¾Ñ‚ÑƒÑ”Ñ‚ÑŒÑÑ Ð½Ð° {0}.</value>
   </data>
   <data name="ChatCmdVendorActiveMidEvent" xml:space="preserve">
-    <value>Мандрівний продавець наразі активний (підключений в середині події - час появи невідомий).</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ Ð½Ð°Ñ€Ð°Ð·Ñ– Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹ (Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ð¹ Ð² ÑÐµÑ€ÐµÐ´Ð¸Ð½Ñ– Ð¿Ð¾Ð´Ñ–Ñ— - Ñ‡Ð°Ñ Ð¿Ð¾ÑÐ²Ð¸ Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹).</value>
   </data>
   <data name="ChatCmdVendorDespawnedAgo" xml:space="preserve">
-    <value>Мандрівний продавець не активний. Департизовано {0} років тому в цій сесії.</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ Ð½Ðµ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ð¹. Ð”ÐµÐ¿Ð°Ñ€Ñ‚Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾ {0} Ñ€Ð¾ÐºÑ–Ð² Ñ‚Ð¾Ð¼Ñƒ Ð² Ñ†Ñ–Ð¹ ÑÐµÑÑ–Ñ—.</value>
   </data>
   <data name="ChatCmdVendorStatusUnknown" xml:space="preserve">
-    <value>Статус події Travelling Vendor невідомий (не бачив цю сесію).</value>
+    <value>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ð¿Ð¾Ð´Ñ–Ñ— Travelling Vendor Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¸Ð¹ (Ð½Ðµ Ð±Ð°Ñ‡Ð¸Ð² Ñ†ÑŽ ÑÐµÑÑ–ÑŽ).</value>
   </data>
   <data name="ChatCmdUpkeepNoTcMapped" xml:space="preserve">
-    <value>Для команд обслуговування не зіставлено жодної шафи для інструментів.</value>
+    <value>Ð”Ð»Ñ ÐºÐ¾Ð¼Ð°Ð½Ð´ Ð¾Ð±ÑÐ»ÑƒÐ³Ð¾Ð²ÑƒÐ²Ð°Ð½Ð½Ñ Ð½Ðµ Ð·Ñ–ÑÑ‚Ð°Ð²Ð»ÐµÐ½Ð¾ Ð¶Ð¾Ð´Ð½Ð¾Ñ— ÑˆÐ°Ñ„Ð¸ Ð´Ð»Ñ Ñ–Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ–Ð².</value>
   </data>
   <data name="ChatCmdUpkeepTcEmptyExpired" xml:space="preserve">
-    <value>Підтримка в {0} TC: Порожній або прострочений.</value>
+    <value>ÐŸÑ–Ð´Ñ‚Ñ€Ð¸Ð¼ÐºÐ° Ð² {0} TC: ÐŸÐ¾Ñ€Ð¾Ð¶Ð½Ñ–Ð¹ Ð°Ð±Ð¾ Ð¿Ñ€Ð¾ÑÑ‚Ñ€Ð¾Ñ‡ÐµÐ½Ð¸Ð¹.</value>
   </data>
   <data name="ChatCmdUpkeepNeed24h" xml:space="preserve">
-    <value> Потреба/24 години: {0}.</value>
+    <value> ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð°/24 Ð³Ð¾Ð´Ð¸Ð½Ð¸: {0}.</value>
   </data>
   <data name="ChatCmdUpkeepTcTime" xml:space="preserve">
-    <value>Підтримка в {0} TC: {1}.</value>
+    <value>ÐŸÑ–Ð´Ñ‚Ñ€Ð¸Ð¼ÐºÐ° Ð² {0} TC: {1}.</value>
   </data>
   <data name="ChatCmdUpkeepDays" xml:space="preserve">
-    <value>{0} днів</value>
+    <value>{0} Ð´Ð½Ñ–Ð²</value>
   </data>
   <data name="ChatCmdUpkeepHours" xml:space="preserve">
-    <value>{0} годин</value>
+    <value>{0} Ð³Ð¾Ð´Ð¸Ð½</value>
   </data>
   <data name="ChatCmdUpkeepMinutes" xml:space="preserve">
-    <value>{0} хвилини</value>
+    <value>{0} Ñ…Ð²Ð¸Ð»Ð¸Ð½Ð¸</value>
   </data>
   <data name="ChatCmdUpkeepEmptyExpiredShort" xml:space="preserve">
-    <value>{0}: Порожній/прострочений</value>
+    <value>{0}: ÐŸÐ¾Ñ€Ð¾Ð¶Ð½Ñ–Ð¹/Ð¿Ñ€Ð¾ÑÑ‚Ñ€Ð¾Ñ‡ÐµÐ½Ð¸Ð¹</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
     <value>{0}: {1}d, {2}h</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
-    <value>Підтримка: {0}</value>
+    <value>ÐŸÑ–Ð´Ñ‚Ñ€Ð¸Ð¼ÐºÐ°: {0}</value>
   </data>
   <data name="ChatCmdUpkeepNotPaired" xml:space="preserve">
-    <value>Зв'язані монітори шафи для інструментів не знайдено або не сполучено.</value>
+    <value>Ð—Ð²'ÑÐ·Ð°Ð½Ñ– Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€Ð¸ ÑˆÐ°Ñ„Ð¸ Ð´Ð»Ñ Ñ–Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ–Ð² Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ð°Ð±Ð¾ Ð½Ðµ ÑÐ¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¾.</value>
   </data>
   <data name="ChatCmdUpkeepNotPairedSingle" xml:space="preserve">
-    <value>Зв'язаний монітор шафи для інструментів не знайдено або не сполучено.</value>
+    <value>Ð—Ð²'ÑÐ·Ð°Ð½Ð¸Ð¹ Ð¼Ð¾Ð½Ñ–Ñ‚Ð¾Ñ€ ÑˆÐ°Ñ„Ð¸ Ð´Ð»Ñ Ñ–Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ–Ð² Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ð°Ð±Ð¾ Ð½Ðµ ÑÐ¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¾.</value>
   </data>
   <data name="ChatCmdSwitchToggled" xml:space="preserve">
-    <value>{0} перетворився на {1}.</value>
+    <value>{0} Ð¿ÐµÑ€ÐµÑ‚Ð²Ð¾Ñ€Ð¸Ð²ÑÑ Ð½Ð° {1}.</value>
   </data>
   <data name="ChatCmdSwitchStateOn" xml:space="preserve">
-    <value>УВІМКНЕНО</value>
+    <value>Ð£Ð’Ð†ÐœÐšÐÐ•ÐÐž</value>
   </data>
   <data name="ChatCmdSwitchStateOff" xml:space="preserve">
-    <value>ВИМКНЕНО</value>
+    <value>Ð’Ð˜ÐœÐšÐÐ•ÐÐž</value>
   </data>
   <data name="ChatCmdSwitchNotPaired" xml:space="preserve">
-    <value>Прив'язаний інтелектуальний перемикач не знайдено або не спарено.</value>
+    <value>ÐŸÑ€Ð¸Ð²'ÑÐ·Ð°Ð½Ð¸Ð¹ Ñ–Ð½Ñ‚ÐµÐ»ÐµÐºÑ‚ÑƒÐ°Ð»ÑŒÐ½Ð¸Ð¹ Ð¿ÐµÑ€ÐµÐ¼Ð¸ÐºÐ°Ñ‡ Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ð°Ð±Ð¾ Ð½Ðµ ÑÐ¿Ð°Ñ€ÐµÐ½Ð¾.</value>
   </data>
   <data name="MaterialWood" xml:space="preserve">
-    <value>Дерево</value>
+    <value>Ð”ÐµÑ€ÐµÐ²Ð¾</value>
   </data>
   <data name="MaterialStone" xml:space="preserve">
-    <value>Камінь</value>
+    <value>ÐšÐ°Ð¼Ñ–Ð½ÑŒ</value>
   </data>
   <data name="MaterialMetal" xml:space="preserve">
-    <value>Метал</value>
+    <value>ÐœÐµÑ‚Ð°Ð»</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
     <value>HQM</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>Невелика нафтова вишка</value>
+    <value>ÐÐµÐ²ÐµÐ»Ð¸ÐºÐ° Ð½Ð°Ñ„Ñ‚Ð¾Ð²Ð° Ð²Ð¸ÑˆÐºÐ°</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>Велика нафтова вишка</value>
+    <value>Ð’ÐµÐ»Ð¸ÐºÐ° Ð½Ð°Ñ„Ñ‚Ð¾Ð²Ð° Ð²Ð¸ÑˆÐºÐ°</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
-    <value>Магазин</value>
+    <value>ÐœÐ°Ð³Ð°Ð·Ð¸Ð½</value>
   </data>
   <data name="EventCargoShip" xml:space="preserve">
-    <value>Вантажний корабель</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ</value>
   </data>
   <data name="EventTravellingVendor" xml:space="preserve">
-    <value>Мандрівний продавець</value>
+    <value>ÐœÐ°Ð½Ð´Ñ€Ñ–Ð²Ð½Ð¸Ð¹ Ð¿Ñ€Ð¾Ð´Ð°Ð²ÐµÑ†ÑŒ</value>
   </data>
   <data name="EventCH47" xml:space="preserve">
     <value>CH47</value>
   </data>
   <data name="EventPatrolHelicopter" xml:space="preserve">
-    <value>Патрульний вертоліт</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð²ÐµÑ€Ñ‚Ð¾Ð»Ñ–Ñ‚</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>Ящик для ойлріг</value>
+    <value>Ð¯Ñ‰Ð¸Ðº Ð´Ð»Ñ Ð¾Ð¹Ð»Ñ€Ñ–Ð³</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
-    <value>Вибух!</value>
+    <value>Ð’Ð¸Ð±ÑƒÑ…!</value>
   </data>
   <data name="EventBuildingBlocked" xml:space="preserve">
-    <value>Будівля заблокована</value>
+    <value>Ð‘ÑƒÐ´Ñ–Ð²Ð»Ñ Ð·Ð°Ð±Ð»Ð¾ÐºÐ¾Ð²Ð°Ð½Ð°</value>
   </data>
   <data name="EventGeneric" xml:space="preserve">
-    <value>Подія</value>
+    <value>ÐŸÐ¾Ð´Ñ–Ñ</value>
   </data>
   <data name="AlertOilRigTriggered" xml:space="preserve">
-    <value>[{0}] спрацювало! Ящик розблоковується в {1}.</value>
+    <value>[{0}] ÑÐ¿Ñ€Ð°Ñ†ÑŽÐ²Ð°Ð»Ð¾! Ð¯Ñ‰Ð¸Ðº Ñ€Ð¾Ð·Ð±Ð»Ð¾ÐºÐ¾Ð²ÑƒÑ”Ñ‚ÑŒÑÑ Ð² {1}.</value>
   </data>
   <data name="AlertAlarmTriggered" xml:space="preserve">
-    <value>ТРИВОГА: {0} спрацював!</value>
+    <value>Ð¢Ð Ð˜Ð’ÐžÐ“Ð: {0} ÑÐ¿Ñ€Ð°Ñ†ÑŽÐ²Ð°Ð²!</value>
   </data>
   <data name="AlertCrateUnlocksIn10Min" xml:space="preserve">
-    <value>[{0}] Ящик розблоковується за 10 хвилин!</value>
+    <value>[{0}] Ð¯Ñ‰Ð¸Ðº Ñ€Ð¾Ð·Ð±Ð»Ð¾ÐºÐ¾Ð²ÑƒÑ”Ñ‚ÑŒÑÑ Ð·Ð° 10 Ñ…Ð²Ð¸Ð»Ð¸Ð½!</value>
   </data>
   <data name="AlertCrateUnlocksIn5Min" xml:space="preserve">
-    <value>[{0}] Ящик розблоковується за 5 хвилин!</value>
+    <value>[{0}] Ð¯Ñ‰Ð¸Ðº Ñ€Ð¾Ð·Ð±Ð»Ð¾ÐºÐ¾Ð²ÑƒÑ”Ñ‚ÑŒÑÑ Ð·Ð° 5 Ñ…Ð²Ð¸Ð»Ð¸Ð½!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Глибоке море піднялося</value>
+    <value>Ð“Ð»Ð¸Ð±Ð¾ÐºÐµ Ð¼Ð¾Ñ€Ðµ Ð¿Ñ–Ð´Ð½ÑÐ»Ð¾ÑÑ</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
-    <value>Новий магазин {0} [{1}]: {2}</value>
+    <value>ÐÐ¾Ð²Ð¸Ð¹ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½ {0} [{1}]: {2}</value>
   </data>
   <data name="AlertSuspiciousShop" xml:space="preserve">
-    <value>Підозрілий магазин {0} [{1}] був онлайн {2}с, продавав {3}</value>
+    <value>ÐŸÑ–Ð´Ð¾Ð·Ñ€Ñ–Ð»Ð¸Ð¹ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½ {0} [{1}] Ð±ÑƒÐ² Ð¾Ð½Ð»Ð°Ð¹Ð½ {2}Ñ, Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð°Ð² {3}</value>
   </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
-    <value>З'явився вантажний корабель {0}</value>
+    <value>Ð—'ÑÐ²Ð¸Ð²ÑÑ Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ð¹ ÐºÐ¾Ñ€Ð°Ð±ÐµÐ»ÑŒ {0}</value>
   </data>
   <data name="CargoFarOutAtSea" xml:space="preserve">
-    <value>далеко в морі (біля {0})</value>
+    <value>Ð´Ð°Ð»ÐµÐºÐ¾ Ð² Ð¼Ð¾Ñ€Ñ– (Ð±Ñ–Ð»Ñ {0})</value>
   </data>
   <data name="AlertCargoDocked" xml:space="preserve">
-    <value>Вантажне судно пришвартоване в порту {0} ({1})</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð¿Ñ€Ð¸ÑˆÐ²Ð°Ñ€Ñ‚Ð¾Ð²Ð°Ð½Ðµ Ð² Ð¿Ð¾Ñ€Ñ‚Ñƒ {0} ({1})</value>
   </data>
   <data name="AlertCargoExpectedDock" xml:space="preserve">
-    <value>Очікується, що вантажне судно причалить до причалу {0} ({1}) приблизно через 5 хвилин.</value>
+    <value>ÐžÑ‡Ñ–ÐºÑƒÑ”Ñ‚ÑŒÑÑ, Ñ‰Ð¾ Ð²Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð¿Ñ€Ð¸Ñ‡Ð°Ð»Ð¸Ñ‚ÑŒ Ð´Ð¾ Ð¿Ñ€Ð¸Ñ‡Ð°Ð»Ñƒ {0} ({1}) Ð¿Ñ€Ð¸Ð±Ð»Ð¸Ð·Ð½Ð¾ Ñ‡ÐµÑ€ÐµÐ· 5 Ñ…Ð²Ð¸Ð»Ð¸Ð½.</value>
   </data>
   <data name="AlertCargoDeparting" xml:space="preserve">
-    <value>Вантажне судно відправляється з {0} через 5 хвилин ({1})</value>
+    <value>Ð’Ð°Ð½Ñ‚Ð°Ð¶Ð½Ðµ ÑÑƒÐ´Ð½Ð¾ Ð²Ñ–Ð´Ð¿Ñ€Ð°Ð²Ð»ÑÑ”Ñ‚ÑŒÑÑ Ð· {0} Ñ‡ÐµÑ€ÐµÐ· 5 Ñ…Ð²Ð¸Ð»Ð¸Ð½ ({1})</value>
   </data>
   <data name="AlertHeliCrashFalseAlarm" xml:space="preserve">
-    <value>Виявлено збій через затримку сервера - Heli все ще на мапі за адресою {0}.</value>
+    <value>Ð’Ð¸ÑÐ²Ð»ÐµÐ½Ð¾ Ð·Ð±Ñ–Ð¹ Ñ‡ÐµÑ€ÐµÐ· Ð·Ð°Ñ‚Ñ€Ð¸Ð¼ÐºÑƒ ÑÐµÑ€Ð²ÐµÑ€Ð° - Heli Ð²ÑÐµ Ñ‰Ðµ Ð½Ð° Ð¼Ð°Ð¿Ñ– Ð·Ð° Ð°Ð´Ñ€ÐµÑÐ¾ÑŽ {0}.</value>
   </data>
   <data name="AlertEventSpawned" xml:space="preserve">
-    <value>{0} з'явився на {1}</value>
+    <value>{0} Ð·'ÑÐ²Ð¸Ð²ÑÑ Ð½Ð° {1}</value>
   </data>
   <data name="AlertHeliShotDown" xml:space="preserve">
-    <value>Патрульний гелікоптер збитий {0}</value>
+    <value>ÐŸÐ°Ñ‚Ñ€ÑƒÐ»ÑŒÐ½Ð¸Ð¹ Ð³ÐµÐ»Ñ–ÐºÐ¾Ð¿Ñ‚ÐµÑ€ Ð·Ð±Ð¸Ñ‚Ð¸Ð¹ {0}</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>невідомо</value>
+    <value>Ð½ÐµÐ²Ñ–Ð´Ð¾Ð¼Ð¾</value>
   </data>
   <data name="AlertPlayerOnlineWithPos" xml:space="preserve">
-    <value>{0} з'явився онлайн @ {1}</value>
+    <value>{0} Ð·'ÑÐ²Ð¸Ð²ÑÑ Ð¾Ð½Ð»Ð°Ð¹Ð½ @ {1}</value>
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
-    <value>{0} вимкнувся.</value>
+    <value>{0} Ð²Ð¸Ð¼ÐºÐ½ÑƒÐ²ÑÑ.</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
-    <value>{0} помер @ {1}</value>
+    <value>{0} Ð¿Ð¾Ð¼ÐµÑ€ @ {1}</value>
   </data>
   <data name="AlertPlayerRespawned" xml:space="preserve">
     <value>{0} respawned @ {1}</value>
   </data>
   <data name="AlertTrackingOnline" xml:space="preserve">
-    <value>[Відстеження] {0}{1} зараз ОНЛАЙН</value>
+    <value>[Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ] {0}{1} Ð·Ð°Ñ€Ð°Ð· ÐžÐÐ›ÐÐ™Ð</value>
   </data>
   <data name="AlertTrackingOffline" xml:space="preserve">
-    <value>[Відстеження] {0}{1} зараз не працює</value>
+    <value>[Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ] {0}{1} Ð·Ð°Ñ€Ð°Ð· Ð½Ðµ Ð¿Ñ€Ð°Ñ†ÑŽÑ”</value>
   </data>
   <data name="AlertTrackingRenamed" xml:space="preserve">
-    <value>[Відстеження] {0}{1} перейменовано на {2}!</value>
+    <value>[Ð’Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ] {0}{1} Ð¿ÐµÑ€ÐµÐ¹Ð¼ÐµÐ½Ð¾Ð²Ð°Ð½Ð¾ Ð½Ð° {2}!</value>
   </data>
   <data name="AlertShopSells" xml:space="preserve">
-    <value>продає</value>
+    <value>Ð¿Ñ€Ð¾Ð´Ð°Ñ”</value>
   </data>
   <data name="AlertShopBuys" xml:space="preserve">
-    <value>купує</value>
+    <value>ÐºÑƒÐ¿ÑƒÑ”</value>
   </data>
   <data name="AlertShopLabelFallback" xml:space="preserve">
-    <value>Магазин</value>
+    <value>ÐœÐ°Ð³Ð°Ð·Ð¸Ð½</value>
   </data>
   <data name="AlertShopMatch" xml:space="preserve">
-    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) для {6} {7}</value>
+    <value>{0} [{1}] {2} x{3} {4} (Stock {5}) Ð´Ð»Ñ {6} {7}</value>
   </data>
   <data name="ListCommandsCommand" xml:space="preserve">
-    <value>Список команд чату</value>
+    <value>Ð¡Ð¿Ð¸ÑÐ¾Ðº ÐºÐ¾Ð¼Ð°Ð½Ð´ Ñ‡Ð°Ñ‚Ñƒ</value>
   </data>
   <data name="ChatCmdListHeader" xml:space="preserve">
-    <value>КОМАНДИ: {0}</value>
+    <value>ÐšÐžÐœÐÐÐ”Ð˜: {0}</value>
   </data>
   <data name="Update530Title" xml:space="preserve">
-    <value>Локалізація, модернізація та зберігання інтерфейсу користувача</value>
+    <value>Ð›Ð¾ÐºÐ°Ð»Ñ–Ð·Ð°Ñ†Ñ–Ñ, Ð¼Ð¾Ð´ÐµÑ€Ð½Ñ–Ð·Ð°Ñ†Ñ–Ñ Ñ‚Ð° Ð·Ð±ÐµÑ€Ñ–Ð³Ð°Ð½Ð½Ñ Ñ–Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹ÑÑƒ ÐºÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ‡Ð°</value>
   </data>
   <data name="FeatureLanguage" xml:space="preserve">
-    <value>Динамічне перемикання локалі</value>
+    <value>Ð”Ð¸Ð½Ð°Ð¼Ñ–Ñ‡Ð½Ðµ Ð¿ÐµÑ€ÐµÐ¼Ð¸ÐºÐ°Ð½Ð½Ñ Ð»Ð¾ÐºÐ°Ð»Ñ–</value>
   </data>
   <data name="FeatureLanguageDesc" xml:space="preserve">
-    <value> - 30+ мов на вибір</value>
+    <value> - 30+ Ð¼Ð¾Ð² Ð½Ð° Ð²Ð¸Ð±Ñ–Ñ€</value>
   </data>
   <data name="FeatureChatCommands" xml:space="preserve">
-    <value>Інтерфейс команд чату</value>
+    <value>Ð†Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹Ñ ÐºÐ¾Ð¼Ð°Ð½Ð´ Ñ‡Ð°Ñ‚Ñƒ</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - Ізольований вид для чистого вигляду</value>
+    <value> - Ð†Ð·Ð¾Ð»ÑŒÐ¾Ð²Ð°Ð½Ð¸Ð¹ Ð²Ð¸Ð´ Ð´Ð»Ñ Ñ‡Ð¸ÑÑ‚Ð¾Ð³Ð¾ Ð²Ð¸Ð³Ð»ÑÐ´Ñƒ</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
-    <value>Накладення нових налаштувань</value>
+    <value>ÐÐ°ÐºÐ»Ð°Ð´ÐµÐ½Ð½Ñ Ð½Ð¾Ð²Ð¸Ñ… Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½ÑŒ</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
-    <value> - Чиста бічна панель для всіх налаштувань</value>
+    <value> - Ð§Ð¸ÑÑ‚Ð° Ð±Ñ–Ñ‡Ð½Ð° Ð¿Ð°Ð½ÐµÐ»ÑŒ Ð´Ð»Ñ Ð²ÑÑ–Ñ… Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½ÑŒ</value>
   </data>
   <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Видалено відстеження BattleMetrics</value>
+    <value>Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
-    <value>Вашу базу атакують!</value>
+    <value>Ð’Ð°ÑˆÑƒ Ð±Ð°Ð·Ñƒ Ð°Ñ‚Ð°ÐºÑƒÑŽÑ‚ÑŒ!</value>
   </data>
   <data name="PleaseConnectFirst" xml:space="preserve">
-    <value>Спочатку підключіться до сервера.</value>
+    <value>Ð¡Ð¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡Ñ–Ñ‚ÑŒÑÑ Ð´Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°.</value>
   </data>
   <data name="NotConnectedError" xml:space="preserve">
-    <value>Ви не підключені до жодного сервера.</value>
+    <value>Ð’Ð¸ Ð½Ðµ Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ñ– Ð´Ð¾ Ð¶Ð¾Ð´Ð½Ð¾Ð³Ð¾ ÑÐµÑ€Ð²ÐµÑ€Ð°.</value>
   </data>
   <data name="ChatNotAvailable" xml:space="preserve">
-    <value>Чат зараз недоступний.</value>
+    <value>Ð§Ð°Ñ‚ Ð·Ð°Ñ€Ð°Ð· Ð½ÐµÐ´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¹.</value>
   </data>
   <data name="PleaseSelectServerFirst" xml:space="preserve">
-    <value>Будь ласка, спочатку виберіть сервер.</value>
+    <value>Ð‘ÑƒÐ´ÑŒ Ð»Ð°ÑÐºÐ°, ÑÐ¿Ð¾Ñ‡Ð°Ñ‚ÐºÑƒ Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ ÑÐµÑ€Ð²ÐµÑ€.</value>
   </data>
   <data name="SnackbarTitleConnection" xml:space="preserve">
-    <value>Підключення</value>
+    <value>ÐŸÑ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ</value>
   </data>
   <data name="SnackbarTitleChat" xml:space="preserve">
-    <value>Чат</value>
+    <value>Ð§Ð°Ñ‚</value>
   </data>
   <data name="HowToTrackPlayersTitle" xml:space="preserve">
-    <value>Як відстежувати гравців</value>
+    <value>Ð¯Ðº Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ñ‚Ð¸ Ð³Ñ€Ð°Ð²Ñ†Ñ–Ð²</value>
   </data>
   <data name="NativeUDPTrackingSubtitle" xml:space="preserve">
-    <value>Нативне відстеження UDP</value>
+    <value>ÐÐ°Ñ‚Ð¸Ð²Ð½Ðµ Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ UDP</value>
   </data>
   <data name="TrackingGuideEnglishOnlyNotice" xml:space="preserve">
-    <value>Наразі посібник з відстеження доступний лише англійською мовою, оскільки найближчим часом він зазнає змін. Просимо вас набратися терпіння.</value>
+    <value>ÐÐ°Ñ€Ð°Ð·Ñ– Ð¿Ð¾ÑÑ–Ð±Ð½Ð¸Ðº Ð· Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÐµÐ½Ð½Ñ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ð¹ Ð»Ð¸ÑˆÐµ Ð°Ð½Ð³Ð»Ñ–Ð¹ÑÑŒÐºÐ¾ÑŽ Ð¼Ð¾Ð²Ð¾ÑŽ, Ð¾ÑÐºÑ–Ð»ÑŒÐºÐ¸ Ð½Ð°Ð¹Ð±Ð»Ð¸Ð¶Ñ‡Ð¸Ð¼ Ñ‡Ð°ÑÐ¾Ð¼ Ð²Ñ–Ð½ Ð·Ð°Ð·Ð½Ð°Ñ” Ð·Ð¼Ñ–Ð½. ÐŸÑ€Ð¾ÑÐ¸Ð¼Ð¾ Ð²Ð°Ñ Ð½Ð°Ð±Ñ€Ð°Ñ‚Ð¸ÑÑ Ñ‚ÐµÑ€Ð¿Ñ–Ð½Ð½Ñ.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>Закрийте це вікно в будь-який час - ви можете знову відкрити його за допомогою кнопки ❓ Як відстежувати.</value>
+    <value>Ð—Ð°ÐºÑ€Ð¸Ð¹Ñ‚Ðµ Ñ†Ðµ Ð²Ñ–ÐºÐ½Ð¾ Ð² Ð±ÑƒÐ´ÑŒ-ÑÐºÐ¸Ð¹ Ñ‡Ð°Ñ - Ð²Ð¸ Ð¼Ð¾Ð¶ÐµÑ‚Ðµ Ð·Ð½Ð¾Ð²Ñƒ Ð²Ñ–Ð´ÐºÑ€Ð¸Ñ‚Ð¸ Ð¹Ð¾Ð³Ð¾ Ð·Ð° Ð´Ð¾Ð¿Ð¾Ð¼Ð¾Ð³Ð¾ÑŽ ÐºÐ½Ð¾Ð¿ÐºÐ¸ â“ Ð¯Ðº Ð²Ñ–Ð´ÑÑ‚ÐµÐ¶ÑƒÐ²Ð°Ñ‚Ð¸.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
-    <value>Обслуговування</value>
+    <value>ÐžÐ±ÑÐ»ÑƒÐ³Ð¾Ð²ÑƒÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="MaintenanceDesc" xml:space="preserve">
-    <value>Витирайте, створюйте резервні копії або відновлюйте налаштування програми, профілі та користувацькі малюнки.</value>
+    <value>Ð’Ð¸Ñ‚Ð¸Ñ€Ð°Ð¹Ñ‚Ðµ, ÑÑ‚Ð²Ð¾Ñ€ÑŽÐ¹Ñ‚Ðµ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ñ– ÐºÐ¾Ð¿Ñ–Ñ— Ð°Ð±Ð¾ Ð²Ñ–Ð´Ð½Ð¾Ð²Ð»ÑŽÐ¹Ñ‚Ðµ Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸, Ð¿Ñ€Ð¾Ñ„Ñ–Ð»Ñ– Ñ‚Ð° ÐºÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ†ÑŒÐºÑ– Ð¼Ð°Ð»ÑŽÐ½ÐºÐ¸.</value>
   </data>
   <data name="ResetAppData" xml:space="preserve">
-    <value>Скинути дані програми...</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ Ð´Ð°Ð½Ñ– Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸...</value>
   </data>
   <data name="BackupData" xml:space="preserve">
-    <value>Резервне копіювання даних...</value>
+    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ Ð´Ð°Ð½Ð¸Ñ…...</value>
   </data>
   <data name="RestoreData" xml:space="preserve">
-    <value>Відновити дані...</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð´Ð°Ð½Ñ–...</value>
   </data>
   <data name="ResetDataTitle" xml:space="preserve">
-    <value>Скинути дані програми</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ Ð´Ð°Ð½Ñ– Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸</value>
   </data>
   <data name="ResetDataDesc" xml:space="preserve">
-    <value>Виберіть компоненти, які потрібно стерти з цього пристрою. Усі вибрані параметри буде безповоротно видалено.</value>
+    <value>Ð’Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ ÐºÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚Ð¸, ÑÐºÑ– Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±Ð½Ð¾ ÑÑ‚ÐµÑ€Ñ‚Ð¸ Ð· Ñ†ÑŒÐ¾Ð³Ð¾ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾ÑŽ. Ð£ÑÑ– Ð²Ð¸Ð±Ñ€Ð°Ð½Ñ– Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¸ Ð±ÑƒÐ´Ðµ Ð±ÐµÐ·Ð¿Ð¾Ð²Ð¾Ñ€Ð¾Ñ‚Ð½Ð¾ Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾.</value>
   </data>
   <data name="ResetOptionConnection" xml:space="preserve">
-    <value>Активне з'єднання з сервером (від'єднати)</value>
+    <value>ÐÐºÑ‚Ð¸Ð²Ð½Ðµ Ð·'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ Ð· ÑÐµÑ€Ð²ÐµÑ€Ð¾Ð¼ (Ð²Ñ–Ð´'Ñ”Ð´Ð½Ð°Ñ‚Ð¸)</value>
   </data>
   <data name="ResetOptionProfiles" xml:space="preserve">
-    <value>Збережені профілі серверів (видалення парних конфігурацій серверів)</value>
+    <value>Ð—Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ñ– Ð¿Ñ€Ð¾Ñ„Ñ–Ð»Ñ– ÑÐµÑ€Ð²ÐµÑ€Ñ–Ð² (Ð²Ð¸Ð´Ð°Ð»ÐµÐ½Ð½Ñ Ð¿Ð°Ñ€Ð½Ð¸Ñ… ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ð¹ ÑÐµÑ€Ð²ÐµÑ€Ñ–Ð²)</value>
   </data>
   <data name="ResetOptionSteam" xml:space="preserve">
-    <value>Облікові дані Steam-акаунта (Вийти)</value>
+    <value>ÐžÐ±Ð»Ñ–ÐºÐ¾Ð²Ñ– Ð´Ð°Ð½Ñ– Steam-Ð°ÐºÐ°ÑƒÐ½Ñ‚Ð° (Ð’Ð¸Ð¹Ñ‚Ð¸)</value>
   </data>
   <data name="ResetOptionPairing" xml:space="preserve">
-    <value>Конфігурація сполучення пристроїв (скидання токенів реєстрації)</value>
+    <value>ÐšÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ñ ÑÐ¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð² (ÑÐºÐ¸Ð´Ð°Ð½Ð½Ñ Ñ‚Ð¾ÐºÐµÐ½Ñ–Ð² Ñ€ÐµÑ”ÑÑ‚Ñ€Ð°Ñ†Ñ–Ñ—)</value>
   </data>
   <data name="ResetOptionCrosshairs" xml:space="preserve">
-    <value>Користувацькі перехрестя (конфігурації з витиранням)</value>
+    <value>ÐšÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ†ÑŒÐºÑ– Ð¿ÐµÑ€ÐµÑ…Ñ€ÐµÑÑ‚Ñ (ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ñ— Ð· Ð²Ð¸Ñ‚Ð¸Ñ€Ð°Ð½Ð½ÑÐ¼)</value>
   </data>
   <data name="ResetOptionCache" xml:space="preserve">
-    <value>Локальний кеш і креслення (Видалення збережених мап/ліній)</value>
+    <value>Ð›Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¸Ð¹ ÐºÐµÑˆ Ñ– ÐºÑ€ÐµÑÐ»ÐµÐ½Ð½Ñ (Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð½Ñ Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð¸Ñ… Ð¼Ð°Ð¿/Ð»Ñ–Ð½Ñ–Ð¹)</value>
   </data>
   <data name="ResetDataWarning" xml:space="preserve">
-    <value>Ця дія є остаточною і не може бути скасована.</value>
+    <value>Ð¦Ñ Ð´Ñ–Ñ Ñ” Ð¾ÑÑ‚Ð°Ñ‚Ð¾Ñ‡Ð½Ð¾ÑŽ Ñ– Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð±ÑƒÑ‚Ð¸ ÑÐºÐ°ÑÐ¾Ð²Ð°Ð½Ð°.</value>
   </data>
   <data name="ConfirmReset" xml:space="preserve">
-    <value>Підтвердити скидання</value>
+    <value>ÐŸÑ–Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚Ð¸ ÑÐºÐ¸Ð´Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="BackupPasswordTitle" xml:space="preserve">
-    <value>Резервний пароль</value>
+    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ</value>
   </data>
   <data name="BackupProtectionTitle" xml:space="preserve">
-    <value>Захист резервного копіювання</value>
+    <value>Ð—Ð°Ñ…Ð¸ÑÑ‚ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð³Ð¾ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="BackupProtectionDesc" xml:space="preserve">
-    <value>Введіть пароль для шифрування цього файлу резервної копії. Якщо ви залишите це поле порожнім, резервна копія не буде зашифрована.</value>
+    <value>Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð´Ð»Ñ ÑˆÐ¸Ñ„Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ Ñ†ÑŒÐ¾Ð³Ð¾ Ñ„Ð°Ð¹Ð»Ñƒ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ñ— ÐºÐ¾Ð¿Ñ–Ñ—. Ð¯ÐºÑ‰Ð¾ Ð²Ð¸ Ð·Ð°Ð»Ð¸ÑˆÐ¸Ñ‚Ðµ Ñ†Ðµ Ð¿Ð¾Ð»Ðµ Ð¿Ð¾Ñ€Ð¾Ð¶Ð½Ñ–Ð¼, Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð° ÐºÐ¾Ð¿Ñ–Ñ Ð½Ðµ Ð±ÑƒÐ´Ðµ Ð·Ð°ÑˆÐ¸Ñ„Ñ€Ð¾Ð²Ð°Ð½Ð°.</value>
   </data>
   <data name="RestoreBackupTitle" xml:space="preserve">
-    <value>Відновити резервну копію</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ñƒ ÐºÐ¾Ð¿Ñ–ÑŽ</value>
   </data>
   <data name="RestoreBackupDesc" xml:space="preserve">
-    <value>Ця резервна копія захищена паролем. Введіть пароль, щоб розшифрувати її:</value>
+    <value>Ð¦Ñ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð° ÐºÐ¾Ð¿Ñ–Ñ Ð·Ð°Ñ…Ð¸Ñ‰ÐµÐ½Ð° Ð¿Ð°Ñ€Ð¾Ð»ÐµÐ¼. Ð’Ð²ÐµÐ´Ñ–Ñ‚ÑŒ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ, Ñ‰Ð¾Ð± Ñ€Ð¾Ð·ÑˆÐ¸Ñ„Ñ€ÑƒÐ²Ð°Ñ‚Ð¸ Ñ—Ñ—:</value>
   </data>
   <data name="Encrypt" xml:space="preserve">
-    <value>Зашифрувати</value>
+    <value>Ð—Ð°ÑˆÐ¸Ñ„Ñ€ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="Decrypt" xml:space="preserve">
-    <value>Розшифрувати</value>
+    <value>Ð Ð¾Ð·ÑˆÐ¸Ñ„Ñ€ÑƒÐ²Ð°Ñ‚Ð¸</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>ГАРАЗД.</value>
+    <value>Ð“ÐÐ ÐÐ—Ð”.</value>
   </data>
   <data name="BackupApplicationDataTitle" xml:space="preserve">
-    <value>Резервне копіювання даних програми</value>
+    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ Ð´Ð°Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸</value>
   </data>
   <data name="BackupSuccessLog" xml:space="preserve">
-    <value>[SYSTEM] Резервну копію успішно створено за адресою: {0}</value>
+    <value>[SYSTEM] Ð ÐµÐ·ÐµÑ€Ð²Ð½Ñƒ ÐºÐ¾Ð¿Ñ–ÑŽ ÑƒÑÐ¿Ñ–ÑˆÐ½Ð¾ ÑÑ‚Ð²Ð¾Ñ€ÐµÐ½Ð¾ Ð·Ð° Ð°Ð´Ñ€ÐµÑÐ¾ÑŽ: {0}</value>
   </data>
   <data name="BackupSuccessMessage" xml:space="preserve">
-    <value>Резервну копію успішно створено!</value>
+    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ñƒ ÐºÐ¾Ð¿Ñ–ÑŽ ÑƒÑÐ¿Ñ–ÑˆÐ½Ð¾ ÑÑ‚Ð²Ð¾Ñ€ÐµÐ½Ð¾!</value>
   </data>
   <data name="BackupSuccessTitle" xml:space="preserve">
-    <value>Резервне копіювання завершено</value>
+    <value>Ð ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾</value>
   </data>
   <data name="BackupErrorLog" xml:space="preserve">
-    <value>[СИСТЕМА] Помилка резервного копіювання: {0}</value>
+    <value>[Ð¡Ð˜Ð¡Ð¢Ð•ÐœÐ] ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð³Ð¾ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ: {0}</value>
   </data>
   <data name="BackupErrorMessage" xml:space="preserve">
-    <value>Помилка створення резервної копії: {0}</value>
+    <value>ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° ÑÑ‚Ð²Ð¾Ñ€ÐµÐ½Ð½Ñ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ñ— ÐºÐ¾Ð¿Ñ–Ñ—: {0}</value>
   </data>
   <data name="BackupFailedTitle" xml:space="preserve">
-    <value>Не вдалося виконати резервне копіювання</value>
+    <value>ÐÐµ Ð²Ð´Ð°Ð»Ð¾ÑÑ Ð²Ð¸ÐºÐ¾Ð½Ð°Ñ‚Ð¸ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ðµ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="RestoreConfirmMessage" xml:space="preserve">
-    <value>Відновлення даних перезапише ваші поточні профілі серверів, користувацькі перехрестя, накладення малюнків і конфігурації мінімап.
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ Ð´Ð°Ð½Ð¸Ñ… Ð¿ÐµÑ€ÐµÐ·Ð°Ð¿Ð¸ÑˆÐµ Ð²Ð°ÑˆÑ– Ð¿Ð¾Ñ‚Ð¾Ñ‡Ð½Ñ– Ð¿Ñ€Ð¾Ñ„Ñ–Ð»Ñ– ÑÐµÑ€Ð²ÐµÑ€Ñ–Ð², ÐºÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ†ÑŒÐºÑ– Ð¿ÐµÑ€ÐµÑ…Ñ€ÐµÑÑ‚Ñ, Ð½Ð°ÐºÐ»Ð°Ð´ÐµÐ½Ð½Ñ Ð¼Ð°Ð»ÑŽÐ½ÐºÑ–Ð² Ñ– ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ñ— Ð¼Ñ–Ð½Ñ–Ð¼Ð°Ð¿.
 
-Ви впевнені, що хочете продовжити?</value>
+Ð’Ð¸ Ð²Ð¿ÐµÐ²Ð½ÐµÐ½Ñ–, Ñ‰Ð¾ Ñ…Ð¾Ñ‡ÐµÑ‚Ðµ Ð¿Ñ€Ð¾Ð´Ð¾Ð²Ð¶Ð¸Ñ‚Ð¸?</value>
   </data>
   <data name="RestoreConfirmTitle" xml:space="preserve">
-    <value>Відновити підтвердження резервного копіювання</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð¿Ñ–Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¶ÐµÐ½Ð½Ñ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð³Ð¾ ÐºÐ¾Ð¿Ñ–ÑŽÐ²Ð°Ð½Ð½Ñ</value>
   </data>
   <data name="RestoreApplicationDataTitle" xml:space="preserve">
-    <value>Відновлення даних програми</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ Ð´Ð°Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸</value>
   </data>
   <data name="RestoreSuccessMessage" xml:space="preserve">
-    <value>Дані програми успішно відновлено!</value>
+    <value>Ð”Ð°Ð½Ñ– Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¸ ÑƒÑÐ¿Ñ–ÑˆÐ½Ð¾ Ð²Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð¾!</value>
   </data>
   <data name="RestoreSuccessTitle" xml:space="preserve">
-    <value>Відновлення завершено</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾</value>
   </data>
   <data name="RestorePasswordErrorLog" xml:space="preserve">
-    <value>[СИСТЕМА] Помилка відновлення: Введено невірний пароль.</value>
+    <value>[Ð¡Ð˜Ð¡Ð¢Ð•ÐœÐ] ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ð²Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ: Ð’Ð²ÐµÐ´ÐµÐ½Ð¾ Ð½ÐµÐ²Ñ–Ñ€Ð½Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ.</value>
   </data>
   <data name="RestorePasswordErrorMessage" xml:space="preserve">
-    <value>Не вдалося розшифрувати. Неправильний пароль або пошкоджений файл резервної копії.</value>
+    <value>ÐÐµ Ð²Ð´Ð°Ð»Ð¾ÑÑ Ñ€Ð¾Ð·ÑˆÐ¸Ñ„Ñ€ÑƒÐ²Ð°Ñ‚Ð¸. ÐÐµÐ¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð°Ð±Ð¾ Ð¿Ð¾ÑˆÐºÐ¾Ð´Ð¶ÐµÐ½Ð¸Ð¹ Ñ„Ð°Ð¹Ð» Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ñ— ÐºÐ¾Ð¿Ñ–Ñ—.</value>
   </data>
   <data name="RestoreFailedTitle" xml:space="preserve">
-    <value>Відновити не вдалося</value>
+    <value>Ð’Ñ–Ð´Ð½Ð¾Ð²Ð¸Ñ‚Ð¸ Ð½Ðµ Ð²Ð´Ð°Ð»Ð¾ÑÑ</value>
   </data>
   <data name="RestoreErrorLog" xml:space="preserve">
-    <value>[СИСТЕМА] Помилка відновлення: {0}</value>
+    <value>[Ð¡Ð˜Ð¡Ð¢Ð•ÐœÐ] ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ð²Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ: {0}</value>
   </data>
   <data name="RestoreErrorMessage" xml:space="preserve">
-    <value>Помилка відновлення резервної копії: {0}</value>
+    <value>ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ° Ð²Ñ–Ð´Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ñ— ÐºÐ¾Ð¿Ñ–Ñ—: {0}</value>
   </data>
   <data name="InvalidBackupFormat" xml:space="preserve">
-    <value>Неправильний формат файлу резервної копії або відсутній підпис.</value>
+    <value>ÐÐµÐ¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¸Ð¹ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚ Ñ„Ð°Ð¹Ð»Ñƒ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ñ— ÐºÐ¾Ð¿Ñ–Ñ— Ð°Ð±Ð¾ Ð²Ñ–Ð´ÑÑƒÑ‚Ð½Ñ–Ð¹ Ð¿Ñ–Ð´Ð¿Ð¸Ñ.</value>
   </data>
   <data name="WipeLogStart" xml:space="preserve">
-    <value>[WIPE] Починаю операцію вибіркового скидання...</value>
+    <value>[WIPE] ÐŸÐ¾Ñ‡Ð¸Ð½Ð°ÑŽ Ð¾Ð¿ÐµÑ€Ð°Ñ†Ñ–ÑŽ Ð²Ð¸Ð±Ñ–Ñ€ÐºÐ¾Ð²Ð¾Ð³Ð¾ ÑÐºÐ¸Ð´Ð°Ð½Ð½Ñ...</value>
   </data>
   <data name="WipeLogConnStart" xml:space="preserve">
-    <value>[WIPE] Вимкнення активного з'єднання з сервером.</value>
+    <value>[WIPE] Ð’Ð¸Ð¼ÐºÐ½ÐµÐ½Ð½Ñ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾Ð³Ð¾ Ð·'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ Ð· ÑÐµÑ€Ð²ÐµÑ€Ð¾Ð¼.</value>
   </data>
   <data name="WipeLogConnEnd" xml:space="preserve">
-    <value>[Скидання з'єднання завершено.</value>
+    <value>[Ð¡ÐºÐ¸Ð´Ð°Ð½Ð½Ñ Ð·'Ñ”Ð´Ð½Ð°Ð½Ð½Ñ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾.</value>
   </data>
   <data name="WipeLogProfilesStart" xml:space="preserve">
-    <value>[WIPE] Очищення збережених профілів сервера...</value>
+    <value>[WIPE] ÐžÑ‡Ð¸Ñ‰ÐµÐ½Ð½Ñ Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð¸Ñ… Ð¿Ñ€Ð¾Ñ„Ñ–Ð»Ñ–Ð² ÑÐµÑ€Ð²ÐµÑ€Ð°...</value>
   </data>
   <data name="WipeLogProfilesEnd" xml:space="preserve">
-    <value>[WIPE] Очищено збережені профілі серверів.</value>
+    <value>[WIPE] ÐžÑ‡Ð¸Ñ‰ÐµÐ½Ð¾ Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ñ– Ð¿Ñ€Ð¾Ñ„Ñ–Ð»Ñ– ÑÐµÑ€Ð²ÐµÑ€Ñ–Ð².</value>
   </data>
   <data name="WipeLogSteamStart" xml:space="preserve">
-    <value>[ВИДАЛИТИ] Видалення облікових даних до акаунта Steam...</value>
+    <value>[Ð’Ð˜Ð”ÐÐ›Ð˜Ð¢Ð˜] Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð½Ñ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ñ… Ð´Ð°Ð½Ð¸Ñ… Ð´Ð¾ Ð°ÐºÐ°ÑƒÐ½Ñ‚Ð° Steam...</value>
   </data>
   <data name="WipeLogSteamEnd" xml:space="preserve">
-    <value>[Очищено облікові дані Steam.</value>
+    <value>[ÐžÑ‡Ð¸Ñ‰ÐµÐ½Ð¾ Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ñ– Ð´Ð°Ð½Ñ– Steam.</value>
   </data>
   <data name="WipeLogPairingStart" xml:space="preserve">
-    <value>[WIPE] Конфігурація сполучення пристроїв для витирання...</value>
+    <value>[WIPE] ÐšÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ñ ÑÐ¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð² Ð´Ð»Ñ Ð²Ð¸Ñ‚Ð¸Ñ€Ð°Ð½Ð½Ñ...</value>
   </data>
   <data name="WipeLogPairingEnd" xml:space="preserve">
-    <value>[Видалено конфігурацію сполучення пристроїв.</value>
+    <value>[Ð’Ð¸Ð´Ð°Ð»ÐµÐ½Ð¾ ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–ÑŽ ÑÐ¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð½Ñ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾Ñ—Ð².</value>
   </data>
   <data name="WipeLogCrosshairsStart" xml:space="preserve">
-    <value>[WIPE] Витирання спеціального перехрестя...</value>
+    <value>[WIPE] Ð’Ð¸Ñ‚Ð¸Ñ€Ð°Ð½Ð½Ñ ÑÐ¿ÐµÑ†Ñ–Ð°Ð»ÑŒÐ½Ð¾Ð³Ð¾ Ð¿ÐµÑ€ÐµÑ…Ñ€ÐµÑÑ‚Ñ...</value>
   </data>
   <data name="WipeLogCrosshairsError" xml:space="preserve">
-    <value>[ВИПРАВЛЕННЯ] Виправлено помилки у користувацькому перехресті: {0}</value>
+    <value>[Ð’Ð˜ÐŸÐ ÐÐ’Ð›Ð•ÐÐÐ¯] Ð’Ð¸Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¾ Ð¿Ð¾Ð¼Ð¸Ð»ÐºÐ¸ Ñƒ ÐºÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ†ÑŒÐºÐ¾Ð¼Ñƒ Ð¿ÐµÑ€ÐµÑ…Ñ€ÐµÑÑ‚Ñ–: {0}</value>
   </data>
   <data name="WipeLogCrosshairsEnd" xml:space="preserve">
-    <value>[Спеціальне перехрестя очищено.</value>
+    <value>[Ð¡Ð¿ÐµÑ†Ñ–Ð°Ð»ÑŒÐ½Ðµ Ð¿ÐµÑ€ÐµÑ…Ñ€ÐµÑÑ‚Ñ Ð¾Ñ‡Ð¸Ñ‰ÐµÐ½Ð¾.</value>
   </data>
   <data name="WipeLogCacheStart" xml:space="preserve">
-    <value>[WIPE] Очищення файлів локального кешу та креслень накладення...</value>
+    <value>[WIPE] ÐžÑ‡Ð¸Ñ‰ÐµÐ½Ð½Ñ Ñ„Ð°Ð¹Ð»Ñ–Ð² Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¾Ð³Ð¾ ÐºÐµÑˆÑƒ Ñ‚Ð° ÐºÑ€ÐµÑÐ»ÐµÐ½ÑŒ Ð½Ð°ÐºÐ»Ð°Ð´ÐµÐ½Ð½Ñ...</value>
   </data>
   <data name="WipeLogCacheError" xml:space="preserve">
-    <value>[WIPE] Теку для очищення кешу від помилок: {0}</value>
+    <value>[WIPE] Ð¢ÐµÐºÑƒ Ð´Ð»Ñ Ð¾Ñ‡Ð¸Ñ‰ÐµÐ½Ð½Ñ ÐºÐµÑˆÑƒ Ð²Ñ–Ð´ Ð¿Ð¾Ð¼Ð¸Ð»Ð¾Ðº: {0}</value>
   </data>
   <data name="WipeLogCacheEnd" xml:space="preserve">
-    <value>[Очищено теки кешу.</value>
+    <value>[ÐžÑ‡Ð¸Ñ‰ÐµÐ½Ð¾ Ñ‚ÐµÐºÐ¸ ÐºÐµÑˆÑƒ.</value>
   </data>
   <data name="WipeLogPairingRestart" xml:space="preserve">
-    <value>[WIPE] Перереєстрація слухачів та облікових даних FCM...</value>
+    <value>[WIPE] ÐŸÐµÑ€ÐµÑ€ÐµÑ”ÑÑ‚Ñ€Ð°Ñ†Ñ–Ñ ÑÐ»ÑƒÑ…Ð°Ñ‡Ñ–Ð² Ñ‚Ð° Ð¾Ð±Ð»Ñ–ÐºÐ¾Ð²Ð¸Ñ… Ð´Ð°Ð½Ð¸Ñ… FCM...</value>
   </data>
   <data name="WipeLogComplete" xml:space="preserve">
-    <value>[WIPE] Операцію вибіркового скидання успішно завершено.</value>
+    <value>[WIPE] ÐžÐ¿ÐµÑ€Ð°Ñ†Ñ–ÑŽ Ð²Ð¸Ð±Ñ–Ñ€ÐºÐ¾Ð²Ð¾Ð³Ð¾ ÑÐºÐ¸Ð´Ð°Ð½Ð½Ñ ÑƒÑÐ¿Ñ–ÑˆÐ½Ð¾ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
-    <value>Видалити маркери смерті</value>
+  <data name="DeleteDeathMarker" xml:space="preserve">
+    <value>Ð’Ð¸Ð´Ð°Ð»Ð¸Ñ‚Ð¸ Ð¼Ð°Ñ€ÐºÐµÑ€Ð¸ ÑÐ¼ÐµÑ€Ñ‚Ñ–</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
-    <value>Очистити все</value>
+  <data name="WipeDeathMarkers" xml:space="preserve">
+    <value>ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚Ð¸ Ð²ÑÐµ</value>
   </data>
-<data name="Accept" xml:space="preserve">
-    <value>Прийняти</value>
+  <data name="Accept" xml:space="preserve">
+    <value>ÐŸÑ€Ð¸Ð¹Ð½ÑÑ‚Ð¸</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
-    <value>Перейменувати маркер смерті</value>
+  <data name="RenameDeathMarker" xml:space="preserve">
+    <value>ÐŸÐµÑ€ÐµÐ¹Ð¼ÐµÐ½ÑƒÐ²Ð°Ñ‚Ð¸ Ð¼Ð°Ñ€ÐºÐµÑ€ ÑÐ¼ÐµÑ€Ñ‚Ñ–</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
-  <value>Напрямок</value>
+  <data name="PlayerDirectionArrow" xml:space="preserve">
+  <value>ÐÐ°Ð¿Ñ€ÑÐ¼Ð¾Ðº</value>
 </data>
-<data name="Profile" xml:space="preserve">
-    <value>Профіль</value>
+  <data name="Profile" xml:space="preserve">
+    <value>ÐŸÑ€Ð¾Ñ„Ñ–Ð»ÑŒ</value>
   </data>
-<data name="Death" xml:space="preserve">
-    <value>Смерть</value>
+  <data name="Death" xml:space="preserve">
+    <value>Ð¡Ð¼ÐµÑ€Ñ‚ÑŒ</value>
   </data>
-<data name="Markers" xml:space="preserve">
-    <value>Маркери:</value>
+  <data name="Markers" xml:space="preserve">
+    <value>ÐœÐ°Ñ€ÐºÐµÑ€Ð¸:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
-    <value>ви</value>
+    <value>Ð²Ð¸</value>
   </data>
   <data name="StateOn" xml:space="preserve">
-    <value>УВІМКНЕНО</value>
+    <value>Ð£Ð’Ð†ÐœÐšÐÐ•ÐÐž</value>
   </data>
   <data name="StateOff" xml:space="preserve">
-    <value>ВИМКНЕНО</value>
+    <value>Ð’Ð˜ÐœÐšÐÐ•ÐÐž</value>
   </data>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
-    <value>[Hotkey] {0}: перемкнено в {1} (запущено {2})</value>
+    <value>[Hotkey] {0}: Ð¿ÐµÑ€ÐµÐ¼ÐºÐ½ÐµÐ½Ð¾ Ð² {1} (Ð·Ð°Ð¿ÑƒÑ‰ÐµÐ½Ð¾ {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>Знайдіть і виберіть піктограму предмета для цього пристрою.</value>
+    <value>Ð—Ð½Ð°Ð¹Ð´Ñ–Ñ‚ÑŒ Ñ– Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼Ñƒ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚Ð° Ð´Ð»Ñ Ñ†ÑŒÐ¾Ð³Ð¾ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾ÑŽ.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
-    <value>Змінити піктограму пристрою</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼Ñƒ Ð¿Ñ€Ð¸ÑÑ‚Ñ€Ð¾ÑŽ</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>Знайдіть і виберіть піктограму предмета для цього правила.</value>
+    <value>Ð—Ð½Ð°Ð¹Ð´Ñ–Ñ‚ÑŒ Ñ– Ð²Ð¸Ð±ÐµÑ€Ñ–Ñ‚ÑŒ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼Ñƒ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚Ð° Ð´Ð»Ñ Ñ†ÑŒÐ¾Ð³Ð¾ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
-    <value>Змінити піктограму правила</value>
+    <value>Ð—Ð¼Ñ–Ð½Ð¸Ñ‚Ð¸ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼Ñƒ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°</value>
   </data>
   <data name="ResetToDefaultIcon" xml:space="preserve">
-    <value>Скинути до піктограми за замовчуванням</value>
+    <value>Ð¡ÐºÐ¸Ð½ÑƒÑ‚Ð¸ Ð´Ð¾ Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼Ð¸ Ð·Ð° Ð·Ð°Ð¼Ð¾Ð²Ñ‡ÑƒÐ²Ð°Ð½Ð½ÑÐ¼</value>
   </data>
   <data name="Rule" xml:space="preserve">
-    <value>Правило</value>
+    <value>ÐŸÑ€Ð°Ð²Ð¸Ð»Ð¾</value>
   </data>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
-    <value>Пошук піктограм (наприклад, турель, перемикач)...</value>
+    <value>ÐŸÐ¾ÑˆÑƒÐº Ð¿Ñ–ÐºÑ‚Ð¾Ð³Ñ€Ð°Ð¼ (Ð½Ð°Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´, Ñ‚ÑƒÑ€ÐµÐ»ÑŒ, Ð¿ÐµÑ€ÐµÐ¼Ð¸ÐºÐ°Ñ‡)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
-    <value>{0} днів</value>
+    <value>{0} Ð´Ð½Ñ–Ð²</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
+  </data>
+  <data name="Delete3DMapData" xml:space="preserve">
+    <value>Delete all 3D Map Data</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
   </data>
 </root>
-
-
-

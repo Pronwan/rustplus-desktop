@@ -678,7 +678,11 @@ public partial class MainWindow
             WipeDeathMarkersOverlay.Visibility = _showDeathMarkers && hasMarkers ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        if (!_showDeathMarkers || _vm?.Selected == null) return;
+        if (!_showDeathMarkers || _vm?.Selected == null) 
+        {
+            SyncLiveMarkersTo3DMap();
+            return;
+        }
         var groups = _vm.Selected.DeathMarkers.GroupBy(m => m.SteamId);
         foreach (var group in groups)
         {
@@ -703,6 +707,8 @@ public partial class MainWindow
                 Canvas.SetTop(el, cy);
             }
         }
+
+        SyncLiveMarkersTo3DMap();
     }
 
     private void RenameDeathMarker_Click(object sender, RoutedEventArgs e)

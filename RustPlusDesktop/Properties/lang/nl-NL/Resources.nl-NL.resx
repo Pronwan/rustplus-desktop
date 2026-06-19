@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -145,7 +145,7 @@
     <value>Toestemming uploaden</value>
   </data>
   <data name="UploadConsentText" xml:space="preserve">
-    <value>Door op 'Accepteren' te klikken, worden de slimme apparaten (en mogelijk ook de kaarttekeningen) voor deze server geüpload naar de server van de maker. Hierdoor kunnen teamgenoten ze downloaden en synchroniseren. Alleen je Steam ID wordt verzonden om teamgenoten te identificeren. Alleen spelers die geautoriseerd zijn bij de Gereedschapskast kunnen de apparaten bedienen.
+    <value>Door op 'Accepteren' te klikken, worden de slimme apparaten (en mogelijk ook de kaarttekeningen) voor deze server geÃ¼pload naar de server van de maker. Hierdoor kunnen teamgenoten ze downloaden en synchroniseren. Alleen je Steam ID wordt verzonden om teamgenoten te identificeren. Alleen spelers die geautoriseerd zijn bij de Gereedschapskast kunnen de apparaten bedienen.
 
 Opmerking: Deze transmissiemethode wordt in de toekomst geoptimaliseerd. Als teamgenoten de gegevens niet kunnen downloaden, probeer dan je maptekeningen te wissen en opnieuw te uploaden.</value>
   </data>
@@ -198,13 +198,13 @@ Opmerking: Deze transmissiemethode wordt in de toekomst geoptimaliseerd. Als tea
     <value>Reset + Luister met rand</value>
   </data>
   <data name="RelinkBattlemetrics" xml:space="preserve">
-    <value>Battlemetrics ID… hersturenchar@@0</value>
+    <value>Battlemetrics IDâ€¦ hersturenchar@@0</value>
   </data>
   <data name="DeleteServer" xml:space="preserve">
-    <value>Server verwijderen…</value>
+    <value>Server verwijderenâ€¦</value>
   </data>
   <data name="PleaseWait" xml:space="preserve">
-    <value>Bitte warten …</value>
+    <value>Bitte warten â€¦</value>
   </data>
   <data name="ToggleServerArea" xml:space="preserve">
     <value>Schakel servergebied aan/uit</value>
@@ -333,7 +333,7 @@ Opmerking: Deze transmissiemethode wordt in de toekomst geoptimaliseerd. Als tea
     <value>Volg {0}</value>
   </data>
   <data name="PairingListening" xml:space="preserve">
-    <value>Koppeling: luisteren…</value>
+    <value>Koppeling: luisterenâ€¦</value>
   </data>
   <data name="PairingStopped" xml:space="preserve">
     <value>Koppelen: gestopt</value>
@@ -419,10 +419,10 @@ Download en installeer nu?</value>
     <value>Meer opties</value>
   </data>
   <data name="RelinkBattlemetricsId" xml:space="preserve">
-    <value>Battlemetrics ID… hersturenchar@@0</value>
+    <value>Battlemetrics IDâ€¦ hersturenchar@@0</value>
   </data>
   <data name="DeleteServerEllipsis" xml:space="preserve">
-    <value>Server verwijderen…</value>
+    <value>Server verwijderenâ€¦</value>
   </data>
   <data name="RightClickRename" xml:space="preserve">
     <value>Rechtsklik om te hernoemen</value>
@@ -728,7 +728,7 @@ Download en installeer nu?</value>
     <value>Profit Trades</value>
   </data>
   <data name="ArbitrageOpportunities" xml:space="preserve">
-    <value>Rechtstreekse arbitragemogelijkheden kopen laag → sell hoog.</value>
+    <value>Rechtstreekse arbitragemogelijkheden kopen laag â†’ sell hoog.</value>
   </data>
   <data name="BuyXForY" xml:space="preserve">
     <value>Koop X voor Y</value>
@@ -1079,7 +1079,7 @@ Download en installeer nu?</value>
     <value>Opslaan</value>
   </data>
   <data name="AssignGlobalHotkeys" xml:space="preserve">
-    <value>Wijs globale sneltoetsen toe aan Smart Switches. Meerdere apparaten kunnen één sneltoets delen (schakelt sequentieel aan).</value>
+    <value>Wijs globale sneltoetsen toe aan Smart Switches. Meerdere apparaten kunnen Ã©Ã©n sneltoets delen (schakelt sequentieel aan).</value>
   </data>
   <data name="Device" xml:space="preserve">
     <value>Apparaat</value>
@@ -1568,7 +1568,7 @@ Download en installeer nu?</value>
     <value>Chatopdrachten UI</value>
   </data>
   <data name="FeatureChatCommandsDesc" xml:space="preserve">
-    <value> - Geïsoleerde weergave voor een strakke look</value>
+    <value> - GeÃ¯soleerde weergave voor een strakke look</value>
   </data>
   <data name="FeatureSettings" xml:space="preserve">
     <value>Nieuwe instellingen overlay</value>
@@ -1610,7 +1610,7 @@ Download en installeer nu?</value>
     <value>De tracking guide is momenteel alleen beschikbaar in het Engels, omdat deze in de nabije toekomst wijzigingen zal ondergaan. We vragen om uw geduld.</value>
   </data>
   <data name="HowToTrackCloseHint" xml:space="preserve">
-    <value>Sluit dit venster op elk gewenst moment - u kunt het opnieuw openen met de ❓ Hoe te volgen knop.</value>
+    <value>Sluit dit venster op elk gewenst moment - u kunt het opnieuw openen met de â“ Hoe te volgen knop.</value>
   </data>
   <data name="MaintenanceTitle" xml:space="preserve">
     <value>Onderhoud</value>
@@ -1788,28 +1788,28 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Selectieve resetoperatie succesvol voltooid.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Richting</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1845,11 +1845,31 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Pictogrammen zoeken (bijv. geschutskoepel, schakelaar)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dagen</value>
   </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Deletes all parsed local map geometries used by the 3D Map Viewer.</value>
+  </data>
+  <data name="Delete3DMapData" xml:space="preserve">
+    <value>Delete all 3D Map Data</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>We now automatically read your local .map files (safely, as read-only) to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
 </root>
-
-
-
