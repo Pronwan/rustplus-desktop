@@ -1411,6 +1411,11 @@ public partial class MainWindow : WpfUi.FluentWindow
     private static readonly SemaphoreSlim sDownloadSemaphore = new SemaphoreSlim(10, 10);
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
+    private static readonly string s_cacheDir = System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "RustPlusDesk", "cache");
+    private static readonly string s_cachePath = System.IO.Path.Combine(s_cacheDir, "rust-item-list.json");
+    private static readonly string s_metaPath = System.IO.Path.Combine(s_cacheDir, "rust-item-list.meta");
 
     private static void EnsureNewItemDbLoaded(bool force = false)
     {
@@ -1430,6 +1435,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var diskCandidates = new[]
         {
         System.IO.Path.Combine(baseDir, "rust-item-list.json"),
+        s_cachePath,
         System.IO.Path.Combine(currDir, "rust-item-list.json"),
         entryDir is null ? null : System.IO.Path.Combine(entryDir, "rust-item-list.json"),
         // hÃ¤ufige Ordner:
@@ -1865,34 +1871,101 @@ public partial class MainWindow : WpfUi.FluentWindow
         return g;
     }
 
+    private static bool ShouldCheckForUpdate()
+    {
+        try
+        {
+            if (!System.IO.File.Exists(s_cachePath)) return true;
+            if (!System.IO.File.Exists(s_metaPath)) return true;
+
+            var lines = System.IO.File.ReadAllLines(s_metaPath);
+            if (lines.Length < 2) return true;
+
+            if (long.TryParse(lines[1], out var lastCheckTicks))
+            {
+                var lastCheck = new DateTime(lastCheckTicks, DateTimeKind.Utc);
+                return (DateTime.UtcNow - lastCheck).TotalHours >= 1;
+            }
+        }
+        catch { }
+        return true;
+    }
+
+    private static string? ReadMetaLastModified()
+    {
+        try
+        {
+            if (System.IO.File.Exists(s_metaPath))
+            {
+                var lines = System.IO.File.ReadAllLines(s_metaPath);
+                return lines.Length > 0 ? lines[0].Trim() : null;
+            }
+        }
+        catch { }
+        return null;
+    }
+
+    private static void WriteMeta(string? lastModified)
+    {
+        try
+        {
+            string? dir = System.IO.Path.GetDirectoryName(s_metaPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.WriteAllLines(s_metaPath, new[] {
+                lastModified ?? "",
+                DateTime.UtcNow.Ticks.ToString()
+            });
+        }
+        catch { }
+    }
+
     private static async Task<bool> TryUpdateItemDbAsync()
     {
         const string url = "https://rusthelp.com/downloads/admin-item-list-public.json";
         try
         {
+            if (!ShouldCheckForUpdate())
+                return false;
+
             using var client = new HttpClient();
             client.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
             client.Timeout = TimeSpan.FromSeconds(15);
-            
+
+            var cachedLastModified = ReadMetaLastModified();
+            if (!string.IsNullOrEmpty(cachedLastModified))
+                client.DefaultRequestHeaders.IfModifiedSince = DateTimeOffset.Parse(cachedLastModified);
+
             var response = await client.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotModified)
+            {
+                WriteMeta(cachedLastModified);
+                return false;
+            }
+
             if (!response.IsSuccessStatusCode) return false;
 
             var json = await response.Content.ReadAsStringAsync();
             if (string.IsNullOrWhiteSpace(json) || !json.Trim().StartsWith("[")) return false;
 
-            // Grobe Validierung: ist es ein JSON Array mit Items?
             if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
 
-            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die hÃ¶chste PrioritÃ¤t beim Laden hat
+            string? newLastModified = response.Content.Headers.LastModified?.ToString("R");
+
+            string? cacheDir = System.IO.Path.GetDirectoryName(s_cachePath);
+            if (!string.IsNullOrEmpty(cacheDir) && !System.IO.Directory.Exists(cacheDir))
+                System.IO.Directory.CreateDirectory(cacheDir);
+            await System.IO.File.WriteAllTextAsync(s_cachePath, json);
+            WriteMeta(newLastModified);
+
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
-
-            // Sicherstellen, dass Ordner existiert
             string? dir = System.IO.Path.GetDirectoryName(targetPath);
             if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
                 System.IO.Directory.CreateDirectory(dir);
-
             await System.IO.File.WriteAllTextAsync(targetPath, json);
+
             return true;
         }
         catch { return false; }

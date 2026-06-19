@@ -290,6 +290,30 @@ namespace RustPlusDesk.Views
                 }
             }
 
+            if (!loaded)
+            {
+                string entryName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? "RustPlusDesk";
+                var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                var resName = $"{entryName}.Assets.Data.recycler-items.json";
+                LogDiag($"[RecyclerOverlay] Checking embedded resource: {resName}");
+                try
+                {
+                    using var stream = asm.GetManifestResourceStream(resName);
+                    if (stream != null)
+                    {
+                        using var r = new StreamReader(stream);
+                        jsonContent = r.ReadToEnd();
+                        loaded = true;
+                        sourcePath = resName;
+                        LogDiag($"[RecyclerOverlay] Loaded database from embedded resource: {resName}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogDiag($"[RecyclerOverlay] Embedded resource failed: {ex.Message}");
+                }
+            }
+
             if (loaded && !string.IsNullOrEmpty(jsonContent))
             {
                 try
