@@ -29,7 +29,6 @@ namespace RustPlusDesk.Views
                 InputsControl.ItemsSource = Items;
                 OutputsControl.ItemsSource = Outputs;
 
-                InitializeOutputs();
                 LoadItems();
 
                 Loaded += RecyclerOverlay_Loaded;
@@ -59,24 +58,41 @@ namespace RustPlusDesk.Views
             LogDiag($"[RecyclerOverlay] Items collection Count = {Items.Count}, Outputs collection Count = {Outputs.Count}");
         }
 
-        private void InitializeOutputs()
+        // Pretty display names for output resources
+        private static readonly Dictionary<string, string> _knownOutputNames = new()
         {
-            var outputsList = new List<RecyclerOutputViewModel>
-            {
-                new() { ShortName = "scrap", DisplayName = "Scrap", Icon = MainWindow.ResolveItemIcon(0, "scrap", 24) },
-                new() { ShortName = "metal.refined", DisplayName = "High Quality Metal", Icon = MainWindow.ResolveItemIcon(0, "metal.refined", 24) },
-                new() { ShortName = "metal.fragments", DisplayName = "Metal Fragments", Icon = MainWindow.ResolveItemIcon(0, "metal.fragments", 24) },
-                new() { ShortName = "cloth", DisplayName = "Cloth", Icon = MainWindow.ResolveItemIcon(0, "cloth", 24) },
-                new() { ShortName = "rope", DisplayName = "Rope", Icon = MainWindow.ResolveItemIcon(0, "rope", 24) },
-                new() { ShortName = "techparts", DisplayName = "Tech Parts", Icon = MainWindow.ResolveItemIcon(0, "techparts", 24) }
-            };
-
-            Outputs.Clear();
-            foreach (var outVm in outputsList)
-            {
-                Outputs.Add(outVm);
-            }
-        }
+            ["scrap"]             = "Scrap",
+            ["metal.refined"]     = "High Quality Metal",
+            ["metal.fragments"]   = "Metal Fragments",
+            ["cloth"]             = "Cloth",
+            ["rope"]              = "Rope",
+            ["techparts"]         = "Tech Parts",
+            ["wood"]              = "Wood",
+            ["stones"]            = "Stones",
+            ["sulfur"]            = "Sulfur",
+            ["gunpowder"]         = "Gunpowder",
+            ["leather"]           = "Leather",
+            ["fat.animal"]        = "Animal Fat",
+            ["lowgradefuel"]      = "Low Grade Fuel",
+            ["bone.fragments"]    = "Bone Fragments",
+            ["charcoal"]          = "Charcoal",
+            ["crude.oil"]         = "Crude Oil",
+            ["riflebody"]         = "Rifle Body",
+            ["semibody"]          = "Semi Body",
+            ["smgbody"]           = "SMG Body",
+            ["metalpipe"]         = "Metal Pipe",
+            ["metalspring"]       = "Metal Spring",
+            ["gears"]             = "Gears",
+            ["metalblade"]        = "Metal Blade",
+            ["roadsigns"]         = "Road Signs",
+            ["sheetmetal"]        = "Sheet Metal",
+            ["sewingkit"]         = "Sewing Kit",
+            ["tarp"]              = "Tarp",
+            ["propanetank"]       = "Propane Tank",
+            ["cctv.camera"]       = "CCTV Camera",
+            ["targeting.computer"]= "Targeting Computer",
+            ["fuse"]              = "Fuse",
+        };
 
         private void LogDiag(string message)
         {
@@ -245,15 +261,17 @@ namespace RustPlusDesk.Views
                         {
                             if (item.canBeRecycled)
                             {
-                                var vm = new RecyclerItemViewModel
-                                {
-                                    Id = item.id,
-                                    ShortName = item.shortName,
-                                    DisplayName = MainWindow.ResolveItemName(0, item.shortName),
-                                    StackSize = item.stackSize,
-                                    Data = item,
-                                    Icon = MainWindow.ResolveItemIcon(0, item.shortName, 40)
-                                };
+                                 var vm = new RecyclerItemViewModel
+                                 {
+                                     Id = item.id,
+                                     ShortName = item.shortName,
+                                     DisplayName = !string.IsNullOrEmpty(item.displayName)
+                                                   ? item.displayName
+                                                   : MainWindow.ResolveItemName(0, item.shortName),
+                                     StackSize = item.stackSize > 0 ? item.stackSize : 1,
+                                     Data = item,
+                                     Icon = MainWindow.ResolveItemIcon(0, item.shortName, 40)
+                                 };
                                 vm.QuantityChanged += (s, e) => CalculateYields();
                                 list.Add(vm);
                             }
@@ -296,68 +314,95 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private string MapResourceShortName(string rawId)
-        {
-            if (rawId == "metal-refined") return "metal.refined";
-            if (rawId == "metal-fragments") return "metal.fragments";
-            return rawId;
-        }
-
         private void CalculateYields()
         {
-            var wildYields = new Dictionary<string, double>();
-            var safeYields = new Dictionary<string, double>();
-
-            foreach (var output in Outputs)
-            {
-                wildYields[output.ShortName] = 0.0;
-                safeYields[output.ShortName] = 0.0;
-            }
+            // Accumulate all yields dynamically across every active item
+            var wildYields = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+            var safeYields = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var item in _allRecyclerItems)
             {
                 if (item.Quantity <= 0) continue;
 
-                if (item.Data?.recycleInfo != null)
+                if (item.Data?.recycleInfo == null) continue;
+
+                foreach (var rec in item.Data.recycleInfo)
                 {
-                    foreach (var rec in item.Data.recycleInfo)
+                    var isWild = rec.recyclerId == "recycler-radtown";
+                    var isSafe = rec.recyclerId == "recycler-safezone";
+                    if (!isWild && !isSafe) continue;
+
+                    void Accumulate(Dictionary<string, double> dict, string shortName, double amount)
                     {
-                        var targetDict = rec.recyclerId == "recycler-radtown" ? wildYields : 
-                                         rec.recyclerId == "recycler-safezone" ? safeYields : null;
+                        if (!dict.ContainsKey(shortName)) dict[shortName] = 0.0;
+                        dict[shortName] += amount;
+                    }
 
-                        if (targetDict == null) continue;
-
-                        if (rec.guaranteedOutput != null)
+                    if (rec.guaranteedOutput != null)
+                    {
+                        foreach (var outItem in rec.guaranteedOutput)
                         {
-                            foreach (var outItem in rec.guaranteedOutput)
-                            {
-                                string shortName = MapResourceShortName(outItem.itemId);
-                                if (targetDict.ContainsKey(shortName))
-                                {
-                                    targetDict[shortName] += item.Quantity * outItem.amount;
-                                }
-                            }
+                            if (string.IsNullOrEmpty(outItem.itemId)) continue;
+                            double val = item.Quantity * outItem.amount;
+                            if (isWild) Accumulate(wildYields, outItem.itemId, val);
+                            else        Accumulate(safeYields, outItem.itemId, val);
                         }
+                    }
 
-                        if (rec.percentageBasedOutput != null)
+                    if (rec.percentageBasedOutput != null)
+                    {
+                        foreach (var outItem in rec.percentageBasedOutput)
                         {
-                            foreach (var outItem in rec.percentageBasedOutput)
-                            {
-                                string shortName = MapResourceShortName(outItem.itemId);
-                                if (targetDict.ContainsKey(shortName))
-                                {
-                                    targetDict[shortName] += item.Quantity * (outItem.amount * 0.01);
-                                }
-                            }
+                            if (string.IsNullOrEmpty(outItem.itemId)) continue;
+                            // amount in JSON is already a 0-100 percentage
+                            double val = item.Quantity * (outItem.amount / 100.0);
+                            if (isWild) Accumulate(wildYields, outItem.itemId, val);
+                            else        Accumulate(safeYields, outItem.itemId, val);
                         }
                     }
                 }
             }
 
-            foreach (var output in Outputs)
+            // Rebuild the Outputs collection with every resource that has a non-zero yield
+            var allShortNames = wildYields.Keys.Union(safeYields.Keys).Distinct().ToList();
+
+            // Keep existing VMs where possible to avoid flicker; add/remove as needed
+            var existingByShort = Outputs.ToDictionary(o => o.ShortName, StringComparer.OrdinalIgnoreCase);
+            var toKeep = new HashSet<string>(allShortNames.Where(s => wildYields.GetValueOrDefault(s) > 0 || safeYields.GetValueOrDefault(s) > 0), StringComparer.OrdinalIgnoreCase);
+
+            // Remove outputs no longer active
+            foreach (var old in Outputs.Where(o => !toKeep.Contains(o.ShortName)).ToList())
+                Outputs.Remove(old);
+
+            // Update / add
+            foreach (var sn in allShortNames.OrderBy(s => s))
             {
-                output.WildAmount = wildYields[output.ShortName];
-                output.SafeAmount = safeYields[output.ShortName];
+                double wild = wildYields.GetValueOrDefault(sn);
+                double safe = safeYields.GetValueOrDefault(sn);
+                if (wild <= 0 && safe <= 0) continue;
+
+                if (existingByShort.TryGetValue(sn, out var vm))
+                {
+                    vm.WildAmount = wild;
+                    vm.SafeAmount = safe;
+                }
+                else
+                {
+                    string display = _knownOutputNames.TryGetValue(sn, out var d) ? d
+                                     : MainWindow.ResolveItemName(0, sn);
+                    if (string.IsNullOrEmpty(display) || display == sn)
+                        display = System.Globalization.CultureInfo.CurrentCulture.TextInfo
+                                    .ToTitleCase(sn.Replace(".", " ").Replace("_", " "));
+                    var newVm = new RecyclerOutputViewModel
+                    {
+                        ShortName   = sn,
+                        DisplayName = display,
+                        Icon        = MainWindow.ResolveItemIcon(0, sn, 24),
+                        WildAmount  = wild,
+                        SafeAmount  = safe
+                    };
+                    Outputs.Add(newVm);
+                }
             }
         }
 
@@ -574,6 +619,7 @@ namespace RustPlusDesk.Views
         public string id { get; set; }
         public string shortName { get; set; }
         public string category { get; set; }
+        public string displayName { get; set; }
         public int stackSize { get; set; }
         public bool canBeRecycled { get; set; }
         public List<RecycleInfoData> recycleInfo { get; set; }
@@ -582,6 +628,7 @@ namespace RustPlusDesk.Views
     public class RecycleInfoData
     {
         public string recyclerId { get; set; }
+        public string recyclerLink { get; set; }
         public List<RecycleOutputData> guaranteedOutput { get; set; }
         public List<RecycleOutputData> percentageBasedOutput { get; set; }
     }
@@ -589,6 +636,8 @@ namespace RustPlusDesk.Views
     public class RecycleOutputData
     {
         public string itemId { get; set; }
-        public int amount { get; set; }
+        public string itemLink { get; set; }
+        /// <summary>Guaranteed quantity (whole units) or percentage chance (0-100) for probabilistic items.</summary>
+        public double amount { get; set; }
     }
 }
