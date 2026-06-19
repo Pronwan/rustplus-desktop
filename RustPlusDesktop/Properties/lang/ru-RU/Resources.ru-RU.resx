@@ -1103,7 +1103,7 @@
     <value>Обновление Upkeep, Minimap &amp; Tracking Update</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Сводка возможностей &amp; Корректировки</value>
+    <value>Сводка функций и корректировки</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
     <value>Больше не показывать это</value>
@@ -2512,5 +2512,38 @@
   </data>
   <data name="Delete3DMapDataTooltip" xml:space="preserve">
     <value>Удаляет все загруженные данные 3D-карты и кэшированные данные для освобождения места на диске</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Обновление Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Улучшения 2D-карты</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Добавлена поддержка маркеров пещер и руин в джунглях.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Интеграция 3D-карты</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Автоматически создавайте и просматривайте интерактивные 3D-модели карт.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Калькулятор переработки</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Калькулятор переработки для ваших компонентов. Увидите разницу между переработкой в безопасной зоне и обычной.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Настройки и очистка</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Легко удаляйте старые 3D-карты из кэша для освобождения места.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Больше не показывать это</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Закрыть</value>
   </data>
 </root>

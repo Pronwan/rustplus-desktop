@@ -4,7 +4,7 @@
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Rust+ Desktop &#x1F6E0;&#xFE0F; v7.0.0 Update"
-        Width="500" Height="720"
+        Width="500" SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#0F1215"

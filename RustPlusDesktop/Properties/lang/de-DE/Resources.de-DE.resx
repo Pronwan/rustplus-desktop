@@ -2672,4 +2672,37 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="Delete3DMapDataTooltip" xml:space="preserve">
     <value>Löscht alle heruntergeladenen 3D-Map-Daten und den Cache, um Speicherplatz freizugeben</value>
   </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D-Karten-Verbesserungen</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Unterstützung für Höhlen- und Dschungelruinen-Marker auf deinen 2D-Karten hinzugefügt.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D-Karten-Integration</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Konstruiere und betrachte interaktive 3D-Kartenmodelle mit integrierten Basis-Footprints und Custom-Monumenten.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Recycling-Rechner</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Recycling-Rechner für deine Komponenten. Vergleiche sofort die Ausbeute zwischen Safe-Zone und regulärem Recycling.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Einstellungen &amp; Bereinigung</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Lösche veraltete 3D-Kartendaten und Cache bequem in den Einstellungen, um Speicherplatz freizugeben.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Nicht mehr anzeigen</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
 </root>

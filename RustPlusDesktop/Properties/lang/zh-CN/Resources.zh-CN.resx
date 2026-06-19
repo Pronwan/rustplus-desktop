@@ -2618,4 +2618,37 @@
   <data name="Delete3DMapDataTooltip" xml:space="preserve">
     <value>删除所有下载的3D地图边界和缓存数据以释放磁盘空间</value>
   </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 更新</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D地图增强功能</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>增加了对洞穴和丛林废墟标记的支持。</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D地图集成</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>自动构建并查看交互式3D地图模型。</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>回收计算器</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>为您的组件等提供的回收计算器。立即查看安全区和普通回收之间的差异。</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>设置与清理</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>轻松删除旧的3D地图缓存以释放存储空间。</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>不再显示此内容</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
 </root>

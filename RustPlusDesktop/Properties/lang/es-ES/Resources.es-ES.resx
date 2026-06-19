@@ -1103,7 +1103,7 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Mantenimiento, Minimap y Actualización de Seguimiento</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Resumen de características y ajustes</value>
+    <value>Resumen de funciones y ajustes</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
     <value>No volver a mostrar</value>
@@ -2401,5 +2401,38 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
   </data>
   <data name="Delete3DMapDataTooltip" xml:space="preserve">
     <value>Elimina todos los datos del mapa 3D descargados y los datos en caché para liberar espacio en disco</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Actualización Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Mejoras en el mapa 2D</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Se agregó soporte para marcadores de cuevas y ruinas en la jungla.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Integración de mapa 3D</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Construya y vea automáticamente modelos de mapas 3D interactivos.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Calculadora de reciclaje</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Calculadora de reciclaje para tus componentes. Mira la diferencia entre reciclaje en zona segura y regular al instante.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Configuración y limpieza</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Elimina fácilmente los cachés de mapas 3D para liberar espacio de almacenamiento.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>No volver a mostrar esto</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Cerrar</value>
   </data>
 </root>

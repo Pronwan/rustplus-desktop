@@ -2703,4 +2703,37 @@ Please pair this server first.</value>
   <data name="Delete3DMapDataTooltip" xml:space="preserve">
     <value>Deletes all downloaded 3D map bounds and cached data to free up disk space</value>
   </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D Map Enhancements</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Added support for Cave and Jungle Ruins markers to your 2D maps.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D Map Integration</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Automatically construct and view interactive 3D map models with built-in base footprints and custom monuments.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Recycling Calculator</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Recycling Calculator for your Components and more. See the difference between safe-zone and regular recycling right away.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Settings &amp; Cleanup</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Easily delete old 3D map bounds and cached data from settings to free up storage space.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>
