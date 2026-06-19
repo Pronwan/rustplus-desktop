@@ -571,19 +571,19 @@ public partial class MainWindow : WpfUi.FluentWindow
                 // Kommt von einer neueren/gleichen Version: Einfach Version updaten
                 TrackingService.LastSeenVersion = AppVersion;
             }
+        }
 
-            if (!TrackingService.SuppressVersion7Notice)
+        if (!TrackingService.SuppressVersion7Notice)
+        {
+            Dispatcher.InvokeAsync(() =>
             {
-                Dispatcher.InvokeAsync(() =>
+                var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
+                dlg7.ShowDialog();
+                if (dlg7.DontShowAgain)
                 {
-                    var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
-                    dlg7.ShowDialog();
-                    if (dlg7.DontShowAgain)
-                    {
-                        TrackingService.SuppressVersion7Notice = true;
-                    }
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
-            }
+                    TrackingService.SuppressVersion7Notice = true;
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         // Initial tracking status update and hook global events
