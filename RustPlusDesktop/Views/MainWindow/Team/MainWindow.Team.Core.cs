@@ -263,7 +263,16 @@ public partial class MainWindow
         var now = DateTime.UtcNow;
         foreach (var m in TeamMembers)
         {
-            m.UpdateAfkState(now);
+            if (m.UpdateAfkState(now))
+            {
+                if (_announceSpawns && TrackingService.AnnouncePlayerAfk)
+                {
+                    string dispName = GetDisplayPlayerName(m.Name);
+                    string chatText = $"{dispName} AFK: 5:00";
+                    string discordText = $"💤 {dispName} AFK: 5:00";
+                    _ = SendTeamChatSafeAsync(chatText, discordText: discordText);
+                }
+            }
         }
     }
 

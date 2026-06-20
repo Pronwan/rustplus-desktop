@@ -348,6 +348,7 @@ namespace RustPlusDesk.Views
                         LogDiag($"[RecyclerOverlay] Filtered to {list.Count} recyclable components.");
 
                         _allRecyclerItems = list;
+                        LoadStackSizes(list);
 
                         // Dynamic Category Extraction
                         var categories = list.Select(x => x.Data.category)
@@ -381,77 +382,174 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void CalculateYields()
+        private void LoadStackSizes(List<RecyclerItemViewModel> list)
         {
-            // Accumulate all yields dynamically across every active item
-            var wildYields = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
-            var safeYields = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var item in _allRecyclerItems)
+            try
             {
-                if (item.Quantity <= 0) continue;
-
-                if (item.Data?.recycleInfo == null) continue;
-
-                foreach (var rec in item.Data.recycleInfo)
+                string jsonContent = "";
+                string asmName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? "RustPlusDesk";
+                var resName = $"{asmName}.Assets.Data.Recycling-Data.json";
+                using var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resName);
+                if (stream != null)
                 {
-                    var isWild = rec.recyclerId == "recycler-radtown";
-                    var isSafe = rec.recyclerId == "recycler-safezone";
-                    if (!isWild && !isSafe) continue;
-
-                    void Accumulate(Dictionary<string, double> dict, string shortName, double amount)
+                    using var r = new StreamReader(stream);
+                    jsonContent = r.ReadToEnd();
+                }
+                else
+                {
+                    var filePaths = new[] {
+                        Path.Combine(AppContext.BaseDirectory, "Assets", "Data", "Recycling-Data.json"),
+                        Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Data", "Recycling-Data.json")
+                    };
+                    foreach (var p in filePaths)
                     {
-                        if (!dict.ContainsKey(shortName)) dict[shortName] = 0.0;
-                        dict[shortName] += amount;
-                    }
-
-                    if (rec.guaranteedOutput != null)
-                    {
-                        foreach (var outItem in rec.guaranteedOutput)
+                        if (File.Exists(p))
                         {
-                            if (string.IsNullOrEmpty(outItem.itemId)) continue;
-                            double val = item.Quantity * outItem.amount;
-                            if (isWild) Accumulate(wildYields, outItem.itemId, val);
-                            else        Accumulate(safeYields, outItem.itemId, val);
+                            jsonContent = File.ReadAllText(p);
+                            break;
                         }
                     }
+                }
 
-                    if (rec.percentageBasedOutput != null)
+                if (!string.IsNullOrEmpty(jsonContent))
+                {
+                    using var doc = JsonDocument.Parse(jsonContent);
+                    var root = doc.RootElement;
+                    foreach (var item in list)
                     {
-                        foreach (var outItem in rec.percentageBasedOutput)
+                        if (root.TryGetProperty(item.ShortName, out var elem))
                         {
-                            if (string.IsNullOrEmpty(outItem.itemId)) continue;
-                            // amount in JSON is already a 0-100 percentage
-                            double val = item.Quantity * (outItem.amount / 100.0);
-                            if (isWild) Accumulate(wildYields, outItem.itemId, val);
-                            else        Accumulate(safeYields, outItem.itemId, val);
+                            if (elem.TryGetProperty("stackSize", out var st))
+                            {
+                                item.StackSize = st.GetInt32();
+                            }
+                            if (elem.TryGetProperty("recycler", out var rec))
+                            {
+                                item.WildRecyclerNode = rec.Clone();
+                            }
+                            if (elem.TryGetProperty("safe-zone-recycler", out var safe))
+                            {
+                                item.SafeRecyclerNode = safe.Clone();
+                            }
+                        }
+                    }
+                    LogDiag($"[RecyclerOverlay] Successfully loaded stack sizes from Recycling-Data.json.");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogDiag($"[RecyclerOverlay] Failed to load stack sizes: {ex.Message}");
+            }
+        }
+
+        private void CalculateYields()
+        {
+            var wildYields = new Dictionary<string, (double Expected, double Min, double Max)>(StringComparer.OrdinalIgnoreCase);
+            var safeYields = new Dictionary<string, (double Expected, double Min, double Max)>(StringComparer.OrdinalIgnoreCase);
+            double totalWildTime = 0;
+            double totalSafeTime = 0;
+
+            void ProcessDetailedNode(JsonElement? node, Dictionary<string, (double Expected, double Min, double Max)> dict, int qty)
+            {
+                if (node == null) return;
+                if (node.Value.TryGetProperty("yield", out var yieldArr))
+                {
+                    foreach (var y in yieldArr.EnumerateArray())
+                    {
+                        if (y.TryGetProperty("shortname", out var snProp) && y.TryGetProperty("quantity", out var qProp) && y.TryGetProperty("probability", out var pProp))
+                        {
+                            string shortName = snProp.GetString() ?? "";
+                            double quantity = qProp.GetDouble();
+                            double probability = pProp.GetDouble();
+                            
+                            double expected = qty * quantity * probability;
+                            double min = probability >= 1.0 ? qty * quantity : 0;
+                            double max = qty * quantity;
+
+                            if (!dict.TryGetValue(shortName, out var current))
+                                current = (0, 0, 0);
+
+                            dict[shortName] = (current.Expected + expected, current.Min + min, current.Max + max);
                         }
                     }
                 }
             }
 
-            // Rebuild the Outputs collection with every resource that has a non-zero yield
+            foreach (var item in _allRecyclerItems)
+            {
+                if (item.Quantity <= 0) continue;
+
+                int unitsPerTick = (int)Math.Ceiling(item.StackSize * 0.10);
+                if (unitsPerTick < 1) unitsPerTick = 1;
+                int ticks = (int)Math.Ceiling((double)item.Quantity / unitsPerTick);
+                totalWildTime += ticks * 5;
+                totalSafeTime += ticks * 8;
+
+                if (item.WildRecyclerNode != null || item.SafeRecyclerNode != null)
+                {
+                    ProcessDetailedNode(item.WildRecyclerNode, wildYields, item.Quantity);
+                    ProcessDetailedNode(item.SafeRecyclerNode, safeYields, item.Quantity);
+                }
+                else if (item.Data?.recycleInfo != null)
+                {
+                    foreach (var rec in item.Data.recycleInfo)
+                    {
+                        var isWild = rec.recyclerId == "recycler-radtown";
+                        var isSafe = rec.recyclerId == "recycler-safezone";
+                        if (!isWild && !isSafe) continue;
+                        
+                        var dict = isWild ? wildYields : safeYields;
+
+                        if (rec.guaranteedOutput != null)
+                        {
+                            foreach (var outItem in rec.guaranteedOutput)
+                            {
+                                if (string.IsNullOrEmpty(outItem.itemId)) continue;
+                                double expected = item.Quantity * outItem.amount;
+                                if (!dict.TryGetValue(outItem.itemId, out var current)) current = (0,0,0);
+                                dict[outItem.itemId] = (current.Expected + expected, current.Min + expected, current.Max + expected);
+                            }
+                        }
+                        if (rec.percentageBasedOutput != null)
+                        {
+                            foreach (var outItem in rec.percentageBasedOutput)
+                            {
+                                if (string.IsNullOrEmpty(outItem.itemId)) continue;
+                                double expected = item.Quantity * (outItem.amount / 100.0);
+                                double max = item.Quantity;
+                                if (!dict.TryGetValue(outItem.itemId, out var current)) current = (0,0,0);
+                                dict[outItem.itemId] = (current.Expected + expected, current.Min, current.Max + max);
+                            }
+                        }
+                    }
+                }
+            }
+
             var allShortNames = wildYields.Keys.Union(safeYields.Keys).Distinct().ToList();
-
-            // Keep existing VMs where possible to avoid flicker; add/remove as needed
             var existingByShort = Outputs.ToDictionary(o => o.ShortName, StringComparer.OrdinalIgnoreCase);
-            var toKeep = new HashSet<string>(allShortNames.Where(s => wildYields.GetValueOrDefault(s) > 0 || safeYields.GetValueOrDefault(s) > 0), StringComparer.OrdinalIgnoreCase);
+            var toKeep = new HashSet<string>(allShortNames.Where(s => wildYields.GetValueOrDefault(s).Expected > 0 || safeYields.GetValueOrDefault(s).Expected > 0), StringComparer.OrdinalIgnoreCase);
 
-            // Remove outputs no longer active
             foreach (var old in Outputs.Where(o => !toKeep.Contains(o.ShortName)).ToList())
                 Outputs.Remove(old);
 
-            // Update / add
             foreach (var sn in allShortNames.OrderBy(s => s))
             {
-                double wild = wildYields.GetValueOrDefault(sn);
-                double safe = safeYields.GetValueOrDefault(sn);
-                if (wild <= 0 && safe <= 0) continue;
+                var wild = wildYields.GetValueOrDefault(sn);
+                var safe = safeYields.GetValueOrDefault(sn);
+                if (wild.Expected <= 0 && safe.Expected <= 0) continue;
+
+                string BuildTooltip((double Expected, double Min, double Max) val)
+                {
+                    if (val.Min < val.Max) return $"Range: {val.Min:0.#} - {val.Max:0.#}";
+                    return null;
+                }
 
                 if (existingByShort.TryGetValue(sn, out var vm))
                 {
-                    vm.WildAmount = wild;
-                    vm.SafeAmount = safe;
+                    vm.WildAmount = wild.Expected;
+                    vm.SafeAmount = safe.Expected;
+                    vm.WildToolTip = BuildTooltip(wild);
+                    vm.SafeToolTip = BuildTooltip(safe);
                 }
                 else
                 {
@@ -465,12 +563,19 @@ namespace RustPlusDesk.Views
                         ShortName   = sn,
                         DisplayName = display,
                         Icon        = MainWindow.ResolveItemIcon(0, sn, 24),
-                        WildAmount  = wild,
-                        SafeAmount  = safe
+                        WildAmount  = wild.Expected,
+                        SafeAmount  = safe.Expected,
+                        WildToolTip = BuildTooltip(wild),
+                        SafeToolTip = BuildTooltip(safe)
                     };
                     Outputs.Add(newVm);
                 }
             }
+
+            if (TxtWildTime != null)
+                TxtWildTime.Text = TimeSpan.FromSeconds(totalWildTime).ToString(@"hh\:mm\:ss");
+            if (TxtSafeTime != null)
+                TxtSafeTime.Text = TimeSpan.FromSeconds(totalSafeTime).ToString(@"hh\:mm\:ss");
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
@@ -619,6 +724,8 @@ namespace RustPlusDesk.Views
         }
 
         public RecyclerItemData Data { get; set; }
+        public JsonElement? WildRecyclerNode { get; set; }
+        public JsonElement? SafeRecyclerNode { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler QuantityChanged;
@@ -655,6 +762,28 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private string _wildToolTip;
+        public string WildToolTip
+        {
+            get => _wildToolTip;
+            set
+            {
+                _wildToolTip = value;
+                OnPropertyChanged(nameof(WildToolTip));
+            }
+        }
+
+        private string _safeToolTip;
+        public string SafeToolTip
+        {
+            get => _safeToolTip;
+            set
+            {
+                _safeToolTip = value;
+                OnPropertyChanged(nameof(SafeToolTip));
+            }
+        }
+
         public string ShortName { get; set; }
         public string DisplayName { get; set; }
 
@@ -673,8 +802,8 @@ namespace RustPlusDesk.Views
         }
 
         public bool IsActive => WildAmount > 0 || SafeAmount > 0;
-        public string WildText => WildAmount > 0 ? WildAmount.ToString("0.#") : "0";
-        public string SafeText => SafeAmount > 0 ? SafeAmount.ToString("0.#") : "0";
+        public string WildText => WildAmount > 0 ? Math.Round(WildAmount).ToString("0") : "0";
+        public string SafeText => SafeAmount > 0 ? Math.Round(SafeAmount).ToString("0") : "0";
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) =>

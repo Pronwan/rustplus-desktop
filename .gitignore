@@ -92,3 +92,6 @@ env
 !RustPlusDesktop/runtime/**/*.exe
 !RustPlusDesktop/runtime/**/bin/
 !RustPlusDesktop/runtime/**/bin/**
+
+# Local build secrets
+build_secrets*.zip

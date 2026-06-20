@@ -1,4 +1,4 @@
-﻿<ui:FluentWindow
+<ui:FluentWindow
     x:Class="RustPlusDesk.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -3239,6 +3239,13 @@
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="PlayerOffline" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="5 min AFK"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="PlayerAfk" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource AnnounceTracking}"

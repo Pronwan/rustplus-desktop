@@ -92,6 +92,7 @@ public class TrackingSettings
     public bool AnnounceDeepSea { get; set; } = false;
     public bool AnnouncePlayerOnline { get; set; } = false;
     public bool AnnouncePlayerOffline { get; set; } = false;
+    public bool AnnouncePlayerAfk { get; set; } = false;
     public bool AnnouncePlayerDeathSelf { get; set; } = false;
     public bool AnnouncePlayerDeathTeam { get; set; } = false;
     public bool AnnouncePlayerRespawnSelf { get; set; } = false;
@@ -589,6 +590,11 @@ public static class TrackingService
     {
         get => _settings.AnnouncePlayerOffline;
         set { _settings.AnnouncePlayerOffline = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerAfk
+    {
+        get => _settings.AnnouncePlayerAfk;
+        set { _settings.AnnouncePlayerAfk = value; SaveDB(); }
     }
     public static bool AnnouncePlayerDeathSelf
     {

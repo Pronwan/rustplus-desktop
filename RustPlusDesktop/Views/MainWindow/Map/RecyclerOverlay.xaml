@@ -57,7 +57,9 @@
                                     Foreground="White"
                                     FontSize="11.5"
                                     Margin="0,0,4,0"
-                                    Height="26"
+                                    Height="28"
+                                    Padding="10,0,10,4"
+                                    VerticalContentAlignment="Center"
                                     TextChanged="SearchTextBox_TextChanged" />
 
                         <ComboBox x:Name="CategoryComboBox"
@@ -66,7 +68,7 @@
                                   BorderBrush="#25FFFFFF"
                                   Foreground="White"
                                   FontSize="11.5"
-                                  Height="26"
+                                  Height="28"
                                   Padding="6,2"
                                   SelectionChanged="CategoryComboBox_SelectionChanged" />
                     </Grid>
@@ -104,11 +106,11 @@
                                                         ClearButtonEnabled="False"
                                                         HorizontalContentAlignment="Center" 
                                                         VerticalContentAlignment="Center"
-                                                        FontSize="10"
+                                                        FontSize="11"
                                                         FontWeight="Bold"
-                                                        Height="20" 
+                                                        Height="24" 
                                                         Margin="3,0,3,3"
-                                                        Padding="0" 
+                                                        Padding="0,2,0,2" 
                                                         BorderThickness="1"
                                                         BorderBrush="#20FFFFFF"
                                                         Background="#0E1012"
@@ -170,12 +172,12 @@
                                             <TextBlock Grid.Column="1" Text="{Binding DisplayName}" FontSize="11.5" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
 
                                             <!-- Wild Amount -->
-                                            <Border Grid.Column="2" Width="40" Height="20" Padding="2,0" Background="#163524" BorderBrush="#304ADE80" BorderThickness="1" CornerRadius="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Border Grid.Column="2" Width="40" Height="20" Padding="2,0" Background="#163524" BorderBrush="#304ADE80" BorderThickness="1" CornerRadius="4" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{Binding WildToolTip}">
                                                 <TextBlock Text="{Binding WildText}" FontSize="11" FontWeight="Bold" Foreground="#FF4ADE80" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                             </Border>
 
                                             <!-- Safezone Amount -->
-                                            <Border Grid.Column="3" Width="40" Height="20" Padding="2,0" Background="#30241E" BorderBrush="#30FBA585" BorderThickness="1" CornerRadius="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Border Grid.Column="3" Width="40" Height="20" Padding="2,0" Background="#30241E" BorderBrush="#30FBA585" BorderThickness="1" CornerRadius="4" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{Binding SafeToolTip}">
                                                 <TextBlock Text="{Binding SafeText}" FontSize="11" FontWeight="Bold" Foreground="#FFFBA585" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                             </Border>
                                         </Grid>
@@ -198,8 +200,15 @@
 
             <!-- Bottom Action Bar -->
             <Grid Grid.Row="2" Margin="0,10,0,0">
-                <TextBlock Text="Shift+Click / Scroll to change by 10" FontSize="10" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock Text="Shift+Click / Scroll to change by 10" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Time:" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtWildTime" Text="00:00:00" FontSize="11" FontWeight="Bold" Foreground="#FF4ADE80" Margin="0,0,8,0" VerticalAlignment="Center" ToolTip="Wild Recycler Time"/>
+                        <TextBlock x:Name="TxtSafeTime" Text="00:00:00" FontSize="11" FontWeight="Bold" Foreground="#FFFBA585" VerticalAlignment="Center" ToolTip="Outpost Recycler Time"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                     <ui:Button Content="Clear All" Appearance="Secondary" Padding="12,5" Click="BtnClearAll_Click" Margin="0,0,8,0" FontSize="11" />
                     <ui:Button Content="Fill Stacks" Appearance="Secondary" Padding="12,5" Click="BtnFillStacks_Click" FontSize="11" />
                 </StackPanel>

@@ -4320,6 +4320,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceDeepSea = val;
         TrackingService.AnnouncePlayerOnline = val;
         TrackingService.AnnouncePlayerOffline = val;
+        TrackingService.AnnouncePlayerAfk = val;
         TrackingService.AnnouncePlayerDeathSelf = val;
         TrackingService.AnnouncePlayerDeathTeam = val;
         TrackingService.AnnouncePlayerRespawnSelf = val;
@@ -4338,7 +4339,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnounceCargoEgress && !TrackingService.AnnounceCargoArrival &&
                !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
                !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
-               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
+               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline && !TrackingService.AnnouncePlayerAfk &&
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
@@ -4386,6 +4387,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
+                case "PlayerAfk": TrackingService.AnnouncePlayerAfk = val; break;
                 case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
                 case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
@@ -4481,6 +4483,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                case "PlayerAfk": isSelected = TrackingService.AnnouncePlayerAfk; break;
                 case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
                 case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;

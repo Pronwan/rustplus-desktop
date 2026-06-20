@@ -95,7 +95,42 @@
                                     VerticalAlignment="Center"
                                     Cursor="Hand"
                                     IsChecked="{Binding ShowMarkers}"
-                                    ToolTip="Show markers on map" />
+                                    ToolTip="Show markers on map">
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="CheckBox">
+                                                        <Border
+                                                            x:Name="Bd"
+                                                            Width="16" Height="16"
+                                                            Background="#1AFFFFFF"
+                                                            BorderBrush="#30FFFFFF"
+                                                            BorderThickness="1"
+                                                            CornerRadius="8"
+                                                            SnapsToDevicePixels="True">
+                                                            <Path x:Name="CheckMark" Data="M3.5,8 L6.5,11 L12.5,4.5" Stroke="White" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
+                                                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                                                                <Setter TargetName="Bd" Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect BlurRadius="4" Color="#60CDFF" Opacity="0.3" ShadowDepth="0" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="Bd" Property="BorderBrush" Value="#60FFFFFF" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
                                 <Grid
                                     Grid.Column="1"
                                     Width="44"
