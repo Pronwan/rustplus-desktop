@@ -20,9 +20,13 @@ namespace RustPlusDesk.Views
                 {
                     ShopSearchContent.Visibility = Visibility.Collapsed;
                 }
+                if (ChatContentBorder != null)
+                {
+                    ChatContentBorder.Visibility = Visibility.Collapsed;
+                }
                 if (ChatOverlayPanel != null)
                 {
-                    ChatOverlayPanel.Visibility = Visibility.Collapsed;
+                    ChatOverlayPanel.Visibility = Visibility.Visible;
                 }
                 
                 RecyclerOverlayPanel.Visibility = Visibility.Visible;
@@ -34,6 +38,10 @@ namespace RustPlusDesk.Views
             if (RecyclerOverlayPanel != null)
             {
                 RecyclerOverlayPanel.Visibility = Visibility.Collapsed;
+            }
+            if (ChatOverlayPanel != null)
+            {
+                ChatOverlayPanel.Visibility = Visibility.Visible;
             }
         }
     }

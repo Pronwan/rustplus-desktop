@@ -2532,14 +2532,14 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="ðŸ’°" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="&#x1F4B0;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
                                             <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="âŸ³" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="&#x27F3;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
                                         <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
@@ -2581,10 +2581,10 @@
                                         <TextBlock Text="Min profit:" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
                                         <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="11.5">
                                             <ComboBoxItem Content="Show All" Tag="0" IsSelected="True"/>
-                                            <ComboBoxItem Content="â‰¥ 10" Tag="10"/>
-                                            <ComboBoxItem Content="â‰¥ 50" Tag="50"/>
-                                            <ComboBoxItem Content="â‰¥ 100" Tag="100"/>
-                                            <ComboBoxItem Content="â‰¥ 500" Tag="500"/>
+                                            <ComboBoxItem Content="&#x2265; 10" Tag="10"/>
+                                            <ComboBoxItem Content="&#x2265; 50" Tag="50"/>
+                                            <ComboBoxItem Content="&#x2265; 100" Tag="100"/>
+                                            <ComboBoxItem Content="&#x2265; 500" Tag="500"/>
                                         </ComboBox>
                                     </StackPanel>
                                 </Grid>
@@ -2627,7 +2627,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="ðŸ”" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="&#x1F501;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
                                             <TextBlock Text="Optimal multi-hop trade pathfinder" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
@@ -4832,10 +4832,7 @@
                                         <Border Grid.Row="0" Background="#401E2126" CornerRadius="12,12,0,0" BorderThickness="0,0,0,1" BorderBrush="#15FFFFFF">
                                             <Grid>
                                                 <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
-                                                    <TextBlock
-                                                        VerticalAlignment="Center"
-                                                        FontSize="11"
-                                                        Text="ðŸ›’ " />
+                                                    <TextBlock VerticalAlignment="Center" FontSize="11" Text="&#x1F6D2; " />
                                                     <TextBlock
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
