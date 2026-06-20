@@ -362,7 +362,13 @@ return;
             Map3DHost.Visibility = Visibility.Visible;
             ImgMap.Visibility = Visibility.Collapsed;
 
-            await _map3DWebView.EnsureCoreWebView2Async();
+            string webViewDataFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RustPlusDesk",
+                "WebView2");
+            Directory.CreateDirectory(webViewDataFolder);
+            var webViewEnvironment = await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
+            await _map3DWebView.EnsureCoreWebView2Async(webViewEnvironment);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
