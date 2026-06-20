@@ -8,10 +8,13 @@ namespace RustPlusDesk.Views.Windows
     {
         private MainWindow? _owner;
 
-        public CloudLoginPromptWindow(MainWindow owner)
+        private readonly bool _sessionExpired;
+
+        public CloudLoginPromptWindow(MainWindow owner, bool sessionExpired = false)
         {
             InitializeComponent();
             _owner = owner;
+            _sessionExpired = sessionExpired;
             Owner = owner;
             ApplyLocalizedText();
         }
@@ -23,11 +26,22 @@ namespace RustPlusDesk.Views.Windows
 
         private void ApplyLocalizedText()
         {
-            Title = T("CloudLoginPromptTitle", "Cloud Sync");
-            TxtTitle.Text = T("CloudLoginPromptHeading", "Account required for Cloud Sync");
-            TxtDescription.Text = T(
-                "CloudLoginPromptDescription",
-                "Cloud services like synchronization and backup storage require a free account. Choose email or Discord to continue syncing your devices, overlays and backups.");
+            if (_sessionExpired)
+            {
+                Title = T("SessionExpiredTitle", "Session expired");
+                TxtTitle.Text = T("SessionExpiredHeading", "Please sign in again");
+                TxtDescription.Text = T(
+                    "SessionExpiredDescription",
+                    "Your account session has expired. Sign in again with email or Discord to continue using account features.");
+            }
+            else
+            {
+                Title = T("CloudLoginPromptTitle", "Cloud Sync");
+                TxtTitle.Text = T("CloudLoginPromptHeading", "Account required for Cloud Sync");
+                TxtDescription.Text = T(
+                    "CloudLoginPromptDescription",
+                    "Cloud services like synchronization and backup storage require a free account. Choose email or Discord to continue syncing your devices, overlays and backups.");
+            }
             TxtEmailLogin.Text = T("CloudLoginPromptEmailButton", "Sync via email");
             TxtDiscordLogin.Text = T("CloudLoginPromptDiscordButton", "Sync via Discord");
             BtnSkip.Content = T("CloudLoginPromptNoThanksButton", "No thanks");
