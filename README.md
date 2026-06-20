@@ -51,6 +51,21 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🚀 UPDATE v7.0.0 | 3D Maps, Base Footprint Builder & Enhanced 2D Maps
+The new version is now available! Simply restart your app or download the latest update.
+
+**🗺️ Interactive 3D Maps** Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.
+
+**🔍 Optional Map File Parsing** You can now optionally read your local .map files (safely, as read-only) by clicking the 3D Map button to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! (And don't worry, the 3D map unloads completely from RAM when closed to save resources.)
+
+**🏗️ 3D Base Footprint Builder** Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.
+
+**⚙️ Refined Logic Engine** Our Logic Engine has been further refined for better performance and stability when constructing custom automation rules.
+
+**📍 Enhanced Map Features** In-game Team Markers are now natively displayed on the 2D map. Plus, we've added beautiful custom icons for all Smart Devices!
+
+**♻️ Recycling Calculator** Recycling Calculator for your Components and more. See the difference between safe-zone and regular recycling right away.
+
 # Rust+ Desktop Update — v6.3.1 :rocket:**
 This update introduces a powerful new automation engine, optimized map controls, and massive optimizations to data usage and performance. 
 
