@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>6.3.1</Version>
+		<Version>7.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>6.3.1</AssemblyVersion>
-		<FileVersion>6.3.1</FileVersion>
-		<InformationalVersion>6.3.1</InformationalVersion>
+		<AssemblyVersion>7.0.0</AssemblyVersion>
+		<FileVersion>7.0.0</FileVersion>
+		<InformationalVersion>7.0.0</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -66,10 +66,12 @@
 	  <None Remove="Assets\icons\airfield.png" />
 	  <None Remove="Assets\icons\animat-Icons\chinook_animate.png" />
 	  <None Remove="Assets\icons\animat-Icons\chinook_map_body.png" />
+	  <None Remove="Assets\icons\anvil-rock.png" />
 	  <None Remove="Assets\icons\arcticresearch.png" />
 	  <None Remove="Assets\icons\banditcamp.png" />
 	  <None Remove="Assets\icons\barn.png" />
 	  <None Remove="Assets\icons\blocked.png" />
+	  <None Remove="Assets\icons\cabins - Kopie.png" />
 	  <None Remove="Assets\icons\cabins.png" />
 	  <None Remove="Assets\icons\cargo.png" />
 	  <None Remove="Assets\icons\cave.png" />
@@ -87,9 +89,12 @@
 	  <None Remove="Assets\icons\fishingvillage.png" />
 	  <None Remove="Assets\icons\fishingvillagelarge.png" />
 	  <None Remove="Assets\icons\gasstation.png" />
+	  <None Remove="Assets\icons\godrock.png" />
 	  <None Remove="Assets\icons\harbour.png" />
 	  <None Remove="Assets\icons\harbour2.png" />
 	  <None Remove="Assets\icons\hqmquarry.png" />
+	  <None Remove="Assets\icons\iceberg.png" />
+	  <None Remove="Assets\icons\ice_lake.png" />
 	  <None Remove="Assets\icons\jungle.png" />
 	  <None Remove="Assets\icons\junkyard.png" />
 	  <None Remove="Assets\icons\largeoilrig.png" />
@@ -163,6 +168,8 @@
 	  <None Remove="Assets\icons\watertreatment.png" />
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
+	  <None Remove="Assets\Data\recycler-items.json" />
+
 	  <None Remove="Assets\icons\discord.png" />
 	  <None Remove="Assets\icq-message.wav" />
 	  <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
@@ -194,6 +201,13 @@
 	  <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
 	  <None Remove="Assets\Images\6.3.1\Logic-Engine.png" />
 	  <None Remove="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
+	  <None Remove="Assets\Images\7.0\3D-Base-Footprint.png" />
+	  <None Remove="Assets\Images\7.0\custom-icons-smart.png" />
+	  <None Remove="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
+	  <None Remove="Assets\Images\7.0\Live-Following-3D.png" />
+	  <None Remove="Assets\Images\7.0\Logic-Engine.png" />
+	  <None Remove="Assets\Images\7.0\No-Build-Zones-3D.png" />
+	  <None Remove="Assets\Images\7.0\Recycling-Calculator.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
@@ -226,6 +240,8 @@
 	<ItemGroup>
 	  <Resource Include="Assets\icons\animat-Icons\chinook_animate.png" />
 	  <Resource Include="Assets\icons\animat-Icons\chinook_map_body.png" />
+	  <Resource Include="Assets\icons\anvil-rock.png" />
+	  <Resource Include="Assets\icons\cabins - Kopie.png" />
 	  <Resource Include="Assets\icons\cloud-download.png" />
 	  <Resource Include="Assets\icons\cloud-upload.png" />
 	  <Resource Include="Assets\icons\crate3.png" />
@@ -233,6 +249,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
+	  <Resource Include="Assets\icons\godrock.png" />
+	  <Resource Include="Assets\icons\iceberg.png" />
+	  <Resource Include="Assets\icons\ice_lake.png" />
 	  <Resource Include="Assets\icons\pen.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
@@ -291,12 +310,96 @@
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
+  <ItemGroup Condition="Exists('..\MapParser\index.html')">
+    <EmbeddedResource Include="..\MapParser\index.html">
+      <LogicalName>Map3DViewer/index.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\app.js">
+      <LogicalName>Map3DViewer/app.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\style.css">
+      <LogicalName>Map3DViewer/style.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
+      <LogicalName>Map3DViewer/draco_decoder.wasm</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
+      <LogicalName>Map3DViewer/Rust_Assets/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\icons\**\*" Condition="Exists('Assets\icons')">
+      <LogicalName>Map3DViewer/Icons/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Target Name="BuildMapParserRuntime"
+          BeforeTargets="AssignTargetPaths"
+          Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <MSBuild Projects="..\MapParser\MapParser.csproj"
+             Targets="Build"
+             Properties="Configuration=$(Configuration)" />
+  </Target>
+
+  <Target Name="EmbedMapParserRuntime"
+          BeforeTargets="AssignTargetPaths"
+          DependsOnTargets="BuildMapParserRuntime"
+          Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.exe">
+      <LogicalName>Map3DParser/MapParser.exe</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.dll">
+      <LogicalName>Map3DParser/MapParser.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.deps.json">
+      <LogicalName>Map3DParser/MapParser.deps.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.runtimeconfig.json">
+      <LogicalName>Map3DParser/MapParser.runtimeconfig.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Compression.LZ4.dll">
+      <LogicalName>Map3DParser/K4os.Compression.LZ4.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Compression.LZ4.Legacy.dll">
+      <LogicalName>Map3DParser/K4os.Compression.LZ4.Legacy.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Compression.LZ4.Streams.dll">
+      <LogicalName>Map3DParser/K4os.Compression.LZ4.Streams.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Hash.xxHash.dll">
+      <LogicalName>Map3DParser/K4os.Hash.xxHash.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\protobuf-net.Core.dll">
+      <LogicalName>Map3DParser/protobuf-net.Core.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\protobuf-net.dll">
+      <LogicalName>Map3DParser/protobuf-net.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\System.IO.Pipelines.dll">
+      <LogicalName>Map3DParser/System.IO.Pipelines.dll</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
+      <LogicalName>Map3DParser/prefabs_map.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
+      <LogicalName>Map3DParser/Rust_Assets/Metadata/carbon_prefabs.json</LogicalName>
+    </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <Content Include="Assets\cash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Include="Assets\Data\rust-item-list.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\recycler-items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\Recycling-Data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
@@ -374,6 +477,8 @@
     <Resource Include="Assets\icons\watertreatment.png" />
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
+    <EmbeddedResource Include="Assets\Data\recycler-items.json" />
+    <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
     <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\icq-message.wav" />
     <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
@@ -403,6 +508,13 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
     <Resource Include="Assets\Images\6.3.1\Logic-Engine.png" />
     <Resource Include="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
+    <Resource Include="Assets\Images\7.0\3D-Base-Footprint.png" />
+    <Resource Include="Assets\Images\7.0\custom-icons-smart.png" />
+    <Resource Include="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
+    <Resource Include="Assets\Images\7.0\Live-Following-3D.png" />
+    <Resource Include="Assets\Images\7.0\Logic-Engine.png" />
+    <Resource Include="Assets\Images\7.0\No-Build-Zones-3D.png" />
+    <Resource Include="Assets\Images\7.0\Recycling-Calculator.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
@@ -515,6 +627,7 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
     <Resource Include="Assets\Data\rust_items.json" />
+    <Resource Include="Assets\Data\monument_bounds.json" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-2.png" />
     <Resource Include="Assets\Images\5.3.0\NewLanguageSelector.png" />

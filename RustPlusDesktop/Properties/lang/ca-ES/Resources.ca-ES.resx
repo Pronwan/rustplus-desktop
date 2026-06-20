@@ -1824,6 +1824,31 @@ Estàs segur que vols continuar?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: canviat a {1} (activat per {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Cerca i selecciona una icona d&apos;element per a aquest dispositiu.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Canviar la icona del dispositiu</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Cerca i selecciona una icona d&apos;element per a aquesta regla.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Canviar la icona de la regla</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Restablir la icona per defecte</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regla</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Cercar icones (p. ex.: torreta, interruptor)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} dies</value>
+  </data>
 </root>
 
 

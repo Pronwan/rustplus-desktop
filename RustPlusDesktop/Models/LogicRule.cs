@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace RustPlusDesk.Models
 {
@@ -21,11 +22,52 @@ namespace RustPlusDesk.Models
             set { _name = value; OnProp(); }
         }
 
+        private int? _customIconId;
+        public int? CustomIconId
+        {
+            get => _customIconId;
+            set { _customIconId = value; OnProp(); OnProp(nameof(CustomIcon)); }
+        }
+
+        private string? _customIconShortName;
+        public string? CustomIconShortName
+        {
+            get => _customIconShortName;
+            set { _customIconShortName = value; OnProp(); OnProp(nameof(CustomIcon)); }
+        }
+
+        [JsonIgnore]
+        public System.Windows.Media.ImageSource? CustomIcon
+        {
+            get
+            {
+                if (CustomIconId.HasValue && CustomIconId.Value != 0)
+                {
+                    return RustPlusDesk.Views.MainWindow.ResolveItemIcon(CustomIconId.Value, CustomIconShortName);
+                }
+                return null;
+            }
+        }
+
         private bool _isEnabled = false;
         public bool IsEnabled
         {
             get => _isEnabled;
             set { _isEnabled = value; OnProp(); }
+        }
+
+        private bool _isExpanded = false;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set { _isExpanded = value; OnProp(); }
+        }
+
+        private bool _isConfirmingDelete = false;
+        public bool IsConfirmingDelete
+        {
+            get => _isConfirmingDelete;
+            set { _isConfirmingDelete = value; OnProp(); }
         }
 
         private string _triggerType = "SmartAlarm"; // SmartAlarm, SmartSwitch, ChatCommand

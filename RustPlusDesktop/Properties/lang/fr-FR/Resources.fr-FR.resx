@@ -1103,7 +1103,7 @@ Télécharger et installer maintenant ?</value>
     <value>Entretien, Minimap et mise à jour de suivi</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Résumé de la fonctionnalité &amp; Ajustements</value>
+    <value>Résumé des fonctionnalités &amp; ajustements</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
     <value>Ne plus afficher</value>
@@ -2329,19 +2329,19 @@ Télécharger et installer maintenant ?</value>
     <value>Personnaliser les alertes de chat</value>
   </data>
   <data name="CustomAlertsHeader" xml:space="preserve">
-    <value>Personnaliser les modèles d&apos;alerte de chat</value>
+    <value>Personnaliser les modèles d'alerte de chat</value>
   </data>
   <data name="CustomAlertsDesc" xml:space="preserve">
-    <value>Ici, vous pouvez modifier les modèles d&apos;alertes de chat automatisées. Les variables (comme {0}, {1}) seront automatiquement remplacées.</value>
+    <value>Ici, vous pouvez modifier les modèles d'alertes de chat automatisées. Les variables (comme {0}, {1}) seront automatiquement remplacées.</value>
   </data>
   <data name="VariablesLabel" xml:space="preserve">
     <value>Variables : {0}</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>Modèle pour &apos;{0}&apos; enregistré avec succès.</value>
+    <value>Modèle pour '{0}' enregistré avec succès.</value>
   </data>
   <data name="ResetSuccess" xml:space="preserve">
-    <value>Modèle pour &apos;{0}&apos; réinitialisé par défaut.</value>
+    <value>Modèle pour '{0}' réinitialisé par défaut.</value>
   </data>
   <data name="SaveSuccessTitle" xml:space="preserve">
     <value>Enregistrement réussi</value>
@@ -2554,15 +2554,95 @@ Télécharger et installer maintenant ?</value>
     <value>Joueurs AFK</value>
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
-    <value>Personne n&apos;est AFK.</value>
+    <value>Personne n'est AFK.</value>
   </data>
   <data name="AlertPlayerAfkName" xml:space="preserve">
     <value>Joueur AFK</value>
   </data>
   <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>Envoyé lorsqu&apos;un membre de l&apos;équipe est AFK trop longtemps.</value>
+    <value>Envoyé lorsqu'un membre de l'équipe est AFK trop longtemps.</value>
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Nom du joueur, {1}: Temps</value>
+  </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Recherchez et sélectionnez une icône d'objet pour cet appareil.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Changer l'icône de l'appareil</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Recherchez et sélectionnez une icône d'objet pour cette règle.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Changer l'icône de la règle</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Réinitialiser l'icône par défaut</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Règle</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Rechercher des icônes (ex. : tourelle, interrupteur)...</value>
+  </data>
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} jours</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Supprimer toutes les données de la carte 3D</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Calculatrice de recyclage pour vos composants et plus. Voyez la différence entre la zone de sécurité et le recyclage normal tout de suite.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Version 7.0 - Changements majeurs</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• Carte 3D avec positions de joueurs en direct et marqueurs de mort
+• La carte est construite à partir du fichier de carte local, obtient des infos supplémentaires comme les zones de construction bloquées, les icebergs, les grottes et les affiche sur la carte 2D
+• Constructeur d'empreinte de base 3D intégré
+• Moteur logique raffiné
+• Les marqueurs d'équipe en jeu sont maintenant affichés sur la carte 2D
+• Icônes personnalisées pour les appareils intelligents</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Paramètres de la carte 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Supprime toutes les données de la carte 3D téléchargées et les données mises en cache pour libérer de l'espace disque</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Mise à jour Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Améliorations de la carte 2D</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Prise en charge ajoutée pour les marqueurs de grottes et de ruines de la jungle.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Intégration de la carte 3D</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Construisez et visualisez automatiquement des modèles de cartes 3D interactifs.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Calculateur de recyclage</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Calculateur de recyclage pour vos composants et plus. Voyez la différence entre le recyclage en zone sûre et régulier.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Paramètres &amp; Nettoyage</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Supprimez facilement les anciennes cartes 3D en cache pour libérer de l'espace.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Ne plus afficher ceci</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Fermer</value>
   </data>
 </root>

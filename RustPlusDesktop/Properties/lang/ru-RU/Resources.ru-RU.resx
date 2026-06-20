@@ -1103,7 +1103,7 @@
     <value>Обновление Upkeep, Minimap &amp; Tracking Update</value>
   </data>
   <data name="FeatureSummaryAdjustments" xml:space="preserve">
-    <value>Сводка возможностей &amp; Корректировки</value>
+    <value>Сводка функций и корректировки</value>
   </data>
   <data name="DontShowAgain" xml:space="preserve">
     <value>Больше не показывать это</value>
@@ -1941,82 +1941,226 @@
   <data name="CloudTooltipActive" xml:space="preserve">
     <value>Cloud-Sync включен</value>
   </data>
-  <data name="CloudAccountTitle" xml:space="preserve"><value>Облачный аккаунт</value></data>
-  <data name="EmailLoginWindowTitle" xml:space="preserve"><value>Вход в облачный аккаунт</value></data>
-  <data name="EmailSignInTab" xml:space="preserve"><value>Войти</value></data>
-  <data name="EmailSignUpTab" xml:space="preserve"><value>Создать аккаунт</value></data>
-  <data name="EmailAddressLabel" xml:space="preserve"><value>Адрес электронной почты</value></data>
-  <data name="PasswordLabel" xml:space="preserve"><value>Пароль</value></data>
-  <data name="PasswordMinCharsLabel" xml:space="preserve"><value>Пароль (минимум 6 символов)</value></data>
-  <data name="ConfirmPasswordLabel" xml:space="preserve"><value>Подтвердите пароль</value></data>
-  <data name="EmailSignInButton" xml:space="preserve"><value>Войти</value></data>
-  <data name="EmailCreateAccountButton" xml:space="preserve"><value>Создать аккаунт</value></data>
-  <data name="EmailConfirmationSentTitle" xml:space="preserve"><value>Письмо подтверждения отправлено!</value></data>
-  <data name="EmailConfirmationSentMessage" xml:space="preserve"><value>Нажмите ссылку в письме. Приложение автоматически проверяет статус каждые несколько секунд...</value></data>
-  <data name="EmailWaitingForConfirmation" xml:space="preserve"><value>Ожидание подтверждения...</value></data>
-  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve"><value>Ожидание подтверждения... ({0}с)</value></data>
-  <data name="EmailProblemsPrefix" xml:space="preserve"><value>Проблемы? </value></data>
-  <data name="EmailOpenInBrowser" xml:space="preserve"><value>Открыть в браузере</value></data>
-  <data name="EmailPasswordRequiredError" xml:space="preserve"><value>Введите e-mail и пароль.</value></data>
-  <data name="EmailRequiredError" xml:space="preserve"><value>Введите адрес электронной почты.</value></data>
-  <data name="EmailPasswordTooShortError" xml:space="preserve"><value>Пароль должен содержать минимум 6 символов.</value></data>
-  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve"><value>Пароли не совпадают.</value></data>
-  <data name="EmailSigningInStatus" xml:space="preserve"><value>Вход...</value></data>
-  <data name="EmailSignedInSuccess" xml:space="preserve"><value>Вход выполнен!</value></data>
-  <data name="EmailSignInFailed" xml:space="preserve"><value>Не удалось войти.</value></data>
-  <data name="EmailRegistrationRunningStatus" xml:space="preserve"><value>Регистрация...</value></data>
-  <data name="EmailRegistrationFailed" xml:space="preserve"><value>Регистрация не удалась.</value></data>
-  <data name="EmailConfirmationTimeout" xml:space="preserve"><value>Тайм-аут: e-mail не был подтвержден в течение 5 минут. Вы сможете войти позже.</value></data>
-  <data name="EmailInvalidCredentialsError" xml:space="preserve"><value>Неверные данные для входа. Проверьте e-mail и пароль.</value></data>
-  <data name="EmailInvalidCredentialsShortError" xml:space="preserve"><value>Неверные данные для входа.</value></data>
-  <data name="EmailNotConfirmedError" xml:space="preserve"><value>Адрес e-mail еще не подтвержден. Нажмите ссылку подтверждения во входящих.</value></data>
-  <data name="EmailAlreadyRegisteredError" xml:space="preserve"><value>Этот адрес e-mail уже зарегистрирован. Войдите в аккаунт.</value></data>
-  <data name="AuthDiscordDisconnectButton" xml:space="preserve"><value>Отключить Discord</value></data>
-  <data name="AuthDiscordConnectedFormat" xml:space="preserve"><value>Discord подключен - Tier: {0}</value></data>
-  <data name="AuthEmailConnectedFormat" xml:space="preserve"><value>E-mail подключен: {0} - Tier: {1}</value></data>
-  <data name="AuthNotConnectedStatus" xml:space="preserve"><value>Не подключено - войдите, чтобы использовать Cloud Sync и резервные копии</value></data>
-  <data name="AuthDisconnectingStatus" xml:space="preserve"><value>Отключение...</value></data>
-  <data name="AuthConnectingStatus" xml:space="preserve"><value>Подключение...</value></data>
-  <data name="EmailAccountButton" xml:space="preserve"><value>E-mail / Аккаунт</value></data>
-  <data name="EmailLogoutConfirmMessage" xml:space="preserve"><value>Выйти из e-mail аккаунта?</value></data>
-  <data name="CloudLoginPromptTitle" xml:space="preserve"><value>Cloud Sync</value></data>
-  <data name="CloudLoginPromptHeading" xml:space="preserve"><value>Для Cloud Sync нужен аккаунт</value></data>
-  <data name="CloudLoginPromptDescription" xml:space="preserve"><value>Облачные сервисы, такие как синхронизация и хранение резервных копий, требуют бесплатный аккаунт. Выберите e-mail или Discord, чтобы продолжить синхронизацию устройств, оверлеев и резервных копий.</value></data>
-  <data name="CloudLoginPromptEmailButton" xml:space="preserve"><value>Синхронизация через e-mail</value></data>
-  <data name="CloudLoginPromptDiscordButton" xml:space="preserve"><value>Синхронизация через Discord</value></data>
-  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve"><value>Нет, спасибо</value></data>
-  <data name="CloudTooltipSyncLimitReached" xml:space="preserve"><value>Достигнут лимит синхронизации</value></data>
-  <data name="CloudTooltipBaseLimit" xml:space="preserve"><value>Достигнут лимит баз (Free: максимум 2 базы, Premium: максимум 10 баз)</value></data>
-  <data name="BaseAddScreenshot" xml:space="preserve"><value>Добавить скриншот</value></data>
-  <data name="BaseScreenshotDragDrop" xml:space="preserve"><value>Перетащите изображение сюда</value></data>
-  <data name="BaseScreenshotPasteHint" xml:space="preserve"><value>или нажмите CTRL+V, чтобы вставить скриншот</value></data>
-  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve"><value>В буфере обмена не найдено изображение.</value></data>
-  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve"><value>Ошибка вставки</value></data>
-  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve"><value>Не удалось вставить изображение: {0}</value></data>
-  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve"><value>Не удалось загрузить файл изображения: {0}</value></data>
-  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve"><value>Ошибка сжатия</value></data>
-  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve"><value>Ошибка при сжатии изображения: {0}</value></data>
-  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve"><value>Разрешение: {0}x{1} | Размер: {2} KB (качество 25%)</value></data>
-  <data name="BaseNoteWindowTitle" xml:space="preserve"><value>Редактировать заметку базы</value></data>
-  <data name="BaseNoteTitle" xml:space="preserve"><value>Заметка базы</value></data>
-  <data name="BaseAddNote" xml:space="preserve"><value>Добавить заметку</value></data>
-  <data name="BaseEditNote" xml:space="preserve"><value>Редактировать заметку</value></data>
-  <data name="BaseDeleteNote" xml:space="preserve"><value>Удалить заметку</value></data>
-  <data name="BaseDeleteScreenshotFormat" xml:space="preserve"><value>Удалить скриншот {0}</value></data>
-  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve"><value>Добавить скриншот {0} (требуется Premium)</value></data>
-  <data name="BaseNoNotesYet" xml:space="preserve"><value>Заметок пока нет.</value></data>
-  <data name="BaseNoScreenshotsYet" xml:space="preserve"><value>Скриншоты пока не добавлены</value></data>
-  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve"><value>Chat Master онлайн</value></data>
-  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve"><value>{0} управляет чат-оповещениями и чат-командами этой команды.</value></data>
-  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve"><value>Chat Master {0} онлайн. Чат-оповещения и чат-команды на этом устройстве приостановлены.</value></data>
-  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve"><value>Вы Chat Master</value></data>
-  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve"><value>Это устройство теперь управляет чат-оповещениями и чат-командами вашей команды.</value></data>
-  <data name="ChatFeatureMasterAccept" xml:space="preserve"><value>Принять</value></data>
-  <data name="ChatFeatureMasterDeny" xml:space="preserve"><value>Отклонить</value></data>
-    <data name="TimerDurationRequired" xml:space="preserve">
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Облачный аккаунт</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Вход в облачный аккаунт</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Создать аккаунт</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Адрес электронной почты</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Пароль (минимум 6 символов)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Подтвердите пароль</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Создать аккаунт</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Письмо подтверждения отправлено!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Нажмите ссылку в письме. Приложение автоматически проверяет статус каждые несколько секунд...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Ожидание подтверждения...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Ожидание подтверждения... ({0}с)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Проблемы? </value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Открыть в браузере</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Введите e-mail и пароль.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Введите адрес электронной почты.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Пароль должен содержать минимум 6 символов.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Пароли не совпадают.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Вход...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Вход выполнен!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Не удалось войти.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Регистрация...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Регистрация не удалась.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Тайм-аут: e-mail не был подтвержден в течение 5 минут. Вы сможете войти позже.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Неверные данные для входа. Проверьте e-mail и пароль.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Неверные данные для входа.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Адрес e-mail еще не подтвержден. Нажмите ссылку подтверждения во входящих.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Этот адрес e-mail уже зарегистрирован. Войдите в аккаунт.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Отключить Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord подключен - Tier: {0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>E-mail подключен: {0} - Tier: {1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Не подключено - войдите, чтобы использовать Cloud Sync и резервные копии</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Отключение...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Подключение...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>E-mail / Аккаунт</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Выйти из e-mail аккаунта?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Для Cloud Sync нужен аккаунт</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Облачные сервисы, такие как синхронизация и хранение резервных копий, требуют бесплатный аккаунт. Выберите e-mail или Discord, чтобы продолжить синхронизацию устройств, оверлеев и резервных копий.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Синхронизация через e-mail</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Синхронизация через Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Нет, спасибо</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Достигнут лимит синхронизации</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Достигнут лимит баз (Free: максимум 2 базы, Premium: максимум 10 баз)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Добавить скриншот</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Перетащите изображение сюда</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>или нажмите CTRL+V, чтобы вставить скриншот</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>В буфере обмена не найдено изображение.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Ошибка вставки</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Не удалось вставить изображение: {0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Не удалось загрузить файл изображения: {0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Ошибка сжатия</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Ошибка при сжатии изображения: {0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Разрешение: {0}x{1} | Размер: {2} KB (качество 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Редактировать заметку базы</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Заметка базы</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Добавить заметку</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Редактировать заметку</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Удалить заметку</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Удалить скриншот {0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Добавить скриншот {0} (требуется Premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Заметок пока нет.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Скриншоты пока не добавлены</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master онлайн</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0} управляет чат-оповещениями и чат-командами этой команды.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master {0} онлайн. Чат-оповещения и чат-команды на этом устройстве приостановлены.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Вы Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Это устройство теперь управляет чат-оповещениями и чат-командами вашей команды.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
     <value>Пожалуйста, введите продолжительность таймера (часы, минуты или секунды).</value>
   </data>
-    <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
     <value>Имя таймера должно начинаться с буквы.</value>
   </data>
   <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
@@ -2095,10 +2239,10 @@
     <value>Переменные: {0}</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>Шаблон для &apos;{0}&apos; успешно сохранен.</value>
+    <value>Шаблон для '{0}' успешно сохранен.</value>
   </data>
   <data name="ResetSuccess" xml:space="preserve">
-    <value>Шаблон для &apos;{0}&apos; сброшен по умолчанию.</value>
+    <value>Шаблон для '{0}' сброшен по умолчанию.</value>
   </data>
   <data name="SaveSuccessTitle" xml:space="preserve">
     <value>Сохранение успешно</value>
@@ -2321,5 +2465,85 @@
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Имя игрока, {1}: Время</value>
+  </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Найдите и выберите значок предмета для этого устройства.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Изменить значок устройства</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Найдите и выберите значок предмета для этого правила.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Изменить значок правила</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Сбросить на значок по умолчанию</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Правило</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Поиск значков (например, турель, выключатель)...</value>
+  </data>
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} дней</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Удалить все данные 3D карты</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Калькулятор переработки для ваших компонентов и многого другого. Сразу увидите разницу между безопасной зоной и обычной переработкой.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Версия 7.0 - Основные изменения</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 3D-карта с живыми позициями игроков и маркерами смерти
+• Карта строится из локального файла карты, получает дополнительную информацию, такую как зоны блокировки строительства, айсберги, пещеры, и отображает ее на 2D-карте
+• Интегрирован 3D-конструктор площади базы
+• Улучшенный логический движок
+• Внутриигровые маркеры команд теперь отображаются на 2D-карте
+• Пользовательские иконки для умных устройств</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Настройки 3D карты</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Удаляет все загруженные данные 3D-карты и кэшированные данные для освобождения места на диске</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Обновление Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Улучшения 2D-карты</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Добавлена поддержка маркеров пещер и руин в джунглях.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Интеграция 3D-карты</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Автоматически создавайте и просматривайте интерактивные 3D-модели карт.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Калькулятор переработки</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Калькулятор переработки для ваших компонентов. Увидите разницу между переработкой в безопасной зоне и обычной.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Настройки и очистка</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Легко удаляйте старые 3D-карты из кэша для освобождения места.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Больше не показывать это</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Закрыть</value>
   </data>
 </root>

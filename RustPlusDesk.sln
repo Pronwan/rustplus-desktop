@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RustPlusDesk", "RustPlusDesktop\RustPlusDesk.csproj", "{234BCF77-B330-4D6E-9245-0A6743F17261}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapParser", "MapParser\MapParser.csproj", "{B304D180-5C75-406D-A7FF-CD3BC3B46944}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{234BCF77-B330-4D6E-9245-0A6743F17261}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{234BCF77-B330-4D6E-9245-0A6743F17261}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{234BCF77-B330-4D6E-9245-0A6743F17261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B304D180-5C75-406D-A7FF-CD3BC3B46944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B304D180-5C75-406D-A7FF-CD3BC3B46944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B304D180-5C75-406D-A7FF-CD3BC3B46944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B304D180-5C75-406D-A7FF-CD3BC3B46944}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

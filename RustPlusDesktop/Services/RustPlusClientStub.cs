@@ -61,5 +61,10 @@ public class RustPlusClientStub : IRustPlusClient
         return Task.FromResult(new EntityProbeResult { Exists = false });
     }
 
+    public Task<RustPlusApi.Data.ServerInfo?> GetServerInfoAsync(CancellationToken ct = default)
+    {
+        return Task.FromResult<RustPlusApi.Data.ServerInfo?>(null);
+    }
+
     public string? Host => "stub";
 }

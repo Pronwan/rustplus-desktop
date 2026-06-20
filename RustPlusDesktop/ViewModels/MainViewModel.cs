@@ -21,6 +21,13 @@ public class MainViewModel : INotifyPropertyChanged
         set { _myAvatar = value; OnPropertyChanged(); }
     }
 
+    private int _unreadNotificationsCount;
+    public int UnreadNotificationsCount
+    {
+        get => _unreadNotificationsCount;
+        set { _unreadNotificationsCount = value; OnPropertyChanged(); }
+    }
+
     public MainViewModel()
     {
         _clockTimer = new System.Windows.Threading.DispatcherTimer();
@@ -37,6 +44,11 @@ public class MainViewModel : INotifyPropertyChanged
                 UpdateDisplayProperties(_lastStatusGameTime.Value);
             }
         };
+
+        NotificationCenterService.UnreadCountChanged += (s, count) => {
+            UnreadNotificationsCount = count;
+        };
+        UnreadNotificationsCount = NotificationCenterService.UnreadCount;
     }
 
     private void TickClock()

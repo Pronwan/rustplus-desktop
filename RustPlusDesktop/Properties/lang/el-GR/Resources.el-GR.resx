@@ -1824,6 +1824,31 @@ Open Releases page?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: τέθηκε σε {1} (ενεργοποιήθηκε από {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Αναζητήστε και επιλέξτε ένα εικονίδιο αντικειμένου για αυτήν τη συσκευή.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Αλλαγή εικονιδίου συσκευής</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Αναζητήστε και επιλέξτε ένα εικονίδιο αντικειμένου για αυτόν τον κανόνα.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Αλλαγή εικονιδίου κανόνα</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Επαναφορά στο προεπιλεγμένο εικονίδιο</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Κανόνας</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Αναζήτηση εικονιδίων (π.χ. πυργίσκος, διακόπτης)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} ημέρες</value>
+  </data>
 </root>
 
 

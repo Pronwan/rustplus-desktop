@@ -2398,10 +2398,10 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Variablen: {0}</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>Vorlage für &apos;{0}&apos; wurde gespeichert.</value>
+    <value>Vorlage für '{0}' wurde gespeichert.</value>
   </data>
   <data name="ResetSuccess" xml:space="preserve">
-    <value>Vorlage für &apos;{0}&apos; wurde auf Standard zurückgesetzt.</value>
+    <value>Vorlage für '{0}' wurde auf Standard zurückgesetzt.</value>
   </data>
   <data name="SaveSuccessTitle" xml:space="preserve">
     <value>Speichern erfolgreich</value>
@@ -2624,5 +2624,85 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   </data>
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Spielername, {1}: Zeit</value>
+  </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Suchen und wählen Sie ein Gegenstandssymbol für dieses Gerät aus.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Gerätesymbol ändern</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Suchen und wählen Sie ein Gegenstandssymbol für diese Regel aus.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Regelsymbol ändern</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Auf Standardsymbol zurücksetzen</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Symbole suchen (z. B. Geschützturm, Schalter)...</value>
+  </data>
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} Tage</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Alle 3D Map Daten löschen</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Recycling Rechner für deine Komponenten und mehr. Siehe sofort den Unterschied zwischen Safe-Zone und regulärem Recycling.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Version 7.0 - Hauptveränderungen</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 3D-Map mit Live-Player-Positions und Death Markern
+• Map wird aus lokalem Map-File gebaut, holt zusätzliche Informationen und stellt sie auf der 2D-Map dar (z.B. Building-Blocked Zones, Eisberge, Caves)
+• 3D Base Footprint-Builder integriert
+• Logic Engine verfeinert
+• Ingame Team Marker werden jetzt auch auf der 2D-Map angezeigt
+• Custom Icons für Smart Devices</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Map Einstellungen</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Löscht alle heruntergeladenen 3D-Map-Daten und den Cache, um Speicherplatz freizugeben</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Update</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D-Karten-Verbesserungen</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Unterstützung für Höhlen- und Dschungelruinen-Marker auf deinen 2D-Karten hinzugefügt.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D-Karten-Integration</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Konstruiere und betrachte interaktive 3D-Kartenmodelle mit integrierten Basis-Footprints und Custom-Monumenten.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Recycling-Rechner</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Recycling-Rechner für deine Komponenten. Vergleiche sofort die Ausbeute zwischen Safe-Zone und regulärem Recycling.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Einstellungen &amp; Bereinigung</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Lösche veraltete 3D-Kartendaten und Cache bequem in den Einstellungen, um Speicherplatz freizugeben.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Nicht mehr anzeigen</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Schließen</value>
   </data>
 </root>

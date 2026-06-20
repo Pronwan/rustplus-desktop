@@ -58,6 +58,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow : WpfUi.FluentWindow
 {
     private readonly MainViewModel _vm = new();
+    internal MainViewModel ViewModel => _vm;
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
 
@@ -365,6 +366,8 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        FlushPendingLogs();
+        MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
         PlayersTab?.SetMainWindow(this);
         
@@ -413,6 +416,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         AppendLog($"[items-new] baseDir={baseDir}");
         EnsureNewItemDbLoaded();
         AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+        StartIconAutoDownload();
 
         // NEU: Hintergrund-Update der Item-Liste von rusthelp.com
         _ = Task.Run(async () =>
@@ -422,6 +426,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 Dispatcher.Invoke(() => {
                     EnsureNewItemDbLoaded(force: true);
                     AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+                    StartIconAutoDownload();
                 });
             }
         });
@@ -506,7 +511,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "6.3.0";
+        const string AppVersion = "7.0.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -554,18 +559,31 @@ public partial class MainWindow : WpfUi.FluentWindow
                     
                     if (dlg.HasMadeChoice)
                     {
-                        TrackingService.LastSeenVersion = AppVersion;
                         TrackingService.CloudSyncEnabled = dlg.CloudSyncAccepted;
                         TrackingService.UploadConsentGiven = dlg.CloudSyncAccepted;
                         _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(dlg.CloudSyncAccepted);
                     }
+                    TrackingService.LastSeenVersion = AppVersion;
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
             else
             {
-                // Kommt von einer neueren/gleichen Version: Einfach Version updaten ohne Popup
+                // Kommt von einer neueren/gleichen Version: Einfach Version updaten
                 TrackingService.LastSeenVersion = AppVersion;
             }
+        }
+
+        if (!TrackingService.SuppressVersion7Notice)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
+                dlg7.ShowDialog();
+                if (dlg7.DontShowAgain)
+                {
+                    TrackingService.SuppressVersion7Notice = true;
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         // Initial tracking status update and hook global events
@@ -584,12 +602,16 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _pairing.Paired += Pairing_Paired;
 
-        // EINMALIG auf AlarmReceived hören:
+        // EINMALIG auf AlarmReceived/Death/Chat/Pairing hören:
         if (_pairing is PairingListenerRealProcess pr)
         {
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
             pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
+            pr.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
         }
+
+        NotificationCenterService.NotificationAdded -= OnNotificationAdded;
+        NotificationCenterService.NotificationAdded += OnNotificationAdded;
 
         // Status Ã¢â€ â€™ UI
         _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
@@ -1399,8 +1421,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     internal static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> sPendingDownloads = new();
+    private static readonly SemaphoreSlim sDownloadSemaphore = new SemaphoreSlim(10, 10);
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
+    private static readonly string s_cacheDir = System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "RustPlusDesk", "cache");
+    private static readonly string s_cachePath = System.IO.Path.Combine(s_cacheDir, "rust-item-list.json");
+    private static readonly string s_metaPath = System.IO.Path.Combine(s_cacheDir, "rust-item-list.meta");
 
     private static void EnsureNewItemDbLoaded(bool force = false)
     {
@@ -1420,6 +1448,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var diskCandidates = new[]
         {
         System.IO.Path.Combine(baseDir, "rust-item-list.json"),
+        s_cachePath,
         System.IO.Path.Combine(currDir, "rust-item-list.json"),
         entryDir is null ? null : System.IO.Path.Combine(entryDir, "rust-item-list.json"),
         // hÃ¤ufige Ordner:
@@ -1654,6 +1683,15 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
     { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
     { "jungle ziggurat",         "pack://application:,,,/Assets/icons/jungle.png" },
+    { "jungle ruins",            "pack://application:,,,/Assets/icons/jungle.png" },
+    { "cave",                    "pack://application:,,,/Assets/icons/cave.png" },
+    { "iceberg",                 "pack://application:,,,/Assets/icons/iceberg.png" },
+    { "water well",              "pack://application:,,,/Assets/icons/waterwell.png" },
+    { "ice lake",                "pack://application:,,,/Assets/icons/ice_lake.png" },
+    { "god rock",                "pack://application:,,,/Assets/icons/godrock.png" },
+    { "large god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
+    { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
+    { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
 };
 
     private static double CalcOverlayScale(double effZoom, double exp, double baseMult = 1.0)
@@ -1747,7 +1785,19 @@ public partial class MainWindow : WpfUi.FluentWindow
              .Replace("missile silo monument", "missile silo")
              .Replace("military tunnels display name", "military tunnel")
              .Replace("oil rig small", "small oil rig")
-            .Replace("module 900x900 2way moonpool", "Moon Pool");
+            .Replace("module 900x900 2way moonpool", "Moon Pool")
+            .Replace("water well", "water well")
+            .Replace("water well a", "water well")
+            .Replace("water well b", "water well")
+            .Replace("water well c", "water well")
+            .Replace("water well d", "water well")
+            .Replace("water well e", "water well")
+            .Replace("ice lake 1", "ice lake")
+            .Replace("ice lake 2", "ice lake")
+            .Replace("ice lake 3", "ice lake")
+            .Replace("ice lake 4", "ice lake")
+            .Replace("large god rock", "god rock")
+            .Replace("train tunnel entrance", "tunnel entrance");
 
         return s;
     }
@@ -1855,34 +1905,101 @@ public partial class MainWindow : WpfUi.FluentWindow
         return g;
     }
 
+    private static bool ShouldCheckForUpdate()
+    {
+        try
+        {
+            if (!System.IO.File.Exists(s_cachePath)) return true;
+            if (!System.IO.File.Exists(s_metaPath)) return true;
+
+            var lines = System.IO.File.ReadAllLines(s_metaPath);
+            if (lines.Length < 2) return true;
+
+            if (long.TryParse(lines[1], out var lastCheckTicks))
+            {
+                var lastCheck = new DateTime(lastCheckTicks, DateTimeKind.Utc);
+                return (DateTime.UtcNow - lastCheck).TotalHours >= 1;
+            }
+        }
+        catch { }
+        return true;
+    }
+
+    private static string? ReadMetaLastModified()
+    {
+        try
+        {
+            if (System.IO.File.Exists(s_metaPath))
+            {
+                var lines = System.IO.File.ReadAllLines(s_metaPath);
+                return lines.Length > 0 ? lines[0].Trim() : null;
+            }
+        }
+        catch { }
+        return null;
+    }
+
+    private static void WriteMeta(string? lastModified)
+    {
+        try
+        {
+            string? dir = System.IO.Path.GetDirectoryName(s_metaPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.WriteAllLines(s_metaPath, new[] {
+                lastModified ?? "",
+                DateTime.UtcNow.Ticks.ToString()
+            });
+        }
+        catch { }
+    }
+
     private static async Task<bool> TryUpdateItemDbAsync()
     {
         const string url = "https://rusthelp.com/downloads/admin-item-list-public.json";
         try
         {
+            if (!ShouldCheckForUpdate())
+                return false;
+
             using var client = new HttpClient();
             client.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
             client.Timeout = TimeSpan.FromSeconds(15);
-            
+
+            var cachedLastModified = ReadMetaLastModified();
+            if (!string.IsNullOrEmpty(cachedLastModified))
+                client.DefaultRequestHeaders.IfModifiedSince = DateTimeOffset.Parse(cachedLastModified);
+
             var response = await client.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotModified)
+            {
+                WriteMeta(cachedLastModified);
+                return false;
+            }
+
             if (!response.IsSuccessStatusCode) return false;
 
             var json = await response.Content.ReadAsStringAsync();
             if (string.IsNullOrWhiteSpace(json) || !json.Trim().StartsWith("[")) return false;
 
-            // Grobe Validierung: ist es ein JSON Array mit Items?
             if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
 
-            // Pfad bestimmen: Wir speichern direkt ins Root-Verzeichnis, da dies die hÃ¶chste PrioritÃ¤t beim Laden hat
+            string? newLastModified = response.Content.Headers.LastModified?.ToString("R");
+
+            string? cacheDir = System.IO.Path.GetDirectoryName(s_cachePath);
+            if (!string.IsNullOrEmpty(cacheDir) && !System.IO.Directory.Exists(cacheDir))
+                System.IO.Directory.CreateDirectory(cacheDir);
+            await System.IO.File.WriteAllTextAsync(s_cachePath, json);
+            WriteMeta(newLastModified);
+
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
-
-            // Sicherstellen, dass Ordner existiert
             string? dir = System.IO.Path.GetDirectoryName(targetPath);
             if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
                 System.IO.Directory.CreateDirectory(dir);
-
             await System.IO.File.WriteAllTextAsync(targetPath, json);
+
             return true;
         }
         catch { return false; }
@@ -2062,6 +2179,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
     private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
     private readonly List<string> _alarmHistoryDedup = new();
+    private readonly Dictionary<string, DateTime> _lastGenericAlarmPerServer = new();
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
@@ -2183,6 +2301,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             n = n with { DeviceName = dev.PureName };
         }
 
+        // Add to Notification Center
+        // Prefer the original FCM title (e.g. "HV Rockets Raid wake up") over the generic device name.
+        var notif = new RustPlusNotification(
+            type: "Alarm",
+            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? "Alarm" : n.DeviceName),
+            message: n.Message,
+            serverIp: n.Ip,
+            serverPort: n.Port,
+            serverName: n.Server
+        )
+        {
+            EntityId = n.EntityId,
+            Timestamp = n.Timestamp,
+            FcmNotificationId = n.FcmNotificationId
+        };
+        NotificationCenterService.AddNotification(notif);
+
         if (n.EntityId.HasValue)
         {
             // Dedup primÃ¤r Ã¼ber ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
@@ -2199,6 +2334,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
                 return;
             }
+            // Cross-path dedup: WS alarm arriving after a generic FCM alarm for same server
+            if (source == "WS" && _lastGenericAlarmPerServer.TryGetValue(cleanSrv, out var genTime) && (now - genTime).TotalSeconds < 5)
+            {
+                _lastAlarmProcessed[key] = now;
+                AppendLog($"[alarm/debug] ({source}) Cross-path dedup: WS alarm follows generic FCM alarm for server '{cleanSrv}'");
+                return;
+            }
+
             _lastAlarmProcessed[key] = now;
             _lastAnyAlarmTime = now; // Merken, dass IRGENDEIN Alarm kam
         }
@@ -2220,6 +2363,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
             _lastAnyAlarmTime = now;
+            if (!string.IsNullOrEmpty(cleanSrv))
+                _lastGenericAlarmPerServer[cleanSrv] = now;
         }
 
         // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
@@ -2252,10 +2397,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
             AppendLog($"[alarm/debug] ({source}) Settings: AudioEnabled={dev.AudioEnabled}, PopupEnabled={dev.PopupEnabled}");
             
-            // Wenn der Alarm via FCM kommt, setzen wir den UI-Zustand manuell auf "ACTIVE" (10s Puls)
+            // Wenn der Alarm via FCM kommt, setzen wir den UI-Zustand manuell auf "ACTIVE" (10s Puls) und triggern die Logic Engine
             if (source != "WS")
             {
                 dev.IsOn = true;
+                TriggerLogicEngineOnDeviceEvent(dev.EntityId, true);
                 _ = Task.Run(async () =>
                 {
                     await Task.Delay(10000);
@@ -2296,6 +2442,88 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _alarmWin.Add(n);
     }
 
+    private System.Media.SoundPlayer? _notificationSoundPlayer;
+
+    private void PlayNotificationSound(string resourceName)
+    {
+        try
+        {
+            if (_notificationSoundPlayer == null)
+            {
+                var resource = Application.GetResourceStream(new Uri($"pack://application:,,,/Assets/{resourceName}"));
+                if (resource != null)
+                {
+                    _notificationSoundPlayer = new System.Media.SoundPlayer(resource.Stream);
+                    _notificationSoundPlayer.Load();
+                }
+                else
+                {
+                    var baseDir = AppContext.BaseDirectory;
+                    var path = System.IO.Path.Combine(baseDir, "Assets", resourceName);
+                    if (!System.IO.File.Exists(path))
+                        path = System.IO.Path.Combine(baseDir, resourceName);
+                    
+                    if (System.IO.File.Exists(path))
+                    {
+                        _notificationSoundPlayer = new System.Media.SoundPlayer(path);
+                        _notificationSoundPlayer.Load();
+                    }
+                }
+            }
+            _notificationSoundPlayer?.Play();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[NotificationSound] Failed to play sound: {ex.Message}");
+        }
+    }
+
+    private void OnNotificationAdded(object? sender, RustPlusNotification notif)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            // Play sound if enabled in settings
+            if (TrackingService.NotificationsSoundsEnabled)
+            {
+                if (notif.Type == "Chat")
+                {
+                    PlayNotificationSound("icq-message.wav");
+                }
+            }
+
+            // Show Toast/Snackbar if enabled
+            if (TrackingService.NotificationsToastEnabled)
+            {
+                var appearance = notif.Type switch
+                {
+                    "Alarm" => WpfUi.ControlAppearance.Danger,
+                    "Death" => WpfUi.ControlAppearance.Caution,
+                    "Chat" => WpfUi.ControlAppearance.Info,
+                    "Pairing" => WpfUi.ControlAppearance.Success,
+                    _ => WpfUi.ControlAppearance.Info
+                };
+                ShowInfoSnackbar(notif.Title, notif.Message, appearance);
+            }
+        });
+    }
+
+    private void HandleFcmChatReceived(TeamChatMessage c)
+    {
+        // Also add it to the chat UI if the server is current!
+        if (_vm.Selected != null && _vm.Selected.Host == c.Ip && _vm.Selected.Port == c.Port)
+        {
+            AppendChatIfNew(c, isHistorical: false);
+        }
+    }
+
+    private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.Source == MainTabs && MainTabs.SelectedItem == NotificationsTab)
+        {
+            NotificationCenterService.MarkAllAsRead();
+        }
+    }
+
     private void HandleOfflineDeath(OfflineDeathNotification d)
     {
         if (!TrackingService.OfflineDeathAlertsEnabled) return;
@@ -2304,6 +2532,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // Save to local history
         TrackingService.AddOfflineDeath(d);
+
+        // Add to Notification Center
+        var notif = new RustPlusNotification(
+            type: "Death",
+            title: "Offline Death",
+            message: $"You were killed by {d.AttackerName} on {d.ServerName}",
+            serverIp: d.Ip,
+            serverPort: d.Port,
+            serverName: d.ServerName
+        )
+        {
+            AttackerName = d.AttackerName,
+            Timestamp = d.Timestamp
+        };
+        NotificationCenterService.AddNotification(notif);
 
         // Play Offline Death sound
         try
@@ -2843,6 +3086,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         Dispatcher.Invoke(() =>
         {
+            // Add to Notification Center!
+            var pairedMsg = e.EntityId.HasValue 
+                ? $"Paired device: {e.EntityName ?? "Smart Device"} (ID: {e.EntityId.Value}, Type: {e.EntityType ?? "Unknown"})"
+                : $"Paired server: {e.ServerName ?? e.Host}:{e.Port}";
+            var notif = new RustPlusNotification(
+                type: "Pairing",
+                title: "Pairing Successful",
+                message: pairedMsg,
+                serverIp: e.Host,
+                serverPort: e.Port,
+                serverName: e.ServerName
+            )
+            {
+                EntityId = e.EntityId,
+                EntityName = e.EntityName,
+                Timestamp = DateTime.Now
+            };
+            NotificationCenterService.AddNotification(notif);
+
             var keyHost = (e.Host ?? "").Trim();
             var keyPort = e.Port;
             // PREFER the SteamID from the pairing payload if it exists. 
@@ -3372,13 +3634,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsPairingBusy = false;
         }
     }
+    private static readonly List<string> sPendingLogs = new();
+    public static event Action? IconsUpdated;
+
+    public void FlushPendingLogs()
+    {
+        if (TxtLog == null) return;
+        lock (sPendingLogs)
+        {
+            if (sPendingLogs.Count > 0)
+            {
+                foreach (var pl in sPendingLogs)
+                {
+                    TxtLog.AppendText(pl + Environment.NewLine);
+                }
+                sPendingLogs.Clear();
+                TxtLog.ScrollToEnd();
+            }
+        }
+    }
+
     public void AppendLog(string line)
     {
         Dispatcher.Invoke(() =>
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
-            TxtLog.AppendText($"[{timestamp}] {line}{Environment.NewLine}");
-            TxtLog.ScrollToEnd();
+            string formatted = $"[{timestamp}] {line}";
+            if (TxtLog == null)
+            {
+                lock (sPendingLogs)
+                {
+                    sPendingLogs.Add(formatted);
+                }
+            }
+            else
+            {
+                FlushPendingLogs();
+                TxtLog.AppendText(formatted + Environment.NewLine);
+                TxtLog.ScrollToEnd();
+            }
         });
     }
 
@@ -3396,6 +3690,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     // death pins per player
     private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
+
+    // team map notes / markers from Rust+ API
+    private readonly Dictionary<string, FrameworkElement> _teamNotesEls = new();
+    private RustPlusClientReal.TeamInfo? _lastTeamInfo;
 
 
 
@@ -3598,30 +3896,30 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (string.IsNullOrWhiteSpace(shortName) && itemId != 0 && sItemsById.TryGetValue(itemId, out var ii0))
             shortName = ii0.ShortName;
 
-        // Fallback-URL (rusthelp)
+        // Original-URL (rusthelp)
         string? rusthelpUrl = null;
         if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) rusthelpUrl = ii1.IconUrl;
         if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
             rusthelpUrl = ii2.IconUrl;
 
-        // PrimÃƒÂ¤r-URL (rustclash)
-        string? rustclashUrl = !string.IsNullOrWhiteSpace(shortName)
-            ? $"https://wiki.rustclash.com/img/items40/{shortName}.png"
+        // Primär-URL (rusthelp optimized to 40px)
+        string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
+            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=40&q=90"
             : null;
 
-        // 1) Versuche RustClash (PrimÃƒÂ¤r)
-        if (rustclashUrl != null)
+        // 1) Versuche Optimierte URL
+        if (optimizedUrl != null)
         {
-            if (sIconCache.TryGetValue(rustclashUrl, out var ready)) return ready;
-            var path = GetIconCachePath(rustclashUrl);
+            if (sIconCache.TryGetValue(optimizedUrl, out var ready)) return ready;
+            var path = GetIconCachePath(optimizedUrl);
             if (System.IO.File.Exists(path))
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
-                if (img != null) { sIconCache[rustclashUrl] = img; return img; }
+                if (img != null) { sIconCache[optimizedUrl] = img; return img; }
             }
         }
 
-        // 2) Versuche RustHelp (Fallback/DB)
+        // 2) Versuche Original URL (Fallback/DB)
         if (rusthelpUrl != null)
         {
             if (sIconCache.TryGetValue(rusthelpUrl, out var ready)) return ready;
@@ -3633,9 +3931,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
-        // 3) Nichts da -> Download (RustClash bevorzugt, RustHelp als Fallback)
-        if (rustclashUrl != null)
-            QueueIconDownload(rustclashUrl, GetIconCachePath(rustclashUrl), rusthelpUrl);
+        // 3) Nichts da -> Download (Optimiert bevorzugt, Original als Fallback)
+        if (optimizedUrl != null)
+            QueueIconDownload(optimizedUrl, GetIconCachePath(optimizedUrl), rusthelpUrl);
         else if (rusthelpUrl != null)
             QueueIconDownload(rusthelpUrl, GetIconCachePath(rusthelpUrl), null);
 
@@ -3666,6 +3964,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch { return null; }
     }
 
+    private static void LogMessage(string message)
+    {
+        System.Diagnostics.Debug.WriteLine(message);
+    }
+
     private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl)
     {
         lock (sPendingDownloads)
@@ -3673,36 +3976,81 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!sPendingDownloads.Add(url)) return;
         }
 
-        UpdateIconProgress(-1); // Total erhÃƒÂ¶hen
+        UpdateIconProgress(-1); // Total erhöhen
 
         _ = Task.Run(async () =>
         {
+            await sDownloadSemaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
                 using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
 
-                // 1) PrimÃƒÂ¤r versuchen
-                var resp = await http.GetAsync(url).ConfigureAwait(false);
-                if (resp.IsSuccessStatusCode)
+                HttpResponseMessage? resp = null;
+                try
+                {
+                    resp = await http.GetAsync(url).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"[icon-download] Download failed (exception): {url} -> {ex.Message}");
+                }
+
+                if (resp != null && resp.IsSuccessStatusCode)
                 {
                     var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                    LogMessage($"[icon-download] Successfully downloaded optimized icon: {url}");
                 }
-                else if (fallbackUrl != null)
+                else
                 {
-                    // 2) Fallback versuchen
-                    var respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
-                    if (respF.IsSuccessStatusCode)
+                    if (resp != null)
                     {
-                        var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-                        await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                        LogMessage($"[icon-download] Download failed (status): {url} -> {resp.StatusCode} ({(int)resp.StatusCode})");
+                    }
+                    else
+                    {
+                        LogMessage($"[icon-download] Download failed: {url} -> No response");
+                    }
+
+                    if (fallbackUrl != null)
+                    {
+                        LogMessage($"[icon-download] Falling back to original for {fallbackUrl}");
+                        HttpResponseMessage? respF = null;
+                        try
+                        {
+                            respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
+                        }
+                        catch (Exception exF)
+                        {
+                            LogMessage($"[icon-download] Fallback failed (exception): {fallbackUrl} -> {exF.Message}");
+                        }
+
+                        if (respF != null && respF.IsSuccessStatusCode)
+                        {
+                            var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                            await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                            LogMessage($"[icon-download] Successfully downloaded fallback icon: {fallbackUrl}");
+                        }
+                        else if (respF != null)
+                        {
+                            LogMessage($"[icon-download] Fallback failed (status): {fallbackUrl} -> {respF.StatusCode} ({(int)respF.StatusCode})");
+                        }
                     }
                 }
             }
-            catch { }
+            catch (Exception exOverall)
+            {
+                LogMessage($"[icon-download] Overall download process error: {exOverall.Message}");
+            }
             finally
             {
+                sDownloadSemaphore.Release();
+                lock (sPendingDownloads)
+                {
+                    sPendingDownloads.Remove(url);
+                }
                 UpdateIconProgress(1); // Fertig
             }
         });
@@ -3714,8 +4062,73 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (Application.Current?.MainWindow is MainWindow mw)
             {
-                if (deltaFinish > 0) mw._vm.IconsDownloaded++;
-                else mw._vm.IconsTotal++;
+                if (deltaFinish > 0)
+                {
+                    mw._vm.IconsDownloaded++;
+                    IconsUpdated?.Invoke();
+                    if (mw._vm.IconsDownloaded == mw._vm.IconsTotal && mw._vm.IconsTotal > 0)
+                    {
+                        mw.AppendLog($"[icon-download] All icons downloaded ({mw._vm.IconsDownloaded}/{mw._vm.IconsTotal})");
+                    }
+                }
+                else
+                {
+                    mw._vm.IconsTotal++;
+                }
+            }
+        });
+    }
+
+    private static void StartIconAutoDownload()
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(1000).ConfigureAwait(false);
+
+                List<ItemInfo> items;
+                lock (sItemsById)
+                {
+                    items = sItemsById.Values.ToList();
+                }
+
+                var toDownload = new List<(string url, string path, string? fallback)>();
+                foreach (var ii in items)
+                {
+                    if (string.IsNullOrWhiteSpace(ii.IconUrl)) continue;
+
+                    string rusthelpUrl = ii.IconUrl;
+                    string optimizedUrl = $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl)}&w=40&q=90";
+                    string path = GetIconCachePath(optimizedUrl);
+
+                    if (!System.IO.File.Exists(path))
+                    {
+                        toDownload.Add((optimizedUrl, path, rusthelpUrl));
+                    }
+                }
+
+                if (toDownload.Count > 0)
+                {
+                    Application.Current?.Dispatcher?.Invoke(() =>
+                    {
+                        if (Application.Current?.MainWindow is MainWindow mw)
+                        {
+                            mw._vm.IconsTotal = 0;
+                            mw._vm.IconsDownloaded = 0;
+                            mw.AppendLog($"[icon-download] Auto-downloading {toDownload.Count} missing icons...");
+                        }
+                    });
+
+                    foreach (var (url, path, fallback) in toDownload)
+                    {
+                        QueueIconDownload(url, path, fallback);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[icon-download] Auto-download error: {ex.Message}");
             }
         });
     }
@@ -3907,6 +4320,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceDeepSea = val;
         TrackingService.AnnouncePlayerOnline = val;
         TrackingService.AnnouncePlayerOffline = val;
+        TrackingService.AnnouncePlayerAfk = val;
         TrackingService.AnnouncePlayerDeathSelf = val;
         TrackingService.AnnouncePlayerDeathTeam = val;
         TrackingService.AnnouncePlayerRespawnSelf = val;
@@ -3925,7 +4339,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnounceCargoEgress && !TrackingService.AnnounceCargoArrival &&
                !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
                !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
-               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
+               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline && !TrackingService.AnnouncePlayerAfk &&
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
@@ -3973,6 +4387,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
+                case "PlayerAfk": TrackingService.AnnouncePlayerAfk = val; break;
                 case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
                 case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
@@ -4068,6 +4483,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                case "PlayerAfk": isSelected = TrackingService.AnnouncePlayerAfk; break;
                 case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
                 case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;

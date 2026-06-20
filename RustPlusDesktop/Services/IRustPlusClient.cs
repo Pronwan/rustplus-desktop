@@ -16,4 +16,5 @@ namespace RustPlusDesk.Services;
 
     // NEU:
     Task<EntityProbeResult> ProbeEntityAsync(uint entityId, CancellationToken ct = default);
+    Task<RustPlusApi.Data.ServerInfo?> GetServerInfoAsync(CancellationToken ct = default);
 }

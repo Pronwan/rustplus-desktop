@@ -1824,6 +1824,31 @@ Ladda ner och installera nu?</value>
   <data name="HotkeyTriggerToggled" xml:space="preserve">
     <value>[Hotkey] {0}: växlad till {1} (utlöst av {2})</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>Sök och välj en föremålsikon för den här enheten.</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>Ändra enhetsikon</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>Sök och välj en föremålsikon för den här regeln.</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>Ändra regelikon</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>Återställ till standardikon</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>Sök ikoner (t.ex. torn, strömbrytare)...</value>
+  </data>
+
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} dagar</value>
+  </data>
 </root>
 
 

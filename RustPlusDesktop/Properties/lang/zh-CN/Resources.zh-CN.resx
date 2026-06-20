@@ -2571,4 +2571,84 @@
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: 玩家名称, {1}: 时间</value>
   </data>
+  <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
+    <value>搜索并选择此设备的物品图标。</value>
+  </data>
+  <data name="ChangeDeviceIconTitle" xml:space="preserve">
+    <value>更改设备图标</value>
+  </data>
+  <data name="ChangeRuleIconSubtitle" xml:space="preserve">
+    <value>搜索并选择此规则的物品图标。</value>
+  </data>
+  <data name="ChangeRuleIconTitle" xml:space="preserve">
+    <value>更改规则图标</value>
+  </data>
+  <data name="ResetToDefaultIcon" xml:space="preserve">
+    <value>重置为默认图标</value>
+  </data>
+  <data name="Rule" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="SearchIconsPlaceholder" xml:space="preserve">
+    <value>搜索图标（例如：炮塔、开关）...</value>
+  </data>
+  <data name="NotificationRetentionDays" xml:space="preserve">
+    <value>{0} 天</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>删除所有3D地图数据</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>组件等回收计算器。立即查看安全区和常规回收之间的区别。</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>7.0版本 - 主要变化</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 带有实时玩家位置和死亡标记的3D地图
+• 地图从本地地图文件构建，获取额外信息（如建筑封锁区、冰山、洞穴）并显示在2D地图上
+• 集成了3D基地脚印构建器
+• 改进的逻辑引擎
+• 游戏内团队标记现在显示在2D地图上
+• 智能设备的自定义图标</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D地图设置</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>删除所有下载的3D地图边界和缓存数据以释放磁盘空间</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 更新</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D地图增强功能</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>增加了对洞穴和丛林废墟标记的支持。</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D地图集成</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>自动构建并查看交互式3D地图模型。</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>回收计算器</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>为您的组件等提供的回收计算器。立即查看安全区和普通回收之间的差异。</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>设置与清理</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>轻松删除旧的3D地图缓存以释放存储空间。</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>不再显示此内容</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
 </root>

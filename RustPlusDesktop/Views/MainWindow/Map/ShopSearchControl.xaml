@@ -273,7 +273,7 @@
                     Style="{StaticResource ActionToolbarButton}"
                     Click="BtnShopProfit_Click">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="💰" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="&#x1F4B0;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text=" Profit" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
@@ -283,7 +283,7 @@
                     Style="{StaticResource ActionToolbarButton}"
                     Click="BtnShopBuyX_Click">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🔍" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="&#x1F50D;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text=" Buy X" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
@@ -294,7 +294,7 @@
                     Margin="0"
                     Click="BtnShopAddAlert_Click">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🔔" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="&#x1F514;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text=" Alert" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>

@@ -3599,6 +3599,8 @@ rp.connect();
     {
         public ulong LeaderSteamId { get; set; }
         public List<Member> Members { get; } = new();
+        public List<MapNote> MapNotes { get; } = new();
+        public List<MapNote> LeaderMapNotes { get; } = new();
 
         public sealed class Member
         {
@@ -3609,6 +3611,16 @@ rp.connect();
             public bool Dead { get; set; }   // neu
             public double? X { get; set; }   // neu
             public double? Y { get; set; }   // neu
+        }
+
+        public sealed class MapNote
+        {
+            public int Type { get; set; }
+            public double X { get; set; }
+            public double Y { get; set; }
+            public int Icon { get; set; }
+            public int Color { get; set; }
+            public string Label { get; set; } = string.Empty;
         }
     }
 
@@ -3735,6 +3747,43 @@ rp.connect();
                 });
             }
         }
+
+        object? mapNotes = P(ti, "mapNotes") ?? P(ti, "MapNotes");
+        object? leaderMapNotes = P(ti, "leaderMapNotes") ?? P(ti, "LeaderMapNotes");
+
+        static List<TeamInfo.MapNote> ParseNotes(object? notesObj)
+        {
+            var res = new List<TeamInfo.MapNote>();
+            if (notesObj is System.Collections.IEnumerable enNotes)
+            {
+                foreach (var n in enNotes)
+                {
+                    int type = AsInt(P(n, "Type") ?? P(n, "type"));
+                    double? x = AsDouble(P(n, "X") ?? P(n, "x"));
+                    double? y = AsDouble(P(n, "Y") ?? P(n, "y"));
+                    if (x.HasValue && y.HasValue)
+                    {
+                        int icon = AsInt(P(n, "Icon") ?? P(n, "icon"));
+                        int color = AsInt(P(n, "Colour") ?? P(n, "colour") ?? P(n, "Color") ?? P(n, "color"));
+                        string label = P(n, "Name")?.ToString() ?? P(n, "name")?.ToString() ?? "";
+
+                        res.Add(new TeamInfo.MapNote
+                        {
+                            Type = type,
+                            X = x.Value,
+                            Y = y.Value,
+                            Icon = icon,
+                            Color = color,
+                            Label = label
+                        });
+                    }
+                }
+            }
+            return res;
+        }
+
+        list.MapNotes.AddRange(ParseNotes(mapNotes));
+        list.LeaderMapNotes.AddRange(ParseNotes(leaderMapNotes));
 
         SaveToCache("team", list);
         return list;
@@ -5033,6 +5082,24 @@ rp.connect();
         catch (Exception ex) { CheckConnectionLost(ex); _log("ProbeEntity (contracts) Fehler: " + ex.Message); }
 
         return new EntityProbeResult(false, null, null);
+    }
+
+    public async Task<RustPlusApi.Data.ServerInfo?> GetServerInfoAsync(CancellationToken ct = default)
+    {
+        if (_api == null) return null;
+        try
+        {
+            var res = await _api.GetInfoAsync();
+            if (res != null && res.IsSuccess)
+            {
+                return res.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            _log($"[GetServerInfoAsync] Error: {ex.Message}");
+        }
+        return null;
     }
 
     public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, CancellationToken ct = default)

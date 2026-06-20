@@ -257,7 +257,7 @@ public partial class MainWindow
         }
     }
 
-    private async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
+    internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
     {
         _ownCloudRestoreReady = false;
 
@@ -352,6 +352,8 @@ public partial class MainWindow
             if (!silent) ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.PleaseSelectServerFirst, WpfUi.ControlAppearance.Info);
             return false;
         }
+
+        ResetBuildingBlockedZonesForServerChange();
 
         try
         {

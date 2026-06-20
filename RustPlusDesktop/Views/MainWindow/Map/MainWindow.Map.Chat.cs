@@ -97,7 +97,7 @@ public partial class MainWindow
     
     private readonly HashSet<string> _recentAutomatedMessages = new();
 
-    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false)
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null)
     {
         if (skipDiscordChatForwarding)
         {
@@ -116,7 +116,8 @@ public partial class MainWindow
                 try
                 {
                     string serverName = _vm.Selected.Name ?? "Rust Server";
-                    var payload = new { content = $"**[{serverName}]** {text}", tts = _vm.Selected.DiscordWebhookChatAlertsTts };
+                    string msg = discordText ?? text;
+                    var payload = new { content = $"**[{serverName}]** {msg}", tts = _vm.Selected.DiscordWebhookChatAlertsTts };
                     var json = System.Text.Json.JsonSerializer.Serialize(payload);
                     using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
                     using var client = new System.Net.Http.HttpClient();

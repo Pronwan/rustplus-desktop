@@ -33,6 +33,55 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v7.0.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v7.0.0 | 3D Maps, Base Footprint Builder &amp; Enhanced 2D Maps" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold" Foreground="{DynamicResource Accent}">&#x2022; Interactive 3D Maps:</Run>
+                                Explore your Rust server like never before with our fully interactive 3D Maps! Includes live player positions and death markers to help you strategize and locate loot.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Optional Map File Parsing:</Run>
+                                You can now optionally read your local `.map` files (safely, as read-only) by clicking the 3D Map button to extract precise in-game details. This brings exact Building Blocked Zones, Caves, Icebergs, and more directly to both your 3D and 2D maps! And don't worry, the 3D map unloads completely from RAM when closed to save resources.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; 3D Base Footprint Builder:</Run>
+                                Planning a new base? Use the new Footprint Builder in the 3D map to preview exactly how your base will fit. Test if it fits between No-Build Zones, check slope steepness, or verify water depth before you build in-game.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Refined Logic Engine:</Run>
+                                Our Logic Engine has been further refined for better performance and stability when constructing custom automation rules.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Enhanced Map Features:</Run>
+                                In-game Team Markers are now natively displayed on the 2D map. Plus, we've added beautiful custom icons for all Smart Devices!
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Recycling Calculator:</Run>
+                                Recycling Calculator for your Components and more. See the difference between safe-zone and regular recycling right away.
+                            </TextBlock>
+
+                            <!-- v7.0.0 Dynamic Image Gallery -->
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/Live-Following-3D.png" Description="Live player following on the interactive 3D map"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/No-Build-Zones-3D.png" Description="Exact Building Blocked Zones visualized on the 3D map"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/3D-Base-Footprint.png" Description="Checking base placement using the new 3D Base Footprint Builder"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/Ingame-Waypoints-on-map.png" Description="In-game Team Waypoints seamlessly synced to your 2D map"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/Logic-Engine.png" Description="Refined Logic Engine for advanced automation rules"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/Recycling-Calculator.png" Description="Recycling Calculator to plan your scrap runs"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/custom-icons-smart.png" Description="Brand new custom icons for Smart Devices"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+                    <!-- ============================================== -->
                     <!-- NEW v6.3.1 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
@@ -663,7 +712,7 @@
                             <TextBlock Text="Manually add players to your trackers list using their BattleMetrics ID. The app fetches their last seen status and allows you to rename them for better organization." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
                             <TextBlock Text="&#x2022; Optimized Item Icon Downloads" FontWeight="Bold" Margin="0,0,0,4"/>
-                            <TextBlock Text="Icons are now fetched from RustClash CDN in 40x40 size, reducing download size by 12.9x (totaling 151KB). Existing high-res icons remain cached; only missing ones are fetched in the new optimized format." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="Icons are now fetched from RustHelp optimized CDN in 40x40 size, reducing download size by 12.9x (totaling 151KB). Existing high-res icons remain cached; only missing ones are fetched in the new optimized format." TextWrapping="Wrap" Margin="0,0,0,8"/>
 
                             <TextBlock Text="&#x2022; Progress Tracking" FontWeight="Bold" Margin="0,0,0,4"/>
                             <TextBlock Text="Added a download progress bar to show visual status when the app is fetching item icons or updates." TextWrapping="Wrap" Margin="0,0,0,8"/>

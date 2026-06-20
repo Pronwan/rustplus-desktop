@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+             xmlns:services="clr-namespace:RustPlusDesk.Services"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Background="{DynamicResource Surface}"
@@ -13,6 +14,11 @@
 
     <UserControl.Resources>
         <conv:DeviceFilterConverter x:Key="DeviceFilterConverter" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <conv:BoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" Invert="True" />
+        <conv:EmptyCollectionToVisibilityConverter x:Key="EmptyCollectionToVisibilityConverter" />
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <conv:NullToVisibilityConverter x:Key="NullToInvertedVisibilityConverter" Invert="True" />
     </UserControl.Resources>
 
     <Grid ClipToBounds="True">
@@ -36,6 +42,7 @@
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -57,36 +64,121 @@
                 </Grid>
             </Border>
 
+            <!-- Runtime Status Panel -->
+            <Border Style="{StaticResource Card}" Margin="12,0,12,12" Grid.Row="1" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource Accent}" BorderThickness="1,0,0,0">
+                <Grid DataContext="{Binding Source={x:Static services:LogicEngineRuntimeService.Instance}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <ui:SymbolIcon Symbol="Pulse24" Margin="0,0,8,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Logic Engine Runtime" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}"/>
+                        <Border Margin="8,0,0,0" Padding="6,2" CornerRadius="4" Background="{DynamicResource Accent}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="RUNNING" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        <Border Margin="8,0,0,0" Padding="6,2" CornerRadius="4" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Visibility="{Binding IsRunning, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                            <TextBlock Text="IDLE" FontSize="10" Foreground="{DynamicResource TextSubtle}"/>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Margin="0,0,0,8">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextPrimary}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Run Text="Active Rule: "/>
+                            <Run Text="{Binding CurrentRuleName}" FontWeight="SemiBold"/>
+                        </TextBlock>
+                        <TextBlock FontSize="11" Foreground="{DynamicResource TextSubtle}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Run Text="Current Step: "/>
+                            <Run Text="{Binding CurrentStepNumber}" FontWeight="SemiBold"/>
+                            <Run Text=" - "/>
+                            <Run Text="{Binding CurrentStepType}"/>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Pending Queue" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                            <ItemsControl ItemsSource="{Binding PendingRules}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontSize="11" Foreground="{DynamicResource TextPrimary}" Margin="12,0,0,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="No pending rules" FontSize="11" Foreground="{DynamicResource TextSubtle}" FontStyle="Italic" Visibility="{Binding PendingRules, Converter={StaticResource EmptyCollectionToVisibilityConverter}}"/>
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Stop" Appearance="Danger" Icon="{ui:SymbolIcon Symbol=Stop24}" Click="BtnStopLogicEngine_Click" IsEnabled="{Binding IsRunning}" VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Grid>
+            </Border>
+
             <!-- Rules List -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="12">
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="12">
                 <ItemsControl x:Name="RulesItemsControl" ItemsSource="{Binding Selected.LogicRules}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1" BorderBrush="{DynamicResource CardBorder}" Background="{DynamicResource SurfaceAlt}" CornerRadius="8" Margin="0,0,0,12" Padding="12">
                                 <StackPanel>
-                                    <!-- Rule Title & Delete/Enabled controls -->
-                                    <Grid Margin="0,0,0,8">
+                                    <!-- Rule Header: Icon, Enable, Name, Expand, Delete -->
+                                    <Grid VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" ToolTip="Enable Rule" Margin="0,0,8,0"/>
-                                            <ui:TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="220" FontWeight="SemiBold" VerticalAlignment="Center" PlaceholderText="Rule Name"/>
-                                        </StackPanel>
+                                        <!-- Icon picker -->
+                                        <ui:Button Grid.Column="0" Click="BtnChangeRuleIcon_Click" Tag="{Binding}" Width="32" Height="32" Padding="4" Margin="0,0,8,0" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="6" ToolTip="Change Rule Icon">
+                                            <Grid>
+                                                <Image Source="{Binding CustomIcon}" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding CustomIcon, Converter={StaticResource NullToInvertedVisibilityConverter}}"/>
+                                                <ui:SymbolIcon Symbol="Emoji24" Visibility="{Binding CustomIcon, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                            </Grid>
+                                        </ui:Button>
 
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <!-- Delete Rule -->
-                                            <ui:Button Click="BtnDeleteRule_Click" Tag="{Binding}" Appearance="Transparent" Width="30" Height="30" Padding="0" ToolTip="Delete Rule" Foreground="IndianRed">
+                                        <!-- Enabled checkbox -->
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" ToolTip="Enable Rule" Margin="0,0,8,0"/>
+
+                                        <!-- Rule name -->
+                                        <ui:TextBox Grid.Column="2" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="SemiBold" VerticalAlignment="Center" PlaceholderText="Rule Name"/>
+
+                                        <!-- Expand/collapse -->
+                                        <ui:Button Grid.Column="3" Click="BtnToggleRuleExpand_Click" Tag="{Binding}" Appearance="Transparent" Width="30" Height="30" Padding="0" ToolTip="Expand/Collapse" Foreground="{DynamicResource TextSubtle}">
+                                            <Grid>
+                                                <ui:SymbolIcon Symbol="ChevronRight24" Visibility="{Binding IsExpanded, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
+                                                <ui:SymbolIcon Symbol="ChevronDown24" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            </Grid>
+                                        </ui:Button>
+
+                                        <!-- Delete Rule -->
+                                        <Grid Grid.Column="4">
+                                            <ui:Button Click="BtnDeleteRule_Click" Tag="{Binding}" Appearance="Transparent" Width="30" Height="30" Padding="0" ToolTip="Delete Rule" Foreground="IndianRed" Visibility="{Binding IsConfirmingDelete, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
                                                 <ui:SymbolIcon Symbol="Delete20"/>
                                             </ui:Button>
-                                        </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Visibility="{Binding IsConfirmingDelete, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <ui:Button Click="BtnConfirmDeleteRule_Click" Tag="{Binding}" Appearance="Danger" Width="30" Height="30" Padding="0" ToolTip="Confirm Delete" Margin="0,0,4,0">
+                                                    <ui:SymbolIcon Symbol="Checkmark20"/>
+                                                </ui:Button>
+                                                <ui:Button Click="BtnCancelDeleteRule_Click" Tag="{Binding}" Appearance="Secondary" Width="30" Height="30" Padding="0" ToolTip="Cancel">
+                                                    <ui:SymbolIcon Symbol="Dismiss20"/>
+                                                </ui:Button>
+                                            </StackPanel>
+                                        </Grid>
                                     </Grid>
 
-                                    <Separator Background="{DynamicResource CardBorder}" Margin="0,4,0,8"/>
+                                    <!-- Rule Details -->
+                                    <Grid Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <StackPanel>
+                                            <Separator Background="{DynamicResource CardBorder}" Margin="0,8,0,8"/>
 
-                                    <!-- Rule Trigger Config -->
+                                            <!-- Rule Trigger Config -->
                                     <TextBlock Text="Trigger Event" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
                                     <WrapPanel Margin="0,0,0,8" VerticalAlignment="Center">
                                         <!-- Trigger Type -->
@@ -405,6 +497,8 @@
 
                                     <!-- Add Action Button -->
                                     <ui:Button Click="BtnAddStep_Click" Tag="{Binding}" Content="Add Execution Step" Margin="0,4,0,0" Padding="8,4" FontSize="11" Icon="{ui:SymbolIcon Symbol=Add20}"/>
+                                        </StackPanel>
+                                    </Grid>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

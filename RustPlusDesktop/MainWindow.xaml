@@ -671,7 +671,7 @@
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                             <MenuItem.Header>
                                                 <TextBlock>
-                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                    <Run Text="ðŸ—‘ï¸ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
                                                 </TextBlock>
                                             </MenuItem.Header>
                                         </MenuItem>
@@ -1049,44 +1049,22 @@
                                         Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico"
                                         Stretch="UniformToFill" />
                                 </ui:Button>
+
+                                <StackPanel Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center" Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
+                                    <ui:SymbolIcon Symbol="ArrowDownload24" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource SystemAccentBrush}"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                        <Run Text="Icons: "/>
+                                        <Run Text="{Binding IconsDownloaded, Mode=OneWay}"/>
+                                        <Run Text="/"/>
+                                        <Run Text="{Binding IconsTotal, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 
-                        <!--  Serverdaten (rechtsbündig, gleiche Zeile)  -->
-                        <StackPanel
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource Players}" />
-                            <TextBlock
-                                Margin="4,0,0,0"
-                                FontWeight="SemiBold"
-                                Text="{Binding ServerPlayers}" />
-
-                    <Button
-                        x:Name="BtnShowOnline"
-                        Width="18"
-                        Height="18"
-                        Margin="4,0,0,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Click="BtnShowOnline_Click"
-                        Content="&#x25BC;"
-                        Foreground="White"
-                        ToolTip="{DynamicResource ShowOnlinePlayers}" />
-
-                    <TextBlock Margin="6,0,0,0" VerticalAlignment="Center">
-                        <Run Text=" | " />
-                        <Run Text="{DynamicResource Queue}" />
-                    </TextBlock>
-                    <TextBlock
-                        Margin="4,0,0,0"
-                        FontWeight="SemiBold"
-                        Text="{Binding ServerQueue}" />
-                </StackPanel>
                     </Grid>
 
-                    <!--  CENTER: TabControl füllt den Rest, mit Mindesthöhe  -->
+                    <!--  CENTER: TabControl fÃ¼llt den Rest, mit MindesthÃ¶he  -->
             <TabControl
                 x:Name="MainTabs"
                 VerticalAlignment="Stretch"
@@ -1095,7 +1073,7 @@
                 <TabItem Style="{StaticResource PrettyTabItem}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center" Text="🔌 " />
+                            <ui:SymbolIcon Symbol="Connector24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource DevicesTab}" />
                         </StackPanel>
                     </TabItem.Header>
@@ -1106,8 +1084,9 @@
                             HorizontalAlignment="Right"
                             DockPanel.Dock="Bottom"
                             Orientation="Horizontal">
-                            <Button
+                            <ui:Button
                                 x:Name="BtnHotkeys"
+                                Appearance="Secondary"
                                 MinWidth="135"
                                 Height="36"
                                 Margin="0,0,5,0"
@@ -1117,14 +1096,14 @@
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Keyboard24" 
                                                    Margin="0,0,6,0" 
-                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}"
                                                    VerticalAlignment="Center"/>
                                     <TextBlock x:Name="TxtBtnHotkeys" 
                                                Text="{DynamicResource Hotkeys}" 
-                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ui:Button}}"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
-                            </Button>
+                            </ui:Button>
 
                             <ui:Button
                                 x:Name="BtnPremiumInfoDevices"
@@ -1236,7 +1215,7 @@
                                                 <Style.Resources>
                                                     <!-- Nullify default highlight brushes so our card layout handles highlights -->
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{DynamicResource TextPrimary}" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#F2F2F2" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                                                 </Style.Resources>
                                             </Style>
@@ -1339,16 +1318,35 @@
                                                                 <ColumnDefinition Width="*" SharedSizeGroup="ColAlias" />
                                                                 <ColumnDefinition Width="Auto" SharedSizeGroup="ColToggle" />
                                                             </Grid.ColumnDefinitions>
+                                                            <!-- Selection Indicator Line -->
+                                                            <Border x:Name="SelectedLine" 
+                                                                    Grid.ColumnSpan="3"
+                                                                    Width="3" 
+                                                                    HorizontalAlignment="Left" 
+                                                                    Background="{DynamicResource Accent}" 
+                                                                    CornerRadius="1.5" 
+                                                                    Margin="-12,-8,0,-8">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                            </Border>
 
                                                             <!--  Spalte 1: Icon  -->
                                                             <Border Grid.Column="0"
                                                                     x:Name="IconBorder"
-                                                                    Width="38"
-                                                                    Height="38"
-                                                                    Background="#14FFFFFF"
+                                                                    Width="44"
+                                                                    Height="44"
+                                                                    Background="#35FFFFFF"
                                                                     CornerRadius="8"
                                                                     Padding="0"
-                                                                    Margin="0,0,10,0"
+                                                                    Margin="0,0,6,0"
                                                                     VerticalAlignment="Center"
                                                                     Cursor="Hand"
                                                                     ToolTip="Change Icon"
@@ -1356,8 +1354,8 @@
                                                                 <Grid>
                                                                     <Image
                                                                         x:Name="DeviceIconImg"
-                                                                        Width="24"
-                                                                        Height="24"
+                                                                        Width="34"
+                                                                        Height="34"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         RenderOptions.BitmapScalingMode="HighQuality">
@@ -1530,13 +1528,13 @@
                                                                             <Setter Property="Background" Value="#1AFFFFFF" />
                                                                             <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                             <Style.Triggers>
-                                                                                <!--  ON / ACTIVE / ONLINE Status (Grün)  -->
+                                                                                <!--  ON / ACTIVE / ONLINE Status (GrÃ¼n)  -->
                                                                                 <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                     <Setter Property="Background" Value="#1A4EB887" />
                                                                                     <Setter Property="BorderBrush" Value="#334EB887" />
                                                                                 </DataTrigger>
 
-                                                                                <!--  Storage Monitor & Others: Immer grün wenn da  -->
+                                                                                <!--  Storage Monitor & Others: Immer grÃ¼n wenn da  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
                                                                                     <Setter Property="Background" Value="#1A4EB887" />
                                                                                     <Setter Property="BorderBrush" Value="#334EB887" />
@@ -1565,7 +1563,7 @@
                                                                                 <Setter Property="Text" Value="{DynamicResource Online}" />
                                                                                 <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
                                                                                 <Style.Triggers>
-                                                                                    <!--  ON Status colors (Grün)  -->
+                                                                                    <!--  ON Status colors (GrÃ¼n)  -->
                                                                                     <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                         <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </DataTrigger>
@@ -1643,130 +1641,78 @@
                                                                 </Border>
                                                             </StackPanel>
 
-                                                            <!--  Spalte 3: Toggle NUR für SmartSwitch  -->
-                                                            <ToggleButton
-                                                                Grid.Column="2"
-                                                                Width="60"
-                                                                Height="22"
-                                                                Margin="8,0,0,0"
-                                                                VerticalAlignment="Center"
-                                                                IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                                                <ToggleButton.Style>
-                                                                    <Style TargetType="ToggleButton">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                                    <Border
-                                                                                        x:Name="Bd"
-                                                                                        Padding="2"
-                                                                                        Background="{TemplateBinding Background}"
-                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                                        BorderThickness="1"
-                                                                                        CornerRadius="11">
-                                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                                    </Border>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                        <EventSetter Event="Checked" Handler="DeviceToggle_Checked" />
-                                                                        <EventSetter Event="Unchecked" Handler="DeviceToggle_Unchecked" />
+                                                            <!--  Spalte 3: Toggle NUR fÃ¼r SmartSwitch  -->
+                                                            <ui:ToggleSwitch
+                                                                 Grid.Column="2"
+                                                                 Margin="8,0,0,0"
+                                                                 VerticalAlignment="Center"
+                                                                 IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Checked="DeviceToggle_Checked"
+                                                                 Unchecked="DeviceToggle_Unchecked">
+                                                                 <ui:ToggleSwitch.Style>
+                                                                     <Style TargetType="ui:ToggleSwitch" BasedOn="{StaticResource {x:Type ui:ToggleSwitch}}">
+                                                                         <Setter Property="Visibility" Value="Collapsed" />
+                                                                         <Style.Triggers>
+                                                                             <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                                 <Setter Property="Visibility" Value="Visible" />
+                                                                             </DataTrigger>
+                                                                             <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                 <Setter Property="IsEnabled" Value="False" />
+                                                                                 <Setter Property="Opacity" Value="0.4" />
+                                                                             </DataTrigger>
+                                                                             <DataTrigger Binding="{Binding IsToggleBusy}" Value="True">
+                                                                                 <Setter Property="IsEnabled" Value="False" />
+                                                                                 <Setter Property="Opacity" Value="0.6" />
+                                                                             </DataTrigger>
+                                                                         </Style.Triggers>
+                                                                     </Style>
+                                                                 </ui:ToggleSwitch.Style>
+                                                             </ui:ToggleSwitch>
 
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                        <Setter Property="Foreground" Value="#A0AEC0" />
-                                                                        <Setter Property="Background" Value="#2A3240" />
-                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
-                                                                        <Setter Property="Content" Value="OFF" />
-                                                                        <Setter Property="FontSize" Value="10" />
-                                                                        <Setter Property="FontWeight" Value="SemiBold" />
-                                                                        <Setter Property="Cursor" Value="Hand" />
+                                                            <!--  Spalte 3: Toggle NUR fÃ¼r Gruppen  -->
+                                                            <ui:Button
+                                                                 Grid.Column="2"
+                                                                 Width="60"
+                                                                 Height="22"
+                                                                 Margin="8,0,0,0"
+                                                                 VerticalAlignment="Center"
+                                                                 Click="GroupToggle_Click"
+                                                                 Content="{DynamicResource Toggle}"
+                                                                 Tag="{Binding}">
+                                                                 <ui:Button.Style>
+                                                                     <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                                         <Setter Property="Visibility" Value="Collapsed" />
+                                                                         <Setter Property="Foreground" Value="White" />
+                                                                         <Setter Property="Background" Value="#D97706" />
+                                                                         <Setter Property="BorderBrush" Value="#D97706" />
+                                                                         <Setter Property="CornerRadius" Value="11" />
+                                                                         <Setter Property="FontSize" Value="10" />
+                                                                         <Setter Property="FontWeight" Value="SemiBold" />
+                                                                         <Setter Property="Cursor" Value="Hand" />
+                                                                         <Style.Triggers>
+                                                                             <Trigger Property="IsMouseOver" Value="True">
+                                                                                 <Setter Property="Background" Value="#F59E0B" />
+                                                                                 <Setter Property="BorderBrush" Value="#F59E0B" />
+                                                                                 <Setter Property="Foreground" Value="White" />
+                                                                             </Trigger>
+                                                                             <Trigger Property="IsPressed" Value="True">
+                                                                                 <Setter Property="Background" Value="#B45309" />
+                                                                                 <Setter Property="BorderBrush" Value="#B45309" />
+                                                                                 <Setter Property="Foreground" Value="White" />
+                                                                             </Trigger>
+                                                                             <MultiDataTrigger>
+                                                                                 <MultiDataTrigger.Conditions>
+                                                                                     <Condition Binding="{Binding IsGroup}" Value="True" />
+                                                                                     <Condition Binding="{Binding HasGroupSwitches}" Value="True" />
+                                                                                 </MultiDataTrigger.Conditions>
+                                                                                 <Setter Property="Visibility" Value="Visible" />
+                                                                             </MultiDataTrigger>
+                                                                         </Style.Triggers>
+                                                                     </Style>
+                                                                 </ui:Button.Style>
+                                                             </ui:Button>
 
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                <Setter Property="IsEnabled" Value="False" />
-                                                                                <Setter Property="Opacity" Value="0.4" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsToggleBusy}" Value="True">
-                                                                                <Setter Property="IsEnabled" Value="False" />
-                                                                                <Setter Property="Opacity" Value="0.6" />
-                                                                            </DataTrigger>
-                                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                                <Setter Property="Background" Value="#353E4F" />
-                                                                            </Trigger>
-                                                                            <Trigger Property="IsChecked" Value="True">
-                                                                                <Setter Property="Background" Value="#2B7A4E" />
-                                                                                <Setter Property="BorderBrush" Value="#332B7A4E" />
-                                                                                <Setter Property="Foreground" Value="White" />
-                                                                                <Setter Property="Content" Value="ON" />
-                                                                            </Trigger>
-                                                                            <MultiTrigger>
-                                                                                <MultiTrigger.Conditions>
-                                                                                    <Condition Property="IsChecked" Value="True" />
-                                                                                    <Condition Property="IsMouseOver" Value="True" />
-                                                                                </MultiTrigger.Conditions>
-                                                                                <Setter Property="Background" Value="#358F5C" />
-                                                                            </MultiTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </ToggleButton.Style>
-                                                            </ToggleButton>
-
-                                                            <!--  Spalte 3: Toggle NUR für Gruppen  -->
-                                                            <Button
-                                                                Grid.Column="2"
-                                                                Width="60"
-                                                                Height="22"
-                                                                Margin="8,0,0,0"
-                                                                VerticalAlignment="Center"
-                                                                Click="GroupToggle_Click"
-                                                                Content="{DynamicResource Toggle}"
-                                                                Tag="{Binding}">
-                                                                <Button.Style>
-                                                                    <Style TargetType="Button">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate TargetType="Button">
-                                                                                    <Border
-                                                                                        x:Name="Bd"
-                                                                                        Padding="2"
-                                                                                        Background="{TemplateBinding Background}"
-                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                                        BorderThickness="1"
-                                                                                        CornerRadius="11">
-                                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                                    </Border>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                        <Setter Property="Foreground" Value="White" />
-                                                                        <Setter Property="Background" Value="#D97706" />
-                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
-                                                                        <Setter Property="FontSize" Value="10" />
-                                                                        <Setter Property="FontWeight" Value="SemiBold" />
-                                                                        <Setter Property="Cursor" Value="Hand" />
-                                                                        <Style.Triggers>
-                                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                                <Setter Property="Background" Value="#F59E0B" />
-                                                                            </Trigger>
-                                                                            <Trigger Property="IsPressed" Value="True">
-                                                                                <Setter Property="Background" Value="#B45309" />
-                                                                            </Trigger>
-                                                                            <MultiDataTrigger>
-                                                                                <MultiDataTrigger.Conditions>
-                                                                                    <Condition Binding="{Binding IsGroup}" Value="True" />
-                                                                                    <Condition Binding="{Binding HasGroupSwitches}" Value="True" />
-                                                                                </MultiDataTrigger.Conditions>
-                                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                            </MultiDataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </Button.Style>
-                                                            </Button>
-
-                                                            <!--  Spalte 3: Toggles NUR für SmartAlarm  -->
+                                                            <!--  Spalte 3: Toggles NUR fÃ¼r SmartAlarm  -->
                                                             <StackPanel
                                                                 Grid.Column="2"
                                                                 Margin="8,0,0,0"
@@ -1795,7 +1741,7 @@
                                                                     ToolTip="{DynamicResource PopupWindow}"
                                                                     IsChecked="{Binding PopupEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DeviceActionCheckBox}">
-                                                                    <Image Source="pack://application:,,,/Assets/icons/Popup.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                    <ui:SymbolIcon Symbol="WindowNew20" FontSize="16" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"/>
                                                                 </CheckBox>
 
                                                                 <CheckBox
@@ -1812,14 +1758,14 @@
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </CheckBox.Style>
-                                                                    <Image Source="pack://application:,,,/Assets/icons/PiP.png" Width="16" Height="16" Stretch="Uniform"/>
+                                                                    <ui:SymbolIcon Symbol="PictureInPicture20" FontSize="16" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"/>
                                                                 </CheckBox>
 
                                                                 <CheckBox
                                                                     ToolTip="{DynamicResource AudioAlert}"
                                                                     IsChecked="{Binding AudioEnabled, Mode=TwoWay}"
                                                                     Style="{StaticResource DeviceActionCheckBox}">
-                                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16"/>
+                                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"/>
                                                                     <CheckBox.ContextMenu>
                                                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                                             <MenuItem
@@ -1861,7 +1807,7 @@
                                                                 Padding="6,2"
                                                                 VerticalAlignment="Center"
                                                                 Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
-                                                                BorderBrush="#1EFFFFFF"
+                                                                BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}"
                                                                 BorderThickness="1"
                                                                 CornerRadius="6"
                                                                 PreviewMouseWheel="StorPill_PreviewMouseWheel"
@@ -1955,7 +1901,7 @@
                                                                                                     CornerRadius="6"
                                                                                                     SnapsToDevicePixels="True">
                                                                                                     <Grid>
-                                                                                                        <!--  Icon groß & zentriert  -->
+                                                                                                        <!--  Icon groÃŸ & zentriert  -->
                                                                                                         <Image
                                                                                                             Width="48"
                                                                                                             Height="48"
@@ -2012,7 +1958,7 @@
                                                     </Border>
                                                     <!--  ===== Ende Zeile =====  -->
 
-                                                    <!-- ===== Klappbereich (hÃ¤ngt direkt an
+                                                    <!-- ===== Klappbereich (hÃƒÂ¤ngt direkt an
                                              ) =====
                                              <Grid Margin="0,4,0,8" Visibility="Collapsed">
                                                  <Grid.Style>
@@ -2033,7 +1979,7 @@
                     <Run Text="{DynamicResource Snapshot}"/>
                     <Run Text="{Binding Storage.ItemsCount, Mode=OneWay, FallbackValue=0}" />
                     <Run Text="{DynamicResource ItemsUpkeep}"/>
-                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=—}"/>
+                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=â€”}"/>
                                                         </TextBlock>
 
                                                         <ItemsControl ItemsSource="{Binding Storage.Items, Mode=OneWay}">
@@ -2048,7 +1994,7 @@
                                                                         <Image Width="24" Height="24" Source="{Binding Icon}" Stretch="Uniform"/>
                                                                         <TextBlock Margin="8,0,0,0" Foreground="White">
                             <Run Text="{Binding Display}"/>
-                            <Run Text=" Ã— "/>
+                            <Run Text=" Ãƒâ€” "/>
                             <Run Text="{Binding Amount}"/>
                             <Run Text="{Binding MaxStack, StringFormat={} (Stack {0})}"/>
                                                                         </TextBlock>
@@ -2084,17 +2030,17 @@
                                         <Border
                                             Padding="32,24"
                                             HorizontalAlignment="Center"
-                                            Background="#101217"
-                                            BorderBrush="#1C202A"
-                                            BorderThickness="1"
-                                            CornerRadius="16">
+                                            Background="{DynamicResource Surface}"
+                                             BorderBrush="{DynamicResource CardBorder}"
+                                             BorderThickness="1"
+                                             CornerRadius="12">
                                             <StackPanel>
-                                                <TextBlock
-                                                    Margin="0,0,0,12"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="36"
-                                                    Opacity="0.8"
-                                                    Text="📡" />
+                                                <ui:SymbolIcon
+                                                     Symbol="Connector24"
+                                                     FontSize="44"
+                                                     Foreground="{DynamicResource TextSubtle}"
+                                                     HorizontalAlignment="Center"
+                                                     Margin="0,0,0,12" />
                                                 <TextBlock
                                                     Margin="0,0,0,6"
                                                     HorizontalAlignment="Center"
@@ -2125,7 +2071,7 @@
                             Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="👥 " />
+                                    <ui:SymbolIcon Symbol="People24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource TeamTab}" />
                                 </StackPanel>
                             </TabItem.Header>
@@ -2159,7 +2105,7 @@
                                                 <WrapPanel />
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
-                                        <!--  Kontextmenü  -->
+                                        <!--  KontextmenÃ¼  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
                                                 <MenuItem Click="Team_Center_Click" Header="{DynamicResource CenterOnMap}" />
@@ -2185,19 +2131,22 @@
                                                 <Border Style="{StaticResource Card}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="56" />
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
 
+                                                        <CheckBox Grid.Column="0" IsChecked="{Binding ShowMarkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewMouseLeftButtonDown="TeamCheckBox_PreviewMouseLeftButtonDown" VerticalAlignment="Center" Margin="4,0,8,0" Cursor="Hand" ToolTip="Show markers on map" />
+
                                                         <!--  Avatar + Status  -->
-                                                        <Grid Width="44" Height="44">
+                                                        <Grid Grid.Column="1" Width="44" Height="44">
                                                             <Image
                                                                 ClipToBounds="True"
                                                                 RenderOptions.BitmapScalingMode="HighQuality"
                                                                 Source="{Binding Avatar}"
                                                                 Stretch="UniformToFill" />
 
-                                                            <!--  Online (grün)  -->
+                                                            <!--  Online (grÃ¼n)  -->
                                                             <Ellipse
                                                                 Width="12"
                                                                 Height="12"
@@ -2228,7 +2177,7 @@
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
                                                             <TextBlock
-                                                                Text="💤"
+                                                                Text="ðŸ’¤"
                                                                 FontSize="16"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Top"
@@ -2242,8 +2191,8 @@
                                                         </Grid>
 
                                                         <!--  Textseite  -->
-                                                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                                            <!--  Name: Standard weiß, offline leicht ausgrauen, tot = rot  -->
+                                                        <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                                            <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
                                                             <TextBlock FontSize="14" FontWeight="SemiBold">
                                                                 <TextBlock.Text>
                                                                     <Binding Path="DisplayName" />
@@ -2439,7 +2388,7 @@
                         <TabItem Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="🎥 " />
+                                    <ui:SymbolIcon Symbol="Video24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource CamerasTab}" />
                                 </StackPanel>
                             </TabItem.Header>
@@ -2452,7 +2401,7 @@
                                     Orientation="Horizontal">
                                     <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock VerticalAlignment="Center" Text="📷 " />
+                                            <TextBlock VerticalAlignment="Center" Text="ðŸ“· " />
                                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
                                         </StackPanel>
                                     </Button>                                </StackPanel>
@@ -2503,11 +2452,50 @@
                         <TabItem Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="🌍 " />
+                                    <ui:SymbolIcon Symbol="Globe24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayersTab}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <views:PlayersTabContent x:Name="PlayersTab" x:FieldModifier="public" />
+                        </TabItem>
+
+                        <!--  ===== NOTIFICATIONS =====  -->
+                        <TabItem Style="{StaticResource PrettyTabItem}" x:Name="NotificationsTab">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Alert24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Notifications" />
+                                    
+                                    <!-- Red Badge for Unread Count -->
+                                    <Border x:Name="NotificationsBadge"
+                                            Background="#EF5350"
+                                            CornerRadius="7"
+                                            Padding="4,1,4,1"
+                                            Margin="5,0,0,0"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding ViewModel.UnreadNotificationsCount, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   FontSize="9"
+                                                   FontWeight="Bold"
+                                                   Foreground="White"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"/>
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ViewModel.UnreadNotificationsCount, RelativeSource={RelativeSource AncestorType=Window}}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ViewModel.UnreadNotificationsCount, RelativeSource={RelativeSource AncestorType=Window}}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <views:NotificationsTabContent x:Name="NotificationsTabControl" />
                         </TabItem>
                     </TabControl>
 
@@ -2544,14 +2532,14 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="💰" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="&#x1F4B0;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
                                             <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="⟳" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
+                                        <Button x:Name="BtnRefreshProfitTrades" Content="&#x27F3;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
                                         <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </Grid>
@@ -2593,10 +2581,10 @@
                                         <TextBlock Text="Min profit:" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
                                         <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="11.5">
                                             <ComboBoxItem Content="Show All" Tag="0" IsSelected="True"/>
-                                            <ComboBoxItem Content="≥ 10" Tag="10"/>
-                                            <ComboBoxItem Content="≥ 50" Tag="50"/>
-                                            <ComboBoxItem Content="≥ 100" Tag="100"/>
-                                            <ComboBoxItem Content="≥ 500" Tag="500"/>
+                                            <ComboBoxItem Content="&#x2265; 10" Tag="10"/>
+                                            <ComboBoxItem Content="&#x2265; 50" Tag="50"/>
+                                            <ComboBoxItem Content="&#x2265; 100" Tag="100"/>
+                                            <ComboBoxItem Content="&#x2265; 500" Tag="500"/>
                                         </ComboBox>
                                     </StackPanel>
                                 </Grid>
@@ -2639,7 +2627,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="🔁" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="&#x1F501;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
                                             <TextBlock Text="Optimal multi-hop trade pathfinder" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
@@ -2875,11 +2863,19 @@
                                     Unchecked="Monuments_Unchecked" />
                                 <CheckBox
                                     x:Name="ChkShops"
-                                    Margin="0,0,24,0"
+                                    Margin="0,0,8,0"
                                     Checked="ChkShops_Checked"
                                     Content="{DynamicResource Shops}"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkShops_Checked" />
+                                <CheckBox
+                                    x:Name="ChkNoBuildZones"
+                                    Margin="0,0,24,0"
+                                    Checked="ChkNoBuildZones_Checked"
+                                    Content="No Build"
+                                    Style="{StaticResource PillToggleButton}"
+                                    Unchecked="ChkNoBuildZones_Checked"
+                                    Visibility="Collapsed" />
 
                                 <TextBlock
                                     Margin="0,0,16,0"
@@ -3245,6 +3241,13 @@
                                                              Tag="PlayerOffline" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
+                                                             Header="5 min AFK"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="PlayerAfk" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource AnnounceTracking}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
@@ -3473,7 +3476,7 @@
                                         x:Name="CrosshairContextMenu"
                                         Opened="CrosshairContextMenu_Opened"
                                         Style="{StaticResource DarkContextMenu}">
-                                        <!--  sorge dafür, dass ALLE Items (auch Submenüs) dunkel sind  -->
+                                        <!--  sorge dafÃ¼r, dass ALLE Items (auch SubmenÃ¼s) dunkel sind  -->
                                         <ContextMenu.Resources>
                                             <Style BasedOn="{StaticResource DarkMenuItem}" TargetType="MenuItem" />
                                             <Style BasedOn="{StaticResource DarkSeparator}" TargetType="Separator" />
@@ -3683,6 +3686,17 @@
                                 <ui:SymbolIcon Symbol="Edit24" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </ui:Button>
 
+                            <ui:Button
+                                x:Name="BtnOpenRecycler"
+                                Width="32"
+                                Height="32"
+                                Margin="4,0,0,0"
+                                Padding="6"
+                                Click="BtnOpenRecycler_Click"
+                                ToolTip="Recycling Calculator">
+                                <ui:SymbolIcon Symbol="Calculator24" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </ui:Button>
+
                             <!--  StackPanel with Heli Demo removed  -->
                             <StackPanel Margin="12,0,0,0" Orientation="Horizontal" />
                             </StackPanel>
@@ -3763,7 +3777,7 @@
                             </Border>
                         </Border>
 
-                        <!--  2) Titelbild als „contain“, zentriert, unverzerrt  -->
+                        <!--  2) Titelbild als â€žcontainâ€œ, zentriert, unverzerrt  -->
                         <Image
                             x:Name="SplashBg"
                             HorizontalAlignment="Center"
@@ -3779,6 +3793,13 @@
                             VerticalAlignment="Top"
                             RenderOptions.BitmapScalingMode="HighQuality"
                             Stretch="None" />
+                        <Grid
+                            x:Name="Map3DHost"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="#FF0E1117"
+                            Panel.ZIndex="35"
+                            Visibility="Collapsed" />
 
                         <StackPanel
                             Margin="15"
@@ -3811,7 +3832,7 @@
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="-">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="">
@@ -3844,7 +3865,7 @@
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="-">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -3871,7 +3892,7 @@
                                                         <DataTrigger Binding="{Binding ServerTime}" Value="-">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="–">
+                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -3901,6 +3922,73 @@
                                                     </Style>
                                                 </TextBlock.Style>
                                             </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ui:Card>
+
+                                <!--  SERVER STATUS OVERLAY  -->
+                                <ui:Card
+                                    x:Name="ServerStatusOverlay"
+                                    Margin="0,6,0,0"
+                                    Padding="8,4"
+                                    Background="#AA16181C"
+                                    BorderBrush="#40FFFFFF"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Symbol="People20" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="#8D98A8"
+                                                Text="{DynamicResource Players}" />
+                                            <TextBlock
+                                                Margin="6,0,4,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{Binding ServerPlayers}" />
+                                            <Button
+                                                x:Name="BtnShowOnline"
+                                                Width="18"
+                                                Height="18"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Click="BtnShowOnline_Click"
+                                                Content="&#x25BC;"
+                                                FontSize="10"
+                                                Foreground="White"
+                                                ToolTip="{DynamicResource ShowOnlinePlayers}" />
+                                        </StackPanel>
+
+                                        <StackPanel
+                                            Margin="0,2,0,0"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Symbol="Hourglass20" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="#8D98A8"
+                                                Text="{DynamicResource Queue}" />
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{Binding ServerQueue}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </ui:Card>
@@ -3984,6 +4072,23 @@
                                                 <TextBlock Text="Send to Discord" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </ui:Button>
+<ui:Button
+                                            x:Name="BtnOpen3DMap"
+                                            Margin="0,2,0,0"
+                                            Padding="6,4"
+                                            Appearance="Transparent"
+                                            BorderThickness="0"
+                                            Click="BtnOpen3DMap_Click"
+                                            ToolTip="Build and open local 3D map"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            Visibility="Collapsed">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <ui:SymbolIcon x:Name="IconOpen3DMap" Symbol="Cube20" FontSize="14" Foreground="#FF8C00" Margin="0,0,6,0" />
+                                                <TextBlock x:Name="TxtOpen3DMap" Text="3D Map" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </ui:Button>
+
                                     </StackPanel>
                                 </ui:Card>
 
@@ -4001,8 +4106,7 @@
                                     <StackPanel Orientation="Vertical">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240" HorizontalScrollBarVisibility="Disabled">
                                             <StackPanel x:Name="SubscriptionStack" Orientation="Vertical" />
-                                        </ScrollViewer>
-                                        <ui:Button
+                                        </ScrollViewer><ui:Button
                                             x:Name="DockEditSubscriptionsButton"
                                             Margin="0,4,0,0"
                                             Padding="4"
@@ -4728,10 +4832,7 @@
                                         <Border Grid.Row="0" Background="#401E2126" CornerRadius="12,12,0,0" BorderThickness="0,0,0,1" BorderBrush="#15FFFFFF">
                                             <Grid>
                                                 <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
-                                                    <TextBlock
-                                                        VerticalAlignment="Center"
-                                                        FontSize="11"
-                                                        Text="🛒 " />
+                                                    <TextBlock VerticalAlignment="Center" FontSize="11" Text="&#x1F6D2; " />
                                                     <TextBlock
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
@@ -4850,6 +4951,18 @@
                                 </Border>
                             </Grid>
                         </Border>
+
+                        <!--  Recycling Calculator Overlay  -->
+                        <views:RecyclerOverlay
+                            x:Name="RecyclerOverlayPanel"
+                            Width="450"
+                            Height="540"
+                            Margin="0,0,12,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Panel.ZIndex="1005"
+                            Visibility="Collapsed"
+                            CloseRequested="BtnCloseRecycler_Click" />
 
                         <!--  Integrated Chat Overlay (Roll-up)  -->
                         <Border
@@ -5219,7 +5332,7 @@
 
                                     <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
 
-                                    <!--  LÃ¶schen  -->
+                                    <!--  LÃƒÂ¶schen  -->
                                     <Button
                                         x:Name="ToolTrashButton"
                                         Width="32"
@@ -5395,13 +5508,12 @@
                                              <Rectangle Width="1" Height="56" Fill="#30FFFFFF" Margin="8,0,8,0" VerticalAlignment="Center"/>
                                              <TextBlock Text="Color:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                              <StackPanel x:Name="RustColorSelectorPanel" Orientation="Horizontal" VerticalAlignment="Center">
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#b5c234" Click="RustColorSelection_Click" Tag="yellow" ToolTip="Yellow"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#2b7fb7" Click="RustColorSelection_Click" Tag="blue" ToolTip="Blue"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#4caf50" Click="RustColorSelection_Click" Tag="green" ToolTip="Green"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#d32f2f" Click="RustColorSelection_Click" Tag="red" ToolTip="Red"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#8e24aa" Click="RustColorSelection_Click" Tag="purple" ToolTip="Purple"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#e25cba" Click="RustColorSelection_Click" Tag="pink" ToolTip="Pink"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#00acc1" Click="RustColorSelection_Click" Tag="cyan" ToolTip="Cyan"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#CDD054" Click="RustColorSelection_Click" Tag="yellow" ToolTip="Yellow"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#2F71C4" Click="RustColorSelection_Click" Tag="blue" ToolTip="Blue"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#76A739" Click="RustColorSelection_Click" Tag="green" ToolTip="Green"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#BD3838" Click="RustColorSelection_Click" Tag="red" ToolTip="Red"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#B65CC4" Click="RustColorSelection_Click" Tag="purple" ToolTip="Purple"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#06EDC2" Click="RustColorSelection_Click" Tag="cyan" ToolTip="Cyan"/>
                                              </StackPanel>
                                          </StackPanel>
                                      </StackPanel>
@@ -5433,7 +5545,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Orientation="Horizontal">
-                                <!--  Buttons fÃ¼r Team-Mitglieder werden dynamisch in CodeBehind eingefÃ¼gt  -->
+                                <!--  Buttons fÃƒÂ¼r Team-Mitglieder werden dynamisch in CodeBehind eingefÃƒÂ¼gt  -->
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -5725,6 +5837,14 @@
                 </Border>
             </Grid>
 
+            <!-- Server Info Backdrop Overlay -->
+            <Grid x:Name="ServerInfoBackdrop"
+                  Grid.ColumnSpan="3"
+                  Background="#990D0E11"
+                  Visibility="Collapsed"
+                  Panel.ZIndex="9990"
+                  MouseLeftButtonDown="ServerInfoBackdrop_MouseLeftButtonDown" />
+
             <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
             <ui:SnackbarPresenter
                 x:Name="RootSnackbar"
@@ -5738,3 +5858,8 @@
         </Grid>
     </Grid>
 </ui:FluentWindow>
+
+
+
+
+

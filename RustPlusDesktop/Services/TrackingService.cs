@@ -92,6 +92,7 @@ public class TrackingSettings
     public bool AnnounceDeepSea { get; set; } = false;
     public bool AnnouncePlayerOnline { get; set; } = false;
     public bool AnnouncePlayerOffline { get; set; } = false;
+    public bool AnnouncePlayerAfk { get; set; } = false;
     public bool AnnouncePlayerDeathSelf { get; set; } = false;
     public bool AnnouncePlayerDeathTeam { get; set; } = false;
     public bool AnnouncePlayerRespawnSelf { get; set; } = false;
@@ -115,6 +116,7 @@ public class TrackingSettings
     public bool ChatMasterOfferSoundEnabled { get; set; } = true;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
+    public bool SuppressVersion7Notice { get; set; } = false;
     public DateTime? FcmIssuedAt { get; set; }
     public DateTime? FcmExpiresAt { get; set; }
     public bool AnnounceTracking { get; set; } = false;
@@ -131,6 +133,12 @@ public class TrackingSettings
     public bool OfflineDeathSoundLoopEnabled { get; set; } = false;
     public bool OfflineDeathDiscordEnabled { get; set; } = false;
     public List<OfflineDeathNotification> OfflineDeathHistory { get; set; } = new();
+    
+    // Notifications Center Settings
+    public bool NotificationsToastEnabled { get; set; } = true;
+    public bool NotificationsSoundsEnabled { get; set; } = true;
+    public int NotificationsRetentionDays { get; set; } = 30;
+    public List<string> MutedNotificationServers { get; set; } = new();
 }
 
 
@@ -583,6 +591,11 @@ public static class TrackingService
         get => _settings.AnnouncePlayerOffline;
         set { _settings.AnnouncePlayerOffline = value; SaveDB(); }
     }
+    public static bool AnnouncePlayerAfk
+    {
+        get => _settings.AnnouncePlayerAfk;
+        set { _settings.AnnouncePlayerAfk = value; SaveDB(); }
+    }
     public static bool AnnouncePlayerDeathSelf
     {
         get => _settings.AnnouncePlayerDeathSelf;
@@ -769,6 +782,11 @@ public static class TrackingService
     {
         get => _settings.LastSeenVersion;
         set { _settings.LastSeenVersion = value; SaveDB(); }
+    }
+    public static bool SuppressVersion7Notice
+    {
+        get => _settings.SuppressVersion7Notice;
+        set { _settings.SuppressVersion7Notice = value; SaveDB(); }
     }
     public static int GetLearnedCargoFullLife(string host)
     {
@@ -1615,5 +1633,52 @@ public static class TrackingService
             _settings.OfflineDeathHistory.Clear();
         }
         SaveDB();
+    }
+
+    public static bool NotificationsToastEnabled
+    {
+        get => _settings.NotificationsToastEnabled;
+        set { _settings.NotificationsToastEnabled = value; SaveDB(); }
+    }
+
+    public static bool NotificationsSoundsEnabled
+    {
+        get => _settings.NotificationsSoundsEnabled;
+        set { _settings.NotificationsSoundsEnabled = value; SaveDB(); }
+    }
+
+    public static int NotificationsRetentionDays
+    {
+        get => _settings.NotificationsRetentionDays <= 0 ? 30 : _settings.NotificationsRetentionDays;
+        set { _settings.NotificationsRetentionDays = value; SaveDB(); }
+    }
+
+    public static List<string> MutedNotificationServers
+    {
+        get
+        {
+            if (_settings.MutedNotificationServers == null) _settings.MutedNotificationServers = new();
+            return _settings.MutedNotificationServers;
+        }
+    }
+
+    public static void MuteServer(string host, int port)
+    {
+        var key = $"{host}:{port}";
+        if (_settings.MutedNotificationServers == null) _settings.MutedNotificationServers = new();
+        if (!_settings.MutedNotificationServers.Contains(key))
+        {
+            _settings.MutedNotificationServers.Add(key);
+            SaveDB();
+        }
+    }
+
+    public static void UnmuteServer(string host, int port)
+    {
+        var key = $"{host}:{port}";
+        if (_settings.MutedNotificationServers != null && _settings.MutedNotificationServers.Remove(key))
+        {
+            SaveDB();
+        }
     }
 }

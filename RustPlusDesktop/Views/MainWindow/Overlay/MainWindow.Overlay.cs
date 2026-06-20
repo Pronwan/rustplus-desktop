@@ -2045,13 +2045,13 @@ private bool _overlayToolsVisible = false;
     {
         public static readonly Dictionary<string, (string Bright, string Dark)> Colors = new(StringComparer.OrdinalIgnoreCase)
         {
-            { "yellow", ("#b5c234", "#151a05") },
-            { "blue",   ("#2b7fb7", "#05141e") },
-            { "green",  ("#4caf50", "#0a190b") },
-            { "red",    ("#d32f2f", "#1e0606") },
-            { "purple", ("#8e24aa", "#140518") },
-            { "pink",   ("#e25cba", "#1e0618") },
-            { "cyan",   ("#00acc1", "#00171a") }
+            { "yellow", ("#CDD054", "#454519") },
+            { "blue",   ("#2F71C4", "#11243F") },
+            { "green",  ("#76A739", "#243410") },
+            { "red",    ("#BD3838", "#3B120F") },
+            { "purple", ("#B65CC4", "#371B3B") },
+            { "pink",   ("#e25cba", "#1e0618") }, // Legacy support
+            { "cyan",   ("#06EDC2", "#094B3B") }
         };
     }
 
@@ -2250,32 +2250,33 @@ private bool _overlayToolsVisible = false;
             }
             else
             {
-                // 1. Background layer (bright color, masked by circular background mask)
+                // 1. Background layer (dark color, masked by circular background mask)
                 var bgRect = new Rectangle
                 {
                     Width = width,
                     Height = height,
-                    Fill = brightBrush,
+                    Fill = darkBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapbackground.png"))
                 };
                 grid.Children.Add(bgRect);
 
-                // 2. Foreground layer (uncolored/original PNG containing black outlines, shadows, and semi-transparent center)
+                // 2. Foreground layer (bright color, masked by circular foreground mask/ring)
                 var fgRect = new Rectangle
                 {
                     Width = width,
                     Height = height,
-                    Fill = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforeground.png"))
+                    Fill = brightBrush,
+                    OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforeground.png"))
                 };
                 grid.Children.Add(fgRect);
 
-                // 3. Icon layer (bright color, masked by icon mask)
+                // 3. Icon layer (White color, masked by icon mask)
                 string iconResPath = $"pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_{shape.ToLowerInvariant()}.png";
                 var iconRect = new Rectangle
                 {
                     Width = width,
                     Height = height,
-                    Fill = brightBrush,
+                    Fill = Brushes.White,
                     OpacityMask = new ImageBrush(LoadBitmapResource(iconResPath))
                 };
                 grid.Children.Add(iconRect);
@@ -4059,13 +4060,12 @@ private bool _overlayToolsVisible = false;
     private void ShowInlineColorPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
     {
         var colorMap = new (string name, Color swatch)[] {
-            ("yellow",  Color.FromRgb(255, 214,  51)),
-            ("blue",    Color.FromRgb( 41, 128, 255)),
-            ("green",   Color.FromRgb( 46, 195,  70)),
-            ("red",     Color.FromRgb(220,  50,  50)),
-            ("purple",  Color.FromRgb(150,  70, 220)),
-            ("pink",    Color.FromRgb(226,  92, 186)),
-            ("cyan",    Color.FromRgb( 20, 210, 210)),
+            ("yellow",  Color.FromRgb(0xCD, 0xD0, 0x54)),
+            ("blue",    Color.FromRgb(0x2F, 0x71, 0xC4)),
+            ("green",   Color.FromRgb(0x76, 0xA7, 0x39)),
+            ("red",     Color.FromRgb(0xBD, 0x38, 0x38)),
+            ("purple",  Color.FromRgb(0xB6, 0x5C, 0xC4)),
+            ("cyan",    Color.FromRgb(0x06, 0xED, 0xC2)),
         };
 
         var header = new Wpf.Ui.Controls.TextBlock

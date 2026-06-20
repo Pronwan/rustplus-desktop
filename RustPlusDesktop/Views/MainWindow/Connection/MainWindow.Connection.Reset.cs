@@ -217,8 +217,51 @@ public partial class MainWindow
     private void BtnShowServerInfo_Click(object sender, RoutedEventArgs e)
     {
         if (_vm.Selected == null) return;
-        var modal = new Views.ServerInfoModal(_vm.Selected.Name, _vm.Selected.Description) { Owner = this };
-        modal.ShowDialog();
+
+        ServerInfoBackdrop.Visibility = Visibility.Visible;
+
+        var modal = new Views.ServerInfoModal(_vm.Selected, _vm, _rust) { Owner = this };
+
+        EventHandler locChanged = (s, args) => CenterServerInfoModal(modal);
+        SizeChangedEventHandler sizeChanged = (s, args) => CenterServerInfoModal(modal);
+
+        this.LocationChanged += locChanged;
+        this.SizeChanged += sizeChanged;
+
+        modal.Loaded += (s, args) => CenterServerInfoModal(modal);
+
+        modal.Closed += (s, args) =>
+        {
+            this.LocationChanged -= locChanged;
+            this.SizeChanged -= sizeChanged;
+            ServerInfoBackdrop.Visibility = Visibility.Collapsed;
+        };
+
+        modal.Show();
+    }
+
+    private void CenterServerInfoModal(Window modal)
+    {
+        if (modal == null) return;
+        double w = double.IsNaN(modal.Width) ? modal.ActualWidth : modal.Width;
+        double h = double.IsNaN(modal.Height) ? modal.ActualHeight : modal.Height;
+        if (w <= 0) w = 500;
+        if (h <= 0) h = 580;
+
+        modal.Left = this.Left + (this.Width - w) / 2;
+        modal.Top = this.Top + (this.Height - h) / 2;
+    }
+
+    private void ServerInfoBackdrop_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        foreach (Window win in OwnedWindows)
+        {
+            if (win is Views.ServerInfoModal)
+            {
+                win.Close();
+                break;
+            }
+        }
     }
 
     private async void OnConnectionLost()
