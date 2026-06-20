@@ -8,6 +8,7 @@ using Microsoft.Web.WebView2.Wpf;
 using Microsoft.Web.WebView2.Core;
 using System.Text.Json.Nodes;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using RustPlusDesk.Services;
@@ -26,6 +27,12 @@ namespace RustPlusDesk.Views
         private bool _isMap3DActive;
         private WebView2? _map3DWebView;
         private string? _currentMapFolderPath;
+        private EventHandler<CoreWebView2WebResourceRequestedEventArgs>? _map3DResourceRequestHandler;
+        private static readonly Lazy<IReadOnlyDictionary<string, string>> Map3DResourceNameMap = new(() =>
+            Assembly.GetExecutingAssembly()
+                .GetManifestResourceNames()
+                .Where(name => name.StartsWith("Map3DViewer/", StringComparison.OrdinalIgnoreCase))
+                .ToDictionary(NormalizeMap3DResourceName, name => name, StringComparer.OrdinalIgnoreCase));
 
         public void UpdateRustMapsUi()
         {
@@ -357,7 +364,9 @@ return;
 
             await _map3DWebView.EnsureCoreWebView2Async();
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
-            _map3DWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(host, runtimeRoot, CoreWebView2HostResourceAccessKind.DenyCors);
+            _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
+            _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
+            _map3DWebView.CoreWebView2.WebResourceRequested += _map3DResourceRequestHandler;
             _map3DWebView.CoreWebView2.Navigate(url);
 
             _isMap3DActive = true;
@@ -373,6 +382,11 @@ return;
                     if (_map3DWebView.CoreWebView2 != null)
                     {
                         _map3DWebView.CoreWebView2.WebMessageReceived -= Map3DWebMessageReceived;
+                        if (_map3DResourceRequestHandler != null)
+                        {
+                            _map3DWebView.CoreWebView2.WebResourceRequested -= _map3DResourceRequestHandler;
+                            _map3DResourceRequestHandler = null;
+                        }
                         _map3DWebView.CoreWebView2.Navigate("about:blank");
                     }
                 }
@@ -430,11 +444,6 @@ return;
             Directory.CreateDirectory(runtimeRoot);
             Directory.CreateDirectory(Path.Combine(runtimeRoot, "maps", "current"));
 
-            string sourceRoot = ResolveMap3DViewerSourceRoot();
-            CopyFileIfExists(Path.Combine(sourceRoot, "index.html"), Path.Combine(runtimeRoot, "index.html"));
-            CopyFileIfExists(Path.Combine(sourceRoot, "app.js"), Path.Combine(runtimeRoot, "app.js"));
-            CopyFileIfExists(Path.Combine(sourceRoot, "style.css"), Path.Combine(runtimeRoot, "style.css"));
-            CopyDirectoryIfExists(Path.Combine(sourceRoot, "Rust_Assets"), Path.Combine(runtimeRoot, "Rust_Assets"));
             string? iconsRoot = ResolveIconsSourceRoot();
             if (iconsRoot != null) CopyDirectoryIfExists(iconsRoot, Path.Combine(runtimeRoot, "Icons"));
 
@@ -445,6 +454,96 @@ return;
             CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
             await WriteViewerMapDataAsync(Path.Combine(result.FolderPath, "map_data.json"), Path.Combine(currentDir, "map_data_viewer.json"), _worldRectPx, ImgMap.Width, ImgMap.Height);
             return runtimeRoot;
+        }
+
+        private void HandleMap3DResourceRequest(CoreWebView2WebResourceRequestedEventArgs args, string runtimeRoot)
+        {
+            try
+            {
+                var uri = new Uri(args.Request.Uri);
+                string relativePath = Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/')).Replace('/', Path.DirectorySeparatorChar);
+                if (string.IsNullOrWhiteSpace(relativePath)) relativePath = "index.html";
+                if (relativePath.Contains("..")) return;
+
+                bool isMapRuntimeFile = relativePath.StartsWith($"maps{Path.DirectorySeparatorChar}current{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
+                bool isIconFile = relativePath.StartsWith($"Icons{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
+                if (isMapRuntimeFile || isIconFile)
+                {
+                    string diskPath = Path.GetFullPath(Path.Combine(runtimeRoot, relativePath));
+                    string root = Path.GetFullPath(runtimeRoot);
+                    if (diskPath.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(diskPath))
+                    {
+                        byte[] bytes = File.ReadAllBytes(diskPath);
+                        args.Response = CreateMap3DResponse(bytes, GetMap3DContentType(diskPath));
+                        return;
+                    }
+
+                    if (isMapRuntimeFile) return;
+                }
+
+                string resourceName = "Map3DViewer/" + relativePath.Replace(Path.DirectorySeparatorChar, '/');
+                byte[]? resourceBytes = ReadEmbeddedResourceBytes(resourceName);
+                if (resourceBytes != null)
+                {
+                    args.Response = CreateMap3DResponse(resourceBytes, GetMap3DContentType(resourceName));
+                }
+            }
+            catch
+            {
+                // Let WebView2 surface a normal load failure for unexpected request errors.
+            }
+        }
+
+        private CoreWebView2WebResourceResponse CreateMap3DResponse(byte[] bytes, string contentType)
+        {
+            var stream = new MemoryStream(bytes);
+            return _map3DWebView!.CoreWebView2.Environment.CreateWebResourceResponse(
+                stream,
+                200,
+                "OK",
+                $"Content-Type: {contentType}\r\nCache-Control: no-cache");
+        }
+
+        private static byte[]? ReadEmbeddedResourceBytes(string logicalName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string? manifestName = logicalName;
+            if (assembly.GetManifestResourceInfo(manifestName) == null)
+            {
+                Map3DResourceNameMap.Value.TryGetValue(NormalizeMap3DResourceName(logicalName), out manifestName);
+            }
+
+            if (manifestName == null) return null;
+            using Stream? stream = assembly.GetManifestResourceStream(manifestName);
+            if (stream == null) return null;
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
+        private static string NormalizeMap3DResourceName(string name)
+        {
+            return name.Replace('\\', '/');
+        }
+
+        private static string GetMap3DContentType(string path)
+        {
+            return Path.GetExtension(path).ToLowerInvariant() switch
+            {
+                ".html" => "text/html; charset=utf-8",
+                ".js" => "application/javascript; charset=utf-8",
+                ".css" => "text/css; charset=utf-8",
+                ".json" => "application/json; charset=utf-8",
+                ".png" => "image/png",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".webp" => "image/webp",
+                ".wasm" => "application/wasm",
+                ".obj" => "text/plain; charset=utf-8",
+                ".mtl" => "text/plain; charset=utf-8",
+                ".glb" => "model/gltf-binary",
+                ".gltf" => "model/gltf+json",
+                _ => "application/octet-stream"
+            };
         }
 
         private static string? ResolveIconsSourceRoot()

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -387,6 +388,9 @@ public static class Map3DLocalBuildService
     private static string? ResolveParserExecutable()
     {
         string baseDir = AppContext.BaseDirectory;
+        string? embeddedParser = ExtractEmbeddedParserRuntime();
+        if (embeddedParser != null) return embeddedParser;
+
         string[] candidates =
         {
             Path.Combine(baseDir, "MapParser.exe"),
@@ -402,6 +406,54 @@ public static class Map3DLocalBuildService
         };
 
         return candidates.FirstOrDefault(File.Exists);
+    }
+
+    private static string? ExtractEmbeddedParserRuntime()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        string[] resourceNames = assembly.GetManifestResourceNames()
+            .Where(name => name.StartsWith("Map3DParser/", StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+        if (resourceNames.Length == 0) return null;
+
+        string targetRoot = Path.Combine(DataManager.CacheDir, "map3d-parser-runtime");
+        try
+        {
+            Directory.CreateDirectory(targetRoot);
+            TryHideDirectory(targetRoot);
+
+            foreach (string resourceName in resourceNames)
+            {
+                string relative = resourceName["Map3DParser/".Length..].Replace('/', Path.DirectorySeparatorChar);
+                if (string.IsNullOrWhiteSpace(relative) || relative.Contains("..")) continue;
+
+                string targetPath = Path.GetFullPath(Path.Combine(targetRoot, relative));
+                if (!targetPath.StartsWith(Path.GetFullPath(targetRoot), StringComparison.OrdinalIgnoreCase)) continue;
+
+                Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
+                using Stream? source = assembly.GetManifestResourceStream(resourceName);
+                if (source == null) continue;
+                using var target = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                source.CopyTo(target);
+            }
+
+            string exePath = Path.Combine(targetRoot, "MapParser.exe");
+            return File.Exists(exePath) ? exePath : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void TryHideDirectory(string path)
+    {
+        try
+        {
+            var info = new DirectoryInfo(path);
+            info.Attributes |= FileAttributes.Hidden;
+        }
+        catch { }
     }
 
     private static async Task<(bool Success, int ExitCode, string? Error)> RunParserAsync(string parserPath, string mapPath, string outputDir, CancellationToken ct)
