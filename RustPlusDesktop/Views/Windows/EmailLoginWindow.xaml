@@ -156,7 +156,16 @@
                 <StackPanel x:Name="PanelSignIn">
                     <TextBlock x:Name="LblSignInEmail" Text="Email address" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
                     <TextBox x:Name="TxtSignInEmail" Style="{StaticResource AuthField}" Margin="0,0,0,12"/>
-                    <TextBlock x:Name="LblSignInPassword" Text="Password" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    
+                    <Grid Margin="0,0,0,4">
+                        <TextBlock x:Name="LblSignInPassword" Text="Password" Foreground="#AAA" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Hyperlink Foreground="#888" TextDecorations="None" Click="LnkForgotPassword_Click">
+                                <Run x:Name="TxtForgotPassword" Text="Forgot password?" FontSize="11"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                    
                     <PasswordBox x:Name="PwdSignIn" Style="{StaticResource AuthPassword}" Margin="0,0,0,16"
                                  KeyDown="PwdSignIn_KeyDown"/>
                     <Button x:Name="BtnSignIn" Content="Sign in" Style="{StaticResource PrimaryBtn}"
@@ -213,7 +222,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock x:Name="TxtProblems" Text="Problems? " Foreground="#666" FontSize="11"/>
                     <TextBlock>
-                        <Hyperlink NavigateUri="https://rustplusdesktop.onrender.com/login"
+                        <Hyperlink NavigateUri="https://www.rustplusdesktop.cloud"
                                    RequestNavigate="Hyperlink_RequestNavigate"
                                    Foreground="#E8612C">
                             <Run x:Name="TxtOpenBrowser" Text="Open in browser"/>

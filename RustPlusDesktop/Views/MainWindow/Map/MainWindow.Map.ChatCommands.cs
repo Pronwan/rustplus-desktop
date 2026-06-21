@@ -327,17 +327,19 @@ public partial class MainWindow
         if (cmd == profile.CmdHeli.ToLowerInvariant())
         {
             string msg;
-            bool isHeliActive = _dynStates.Values.Any(s => s.Type == 8);
+            var heliMarker = _dynStates.Values.FirstOrDefault(s => s.Type == 8);
+            bool isHeliActive = heliMarker != null;
             if (isHeliActive)
             {
+                string grid = GetGridLabel(heliMarker.LastRealX, heliMarker.LastRealY);
                 if (_heliSpawnTime.HasValue)
                 {
                     var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
-                    msg = string.Format(Properties.Resources.ChatCmdHeliActive, FormatAgo(elapsed));
+                    msg = string.Format(Properties.Resources.ChatCmdHeliActive, FormatAgo(elapsed)) + $" [{grid}]";
                 }
                 else
                 {
-                    msg = Properties.Resources.ChatCmdHeliActiveMidEvent;
+                    msg = Properties.Resources.ChatCmdHeliActiveMidEvent + $" [{grid}]";
                 }
             }
             else if (_heliLastEventUtc.HasValue)

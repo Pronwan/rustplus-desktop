@@ -122,7 +122,7 @@ namespace RustPlusDesk.Services.Auth
             get
             {
                 var user = Client?.Auth?.CurrentUser;
-                if (user == null) return false;
+                if (user == null || Client?.Auth?.CurrentSession == null) return false;
                 // Email provider: identities contain 'email' provider, not 'discord'
                 var identities = user.Identities;
                 if (identities == null || identities.Count == 0) return false;
@@ -161,6 +161,8 @@ namespace RustPlusDesk.Services.Auth
                 // call RefreshSession() automatically when the AccessToken is expired.
                 // We manually load + SetSession to force a token refresh via the RefreshToken.
                 AppendLog("[Supabase] Restoring persisted Discord session...");
+                bool hadPersistedAccountSession = false;
+                bool accountSessionRestoreFailed = false;
                 try
                 {
                     var saved = DataManager.LoadCache<Session>("supabase_session");
@@ -168,6 +170,7 @@ namespace RustPlusDesk.Services.Auth
                         !string.IsNullOrEmpty(saved.AccessToken) &&
                         !string.IsNullOrEmpty(saved.RefreshToken))
                     {
+                        hadPersistedAccountSession = true;
                         // SetSession will use the RefreshToken to get a fresh AccessToken if needed
                         var restored = await Client.Auth.SetSession(saved.AccessToken, saved.RefreshToken);
                         if (restored != null)
@@ -176,6 +179,7 @@ namespace RustPlusDesk.Services.Auth
                         }
                         else
                         {
+                            accountSessionRestoreFailed = true;
                             AppendLog("[Supabase] SetSession returned null - refresh token may be expired. Discord login required.");
                         }
                     }
@@ -191,11 +195,17 @@ namespace RustPlusDesk.Services.Auth
                 }
                 catch (Exception authEx)
                 {
+                    accountSessionRestoreFailed = hadPersistedAccountSession;
                     AppendLog($"[Supabase] Session restore error: {authEx.Message}. Cloud sync will run with anon key.");
                 }
 
-                // If no Discord session, try guest handshake auth
-                if (!IsDiscordAuthenticated)
+                if (accountSessionRestoreFailed)
+                {
+                    await ClearCurrentSessionAsync();
+                    ShowCloudAccountRequiredPromptOnce(sessionExpired: true);
+                }
+                // Guest auth is only for users without a persisted Discord/email account.
+                else if (!IsDiscordAuthenticated && !IsEmailAuthenticated)
                 {
                     await TryInitializeGuestAuthAsync();
                 }
@@ -413,6 +423,17 @@ namespace RustPlusDesk.Services.Auth
                 SessionRefreshLock.Release();
             }
 
+            await ClearCurrentSessionAsync();
+
+            CurrentTier = "free";
+            IsPremium = false;
+            AppendLog("[Cloud] Account session expired. Please sign in again.");
+            ShowCloudAccountRequiredPromptOnce(sessionExpired: true);
+            return false;
+        }
+
+        private static async Task ClearCurrentSessionAsync()
+        {
             try
             {
                 var destroySession = Client?.Auth?.GetType().GetMethod(
@@ -420,29 +441,14 @@ namespace RustPlusDesk.Services.Auth
                     System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
 
                 if (destroySession != null)
-                    destroySession.Invoke(Client.Auth, null);
+                    destroySession.Invoke(Client!.Auth, null);
                 else if (Client?.Auth != null)
                     await Client.Auth.SignOut();
             }
             catch
             {
-                // Best effort: a broken local session should not keep poisoning anon requests.
+                new DesktopSessionHandler().DestroySession();
             }
-
-            CurrentTier = "free";
-            IsPremium = false;
-            AppendLog("[Cloud] Discord session expired. Cloud sync continues with anon/free limits until you log in again.");
-            try
-            {
-                if (Application.Current?.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (Application.Current.MainWindow is Views.MainWindow mainWin)
-                            mainWin.ShowInfoSnackbar("Session Expired", "Discord session expired. Cloud sync may be limited.", WpfUi.ControlAppearance.Caution);
-                    });
-            }
-            catch { }
-            return false;
         }
 
         public static async Task<bool> LoginWithDiscordAsync()
@@ -469,6 +475,8 @@ namespace RustPlusDesk.Services.Auth
                 {
                     // Clear guest auth when Discord login succeeds
                     IsGuestAuthenticated = false;
+                    CloudAccountPromptShownThisSession = false;
+                    GuestRegistrationFailedPermanently = false;
                     HandshakeService.Clear();
                     await SyncDiscordRolesAsync();
                 }
@@ -495,6 +503,8 @@ namespace RustPlusDesk.Services.Auth
                     return (false, T("EmailInvalidCredentialsError", "Invalid credentials. Please check your email and password."));
 
                 IsGuestAuthenticated = false;
+                CloudAccountPromptShownThisSession = false;
+                GuestRegistrationFailedPermanently = false;
                 HandshakeService.Clear();
 
                 await RefreshUserProfileAsync();
@@ -510,6 +520,27 @@ namespace RustPlusDesk.Services.Auth
                     msg = T("EmailInvalidCredentialsShortError", "Invalid credentials.");
                 AppendLog($"[Cloud/Email] Login error: {ex.Message}");
                 return (false, msg);
+            }
+        }
+
+        /// <summary>
+        /// Sends a password reset email to the given address.
+        /// </summary>
+        public static async Task<(bool Success, string? Error)> SendPasswordResetEmailAsync(string email)
+        {
+            if (Client == null) return (false, "Supabase not initialized.");
+            try
+            {
+                await Client.Auth.ResetPasswordForEmail(new Supabase.Gotrue.ResetPasswordForEmailOptions(email) { 
+                    RedirectTo = "https://rustplusdesktop.cloud/reset-password"
+                });
+                AppendLog($"[Cloud] Password reset email sent to: {email}");
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Email] Reset password error: {ex.Message}");
+                return (false, ex.Message);
             }
         }
 
@@ -561,6 +592,8 @@ namespace RustPlusDesk.Services.Auth
                     if (session?.User?.EmailConfirmedAt != null)
                     {
                         IsGuestAuthenticated = false;
+                        CloudAccountPromptShownThisSession = false;
+                        GuestRegistrationFailedPermanently = false;
                         HandshakeService.Clear();
                         await RefreshUserProfileAsync();
                         AppendLog("[Cloud/Email] Email confirmed and session active!");
@@ -1019,12 +1052,12 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
-        private static void ShowCloudAccountRequiredPromptOnce()
+        private static void ShowCloudAccountRequiredPromptOnce(bool sessionExpired = false)
         {
-            if (CloudAccountPromptShownThisSession || !TrackingService.CloudSyncEnabled)
+            if (CloudAccountPromptShownThisSession || (!sessionExpired && !TrackingService.CloudSyncEnabled))
                 return;
 
-            if (IsDiscordAuthenticated || IsEmailAuthenticated || IsGuestAuthenticated)
+            if (!sessionExpired && (IsDiscordAuthenticated || IsEmailAuthenticated || IsGuestAuthenticated))
                 return;
 
             CloudAccountPromptShownThisSession = true;
@@ -1035,7 +1068,9 @@ namespace RustPlusDesk.Services.Auth
                 {
                     if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
                     {
-                        var prompt = new RustPlusDesk.Views.Windows.CloudLoginPromptWindow(mainWin)
+                        mainWin.UpdateCloudSyncUI();
+                        mainWin.UpdateRustMapsUi();
+                        var prompt = new RustPlusDesk.Views.Windows.CloudLoginPromptWindow(mainWin, sessionExpired)
                         {
                             Owner = mainWin
                         };
