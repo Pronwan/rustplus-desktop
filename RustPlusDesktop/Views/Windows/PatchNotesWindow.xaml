@@ -33,6 +33,39 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v7.0.2 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v7.0.2 | Hotfixes &amp; Improvements" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold" Foreground="{DynamicResource Accent}">&#x2022; Write Protection Fix:</Run>
+                                Fixed a write protection issue for 3D Maps by moving the LocalBuild cache to the %APPDATA% directory instead of the application installation folder.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Enhanced !heli Command:</Run>
+                                Added dynamic grid coordinate information to the !heli chat command responses.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; MapParser Stability:</Run>
+                                Fixed MapParser freezing and being stuck on "Preparing..." due to output buffer overflow issues.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Cloud Domain Migration:</Run>
+                                Merged the Cloud service to the new dedicated domain: www.rustplusdesktop.cloud.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Email Verification &amp; Password Reset:</Run>
+                                Added in-app password reset options and fixed issues with account verification emails. We are now using our new official email: mail@rustplusdesktop.cloud.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                    <!-- ============================================== -->
                     <!-- NEW v7.0.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
