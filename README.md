@@ -51,6 +51,18 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🛠️ 7.0.2 Hotfixes & Improvements:
+
+- **Seamless 3D Map Setup:** We bundled the .NET 8 Runtime directly into the MapParser.exe. It now works perfectly out-of-the-box on all PCs without requiring any manual framework installations!
+- **3D Map Visuals:** Added new and improved ground textures for the 3D Maps. 🗺️
+- **MapParser BufferOverflow:** Fixed a bug where the MapParser could get stuck in an endless loop due to a BufferOverflow.
+- **3D Map Write Protection:** Fixed an issue where building the 3D Map failed due to Windows write protection. Map cache is now safely stored in %APPDATA%.
+- **Storage Optimization:** Added automatic cleanup of temporary MapParser logs and cache files upon successful 3D map extraction to save your precious disk space. 🧹
+- **Discord !heli Command:** The Attack Helicopter status command now automatically includes the current [Grid] where the Heli is located! 🚁
+- **Account Verification & Password Reset:** Added an in-app password reset option and finally fixed the issue where account verification emails wouldn't send properly. 📧
+- **☁️ Cloud Domain Migration:** We have officially merged our Cloud service to a new, dedicated domain: www.rustplusdesktop.cloud! Our new official support email is now: **mail@rustplusdesktop.cloud**
+.
+
 # 🚀 UPDATE v7.0.0 | 3D Maps, Base Footprint Builder & Enhanced 2D Maps
 The new version is now available! Simply restart your app or download the latest update.
 
