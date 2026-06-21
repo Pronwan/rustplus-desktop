@@ -36,8 +36,8 @@ public readonly record struct Map3DReferenceMonument(double X, double Y, string 
 
 public static class Map3DLocalBuildService
 {
-    private const int RecentCandidateCount = 5;
-    private const int NameCandidateCount = 3;
+    private const int RecentCandidateCount = 7;
+    private const int NameCandidateCount = 5;
     private const double MatchDistanceWorldUnits = 300.0;
 
     public static async Task<Map3DLocalBuildResult> PrepareAsync(
@@ -155,7 +155,7 @@ public static class Map3DLocalBuildService
                 ? "3D map data extracted and staged."
                 : candidates.Count == 0
                     ? "No local .map candidates were found automatically."
-                    : "No matching local .map file was found automatically.";
+                    : $"No matching local .map file was found automatically. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors.";
         }
 
         if (selectedMap != null && texturePath == null) texturePath = PromotePendingTexture(pendingTexturePath, folder);
@@ -474,9 +474,18 @@ public static class Map3DLocalBuildService
         using var process = Process.Start(psi);
         if (process == null) return (false, -1, "Failed to start parser.");
 
-        string stderr = await process.StandardError.ReadToEndAsync(ct).ConfigureAwait(false);
-        await process.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+        var stderrTask = process.StandardError.ReadToEndAsync(ct);
+        var stdoutTask = process.StandardOutput.ReadToEndAsync(ct);
+
+        await Task.WhenAll(stderrTask, stdoutTask).ConfigureAwait(false);
         await process.WaitForExitAsync(ct).ConfigureAwait(false);
+
+        string stderr = stderrTask.Result ?? string.Empty;
+        string stdout = stdoutTask.Result ?? string.Empty;
+
+        string logPath = Path.Combine(outputDir, "parser_log.txt");
+        string logContent = $"--- STDOUT ---\n{stdout}\n\n--- STDERR ---\n{stderr}\n\nExitCode: {process.ExitCode}";
+        try { await File.WriteAllTextAsync(logPath, logContent, ct).ConfigureAwait(false); } catch { }
 
         bool success = process.ExitCode == 0 && File.Exists(Path.Combine(outputDir, "map_resolved.json"));
         return (success, process.ExitCode, string.IsNullOrWhiteSpace(stderr) ? null : stderr.Trim());
