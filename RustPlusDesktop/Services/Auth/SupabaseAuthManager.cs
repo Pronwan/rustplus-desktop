@@ -532,7 +532,7 @@ namespace RustPlusDesk.Services.Auth
             try
             {
                 await Client.Auth.ResetPasswordForEmail(new Supabase.Gotrue.ResetPasswordForEmailOptions(email) { 
-                    RedirectTo = "https://rustplusdesktop-xi7n.onrender.com/reset-password"
+                    RedirectTo = "https://rustplusdesktop.cloud/reset-password"
                 });
                 AppendLog($"[Cloud] Password reset email sent to: {email}");
                 return (true, null);

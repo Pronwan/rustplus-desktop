@@ -18,7 +18,7 @@ namespace RustPlusDesk.Views.Windows
 
         private void BtnOpenPortal_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo("https://rustplusdesktop.onrender.com/dashboard") { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo("https://rustplusdesktop.cloud/dashboard") { UseShellExecute = true });
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
