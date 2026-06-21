@@ -155,7 +155,9 @@ public static class Map3DLocalBuildService
                 ? "3D map data extracted and staged."
                 : candidates.Count == 0
                     ? "No local .map candidates were found automatically."
-                    : $"No matching local .map file was found automatically. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors.";
+                    : explicitMapPath != null
+                        ? $"Failed to parse the selected map. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors."
+                        : $"No matching local .map file was found automatically. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors.";
         }
 
         if (selectedMap != null && texturePath == null) texturePath = PromotePendingTexture(pendingTexturePath, folder);
