@@ -331,7 +331,7 @@ public partial class MainWindow
             bool isHeliActive = heliMarker != null;
             if (isHeliActive)
             {
-                string grid = GetGridLabel(heliMarker.X, heliMarker.Y);
+                string grid = GetGridLabel(heliMarker.LastRealX, heliMarker.LastRealY);
                 if (_heliSpawnTime.HasValue)
                 {
                     var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
