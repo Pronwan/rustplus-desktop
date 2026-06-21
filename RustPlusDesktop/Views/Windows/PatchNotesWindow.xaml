@@ -63,6 +63,21 @@
                                 <Run FontWeight="Bold">&#x2022; Email Verification &amp; Password Reset:</Run>
                                 Added in-app password reset options and fixed issues with account verification emails. We are now using our new official email: mail@rustplusdesktop.cloud.
                             </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Seamless 3D Map Setup:</Run>
+                                Bundled the .NET 8 Runtime directly into MapParser.exe. It now works perfectly out-of-the-box on all PCs without requiring manual framework installations!
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; 3D Map Visuals:</Run>
+                                Added new and improved ground textures for the 3D Maps.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Storage Optimization:</Run>
+                                Added automatic cleanup of temporary MapParser logs and cache files upon successful 3D map extraction to save disk space.
+                            </TextBlock>
                         </StackPanel>
                     </Border>
                     <!-- ============================================== -->
