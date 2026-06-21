@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.0.1</Version>
+		<Version>7.0.2</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.0.1</AssemblyVersion>
-		<FileVersion>7.0.1</FileVersion>
-		<InformationalVersion>7.0.1</InformationalVersion>
+		<AssemblyVersion>7.0.2</AssemblyVersion>
+		<FileVersion>7.0.2</FileVersion>
+		<InformationalVersion>7.0.2</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -335,54 +335,24 @@
           BeforeTargets="AssignTargetPaths"
           Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <MSBuild Projects="..\MapParser\MapParser.csproj"
-             Targets="Build"
-             Properties="Configuration=$(Configuration);RuntimeIdentifier=;SelfContained=;PublishSingleFile=;RuntimeIdentifiers=" />
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true" />
   </Target>
 
   <Target Name="EmbedMapParserRuntime"
           BeforeTargets="AssignTargetPaths"
           DependsOnTargets="BuildMapParserRuntime"
-          Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+          Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.exe">
-      <LogicalName>Map3DParser/MapParser.exe</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.dll">
-      <LogicalName>Map3DParser/MapParser.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.deps.json">
-      <LogicalName>Map3DParser/MapParser.deps.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\MapParser.runtimeconfig.json">
-      <LogicalName>Map3DParser/MapParser.runtimeconfig.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Compression.LZ4.dll">
-      <LogicalName>Map3DParser/K4os.Compression.LZ4.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Compression.LZ4.Legacy.dll">
-      <LogicalName>Map3DParser/K4os.Compression.LZ4.Legacy.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Compression.LZ4.Streams.dll">
-      <LogicalName>Map3DParser/K4os.Compression.LZ4.Streams.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\K4os.Hash.xxHash.dll">
-      <LogicalName>Map3DParser/K4os.Hash.xxHash.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\protobuf-net.Core.dll">
-      <LogicalName>Map3DParser/protobuf-net.Core.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\protobuf-net.dll">
-      <LogicalName>Map3DParser/protobuf-net.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\System.IO.Pipelines.dll">
-      <LogicalName>Map3DParser/System.IO.Pipelines.dll</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
-      <LogicalName>Map3DParser/prefabs_map.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
-      <LogicalName>Map3DParser/Rust_Assets/Metadata/carbon_prefabs.json</LogicalName>
-    </EmbeddedResource>
+      <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe">
+        <LogicalName>Map3DParser/MapParser.exe</LogicalName>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
+        <LogicalName>Map3DParser/prefabs_map.json</LogicalName>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
+        <LogicalName>Map3DParser/Rust_Assets/Metadata/carbon_prefabs.json</LogicalName>
+      </EmbeddedResource>
     </ItemGroup>
   </Target>
 
