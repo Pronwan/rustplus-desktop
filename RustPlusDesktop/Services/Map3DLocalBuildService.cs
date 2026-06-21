@@ -162,6 +162,16 @@ public static class Map3DLocalBuildService
 
         if (selectedMap != null && texturePath == null) texturePath = PromotePendingTexture(pendingTexturePath, folder);
 
+        if (selectedMap != null)
+        {
+            try
+            {
+                string attemptsDir = Path.Combine(folder, "parser_attempts");
+                if (Directory.Exists(attemptsDir)) Directory.Delete(attemptsDir, true);
+            }
+            catch { }
+        }
+
         var manifest = new
         {
             profile.Name,
