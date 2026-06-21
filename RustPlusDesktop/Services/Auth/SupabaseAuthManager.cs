@@ -524,6 +524,28 @@ namespace RustPlusDesk.Services.Auth
         }
 
         /// <summary>
+        /// Sends a password reset email to the given address.
+        /// </summary>
+        public static async Task<(bool Success, string? Error)> SendPasswordResetEmailAsync(string email)
+        {
+            if (Client == null) return (false, "Supabase not initialized.");
+            try
+            {
+                await Client.Auth.ResetPasswordForEmail(new Supabase.Gotrue.ResetPasswordForEmailOptions(email) { 
+                    RedirectTo = "https://rustplusdesktop-xi7n.onrender.com/reset-password",
+                    FlowType = Supabase.Gotrue.Constants.OAuthFlowType.Implicit
+                });
+                AppendLog($"[Cloud] Password reset email sent to: {email}");
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Email] Reset password error: {ex.Message}");
+                return (false, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Register a new account with email + password.
         /// Supabase sends a confirmation email. Call PollEmailConfirmedAsync after signup to wait for it.
         /// </summary>

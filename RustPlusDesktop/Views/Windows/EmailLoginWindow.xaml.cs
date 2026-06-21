@@ -102,6 +102,31 @@ namespace RustPlusDesk.Views.Windows
                 BtnSignIn_Click(sender, e);
         }
 
+        private async void LnkForgotPassword_Click(object sender, RoutedEventArgs e)
+        {
+            var email = TxtSignInEmail.Text.Trim();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ShowError(T("EmailRequiredForResetError", "Please enter your email address to reset password."));
+                return;
+            }
+
+            SetBusy(true, T("EmailResettingPasswordStatus", "Sending reset email..."));
+
+            var (success, error) = await Services.Auth.SupabaseAuthManager.SendPasswordResetEmailAsync(email);
+
+            SetBusy(false);
+
+            if (success)
+            {
+                ShowSuccess(T("EmailResetPasswordSent", "Password reset email sent. Check your inbox."));
+            }
+            else
+            {
+                ShowError(error ?? T("EmailResetPasswordFailed", "Failed to send reset email."));
+            }
+        }
+
         // ──────────────────────────────────────────────────────────
         // Sign Up + Email Confirmation Polling
         // ──────────────────────────────────────────────────────────
