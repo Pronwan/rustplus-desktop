@@ -671,7 +671,7 @@
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                             <MenuItem.Header>
                                                 <TextBlock>
-                                                    <Run Text="ðŸ—‘ï¸ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
                                                 </TextBlock>
                                             </MenuItem.Header>
                                         </MenuItem>
