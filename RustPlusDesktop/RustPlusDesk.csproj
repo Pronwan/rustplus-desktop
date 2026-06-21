@@ -335,6 +335,9 @@
           BeforeTargets="AssignTargetPaths"
           Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <MSBuild Projects="..\MapParser\MapParser.csproj"
+             Targets="Restore"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64" />
+    <MSBuild Projects="..\MapParser\MapParser.csproj"
              Targets="Publish"
              Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true" />
   </Target>
