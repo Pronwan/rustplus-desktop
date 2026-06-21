@@ -336,7 +336,7 @@
           Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <MSBuild Projects="..\MapParser\MapParser.csproj"
              Targets="Build"
-             Properties="Configuration=$(Configuration)" />
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=;SelfContained=;PublishSingleFile=;RuntimeIdentifiers=" />
   </Target>
 
   <Target Name="EmbedMapParserRuntime"
