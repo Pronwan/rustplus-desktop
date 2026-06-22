@@ -33,7 +33,26 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v7.0.2 PATCH NOTES -->
+                    <!-- NEW v7.1.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v7.1.0 | Resource Heatmaps Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Resource Heatmaps (2D &amp; 3D):</Run>
+                                Added fully procedural heatmaps for all resources, animals, and loot directly to the 2D and 3D maps! Visualize exactly where to find the best spots for farming.
+                            </TextBlock>
+
+                            <!-- v7.1.0 Dynamic Image Gallery -->
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/heatmap.png" Description="New procedural 2D Resource Heatmaps"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/heatmap-3D.png" Description="Fully integrated 3D Resource Heatmaps on the terrain"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+                    <!-- ============================================== -->
+                    <!-- OLD v7.0.2 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
@@ -78,17 +97,6 @@
                                 <Run FontWeight="Bold">&#x2022; Storage Optimization:</Run>
                                 Added automatic cleanup of temporary MapParser logs and cache files upon successful 3D map extraction to save disk space.
                             </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Resource Heatmaps (2D &amp; 3D):</Run>
-                                Added fully procedural heatmaps for all resources, animals, and loot directly to the 2D and 3D maps! Visualize exactly where to find the best spots for farming.
-                            </TextBlock>
-
-                            <!-- v7.0.2 Dynamic Image Gallery -->
-                            <views:ImageGallery>
-                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/heatmap.png" Description="New procedural 2D Resource Heatmaps"/>
-                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/7.0/heatmap-3D.png" Description="Fully integrated 3D Resource Heatmaps on the terrain"/>
-                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
                     <!-- ============================================== -->
