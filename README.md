@@ -1,6 +1,6 @@
 ![Headline](RustPlusDesktop/Assets/Images/headlineGIT.jpg)  
 [![Discord](https://img.shields.io/badge/Discord-Rust²%20|%20Rust%2B%20Desktop-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/v4X584wye4)
-[![Cloud](https://github.com/Pronwan/rustplus-desktop/blob/master/cloud.png?raw=true](https://rustplusdesktop.cloud)
+[![Cloud](https://github.com/Pronwan/rustplus-desktop/blob/master/cloud.png?raw=true)](https://rustplusdesktop.cloud)
 
 [![Donate](./RustPlusDesktop/Assets/Images/donate.png)](https://www.patreon.com/c/Pronwan)
 
