@@ -4167,29 +4167,29 @@
                                                                      <ColumnDefinition Width="*" />
                                                                  </Grid.ColumnDefinitions>
                                                                  <!-- Ores -->
-                                                                 <Border x:Name="Bento_ores" Grid.Column="0" Background="#FFF3E0" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_ores" Grid.Column="0" Background="#FFF3E0" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="ores" Click="BtnHeatmapIcon_Click" ToolTip="Ores" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/icons/map-markers/ore.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/icons/map-markers/ore.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wood Piles -->
-                                                                 <Border x:Name="Bento_wood" Grid.Column="1" Background="#E8F5E9" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_wood" Grid.Column="1" Background="#E8F5E9" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="wood" Click="BtnHeatmapIcon_Click" ToolTip="Wood Piles" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/wood-pile.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/wood-pile.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Log Piles -->
-                                                                 <Border x:Name="Bento_logs" Grid.Column="2" Background="#EFEBE9" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_logs" Grid.Column="2" Background="#EFEBE9" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="logs" Click="BtnHeatmapIcon_Click" ToolTip="Log Piles" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
@@ -4214,36 +4214,36 @@
                                                                      <ColumnDefinition Width="*" />
                                                                  </Grid.ColumnDefinitions>
                                                                  <!-- Junkpiles -->
-                                                                 <Border x:Name="Bento_junkpiles" Grid.Column="0" Background="#E5E7EB" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_junkpiles" Grid.Column="0" Background="#E5E7EB" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="junkpiles" Click="BtnHeatmapIcon_Click" ToolTip="Junkpiles" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Rowboats -->
-                                                                 <Border x:Name="Bento_rowboat" Grid.Column="1" Background="#E0F7FA" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_rowboat" Grid.Column="1" Background="#E0F7FA" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="rowboat" Click="BtnHeatmapIcon_Click" ToolTip="Rowboats" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Cars -->
-                                                                 <Border x:Name="Bento_modularcar" Grid.Column="2" Background="#E3F2FD" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_modularcar" Grid.Column="2" Background="#E3F2FD" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="modularcar" Click="BtnHeatmapIcon_Click" ToolTip="Modular Cars" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </Grid>
@@ -4256,69 +4256,69 @@
                                                              <TextBlock Text="Agriculture &amp; Food" FontSize="10" FontWeight="Bold" Foreground="#8D98A8" Margin="4,2,0,8" />
                                                              <UniformGrid Columns="3">
                                                                  <!-- Mushrooms -->
-                                                                 <Border x:Name="Bento_mushroom" Background="#FFEBEE" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_mushroom" Background="#FFEBEE" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="mushroom" Click="BtnHeatmapIcon_Click" ToolTip="Mushrooms" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/mushroom.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/mushroom.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Berries -->
-                                                                 <Border x:Name="Bento_berries" Background="#FCE4EC" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_berries" Background="#FCE4EC" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="berries" Click="BtnHeatmapIcon_Click" ToolTip="Berries" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/red-berry.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/red-berry.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Corn -->
-                                                                 <Border x:Name="Bento_corn" Background="#FFFDE7" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_corn" Background="#FFFDE7" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="corn" Click="BtnHeatmapIcon_Click" ToolTip="Corn" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/corn.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/corn.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Pumpkin -->
-                                                                 <Border x:Name="Bento_pumpkin" Background="#FFE0B2" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_pumpkin" Background="#FFE0B2" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="pumpkin" Click="BtnHeatmapIcon_Click" ToolTip="Pumpkins" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/pumpkin.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/pumpkin.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Potato -->
-                                                                 <Border x:Name="Bento_potato" Background="#EFEBE9" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_potato" Background="#EFEBE9" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="potato" Click="BtnHeatmapIcon_Click" ToolTip="Potatoes" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/potato.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/potato.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wheat -->
-                                                                 <Border x:Name="Bento_wheat" Background="#FFF8E1" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_wheat" Background="#FFF8E1" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="wheat" Click="BtnHeatmapIcon_Click" ToolTip="Wheat" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/wheat.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/wheat.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </UniformGrid>
@@ -4331,91 +4331,91 @@
                                                              <TextBlock Text="Fauna &amp; Wildlife" FontSize="10" FontWeight="Bold" Foreground="#8D98A8" Margin="4,2,0,8" />
                                                              <UniformGrid Columns="4">
                                                                  <!-- Bear -->
-                                                                 <Border x:Name="Bento_bear" Background="#EFEBE9" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_bear" Background="#EFEBE9" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="bear" Click="BtnHeatmapIcon_Click" ToolTip="Bears" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/bear.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/bear.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Boar -->
-                                                                 <Border x:Name="Bento_boar" Background="#F5F5F5" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_boar" Background="#F5F5F5" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="boar" Click="BtnHeatmapIcon_Click" ToolTip="Boars" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/boar.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/boar.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Chicken -->
-                                                                 <Border x:Name="Bento_chicken" Background="#FFFDE7" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_chicken" Background="#FFFDE7" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="chicken" Click="BtnHeatmapIcon_Click" ToolTip="Chickens" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/chicken.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/chicken.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wolf -->
-                                                                 <Border x:Name="Bento_wolf" Background="#ECEFF1" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_wolf" Background="#ECEFF1" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="wolf" Click="BtnHeatmapIcon_Click" ToolTip="Wolves" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/wolf.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/wolf.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Deer -->
-                                                                 <Border x:Name="Bento_stag" Background="#EFEBE9" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_stag" Background="#EFEBE9" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="stag" Click="BtnHeatmapIcon_Click" ToolTip="Deers" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/stag.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/stag.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Crocodile -->
-                                                                 <Border x:Name="Bento_crocodile" Background="#E8F5E9" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_crocodile" Background="#E8F5E9" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="crocodile" Click="BtnHeatmapIcon_Click" ToolTip="Crocodiles" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/crocodile.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/crocodile.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Tiger -->
-                                                                 <Border x:Name="Bento_tiger" Background="#FFE0B2" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_tiger" Background="#FFE0B2" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="tiger" Click="BtnHeatmapIcon_Click" ToolTip="Tigers" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/tiger.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/tiger.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Snake -->
-                                                                 <Border x:Name="Bento_snake" Background="#DCEDC8" Width="48" Height="48" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                 <Border x:Name="Bento_snake" Background="#DCEDC8" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                      <Button Tag="snake" Click="BtnHeatmapIcon_Click" ToolTip="Snakes" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                                          <Button.Template>
                                                                              <ControlTemplate TargetType="Button">
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/snake.png" Margin="3" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/snake.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </UniformGrid>
