@@ -223,7 +223,7 @@ public partial class MainWindow
         finally
         {
             BtnSendMapToDiscord.Content = oldContent;
-            BtnSendMapToDiscord.IsEnabled = true;
+            BtnSendMapToDiscord.ClearValue(IsEnabledProperty);
         }
     }
 }

@@ -304,6 +304,11 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
+	
+	<ItemGroup>
+		<Resource Include="Assets\heatmap icons\**\*" />
+	</ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />

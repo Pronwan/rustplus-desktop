@@ -745,11 +745,49 @@ return;
             await SearchRustMapsAsync(forceRefetch: true);
         }
 
+        private string? _currentActiveHeatmap = null;
+
+        private void BtnToggleHeatmap_Click(object sender, RoutedEventArgs e)
+        {
+            if (HeatmapPopup != null)
+            {
+                HeatmapPopup.IsOpen = !HeatmapPopup.IsOpen;
+                if (HeatmapPopup.IsOpen)
+                {
+                    UpdateBentoActiveStates();
+                }
+            }
+        }
+
+        private void UpdateBentoActiveStates()
+        {
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar" };
+            foreach (var cat in allCategories)
+            {
+                var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
+                if (border != null)
+                {
+                    bool isActive = (cat == _currentActiveHeatmap);
+                    border.BorderBrush = isActive 
+                        ? new SolidColorBrush(Color.FromRgb(74, 193, 255)) 
+                        : Brushes.Transparent;
+                    border.BorderThickness = isActive ? new Thickness(1.5) : new Thickness(1);
+                }
+            }
+        }
+
         private async void BtnHeatmapIcon_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Wpf.Ui.Controls.Button btn && btn.Tag is string heatmapType)
+            if (sender is FrameworkElement btn && btn.Tag is string heatmapType)
             {
-                BtnToggleHeatmap.IsChecked = false;
+                // Toggle behavior: if they click the active one, clear it
+                if (_currentActiveHeatmap == heatmapType)
+                {
+                    heatmapType = "clear";
+                }
+
+                _currentActiveHeatmap = (heatmapType == "clear") ? null : heatmapType;
+                UpdateBentoActiveStates();
 
                 if (heatmapType == "clear")
                 {
