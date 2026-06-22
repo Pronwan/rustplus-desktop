@@ -327,6 +327,9 @@
     <EmbeddedResource Include="..\MapParser\style.css">
       <LogicalName>Map3DViewer/style.css</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\modules\**\*" Condition="Exists('..\MapParser\modules')">
+      <LogicalName>Map3DViewer/modules/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
       <LogicalName>Map3DViewer/draco_decoder.wasm</LogicalName>
     </EmbeddedResource>
