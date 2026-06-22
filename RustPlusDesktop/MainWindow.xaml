@@ -4174,7 +4174,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/icons/map-markers/ore.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/icons/map-markers/ore.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wood Piles -->
@@ -4185,7 +4185,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/wood-pile.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/wood-pile.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Log Piles -->
@@ -4196,7 +4196,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <TextBlock Text="🌲" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                         <TextBlock Text="🌲" FontSize="34" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                      </Button>
                                                                  </Border>
                                                              </Grid>
@@ -4221,7 +4221,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Rowboats -->
@@ -4232,7 +4232,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Cars -->
@@ -4243,7 +4243,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </Grid>
@@ -4263,7 +4263,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/mushroom.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/mushroom.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Berries -->
@@ -4274,7 +4274,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/red-berry.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/red-berry.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Corn -->
@@ -4285,7 +4285,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/corn.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/corn.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Pumpkin -->
@@ -4296,7 +4296,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/pumpkin.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/pumpkin.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Potato -->
@@ -4307,7 +4307,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/potato.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/potato.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wheat -->
@@ -4318,7 +4318,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/wheat.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/Food/wheat.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </UniformGrid>
@@ -4338,7 +4338,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/bear.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/bear.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Boar -->
@@ -4349,7 +4349,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/boar.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/boar.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Chicken -->
@@ -4360,7 +4360,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/chicken.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/chicken.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wolf -->
@@ -4371,7 +4371,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/wolf.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/wolf.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Deer -->
@@ -4382,7 +4382,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/stag.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/stag.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Crocodile -->
@@ -4393,7 +4393,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/crocodile.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/crocodile.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Tiger -->
@@ -4404,7 +4404,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/tiger.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/tiger.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Snake -->
@@ -4415,7 +4415,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/snake.png" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/snake.png" Width="48" Height="48" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </UniformGrid>
