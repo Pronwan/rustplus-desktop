@@ -203,6 +203,8 @@
 	  <None Remove="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
 	  <None Remove="Assets\Images\7.0\3D-Base-Footprint.png" />
 	  <None Remove="Assets\Images\7.0\custom-icons-smart.png" />
+	  <None Remove="Assets\Images\7.0\heatmap-3D.png" />
+	  <None Remove="Assets\Images\7.0\heatmap.png" />
 	  <None Remove="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
 	  <None Remove="Assets\Images\7.0\Live-Following-3D.png" />
 	  <None Remove="Assets\Images\7.0\Logic-Engine.png" />
@@ -331,18 +333,11 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="BuildMapParserRuntime"
-          BeforeTargets="AssignTargetPaths"
-          Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
-    <MSBuild Projects="..\MapParser\MapParser.csproj"
-             Targets="Publish"
-             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true" />
+  <Target Name="BuildMapParserRuntime" BeforeTargets="AssignTargetPaths" Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <MSBuild Projects="..\MapParser\MapParser.csproj" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true" />
   </Target>
 
-  <Target Name="EmbedMapParserRuntime"
-          BeforeTargets="AssignTargetPaths"
-          DependsOnTargets="BuildMapParserRuntime"
-          Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
       <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe">
         <LogicalName>Map3DParser/MapParser.exe</LogicalName>
@@ -480,6 +475,8 @@
     <Resource Include="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
     <Resource Include="Assets\Images\7.0\3D-Base-Footprint.png" />
     <Resource Include="Assets\Images\7.0\custom-icons-smart.png" />
+    <Resource Include="Assets\Images\7.0\heatmap-3D.png" />
+    <Resource Include="Assets\Images\7.0\heatmap.png" />
     <Resource Include="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
     <Resource Include="Assets\Images\7.0\Live-Following-3D.png" />
     <Resource Include="Assets\Images\7.0\Logic-Engine.png" />
@@ -596,6 +593,9 @@
     <Resource Include="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
     <Resource Include="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
     <Resource Include="Assets\TitleScreen-rust-plus-desktop.png" />
+    <Resource Include="Assets\icons\map-markers\Heatmap.png" />
+    <Resource Include="Assets\icons\map-markers\junk.png" />
+    <Resource Include="Assets\icons\map-markers\ore.png" />
     <Resource Include="Assets\Data\rust_items.json" />
     <Resource Include="Assets\Data\monument_bounds.json" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />
