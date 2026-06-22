@@ -3793,6 +3793,14 @@
                             VerticalAlignment="Top"
                             RenderOptions.BitmapScalingMode="HighQuality"
                             Stretch="None" />
+                        <Image
+                            x:Name="ImgHeatmap"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            IsHitTestVisible="False"
+                            Opacity="0.8"
+                            Stretch="None" />
                         <Grid
                             x:Name="Map3DHost"
                             HorizontalAlignment="Stretch"
@@ -4088,6 +4096,139 @@
                                                 <TextBlock x:Name="TxtOpen3DMap" Text="3D Map" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </ui:Button>
+
+                                        <!-- Heatmap Button -->
+                                        <ToggleButton
+                                            x:Name="BtnToggleHeatmap"
+                                            Margin="0,2,0,0"
+                                            Padding="6,4"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            ToolTip="Show Spawn Heatmaps"
+                                            Visibility="Collapsed"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Image Source="pack://application:,,,/Assets/icons/map-markers/Heatmap.png" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                <TextBlock Text="Heatmaps" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <Popup
+                                            x:Name="HeatmapPopup"
+                                            AllowsTransparency="True"
+                                            IsOpen="{Binding IsChecked, ElementName=BtnToggleHeatmap}"
+                                            Placement="Right"
+                                            PlacementTarget="{Binding ElementName=BtnToggleHeatmap}"
+                                            StaysOpen="False"
+                                            VerticalOffset="0">
+                                            <ui:Card
+                                                Margin="4,0,0,0"
+                                                Padding="0"
+                                                Background="#AA16181C"
+                                                BorderBrush="#40FFFFFF"
+                                                BorderThickness="1"
+                                                VerticalAlignment="Top">
+                                                <StackPanel Orientation="Vertical">
+                                                    <Border
+                                                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                                        BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="8"
+                                                        Padding="8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="16" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <!-- Left Column: Resources & Food -->
+                                                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                                                <TextBlock Text="Resources" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,0,4,4"/>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="ores" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="⛰️" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Ores" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="wood" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌳" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Wood Piles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="logs" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌲" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Log Piles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+
+                                                                <TextBlock Text="Food" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,12,4,4"/>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="mushroom" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🍄" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Mushrooms" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="berries" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🍓" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Berries" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="corn" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌽" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Corn" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="pumpkin" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🎃" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Pumpkins" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="potato" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🥔" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Potatoes" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="wheat" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌾" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Wheat" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                            </StackPanel>
+
+                                                            <!-- Right Column: Animals & Loot -->
+                                                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                                                <TextBlock Text="Animals" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,0,4,4"/>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="bear" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐻" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Bears" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="boar" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐗" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Boars" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="chicken" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐔" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Chickens" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="wolf" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐺" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Wolves" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="stag" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🦌" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Deers" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="crocodile" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐊" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Crocodiles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="tiger" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐅" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Tigers" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="snake" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐍" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Snakes" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+
+                                                                <TextBlock Text="Loot &amp; Vehicles" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,12,4,4"/>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="junkpiles" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🛢️" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Junkpiles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="rowboat" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🚤" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Rowboats" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="modularcar" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🚙" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Cars" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
+                                                                </ui:Button>
+
+                                                                <Rectangle Height="1" Fill="#33FFFFFF" Margin="4,12,4,8" />
+                                                                
+                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="clear" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <ui:SymbolIcon Symbol="Dismiss20" FontSize="16" Foreground="#FF5555" Margin="0,0,6,0" />
+                                                                        <TextBlock Text="Clear Heatmap" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                                                    </StackPanel>
+                                                                </ui:Button>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </ui:Card>
+                                        </Popup>
 
                                     </StackPanel>
                                 </ui:Card>
