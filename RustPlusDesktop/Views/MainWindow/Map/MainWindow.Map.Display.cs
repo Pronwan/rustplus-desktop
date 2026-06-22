@@ -21,6 +21,25 @@ public partial class MainWindow
         ImgMap.Height = hDip;
         RenderOptions.SetBitmapScalingMode(ImgMap, BitmapScalingMode.HighQuality);
 
+        ImgHeatmap.Stretch = Stretch.Fill;
+        ImgHeatmap.HorizontalAlignment = HorizontalAlignment.Left;
+        ImgHeatmap.VerticalAlignment = VerticalAlignment.Top;
+        
+        var ptTopLeft = WorldToImagePx(0, _worldSizeS);
+        var ptBotRight = WorldToImagePx(_worldSizeS, 0);
+        if (ptBotRight.X > ptTopLeft.X && ptBotRight.Y > ptTopLeft.Y)
+        {
+            ImgHeatmap.Width = ptBotRight.X - ptTopLeft.X;
+            ImgHeatmap.Height = ptBotRight.Y - ptTopLeft.Y;
+            ImgHeatmap.Margin = new Thickness(ptTopLeft.X, ptTopLeft.Y, 0, 0);
+        }
+        else
+        {
+            ImgHeatmap.Width = wDip;
+            ImgHeatmap.Height = hDip;
+        }
+        RenderOptions.SetBitmapScalingMode(ImgHeatmap, BitmapScalingMode.HighQuality);
+
         GridLayer.Width = wDip;
         GridLayer.Height = hDip;
         GridLayer.IsHitTestVisible = false;
@@ -36,6 +55,7 @@ public partial class MainWindow
         _scene.Height = hDip + padPx * 2;
 
         (ImgMap.Parent as Panel)?.Children.Remove(ImgMap);
+        (ImgHeatmap.Parent as Panel)?.Children.Remove(ImgHeatmap);
         (GridLayer.Parent as Panel)?.Children.Remove(GridLayer);
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
 
@@ -43,8 +63,9 @@ public partial class MainWindow
 
         // Map bei (padPx, padPx)? -> NEIN, jetzt bei (0,0)!
         _scene.Children.Add(ImgMap); Panel.SetZIndex(ImgMap, 0);
-        _scene.Children.Add(GridLayer); Panel.SetZIndex(GridLayer, 1);
-        _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 2);
+        _scene.Children.Add(ImgHeatmap); Panel.SetZIndex(ImgHeatmap, 1);
+        _scene.Children.Add(GridLayer); Panel.SetZIndex(GridLayer, 2);
+        _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 3);
 
         _scene.RenderTransform = MapTransform;
 
@@ -62,6 +83,7 @@ public partial class MainWindow
         _mapBaseBmp = null;
 
         ImgMap.Source = null;
+        ImgHeatmap.Source = null;
         GridLayer.Children.Clear();
 
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;

@@ -69,6 +69,10 @@ namespace RustPlusDesk.Views
             TxtOpen3DMap.Text = _isMap3DPreparing ? "Preparing..." : _isMap3DActive ? "2D Map" : "3D Map";
             IconOpen3DMap.Symbol = _isMap3DActive ? Wpf.Ui.Controls.SymbolRegular.Map20 : Wpf.Ui.Controls.SymbolRegular.Cube20;
 
+            string folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+            bool mapDataExists = System.IO.File.Exists(System.IO.Path.Combine(folderPath, "map_data.json"));
+            BtnToggleHeatmap.Visibility = mapDataExists ? Visibility.Visible : Visibility.Collapsed;
+
             if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium)
             {
                 BtnSendMapToDiscord.Visibility = Visibility.Visible;
@@ -714,9 +718,15 @@ return;
 
         private static void CopyFileIfExists(string source, string target)
         {
-            if (!File.Exists(source)) return;
-            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-            File.Copy(source, target, overwrite: true);
+            if (File.Exists(source))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                File.Copy(source, target, overwrite: true);
+            }
+            else if (File.Exists(target))
+            {
+                File.Delete(target);
+            }
         }
 
         private static void CopyDirectoryIfExists(string sourceDir, string targetDir)
@@ -735,6 +745,161 @@ return;
             await SearchRustMapsAsync(forceRefetch: true);
         }
 
+        private async void BtnHeatmapIcon_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Wpf.Ui.Controls.Button btn && btn.Tag is string heatmapType)
+            {
+                BtnToggleHeatmap.IsChecked = false;
+
+                if (heatmapType == "clear")
+                {
+                    ImgHeatmap.Source = null;
+                    if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
+                    {
+                        var data = new { type = "CLEAR_HEATMAP" };
+                        string json = JsonSerializer.Serialize(data);
+                        _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
+                    }
+                    return;
+                }
+
+                if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
+                {
+                    try
+                    {
+                        var data = new
+                        {
+                            type = "SHOW_HEATMAP",
+                            category = heatmapType
+                        };
+
+                        string json = JsonSerializer.Serialize(data);
+                        await _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[Heatmap] Error sending to viewer: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    await DrawHeatmapOn2DMapAsync(heatmapType);
+                }
+            }
+        }
+
+        private async Task DrawHeatmapOn2DMapAsync(string category)
+        {
+            var profile = _vm.Selected;
+            if (profile == null) return;
+
+            string folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+            string dataPath = System.IO.Path.Combine(folderPath, "map_data.json");
+            if (!System.IO.File.Exists(dataPath))
+            {
+                AppendLog("[Heatmap] No map data found for 2D map. Try building 3D Map first.");
+                return;
+            }
+
+            try
+            {
+                using var fs = new System.IO.FileStream(dataPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
+                using var doc = await System.Text.Json.JsonDocument.ParseAsync(fs);
+                
+                if (doc.RootElement.TryGetProperty("heatmaps", out var heatmapsEl) &&
+                    heatmapsEl.TryGetProperty(category, out var b64El))
+                {
+                    string b64 = b64El.GetString() ?? "";
+                    if (string.IsNullOrEmpty(b64)) return;
+
+                    byte[] rawData = Convert.FromBase64String(b64);
+                    int width = 512;
+                    int height = 512;
+                    if (rawData.Length != width * height) return;
+
+                    int[] pixels = new int[width * height];
+                    float[] blurred = new float[width * height];
+                    int radius = 3; // 7x7 blur
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            float sum = 0;
+                            int count = 0;
+                            for (int dy = -radius; dy <= radius; dy++)
+                            {
+                                int ny = y + dy;
+                                if (ny < 0 || ny >= height) continue;
+                                for (int dx = -radius; dx <= radius; dx++)
+                                {
+                                    int nx = x + dx;
+                                    if (nx < 0 || nx >= width) continue;
+                                    sum += rawData[ny * width + nx];
+                                    count++;
+                                }
+                            }
+                            blurred[y * width + x] = sum / count;
+                        }
+                    }
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            int destI = y * width + x;
+                            float original = rawData[destI];
+                            float val = Math.Max(blurred[destI], original);
+
+                            if (val <= 2)
+                            {
+                                pixels[destI] = 0;
+                                continue;
+                            }
+
+                            float t = Math.Min(1.0f, val / 255f);
+                            byte a = (byte)(t * 180 + 75);
+                            byte r = (byte)Math.Min(255, 255 * (t * 2));
+                            byte g = (byte)Math.Min(255, 255 * (2 - t * 2));
+                            byte b = 0;
+
+                            // Pre-multiply alpha for Pbgra32
+                            r = (byte)((r * a) / 255);
+                            g = (byte)((g * a) / 255);
+                            b = (byte)((b * a) / 255);
+
+                            pixels[destI] = (a << 24) | (r << 16) | (g << 8) | b;
+                        }
+                    }
+
+                    // Apply the scale and margin
+                    var ptTopLeft = WorldToImagePx(0, _worldSizeS);
+                    var ptBotRight = WorldToImagePx(_worldSizeS, 0);
+                    if (ptBotRight.X > ptTopLeft.X && ptBotRight.Y > ptTopLeft.Y)
+                    {
+                        ImgHeatmap.Width = ptBotRight.X - ptTopLeft.X;
+                        ImgHeatmap.Height = ptBotRight.Y - ptTopLeft.Y;
+                        ImgHeatmap.Margin = new Thickness(ptTopLeft.X, ptTopLeft.Y, 0, 0);
+                    }
+
+                    var writeableBmp = new System.Windows.Media.Imaging.WriteableBitmap(
+                        width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32, null);
+
+                    writeableBmp.WritePixels(new System.Windows.Int32Rect(0, 0, width, height), pixels, width * 4, 0);
+
+                    ImgHeatmap.Source = writeableBmp;
+                }
+                else
+                {
+                    AppendLog($"[Heatmap] Category '{category}' not found in map data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Heatmap] Failed to draw 2D heatmap: {ex.Message}");
+            }
+        }
+
         private sealed class RustMapsMatch
         {
             public string? name { get; set; }
@@ -745,23 +910,3 @@ return;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
