@@ -51,6 +51,23 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# Update v7.1.0 | Resource Heatmaps (2D & 3D)
+
+🗺️ Brand New Procedural Resource Heatmaps You can now visualize the exact spawn zones for all major resources directly on your map! Whether you're looking for the perfect spot to mine ores or want to know where to hunt animals.
+**
+🔹 Full 2D & 3D Integration:** The heatmaps are available both on your standard 2D map and as a beautiful, detailed overlay baked directly onto the terrain in the 3D map! 🔹 New Categories: Ores (metal, sulfur, stone), Junk/Trash piles, and all animals (Bears, Boars, Horses, Wolves, and even Chickens!).
+
+⚠️ **IMPORTANT NOTICE FOR THE CURRENT WIPE:** ⚠️ The heatmaps are extracted directly from the map files (.map). If you have already generated a 3D map during this wipe, your local cache files are missing the newly added heatmap layers.
+
+To get the heatmaps on your current map right now:
+
+Close RustPlusDesktop.
+Press Windows + R, type %appdata%\RustPlusDesk\3DMaps and hit Enter.
+Delete the folder of your current map.
+Restart the app and let it freshly extract your 3D map (which will now include the heatmaps). (Starting next wipe, this will happen automatically again!)
+
+Happy farming and base planning! ❤️
+
 # 🛠️ 7.0.2 Hotfixes & Improvements:
 
 - **Seamless 3D Map Setup:** We bundled the .NET 8 Runtime directly into the MapParser.exe. It now works perfectly out-of-the-box on all PCs without requiring any manual framework installations!
