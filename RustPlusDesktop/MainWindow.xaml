@@ -4174,7 +4174,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <Image Source="pack://application:,,,/Assets/icons/map-markers/ore.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/nodes.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                                  <!-- Wood Piles -->
@@ -4196,7 +4196,7 @@
                                                                                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                              </ControlTemplate>
                                                                          </Button.Template>
-                                                                         <TextBlock Text="🌲" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/logs.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </Grid>
