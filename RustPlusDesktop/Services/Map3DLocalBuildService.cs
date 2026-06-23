@@ -400,13 +400,21 @@ public static class Map3DLocalBuildService
     private static string? ResolveParserExecutable()
     {
         string baseDir = AppContext.BaseDirectory;
+
+        // 1. Prefer local MapParser.exe next to the app if present
+        string localExe = Path.Combine(baseDir, "MapParser.exe");
+        if (File.Exists(localExe)) return localExe;
+
+        string localSubExe = Path.Combine(baseDir, "MapParser", "MapParser.exe");
+        if (File.Exists(localSubExe)) return localSubExe;
+
+        // 2. Fallback to extracting the embedded parser
         string? embeddedParser = ExtractEmbeddedParserRuntime();
         if (embeddedParser != null) return embeddedParser;
 
+        // 3. Fallback to development folders
         string[] candidates =
         {
-            Path.Combine(baseDir, "MapParser.exe"),
-            Path.Combine(baseDir, "MapParser", "MapParser.exe"),
             Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "MapParser.exe")),
             Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net9.0", "MapParser.exe")),
             Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Release", "net8.0", "MapParser.exe")),

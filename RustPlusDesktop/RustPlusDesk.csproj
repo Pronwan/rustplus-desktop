@@ -317,6 +317,10 @@
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
   <ItemGroup Condition="Exists('..\MapParser\index.html')">
     <EmbeddedResource Include="..\MapParser\index.html">
       <LogicalName>Map3DViewer/index.html</LogicalName>
