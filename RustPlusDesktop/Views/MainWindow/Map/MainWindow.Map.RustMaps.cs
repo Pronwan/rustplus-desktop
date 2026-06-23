@@ -761,7 +761,7 @@ return;
 
         private void UpdateBentoActiveStates()
         {
-            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar" };
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse" };
             foreach (var cat in allCategories)
             {
                 var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;

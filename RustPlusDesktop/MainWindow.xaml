@@ -4212,6 +4212,7 @@
                                                                      <ColumnDefinition Width="*" />
                                                                      <ColumnDefinition Width="*" />
                                                                      <ColumnDefinition Width="*" />
+                                                                     <ColumnDefinition Width="*" />
                                                                  </Grid.ColumnDefinitions>
                                                                  <!-- Junkpiles -->
                                                                  <Border x:Name="Bento_junkpiles" Grid.Column="0" Background="#E5E7EB" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -4244,6 +4245,17 @@
                                                                              </ControlTemplate>
                                                                          </Button.Template>
                                                                          <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                     </Button>
+                                                                 </Border>
+                                                                 <!-- Horses -->
+                                                                 <Border x:Name="Bento_horse" Grid.Column="3" Background="#F5F5F5" Width="48" Height="48" Padding="3" CornerRadius="8" BorderThickness="1" BorderBrush="Transparent" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                     <Button Tag="horse" Click="BtnHeatmapIcon_Click" ToolTip="Horses" Cursor="Hand" Background="Transparent" BorderThickness="0" Margin="0" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                                         <Button.Template>
+                                                                             <ControlTemplate TargetType="Button">
+                                                                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                             </ControlTemplate>
+                                                                         </Button.Template>
+                                                                         <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/horse.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                      </Button>
                                                                  </Border>
                                                              </Grid>
