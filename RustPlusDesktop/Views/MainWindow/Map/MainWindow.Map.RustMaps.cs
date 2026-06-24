@@ -383,8 +383,69 @@ return;
             UpdateRustMapsUi();
         }
 
+        private Window? _fullscreenWindow = null;
+
+        private void ToggleWpfFullscreen()
+        {
+            if (_fullscreenWindow == null)
+            {
+                if (_map3DWebView == null) return;
+
+                // Remove WebView2 from current host
+                Map3DHost.Children.Remove(_map3DWebView);
+
+                // Create a borderless maximized window
+                _fullscreenWindow = new Window
+                {
+                    WindowStyle = WindowStyle.None,
+                    WindowState = WindowState.Maximized,
+                    ResizeMode = ResizeMode.NoResize,
+                    Background = new SolidColorBrush(Color.FromRgb(14, 17, 23)),
+                    Content = _map3DWebView
+                };
+
+                _fullscreenWindow.Closed += (s, args) =>
+                {
+                    if (_fullscreenWindow != null)
+                    {
+                        _fullscreenWindow = null;
+                        if (_map3DWebView.Parent == null)
+                        {
+                            Map3DHost.Children.Add(_map3DWebView);
+                        }
+                    }
+                };
+
+                _fullscreenWindow.Show();
+            }
+            else
+            {
+                var win = _fullscreenWindow;
+                _fullscreenWindow = null;
+                
+                win.Content = null;
+                win.Close();
+
+                if (_map3DWebView.Parent == null)
+                {
+                    Map3DHost.Children.Add(_map3DWebView);
+                }
+            }
+        }
+
         private void CloseMap3DView()
         {
+            if (_fullscreenWindow != null)
+            {
+                try
+                {
+                    var win = _fullscreenWindow;
+                    _fullscreenWindow = null;
+                    win.Content = null;
+                    win.Close();
+                }
+                catch { }
+            }
             if (_map3DWebView != null)
             {
                 try
@@ -423,10 +484,23 @@ return;
                 try { message = e.WebMessageAsJson; } catch { }
             }
             
-            if (string.Equals(message, "close3d", StringComparison.OrdinalIgnoreCase))
+            if (message != null)
             {
-                Dispatcher.Invoke(CloseMap3DView);
-                return;
+                string cleanMessage = message.Trim('"');
+                if (string.Equals(cleanMessage, "toggle_fullscreen", StringComparison.OrdinalIgnoreCase))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        ToggleWpfFullscreen();
+                    });
+                    return;
+                }
+
+                if (string.Equals(cleanMessage, "close3d", StringComparison.OrdinalIgnoreCase))
+                {
+                    Dispatcher.Invoke(CloseMap3DView);
+                    return;
+                }
             }
 
             if (!string.IsNullOrEmpty(message))
@@ -434,14 +508,28 @@ return;
                 try
                 {
                     using var doc = System.Text.Json.JsonDocument.Parse(message);
-                    if (doc.RootElement.TryGetProperty("type", out var typeProp) && typeProp.GetString() == "save_buildings")
+                    if (doc.RootElement.TryGetProperty("type", out var typeProp))
                     {
-                        if (!string.IsNullOrEmpty(_currentMapFolderPath))
+                        string typeStr = typeProp.GetString();
+                        if (typeStr == "save_buildings")
                         {
-                            var dataNode = doc.RootElement.GetProperty("data");
-                            var dataString = dataNode.ValueKind == System.Text.Json.JsonValueKind.String ? dataNode.GetString() : dataNode.GetRawText();
-                            string path = Path.Combine(_currentMapFolderPath, "map_buildings.json");
-                            await File.WriteAllTextAsync(path, dataString ?? "[]");
+                            if (!string.IsNullOrEmpty(_currentMapFolderPath))
+                            {
+                                var dataNode = doc.RootElement.GetProperty("data");
+                                var dataString = dataNode.ValueKind == System.Text.Json.JsonValueKind.String ? dataNode.GetString() : dataNode.GetRawText();
+                                string path = Path.Combine(_currentMapFolderPath, "map_buildings.json");
+                                await File.WriteAllTextAsync(path, dataString ?? "[]");
+                            }
+                        }
+                        else if (typeStr == "save_settings")
+                        {
+                            if (!string.IsNullOrEmpty(_currentMapFolderPath))
+                            {
+                                var dataNode = doc.RootElement.GetProperty("data");
+                                var dataString = dataNode.ValueKind == System.Text.Json.JsonValueKind.String ? dataNode.GetString() : dataNode.GetRawText();
+                                string path = Path.Combine(_currentMapFolderPath, "map_settings.json");
+                                await File.WriteAllTextAsync(path, dataString ?? "{}");
+                            }
                         }
                     }
                 }
@@ -461,6 +549,7 @@ return;
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_resolved.json"), Path.Combine(currentDir, "map_resolved.json"));
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_texture.png"), Path.Combine(currentDir, "map_texture.png"));
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
+            CopyFileIfExists(Path.Combine(result.FolderPath, "map_settings.json"), Path.Combine(currentDir, "map_settings.json"));
             CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
             await WriteViewerMapDataAsync(Path.Combine(result.FolderPath, "map_data.json"), Path.Combine(currentDir, "map_data_viewer.json"), _worldRectPx, ImgMap.Width, ImgMap.Height);
             return runtimeRoot;
