@@ -759,6 +759,18 @@ return;
             }
         }
 
+        private static readonly Dictionary<string, string> HeatmapLabels = new()
+        {
+            { "ores", "Ores" }, { "wood", "Wood Piles" }, { "logs", "Log Piles" },
+            { "mushroom", "Mushrooms" }, { "berries", "Berries" }, { "corn", "Corn" },
+            { "pumpkin", "Pumpkins" }, { "potato", "Potatoes" }, { "wheat", "Wheat" },
+            { "bear", "Bears" }, { "boar", "Boars" }, { "chicken", "Chickens" },
+            { "wolf", "Wolves" }, { "stag", "Deers" }, { "crocodile", "Crocodiles" },
+            { "tiger", "Tigers" }, { "snake", "Snakes" },
+            { "junkpiles", "Junkpiles" }, { "rowboat", "Rowboats" },
+            { "modularcar", "Modular Cars" }, { "horse", "Horses" },
+        };
+
         private void UpdateBentoActiveStates()
         {
             string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse" };
@@ -772,6 +784,52 @@ return;
                         ? new SolidColorBrush(Color.FromRgb(74, 193, 255)) 
                         : Brushes.Transparent;
                     border.BorderThickness = isActive ? new Thickness(1.5) : new Thickness(1);
+                }
+            }
+
+            // Update active heatmap badge
+            var badge = FindName("ActiveHeatmapBadge") as Badge;
+            var label = FindName("ActiveHeatmapLabel") as System.Windows.Controls.TextBlock;
+            bool hasActive = _currentActiveHeatmap != null && HeatmapLabels.ContainsKey(_currentActiveHeatmap);
+            if (badge != null && label != null)
+            {
+                badge.Visibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                label.Text = hasActive
+                    ? $"Active: {HeatmapLabels[_currentActiveHeatmap!]}"
+                    : "No heatmap active";
+            }
+
+            var glow = FindName("HeatmapActiveGlow") as System.Windows.Controls.Border;
+            if (glow != null)
+                glow.Visibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        }
+
+        private void HeatmapSearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var searchBox = sender as System.Windows.Controls.TextBox;
+            if (searchBox == null) return;
+
+            string filter = searchBox.Text?.Trim().ToLowerInvariant() ?? "";
+
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse" };
+
+            foreach (var cat in allCategories)
+            {
+                var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
+                if (border == null) continue;
+
+                if (string.IsNullOrEmpty(filter))
+                {
+                    border.Visibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    var btn = border.Child as System.Windows.Controls.Button;
+                    string tagText = btn?.Tag?.ToString()?.ToLowerInvariant() ?? "";
+                    string toolTipText = btn?.ToolTip?.ToString()?.ToLowerInvariant() ?? "";
+                    border.Visibility = (tagText.Contains(filter) || toolTipText.Contains(filter))
+                        ? System.Windows.Visibility.Visible
+                        : System.Windows.Visibility.Collapsed;
                 }
             }
         }

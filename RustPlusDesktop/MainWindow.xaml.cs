@@ -618,7 +618,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = true;
             _vm.IsPairingBusy = true; // Update UI button state
-            TxtPairingState.Text = Properties.Resources.PairingListening;
+            TxtPairingState.Text = "";
             UpdatePairingGuideSnackbar();
         }));
         _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
@@ -3388,7 +3388,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_pairing.IsRunning)
         {
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            TxtPairingState.Text = Properties.Resources.PairingListening;
+            TxtPairingState.Text = "";
             AppendLog("Listener already running.");
             return;
         }
@@ -3416,7 +3416,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Failed -= onFail;
 
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            if (ok) { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); }
+            if (ok) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
         }
         finally { _listenerStarting = false; }
     }
@@ -3427,13 +3427,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             if (st == "starting") _vm.BusyText = Properties.Resources.StartingPairingListener;
-            else if (st == "listening") { TxtPairingState.Text = Properties.Resources.PairingListening; UpdatePairingGuideSnackbar(); }
+            else if (st == "listening") { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
             else if (st == "error") TxtPairingState.Text = Properties.Resources.PairingError;
         });
     }
     private void Real_Listening(object? s, EventArgs e)
     {
-        Dispatcher.Invoke(() => { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); });
+        Dispatcher.Invoke(() => { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); });
     }
     private void Real_Failed(object? s, string msg)
     {
@@ -3448,7 +3448,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _vm.IsBusy = false;
         _vm.BusyText = "";
-        TxtPairingState.Text = Properties.Resources.PairingListening;
+        TxtPairingState.Text = "";
         UpdatePairingGuideSnackbar();
     }
 
@@ -5825,7 +5825,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        bool isListening = TxtPairingState.Text != null && TxtPairingState.Text.Contains("listening");
+        bool isListening = _vm.IsPairingBusy;
 
         string title = isListening ? "Pairing Active" : "Action Required";
         string msg = isListening 
