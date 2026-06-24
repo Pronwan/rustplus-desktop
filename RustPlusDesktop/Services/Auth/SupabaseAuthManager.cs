@@ -1330,6 +1330,15 @@ namespace RustPlusDesk.Services.Auth
             if (IsUpgradeRequiredSnackbarShown)
                 throw new InvalidOperationException("Cloud features are unavailable because an application update is required.");
 
+            try
+            {
+                await EnsureFreshSessionAsync();
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Warning] Failed to ensure fresh session: {ex.Message}");
+            }
+
             var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/{functionName}";
             if (queryParams != null && queryParams.Count > 0)
             {
