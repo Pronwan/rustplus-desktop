@@ -48,8 +48,9 @@ namespace RustPlusDesk.Views
             {
                 try
                 {
-                    Directory.CreateDirectory(@"C:\Users\Jawad\.gemini\antigravity-ide\brain\c4d06e13-9fd0-4c38-9e9e-769d13bce6c7\scratch");
-                    File.WriteAllText(@"C:\Users\Jawad\.gemini\antigravity-ide\brain\c4d06e13-9fd0-4c38-9e9e-769d13bce6c7\scratch\crash.txt", ex.ToString());
+                    string diagDir = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Diagnostics");
+                    Directory.CreateDirectory(diagDir);
+                    File.WriteAllText(Path.Combine(diagDir, "recycler-crash.txt"), ex.ToString());
                 }
                 catch { }
                 throw;
@@ -107,8 +108,9 @@ namespace RustPlusDesk.Views
                 var mainWin = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
                 mainWin?.AppendLog(message);
                 
-                string logPath = @"C:\Users\Jawad\.gemini\antigravity-ide\brain\c4d06e13-9fd0-4c38-9e9e-769d13bce6c7\scratch\recycler-log.txt";
-                Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                string diagDir = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Diagnostics");
+                string logPath = Path.Combine(diagDir, "recycler-log.txt");
+                Directory.CreateDirectory(diagDir);
                 File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {message}{Environment.NewLine}");
             }
             catch { }
