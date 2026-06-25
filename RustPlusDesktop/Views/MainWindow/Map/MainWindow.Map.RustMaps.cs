@@ -36,6 +36,38 @@ namespace RustPlusDesk.Views
 
         private ServerProfile? _copyMapSourceProfile;
 
+        /// <summary>
+        /// For offline/placeholder map profiles, the API is not connected so _worldSizeS is never
+        /// set via GetMapAsync. This method restores it from a previously-parsed map_data.json so
+        /// that the heatmap overlay rect and 3D texture UV are computed correctly.
+        /// </summary>
+        private void TryRestoreWorldSizeFromCachedMapData(ServerProfile prof, System.Windows.Media.Imaging.BitmapSource bitmap)
+        {
+            try
+            {
+                string folder = Map3DLocalBuildService.GetPreparedFolderPath(prof, prof.RustMapsMapId);
+                string mapDataPath = System.IO.Path.Combine(folder, "map_data.json");
+                if (!System.IO.File.Exists(mapDataPath)) return;
+
+                using var doc = System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(mapDataPath));
+                if (!doc.RootElement.TryGetProperty("size", out var sizeEl)) return;
+                int parsedSize = sizeEl.GetInt32();
+                if (parsedSize <= 0) return;
+
+                double wDip = bitmap.PixelWidth * (96.0 / bitmap.DpiX);
+                double hDip = bitmap.PixelHeight * (96.0 / bitmap.DpiY);
+
+                _worldSizeS = parsedSize;
+                _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, 2000);
+
+                AppendLog($"[Offline Map] Restored worldSize={parsedSize} from cached map_data.json. worldRectPx=[{(int)_worldRectPx.X},{(int)_worldRectPx.Y},{(int)_worldRectPx.Width}x{(int)_worldRectPx.Height}]");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Could not restore worldSize from map_data.json: {ex.Message}");
+            }
+        }
+
         public void UpdateRustMapsUi()
         {
             var profile = _vm.Selected;
@@ -712,6 +744,20 @@ return;
             string parentDir = Path.GetDirectoryName(targetPath) ?? "";
             bool hasTexture = File.Exists(Path.Combine(parentDir, "map_texture.png"));
             node["mapTextureSource"] = hasTexture ? "/maps/current/map_texture.png" : null;
+
+            // Read worldSize from the parsed map_data.json (written by MapParser as "size").
+            // This is critical for offline/placeholder maps where _worldSizeS is 0 because
+            // there is no API connection – without the correct size the texture UV is wrong.
+            int parsedWorldSize = 0;
+            if (node.TryGetPropertyValue("size", out var sizeNode) && sizeNode != null)
+                int.TryParse(sizeNode.ToJsonString(), out parsedWorldSize);
+
+            if (parsedWorldSize > 0 && imageWidth > 0 && imageHeight > 0)
+            {
+                // Recompute the world rect directly from the map's own size field so the UV
+                // is always correct, regardless of whether _worldSizeS was available.
+                worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize);
+            }
 
             node["mapTexturePaddingWorld"] = 2000;
             node["mapTextureAutoAlign"] = true;

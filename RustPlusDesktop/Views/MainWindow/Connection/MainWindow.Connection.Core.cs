@@ -128,6 +128,10 @@ public partial class MainWindow
                         bitmap.UriSource = new Uri(prof.LocalMapImagePath);
                         bitmap.EndInit();
                         ShowMapBasic(bitmap);
+
+                        // Try to restore _worldSizeS from a previously-parsed map_data.json.
+                        // Without this, _worldSizeS stays 0 and the heatmap/UV rect is wrong.
+                        TryRestoreWorldSizeFromCachedMapData(prof, bitmap);
                     }
                     catch (Exception ex)
                     {
