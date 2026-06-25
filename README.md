@@ -45,6 +45,7 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
 
+[![YouTube V7](https://github.com/Pronwan/rustplus-desktop/blob/master/Thumbnail.png?raw=true)](https://www.youtube.com/watch?v=dajHSihKwQs)
 [![YouTube V6](./RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
 [![YouTube V5](./RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
 
