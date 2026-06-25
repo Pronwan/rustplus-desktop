@@ -115,8 +115,10 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(prof.SteamId64))
                 _vm.SteamId64 = prof.SteamId64;
 
-            bool isPlaceholder = !string.IsNullOrEmpty(prof.LocalMapFilePath);
-            if (isPlaceholder)
+            bool isOfflineOnly = prof.Port == 0 || prof.PlayerToken == "offline";
+            bool hasLocalMap = !string.IsNullOrEmpty(prof.LocalMapFilePath);
+
+            if (hasLocalMap)
             {
                 if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
                 {
@@ -143,8 +145,9 @@ public partial class MainWindow
                     ResetMapDisplay();
                 }
             }
-            // Trigger soft connect to devices only if there are any devices to control
-            else if (!prof.IsConnected && prof.Devices.Any())
+
+            // Trigger soft connect to devices only if there are any devices to control and this is not a purely offline profile
+            if (!isOfflineOnly && !prof.IsConnected && prof.Devices.Any())
             {
                 await PerformConnectDevicesOnlyAsync(prof);
             }

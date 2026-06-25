@@ -684,7 +684,7 @@
                                                 <Style TargetType="MenuItem">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding LocalMapFilePath, Converter={StaticResource LocalNotNull}}" Value="True">
+                                                        <DataTrigger Binding="{Binding PlacementTarget.DataContext.LocalMapFilePath, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource LocalNotNull}}" Value="True">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
