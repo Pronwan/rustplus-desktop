@@ -38,11 +38,39 @@ public partial class MainWindow
                     string c = ReadString(el, "c").ToLowerInvariant();
                     string i = ReadString(el, "i").ToLowerInvariant();
                     if (c == "iceberg") AddPrefab(el, "Iceberg");
-                    else if (c == "tunnel-entrance") AddPrefab(el, "Tunnel Entrance");
+                    else if (c == "oasis") AddPrefab(el, "Oasis");
                     else if (i.StartsWith("water_well", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Water Well");
                     else if (i.StartsWith("ice_lake", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Ice Lake");
                     else if (i.StartsWith("jungle_ruins", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Ruins");
+                    else if (i.StartsWith("ue_jungle_swamp", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Swamp");
                     else if (i.StartsWith("cave_", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Cave");
+                    else if (c == "lake") AddPrefab(el, "Lake");
+                    else if (i.Contains("ziggurat")) continue; // already returned by API as "Jungle Ziggurat"
+                }
+            }
+
+            // Fallback: scan map_resolved.json for extra monuments missed by map_data.json
+            // (handles maps processed by older Program.cs versions that didn't include oasis in isOfInterest)
+            string resolvedPath = Path.Combine(folderPath, "map_resolved.json");
+            if (File.Exists(resolvedPath))
+            {
+                using var resolvedDoc = JsonDocument.Parse(File.ReadAllText(resolvedPath));
+                if (resolvedDoc.RootElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var el in resolvedDoc.RootElement.EnumerateArray())
+                    {
+                        string c = ReadString(el, "c").ToLowerInvariant();
+                        string i = ReadString(el, "i").ToLowerInvariant();
+                        if (c == "oasis") AddPrefab(el, "Oasis");
+                        else if (c == "iceberg") AddPrefab(el, "Iceberg");
+                        else if (i.StartsWith("water_well", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Water Well");
+                        else if (i.StartsWith("ice_lake", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Ice Lake");
+                        else if (i.StartsWith("jungle_ruins", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Ruins");
+                        else if (i.StartsWith("ue_jungle_swamp", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Swamp");
+                        else if (i.StartsWith("cave_", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Cave");
+                        else if (c == "lake") AddPrefab(el, "Lake");
+                        else if (i.Contains("ziggurat")) continue; // already returned by API as "Jungle Ziggurat"
+                    }
                 }
             }
 
