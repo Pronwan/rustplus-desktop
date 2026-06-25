@@ -19,12 +19,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.1.0</Version>
+		<Version>7.1.1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.1.0</AssemblyVersion>
-		<FileVersion>7.1.0</FileVersion>
-		<InformationalVersion>7.1.0</InformationalVersion>
+		<AssemblyVersion>7.1.1</AssemblyVersion>
+		<FileVersion>7.1.1</FileVersion>
+		<InformationalVersion>7.1.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -346,7 +346,7 @@
   </ItemGroup>
 
   <Target Name="BuildMapParserRuntime" BeforeTargets="AssignTargetPaths" Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
-    <MSBuild Projects="..\MapParser\MapParser.csproj" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true" />
+    <MSBuild Projects="..\MapParser\MapParser.csproj" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;TargetFramework=net8.0" />
   </Target>
 
   <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">

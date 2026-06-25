@@ -40,6 +40,24 @@ public static class Map3DLocalBuildService
     private const int NameCandidateCount = 5;
     private const double MatchDistanceWorldUnits = 300.0;
 
+    private static BitmapSource CreateDummyTexture()
+    {
+        int width = 512;
+        int height = 512;
+        byte[] pixels = new byte[width * height * 4];
+        for (int i = 0; i < pixels.Length; i += 4)
+        {
+            pixels[i] = 128;     // B
+            pixels[i + 1] = 128; // G
+            pixels[i + 2] = 128; // R
+            pixels[i + 3] = 255; // A
+        }
+        return BitmapSource.Create(
+            width, height, 96, 96,
+            System.Windows.Media.PixelFormats.Bgra32,
+            null, pixels, width * 4);
+    }
+
     public static async Task<Map3DLocalBuildResult> PrepareAsync(
         ServerProfile profile,
         BitmapSource? currentMapTexture,
@@ -51,9 +69,34 @@ public static class Map3DLocalBuildService
     {
         ArgumentNullException.ThrowIfNull(profile);
 
+        if (currentMapTexture == null && !string.IsNullOrEmpty(profile.LocalMapImagePath) && File.Exists(profile.LocalMapImagePath))
+        {
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(profile.LocalMapImagePath);
+                bitmap.EndInit();
+                currentMapTexture = bitmap;
+            }
+            catch { }
+        }
+
+
+
         string serverKey = BuildServerKey(profile, rustMapsMapId);
         string folder = Path.Combine(DataManager.AppDir, "3DMaps", serverKey);
         Directory.CreateDirectory(folder);
+
+        if (currentMapTexture == null)
+        {
+            string oldTexture = Path.Combine(folder, "map_texture.png");
+            if (File.Exists(oldTexture))
+            {
+                try { File.Delete(oldTexture); } catch { }
+            }
+        }
 
         string? texturePath = null;
         string? pendingTexturePath = null;
@@ -217,8 +260,7 @@ public static class Map3DLocalBuildService
         cached = default;
         string mapDataPath = Path.Combine(folder, "map_data.json");
         string mapResolvedPath = Path.Combine(folder, "map_resolved.json");
-        string texturePath = Path.Combine(folder, "map_texture.png");
-        if (!File.Exists(manifestPath) || !File.Exists(mapDataPath) || !File.Exists(mapResolvedPath) || !File.Exists(texturePath)) return false;
+        if (!File.Exists(manifestPath) || !File.Exists(mapDataPath) || !File.Exists(mapResolvedPath)) return false;
 
         try
         {
@@ -229,8 +271,14 @@ public static class Map3DLocalBuildService
             string? selectedMap = root.TryGetProperty("SelectedMapFile", out var selectedEl) ? selectedEl.GetString() : null;
 
             if (!string.Equals(manifestMapId ?? string.Empty, rustMapsMapId ?? string.Empty, StringComparison.OrdinalIgnoreCase)) return false;
-            if (!string.IsNullOrWhiteSpace(textureSha256) && !string.Equals(manifestTextureHash, textureSha256, StringComparison.OrdinalIgnoreCase)) return false;
+            if (!string.Equals(manifestTextureHash ?? string.Empty, textureSha256 ?? string.Empty, StringComparison.Ordinal)) return false;
             if (string.IsNullOrWhiteSpace(selectedMap) || !File.Exists(selectedMap)) return false;
+
+            string? manifestTextureFile = root.TryGetProperty("MapTexture", out var texFileEl) ? texFileEl.GetString() : null;
+            if (!string.IsNullOrEmpty(manifestTextureFile))
+            {
+                if (!File.Exists(Path.Combine(folder, manifestTextureFile))) return false;
+            }
 
             cached = new CachedMap3DManifest(selectedMap);
             return true;
@@ -401,12 +449,34 @@ public static class Map3DLocalBuildService
     {
         string baseDir = AppContext.BaseDirectory;
 
-        // 1. Prefer local MapParser.exe next to the app if present
+        // 1. Prefer local MapParser.exe next to the app if present and runnable
         string localExe = Path.Combine(baseDir, "MapParser.exe");
-        if (File.Exists(localExe)) return localExe;
+        if (File.Exists(localExe))
+        {
+            if (new FileInfo(localExe).Length < 5 * 1024 * 1024)
+            {
+                string localDll = Path.Combine(baseDir, "MapParser.dll");
+                if (File.Exists(localDll)) return localExe;
+            }
+            else
+            {
+                return localExe;
+            }
+        }
 
         string localSubExe = Path.Combine(baseDir, "MapParser", "MapParser.exe");
-        if (File.Exists(localSubExe)) return localSubExe;
+        if (File.Exists(localSubExe))
+        {
+            if (new FileInfo(localSubExe).Length < 5 * 1024 * 1024)
+            {
+                string localSubDll = Path.Combine(baseDir, "MapParser", "MapParser.dll");
+                if (File.Exists(localSubDll)) return localSubExe;
+            }
+            else
+            {
+                return localSubExe;
+            }
+        }
 
         // 2. Fallback to extracting the embedded parser
         string? embeddedParser = ExtractEmbeddedParserRuntime();
@@ -511,7 +581,7 @@ public static class Map3DLocalBuildService
         return (success, process.ExitCode, string.IsNullOrWhiteSpace(stderr) ? null : stderr.Trim());
     }
 
-    private static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
+    public static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
     {
         if (refs == null || refs.Count == 0 || worldSize <= 0 || !File.Exists(resolvedPath)) return default;
 
@@ -586,7 +656,7 @@ public static class Map3DLocalBuildService
         };
     }
 
-    private static bool IsGoodMatch(MapMatchScore score, IReadOnlyList<Map3DReferenceMonument>? refs)
+    public static bool IsGoodMatch(MapMatchScore score, IReadOnlyList<Map3DReferenceMonument>? refs)
     {
         int available = refs?.Count(r => !string.IsNullOrWhiteSpace(r.Name)) ?? 0;
         int required = Math.Min(3, Math.Max(1, available));
@@ -703,7 +773,7 @@ public static class Map3DLocalBuildService
 
     private readonly record struct ParsedPoint(double X, double Y, string Name);
     private readonly record struct CachedMap3DManifest(string SelectedMapFile);
-    private readonly record struct MapMatchScore(int MatchedCount, double TotalDistance)
+    public readonly record struct MapMatchScore(int MatchedCount, double TotalDistance)
     {
         public bool IsBetterThan(MapMatchScore other)
         {

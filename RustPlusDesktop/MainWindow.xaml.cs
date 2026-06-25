@@ -2963,15 +2963,285 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         });
     }
 
+    public void ManuallyImportMapFile()
+    {
+        try
+        {
+            var picker = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Select Rust .map file",
+                Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
+                InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
+                CheckFileExists = true,
+                Multiselect = false
+            };
+
+            if (picker.ShowDialog(this) == true)
+            {
+                string mapFilePath = picker.FileName;
+                string? directoryPath = IOPath.GetDirectoryName(mapFilePath);
+                
+                string? localMapImagePath = null;
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    string mapName = IOPath.GetFileNameWithoutExtension(mapFilePath);
+                    var imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                    var imageFiles = Directory.GetFiles(directoryPath)
+                        .Where(f => imageExtensions.Contains(IOPath.GetExtension(f).ToLower()))
+                        .ToList();
+
+                    var exactMatch = imageFiles.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (exactMatch != null)
+                    {
+                        localMapImagePath = exactMatch;
+                    }
+                    else if (imageFiles.Count == 1)
+                    {
+                        localMapImagePath = imageFiles[0];
+                    }
+                }
+
+                int count = 1;
+                while (_vm.Servers.Any(s => s.Name == $"3D-Map-Parsing {count}"))
+                {
+                    count++;
+                }
+                string importedServerName = $"3D-Map-Parsing {count}";
+
+                var prof = new ServerProfile
+                {
+                    Name = importedServerName,
+                    Host = "127.0.0.1",
+                    Port = 0,
+                    SteamId64 = _vm.SteamId64 ?? "0",
+                    PlayerToken = "offline",
+                    LocalMapFilePath = mapFilePath,
+                    LocalMapImagePath = localMapImagePath,
+                    Devices = new ObservableCollection<SmartDevice>()
+                };
+
+                _vm.AddServer(prof);
+                _vm.Selected = prof;
+                _vm.Save();
+                
+                AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
+                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Offline Map] Manual import failed: {ex.Message}");
+            MessageBox.Show($"Failed to import map: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void Server_CopyMap_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem menuItem && menuItem.Tag is ServerProfile sourceProfile)
+        {
+            if (string.IsNullOrEmpty(sourceProfile.LocalMapFilePath))
+            {
+                MessageBox.Show("Only manually parsed offline maps can be copied to other servers.", "Copy Map", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            _copyMapSourceProfile = sourceProfile;
+            AppendLog($"[Offline Map] Staged source map for copy: {sourceProfile.Name} ({sourceProfile.LocalMapFilePath})");
+            MessageBox.Show($"Please select/connect to a paired server in the list. If its layout matches, the map will be copied automatically.", "Copy Map Staged", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
     public void HandleRustPlusLink(string link)
     {
         try
         {
+            if (link != null) link = link.Trim().Trim('"', '\'').Trim();
+
             string host = "";
             int port = 28082; // Standard Rust+ Port
             string playerId = _vm.SteamId64 ?? "0";
             string playerToken = "0";
             string serverName = "Manual Server";
+
+            bool isOfflineMapImport = false;
+            string rawLink = (link ?? "").Replace("rustplus://", "").Trim().TrimEnd('/', '\\').Trim();
+            rawLink = Uri.UnescapeDataString(rawLink);
+
+            // Replace forward slashes with backslashes on Windows for local paths
+            rawLink = rawLink.Replace('/', '\\');
+
+            // Handle normalized drive letters (e.g., G\\SteamLibrary -> G:\SteamLibrary)
+            if (rawLink.Length >= 2 && char.IsLetter(rawLink[0]) && rawLink[1] == '\\')
+            {
+                string rest = rawLink.Substring(2);
+                while (rest.StartsWith("\\"))
+                {
+                    rest = rest.Substring(1);
+                }
+                rawLink = rawLink[0] + @":\" + rest;
+            }
+
+            if (!link.Contains("?") && !link.Contains("ip=") && !link.Contains("address=") &&
+                (rawLink.Contains(":") || rawLink.Contains("\\") || Directory.Exists(rawLink) || File.Exists(rawLink)))
+            {
+                isOfflineMapImport = true;
+            }
+
+            if (isOfflineMapImport)
+            {
+                string? mapFilePath = null;
+                string? directoryPath = null;
+
+                // Helper to resolve map file from a directory
+                string? ResolveMapFromDir(string dir)
+                {
+                    if (!Directory.Exists(dir)) return null;
+
+                    var files = Directory.GetFiles(dir, "*.map");
+                    if (files.Length == 1) return files[0];
+                    if (files.Length > 1)
+                    {
+                        // Try to find one matching folder name, else first
+                        string dirName = IOPath.GetFileName(dir);
+                        return files.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(dirName, StringComparison.OrdinalIgnoreCase)) ?? files[0];
+                    }
+                    return null;
+                }
+
+                // Clean the rawLink to see if we can find the file
+                if (File.Exists(rawLink))
+                {
+                    mapFilePath = rawLink;
+                    directoryPath = IOPath.GetDirectoryName(rawLink);
+                }
+                else if (Directory.Exists(rawLink))
+                {
+                    // Check directly in directory
+                    mapFilePath = ResolveMapFromDir(rawLink);
+                    directoryPath = rawLink;
+
+                    // If not found, try "maps" subdirectory
+                    if (string.IsNullOrEmpty(mapFilePath))
+                    {
+                        string subMapsDir = IOPath.Combine(rawLink, "maps");
+                        if (Directory.Exists(subMapsDir))
+                        {
+                            mapFilePath = ResolveMapFromDir(subMapsDir);
+                            if (!string.IsNullOrEmpty(mapFilePath))
+                            {
+                                directoryPath = subMapsDir;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // It's a file path that doesn't exist directly.
+                    // Try with .map suffix if it wasn't there
+                    string pathToCheck = rawLink;
+                    if (!pathToCheck.EndsWith(".map", StringComparison.OrdinalIgnoreCase))
+                    {
+                        pathToCheck += ".map";
+                    }
+
+                    if (File.Exists(pathToCheck))
+                    {
+                        mapFilePath = pathToCheck;
+                        directoryPath = IOPath.GetDirectoryName(pathToCheck);
+                    }
+                    else
+                    {
+                        // Let's check in "maps" subdirectory of the parent folder
+                        string parent = IOPath.GetDirectoryName(pathToCheck) ?? "";
+                        string filename = IOPath.GetFileName(pathToCheck);
+
+                        if (!string.IsNullOrEmpty(parent) && Directory.Exists(parent))
+                        {
+                            string subMapsDir = IOPath.Combine(parent, "maps");
+                            string subMapFile = IOPath.Combine(subMapsDir, filename);
+                            if (File.Exists(subMapFile))
+                            {
+                                mapFilePath = subMapFile;
+                                directoryPath = subMapsDir;
+                            }
+                            else if (Directory.Exists(subMapsDir))
+                            {
+                                // Try finding any file matching filename in the maps subfolder
+                                var matchedFiles = Directory.GetFiles(subMapsDir, filename + "*.map");
+                                if (matchedFiles.Length > 0)
+                                {
+                                    mapFilePath = matchedFiles[0];
+                                    directoryPath = subMapsDir;
+                                }
+                            }
+                        }
+
+                        // Last resort: search parent folder itself if parent is a "maps" directory, or search parent directory's wildcard files
+                        if (string.IsNullOrEmpty(mapFilePath) && !string.IsNullOrEmpty(parent) && Directory.Exists(parent))
+                        {
+                            var matchedFiles = Directory.GetFiles(parent, filename + "*.map");
+                            if (matchedFiles.Length > 0)
+                            {
+                                mapFilePath = matchedFiles[0];
+                                directoryPath = parent;
+                            }
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(mapFilePath) || !File.Exists(mapFilePath))
+                {
+                    throw new FileNotFoundException($"No .map file resolved from link path: '{rawLink}'");
+                }
+
+                string? localMapImagePath = null;
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    string mapName = IOPath.GetFileNameWithoutExtension(mapFilePath);
+                    var imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                    var imageFiles = Directory.GetFiles(directoryPath)
+                        .Where(f => imageExtensions.Contains(IOPath.GetExtension(f).ToLower()))
+                        .ToList();
+
+                    var exactMatch = imageFiles.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (exactMatch != null)
+                    {
+                        localMapImagePath = exactMatch;
+                    }
+                    else if (imageFiles.Count == 1)
+                    {
+                        localMapImagePath = imageFiles[0];
+                    }
+                }
+
+                int count = 1;
+                while (_vm.Servers.Any(s => s.Name == $"3D-Map-Parsing {count}"))
+                {
+                    count++;
+                }
+                string importedServerName = $"3D-Map-Parsing {count}";
+
+                var prof = new ServerProfile
+                {
+                    Name = importedServerName,
+                    Host = "127.0.0.1",
+                    Port = 0,
+                    SteamId64 = _vm.SteamId64 ?? "0",
+                    PlayerToken = "offline",
+                    LocalMapFilePath = mapFilePath,
+                    LocalMapImagePath = localMapImagePath,
+                    Devices = new ObservableCollection<SmartDevice>()
+                };
+
+                _vm.AddServer(prof);
+                _vm.Selected = prof;
+                _vm.Save();
+
+                AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
+                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.Activate();
+                return;
+            }
 
             if (link.Contains("?") && (link.Contains("address=") || link.Contains("ip=")))
             {

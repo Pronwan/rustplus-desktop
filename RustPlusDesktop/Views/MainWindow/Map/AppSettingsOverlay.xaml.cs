@@ -342,6 +342,11 @@ namespace RustPlusDesk.Views
             ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
             MessageBox.Show(owner, "Cached 3D map data deleted. It will be rebuilt when you open a 3D map again.", "3D Map Data", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void BtnManuallyParseMap_Click(object sender, RoutedEventArgs e)
+        {
+            ParentWindow?.ManuallyImportMapFile();
+        }
         private void BtnBackupData_Click(object sender, RoutedEventArgs e)
         {
             if (ParentWindow == null) return;

@@ -661,6 +661,7 @@
                                 SelectionChanged="ListServers_SelectionChanged">
 
                                 <ListBox.Resources>
+                                    <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                     <ContextMenu
                                         x:Key="ServerCtx"
                                         Foreground="White"
@@ -672,6 +673,26 @@
                                             <MenuItem.Header>
                                                 <TextBlock>
                                                     <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                </TextBlock>
+                                            </MenuItem.Header>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Server_CopyMap_Click"
+                                            Foreground="Black"
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Style>
+                                                <Style TargetType="MenuItem">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding LocalMapFilePath, Converter={StaticResource LocalNotNull}}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                            <MenuItem.Header>
+                                                <TextBlock>
+                                                    <Run Text="🗺️ " /><Run Text="Copy map to server..." />
                                                 </TextBlock>
                                             </MenuItem.Header>
                                         </MenuItem>
@@ -4393,6 +4414,15 @@
                                                                             </Button>
                                                                         </Border>
                                                                     </Grid>
+                                                                    <Grid Margin="0,6,0,0">
+                                                                        <Border x:Name="Bento_flowers" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="flowers" ToolTip="Flowers" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Flowers/flowers.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </Grid>
                                                                 </StackPanel>
                                                             </Border>
 
@@ -4457,42 +4487,50 @@
                                                                     <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
     <Run Text="📦" /><Run Text="  Loot &amp; Transport" FontSize="11" />
 </TextBlock>
-                                                                    <Grid>
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="*" />
-                                                                            <ColumnDefinition Width="*" />
-                                                                            <ColumnDefinition Width="*" />
-                                                                            <ColumnDefinition Width="*" />
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <Border x:Name="Bento_junkpiles" Grid.Column="0" Style="{StaticResource HeatmapTileContainer}">
+                                                                    <UniformGrid Columns="3">
+                                                                        <Border x:Name="Bento_junkpiles" Style="{StaticResource HeatmapTileContainer}">
                                                                             <Button Tag="junkpiles" ToolTip="Junkpiles" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
-                                                                        <Border x:Name="Bento_rowboat" Grid.Column="1" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Border x:Name="Bento_rowboat" Style="{StaticResource HeatmapTileContainer}">
                                                                             <Button Tag="rowboat" ToolTip="Rowboats" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
-                                                                        <Border x:Name="Bento_modularcar" Grid.Column="2" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Border x:Name="Bento_modularcar" Style="{StaticResource HeatmapTileContainer}">
                                                                             <Button Tag="modularcar" ToolTip="Modular Cars" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
-                                                                        <Border x:Name="Bento_horse" Grid.Column="3" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Border x:Name="Bento_horse" Style="{StaticResource HeatmapTileContainer}">
                                                                             <Button Tag="horse" ToolTip="Horses" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/horse.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
-                                                                    </Grid>
+                                                                        <Border x:Name="Bento_pedalbike" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="pedalbike" ToolTip="Bicycles" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/bicycle.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_hab" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="hab" ToolTip="Hot Air Balloons" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/hab.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </UniformGrid>
                                                                 </StackPanel>
                                                             </Border>
 

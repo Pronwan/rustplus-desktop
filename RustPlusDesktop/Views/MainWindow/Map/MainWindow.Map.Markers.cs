@@ -258,6 +258,12 @@ public partial class MainWindow
             MergeCachedExtraMonumentsForCurrentMap();
             BuildMonumentOverlays();
             LoadCachedBuildingBlockedZonesForCurrentServer();
+
+            var activeProfile = _vm.Selected;
+            if (activeProfile != null)
+            {
+                CheckAndExecutePendingMapCopy(activeProfile);
+            }
             var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
             AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");
 

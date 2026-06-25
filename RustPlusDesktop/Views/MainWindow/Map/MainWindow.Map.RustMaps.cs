@@ -34,10 +34,19 @@ namespace RustPlusDesk.Views
                 .Where(name => name.StartsWith("Map3DViewer/", StringComparison.OrdinalIgnoreCase))
                 .ToDictionary(NormalizeMap3DResourceName, name => name, StringComparer.OrdinalIgnoreCase));
 
+        private ServerProfile? _copyMapSourceProfile;
+
         public void UpdateRustMapsUi()
         {
             var profile = _vm.Selected;
-            if (profile == null || (!profile.IsConnected && !profile.IsFullConnected))
+            if (profile == null)
+            {
+                RustMapsOverlay.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            bool isPlaceholder = !string.IsNullOrEmpty(profile.LocalMapFilePath);
+            if (!isPlaceholder && !profile.IsConnected && !profile.IsFullConnected)
             {
                 RustMapsOverlay.Visibility = Visibility.Collapsed;
                 return;
@@ -45,7 +54,12 @@ namespace RustPlusDesk.Views
 
             RustMapsOverlay.Visibility = Visibility.Visible;
 
-            if (_isRustMapsSearching)
+            if (isPlaceholder)
+            {
+                TxtRustMapsStatus.Text = "Offline Map";
+                BtnOpenRustMaps.IsEnabled = false;
+            }
+            else if (_isRustMapsSearching)
             {
                 TxtRustMapsStatus.Text = "Searching...";
                 BtnOpenRustMaps.IsEnabled = false;
@@ -62,8 +76,7 @@ namespace RustPlusDesk.Views
             }
 
             bool canUseLocal3DMap = (SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated)
-                && profile.IsFullConnected
-                && ImgMap.Source != null;
+                && (profile.IsFullConnected || isPlaceholder);
             BtnOpen3DMap.Visibility = canUseLocal3DMap ? Visibility.Visible : Visibility.Collapsed;
             BtnOpen3DMap.IsEnabled = canUseLocal3DMap && !_isMap3DPreparing;
             TxtOpen3DMap.Text = _isMap3DPreparing ? "Preparing..." : _isMap3DActive ? "2D Map" : "3D Map";
@@ -271,9 +284,10 @@ return;
             }
 
             var profile = _vm.Selected;
-            if (profile == null || !profile.IsFullConnected || ImgMap.Source == null)
+            bool isPlaceholder = profile != null && !string.IsNullOrEmpty(profile.LocalMapFilePath);
+            if (profile == null || (!profile.IsFullConnected && !isPlaceholder))
             {
-                AppendLog("[3D Map] Fully connect to a server and load its 2D map before building a local 3D map.");
+                AppendLog("[3D Map] Fully connect to a server or select an imported offline map before building a local 3D map.");
                 return;
             }
 
@@ -310,7 +324,7 @@ return;
                     .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
                     .ToList();
 
-                var result = await Map3DLocalBuildService.PrepareAsync(profile, texture, profile.RustMapsMapId, references, _worldSizeS);
+                var result = await Map3DLocalBuildService.PrepareAsync(profile, texture, profile.RustMapsMapId, references, _worldSizeS, isPlaceholder ? profile.LocalMapFilePath : null);
                 if (result.NeedsManualMapSelection)
                 {
                     AppendLog($"[3D Map] Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
@@ -547,7 +561,21 @@ return;
 
             string currentDir = Path.Combine(runtimeRoot, "maps", "current");
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_resolved.json"), Path.Combine(currentDir, "map_resolved.json"));
-            CopyFileIfExists(Path.Combine(result.FolderPath, "map_texture.png"), Path.Combine(currentDir, "map_texture.png"));
+            
+            string targetTexturePath = Path.Combine(currentDir, "map_texture.png");
+            string sourceTexturePath = Path.Combine(result.FolderPath, "map_texture.png");
+            if (File.Exists(sourceTexturePath))
+            {
+                File.Copy(sourceTexturePath, targetTexturePath, true);
+            }
+            else
+            {
+                if (File.Exists(targetTexturePath))
+                {
+                    try { File.Delete(targetTexturePath); } catch { }
+                }
+            }
+
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_settings.json"), Path.Combine(currentDir, "map_settings.json"));
             CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
@@ -680,7 +708,11 @@ return;
             if (!File.Exists(sourcePath)) throw new FileNotFoundException("map_data.json was not found.", sourcePath);
             var node = JsonNode.Parse(await File.ReadAllTextAsync(sourcePath).ConfigureAwait(false)) as JsonObject;
             if (node == null) throw new InvalidDataException("map_data.json root must be an object.");
-            node["mapTextureSource"] = "/maps/current/map_texture.png";
+
+            string parentDir = Path.GetDirectoryName(targetPath) ?? "";
+            bool hasTexture = File.Exists(Path.Combine(parentDir, "map_texture.png"));
+            node["mapTextureSource"] = hasTexture ? "/maps/current/map_texture.png" : null;
+
             node["mapTexturePaddingWorld"] = 2000;
             node["mapTextureAutoAlign"] = true;
             if (imageWidth > 0 && imageHeight > 0 && worldRectPx.Width > 0 && worldRectPx.Height > 0)
@@ -858,11 +890,13 @@ return;
             { "tiger", "Tigers" }, { "snake", "Snakes" },
             { "junkpiles", "Junkpiles" }, { "rowboat", "Rowboats" },
             { "modularcar", "Modular Cars" }, { "horse", "Horses" },
+            { "pedalbike", "Bicycles" }, { "hab", "Hot Air Balloons" },
+            { "flowers", "Flowers" },
         };
 
         private void UpdateBentoActiveStates()
         {
-            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse" };
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers" };
             foreach (var cat in allCategories)
             {
                 var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
@@ -900,7 +934,7 @@ return;
 
             string filter = searchBox.Text?.Trim().ToLowerInvariant() ?? "";
 
-            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse" };
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower" };
 
             foreach (var cat in allCategories)
             {
@@ -1082,6 +1116,73 @@ return;
             catch (Exception ex)
             {
                 AppendLog($"[Heatmap] Failed to draw 2D heatmap: {ex.Message}");
+            }
+        }
+
+        public void CheckAndExecutePendingMapCopy(ServerProfile connectedProfile)
+        {
+            if (_copyMapSourceProfile == null) return;
+
+            var sourceProfile = _copyMapSourceProfile;
+            if (sourceProfile == connectedProfile) return;
+
+            try
+            {
+                AppendLog($"[Offline Map] Checking layout match between offline map '{sourceProfile.Name}' and connected server '{connectedProfile.Name}'...");
+
+                string sourceFolder = Map3DLocalBuildService.GetPreparedFolderPath(sourceProfile, sourceProfile.RustMapsMapId);
+                string resolvedPath = Path.Combine(sourceFolder, "map_resolved.json");
+
+                if (!File.Exists(resolvedPath))
+                {
+                    AppendLog($"[Offline Map] Source map '{sourceProfile.Name}' has not been parsed into 3D map data yet. Please open its 3D map once to parse it.");
+                    System.Windows.MessageBox.Show($"The offline map '{sourceProfile.Name}' has not been parsed yet. Please open its 3D Map once to parse it, then try copying again.", "Copy Map Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    _copyMapSourceProfile = null;
+                    return;
+                }
+
+                var references = (_monData ?? new List<(double X, double Y, string Name)>())
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                    .Take(12)
+                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                    .ToList();
+
+                var score = Map3DLocalBuildService.ScoreParsedMap(resolvedPath, references, _worldSizeS);
+                bool isGoodMatch = Map3DLocalBuildService.IsGoodMatch(score, references);
+
+                if (!isGoodMatch)
+                {
+                    AppendLog($"[Offline Map] Layout mismatch! Mapped count: {score.MatchedCount}, distance: {score.TotalDistance}. Aborting copy.");
+                    System.Windows.MessageBox.Show($"Map layouts do not match! The map '{sourceProfile.Name}' does not appear to be the same map as the connected server '{connectedProfile.Name}'.", "Map Mismatch", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    _copyMapSourceProfile = null;
+                    return;
+                }
+
+                string targetFolder = Map3DLocalBuildService.GetPreparedFolderPath(connectedProfile, connectedProfile.RustMapsMapId);
+                Directory.CreateDirectory(targetFolder);
+
+                foreach (var file in Directory.GetFiles(sourceFolder))
+                {
+                    string destFile = Path.Combine(targetFolder, Path.GetFileName(file));
+                    File.Copy(file, destFile, overwrite: true);
+                }
+
+                connectedProfile.LocalMapFilePath = sourceProfile.LocalMapFilePath;
+                connectedProfile.LocalMapImagePath = sourceProfile.LocalMapImagePath;
+                _vm.Save();
+
+                AppendLog($"[Offline Map] Map successfully copied from '{sourceProfile.Name}' to '{connectedProfile.Name}'!");
+                System.Windows.MessageBox.Show($"Successfully copied 3D map and local assets from '{sourceProfile.Name}' to '{connectedProfile.Name}'!", "Map Copied", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Error during map copy: {ex.Message}");
+                System.Windows.MessageBox.Show($"An error occurred while copying the map: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+            finally
+            {
+                _copyMapSourceProfile = null;
+                UpdateRustMapsUi();
             }
         }
 

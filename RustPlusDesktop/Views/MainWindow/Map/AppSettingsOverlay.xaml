@@ -627,9 +627,12 @@
                 <!-- 3D Map Section -->
                 <TextBlock Text="{DynamicResource ThreeDMapSectionTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
                 <Border Style="{StaticResource Card}" Margin="0,0,0,16">
-                    <StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <!-- Delete 3D Map Data button -->
                         <ui:Button Appearance="Danger" HorizontalAlignment="Left" Padding="12,6" Click="BtnDelete3DMapData_Click" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="{DynamicResource Settings3dMapDeleteData}" ToolTip="{DynamicResource Delete3DMapDataTooltip}"/>
+                        
+                        <!-- Manually Parse Map button -->
+                        <ui:Button x:Name="BtnManuallyParseMap" Appearance="Secondary" HorizontalAlignment="Left" Padding="12,6" Margin="8,0,0,0" Click="BtnManuallyParseMap_Click" Icon="{ui:SymbolIcon Symbol=FolderOpen24}" Content="Parse 3D Map manually" />
                     </StackPanel>
                 </Border>
 

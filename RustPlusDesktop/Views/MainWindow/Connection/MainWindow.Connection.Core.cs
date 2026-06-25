@@ -115,8 +115,32 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(prof.SteamId64))
                 _vm.SteamId64 = prof.SteamId64;
 
+            bool isPlaceholder = !string.IsNullOrEmpty(prof.LocalMapFilePath);
+            if (isPlaceholder)
+            {
+                if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
+                {
+                    try
+                    {
+                        var bitmap = new System.Windows.Media.Imaging.BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                        bitmap.UriSource = new Uri(prof.LocalMapImagePath);
+                        bitmap.EndInit();
+                        ShowMapBasic(bitmap);
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[Offline Map] Failed to load local map image: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    ResetMapDisplay();
+                }
+            }
             // Trigger soft connect to devices only if there are any devices to control
-            if (!prof.IsConnected && prof.Devices.Any())
+            else if (!prof.IsConnected && prof.Devices.Any())
             {
                 await PerformConnectDevicesOnlyAsync(prof);
             }
