@@ -870,14 +870,27 @@ return;
                     }
                 }
 
-                var data = new
+                // Cargo ship markers (Type 5) — forward id, world-coords and heading to the 3D viewer
+                var cargoList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 5))
                 {
-                    players = playersList,
-                    deaths = deathsList
-                };
+                    cargoList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y,
+                        rotation = m.Rotation   // degrees, Rust convention (0 = north, CW)
+                    });
+                }
 
-                string json = JsonSerializer.Serialize(data);
-                string script = $"if (window.updateLiveMarkers) window.updateLiveMarkers({json}.players, {json}.deaths);";
+                var liveData = new { players = playersList, deaths = deathsList };
+                string liveJson  = JsonSerializer.Serialize(liveData);
+                string cargoJson = JsonSerializer.Serialize(cargoList);
+
+                string script = $$"""
+                    if (window.updateLiveMarkers) window.updateLiveMarkers({{liveJson}}.players, {{liveJson}}.deaths);
+                    if (window.updateCargoMarkers) window.updateCargoMarkers({{cargoJson}});
+                    """;
                 await _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
             }
             catch { }
