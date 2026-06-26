@@ -139,6 +139,9 @@ public class TrackingSettings
     public bool NotificationsSoundsEnabled { get; set; } = true;
     public int NotificationsRetentionDays { get; set; } = 30;
     public List<string> MutedNotificationServers { get; set; } = new();
+
+    /// <summary>Extra monument type names (e.g. "Cave", "God Rock") that the user has chosen to hide on the map.</summary>
+    public List<string> HiddenExtraMonumentTypes { get; set; } = new();
 }
 
 
@@ -777,6 +780,32 @@ public static class TrackingService
     {
         get => _settings.MapMonumentOpacity;
         set { _settings.MapMonumentOpacity = value; SaveDB(); }
+    }
+
+    /// <summary>Returns a snapshot of the extra monument type names that are currently hidden by the user.</summary>
+    public static IReadOnlyList<string> HiddenExtraMonumentTypes
+        => _settings.HiddenExtraMonumentTypes;
+
+    /// <summary>Returns <c>true</c> if the given extra monument type name is hidden.</summary>
+    public static bool IsExtraMonumentTypeHidden(string name)
+        => _settings.HiddenExtraMonumentTypes.Contains(name, StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Sets the visibility of a named extra monument group and persists the change.</summary>
+    public static void SetExtraMonumentTypeHidden(string name, bool hidden)
+    {
+        bool changed;
+        if (hidden)
+        {
+            if (!_settings.HiddenExtraMonumentTypes.Contains(name, StringComparer.OrdinalIgnoreCase))
+            {
+                _settings.HiddenExtraMonumentTypes.Add(name);
+                changed = true;
+            }
+            else changed = false;
+        }
+        else
+            changed = _settings.HiddenExtraMonumentTypes.RemoveAll(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase)) > 0;
+        if (changed) SaveDB();
     }
     public static string LastSeenVersion
     {

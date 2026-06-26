@@ -290,8 +290,23 @@
                             <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderMonumentOpacity, StringFormat={}{0:0%}}" 
                                        VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="40"/>
                         </Grid>
+
+                        <!-- Extra Monument Type Filters -->
+                        <TextBlock Text="Extra Monument Filters" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextSubtle}" Margin="4,14,0,6"/>
+                        <Border BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                                CornerRadius="6" Background="#0D1520" Padding="8,6" Margin="0,0,0,2">
+                            <StackPanel x:Name="PnlExtraMonumentFilters">
+                                <!-- Populated dynamically from GetKnownExtraMonumentTypes() -->
+                                <TextBlock x:Name="TxtExtraMonFiltersEmpty"
+                                           Text="No extra monuments detected on this map yet."
+                                           FontSize="11" Foreground="{DynamicResource TextSubtle}"
+                                           FontStyle="Italic" Margin="2,2,0,2"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Border>
+
 
                 <!-- Team Markers Section -->
                 <TextBlock Text="{DynamicResource TeamMarkersSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>

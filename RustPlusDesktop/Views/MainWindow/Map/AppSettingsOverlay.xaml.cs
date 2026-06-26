@@ -102,7 +102,8 @@ namespace RustPlusDesk.Views
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
             SliderMonumentScale.Value = TrackingService.MapMonumentScale;
             SliderMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
-            
+            PopulateExtraMonumentFilters();
+
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
 
@@ -293,6 +294,43 @@ namespace RustPlusDesk.Views
         {
             Visibility = Visibility.Collapsed;
             ParentWindow?.ApplySettings();
+        }
+
+        private void PopulateExtraMonumentFilters()
+        {
+            PnlExtraMonumentFilters.Children.Clear();
+
+            var types = ParentWindow?.GetKnownExtraMonumentTypes();
+            if (types == null || types.Count == 0)
+            {
+                PnlExtraMonumentFilters.Children.Add(TxtExtraMonFiltersEmpty);
+                return;
+            }
+
+            var dotStyle = TryFindResource("DotCheckBox") as System.Windows.Style;
+            foreach (var name in types)
+            {
+                var chk = new System.Windows.Controls.CheckBox
+                {
+                    Content = name,
+                    IsChecked = TrackingService.IsExtraMonumentTypeHidden(name),
+                    Margin = new System.Windows.Thickness(0, 3, 0, 3),
+                    Tag = name,
+                    FontSize = 12,
+                    Style = dotStyle,
+                };
+                chk.Checked += OnExtraMonumentFilterChanged;
+                chk.Unchecked += OnExtraMonumentFilterChanged;
+                PnlExtraMonumentFilters.Children.Add(chk);
+            }
+        }
+
+        private void OnExtraMonumentFilterChanged(object? sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            if (sender is not System.Windows.Controls.CheckBox chk || chk.Tag is not string name) return;
+            TrackingService.SetExtraMonumentTypeHidden(name, chk.IsChecked == true);
+            ParentWindow?.RebuildExtraMonumentOverlay();
         }
 
         private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)

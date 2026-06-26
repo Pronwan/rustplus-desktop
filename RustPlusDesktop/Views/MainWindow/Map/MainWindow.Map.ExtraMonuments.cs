@@ -12,6 +12,15 @@ public partial class MainWindow
 {
     private const string ExtraMonumentsFileName = "map_extra_monuments.json";
 
+    /// <summary>
+    /// Canonical type names present in the most-recently loaded <c>map_extra_monuments.json</c>.
+    /// Used by the settings panel to populate filter checkboxes.
+    /// </summary>
+    private readonly HashSet<string> _extraMonumentNames = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Last deserialized extra monuments list, kept so we can re-apply filters without re-reading disk.</summary>
+    private List<ExtraMonument>? _lastExtraMonuments;
+
     private void GenerateAndLoadExtraMonumentsForCurrentMap(string? folderPath)
     {
         if (string.IsNullOrWhiteSpace(folderPath)) return;
@@ -95,7 +104,7 @@ public partial class MainWindow
 
             string outPath = Path.Combine(folderPath, ExtraMonumentsFileName);
             File.WriteAllText(outPath, JsonSerializer.Serialize(filtered, new JsonSerializerOptions { WriteIndented = true }));
-            MergeExtraMonuments(filtered);
+            StoreAndMergeExtraMonuments(filtered);
             BuildMonumentOverlays();
         }
         catch (Exception ex)
@@ -113,20 +122,61 @@ public partial class MainWindow
             string path = Path.Combine(folder, ExtraMonumentsFileName);
             if (!File.Exists(path)) return;
             var extras = JsonSerializer.Deserialize<List<ExtraMonument>>(File.ReadAllText(path), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            if (extras != null) MergeExtraMonuments(extras);
+            if (extras != null) StoreAndMergeExtraMonuments(extras);
         }
         catch { }
+    }
+
+    /// <summary>
+    /// Stores the full extra monument list for later re-filtering and merges the visible subset into <c>_monData</c>.
+    /// Tracks the distinct type names present so the settings panel can enumerate them.
+    /// </summary>
+    private void StoreAndMergeExtraMonuments(List<ExtraMonument> extras)
+    {
+        _lastExtraMonuments = extras;
+        _extraMonumentNames.Clear();
+        foreach (var e in extras)
+            _extraMonumentNames.Add(e.Name);
+
+        MergeExtraMonuments(extras);
     }
 
     private void MergeExtraMonuments(IEnumerable<ExtraMonument> extras)
     {
         foreach (var extra in extras)
         {
-            if (_monData.Any(m => string.Equals(m.Name, extra.Name, StringComparison.OrdinalIgnoreCase) && Math.Sqrt((m.X - extra.X) * (m.X - extra.X) + (m.Y - extra.Y) * (m.Y - extra.Y)) < 35))
+            // Skip types that the user has filtered out.
+            if (TrackingService.IsExtraMonumentTypeHidden(extra.Name)) continue;
+
+            if (_monData.Any(m => string.Equals(m.Name, extra.Name, StringComparison.OrdinalIgnoreCase) &&
+                                  Math.Sqrt((m.X - extra.X) * (m.X - extra.X) + (m.Y - extra.Y) * (m.Y - extra.Y)) < 35))
                 continue;
             _monData.Add((extra.X, extra.Y, extra.Name));
         }
     }
+
+    /// <summary>
+    /// Re-applies the current extra monument type filter to <c>_monData</c> and rebuilds the map overlays.
+    /// Call this after the user changes the hidden-types setting.
+    /// </summary>
+    internal void RebuildExtraMonumentOverlay()
+    {
+        if (_lastExtraMonuments == null) return;
+
+        // Remove all previously-injected extra monument entries from _monData.
+        _monData.RemoveAll(m => _extraMonumentNames.Contains(m.Name));
+
+        // Re-merge, now with the updated filter.
+        MergeExtraMonuments(_lastExtraMonuments);
+        BuildMonumentOverlays();
+    }
+
+    /// <summary>
+    /// Returns the sorted distinct type names present in the extra monuments JSON for the current map.
+    /// Returns an empty list if no extra monuments have been loaded yet.
+    /// </summary>
+    internal IReadOnlyList<string> GetKnownExtraMonumentTypes()
+        => _extraMonumentNames.OrderBy(n => n).ToList();
 
     private static bool TryReadPoint(JsonElement el, out double x, out double y)
     {
