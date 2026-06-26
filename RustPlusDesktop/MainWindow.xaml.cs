@@ -1690,9 +1690,9 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "water well",              "pack://application:,,,/Assets/icons/waterwell.png" },
     { "ice lake",                "pack://application:,,,/Assets/icons/ice_lake.png" },
     { "god rock",                "pack://application:,,,/Assets/icons/godrock.png" },
-    { "large god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
-    { "medium god rock",         "pack://application:,,,/Assets/icons/godrock.png" },
-    { "small god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
+    { "large god rock",          "pack://application:,,,/Assets/icons/godrock_large.png" },
+    { "medium god rock",         "pack://application:,,,/Assets/icons/godrock_medium.png" },
+    { "small god rock",          "pack://application:,,,/Assets/icons/godrock_small.png" },
     { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
     { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
 };

@@ -90,6 +90,9 @@
 	  <None Remove="Assets\icons\fishingvillagelarge.png" />
 	  <None Remove="Assets\icons\gasstation.png" />
 	  <None Remove="Assets\icons\godrock.png" />
+	  <None Remove="Assets\icons\godrock_large.png" />
+	  <None Remove="Assets\icons\godrock_medium.png" />
+	  <None Remove="Assets\icons\godrock_small.png" />
 	  <None Remove="Assets\icons\harbour.png" />
 	  <None Remove="Assets\icons\harbour2.png" />
 	  <None Remove="Assets\icons\hqmquarry.png" />
@@ -254,6 +257,9 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Resource Include="Assets\icons\godrock.png" />
+	  <Resource Include="Assets\icons\godrock_large.png" />
+	  <Resource Include="Assets\icons\godrock_medium.png" />
+	  <Resource Include="Assets\icons\godrock_small.png" />
 	  <Resource Include="Assets\icons\iceberg.png" />
 	  <Resource Include="Assets\icons\ice_lake.png" />
 	  <Resource Include="Assets\icons\pen.png">
