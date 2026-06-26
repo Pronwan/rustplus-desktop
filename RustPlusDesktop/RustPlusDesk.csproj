@@ -96,8 +96,10 @@
 	  <None Remove="Assets\icons\iceberg.png" />
 	  <None Remove="Assets\icons\ice_lake.png" />
 	  <None Remove="Assets\icons\jungle.png" />
+	  <None Remove="Assets\icons\jungle_ziggurat.png" />
 	  <None Remove="Assets\icons\junkyard.png" />
 	  <None Remove="Assets\icons\largeoilrig.png" />
+    <None Remove="Assets\icons\jungle_swamp.png" />
 	  <None Remove="Assets\icons\launchsite.png" />
 	  <None Remove="Assets\icons\lighthouse.png" />
 	  <None Remove="Assets\icons\map-icons\base1.png" />
@@ -411,6 +413,8 @@
     <Resource Include="Assets\icons\harbour2.png" />
     <Resource Include="Assets\icons\hqmquarry.png" />
     <Resource Include="Assets\icons\jungle.png" />
+    <Resource Include="Assets\icons\jungle_swamp.png" />
+    <Resource Include="Assets\icons\jungle_ziggurat.png" />
     <Resource Include="Assets\icons\junkyard.png" />
     <Resource Include="Assets\icons\largeoilrig.png" />
     <Resource Include="Assets\icons\launchsite.png" />

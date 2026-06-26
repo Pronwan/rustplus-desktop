@@ -526,24 +526,6 @@ public static class Map3DLocalBuildService
 
         string targetRoot = Path.Combine(DataManager.CacheDir, "map3d-parser-runtime");
         string exePath = Path.Combine(targetRoot, "MapParser.exe");
-        string stampPath = Path.Combine(targetRoot, "build_id.txt");
-
-        // Compute a lightweight build-id from the sorted resource name list so we can
-        // detect when the embedded parser payload has changed between app versions.
-        string buildId = ComputeBuildId(resourceNames);
-
-        bool needsExtract = true;
-        if (File.Exists(exePath) && File.Exists(stampPath))
-        {
-            try
-            {
-                string storedId = File.ReadAllText(stampPath).Trim();
-                needsExtract = !string.Equals(storedId, buildId, StringComparison.Ordinal);
-            }
-            catch { /* treat as needs-extract */ }
-        }
-
-        if (!needsExtract) return exePath;
 
         try
         {
@@ -565,9 +547,6 @@ public static class Map3DLocalBuildService
                 source.CopyTo(target);
             }
 
-            // Write stamp only after all files have been successfully extracted.
-            File.WriteAllText(stampPath, buildId);
-
             return File.Exists(exePath) ? exePath : null;
         }
         catch
@@ -576,16 +555,6 @@ public static class Map3DLocalBuildService
         }
     }
 
-    /// <summary>
-    /// Derives a short build-id from an ordered list of embedded resource names
-    /// so we can detect when the embedded parser payload has changed between app versions.
-    /// </summary>
-    private static string ComputeBuildId(string[] resourceNames)
-    {
-        using var sha = System.Security.Cryptography.SHA256.Create();
-        byte[] hash = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(string.Join('|', resourceNames)));
-        return Convert.ToHexString(hash)[..16].ToLowerInvariant();
-    }
 
     private static void TryHideDirectory(string path)
     {
