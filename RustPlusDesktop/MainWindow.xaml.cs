@@ -1691,6 +1691,8 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "ice lake",                "pack://application:,,,/Assets/icons/ice_lake.png" },
     { "god rock",                "pack://application:,,,/Assets/icons/godrock.png" },
     { "large god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
+    { "medium god rock",         "pack://application:,,,/Assets/icons/godrock.png" },
+    { "small god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
     { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
     { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
 };
@@ -1805,7 +1807,6 @@ public partial class MainWindow : WpfUi.FluentWindow
             .Replace("ice lake 2", "ice lake")
             .Replace("ice lake 3", "ice lake")
             .Replace("ice lake 4", "ice lake")
-            .Replace("large god rock", "god rock")
             .Replace("train tunnel entrance", "tunnel entrance");
 
         return s;

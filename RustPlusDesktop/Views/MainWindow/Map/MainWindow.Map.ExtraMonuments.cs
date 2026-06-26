@@ -90,7 +90,7 @@ public partial class MainWindow
                     string kind = ReadString(el, "kind");
                     if (!kind.Contains("God Rock", StringComparison.OrdinalIgnoreCase) && !kind.Contains("Anvil Rock", StringComparison.OrdinalIgnoreCase)) continue;
                     if (!TryReadPoint(el, out double x, out double y)) continue;
-                    string name = kind.Contains("Anvil", StringComparison.OrdinalIgnoreCase) ? "Anvil Rock" : "God Rock";
+                    string name = NormalizeRockClusterExtraMonumentName(kind, ReadString(el, "size"));
                     extras.Add(new ExtraMonument { X = x + half, Y = y + half, Name = name });
                 }
             }
@@ -189,6 +189,18 @@ public partial class MainWindow
 
     private static string ReadString(JsonElement el, string name)
         => el.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() ?? "" : "";
+
+    private static string NormalizeRockClusterExtraMonumentName(string kind, string size)
+    {
+        if (kind.Contains("Anvil", StringComparison.OrdinalIgnoreCase)) return "Anvil Rock";
+        if (kind.Contains("Small God Rock", StringComparison.OrdinalIgnoreCase) ||
+            size.Equals("small", StringComparison.OrdinalIgnoreCase)) return "Small God Rock";
+        if (kind.Contains("Medium God Rock", StringComparison.OrdinalIgnoreCase) ||
+            size.Equals("medium", StringComparison.OrdinalIgnoreCase)) return "Medium God Rock";
+        if (kind.Contains("Large God Rock", StringComparison.OrdinalIgnoreCase) ||
+            size.Equals("large", StringComparison.OrdinalIgnoreCase)) return "Large God Rock";
+        return "God Rock";
+    }
 
     private sealed class ExtraMonument
     {
