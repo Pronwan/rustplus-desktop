@@ -1705,6 +1705,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     private static readonly Dictionary<string, string> sMonIconByKey =
     BuildCanonIconMap(sMonIconByKeyRaw);
 
+    // Per-monument icon size multipliers (relative to the caller's requested size).
+    // Keys must match the canonicalized name produced by Canon().
+    private static readonly Dictionary<string, double> sMonIconSizeScale = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "swamp",         0.6 },
+        { "jungle swamp",  0.6 },
+    };
+
     private static Dictionary<string, string> BuildCanonIconMap(
         Dictionary<string, string> raw)
     {
@@ -1806,6 +1814,10 @@ public partial class MainWindow : WpfUi.FluentWindow
     private FrameworkElement MakeMonIcon(string key, string tooltip, int size = 64)
     {
         key = Canon(key);
+
+        // Apply per-monument size scale if defined
+        if (sMonIconSizeScale.TryGetValue(key, out double sizeScale))
+            size = Math.Max(8, (int)Math.Round(size * sizeScale));
 
         if (TrackingService.MapMonumentDisplayMode == 1) // Original text monument names
         {
