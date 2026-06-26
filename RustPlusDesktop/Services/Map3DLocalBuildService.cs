@@ -447,24 +447,22 @@ public static class Map3DLocalBuildService
 
     private static string? ResolveParserExecutable()
     {
-        string baseDir = AppContext.BaseDirectory;
+        // 1. Embedded parser is always the primary source.
+        //    It is extracted to AppData\Roaming\RustPlusDesk\cache\map3d-parser-runtime
+        //    and re-extracted only when the embedded content has changed (build-id stamp).
+        string? embeddedParser = ExtractEmbeddedParserRuntime();
+        if (embeddedParser != null) return embeddedParser;
 
-        // 1. Prefer local MapParser.exe next to the app if present and runnable
+        // 2. Fallback: local MapParser.exe next to the running executable (installed layout).
+        string baseDir = AppContext.BaseDirectory;
         string localExe = Path.Combine(baseDir, "MapParser.exe");
         if (IsRunnableParserExecutable(localExe)) return localExe;
 
         string localSubExe = Path.Combine(baseDir, "MapParser", "MapParser.exe");
         if (IsRunnableParserExecutable(localSubExe)) return localSubExe;
 
-        // 2. In source checkouts, use the newest sibling MapParser build before the embedded runtime.
-        string? developmentParser = ResolveDevelopmentParserExecutable(baseDir);
-        if (developmentParser != null) return developmentParser;
-
-        // 3. Fallback to extracting the embedded parser
-        string? embeddedParser = ExtractEmbeddedParserRuntime();
-        if (embeddedParser != null) return embeddedParser;
-
-        return null;
+        // 3. Last resort: development sibling build (source checkout layout).
+        return ResolveDevelopmentParserExecutable(baseDir);
     }
 
     private static bool IsRunnableParserExecutable(string path)
@@ -509,15 +507,44 @@ public static class Map3DLocalBuildService
         }
     }
 
+    /// <summary>
+    /// Extracts the embedded Map3DParser resources to
+    /// <c>AppData\Roaming\RustPlusDesk\cache\map3d-parser-runtime</c> when needed
+    /// and returns the path to <c>MapParser.exe</c> inside that directory.
+    /// Extraction is skipped when the directory already contains an up-to-date build
+    /// (verified via a build-id stamp derived from the embedded resource manifest).
+    /// Returns <c>null</c> if no embedded parser resources are present in the assembly.
+    /// </summary>
     private static string? ExtractEmbeddedParserRuntime()
     {
         var assembly = Assembly.GetExecutingAssembly();
         string[] resourceNames = assembly.GetManifestResourceNames()
             .Where(name => name.StartsWith("Map3DParser/", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(n => n, StringComparer.Ordinal)
             .ToArray();
         if (resourceNames.Length == 0) return null;
 
         string targetRoot = Path.Combine(DataManager.CacheDir, "map3d-parser-runtime");
+        string exePath = Path.Combine(targetRoot, "MapParser.exe");
+        string stampPath = Path.Combine(targetRoot, "build_id.txt");
+
+        // Compute a lightweight build-id from the sorted resource name list so we can
+        // detect when the embedded parser payload has changed between app versions.
+        string buildId = ComputeBuildId(resourceNames);
+
+        bool needsExtract = true;
+        if (File.Exists(exePath) && File.Exists(stampPath))
+        {
+            try
+            {
+                string storedId = File.ReadAllText(stampPath).Trim();
+                needsExtract = !string.Equals(storedId, buildId, StringComparison.Ordinal);
+            }
+            catch { /* treat as needs-extract */ }
+        }
+
+        if (!needsExtract) return exePath;
+
         try
         {
             Directory.CreateDirectory(targetRoot);
@@ -538,13 +565,26 @@ public static class Map3DLocalBuildService
                 source.CopyTo(target);
             }
 
-            string exePath = Path.Combine(targetRoot, "MapParser.exe");
+            // Write stamp only after all files have been successfully extracted.
+            File.WriteAllText(stampPath, buildId);
+
             return File.Exists(exePath) ? exePath : null;
         }
         catch
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Derives a short build-id from an ordered list of embedded resource names
+    /// so we can detect when the embedded parser payload has changed between app versions.
+    /// </summary>
+    private static string ComputeBuildId(string[] resourceNames)
+    {
+        using var sha = System.Security.Cryptography.SHA256.Create();
+        byte[] hash = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(string.Join('|', resourceNames)));
+        return Convert.ToHexString(hash)[..16].ToLowerInvariant();
     }
 
     private static void TryHideDirectory(string path)
