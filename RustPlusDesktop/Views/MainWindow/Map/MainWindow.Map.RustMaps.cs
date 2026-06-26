@@ -883,13 +883,27 @@ return;
                     });
                 }
 
+                // Travelling vendor markers (Type 6) — direction is derived in 3D from movement between x/y updates
+                var vendorList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 6))
+                {
+                    vendorList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y
+                    });
+                }
+
                 var liveData = new { players = playersList, deaths = deathsList };
                 string liveJson  = JsonSerializer.Serialize(liveData);
                 string cargoJson = JsonSerializer.Serialize(cargoList);
+                string vendorJson = JsonSerializer.Serialize(vendorList);
 
                 string script = $$"""
                     if (window.updateLiveMarkers) window.updateLiveMarkers({{liveJson}}.players, {{liveJson}}.deaths);
                     if (window.updateCargoMarkers) window.updateCargoMarkers({{cargoJson}});
+                    if (window.updateVendorMarkers) window.updateVendorMarkers({{vendorJson}});
                     """;
                 await _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
             }
