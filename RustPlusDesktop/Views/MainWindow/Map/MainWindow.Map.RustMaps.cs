@@ -895,15 +895,29 @@ return;
                     });
                 }
 
+                // Patrol helicopter markers (Type 8) — direction is derived in 3D from movement between x/y updates
+                var patrolHeliList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 8))
+                {
+                    patrolHeliList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y
+                    });
+                }
+
                 var liveData = new { players = playersList, deaths = deathsList };
                 string liveJson  = JsonSerializer.Serialize(liveData);
                 string cargoJson = JsonSerializer.Serialize(cargoList);
                 string vendorJson = JsonSerializer.Serialize(vendorList);
+                string patrolHeliJson = JsonSerializer.Serialize(patrolHeliList);
 
                 string script = $$"""
                     if (window.updateLiveMarkers) window.updateLiveMarkers({{liveJson}}.players, {{liveJson}}.deaths);
                     if (window.updateCargoMarkers) window.updateCargoMarkers({{cargoJson}});
                     if (window.updateVendorMarkers) window.updateVendorMarkers({{vendorJson}});
+                    if (window.updatePatrolHeliMarkers) window.updatePatrolHeliMarkers({{patrolHeliJson}});
                     """;
                 await _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
             }
