@@ -313,7 +313,7 @@ namespace RustPlusDesk.Views
                 var chk = new System.Windows.Controls.CheckBox
                 {
                     Content = name,
-                    IsChecked = TrackingService.IsExtraMonumentTypeHidden(name),
+                    IsChecked = !TrackingService.IsExtraMonumentTypeHidden(name),
                     Margin = new System.Windows.Thickness(0, 3, 0, 3),
                     Tag = name,
                     FontSize = 12,
@@ -329,7 +329,7 @@ namespace RustPlusDesk.Views
         {
             if (!_isSettingsInitialized) return;
             if (sender is not System.Windows.Controls.CheckBox chk || chk.Tag is not string name) return;
-            TrackingService.SetExtraMonumentTypeHidden(name, chk.IsChecked == true);
+            TrackingService.SetExtraMonumentTypeHidden(name, chk.IsChecked != true);
             ParentWindow?.RebuildExtraMonumentOverlay();
         }
 
