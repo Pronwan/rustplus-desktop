@@ -451,51 +451,62 @@ public static class Map3DLocalBuildService
 
         // 1. Prefer local MapParser.exe next to the app if present and runnable
         string localExe = Path.Combine(baseDir, "MapParser.exe");
-        if (File.Exists(localExe))
-        {
-            if (new FileInfo(localExe).Length < 5 * 1024 * 1024)
-            {
-                string localDll = Path.Combine(baseDir, "MapParser.dll");
-                if (File.Exists(localDll)) return localExe;
-            }
-            else
-            {
-                return localExe;
-            }
-        }
+        if (IsRunnableParserExecutable(localExe)) return localExe;
 
         string localSubExe = Path.Combine(baseDir, "MapParser", "MapParser.exe");
-        if (File.Exists(localSubExe))
-        {
-            if (new FileInfo(localSubExe).Length < 5 * 1024 * 1024)
-            {
-                string localSubDll = Path.Combine(baseDir, "MapParser", "MapParser.dll");
-                if (File.Exists(localSubDll)) return localSubExe;
-            }
-            else
-            {
-                return localSubExe;
-            }
-        }
+        if (IsRunnableParserExecutable(localSubExe)) return localSubExe;
 
-        // 2. Fallback to extracting the embedded parser
+        // 2. In source checkouts, use the newest sibling MapParser build before the embedded runtime.
+        string? developmentParser = ResolveDevelopmentParserExecutable(baseDir);
+        if (developmentParser != null) return developmentParser;
+
+        // 3. Fallback to extracting the embedded parser
         string? embeddedParser = ExtractEmbeddedParserRuntime();
         if (embeddedParser != null) return embeddedParser;
 
-        // 3. Fallback to development folders
-        string[] candidates =
-        {
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net9.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Release", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Release", "net9.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Debug", "net9.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Release", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Release", "net9.0", "MapParser.exe"))
-        };
+        return null;
+    }
 
-        return candidates.FirstOrDefault(File.Exists);
+    private static bool IsRunnableParserExecutable(string path)
+    {
+        if (!File.Exists(path)) return false;
+
+        var info = new FileInfo(path);
+        if (info.Length >= 5 * 1024 * 1024) return true;
+
+        string parserDll = Path.ChangeExtension(path, ".dll");
+        return File.Exists(parserDll);
+    }
+
+    private static string? ResolveDevelopmentParserExecutable(string baseDir)
+    {
+        var candidates = new List<string>();
+
+        foreach (string root in EnumerateAncestorDirectories(baseDir))
+        {
+            string parserRoot = Path.Combine(root, "MapParser");
+            if (!File.Exists(Path.Combine(parserRoot, "MapParser.csproj"))) continue;
+
+            candidates.Add(Path.Combine(parserRoot, "bin", "Debug", "net8.0", "win-x64", "publish", "MapParser.exe"));
+            candidates.Add(Path.Combine(parserRoot, "bin", "Release", "net8.0", "win-x64", "publish", "MapParser.exe"));
+            candidates.Add(Path.Combine(parserRoot, "bin", "Debug", "net8.0", "MapParser.exe"));
+            candidates.Add(Path.Combine(parserRoot, "bin", "Release", "net8.0", "MapParser.exe"));
+        }
+
+        return candidates
+            .Where(IsRunnableParserExecutable)
+            .OrderByDescending(path => new FileInfo(path).LastWriteTimeUtc)
+            .FirstOrDefault();
+    }
+
+    private static IEnumerable<string> EnumerateAncestorDirectories(string start)
+    {
+        var dir = new DirectoryInfo(Path.GetFullPath(start));
+        while (dir != null)
+        {
+            yield return dir.FullName;
+            dir = dir.Parent;
+        }
     }
 
     private static string? ExtractEmbeddedParserRuntime()

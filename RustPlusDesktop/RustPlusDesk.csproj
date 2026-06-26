@@ -345,13 +345,21 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="BuildMapParserRuntime" BeforeTargets="AssignTargetPaths" Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
-    <MSBuild Projects="..\MapParser\MapParser.csproj" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;TargetFramework=net8.0" />
+  <PropertyGroup>
+    <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
+    <MapParserPublishDir>$(MSBuildProjectDirectory)\..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
+    <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
+  </PropertyGroup>
+
+  <Target Name="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
+    <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
   </Target>
 
-  <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserPublishedExe)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
-      <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe">
+      <EmbeddedResource Include="$(MapParserPublishedExe)">
         <LogicalName>Map3DParser/MapParser.exe</LogicalName>
       </EmbeddedResource>
       <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
