@@ -256,8 +256,40 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    private bool _forceShowLoginOverlay;
+    public bool ForceShowLoginOverlay
+    {
+        get => _forceShowLoginOverlay;
+        set { _forceShowLoginOverlay = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowLoginOverlay)); }
+    }
+
+    private string _loginOverlayMessage = "";
+    public string LoginOverlayMessage
+    {
+        get => _loginOverlayMessage;
+        set 
+        { 
+            _loginOverlayMessage = value; 
+            OnPropertyChanged(); 
+            OnPropertyChanged(nameof(HasLoginOverlayMessage)); 
+        }
+    }
+
+    public bool HasLoginOverlayMessage => !string.IsNullOrEmpty(_loginOverlayMessage);
+
     public void NotifyFcmChanged()
     {
+        bool hasValidToken = TrackingService.IsFcmConfigured() &&
+                            (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+        if (hasValidToken)
+        {
+            _forceShowLoginOverlay = false;
+            _loginOverlayMessage = "";
+            OnPropertyChanged(nameof(ForceShowLoginOverlay));
+            OnPropertyChanged(nameof(LoginOverlayMessage));
+            OnPropertyChanged(nameof(HasLoginOverlayMessage));
+        }
+
         OnPropertyChanged(nameof(FcmExpiryText));
         OnPropertyChanged(nameof(FcmExpiryDays));
         OnPropertyChanged(nameof(ShowLoginOverlay));
@@ -267,6 +299,8 @@ public class MainViewModel : INotifyPropertyChanged
     {
         get
         {
+            if (ForceShowLoginOverlay) return true;
+
             // Show overlay if no token registered and not currently busy/initializing
             // Show overlay if no valid token exists
             bool hasToken = TrackingService.IsFcmConfigured() &&

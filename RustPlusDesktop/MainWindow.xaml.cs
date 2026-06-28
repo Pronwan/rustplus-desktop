@@ -546,6 +546,14 @@ public partial class MainWindow : WpfUi.FluentWindow
             TrackingService.ReadFcmConfig();
             _vm.NotifyFcmChanged();
 
+            // Check if FCM token is expired and show login overlay
+            if (TrackingService.IsFcmConfigured() && TrackingService.FcmExpiresAt.HasValue && TrackingService.FcmExpiresAt.Value < DateTime.Now)
+            {
+                _vm.ForceShowLoginOverlay = true;
+                _vm.LoginOverlayMessage = "FCM is expired you need to relogin to rust+";
+                AppendLog("[pairing] FCM token is expired. Forcing login overlay display.");
+            }
+
             StartPairingSilent(true);
             
             // Auto-connect if enabled and not already connected

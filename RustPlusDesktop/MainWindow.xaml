@@ -6278,6 +6278,17 @@
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
+                        <TextBlock
+                            x:Name="TxtLoginOverlayMessage"
+                            Margin="0,-16,0,24"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#FFFF4B4B"
+                            Text="{Binding LoginOverlayMessage}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding HasLoginOverlayMessage, Converter={StaticResource Vis}}" />
+
                         <ui:Button
                             x:Name="BtnOverlayPair"
                             Height="50"
