@@ -2446,4 +2446,305 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="GenericClose" xml:space="preserve">
     <value>Cerrar</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Marcadores de equipo</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Modo de ejecución</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Secuencial (con retraso)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Paralelo (instantáneo)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Alternar retraso</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Esta tecla de acceso rápido ya está registrada por otra aplicación.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>No, mantente activo</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>¿Quieres desactivar el bucle de alerta de audio?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Bucle de audio hasta que se cierre la ventana emergente</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Esto requiere desactivar el bucle de alerta de audio para todas las alarmas inteligentes.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Apagar ahora</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Hora de la muerte</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Cuenta en la nube</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Inicio de sesión de cuenta en la nube</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Crear una cuenta</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Dirección de correo electrónico</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Contraseña (mínimo 6 caracteres)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirmar Contraseña</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Crear una cuenta</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>¡Correo electrónico de confirmación enviado!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Haga clic en el enlace de su correo electrónico. La aplicación comprueba automáticamente cada pocos segundos...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Esperando confirmación...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Esperando confirmación... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>¿Problemas?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Abrir en el navegador</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Por favor ingrese el correo electrónico y la contraseña.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Por favor ingrese una dirección de correo electrónico.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>La contraseña debe tener al menos 6 caracteres.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Iniciando sesión...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>¡Iniciaste sesión exitosamente!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Error al iniciar sesión.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Registro en marcha...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>El registro falló.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Tiempo de espera: el correo electrónico no se confirmó en 5 minutos. Puedes iniciar sesión más tarde.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Credenciales no válidas. Por favor revisa tu correo electrónico y contraseña.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Credenciales no válidas.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Dirección de correo electrónico aún no confirmada. Haga clic en el enlace de confirmación en su bandeja de entrada.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Esta dirección de correo electrónico ya está registrada. Por favor inicia sesión.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Desconectar la discordia</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord conectado - Nivel:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Correo electrónico conectado:{0}- Nivel:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>No conectado: inicia sesión para usar Cloud Sync y copias de seguridad</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Desconectando...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Conectando...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>Correo electrónico / Cuenta</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>¿Cerrar sesión en la cuenta de correo electrónico?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Sincronización en la nube</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Se requiere cuenta para la sincronización en la nube</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Los servicios en la nube, como la sincronización y el almacenamiento de copias de seguridad, requieren una cuenta gratuita. Elija correo electrónico o Discord para continuar sincronizando sus dispositivos, superposiciones y copias de seguridad.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Sincronización por correo electrónico</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Sincronizar a través de Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>No, gracias</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Límite de sincronización alcanzado</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Límite base alcanzado (Gratis: máximo 2 bases, Premium: máximo 10 bases)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Agregar captura de pantalla</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Arrastra y suelta una imagen aquí</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>o presione CTRL+V para pegar una captura de pantalla</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>No se encontró ninguna imagen en el portapapeles.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Error al pegar</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>No se pudo pegar la imagen:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>No se pudo cargar el archivo de imagen:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Error de compresión</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Error al comprimir la imagen:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Resolución:{0}x{1}| Tamaño:{2}KB (Calidad 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Editar nota base</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Nota básica</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Agregar nota</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Editar nota</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Eliminar nota</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Eliminar captura de pantalla{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Agregar captura de pantalla{0}(se requiere Premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Aún no se han agregado notas.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Aún no se han agregado capturas de pantalla</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Error de conexión: Rust+ es inalcanzable.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>O su firewall está bloqueando la conexión o la API Rust+ en el servidor no se ejecuta correctamente.</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Notificaciones</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Centro de notificaciones</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Mostrar notificaciones de brindis</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Reproducir alertas de sonido</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Período de retención</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Servidores silenciados</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Ningún servidor silenciado</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Dejar de silenciar</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtrar:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Todo</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarmas</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Fallecidos</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Buscar mensaje...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>marcar leído</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>No hay notificaciones aquí</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>¡Estáis todos atrapados!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>¿Estás seguro de que deseas borrar todo el historial de notificaciones?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Borrar historial</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>No se pudo encontrar un perfil de servidor emparejado para{0}:{1}.
+Primero empareje este servidor.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Servidor no encontrado</value>
+  </data>
 </root>

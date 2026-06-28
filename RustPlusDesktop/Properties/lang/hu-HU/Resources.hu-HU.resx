@@ -1860,6 +1860,894 @@ Biztos, hogy folytatni szeretné?</value>
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} nap</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Csapatjelzők</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Végrehajtási mód</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Szekvenciális (késleltetéssel)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Párhuzamos (azonnali)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Késleltetés váltása</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Ezt a gyorsbillentyűt egy másik alkalmazás már regisztrálta.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Nem, maradj aktív</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Ki szeretné kapcsolni a hangriasztási hurkot?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Hanghurkolás a felugró ablak bezárásáig</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Ehhez minden intelligens riasztásnál ki kell kapcsolni a hangriasztási hurkot.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Kapcsolja ki most</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Ellenőrizze a Chat-Alert beállításait az új egyéni időzítőkhöz. Ezenkívül a haláljelzőket mindig helyben menti a rendszer. A Minimap most is frissül, miközben minimalizálva van.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Kérjük, vegye figyelembe</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Haláljelző</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Egyedi markerek a csapat számára</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>A halál ideje</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Egyedi időzítő</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>{0}időzítő létrehozva a következőhöz:{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Egyedi időzítő</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Aktív időzítők</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Időzítő hozzáadása</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Időzítő neve</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Chat parancs:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Az állapot ellenőrzéséhez használja az alábbi chat parancsot.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maximum 5 időzítő megengedett.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Adja meg az időzítő időtartamát (óra, perc vagy másodperc).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Az időzítő nevének betűvel kell kezdődnie.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Időzítő riasztások</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m-rel a vége előtt</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Fordítási hozzájárulás</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Az Elfogadás gombra kattintva a javítási megjegyzések tartalma fordításra elküldésre kerül a Google Fordítónak (USA). elfogadod?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>A Google Fordító API feltételei</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Fordítás a Google-n keresztül</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Adatvédelem és felhőszinkronizálás</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>A térképfedvények és intelligens eszközök élő szinkronizálásának engedélyezéséhez az adatokat biztonságos felhőnkbe kell küldeni. A funkciók fejlesztése érdekében anonimizált használati telemetriát is gyűjtünk.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Felhő elfogadása és engedélyezése</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Csökkentse a felhőt</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Támogatói előnyök</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Több mint 10 eszköz elérhető helyben vagy importból. Az ingyenes felhőszinkronizálás megtartja az első 10 eszközt; A támogatók korlátlan számú eszközt szinkronizálhatnak.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Ez a fedvény nagyobb, mint az ingyenes felhőszinkronizálási korlát. A támogatók 10-szer nagyobb fedvényméretet, több térképjelölőt és több képernyőképet kapnak.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Csatlakoztassa a Discordot támogatói előnyökért</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>A Discord leválasztása</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Csatlakozás...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Felhőszinkronizálás és élő feltöltés</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Élőben töltse fel és szinkronizálja az okoseszközöket és a térképfedvényeket biztonságosan a felhőben.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Támogatói beállítások</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Ezek a funkciók kizárólag a Támogatóink és Fejlesztőink számára érhetők el Discord bejelentkezéssel.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Fejlett Discord integráció (webhookok, hangos figyelmeztetések)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>A távirati riasztások integrációja</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Szinkronizálás leállítása</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Maradj Szabad</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Támogatás most</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Fedvény szinkronizált{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Maximum 10 eszköz a Free Tierben</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>A{0}eszközök szinkronizálták a{1}kódot</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>A fedvény mérete túl nagy a szinkronizáláshoz ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Aktiválja a Cloud-Sync szolgáltatást</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync aktív</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Felhő fiók</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Cloud-fiók bejelentkezés</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Jelentkezzen be</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Hozzon létre fiókot</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>E-mail cím</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Jelszó</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Jelszó (min. 6 karakter)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Erősítse meg a jelszót</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Jelentkezzen be</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Hozzon létre fiókot</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Megerősítő email elküldve!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Kattintson az e-mailben található linkre. Az alkalmazás néhány másodpercenként automatikusan ellenőrzi...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Megerősítésre vár...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Várakozás megerősítésre... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Problémák?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Nyissa meg a böngészőben</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Kérjük, adja meg az e-mail címet és a jelszót.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Kérjük, adjon meg egy e-mail címet.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>A jelszónak legalább 6 karakter hosszúnak kell lennie.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>A jelszavak nem egyeznek.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Bejelentkezés...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Sikeres bejelentkezés!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Sikertelen bejelentkezés.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>A regisztráció folyamatban...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>A regisztráció sikertelen.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Időtúllépés: Az e-mailt 5 percen belül nem erősítették meg. Később bejelentkezhet.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Érvénytelen hitelesítő adatok. Kérjük, ellenőrizze e-mail címét és jelszavát.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Érvénytelen hitelesítő adatok.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Az e-mail cím még nincs megerősítve. Kérjük, kattintson a megerősítő linkre a postaládájában.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Ez az e-mail cím már regisztrálva van. Kérjük, jelentkezzen be.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>A Discord leválasztása</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord csatlakoztatva – szint:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Csatlakoztatott e-mail:{0}– szint:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Nincs csatlakoztatva – jelentkezzen be a Cloud Sync és a biztonsági mentések használatához</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Leválasztás...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Csatlakozás...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>E-mail / fiók</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Kijelentkezik az e-mail fiókból?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>A Cloud Sync használatához fiók szükséges</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>A felhőszolgáltatásokhoz, például a szinkronizáláshoz és a biztonsági mentéshez ingyenes fiókra van szükség. Válassza az e-mail vagy a Discord lehetőséget az eszközök, a fedvények és a biztonsági másolatok szinkronizálásának folytatásához.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Szinkronizálás e-mailben</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Szinkronizálás Discord-on keresztül</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Nem köszönöm</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Elérte a szinkronizálási korlátot</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Elérte az alapkorlátot (ingyenes: max 2 bázis, prémium: max 10 bázis)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Képernyőkép hozzáadása</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Drag &amp; Drop ide egy képet</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>vagy nyomja meg a CTRL+V billentyűkombinációt egy képernyőkép beillesztéséhez</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Nem található kép a vágólapon.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Beillesztési hiba</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Nem sikerült beilleszteni a képet:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Nem sikerült betölteni a képfájlt:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Tömörítési hiba</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Hiba a kép tömörítésekor:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Felbontás:{0}x{1}| Méret:{2}KB (25%-os minőség)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Alapjegyzet szerkesztése</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Alapjegyzet</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Megjegyzés hozzáadása</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Jegyzet szerkesztése</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Jegyzet törlése</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>A{0}képernyőkép törlése</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Képernyőkép hozzáadása{0}(prémium szükséges)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Még nincsenek megjegyzések.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Még nincsenek képernyőképek hozzáadva</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>A{0}felügyeli a csevegési figyelmeztetéseket és a csevegési parancsokat ebben a csapatban.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master{0}online. A csevegési figyelmeztetések és a csevegési parancsok szünetelnek ezen az eszközön.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Ön Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Ez az eszköz mostantól vezérli a csevegési figyelmeztetéseket és a csevegési parancsokat csapata számára.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Elfogadás</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Megtagadás</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 frissítés</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Hasonlítsa össze a felhőszolgáltatásokat</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Felhőfunkciók összehasonlítása</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Üdvözöljük a Felhőben</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Válassza ki az igényeinek leginkább megfelelő szintet.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Nincs fiók</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Az adatok 100%-ban helyiek maradnak. A legjobb egyéni játékosok számára.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Nincs felhőszinkronizálás vagy biztonsági mentés</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Nincs eszközmegosztás</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Nincs hozzáférés a webportálhoz</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Ingyenes Cloud fiók</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Alapvető felhőszolgáltatások a megosztás megkezdéséhez.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Alapvető Discord Webhook figyelmeztetések</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Akár 10 eszköz megosztása</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Térképmegosztás (300 KB, 2 alap, 1 képernyőkép)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Támogatói segítőként működjön</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Hozzáférés a Cloud Web Portalhoz</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Támogatói felhő</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>A végső Rust+ élmény klánok és haladó felhasználók számára.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Profi térképmegosztás (3 MB, 10 alap, 5 képernyőkép)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Chat Master System</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Fejlett kétirányú Discord Bot</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Korai béta és tesztverziók a Discordon keresztül</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Legyél Támogató</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Támogass minket</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Kapcsolja össze a Patreont a Discord-dal az automatikus támogatói szerep és az alkalmazás észleléséhez.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Tipp keresztül</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad vagy Pronwan a Discordban kézi támogatói szerepért (összeg / 2,50 $ = hónapok).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Nyissa meg a Cloud Web Portalt</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>A csatlakozás sikertelen: a Rust+ nem érhető el.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Vagy a tűzfal blokkolja a kapcsolatot, vagy a Rust+ API nem fut megfelelően a kiszolgálón.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Offline Death</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Önt a{0}ölte meg a{1}webhelyen.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Hang leállítása</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Offline Halálértesítések</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Offline halálriasztások engedélyezése</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Figyelmeztető hang</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Alapértelmezett: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Válasszon...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Hurok figyelmeztető hang</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Küldés a Discord Raid Alerts-nek (támogató)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Nyissa meg az Offline halálozási naplót</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Értesítések</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Értesítési Központ</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Toast-értesítések megjelenítése</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Hangjelzések lejátszása</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Megtartási időszak</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Elnémított szerverek</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Nincs némított szerver</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Némítás feloldása</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Szűrő:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Minden</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Riasztások</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Halálozások</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Üzenet keresése...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Mark olvasott</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Világos</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Itt nincsenek értesítések</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Mindannyian elkaptak!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Biztosan törli az összes értesítési előzményt?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Törölje az előzményeket</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Nem található párosított szerverprofil a következőhöz:{0}:{1}.
+Kérjük, először párosítsa ezt a szervert.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>A szerver nem található</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Offline Death Log</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Napló törlése</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Nem rögzítettek offline haláleseteket.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Megölte</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>A csevegési figyelmeztetések testreszabása</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>A csevegési figyelmeztető sablonok testreszabása</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Itt szerkesztheti az automatikus csevegési figyelmeztetések sablonjait. A változók (például{0},{1}) automatikusan lecserélődnek.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Változók:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>A '{0}' sablon sikeresen elmentve.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>A '{0}' sablonja visszaállt az alapértelmezettre.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Siker mentése</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Olajfúrótorony kioldva</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Elküldve, amikor az Oil Rig esemény kezdődik.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Szerszám neve,{1}: Megnyitás ideje</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Láda nyitás (10 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Figyelmeztetés küldve 10 perccel a láda feloldása előtt.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Szerszám neve</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Láda nyitás (5 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Figyelmeztetés küldve 5 perccel a láda kinyitása előtt.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Szerszám neve</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Intelligens riasztás aktiválva</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Intelligens riasztás indításakor küldik.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Riasztás neve</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Mélytengeri esemény aktív</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Elküldve, ha a Deep Sea esemény aktív.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Egyik sem</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Új automata</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Új automata észlelésekor küldik.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Bolt neve,{1}: Rács,{2}: Ajánlatok</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Gyanús bolt</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Akkor küldték el, amikor egy automata nagyon rövid ideig online volt.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Bolt neve,{1}: Rács,{2}: Online idő(k),{3}: Ajánlatok</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Automata árucikk egyezés</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Akkor küldjük el, ha egy automata elad egy tételt a figyelőlistán.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Bolt neve,{1}: Rács, PHPPLACEHOLDER2TOKEN : Cikk, PHPPLACEHOLDER3TOKEN : Költség Mennyiség,{4}: Költségtétel,{5}: Raktáron, PHPlTOLACEHOLDER6{7}: Tétel eladása</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Megszületett a teherhajó</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Elküldve, amikor a teherhajó ívik.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Hely / Leírás</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Teherhajó Dokkolva</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Akkor küldték, amikor a teherhajó kiköt egy kikötőben.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Kikötő neve,{1}: Rács</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Teherhajó közeledik</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Akkor küldik el, amikor a teherhajó várhatóan 5 percen belül kiköt.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Kikötő neve,{1}: Rács</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Teherhajó indulás</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>5 perccel a teherhajó indulása előtt elküldve.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Kikötő neve,{1}: Rács</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Az esemény megszületett</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Elküldve, amikor általános események (például Heli) megjelennek.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Esemény neve,{1}: Rács</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Heli Crash Hamis riasztás</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Akkor küldték el, amikor az észlelt Heli összeomlás valójában szerverkésés volt.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Rács</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Heli járőrt lelőtték</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Akkor küldték el, amikor a Patrol Helit lelőtték.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Rács</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Játékos Online</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Akkor küldik el, amikor egy nyomon követett csapattag online érkezik.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Játékos neve,{1}: Rács/Pozíció</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Player Offline</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Akkor küldik el, amikor egy nyomon követett csapattag offline állapotba kerül.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Játékos neve</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>A játékos meghalt</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Akkor küldik, amikor egy nyomon követett csapattag meghal.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Játékos neve,{1}: Rács/Pozíció</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Player Respawned</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Akkor küldik el, amikor egy nyomon követett csapattag újra megjelenik.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Játékos neve,{1}: Rács/Pozíció</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Online követés</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Akkor küldik el, amikor egy nyomon követett játékos csatlakozik az internethez.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Játékos neve,{1}: Csoportinformációk</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Offline követés</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Akkor küldik el, amikor egy nyomon követett játékos offline állapotba kerül.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Játékos neve,{1}: Csoportinformációk</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Követés átnevezve</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Akkor küldik el, ha egy követett játékos megváltoztatja a nevét.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Régi név,{1}: Csoportinformáció,{2}: Új név</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>A csevegési figyelmeztetések testreszabása</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>AFK játékosok</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Senki sem AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>AFK játékos</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Akkor küldik el, ha egy csapattag túl sokáig AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Játékos neve,{1}: Idő</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Törölje az összes 3D-s térképadatot</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Újrahasznosítási kalkulátor az alkatrészekhez és még sok máshoz. Azonnal láthatja a különbséget a biztonságos zóna és a normál újrahasznosítás között.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>7.0-s verzió – Főbb változások</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 3D-térkép élő játékos pozíciókkal és haláljelzőkkel
+• A térkép helyi térképfájlból épül fel, további információkat kap, mint például a blokkolt zónák, jéghegyek, barlangok, és megjeleníti a 2D-s térképen
+• Integrált 3D Base Footprint-Builder
+• Kifinomult logikai motor
+• A játékcsapat jelölői most már megjelennek a 2D-térképen
+• Egyéni ikonok intelligens eszközökhöz</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D térkép beállításai</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>A lemezterület felszabadítása érdekében törli az összes letöltött 3D-s térképhatárt és a gyorsítótárazott adatot</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 frissítés</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D térképfejlesztések</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Támogatás hozzáadva a Cave és Jungle Ruins markerekhez a 2D-s térképekhez.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D térkép integráció</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Automatikusan készíthet és tekinthet meg interaktív 3D-s térképmodelleket beépített lábnyomokkal és egyedi emlékművekkel.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Újrahasznosítási kalkulátor</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Újrahasznosítási kalkulátor az alkatrészekhez és még sok máshoz. Azonnal láthatja a különbséget a biztonságos zóna és a normál újrahasznosítás között.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Beállítások és tisztítás</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Könnyen törölje a régi 3D-s térképhatárokat és a gyorsítótárazott adatokat a beállításokból, hogy tárhelyet szabadítson fel.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Ne mutasd ezt újra</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Közeli</value>
+  </data>
 </root>
 
 

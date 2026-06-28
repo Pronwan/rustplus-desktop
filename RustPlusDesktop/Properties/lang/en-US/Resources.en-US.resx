@@ -2524,4 +2524,227 @@ Are you sure you want to continue?</value>
   <data name="GenericClose" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Team Markers</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>No, keep active</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Do you want to turn off the audio-alert loop?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Loop Audio till popup-close</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>This requires turning off the audio-alert loop for all Smart Alarms.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Turn off now</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Check your Chat-Alert settings for the new custom timers. Also, death markers are now always saved locally. Minimap now also updates while minimized.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Please note</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Death Marker</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value> - Custom markers for team</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Time of Death</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Custom Timer</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer {0} created for {1}h {2}m {3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Custom Timer</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Active Timers</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Add Timer</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Timer Name</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Chat Command:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Use chat command below to check status.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maximum of 5 timers allowed.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Please enter a timer duration (hours, minutes, or seconds).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Timer name must start with a letter.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timer Alerts</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value> - 60,30,10,3 m before end</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Translation Consent</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>By clicking Accept, the contents of the patch notes will be sent to Google Translate (USA) for translation. Do you accept?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Translate API Terms</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Translate via Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privacy &amp; Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>To enable live syncing for map overlays and smart devices, data must be sent to our secure cloud. We also collect anonymized usage telemetry to improve features.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Accept &amp; Enable Cloud</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Decline Cloud</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporter Benefits</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>More than 10 devices are available locally or from imports. Free cloud sync keeps the first 10 devices; Supporters can sync unlimited devices.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>This overlay is larger than the free cloud sync limit. Supporters get 10x higher overlay sizes, more map markers and more screenshots.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Connect Discord for Supporter Benefits</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Disconnect Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Cloud Sync &amp; Live Upload</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Live upload and synchronize smart devices and map overlays securely in the cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Supporter Settings</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>These features are exclusively available to our Supporters and Developers via Discord login.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Advanced Discord Integration (Webhooks, Audio Alerts)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram Alerts Integration</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Stop Sync</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Stay Free</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Support Now</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay Synced {0} KB {1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 Devices max in Free Tier</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0} devices synced {1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlay Size too big for sync ({0} KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activate Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync active</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Notification Center</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Show Toast Notifications</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Play Sound Alerts</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Retention Period</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Muted Servers</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>No servers muted</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Unmute</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarms</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Search message...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Mark read</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>No notifications here</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>You're all caught up!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Are you sure you want to clear all notification history?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Clear History</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Could not find a paired server profile for {0}:{1}.
+Please pair this server first.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Server Not Found</value>
+  </data>
 </root>

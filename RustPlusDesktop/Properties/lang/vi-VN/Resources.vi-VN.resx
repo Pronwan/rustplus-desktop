@@ -1860,6 +1860,894 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} ngày</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Điểm đánh dấu đội</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Chế độ thực thi</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Tuần tự (có độ trễ)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Song song (tức thời)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Chuyển đổi độ trễ</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Phím nóng này đã được đăng ký bởi một ứng dụng khác.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Không, tiếp tục hoạt động</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Bạn có muốn tắt vòng lặp cảnh báo âm thanh không?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Lặp lại âm thanh cho đến khi đóng cửa sổ bật lên</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Điều này yêu cầu tắt vòng lặp cảnh báo âm thanh cho tất cả Báo thức thông minh.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Tắt ngay bây giờ</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Kiểm tra cài đặt Cảnh báo trò chuyện của bạn để biết bộ hẹn giờ tùy chỉnh mới. Ngoài ra, các dấu hiệu tử vong hiện luôn được lưu cục bộ. Minimap bây giờ cũng cập nhật trong khi thu nhỏ.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Xin lưu ý</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Dấu ấn tử thần</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Đánh dấu tùy chỉnh cho đội</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Thời gian của cái chết</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Hẹn giờ tùy chỉnh</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Bộ đếm thời gian{0}được tạo cho{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Hẹn giờ tùy chỉnh</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Bộ hẹn giờ đang hoạt động</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Thêm bộ hẹn giờ</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Tên hẹn giờ</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Lệnh trò chuyện:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Sử dụng lệnh trò chuyện bên dưới để kiểm tra trạng thái.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Cho phép tối đa 5 bộ tính giờ.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Vui lòng nhập khoảng thời gian hẹn giờ (giờ, phút hoặc giây).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Tên bộ hẹn giờ phải bắt đầu bằng một chữ cái.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Cảnh báo hẹn giờ</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m trước khi kết thúc</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Đồng ý dịch thuật</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Khi nhấn Chấp nhận, nội dung ghi chú vá lỗi sẽ được gửi tới Google Translate (Mỹ) để dịch. Bạn có chấp nhận không?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Điều khoản API của Google Dịch</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Dịch qua Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Quyền riêng tư &amp; Đồng bộ hóa đám mây</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Để bật đồng bộ hóa trực tiếp cho lớp phủ bản đồ và thiết bị thông minh, dữ liệu phải được gửi tới đám mây bảo mật của chúng tôi. Chúng tôi cũng thu thập dữ liệu đo từ xa việc sử dụng ẩn danh để cải thiện các tính năng.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Chấp nhận và kích hoạt đám mây</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Từ chối đám mây</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Lợi ích của người hỗ trợ</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Hơn 10 thiết bị có sẵn tại địa phương hoặc từ hàng nhập khẩu. Đồng bộ đám mây miễn phí giữ 10 thiết bị đầu tiên; Người ủng hộ có thể đồng bộ hóa các thiết bị không giới hạn.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Lớp phủ này lớn hơn giới hạn đồng bộ hóa đám mây miễn phí. Những người ủng hộ nhận được kích thước lớp phủ cao hơn gấp 10 lần, nhiều điểm đánh dấu bản đồ hơn và nhiều ảnh chụp màn hình hơn.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Kết nối Discord vì lợi ích của người hỗ trợ</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Ngắt kết nối Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Đang kết nối...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Đồng bộ hóa đám mây &amp; Tải lên trực tiếp</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Tải lên trực tiếp và đồng bộ hóa các thiết bị thông minh cũng như lớp phủ bản đồ một cách an toàn trên đám mây.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Cài đặt người hỗ trợ</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Những tính năng này chỉ dành riêng cho Người hỗ trợ và Nhà phát triển của chúng tôi thông qua đăng nhập Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Tích hợp Discord nâng cao (Webhooks, Cảnh báo âm thanh)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Tích hợp cảnh báo Telegram</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Dừng đồng bộ hóa</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Ở miễn phí</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Hỗ trợ ngay</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Lớp phủ được đồng bộ hóa{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Tối đa 10 thiết bị ở Bậc miễn phí</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Các thiết bị{0}đã được đồng bộ hóa{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Kích thước lớp phủ quá lớn để đồng bộ hóa ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Kích hoạt đồng bộ hóa đám mây</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Đồng bộ hóa đám mây đang hoạt động</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Tài khoản đám mây</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Đăng nhập tài khoản đám mây</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Tạo tài khoản</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Địa chỉ email</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Mật khẩu (tối thiểu 6 ký tự)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Xác nhận mật khẩu</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Tạo tài khoản</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Email xác nhận đã được gửi!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Nhấp vào liên kết trong email của bạn. Ứng dụng sẽ tự động kiểm tra cứ sau vài giây...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Đang chờ xác nhận...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Đang chờ xác nhận... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Vấn đề?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Mở trong trình duyệt</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Vui lòng nhập email và mật khẩu.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Vui lòng nhập một địa chỉ email.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Mật khẩu phải dài ít nhất 6 ký tự.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Mật khẩu không khớp.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Đang đăng nhập...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Đăng nhập thành công!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Đăng nhập không thành công.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Đang chạy đăng ký...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Đăng ký không thành công.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Hết thời gian chờ: Email không được xác nhận trong vòng 5 phút. Bạn có thể đăng nhập sau.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Thông tin xác thực không hợp lệ. Vui lòng kiểm tra email và mật khẩu của bạn.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Thông tin xác thực không hợp lệ.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Địa chỉ email chưa được xác nhận. Vui lòng nhấp vào liên kết xác nhận trong hộp thư đến của bạn.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Địa chỉ email này đã được đăng ký. Vui lòng đăng nhập.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Ngắt kết nối Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Đã kết nối Discord - Cấp:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Email được kết nối:{0}- Cấp:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Chưa kết nối - hãy đăng nhập để sử dụng Cloud Sync và bản sao lưu</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Đang ngắt kết nối...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Đang kết nối...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>Email / Tài khoản</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Đăng xuất khỏi tài khoản email?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Đồng bộ đám mây</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Cần có tài khoản để đồng bộ hóa đám mây</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Các dịch vụ đám mây như đồng bộ hóa và lưu trữ sao lưu yêu cầu phải có tài khoản miễn phí. Chọn email hoặc Discord để tiếp tục đồng bộ hóa thiết bị, lớp phủ và bản sao lưu của bạn.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Đồng bộ qua email</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Đồng bộ hóa qua Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Không, cảm ơn</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Đã đạt đến giới hạn đồng bộ hóa</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Đã đạt đến giới hạn cơ sở (Miễn phí: tối đa 2 căn cứ, Premium: tối đa 10 căn cứ)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Thêm ảnh chụp màn hình</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Kéo và thả hình ảnh vào đây</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>hoặc nhấn CTRL+V để dán ảnh chụp màn hình</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Không tìm thấy hình ảnh nào trong clipboard.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Lỗi dán</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Không thể dán hình ảnh:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Không tải được tệp hình ảnh:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Lỗi nén</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Lỗi nén hình ảnh:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Độ phân giải:{0}x{1}| Kích thước:{2}KB (Chất lượng 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Chỉnh sửa ghi chú cơ bản</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Lưu ý cơ bản</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Thêm ghi chú</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Chỉnh sửa ghi chú</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Xóa ghi chú</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Xóa ảnh chụp màn hình{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Thêm ảnh chụp màn hình{0}(Yêu cầu Premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Chưa có ghi chú nào được thêm vào.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Chưa có ảnh chụp màn hình nào được thêm vào</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Trò chuyện trực tuyến</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}đang kiểm soát Cảnh báo trò chuyện và Lệnh trò chuyện cho nhóm này.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Trò chuyện trực tuyến với Master{0}. Cảnh báo trò chuyện và Lệnh trò chuyện bị tạm dừng trên thiết bị này.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Bạn là Bậc thầy trò chuyện</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Thiết bị này hiện đang kiểm soát Cảnh báo trò chuyện và Lệnh trò chuyện cho nhóm của bạn.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Chấp nhận</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>Cập nhật v6.0.0</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>So sánh các tính năng của đám mây</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>So sánh tính năng đám mây</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Chào mừng đến với đám mây</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Chọn cấp độ phù hợp nhất với nhu cầu của bạn.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Không có tài khoản</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Dữ liệu của bạn vẫn ở địa phương 100%. Tốt nhất cho người chơi solo.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Không có đồng bộ hóa hoặc sao lưu trên đám mây</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Không chia sẻ thiết bị</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Không có quyền truy cập cổng thông tin web</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Tài khoản đám mây miễn phí</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Các tính năng cơ bản của đám mây giúp bạn bắt đầu chia sẻ.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Cảnh báo Webhook cơ bản của Discord</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Chia sẻ tối đa 10 thiết bị</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Chia sẻ bản đồ (300 KB, 2 căn cứ, 1 ảnh chụp màn hình)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Đóng vai trò là người hỗ trợ Người trợ giúp</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Truy cập vào Cổng thông tin web trên nền tảng đám mây</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Đám mây hỗ trợ</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Trải nghiệm Rust+ tối ưu dành cho gia tộc và người dùng nâng cao.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Chia sẻ bản đồ chuyên nghiệp (3 MB, 10 căn cứ, 5 ảnh chụp màn hình)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Hệ thống trò chuyện chính</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Bot Discord hai chiều nâng cao</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Phiên bản thử nghiệm và Beta sớm thông qua Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Trở thành người ủng hộ</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Hỗ trợ chúng tôi trên</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Liên kết Patreon với Discord để tự động phát hiện vai trò Người hỗ trợ &amp; Ứng dụng.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Mẹo qua</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad hoặc Pronwan in Discord cho vai trò Người hỗ trợ thủ công (Số tiền / 2,50 USD = Tháng).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Cổng thông tin web đám mây mở</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Kết nối không thành công: Rust+ không thể truy cập được.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Tường lửa của bạn đang chặn kết nối hoặc API Rust+ trên máy chủ không chạy đúng cách.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Cái chết ngoại tuyến</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Bạn đã bị giết bởi{0}trên{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Dừng âm thanh</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Thông báo tử vong ngoại tuyến</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Bật cảnh báo tử vong ngoại tuyến</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Âm thanh cảnh báo</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Mặc định: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Lựa chọn...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Âm thanh cảnh báo vòng lặp</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Gửi tới Cảnh báo đột kích Discord (Người hỗ trợ)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Mở nhật ký tử vong ngoại tuyến</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Thông báo</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Trung tâm thông báo</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Hiển thị thông báo bánh mì nướng</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Phát cảnh báo bằng âm thanh</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Thời gian lưu giữ</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Máy chủ bị tắt tiếng</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Không có máy chủ nào bị tắt tiếng</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Bật tiếng</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Lọc:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Tất cả</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Báo động</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Tử vong</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm tin nhắn...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Đánh dấu đã đọc</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Thông thoáng</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Không có thông báo ở đây</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Bạn đã bắt kịp tất cả!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa tất cả lịch sử thông báo không?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Xóa lịch sử</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Không thể tìm thấy cấu hình máy chủ được ghép nối cho{0}:{1}.
+Vui lòng ghép nối máy chủ này trước.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Không tìm thấy máy chủ</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Nhật ký tử vong ngoại tuyến</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Xóa nhật ký</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Không có trường hợp tử vong ngoại tuyến nào được ghi nhận.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Bị giết bởi</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Tùy chỉnh cảnh báo trò chuyện</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Tùy chỉnh mẫu thông báo trò chuyện</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Tại đây bạn có thể chỉnh sửa các mẫu cảnh báo trò chuyện tự động. Các biến (như{0},{1}) sẽ được tự động thay thế.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Các biến:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Mẫu cho '{0}' đã được lưu thành công.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Mẫu cho '{0}' được đặt lại về mặc định.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Lưu thành công</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Cài lại</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Giàn khoan dầu được kích hoạt</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Được gửi khi sự kiện giàn khoan dầu bắt đầu.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Tên giàn khoan,{1}: Thời gian mở</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Mở khóa thùng (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Cảnh báo được gửi 10 phút trước khi mở khóa thùng.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Tên giàn khoan</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Mở khóa thùng (5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Cảnh báo được gửi 5 phút trước khi mở khóa thùng.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Tên giàn khoan</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Đã kích hoạt cảnh báo thông minh</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Được gửi khi Cảnh báo thông minh được kích hoạt.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Tên báo động</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Sự kiện biển sâu đang hoạt động</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Được gửi khi sự kiện Biển sâu đang diễn ra.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Không có</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Máy bán hàng tự động mới</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Được gửi khi phát hiện thấy máy bán hàng tự động mới.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Tên cửa hàng,{1}: Lưới,{2}: Ưu đãi</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Cửa hàng đáng ngờ</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Được gửi khi máy bán hàng tự động trực tuyến trong thời gian rất ngắn.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Tên cửa hàng,{1}: Lưới,{2}: Thời gian trực tuyến,{3}: Ưu đãi</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Máy bán hàng tự động phù hợp với mặt hàng</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Được gửi khi máy bán hàng tự động bán một mặt hàng trong danh sách theo dõi của bạn.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Tên cửa hàng,{1}: Lưới,{2}: Mặt hàng,{3}: Số lượng chi phí,{4}: Mặt hàng giá thành,{5}: Kho hàng,{6}: Số lượng bán,{7}: Bán mặt hàng</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Tàu chở hàng xuất hiện</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Được gửi khi Tàu chở hàng xuất hiện.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Vị trí / Mô tả</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Tàu hàng neo đậu</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Được gửi khi tàu chở hàng cập cảng.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Tên bến cảng,{1}: Lưới</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Tàu chở hàng đang đến gần</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Được gửi khi tàu chở hàng dự kiến ​​sẽ cập bến sau 5 phút nữa.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Tên bến cảng,{1}: Lưới</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Tàu chở hàng khởi hành</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Gửi 5 phút trước khi tàu chở hàng khởi hành.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Tên bến cảng,{1}: Lưới</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Sự kiện được sinh ra</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Được gửi khi các sự kiện chung (như Heli) xuất hiện.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Tên sự kiện,{1}: Lưới</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Báo động sai sự cố Heli</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Được gửi khi phát hiện sự cố Heli thực chất là do máy chủ bị lag.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Lưới</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Tuần tra Heli bắn hạ</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Được gửi khi trực thăng tuần tra bị bắn hạ.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Lưới</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Người chơi trực tuyến</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Được gửi khi một thành viên trong nhóm được theo dõi trực tuyến.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Tên người chơi,{1}: Lưới/Vị trí</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Người chơi ngoại tuyến</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Được gửi khi một thành viên trong nhóm được theo dõi ngoại tuyến.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Tên người chơi</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Người chơi đã chết</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Được gửi khi một thành viên trong nhóm được theo dõi qua đời.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Tên người chơi,{1}: Lưới/Vị trí</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Người chơi được hồi sinh</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Được gửi khi một thành viên trong nhóm được theo dõi hồi sinh.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Tên người chơi,{1}: Lưới/Vị trí</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Theo dõi trực tuyến</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Được gửi khi người chơi được theo dõi trực tuyến.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Tên người chơi,{1}: Thông tin nhóm</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Theo dõi ngoại tuyến</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Được gửi khi người chơi được theo dõi ngoại tuyến.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Tên người chơi,{1}: Thông tin nhóm</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Theo dõi đã được đổi tên</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Được gửi khi người chơi được theo dõi thay đổi tên của họ.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Tên cũ,{1}: Thông tin nhóm,{2}: Tên mới</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Tùy chỉnh cảnh báo trò chuyện</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>Người chơi AFK</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Không có ai AFK cả.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Người chơi AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Được gửi khi một thành viên trong nhóm AFK quá lâu.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Tên người chơi,{1}: Thời gian</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Xóa tất cả dữ liệu bản đồ 3D</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Máy tính tái chế cho các thành phần của bạn và hơn thế nữa. Hãy xem ngay sự khác biệt giữa vùng an toàn và tái chế thông thường.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Phiên bản 7.0 - Những thay đổi lớn</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• Bản đồ 3D với Vị trí người chơi trực tiếp và Điểm đánh dấu cái chết
+• Bản đồ được xây dựng từ Tệp bản đồ cục bộ, nhận thông tin bổ sung như Khu vực bị chặn xây dựng, Tảng băng trôi, Hang động và hiển thị thông tin đó trên Bản đồ 2D
+• Tích hợp Trình tạo dấu chân cơ sở 3D
+• Công cụ logic tinh chỉnh
+• Điểm đánh dấu đội trong trò chơi hiện được hiển thị trên Bản đồ 2D
+• Biểu tượng tùy chỉnh cho thiết bị thông minh</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Cài đặt bản đồ 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Xóa tất cả giới hạn bản đồ 3D đã tải xuống và dữ liệu được lưu trong bộ nhớ đệm để giải phóng dung lượng ổ đĩa</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Cập nhật Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Cải tiến bản đồ 2D</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Đã thêm hỗ trợ cho các điểm đánh dấu Di tích hang động và rừng rậm vào bản đồ 2D của bạn.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Tích hợp bản đồ 3D</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Tự động xây dựng và xem các mô hình bản đồ 3D tương tác với dấu chân cơ sở tích hợp và tượng đài tùy chỉnh.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Máy tính tái chế</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Máy tính tái chế cho các thành phần của bạn và hơn thế nữa. Hãy xem ngay sự khác biệt giữa vùng an toàn và tái chế thông thường.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Cài đặt &amp; Dọn dẹp</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Dễ dàng xóa giới hạn bản đồ 3D cũ và dữ liệu được lưu trong bộ nhớ đệm khỏi cài đặt để giải phóng dung lượng lưu trữ.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Đừng hiển thị lại điều này</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
 </root>
 
 

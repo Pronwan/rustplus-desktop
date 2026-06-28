@@ -1860,6 +1860,894 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} 日</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>チームマーカー</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>実行モード</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>シーケンシャル（遅延あり）</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>パラレル（インスタント）</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>トグル遅延</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>このホットキーは別のアプリケーションによってすでに登録されています。</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>いいえ、アクティブのままにしてください</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>音声警告ループをオフにしますか?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>ポップアップが閉じるまでオーディオをループする</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>これには、すべてのスマート アラームの音声警告ループをオフにする必要があります。</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>今すぐオフにしてください</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>新しいカスタム タイマーのチャット アラート設定を確認してください。また、死亡マーカーは常にローカルに保存されるようになりました。ミニマップは最小化中にも更新されるようになりました。</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>ご注意ください</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>デスマーカー</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- チーム用のカスタムマーカー</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>死亡時刻</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>カスタムタイマー</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>タイマー{0}が{1}h{2}m{3}s 用に作成されました</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>カスタムタイマー</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>アクティブタイマー</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>タイマーの追加</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>タイマー名</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>チャットコマンド:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>ステータスを確認するには、以下のチャットコマンドを使用してください。</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>最大 5 つのタイマーが許可されます。</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>タイマーの継続時間 (時間、分、または秒) を入力してください。</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>タイマー名は文字で始める必要があります。</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>タイマーアラート</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 終了点の60、30、10、3メートル前</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>翻訳の同意</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>「同意する」をクリックすると、パッチノートの内容が翻訳のために Google Translate (USA) に送信されます。受け入れますか？</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google 翻訳 API 規約</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Google 経由で翻訳する</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>プライバシーとクラウド同期</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>マップ オーバーレイとスマート デバイスのライブ同期を有効にするには、データを安全なクラウドに送信する必要があります。また、機能を改善するために、匿名化された使用状況テレメトリーも収集します。</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>クラウドを受け入れて有効にする</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>雲の衰退</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>サポーター特典</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>10 を超えるデバイスがローカルまたは輸入から入手可能です。無料のクラウド同期では、最初の 10 台のデバイスが保持されます。サポーターは無制限のデバイスを同期できます。</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>このオーバーレイは、無料のクラウド同期制限を超えています。サポーターは 10 倍のオーバーレイ サイズ、より多くのマップ マーカー、より多くのスクリーンショットを取得できます。</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Discord に接続してサポーター特典を利用する</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>不和を切断する</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>接続中...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>クラウド同期とライブアップロード</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>スマート デバイスとマップ オーバーレイをクラウドに安全にライブ アップロードして同期します。</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>サポーター設定</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>これらの機能は、Discord ログインを介してサポーターと開発者のみが利用できます。</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>高度な Discord 統合 (Webhook、音声アラート)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>テレグラムアラートの統合</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>同期の停止</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>ステイフリー</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>今すぐサポート</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>オーバーレイ同期済み{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>無料利用枠では最大 10 台のデバイス</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0}デバイスが同期されました{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>オーバーレイのサイズが大きすぎて同期できません ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>クラウド同期を有効にする</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>クラウド同期がアクティブです</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>クラウドアカウント</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>クラウドアカウントログイン</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>サインイン</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>アカウントを作成する</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>電子メールアドレス</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>パスワード（6文字以上）</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>パスワードを認証する</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>サインイン</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>アカウントを作成する</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>確認メールを送信しました!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>メール内のリンクをクリックします。アプリは数秒ごとに自動的にチェックします...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>確認を待っています...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>確認を待っています... ({0})</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>問題がありますか?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>ブラウザで開く</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>メールアドレスとパスワードを入力してください。</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>メールアドレスを入力してください。</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>パスワードは 6 文字以上である必要があります。</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>パスワードが一致しません。</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>サインイン中...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>正常にサインインしました!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>サインインに失敗しました。</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>登録を実行中...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>登録に失敗しました。</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>タイムアウト: 電子メールは 5 分以内に確認されませんでした。後でサインインできます。</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>無効な資格情報です。メールアドレスとパスワードをご確認ください。</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>無効な資格情報です。</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>メールアドレスはまだ確認されていません。受信箱の確認リンクをクリックしてください。</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>このメールアドレスはすでに登録されています。サインインしてください。</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>不和を切断する</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord 接続中 - Tier:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>接続された電子メール:{0}- 層:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>接続されていません - クラウド同期とバックアップを使用するにはサインインしてください</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>切断中...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>接続中...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>メールアドレス/アカウント</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>電子メール アカウントからサインアウトしますか?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>クラウド同期</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>クラウド同期にはアカウントが必要です</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>同期やバックアップ ストレージなどのクラウド サービスには無料のアカウントが必要です。デバイス、オーバーレイ、バックアップの同期を続けるには、メールまたは Discord を選択してください。</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>電子メール経由で同期する</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Discord経由で同期する</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>結構です</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>同期制限に達しました</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>基本制限に達しました (無料: 最大 2 拠点、プレミアム: 最大 10 拠点)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>スクリーンショットの追加</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>ここに画像をドラッグ＆ドロップします</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>または、CTRL+V を押してスクリーンショットを貼り付けます</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>クリップボードに画像が見つかりません。</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>貼り付けエラー</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>画像の貼り付けに失敗しました:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>画像ファイルのロードに失敗しました:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>圧縮エラー</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>画像圧縮エラー:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>解決策:{0}x{1}|サイズ:{2}KB (品質 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>ベースノートの編集</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>ベースノート</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>メモを追加</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>メモの編集</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>メモの削除</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>スクリーンショットの削除{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>スクリーンショットを追加{0}(プレミアムが必要)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>まだメモは追加されていません。</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>スクリーンショットはまだ追加されていません</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>オンラインでのチャットマスター</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}は、このチームのチャット アラートとチャット コマンドを制御しています。</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master{0}online.このデバイスでは、チャット アラートとチャット コマンドが一時停止されています。</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>あなたはチャットマスターです</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>このデバイスは現在、チームのチャット アラートとチャット コマンドを制御しています。</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>受け入れる</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>拒否</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 アップデート</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>クラウド機能の比較</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>クラウド機能の比較</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>クラウドへようこそ</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>ニーズに最適な層を選択してください。</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>アカウントがありません</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>データは 100% ローカルに維持されます。ソロプレイヤーに最適です。</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>クラウド同期やバックアップはありません</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>デバイス共有なし</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Web ポータルにアクセスできない</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>無料のクラウドアカウント</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>共有を始めるための基本的なクラウド機能。</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>基本的な Discord Webhook アラート</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>最大10台のデバイスを共有</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>マップ共有 (300 KB、2 ベース、1 スクリーンショット)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>サポーターヘルパーとして活動する</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>クラウド Web ポータルへのアクセス</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>サポータークラウド</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>クランと上級ユーザー向けの究極の Rust+ エクスペリエンス。</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>プロマップ共有 (3 MB、10 ベース、5 スクリーンショット)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>チャットマスターシステム</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>高度な双方向 Discord ボット</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Discord 経由の初期ベータ版とテスト版</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>サポーターになる</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>サポートしてください</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Patreon を Discord にリンクすると、サポーターの役割とアプリが自動的に検出されます。</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>チップ経由</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Discord で Jawad または Pronwan をポークして、手動サポーターの役割を獲得します (金額 / $2.50 = 月)。</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>オープンクラウドウェブポータル</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>接続に失敗しました: Rust+ に到達できません。</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>ファイアウォールが接続をブロックしているか、サーバー上の Rust+ API が適切に実行されていません。</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>オフラインでの死</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>あなたは{1}の{0}によって殺されました。</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>停止音</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>オフラインの死亡通知</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>オフライン死亡アラートを有効にする</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>警告音</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>デフォルト: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>選択してください...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>ループ警告音</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Discord レイドアラートに送信 (サポーター)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>オフライン死亡ログを開く</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>通知センター</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>トースト通知を表示する</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>サウンドアラートを再生する</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>保存期間</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>ミュートされたサーバー</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>ミュートされているサーバーはありません</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>ミュートを解除する</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>フィルター：</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>全て</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>アラーム</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>死亡者（数</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>メッセージを検索...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>既読マークを付ける</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>クリア</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>ここには通知はありません</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>皆さんも追い込まれていますね！</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>すべての通知履歴をクリアしてもよろしいですか?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>履歴をクリアする</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>{0}のペアのサーバー プロファイルが見つかりませんでした:{1}。
+まずこのサーバーをペアリングしてください。</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>サーバーが見つかりません</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>オフラインデスログ</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>ログをクリアする</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>オフラインでの死亡は記録されていません。</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>によって殺されました</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>チャットアラートのカスタマイズ</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>チャットアラートテンプレートのカスタマイズ</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>ここで、自動チャット アラートのテンプレートを編集できます。変数 ({0}、{1}など) は自動的に置き換えられます。</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>変数:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>「{0}」のテンプレートが正常に保存されました。</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>「{0}」のテンプレートがデフォルトにリセットされました。</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>保存成功</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>リセット</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>石油掘削装置の作動</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>石油掘削装置イベントの開始時に送信されます。</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: リグ名、{1}: オープン時間</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>木箱のロック解除 (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>警告は箱のロックが解除される 10 分前に送信されます。</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: リグ名</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>クレートのロック解除 (5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>木箱のロックが解除される 5 分前に警告が送信されます。</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: リグ名</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>スマートアラームが作動しました</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>スマート アラームがトリガーされたときに送信されます。</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: アラーム名</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>深海イベントがアクティブです</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Deep Sea イベントがアクティブなときに送信されます。</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>新しい自動販売機</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>新しい自動販売機が検出されたときに送信されます。</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: ショップ名、{1}: グリッド、{2}: オファー</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>怪しい店</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>自動販売機が非常に短時間オンラインになったときに送信されます。</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: ショップ名、{1}: グリッド、{2}: オンライン時間(秒)、{3}: オファー</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>自動販売機のアイテムマッチ</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>ウォッチリストにある商品が自動販売機で販売されたときに送信されます。</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: ショップ名、{1}: グリッド、{2}: 品目、{3}: 原価数量、{4}: 原価品目、{5}: 在庫、{6}: 販売数量、{7}: アイテムを売る</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>貨物船が出現しました</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>貨物船が出現すると送信されます。</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: 場所 / 説明</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>貨物船が停泊中</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>貨物船が港に着岸したときに送信されます。</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: 港名、{1}: グリッド</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>貨物船が接近中</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>貨物船が 5 分以内に着岸すると予想されるときに送信されます。</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: 港名、{1}: グリッド</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>貨物船の出港</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>貨物船の出港5分前に送信されます。</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: 港名、{1}: グリッド</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>イベントが発生しました</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>一般的なイベント (ヘリなど) が生成されるときに送信されます。</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: イベント名、{1}: グリッド</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>ヘリ墜落誤報</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>検出された Heli クラッシュが実際にはサーバーのラグであった場合に送信されます。</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: グリッド</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>パトロールヘリ撃墜</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>パトロールヘリが撃墜されたときに送信されます。</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: グリッド</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>オンラインプレイヤー</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>追跡対象のチームメンバーがオンラインになったときに送信されます。</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: プレイヤー名、{1}: グリッド/ポジション</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>プレーヤーがオフライン</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>追跡されているチームメンバーがオフラインになったときに送信されます。</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: プレイヤー名</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>プレイヤーが死亡しました</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>追跡されているチームメンバーが死亡したときに送信されます。</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: プレイヤー名、{1}: グリッド/ポジション</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>プレイヤーが復活しました</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>追跡されたチームメンバーが復活したときに送信されます。</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: プレイヤー名、{1}: グリッド/ポジション</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>オンラインで追跡する</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>追跡されているプレーヤーがオンラインになるときに送信されます。</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: プレイヤー名、{1}: グループ情報</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>オフラインでの追跡</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>追跡されているプレーヤーがオフラインになったときに送信されます。</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: プレイヤー名、{1}: グループ情報</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>追跡の名前が変更されました</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>追跡されているプレイヤーが名前を変更したときに送信されます。</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: 古い名前、{1}: グループ情報、{2}: 新しい名前</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>チャットアラートのカスタマイズ</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>AFK選手</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>誰もAFKではありません。</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>プレーヤーAFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>チームメンバーが長時間AFK状態にある場合に送信されます。</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: プレイヤー名、{1}: 時間</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>3D地図データをすべて削除する</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>コンポーネントなどのリサイクル計算ツール。安全地帯と通常のリサイクルの違いがすぐにわかります。</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>バージョン 7.0 - 主な変更点</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• ライブプレイヤーの位置と死亡マーカーを備えた 3D マップ
+• マップはローカルのマップ ファイルから構築され、建築禁止区域、氷山、洞窟などの追加情報を取得して 2D マップ上に表示します。
+• 3D Base Footprint-Builder の統合
+• 洗練されたロジックエンジン
+• ゲーム内チームマーカーが 2D マップ上に表示されるようになりました
+• スマートデバイス用のカスタムアイコン</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3Dマップの設定</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>ダウンロードした 3D マップの境界とキャッシュされたデータをすべて削除して、ディスク領域を解放します。</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ デスクトップ v7.0.0 アップデート</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D マップの機能強化</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>2D マップに洞窟およびジャングル遺跡マーカーのサポートが追加されました。</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D マップの統合</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>ベースフットプリントとカスタムモニュメントが組み込まれたインタラクティブな 3D マップモデルを自動的に構築して表示します。</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>リサイクル計算機</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>コンポーネントなどのリサイクル計算ツール。安全地帯と通常のリサイクルの違いがすぐにわかります。</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>設定とクリーンアップ</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>古い 3D マップの境界とキャッシュされたデータを設定から簡単に削除して、ストレージ領域を解放します。</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>これを二度と表示しないでください</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>近い</value>
+  </data>
 </root>
 
 

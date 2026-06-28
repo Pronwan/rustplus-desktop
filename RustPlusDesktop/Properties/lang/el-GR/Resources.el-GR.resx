@@ -1860,6 +1860,894 @@ Open Releases page?</value>
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} ημέρες</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Δείκτες ομάδας</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Λειτουργία εκτέλεσης</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Διαδοχική (με καθυστέρηση)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Παράλληλη (στιγμιαία)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Εναλλαγή καθυστέρησης</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Αυτό το πλήκτρο πρόσβασης έχει ήδη καταχωρηθεί από άλλη εφαρμογή.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Όχι, μείνε ενεργός</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Θέλετε να απενεργοποιήσετε τον βρόχο ειδοποίησης ήχου;</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Επανάληψη ήχου μέχρι το αναδυόμενο κλείσιμο</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Αυτό απαιτεί την απενεργοποίηση του βρόχου ειδοποίησης ήχου για όλους τους Έξυπνους Συναγερμούς.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Απενεργοποιήστε τώρα</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Ελέγξτε τις ρυθμίσεις Chat-Alert για τα νέα προσαρμοσμένα χρονόμετρα. Επίσης, οι δείκτες θανάτου αποθηκεύονται πλέον πάντα τοπικά. Ο μίνι χάρτης ενημερώνεται τώρα και ελαχιστοποιείται.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Παρακαλώ σημειώστε</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Δείκτης θανάτου</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Προσαρμοσμένοι δείκτες για την ομάδα</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Ώρα Θανάτου</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Προσαρμοσμένο χρονόμετρο</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Χρονόμετρο{0}δημιουργήθηκε για{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Προσαρμοσμένο χρονόμετρο</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Ενεργά χρονόμετρα</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Προσθήκη χρονοδιακόπτη</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Όνομα χρονοδιακόπτη</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Εντολή συνομιλίας:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Χρησιμοποιήστε την παρακάτω εντολή συνομιλίας για να ελέγξετε την κατάσταση.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Επιτρέπονται έως 5 χρονόμετρα.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Εισαγάγετε μια διάρκεια χρονοδιακόπτη (ώρες, λεπτά ή δευτερόλεπτα).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Το όνομα του χρονοδιακόπτη πρέπει να ξεκινά με ένα γράμμα.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Ειδοποιήσεις χρονοδιακόπτη</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 μ. πριν το τέλος</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Συναίνεση μετάφρασης</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Κάνοντας κλικ στην Αποδοχή, τα περιεχόμενα των σημειώσεων ενημέρωσης κώδικα θα σταλούν στη Μετάφραση Google (ΗΠΑ) για μετάφραση. Δέχεσαι;</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Όροι API Μετάφρασης Google</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Μετάφραση μέσω Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Απόρρητο &amp; Cloud Sync</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Για να ενεργοποιηθεί ο ζωντανός συγχρονισμός για επικαλύψεις χαρτών και έξυπνες συσκευές, τα δεδομένα πρέπει να αποστέλλονται στο ασφαλές μας cloud. Συλλέγουμε επίσης ανώνυμη τηλεμετρία χρήσης για να βελτιώσουμε τις λειτουργίες.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Αποδοχή και ενεργοποίηση του Cloud</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Decline Cloud</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Οφέλη υποστηρικτών</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Περισσότερες από 10 συσκευές είναι διαθέσιμες τοπικά ή από εισαγωγές. Ο δωρεάν συγχρονισμός cloud διατηρεί τις πρώτες 10 συσκευές. Οι υποστηρικτές μπορούν να συγχρονίσουν απεριόριστες συσκευές.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Αυτή η επικάλυψη είναι μεγαλύτερη από το όριο ελεύθερου συγχρονισμού cloud. Οι υποστηρικτές λαμβάνουν 10 φορές μεγαλύτερα μεγέθη επικάλυψης, περισσότερους δείκτες χαρτών και περισσότερα στιγμιότυπα οθόνης.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Συνδέστε το Discord για Προνόμια Υποστηρικτών</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Αποσυνδέστε το Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Συνδετικός...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Cloud Sync &amp; Live Upload</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Ζωντανή μεταφόρτωση και συγχρονισμός έξυπνων συσκευών και επικαλύψεων χαρτών με ασφάλεια στο cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Ρυθμίσεις υποστηρικτών</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Αυτές οι δυνατότητες είναι αποκλειστικά διαθέσιμες στους Υποστηρικτές και τους Προγραμματιστές μας μέσω της σύνδεσης στο Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Προηγμένη ενσωμάτωση Discord (Webhooks, ηχητικές ειδοποιήσεις)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Ενσωμάτωση ειδοποιήσεων Telegram</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Διακοπή συγχρονισμού</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Μείνετε Ελεύθεροι</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Υποστήριξη τώρα</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Επικάλυψη συγχρονίστηκε{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 συσκευές μέγιστο σε δωρεάν βαθμίδα</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Οι συσκευές{0}συγχρονίστηκαν με το{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Το μέγεθος επικάλυψης είναι πολύ μεγάλο για συγχρονισμό ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Ενεργοποίηση Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Ενεργό Cloud-Sync</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Λογαριασμός Cloud</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Είσοδος λογαριασμού Cloud</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Συνδεθείτε</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Δημιουργία λογαριασμού</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Διεύθυνση ηλεκτρονικού ταχυδρομείου</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Σύνθημα</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Κωδικός πρόσβασης (τουλάχιστον 6 χαρακτήρες)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Επιβεβαίωση κωδικού πρόσβασης</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Συνδεθείτε</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Δημιουργία λογαριασμού</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Στάλθηκε email επιβεβαίωσης!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Κάντε κλικ στο σύνδεσμο στο email σας. Η εφαρμογή ελέγχει αυτόματα κάθε λίγα δευτερόλεπτα...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Αναμονή για επιβεβαίωση...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Αναμονή για επιβεβαίωση... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Προβλήματα;</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Άνοιγμα στο πρόγραμμα περιήγησης</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Εισαγάγετε email και κωδικό πρόσβασης.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Εισαγάγετε μια διεύθυνση email.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Ο κωδικός πρόσβασης πρέπει να αποτελείται από τουλάχιστον 6 χαρακτήρες.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Οι κωδικοί πρόσβασης δεν ταιριάζουν.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Σύνδεση...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Επιτυχής σύνδεση!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Η σύνδεση απέτυχε.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Οι εγγραφές τρέχουν...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Η εγγραφή απέτυχε.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Χρονικό όριο: Το email δεν επιβεβαιώθηκε μέσα σε 5 λεπτά. Μπορείτε να συνδεθείτε αργότερα.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Μη έγκυρα διαπιστευτήρια. Ελέγξτε το email και τον κωδικό πρόσβασής σας.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Μη έγκυρα διαπιστευτήρια.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Η διεύθυνση email δεν έχει επιβεβαιωθεί ακόμα. Κάντε κλικ στον σύνδεσμο επιβεβαίωσης στα εισερχόμενά σας.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Αυτή η διεύθυνση ηλεκτρονικού ταχυδρομείου είναι ήδη εγγεγραμμένη. Παρακαλώ συνδεθείτε.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Αποσυνδέστε το Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Η διαφωνία συνδέθηκε - Επίπεδο:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Συνδεδεμένο μήνυμα ηλεκτρονικού ταχυδρομείου:{0}- Επίπεδο:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Δεν είναι συνδεδεμένο - συνδεθείτε για να χρησιμοποιήσετε το Cloud Sync και τα αντίγραφα ασφαλείας</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Αποσύνδεση...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Συνδετικός...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>Email / Λογαριασμός</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Αποσύνδεση από τον λογαριασμό email;</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Απαιτείται λογαριασμός για το Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Οι υπηρεσίες Cloud όπως ο συγχρονισμός και η αποθήκευση αντιγράφων ασφαλείας απαιτούν δωρεάν λογαριασμό. Επιλέξτε email ή Discord για να συνεχίσετε να συγχρονίζετε τις συσκευές, τις επικαλύψεις και τα αντίγραφα ασφαλείας.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Συγχρονισμός μέσω email</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Συγχρονισμός μέσω Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Όχι ευχαριστώ</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Συμπληρώθηκε το όριο συγχρονισμού</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Συμπληρώθηκε το βασικό όριο (Δωρεάν: έως 2 βάσεις, Premium: μέγιστο 10 βάσεις)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Προσθήκη στιγμιότυπου οθόνης</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Σύρετε και αποθέστε μια εικόνα εδώ</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>ή πατήστε CTRL+V για να επικολλήσετε ένα στιγμιότυπο οθόνης</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Δεν βρέθηκε εικόνα στο πρόχειρο.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Σφάλμα επικόλλησης</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Η επικόλληση της εικόνας απέτυχε:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Η φόρτωση του αρχείου εικόνας απέτυχε:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Σφάλμα συμπίεσης</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Σφάλμα συμπίεσης εικόνας:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Ανάλυση:{0}x{1}| Μέγεθος:{2}KB (Ποιότητα 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Επεξεργασία Βασικής Σημείωσης</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Σημείωση Βάσης</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Προσθήκη Σημείωσης</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Επεξεργασία Σημείωσης</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Διαγραφή Σημείωσης</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Διαγραφή στιγμιότυπου οθόνης{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Προσθήκη στιγμιότυπου οθόνης{0}(απαιτείται Premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Δεν έχουν προστεθεί ακόμη σημειώσεις.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Δεν έχουν προστεθεί ακόμα στιγμιότυπα οθόνης</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>Το{0}ελέγχει τις ειδοποιήσεις συνομιλίας και τις εντολές συνομιλίας για αυτήν την ομάδα.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master{0}online. Οι ειδοποιήσεις συνομιλίας και οι εντολές συνομιλίας έχουν τεθεί σε παύση σε αυτήν τη συσκευή.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Είστε Master Chat</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Αυτή η συσκευή ελέγχει τώρα τις ειδοποιήσεις συνομιλίας και τις εντολές συνομιλίας για την ομάδα σας.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Αποδέχομαι</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Αρνούμαι</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 Ενημέρωση</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Συγκρίνετε τις λειτουργίες του Cloud</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Σύγκριση χαρακτηριστικών του Cloud</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Καλώς ήρθατε στο Cloud</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Επιλέξτε το επίπεδο που ταιριάζει καλύτερα στις ανάγκες σας.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Χωρίς λογαριασμό</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Τα δεδομένα σας παραμένουν 100% τοπικά. Το καλύτερο για σόλο παίκτες.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Χωρίς Cloud Sync ή Backup</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Χωρίς κοινή χρήση συσκευής</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Δεν υπάρχει πρόσβαση στην Πύλη Ιστού</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Δωρεάν λογαριασμός Cloud</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Βασικές λειτουργίες cloud για να ξεκινήσετε την κοινή χρήση.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Basic Discord Webhook Alerts</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Μοιραστείτε έως και 10 Συσκευές</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Κοινή χρήση χάρτη (300 KB, 2 βάσεις, 1 στιγμιότυπο οθόνης)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Λειτουργήστε ως Υποστηρικτής Βοηθός</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Πρόσβαση στην Πύλη Ιστού Cloud</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Υποστηρικτικό Cloud</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Η απόλυτη εμπειρία Rust+ για clans και προχωρημένους χρήστες.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Pro Map Sharing (3 MB, 10 βάσεις, 5 στιγμιότυπα οθόνης)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Chat Master System</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Προηγμένο αμφίδρομο ρομπότ</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Πρώιμες εκδόσεις Beta &amp; Test μέσω Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Γίνε Υποστηρικτής</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Υποστηρίξτε μας</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Συνδέστε το Patreon με το Discord για αυτόματη ανίχνευση ρόλων υποστήριξης και εφαρμογής.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Συμβουλή μέσω</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad ή Pronwan στο Discord για χειροκίνητο ρόλο Υποστήριξης (Ποσό / 2,50 $ = Μήνες).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Ανοίξτε την Πύλη Ιστού Cloud</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Η σύνδεση απέτυχε: Το Rust+ δεν είναι προσβάσιμο.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Είτε το τείχος προστασίας αποκλείει τη σύνδεση είτε το Rust+ API στον διακομιστή δεν εκτελείται σωστά.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Θάνατος εκτός σύνδεσης</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Σκοτωθείτε από το{0}στο{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Stop Sound</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Ειδοποιήσεις θανάτου εκτός σύνδεσης</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Ενεργοποιήστε τις ειδοποιήσεις θανάτου εκτός σύνδεσης</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Ήχος ειδοποίησης</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Προεπιλογή: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Επιλέγω...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Ήχος ειδοποίησης βρόχου</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Send to Discord Raid Alerts (Υποστηρικτής)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Ανοίξτε το αρχείο καταγραφής θανάτων εκτός σύνδεσης</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Ειδοποιήσεις</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Κέντρο ειδοποιήσεων</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Εμφάνιση ειδοποιήσεων τοστ</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Παίξτε ηχητικές ειδοποιήσεις</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Περίοδος Διατήρησης</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Διακομιστές σε σίγαση</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Δεν υπάρχει σίγαση διακομιστών</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Κατάργηση σίγασης</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Φίλτρο:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Ολοι</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Συναγερμός</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Θάνατοι</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Αναζήτηση μηνύματος...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Σημάδι διαβάστε</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Σαφής</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Δεν υπάρχουν ειδοποιήσεις εδώ</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Είστε όλοι πιασμένοι!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να διαγράψετε όλο το ιστορικό ειδοποιήσεων;</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Καθαρίστε το ιστορικό</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η εύρεση ενός αντιστοιχισμένου προφίλ διακομιστή για το{0}:{1}.
+Συνδέστε πρώτα αυτόν τον διακομιστή.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Ο διακομιστής δεν βρέθηκε</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Μητρώο θανάτου εκτός σύνδεσης</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Εκκαθάριση αρχείου καταγραφής</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Δεν καταγράφηκαν θάνατοι εκτός σύνδεσης.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Σκοτώθηκε από</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Προσαρμόστε τις ειδοποιήσεις συνομιλίας</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Προσαρμόστε τα πρότυπα ειδοποιήσεων συνομιλίας</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Εδώ μπορείτε να επεξεργαστείτε τα πρότυπα για αυτοματοποιημένες ειδοποιήσεις συνομιλίας. Οι μεταβλητές (όπως{0},{1}) θα αντικατασταθούν αυτόματα.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Μεταβλητές:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Το πρότυπο για το "{0}" αποθηκεύτηκε με επιτυχία.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Το πρότυπο για το "{0}" επαναφέρεται στις προεπιλογές.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Αποθήκευση επιτυχίας</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Πυροδοτήθηκε η εξέδρα πετρελαίου</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν ξεκινά η εκδήλωση Oil Rig.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Όνομα εξέδρας,{1}: Ώρα για άνοιγμα</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Ξεκλείδωμα κλουβιών (10 μέτρα)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Η προειδοποίηση στάλθηκε 10 λεπτά πριν το ξεκλείδωμα του κλουβιού.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Όνομα εξέδρας</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Ξεκλείδωμα κλουβιών (5 μέτρα)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Η προειδοποίηση στάλθηκε 5 λεπτά πριν το ξεκλείδωμα του κιβωτίου.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Όνομα εξέδρας</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Ενεργοποιήθηκε ο έξυπνος συναγερμός</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ενεργοποιείται ένας Έξυπνος συναγερμός.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Όνομα συναγερμού</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Deep Sea Event Active</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν είναι ενεργή η εκδήλωση Deep Sea.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Κανένας</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Νέος Πωλητής</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν εντοπιστεί νέο μηχάνημα αυτόματης πώλησης.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Όνομα καταστήματος,{1}: Πλέγμα,{2}: Προσφορές</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Ύποπτο κατάστημα</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν ένα μηχάνημα αυτόματης πώλησης ήταν στο διαδίκτυο για πολύ μικρό χρονικό διάστημα.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Όνομα καταστήματος,{1}: Grid,{2}: Ώρες στο διαδίκτυο,{3}: Προσφορές</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Αντιστοιχία αντικειμένου μηχανήματος αυτόματης πώλησης</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν ένα μηχάνημα αυτόματης πώλησης πουλά ένα αντικείμενο στη λίστα παρακολούθησης σας.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Όνομα καταστήματος,{1}: Grid,{2}: Item,{3}: Cost Qty,{4}: Cost Item,{2}Setting Ποσότητα,{7}: Πώληση αντικειμένου</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Φορτηγό πλοίο γεννήθηκε</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν το φορτηγό πλοίο αναπαράγεται.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Τοποθεσία / Περιγραφή</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Ελλιμενισμένο φορτηγό πλοίο</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν το φορτηγό πλοίο προσγειωθεί σε ένα λιμάνι.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Όνομα λιμένα,{1}: Πλέγμα</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Πλησιάζει φορτηγό πλοίο</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν το φορτηγό πλοίο αναμένεται να ελλιμενίσει σε 5 λεπτά.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Όνομα λιμένα,{1}: Πλέγμα</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Αναχώρηση φορτηγού πλοίου</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Στάλθηκε 5 λεπτά πριν από την αναχώρηση του φορτηγού πλοίου.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Όνομα λιμένα,{1}: Πλέγμα</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Γεγονός που γεννήθηκε</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν γεννηθούν γενικά γεγονότα (όπως το Heli).</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Όνομα συμβάντος,{1}: Πλέγμα</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Ψευδής συναγερμός σύγκρουσης Heli</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν εντοπίστηκε σφάλμα Heli ήταν στην πραγματικότητα καθυστέρηση διακομιστή.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Πλέγμα</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Καταρρίφθηκε το Περιπολικό Χέλι</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Στάλθηκε όταν καταρρίπτεται το Patrol Heli.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Πλέγμα</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Παίκτης σε απευθείας σύνδεση</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένα μέλος της ομάδας που παρακολουθείται συνδεθεί στο διαδίκτυο.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη,{1}: Πλέγμα/Θέση</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Παίκτης εκτός σύνδεσης</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένα μέλος της ομάδας που παρακολουθείται είναι εκτός σύνδεσης.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Πέθανε ο παίκτης</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν πεθάνει ένα μέλος της ομάδας που παρακολουθείται.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη,{1}: Πλέγμα/Θέση</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Ο παίκτης ανανεώθηκε</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένα μέλος της ομάδας που παρακολουθείται ανανεώνεται.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη,{1}: Πλέγμα/Θέση</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Παρακολούθηση στο Διαδίκτυο</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένα πρόγραμμα αναπαραγωγής που παρακολουθείται συνδεθεί στο διαδίκτυο.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη,{1}: Πληροφορίες ομάδας</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Παρακολούθηση εκτός σύνδεσης</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένα πρόγραμμα αναπαραγωγής που παρακολουθείται είναι εκτός σύνδεσης.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη,{1}: Πληροφορίες ομάδας</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Η παρακολούθηση μετονομάστηκε</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένας παίκτης που παρακολουθείται αλλάζει το όνομά του.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Παλιό όνομα,{1}: Πληροφορίες ομάδας,{2}: Νέο όνομα</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Προσαρμόστε τις ειδοποιήσεις συνομιλίας</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>Παίκτες AFK</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Κανείς δεν είναι AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Παίκτης AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Αποστέλλεται όταν ένα μέλος της ομάδας είναι AFK για πολύ μεγάλο χρονικό διάστημα.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Όνομα παίκτη,{1}: Ώρα</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Διαγράψτε όλα τα δεδομένα του τρισδιάστατου χάρτη</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Υπολογιστής ανακύκλωσης για τα εξαρτήματά σας και πολλά άλλα. Δείτε αμέσως τη διαφορά μεταξύ ασφαλούς ζώνης και τακτικής ανακύκλωσης.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Έκδοση 7.0 - Σημαντικές αλλαγές</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 3D-Map με Live-Player-Positions και Death Markers
+• Ο χάρτης δημιουργείται από το τοπικό Αρχείο χάρτη, λαμβάνει πρόσθετες πληροφορίες όπως Ζώνες αποκλεισμού κτιρίων, παγόβουνα, σπηλιές και τις εμφανίζει στον 2D-Χάρτη
+• Ενσωματωμένο 3D Base Footprint-Builder
+• Εκλεπτυσμένη Λογική Μηχανή
+• Οι δείκτες ομάδας Ingame εμφανίζονται πλέον στον 2D-Map
+• Προσαρμοσμένα εικονίδια για έξυπνες συσκευές</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Ρυθμίσεις 3D χάρτη</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Διαγράφει όλα τα ληφθέντα όρια τρισδιάστατου χάρτη και τα δεδομένα προσωρινής αποθήκευσης για να ελευθερώσει χώρο στο δίσκο</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Ενημέρωση Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Βελτιώσεις 2D χάρτη</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Προστέθηκε υποστήριξη για δείκτες Cave and Jungle Ruins στους 2D χάρτες σας.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Ενσωμάτωση τρισδιάστατου χάρτη</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Αυτόματη κατασκευή και προβολή διαδραστικών τρισδιάστατων μοντέλων χαρτών με ενσωματωμένα ίχνη βάσης και προσαρμοσμένα μνημεία.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Υπολογιστής ανακύκλωσης</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Υπολογιστής ανακύκλωσης για τα εξαρτήματά σας και πολλά άλλα. Δείτε αμέσως τη διαφορά μεταξύ ασφαλούς ζώνης και τακτικής ανακύκλωσης.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Ρυθμίσεις &amp; Εκκαθάριση</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Διαγράψτε εύκολα τα παλιά όρια τρισδιάστατου χάρτη και τα δεδομένα προσωρινής αποθήκευσης από τις ρυθμίσεις για να ελευθερώσετε χώρο αποθήκευσης.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Μην το ξαναδείξετε αυτό</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Κοντά</value>
+  </data>
 </root>
 
 

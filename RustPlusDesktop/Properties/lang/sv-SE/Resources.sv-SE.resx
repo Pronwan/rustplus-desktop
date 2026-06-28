@@ -1860,6 +1860,894 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dagar</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Lagmarkörer</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Utförandeläge</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Sekventiell (med fördröjning)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Parallell (omedelbar)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Växla fördröjning</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Den här snabbtangenten är redan registrerad av en annan applikation.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Nej, håll dig aktiv</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Vill du stänga av ljudvarningsslingan?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Slinga ljud tills popup-stäng</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Detta kräver att du stänger av ljudvarningsslingan för alla smarta larm.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Stäng av nu</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Kontrollera dina Chat-Alert-inställningar för de nya anpassade timers. Dessutom sparas dödsmarkörer nu alltid lokalt. Minimap uppdateras nu även medan den är minimerad.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Vänligen notera</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Dödsmarkör</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Anpassade markörer för team</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Dödens tid</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Anpassad timer</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer{0}skapad för{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Anpassad timer</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Aktiva timers</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Lägg till timer</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Timernamn</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Chattkommando:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Använd chattkommandot nedan för att kontrollera status.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Max 5 timers tillåtna.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Ange en timerns varaktighet (timmar, minuter eller sekunder).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Timernamn måste börja med en bokstav.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timervarningar</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m innan slut</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Översättningssamtycke</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Genom att klicka på Acceptera kommer innehållet i patch-anteckningarna att skickas till Google Translate (USA) för översättning. accepterar du?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Translate API-villkor</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Översätt via Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Sekretess och molnsynkronisering</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>För att möjliggöra livesynkronisering för kartöverlägg och smarta enheter måste data skickas till vårt säkra moln. Vi samlar också in anonymiserad användningstelemetri för att förbättra funktionerna.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Acceptera och aktivera molnet</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Avvisa molnet</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Supporterförmåner</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Mer än 10 enheter är tillgängliga lokalt eller från import. Gratis molnsynkronisering behåller de första 10 enheterna; Supportrar kan synkronisera obegränsat antal enheter.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Denna överlagring är större än gränsen för gratis molnsynkronisering. Supportrar får 10 gånger högre överlagringsstorlekar, fler kartmarkörer och fler skärmdumpar.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Connect Discord för supporterförmåner</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Koppla bort Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Ansluter...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Cloud Sync &amp; Live Upload</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Liveuppladdning och synkronisera smarta enheter och kartöverlägg säkert i molnet.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Supporterinställningar</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Dessa funktioner är exklusivt tillgängliga för våra supportrar och utvecklare via Discord-inloggning.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Avancerad Discord-integration (Webhooks, Audio Alerts)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integrering av telegramvarningar</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Stoppa synkronisering</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Håll dig fri</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Support nu</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Överlagring Synkroniserad{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Max 10 enheter i Free Tier</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0}-enheter synkroniserade{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Överlagringsstorleken är för stor för synkronisering ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Aktivera Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync aktiv</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Molnkonto</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Molnkontoinloggning</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Skapa konto</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>E-postadress</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Lösenord</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Lösenord (minst 6 tecken)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Bekräfta lösenord</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Skapa konto</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Bekräftelsemail har skickats!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Klicka på länken i ditt mejl. Appen kontrollerar automatiskt med några sekunders mellanrum...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Väntar på bekräftelse...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Väntar på bekräftelse... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Problem?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Öppna i webbläsaren</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Vänligen ange e-postadress och lösenord.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Vänligen ange en e-postadress.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Lösenordet måste vara minst 6 tecken långt.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Lösenorden stämmer inte överens.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Loggar in...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Inloggad!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Inloggningen misslyckades.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Registreringen pågår...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Registreringen misslyckades.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Timeout: E-postmeddelandet bekräftades inte inom 5 minuter. Du kan logga in senare.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Ogiltiga användaruppgifter. Kontrollera din e-postadress och ditt lösenord.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Ogiltiga användaruppgifter.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>E-postadressen är inte bekräftad ännu. Klicka på bekräftelselänken i din inkorg.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Denna e-postadress är redan registrerad. Logga in.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Koppla bort Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord ansluten - Nivå:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>E-post ansluten:{0}- Nivå:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Ej ansluten – logga in för att använda Cloud Sync och säkerhetskopior</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Kopplar bort...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Ansluter...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>E-post/konto</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Logga ut från e-postkontot?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Konto krävs för Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Molntjänster som synkronisering och backuplagring kräver ett gratis konto. Välj e-post eller Discord för att fortsätta synkronisera dina enheter, överlägg och säkerhetskopior.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Synkronisera via e-post</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Synkronisera via Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Nej tack</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Synkroniseringsgränsen nådd</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Basgräns uppnådd (gratis: max 2 baser, Premium: max 10 baser)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Lägg till skärmdump</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Dra och släpp en bild här</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>eller tryck på CTRL+V för att klistra in en skärmdump</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Ingen bild hittades i urklipp.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Klistra in fel</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Det gick inte att klistra in bilden:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Det gick inte att ladda bildfilen:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Kompressionsfel</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Fel vid komprimering av bilden:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Upplösning:{0}x{1}| Storlek:{2}KB (Kvalitet 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Redigera basanteckning</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Basanmärkning</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Lägg till anteckning</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Redigera anteckning</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Ta bort anteckning</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Ta bort skärmbild{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Lägg till skärmbild{0}(Premium krävs)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Inga anteckningar har lagts till ännu.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Inga skärmdumpar har lagts till ännu</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}kontrollerar chattvarningar och chattkommandon för detta team.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master{0}online. Chattvarningar och chattkommandon är pausade på den här enheten.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Du är Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Den här enheten styr nu chattvarningar och chattkommandon för ditt team.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Acceptera</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Förneka</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 Uppdatering</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Jämför molnfunktioner</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Jämförelse av molnfunktioner</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Välkommen till molnet</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Välj den nivå som bäst passar dina behov.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Inget konto</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Din data förblir 100 % lokal. Bäst för solospelare.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Ingen molnsynkronisering eller säkerhetskopior</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Ingen enhetsdelning</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Ingen tillgång till webbportalen</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Gratis molnkonto</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Grundläggande molnfunktioner för att komma igång med delning.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Grundläggande Discord Webhook-varningar</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Dela upp till 10 enheter</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Kartdelning (300 KB, 2 baser, 1 skärmdump)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Agera som Supporter Helper</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Tillgång till Cloud Web Portal</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Supportermoln</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Den ultimata Rust+-upplevelsen för klaner och avancerade användare.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Pro Map Sharing (3 MB, 10 baser, 5 skärmdumpar)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Chat Master System</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Avancerad dubbelriktad Discord Bot</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Tidiga beta- och testversioner via Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Bli supporter</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Stöd oss ​​vidare</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Länka Patreon med Discord för automatisk supporterroll och appidentifiering.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Tipsa via</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Peta Jawad eller Pronwan i Discord för manuell supporterroll (belopp / $2,50 = månader).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Öppna Cloud Web Portal</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Anslutning misslyckades: Rust+ går inte att nå.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Antingen blockerar din brandvägg anslutningen eller så fungerar inte Rust+ API på servern korrekt.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Offline död</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Du dödades av{0}på{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Stoppa ljud</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Offline dödsmeddelanden</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Aktivera offline dödsalarm</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Varningsljud</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Standard: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Välja...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Slingalarmljud</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Skicka till Discord Raid Alerts (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Öppna offline dödslogg</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Aviseringar</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Aviseringscenter</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Visa Toast-aviseringar</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Spela Sound Alerts</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Lagringsperiod</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Avstängda servrar</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Inga servrar avstängda</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Slå på ljudet</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtrera:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Alla</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Larm</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Dödsfall</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Sök meddelande...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Markera läst</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Rensa</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Inga aviseringar här</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Ni är alla ikapp!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Är du säker på att du vill rensa all aviseringshistorik?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Rensa historik</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Det gick inte att hitta en parad serverprofil för{0}:{1}.
+Vänligen para ihop denna server först.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Servern hittades inte</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Offline dödslogg</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Rensa logg</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Inga offline dödsfall registrerade.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Dödad av</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Anpassa chattvarningar</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Anpassa chattvarningsmallar</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Här kan du redigera mallarna för automatiska chattvarningar. Variabler (som{0},{1}) kommer att ersättas automatiskt.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Variabler:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Mall för '{0}' har sparats.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Mall för '{0}' återställd till standard.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Spara framgång</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Återställa</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Utlöst oljerigg</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Skickas när oljeriggen startar.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Riggnamn,{1}: Dags att öppna</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Lås upp (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Varning skickas 10 minuter innan lådan låses upp.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Riggnamn</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Lås upp (5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Varning skickas 5 minuter innan lådan låses upp.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Riggnamn</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Smart larm utlöst</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Skickas när ett smart larm utlöses.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Larmnamn</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Deep Sea Event Aktivt</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Skickas när Deep Sea-evenemanget är aktivt.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Ingen</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Ny varuautomat</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Skickas när en ny varuautomat upptäcks.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Butiksnamn,{1}: Grid,{2}: Erbjudanden</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Misstänkt butik</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Skickades när en varuautomat var online en mycket kort tid.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Butiksnamn,{1}: Grid,{2}: Onlinetid (er),{3}: Erbjudanden</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Varuautomat Item Match</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Skickas när en varuautomat säljer en vara på din bevakningslista.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Butiksnamn,{1}: Grid,{2}: Artikel,{3}: Kostnad Antal,{4}: Kostnadsartikel,{5}: Lager,{2}: Sälj: HOLDER SÄLJ MÅL,{0}</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Lastfartyg uppstod</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Skickas när lastfartyget leker.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Plats/beskrivning</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Lastfartyg dockat</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Skickas när lastfartyget lägger till vid en hamn.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Hamnnamn,{1}: Rutnät</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Lastfartyg närmar sig</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Skickas när lastfartyget förväntas lägga till om 5 minuter.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Hamnnamn,{1}: Rutnät</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Lastfartyg avgår</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Skickas 5 minuter innan lastfartyget avgår.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Hamnnamn,{1}: Rutnät</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Händelse uppstod</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Skickas när allmänna händelser (som Heli) uppstår.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Händelsenamn,{1}: Grid</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Heli Crash Falskt larm</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Skickades när en upptäckt Heli-krasch faktiskt var serverlag.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Grid</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Patrull Heli nedskjuten</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Skickas när Patrol Heli är nedskjuten.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Grid</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Spelare online</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Skickas när en spårad teammedlem kommer online.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Spelarens namn,{1}: Grid/Position</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Spelare offline</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Skickas när en spårad gruppmedlem går offline.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Spelarens namn</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Spelaren dog</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Skickas när en spårad gruppmedlem dör.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Spelarens namn,{1}: Grid/Position</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Spelaren har återuppstått</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Skickas när en spårad gruppmedlem återuppstår.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Spelarens namn,{1}: Grid/Position</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Spårning online</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Skickas när en spårad spelare går online.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Spelarens namn,{1}: Gruppinformation</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Spårning offline</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Skickas när en spårad spelare går offline.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Spelarens namn,{1}: Gruppinformation</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Spårning Bytt namn</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Skickas när en spårad spelare byter namn.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Gammalt namn,{1}: Gruppinformation,{2}: Nytt namn</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Anpassa chattvarningar</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>AFK-spelare</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Ingen är AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Spelare AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Skickas när en lagmedlem är AFK för länge.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Spelarens namn,{1}: Tid</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Radera alla 3D-kartdata</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Återvinningskalkylator för dina komponenter och mer. Se skillnaden mellan säker-zon och vanlig återvinning direkt.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Version 7.0 - Stora ändringar</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 3D-karta med Live-Player-Positions och Death Markers
+• Kartan är byggd från lokal kartfil, får ytterligare information som byggnadsblockerade zoner, isberg, grottor och visar den på 2D-kartan
+• 3D Base Footprint-Builder integrerad
+• Förfinad logikmotor
+• Ingame Team Markers visas nu på 2D-kartan
+• Anpassade ikoner för smarta enheter</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D-kartainställningar</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Tar bort alla nedladdade 3D-kartgränser och cachad data för att frigöra diskutrymme</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Uppdatering</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D-kartaförbättringar</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Lade till stöd för grott- och djungelruinmarkörer till dina 2D-kartor.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D-kartaintegration</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Konstruera och visa interaktiva 3D-kartmodeller automatiskt med inbyggda fotspår och anpassade monument.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Återvinningsräknare</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Återvinningskalkylator för dina komponenter och mer. Se skillnaden mellan säker-zon och vanlig återvinning direkt.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Inställningar &amp; Rengöring</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Ta enkelt bort gamla 3D-kartgränser och cachad data från inställningarna för att frigöra lagringsutrymme.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Visa inte detta igen</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Nära</value>
+  </data>
 </root>
 
 

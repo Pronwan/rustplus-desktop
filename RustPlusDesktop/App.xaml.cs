@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Reflection;
+using System.Runtime.Loader;
 using RustPlusDesk.Views;
 using RustPlusDesk.Services;
 using System.Drawing;
@@ -30,6 +32,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
         SetLanguage();
         base.OnStartup(e);
 
@@ -79,6 +82,26 @@ public partial class App : Application
 
         if (e.Args.Length > 0 && e.Args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
             _main?.HandleRustPlusLink(e.Args[0]);
+    }
+
+    private static Assembly? ResolveSatelliteAssemblyFromLangFolder(AssemblyLoadContext context, AssemblyName assemblyName)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyName.Name) ||
+            !assemblyName.Name.EndsWith(".resources", StringComparison.OrdinalIgnoreCase) ||
+            string.IsNullOrWhiteSpace(assemblyName.CultureName))
+        {
+            return null;
+        }
+
+        string satellitePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "lang",
+            assemblyName.CultureName,
+            $"{assemblyName.Name}.dll");
+
+        return File.Exists(satellitePath)
+            ? context.LoadFromAssemblyPath(satellitePath)
+            : null;
     }
 
     private void ShowMainWindow()

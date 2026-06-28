@@ -2638,4 +2638,104 @@
   <data name="GenericClose" xml:space="preserve">
     <value>إغلاق</value>
   </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>علامات الفريق</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>وضع التنفيذ</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>متسلسل (مع تأخير)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>الموازي (فوري)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>تبديل التأخير</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>تم تسجيل مفتاح التشغيل السريع هذا بالفعل بواسطة تطبيق آخر.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>لا، واصل نشاطك</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>هل تريد إيقاف تشغيل حلقة التنبيه الصوتي؟</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>قم بتكرار الصوت حتى إغلاق النافذة المنبثقة</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>يتطلب ذلك إيقاف تشغيل حلقة التنبيه الصوتي لجميع الإنذارات الذكية.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>أطفئ الآن</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>وقت الوفاة</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>إشعارات</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>مركز الإخطار</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>عرض إخطارات الخبز المحمص</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>تشغيل التنبيهات الصوتية</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>فترة الاحتفاظ</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>خوادم مكتومة</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>لم يتم كتم أي خوادم</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>إلغاء كتم الصوت</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>فلتر:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>الجميع</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>إنذار</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>حالات الوفاة</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>رسالة البحث...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>مارك اقرأ</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>واضح</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>لا توجد إخطارات هنا</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>لقد تم القبض عليك جميعًا!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد مسح سجل الإشعارات بالكامل؟</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>مسح التاريخ</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>تعذر العثور على ملف تعريف خادم مقترن لـ{0}:{1}.
+يرجى إقران هذا الخادم أولاً.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>لم يتم العثور على الخادم</value>
+  </data>
 </root>

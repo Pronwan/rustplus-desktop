@@ -648,6 +648,26 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <Target Name="MoveBuildSatelliteAssembliesUnderLang" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(TargetDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <BuildSatelliteAssemblies Include="$(TargetDir)*\$(AssemblyName).resources.dll" Exclude="$(TargetDir)lang\**\*" />
+    </ItemGroup>
+    <MakeDir Directories="@(BuildSatelliteAssemblies->'$(TargetDir)lang\%(RecursiveDir)')" />
+    <Copy SourceFiles="@(BuildSatelliteAssemblies)" DestinationFiles="@(BuildSatelliteAssemblies->'$(TargetDir)lang\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Delete Files="@(BuildSatelliteAssemblies)" />
+    <RemoveDir Directories="@(BuildSatelliteAssemblies->'$(TargetDir)%(RecursiveDir)')" />
+  </Target>
+
+  <Target Name="MovePublishSatelliteAssembliesUnderLang" AfterTargets="Publish" Condition="'$(PublishDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <PublishSatelliteAssemblies Include="$(PublishDir)*\$(AssemblyName).resources.dll" Exclude="$(PublishDir)lang\**\*" />
+    </ItemGroup>
+    <MakeDir Directories="@(PublishSatelliteAssemblies->'$(PublishDir)lang\%(RecursiveDir)')" />
+    <Copy SourceFiles="@(PublishSatelliteAssemblies)" DestinationFiles="@(PublishSatelliteAssemblies->'$(PublishDir)lang\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Delete Files="@(PublishSatelliteAssemblies)" />
+    <RemoveDir Directories="@(PublishSatelliteAssemblies->'$(PublishDir)%(RecursiveDir)')" />
+  </Target>
+
 
 	
 	<PropertyGroup>
