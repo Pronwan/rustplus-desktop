@@ -46,6 +46,7 @@ Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; 2. Die Unterordner direkt aus dem Release-Verzeichnis
 Source: "..\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\lang\*";      DestDir: "{app}\lang";      Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
@@ -59,6 +60,7 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}
 Type: filesandordirs; Name: "{app}\runtimes"
 Type: filesandordirs; Name: "{app}\runtime"
 Type: filesandordirs; Name: "{app}\Assets"
+Type: filesandordirs; Name: "{app}\lang"
 
 [Code]
 // Jawads Aufräum-Logik (Sehr nützlich!)
