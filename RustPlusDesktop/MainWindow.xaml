@@ -299,35 +299,42 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     x:Name="ColSidebar"
-                    Width="600"
-                    MinWidth="400"
+                    Width="72"
+                    MinWidth="72"
                     MaxWidth="600" />
                 <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="*" MinWidth="400" />
             </Grid.ColumnDefinitions>
 
             <GridSplitter
+                x:Name="SidebarSplitter"
                 Grid.Column="1"
                 Width="8"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="Transparent"
                 DragCompleted="SidebarSplitter_DragCompleted"
+                MouseEnter="LeftPanelBorder_MouseEnter"
+                MouseLeave="LeftPanelBorder_MouseLeave"
                 ResizeBehavior="PreviousAndNext"
                 ResizeDirection="Columns"
                 ShowsPreview="False" />
 
             <!--  Left Panel  -->
             <Border
+                x:Name="LeftPanelBorder"
                 Grid.Column="0"
-                MinWidth="400"
+                MinWidth="72"
                 MaxWidth="600"
                 Margin="0,0,0,0"
-                Padding="16"
+                Padding="0"
                 Background="{DynamicResource Surface}"
                 BorderBrush="#1AFFFFFF"
                 BorderThickness="0,0,1,0"
+                ClipToBounds="True"
                 CornerRadius="0"
+                MouseEnter="LeftPanelBorder_MouseEnter"
+                MouseLeave="LeftPanelBorder_MouseLeave"
                 TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
                 <Border.Effect>
                     <DropShadowEffect
@@ -337,7 +344,10 @@
                         Color="#000000" />
                 </Border.Effect>
                 <Grid>
-                    <DockPanel x:Name="LeftPanelContent" LastChildFill="True">
+                    <DockPanel
+                        x:Name="LeftPanelContent"
+                        LastChildFill="True"
+                        Visibility="Collapsed">
 
                     <!--  TOP: Account + Serverliste  -->
                     <StackPanel DockPanel.Dock="Top">
@@ -595,6 +605,14 @@
                                         Click="BtnSettings_Click"
                                         Icon="{ui:SymbolIcon Symbol=Settings24}"
                                         ToolTip="{DynamicResource Settings}" />
+                                    <ui:Button
+                                        x:Name="BtnPinSidebar"
+                                        Margin="2,0,0,0"
+                                        Padding="6,4"
+                                        Appearance="Transparent"
+                                        Click="BtnToggleSidebarPin_Click"
+                                        Icon="{ui:SymbolIcon Symbol=Pin24}"
+                                        ToolTip="Keep sidebar unfolded" />
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -2558,6 +2576,97 @@
                     </TabControl>
 
                     </DockPanel>
+
+                    <Grid
+                        x:Name="CompactSidebarRail"
+                        Width="72"
+                        HorizontalAlignment="Left"
+                        Background="{DynamicResource Surface}">
+                        <StackPanel
+                            Margin="0,14"
+                            HorizontalAlignment="Center">
+                            <ui:Button
+                                x:Name="BtnCompactPinSidebar"
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="BtnToggleSidebarPin_Click"
+                                Icon="{ui:SymbolIcon Symbol=Pin24}"
+                                ToolTip="Keep sidebar unfolded" />
+
+                            <Border
+                                Width="40"
+                                Height="40"
+                                Margin="0,0,0,14"
+                                Background="#1AFFFFFF"
+                                ClipToBounds="True"
+                                CornerRadius="20"
+                                ToolTip="{DynamicResource SteamAccount}">
+                                <Grid>
+                                    <ui:SymbolIcon
+                                        FontSize="20"
+                                        Foreground="White"
+                                        Opacity="0.4"
+                                        Symbol="Person24" />
+                                    <Image
+                                        Source="{Binding MyAvatar}"
+                                        Stretch="UniformToFill" />
+                                </Grid>
+                            </Border>
+
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Connector24}"
+                                Tag="0"
+                                ToolTip="{DynamicResource DevicesTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=People24}"
+                                Tag="1"
+                                ToolTip="{DynamicResource TeamTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Video24}"
+                                Tag="2"
+                                ToolTip="{DynamicResource CamerasTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Globe24}"
+                                Tag="3"
+                                ToolTip="{DynamicResource PlayersTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Alert24}"
+                                Tag="4"
+                                ToolTip="{DynamicResource NotificationsTab}" />
+                        </StackPanel>
+                    </Grid>
 
                     <!--  Profit Trades Overlay  -->
                     <Border

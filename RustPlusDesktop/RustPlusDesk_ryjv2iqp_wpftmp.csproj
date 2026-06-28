@@ -1,0 +1,665 @@
+<Project>
+  <PropertyGroup>
+    <AssemblyName>RustPlusDesk</AssemblyName>
+    <IntermediateOutputPath>obj\Debug\</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>D:\Development\rustplus-desktop\RustPlusDesktop\obj\</MSBuildProjectExtensionsPath>
+    <_TargetAssemblyProjectName>RustPlusDesk</_TargetAssemblyProjectName>
+    <RootNamespace>RustPlusDesk</RootNamespace>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>Assets\rustplus-desktop-icon.ico</ApplicationIcon>
+    <!-- Fixes for Single-File Publish and Cleanup -->
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="RustPlusClientStub.cs" />
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
+    <Version>7.1.1</Version>
+    <Title>Rust+ Desk</Title>
+    <Authors>Pronwan</Authors>
+    <AssemblyVersion>7.1.1</AssemblyVersion>
+    <FileVersion>7.1.1</FileVersion>
+    <InformationalVersion>7.1.1</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
+    <AssemblyTitle>RustPlusDesk</AssemblyTitle>
+    <Product>RustPlusDesk</Product>
+  </PropertyGroup>
+  <!-- Den dicken Ordner NICHT mehr kopieren -->
+  <ItemGroup>
+    <None Remove="runtime\rustplus-cli\**\*" />
+    <Content Remove="runtime\rustplus-cli\**\*" />
+  </ItemGroup>
+  <!-- Debug: (optional) Ordner als None lassen, damit du lokal damit arbeiten kannst -->
+  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <None Include="runtime\rustplus-cli\**\*" />
+    <None Include="runtime\node-win-x64\**\*" />
+  </ItemGroup>
+  <!-- Release/Publish: nur die schlanken Assets -->
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <!-- portable Node -->
+    <Content Include="runtime\node-win-x64\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <!-- CLI-Archiv -->
+    <Content Include="runtime\rustplus-cli.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Assets\1-76fc6c7e.ico" />
+    <None Remove="Assets\1min.mp3" />
+    <None Remove="Assets\bell.mp3" />
+    <None Remove="Assets\cash.wav" />
+    <None Remove="Assets\icons\airfield.png" />
+    <None Remove="Assets\icons\animat-Icons\chinook_animate.png" />
+    <None Remove="Assets\icons\animat-Icons\chinook_map_body.png" />
+    <None Remove="Assets\icons\anvil-rock.png" />
+    <None Remove="Assets\icons\arcticresearch.png" />
+    <None Remove="Assets\icons\banditcamp.png" />
+    <None Remove="Assets\icons\barn.png" />
+    <None Remove="Assets\icons\blocked.png" />
+    <None Remove="Assets\icons\cabins - Kopie.png" />
+    <None Remove="Assets\icons\cabins.png" />
+    <None Remove="Assets\icons\cargo.png" />
+    <None Remove="Assets\icons\cave.png" />
+    <None Remove="Assets\icons\ch47.png" />
+    <None Remove="Assets\icons\cloud-download.png" />
+    <None Remove="Assets\icons\cloud-upload.png" />
+    <None Remove="Assets\icons\crate.png" />
+    <None Remove="Assets\icons\crate3.png" />
+    <None Remove="Assets\icons\ds_event.png" />
+    <None Remove="Assets\icons\dome.png" />
+    <None Remove="Assets\icons\eraser.png" />
+    <None Remove="Assets\icons\excavator.png" />
+    <None Remove="Assets\icons\explosion.png" />
+    <None Remove="Assets\icons\ferryterminal.png" />
+    <None Remove="Assets\icons\fishingvillage.png" />
+    <None Remove="Assets\icons\fishingvillagelarge.png" />
+    <None Remove="Assets\icons\gasstation.png" />
+    <None Remove="Assets\icons\godrock.png" />
+    <None Remove="Assets\icons\godrock_large.png" />
+    <None Remove="Assets\icons\godrock_medium.png" />
+    <None Remove="Assets\icons\godrock_small.png" />
+    <None Remove="Assets\icons\harbour.png" />
+    <None Remove="Assets\icons\harbour2.png" />
+    <None Remove="Assets\icons\hqmquarry.png" />
+    <None Remove="Assets\icons\iceberg.png" />
+    <None Remove="Assets\icons\ice_lake.png" />
+    <None Remove="Assets\icons\jungle.png" />
+    <None Remove="Assets\icons\jungle_ziggurat.png" />
+    <None Remove="Assets\icons\junkyard.png" />
+    <None Remove="Assets\icons\largeoilrig.png" />
+    <None Remove="Assets\icons\jungle_swamp.png" />
+    <None Remove="Assets\icons\launchsite.png" />
+    <None Remove="Assets\icons\lighthouse.png" />
+    <None Remove="Assets\icons\map-icons\base1.png" />
+    <None Remove="Assets\icons\map-icons\base2.png" />
+    <None Remove="Assets\icons\map-icons\sam-site.png" />
+    <None Remove="Assets\icons\map-icons\turret.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_dollar.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_gun.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_home.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_loot.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_parachute.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_rock.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_scope.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_shield.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_skull.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_sleep.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmap_zzz.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmapbackground.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmapforeground.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmapforegroundleader.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmappinbg.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmappinfg.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_iconmappinfgleader.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_shop_background.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_shop_icon.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_shop_tint.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_submarine.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_train.png" />
+    <None Remove="Assets\icons\map-markers\assets_markers_tunnel.png" />
+    <None Remove="Assets\icons\militarybase.png" />
+    <None Remove="Assets\icons\militarytunnel.png" />
+    <None Remove="Assets\icons\miningoutpost.png" />
+    <None Remove="Assets\icons\miningoutpost2.png" />
+    <None Remove="Assets\icons\missilesilo.png" />
+    <None Remove="Assets\icons\oilrig.png" />
+    <None Remove="Assets\icons\outpost.png" />
+    <None Remove="Assets\icons\patrol.png" />
+    <None Remove="Assets\icons\pen.png" />
+    <None Remove="Assets\icons\pencil.png" />
+    <None Remove="Assets\icons\pin.png" />
+    <None Remove="Assets\icons\PiP.png" />
+    <None Remove="Assets\icons\Popup.png" />
+    <None Remove="Assets\icons\powerplant.png" />
+    <None Remove="Assets\icons\powerstation.png" />
+    <None Remove="Assets\icons\radtown.png" />
+    <None Remove="Assets\icons\rust-c4.mp3" />
+    <None Remove="Assets\icons\satellitedish.png" />
+    <None Remove="Assets\icons\save.png" />
+    <None Remove="Assets\icons\sewerbranch.png" />
+    <None Remove="Assets\icons\smartalarm.png" />
+    <None Remove="Assets\icons\smartswitch.png" />
+    <None Remove="Assets\icons\stable.png" />
+    <None Remove="Assets\icons\stonequarry.png" />
+    <None Remove="Assets\icons\storagemonitor.png" />
+    <None Remove="Assets\icons\sulfurquarry.png" />
+    <None Remove="Assets\icons\supermarket.png" />
+    <None Remove="Assets\icons\swamp.png" />
+    <None Remove="Assets\icons\text.png" />
+    <None Remove="Assets\icons\traintunnel.png" />
+    <None Remove="Assets\icons\traintunnel2.png" />
+    <None Remove="Assets\icons\trainyard.png" />
+    <None Remove="Assets\icons\trash.png" />
+    <None Remove="Assets\icons\underwater.png" />
+    <None Remove="Assets\icons\upload.png" />
+    <None Remove="Assets\icons\vending.png" />
+    <None Remove="Assets\icons\vending2.png" />
+    <None Remove="Assets\icons\vendor.png" />
+    <None Remove="Assets\icons\watertreatment.png" />
+    <None Remove="Assets\icons\waterwell.png" />
+    <None Remove="Assets\Data\rust-item-list.json" />
+    <None Remove="Assets\Data\recycler-items.json" />
+    <None Remove="Assets\icons\discord.png" />
+    <None Remove="Assets\icq-message.wav" />
+    <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
+    <None Remove="Assets\Images\5.5.0\Account-needed.png" />
+    <None Remove="Assets\Images\5.5.0\Advanced-Discord-Settings.png" />
+    <None Remove="Assets\Images\5.5.0\Advanced-Discord.png" />
+    <None Remove="Assets\Images\5.5.0\App-customTimer.png" />
+    <None Remove="Assets\Images\5.5.0\APP-new-shop-system.png" />
+    <None Remove="Assets\Images\5.5.0\Basic-Discord.png" />
+    <None Remove="Assets\Images\5.5.0\Chat_Master-Slave.png" />
+    <None Remove="Assets\Images\5.5.0\Chat_Master1.png" />
+    <None Remove="Assets\Images\5.5.0\Cloud-Backend.png" />
+    <None Remove="Assets\Images\5.5.0\Cloud-Base-Screenshots.png" />
+    <None Remove="Assets\Images\5.5.0\Device-Cloud-Sync.png" />
+    <None Remove="Assets\Images\5.5.0\discord-no-permission.png" />
+    <None Remove="Assets\Images\5.5.0\New-Custom-Death-Markers.png" />
+    <None Remove="Assets\Images\5.5.0\r+desktop-icon-bot.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\afk.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\camera_move.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\Chat-Command-Customization.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\Chat-Command-Delay.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\death-notifications.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\death-snackbar.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\devices-icons.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\MapFetchDiscord.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\Thumbnail_RustPlus6_V6.jpg" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\window-size.png" />
+    <None Remove="Assets\Images\6.0 Cloud Patch\WPF_devicelist.png" />
+    <None Remove="Assets\Images\6.3.1\Logic-Engine.png" />
+    <None Remove="Assets\Images\6.3.1\LogicEngine-Button_and_subscriber_dock.png" />
+    <None Remove="Assets\Images\7.0\3D-Base-Footprint.png" />
+    <None Remove="Assets\Images\7.0\custom-icons-smart.png" />
+    <None Remove="Assets\Images\7.0\heatmap-3D.png" />
+    <None Remove="Assets\Images\7.0\heatmap.png" />
+    <None Remove="Assets\Images\7.0\Ingame-Waypoints-on-map.png" />
+    <None Remove="Assets\Images\7.0\Live-Following-3D.png" />
+    <None Remove="Assets\Images\7.0\Logic-Engine.png" />
+    <None Remove="Assets\Images\7.0\No-Build-Zones-3D.png" />
+    <None Remove="Assets\Images\7.0\Recycling-Calculator.png" />
+    <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
+    <None Remove="Assets\rustplus-desktop-icon.ico" />
+    <None Remove="Assets\Data\rust_items.json" />
+    <None Remove="Assets\Screenshots\3.0_1.png" />
+    <None Remove="Assets\Screenshots\3.0_2.png" />
+    <None Remove="Assets\Screenshots\3.0_3.png" />
+    <None Remove="Assets\Screenshots\3.0_4.png" />
+    <None Remove="Assets\Screenshots\3.0_5.png" />
+    <None Remove="Assets\Screenshots\3.0_6.png" />
+    <None Remove="Assets\Screenshots\3.1.0.png" />
+    <None Remove="Assets\Screenshots\3.2.0.png" />
+    <None Remove="Assets\Screenshots\3.3.0_1.png" />
+    <None Remove="Assets\Screenshots\3.3.0_2.png" />
+    <None Remove="Assets\Screenshots\3_5A.png" />
+    <None Remove="Assets\Screenshots\3_5B.png" />
+    <None Remove="Assets\Screenshots\4.5.0.png" />
+    <None Remove="Assets\Screenshots\5.2.png" />
+    <None Remove="Assets\Screenshots\Cargo_docked_countdown.png" />
+    <None Remove="Assets\Screenshots\Cargo_notification_settings.png" />
+    <None Remove="Assets\Screenshots\Cargo_remaining-on-map.png" />
+    <None Remove="Assets\Screenshots\Tracking1.jpg" />
+    <None Remove="Assets\Screenshots\Tracking2.jpg" />
+    <None Remove="Assets\Screenshots\Tracking3.jpg" />
+    <None Remove="Assets\Screenshots\Tracking4.jpg" />
+    <None Remove="Assets\Screenshots\Tracking5.jpg" />
+    <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
+    <None Remove="Assets\Screenshots\v4_shop_hover.png" />
+    <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\1min.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\bell.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\death.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\icons\rust-c4.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\1-76fc6c7e.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\rustplus-desktop-icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
+    <PackageReference Include="RustPlusApi" Version="1.3.0" />
+    <PackageReference Include="supabase-csharp" Version="0.16.2" />
+    <PackageReference Include="WPF-UI" Version="3.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup Condition="Exists('..\MapParser\index.html')">
+    <EmbeddedResource Include="..\MapParser\index.html">
+      <LogicalName>Map3DViewer/index.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\app.js">
+      <LogicalName>Map3DViewer/app.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\style.css">
+      <LogicalName>Map3DViewer/style.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\modules\**\*" Condition="Exists('..\MapParser\modules')">
+      <LogicalName>Map3DViewer/modules/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
+      <LogicalName>Map3DViewer/draco_decoder.wasm</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
+      <LogicalName>Map3DViewer/Rust_Assets/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\icons\**\*" Condition="Exists('Assets\icons')">
+      <LogicalName>Map3DViewer/Icons/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
+    <MapParserPublishDir>$(MSBuildProjectDirectory)\..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
+    <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
+  </PropertyGroup>
+  <Target Name="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
+    <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
+  </Target>
+  <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserPublishedExe)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <EmbeddedResource Include="$(MapParserPublishedExe)">
+        <LogicalName>Map3DParser/MapParser.exe</LogicalName>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
+        <LogicalName>Map3DParser/prefabs_map.json</LogicalName>
+      </EmbeddedResource>
+      <EmbeddedResource Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
+        <LogicalName>Map3DParser/Rust_Assets/Metadata/carbon_prefabs.json</LogicalName>
+      </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+  <ItemGroup>
+    <Content Include="Assets\cash.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\rust-item-list.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\recycler-items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\Recycling-Data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <EmbeddedResource Include="Assets\Data\recycler-items.json" />
+    <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Models\AlarmNotification.cs">
+      <CustomToolNamespace>
+      </CustomToolNamespace>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Map nested localized resources using Link to keep culture naming intact while avoiding manifest name collisions -->
+    <EmbeddedResource Update="Properties/lang/**/*.resx">
+      <TargetPath>Properties\%(Filename)%(Extension)</TargetPath>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <CopyRetryCount>60</CopyRetryCount>
+    <CopyRetryDelayMilliseconds>250</CopyRetryDelayMilliseconds>
+  </PropertyGroup>
+  <Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
+    <ItemGroup>
+      <Compile Remove="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
+      <Compile Include="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
+    </ItemGroup>
+  </Target>
+  <ItemGroup>
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\Accessibility.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\google.protobuf\3.31.1\lib\net5.0\Google.Protobuf.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.identitymodel.abstractions\7.0.3\lib\net8.0\Microsoft.IdentityModel.Abstractions.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.identitymodel.jsonwebtokens\7.0.3\lib\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.identitymodel.logging\7.0.3\lib\net8.0\Microsoft.IdentityModel.Logging.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.identitymodel.tokens\7.0.3\lib\net8.0\Microsoft.IdentityModel.Tokens.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\Microsoft.VisualBasic.Core.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\Microsoft.VisualBasic.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\Microsoft.VisualBasic.Forms.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.web.webview2\1.0.3485.44\lib_manual\netcoreapp3.0\Microsoft.Web.WebView2.Core.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.web.webview2\1.0.3485.44\lib_manual\netcoreapp3.0\Microsoft.Web.WebView2.WinForms.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\microsoft.web.webview2\1.0.3485.44\lib_manual\net5.0-windows10.0.17763.0\Microsoft.Web.WebView2.Wpf.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\Microsoft.Win32.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\Microsoft.Win32.Registry.AccessControl.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\Microsoft.Win32.Registry.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\Microsoft.Win32.SystemEvents.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\mimemapping\2.0.0\lib\netstandard2.0\MimeMapping.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\mscorlib.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\netstandard.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\newtonsoft.json\13.0.3\lib\net6.0\Newtonsoft.Json.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.Aero.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.Aero2.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.AeroLite.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.Classic.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.Luna.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationFramework.Royale.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\PresentationUI.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\ReachFramework.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\rustplusapi\1.3.0\lib\net8.0\RustPlusApi.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\supabase-core\0.0.3\lib\netstandard2.0\Supabase.Core.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\supabase-csharp\0.16.2\lib\netstandard2.0\Supabase.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\functions-csharp\1.3.2\lib\netstandard2.0\Supabase.Functions.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\gotrue-csharp\4.2.7\lib\netstandard2.0\Supabase.Gotrue.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\postgrest-csharp\3.5.1\lib\netstandard2.0\Supabase.Postgrest.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\realtime-csharp\6.0.4\lib\netstandard2.0\Supabase.Realtime.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\supabase-storage-csharp\1.4.0\lib\netstandard2.0\Supabase.Storage.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.AppContext.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Buffers.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.CodeDom.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Collections.Concurrent.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Collections.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Collections.Immutable.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Collections.NonGeneric.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Collections.Specialized.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ComponentModel.Annotations.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ComponentModel.DataAnnotations.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ComponentModel.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ComponentModel.EventBasedAsync.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ComponentModel.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ComponentModel.TypeConverter.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Configuration.ConfigurationManager.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Configuration.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Console.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Data.Common.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Design.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.Contracts.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.Debug.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.DiagnosticSource.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.EventLog.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.FileVersionInfo.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.PerformanceCounter.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.Process.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.StackTrace.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.TextWriterTraceListener.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.Tools.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.TraceSource.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Diagnostics.Tracing.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.DirectoryServices.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Drawing.Common.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Drawing.Design.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Drawing.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Drawing.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Dynamic.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Formats.Asn1.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Formats.Tar.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Globalization.Calendars.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Globalization.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Globalization.Extensions.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\system.identitymodel.tokens.jwt\7.0.3\lib\net8.0\System.IdentityModel.Tokens.Jwt.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.Compression.Brotli.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.Compression.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.Compression.FileSystem.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.Compression.ZipFile.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.FileSystem.AccessControl.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.FileSystem.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.FileSystem.DriveInfo.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.FileSystem.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.FileSystem.Watcher.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.IsolatedStorage.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.MemoryMappedFiles.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.IO.Packaging.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.Pipes.AccessControl.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.Pipes.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.IO.UnmanagedMemoryStream.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Linq.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Linq.Expressions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Linq.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Linq.Queryable.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Memory.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Http.Json.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.HttpListener.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Mail.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.NameResolution.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.NetworkInformation.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Ping.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Quic.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Requests.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Security.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.ServicePoint.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.Sockets.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.WebClient.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.WebHeaderCollection.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.WebProxy.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.WebSockets.Client.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Net.WebSockets.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Numerics.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Numerics.Vectors.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ObjectModel.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Printing.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\system.reactive\5.0.0\lib\net5.0\System.Reactive.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.DispatchProxy.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.Emit.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.Emit.ILGeneration.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.Emit.Lightweight.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.Metadata.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Reflection.TypeExtensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Resources.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Resources.Reader.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Resources.ResourceManager.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Resources.Writer.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.CompilerServices.Unsafe.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.CompilerServices.VisualC.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Handles.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.InteropServices.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.InteropServices.JavaScript.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Intrinsics.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Loader.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Numerics.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Serialization.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Serialization.Formatters.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Serialization.Json.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Serialization.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Runtime.Serialization.Xml.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.AccessControl.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Claims.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Algorithms.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Cng.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Csp.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.OpenSsl.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Pkcs.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.ProtectedData.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.X509Certificates.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Security.Cryptography.Xml.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Security.Permissions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Principal.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.Principal.Windows.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Security.SecureString.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ServiceModel.Web.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ServiceProcess.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Text.Encoding.CodePages.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Text.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Text.Encoding.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Text.Encodings.Web.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Text.Json.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Text.RegularExpressions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Threading.AccessControl.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Channels.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Overlapped.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Tasks.Dataflow.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Tasks.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Tasks.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Tasks.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Thread.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.ThreadPool.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Threading.Timer.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Transactions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Transactions.Local.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.ValueTuple.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Web.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Web.HttpUtility.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Controls.Ribbon.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Windows.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Forms.Design.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Forms.Design.Editors.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Forms.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Forms.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Input.Manipulations.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Windows.Presentation.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.ReaderWriter.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.Serialization.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.XDocument.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.XmlDocument.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.XmlSerializer.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.XPath.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\ref\net8.0\System.Xml.XPath.XDocument.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\UIAutomationClient.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\UIAutomationClientSideProviders.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\UIAutomationProvider.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\UIAutomationTypes.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\websocket.client\4.6.1\lib\net6.0\Websocket.Client.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\WindowsBase.dll" />
+    <ReferencePath Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\ref\net8.0\WindowsFormsIntegration.dll" />
+    <ReferencePath Include="C:\Users\Jawad\.nuget\packages\wpf-ui\3.0.5\lib\net8.0-windows7.0\Wpf.Ui.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\MainWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Camera\CamerasTabContent.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Map\AppSettingsOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Map\ChatCommandsOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Map\LogicEngineOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Map\RecyclerOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Map\ShopSearchControl.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Notifications\NotificationsTabContent.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Overlay\AlarmOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Overlay\BusyOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Overlay\DeleteConfirmationOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Overlay\LoginOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Overlay\UploadConsentOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Players\PlayersTabContent.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\MainWindow\Team\TeamTabContent.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\AdminPanelWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\AlarmPopupWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\BackupPasswordDialog.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\BaseNoteWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\BaseScreenshotWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CameraWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\ChangeDeviceIconDialog.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CloudDisclaimerWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CloudFeaturesWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CloudLoginPromptWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CrosshairEditorWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CrosshairWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\CustomAlertsWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\DeathMarkerSettingsDialog.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\DeviceImportWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\EmailLoginWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\HotkeyCaptureWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\HotkeysWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\ImageGallery.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\ImageZoomWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\Map3DConsentWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\MigrationNoticeWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\MiniMapSettingsOverlay.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\MiniMapWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\OfflineDeathsHistoryWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\PatchNotesWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\PremiumInfoWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\PromptDialog.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\ResetDataWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\ServerInfoModal.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\Views\Windows\Version7NoticeWindow.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\App.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\RustPlusDesk_Content.g.cs" />
+    <Compile Include="D:\Development\rustplus-desktop\RustPlusDesktop\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="C:\Program Files\dotnet\sdk\10.0.203\Sdks\Microsoft.NET.Sdk\targets\..\analyzers\Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\sdk\10.0.203\Sdks\Microsoft.NET.Sdk\targets\..\analyzers\Microsoft.CodeAnalysis.NetAnalyzers.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\analyzers/dotnet/cs/Microsoft.Interop.ComInterfaceGenerator.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\analyzers/dotnet/cs/Microsoft.Interop.JavaScript.JSImportGenerator.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\analyzers/dotnet/cs/Microsoft.Interop.LibraryImportGenerator.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\analyzers/dotnet/cs/Microsoft.Interop.SourceGeneration.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\analyzers/dotnet/cs/System.Text.Json.SourceGeneration.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.26\analyzers/dotnet/cs/System.Text.RegularExpressions.Generator.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\analyzers/dotnet/System.Windows.Forms.Analyzers.dll" />
+    <Analyzer Include="C:\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\8.0.26\analyzers/dotnet/cs/System.Windows.Forms.Analyzers.CSharp.dll" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

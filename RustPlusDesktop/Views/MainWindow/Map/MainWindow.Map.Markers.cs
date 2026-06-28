@@ -1171,6 +1171,32 @@ public partial class MainWindow
                 itemRow.MouseLeftButtonDown -= EventItem_Click;
                 if (isClickable) itemRow.MouseLeftButtonDown += EventItem_Click;
             }
+
+            // Sync events to 3D map if it is active
+            if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
+            {
+                try
+                {
+                    var clientEvents = activeEvents.Select(ev => new
+                    {
+                        name = ev.Name,
+                        active = ev.Active,
+                        id = ev.Id,
+                        x = ev.X,
+                        y = ev.Y,
+                        trackable = ev.Trackable,
+                        type = ev.Type,
+                        timerText = ev.TimerText,
+                        toolTip = ev.ToolTip,
+                        icon = ev.Icon.Replace("pack://application:,,,/Assets/icons/", "/Icons/", StringComparison.OrdinalIgnoreCase)
+                    }).ToList();
+
+                    string json = System.Text.Json.JsonSerializer.Serialize(clientEvents);
+                    string script = $"if (window.update3DEventDock) window.update3DEventDock({json});";
+                    _ = _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
+                }
+                catch { }
+            }
         });
     }
 
@@ -1489,17 +1515,28 @@ public partial class MainWindow
                 if (el.Tag is PlayerMarkerTag pmt)
                 {
                     double targetRot;
-                    if (isPlayer)
+                    if (isPlayer || m.Type == 6)
                     {
                         double distSq = state.LastVX * state.LastVX + state.LastVY * state.LastVY;
                         if (state.History.Count > 1 && distSq > 0.0025)
                         {
                             double angleRad = Math.Atan2(state.LastVX, state.LastVY);
                             targetRot = angleRad * (180.0 / Math.PI);
+                            if (m.Type == 6)
+                            {
+                                targetRot += 180; // Correction for vendor icon's default downward orientation
+                            }
                         }
                         else
                         {
-                            targetRot = isNew ? 0 : pmt.Rotation;
+                            if (isPlayer)
+                            {
+                                targetRot = isNew ? 0 : pmt.Rotation;
+                            }
+                            else
+                            {
+                                targetRot = isNew ? (m.Rotation + 180) : pmt.Rotation;
+                            }
                         }
                     }
                     else if (m.Type == 5 || m.Type == 8 || m.Type == 4)
@@ -1508,7 +1545,7 @@ public partial class MainWindow
                     }
                     else
                     {
-                        double correction = (m.Type == 6 || m.Type == 3) ? 180 : 0;
+                        double correction = (m.Type == 3) ? 180 : 0;
                         targetRot = m.Rotation + correction;
                     }
                     

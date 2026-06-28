@@ -221,6 +221,20 @@ public partial class MainWindow : WpfUi.FluentWindow
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     private bool _isShuttingDown = false;
+    private const double CompactSidebarWidth = 72;
+    private const double MinExpandedSidebarWidth = 400;
+    private const double MaxExpandedSidebarWidth = 600;
+    private const int SidebarAnimationDurationMs = 180;
+    private double _expandedSidebarWidth = 600;
+    private bool _isSidebarExpanded;
+    private bool _isSidebarPinnedExpanded;
+    private bool _isSidebarTemporarilyExpandedForOverlay;
+    private bool _sidebarOverlayVisibilityUpdateQueued;
+    private System.Windows.Threading.DispatcherTimer? _sidebarAnimationTimer;
+    private DateTime _sidebarAnimationStartedAt;
+    private double _sidebarAnimationStartWidth;
+    private double _sidebarAnimationTargetWidth;
+    private Action? _sidebarAnimationCompleted;
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
@@ -239,7 +253,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         if (ColSidebar != null)
         {
-            TrackingService.SidebarWidth = ColSidebar.ActualWidth;
+            TrackingService.SidebarWidth = _expandedSidebarWidth;
         }
 
         base.OnClosing(e);
@@ -366,6 +380,10 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+        _expandedSidebarWidth = Math.Clamp(TrackingService.SidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+        TrackLeftPanelOverlayVisibility();
+        SetSidebarExpanded(false);
         FlushPendingLogs();
         MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
@@ -773,6 +791,18 @@ public partial class MainWindow : WpfUi.FluentWindow
                 UpdateLanguageFlag();
             }));
         };
+    }
+
+    private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0 && e.Key == Key.F)
+        {
+            if (_isMap3DActive)
+            {
+                e.Handled = true;
+                ToggleWpfFullscreen();
+            }
+        }
     }
 
     private void OnTrackingNotification(string msg, string serverName)
@@ -5903,16 +5933,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (ColSidebar != null)
         {
             double w = TrackingService.SidebarWidth;
-            if (w < 400) w = 400;
+            if (w < MinExpandedSidebarWidth) w = MinExpandedSidebarWidth;
 
             // Ensure we don't squash the map below 800 if window is small
             if (this.ActualWidth > 0)
             {
                 double maxW = this.ActualWidth - 850; // 800 map + 50 padding/splitter
-                if (w > maxW && maxW > 400) w = maxW;
+                if (w > maxW && maxW > MinExpandedSidebarWidth) w = maxW;
             }
 
-            ColSidebar.Width = new GridLength(w, GridUnitType.Pixel);
+            _expandedSidebarWidth = Math.Clamp(w, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            SetSidebarExpanded(_isSidebarExpanded);
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
 
@@ -6146,7 +6177,261 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (ColSidebar != null)
         {
-            TrackingService.SidebarWidth = ColSidebar.ActualWidth;
+            _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            TrackingService.SidebarWidth = _expandedSidebarWidth;
+        }
+    }
+
+    private void LeftPanelBorder_MouseEnter(object sender, MouseEventArgs e)
+    {
+        SetSidebarExpanded(true);
+    }
+
+    private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (_isSidebarPinnedExpanded)
+        {
+            return;
+        }
+
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (_isSidebarPinnedExpanded)
+            {
+                return;
+            }
+
+            if (LeftPanelBorder?.IsMouseOver == true || SidebarSplitter?.IsMouseOver == true)
+            {
+                return;
+            }
+
+            SetSidebarExpanded(false);
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void CompactSidebarTab_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string tag } && int.TryParse(tag, out int index))
+        {
+            MainTabs.SelectedIndex = index;
+            SetSidebarExpanded(true);
+        }
+    }
+
+    private void BtnToggleSidebarPin_Click(object sender, RoutedEventArgs e)
+    {
+        _isSidebarPinnedExpanded = !_isSidebarPinnedExpanded;
+
+        if (_isSidebarPinnedExpanded)
+        {
+            SetSidebarExpanded(true);
+        }
+        else
+        {
+            UpdateSidebarForOverlayVisibility();
+            if (!_isSidebarTemporarilyExpandedForOverlay)
+            {
+                SetSidebarExpanded(false);
+            }
+        }
+
+        UpdateSidebarPinButtons();
+    }
+
+    private void SetSidebarExpanded(bool isExpanded)
+    {
+        _isSidebarExpanded = isExpanded;
+
+        if (ColSidebar == null || LeftPanelContent == null || CompactSidebarRail == null || LeftPanelBorder == null)
+        {
+            return;
+        }
+
+        if (isExpanded)
+        {
+            double width = Math.Clamp(_expandedSidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            ColSidebar.MinWidth = CompactSidebarWidth;
+            LeftPanelBorder.Padding = new Thickness(16);
+            LeftPanelContent.Visibility = Visibility.Visible;
+            CompactSidebarRail.Visibility = Visibility.Collapsed;
+            AnimateSidebarWidth(width, () =>
+            {
+                if (_isSidebarExpanded)
+                {
+                    ColSidebar.MinWidth = MinExpandedSidebarWidth;
+                }
+            });
+            UpdateSidebarPinButtons();
+            return;
+        }
+
+        if (ColSidebar.ActualWidth >= MinExpandedSidebarWidth)
+        {
+            _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+        }
+
+        ColSidebar.MinWidth = CompactSidebarWidth;
+        LeftPanelBorder.Padding = new Thickness(0);
+        AnimateSidebarWidth(CompactSidebarWidth, () =>
+        {
+            if (!_isSidebarExpanded)
+            {
+                LeftPanelContent.Visibility = Visibility.Collapsed;
+                CompactSidebarRail.Visibility = Visibility.Visible;
+            }
+        });
+        UpdateSidebarPinButtons();
+    }
+
+    private void AnimateSidebarWidth(double targetWidth, Action? completed = null)
+    {
+        if (ColSidebar == null)
+        {
+            return;
+        }
+
+        _sidebarAnimationTimer?.Stop();
+        _sidebarAnimationCompleted = completed;
+        _sidebarAnimationStartWidth = GetCurrentSidebarWidth();
+        _sidebarAnimationTargetWidth = targetWidth;
+
+        if (Math.Abs(_sidebarAnimationStartWidth - _sidebarAnimationTargetWidth) < 1)
+        {
+            SetSidebarWidth(_sidebarAnimationTargetWidth);
+            _sidebarAnimationCompleted?.Invoke();
+            _sidebarAnimationCompleted = null;
+            return;
+        }
+
+        _sidebarAnimationStartedAt = DateTime.UtcNow;
+        _sidebarAnimationTimer ??= new System.Windows.Threading.DispatcherTimer(
+            System.Windows.Threading.DispatcherPriority.Render)
+        {
+            Interval = TimeSpan.FromMilliseconds(16)
+        };
+
+        _sidebarAnimationTimer.Tick -= SidebarAnimationTimer_Tick;
+        _sidebarAnimationTimer.Tick += SidebarAnimationTimer_Tick;
+        _sidebarAnimationTimer.Start();
+    }
+
+    private void SidebarAnimationTimer_Tick(object? sender, EventArgs e)
+    {
+        double elapsedMs = (DateTime.UtcNow - _sidebarAnimationStartedAt).TotalMilliseconds;
+        double progress = Math.Clamp(elapsedMs / SidebarAnimationDurationMs, 0, 1);
+        double eased = 1 - Math.Pow(1 - progress, 3);
+        double width = _sidebarAnimationStartWidth + ((_sidebarAnimationTargetWidth - _sidebarAnimationStartWidth) * eased);
+
+        SetSidebarWidth(width);
+
+        if (progress < 1)
+        {
+            return;
+        }
+
+        _sidebarAnimationTimer?.Stop();
+        SetSidebarWidth(_sidebarAnimationTargetWidth);
+        _sidebarAnimationCompleted?.Invoke();
+        _sidebarAnimationCompleted = null;
+    }
+
+    private double GetCurrentSidebarWidth()
+    {
+        if (ColSidebar == null)
+        {
+            return CompactSidebarWidth;
+        }
+
+        if (ColSidebar.Width.IsAbsolute && ColSidebar.Width.Value > 0)
+        {
+            return ColSidebar.Width.Value;
+        }
+
+        if (ColSidebar.ActualWidth > 0)
+        {
+            return ColSidebar.ActualWidth;
+        }
+
+        return _isSidebarExpanded ? _expandedSidebarWidth : CompactSidebarWidth;
+    }
+
+    private void SetSidebarWidth(double width)
+    {
+        if (ColSidebar != null)
+        {
+            ColSidebar.Width = new GridLength(Math.Clamp(width, CompactSidebarWidth, MaxExpandedSidebarWidth), GridUnitType.Pixel);
+        }
+    }
+
+    private void TrackLeftPanelOverlayVisibility()
+    {
+        if (AppSettingsPanel != null) AppSettingsPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (ProfitTradesPanel != null) ProfitTradesPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (BuyXForYPanel != null) BuyXForYPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+    }
+
+    private void LeftPanelOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        QueueSidebarOverlayVisibilityUpdate();
+    }
+
+    private void QueueSidebarOverlayVisibilityUpdate()
+    {
+        if (_sidebarOverlayVisibilityUpdateQueued)
+        {
+            return;
+        }
+
+        _sidebarOverlayVisibilityUpdateQueued = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            _sidebarOverlayVisibilityUpdateQueued = false;
+            UpdateSidebarForOverlayVisibility();
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void UpdateSidebarForOverlayVisibility()
+    {
+        bool hasLeftOverlayOpen =
+            AppSettingsPanel?.Visibility == Visibility.Visible ||
+            ProfitTradesPanel?.Visibility == Visibility.Visible ||
+            BuyXForYPanel?.Visibility == Visibility.Visible;
+
+        if (hasLeftOverlayOpen)
+        {
+            if (!_isSidebarPinnedExpanded)
+            {
+                _isSidebarTemporarilyExpandedForOverlay = true;
+                SetSidebarExpanded(true);
+            }
+
+            return;
+        }
+
+        if (_isSidebarTemporarilyExpandedForOverlay)
+        {
+            _isSidebarTemporarilyExpandedForOverlay = false;
+
+            if (!_isSidebarPinnedExpanded)
+            {
+                SetSidebarExpanded(false);
+            }
+        }
+    }
+
+    private void UpdateSidebarPinButtons()
+    {
+        var tooltip = _isSidebarPinnedExpanded ? "Fold sidebar" : "Keep sidebar unfolded";
+
+        if (BtnPinSidebar != null)
+        {
+            BtnPinSidebar.ToolTip = tooltip;
+        }
+
+        if (BtnCompactPinSidebar != null)
+        {
+            BtnCompactPinSidebar.ToolTip = tooltip;
         }
     }
 

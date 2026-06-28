@@ -408,6 +408,7 @@ return;
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
+            _map3DWebView.NavigationCompleted += Map3DWebView_NavigationCompleted;
             Map3DHost.Children.Add(_map3DWebView);
             Map3DHost.Visibility = Visibility.Visible;
             ImgMap.Visibility = Visibility.Collapsed;
@@ -433,6 +434,7 @@ return;
 
         private void ToggleWpfFullscreen()
         {
+            bool isFullscreenNow = false;
             if (_fullscreenWindow == null)
             {
                 if (_map3DWebView == null) return;
@@ -450,6 +452,15 @@ return;
                     Content = _map3DWebView
                 };
 
+                _fullscreenWindow.PreviewKeyDown += (s, ev) =>
+                {
+                    if ((System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) != 0 && ev.Key == System.Windows.Input.Key.F)
+                    {
+                        ev.Handled = true;
+                        ToggleWpfFullscreen();
+                    }
+                };
+
                 _fullscreenWindow.Closed += (s, args) =>
                 {
                     if (_fullscreenWindow != null)
@@ -460,9 +471,11 @@ return;
                             Map3DHost.Children.Add(_map3DWebView);
                         }
                     }
+                    try { _map3DWebView?.CoreWebView2?.ExecuteScriptAsync("if (window.setFullscreenState) window.setFullscreenState(false);"); } catch {}
                 };
 
                 _fullscreenWindow.Show();
+                isFullscreenNow = true;
             }
             else
             {
@@ -476,7 +489,10 @@ return;
                 {
                     Map3DHost.Children.Add(_map3DWebView);
                 }
+                isFullscreenNow = false;
             }
+
+            try { _map3DWebView?.CoreWebView2?.ExecuteScriptAsync($"if (window.setFullscreenState) window.setFullscreenState({isFullscreenNow.ToString().ToLower()});"); } catch {}
         }
 
         private void CloseMap3DView()
@@ -492,10 +508,12 @@ return;
                 }
                 catch { }
             }
+            try { _map3DWebView?.CoreWebView2?.ExecuteScriptAsync("if (window.setFullscreenState) window.setFullscreenState(false);"); } catch {}
             if (_map3DWebView != null)
             {
                 try
                 {
+                    _map3DWebView.NavigationCompleted -= Map3DWebView_NavigationCompleted;
                     if (_map3DWebView.CoreWebView2 != null)
                     {
                         _map3DWebView.CoreWebView2.WebMessageReceived -= Map3DWebMessageReceived;
@@ -582,6 +600,16 @@ return;
                 catch { }
             }
         }
+
+        private void Map3DWebView_NavigationCompleted(object? sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (e.IsSuccess)
+            {
+                SyncLiveMarkersTo3DMap();
+                RefreshEventDock();
+            }
+        }
+
         private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
         {
             string runtimeRoot = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Map3DViewer");
@@ -660,7 +688,7 @@ return;
                 stream,
                 200,
                 "OK",
-                $"Content-Type: {contentType}\r\nCache-Control: no-cache");
+                $"Content-Type: {contentType}\r\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0");
         }
 
         private static byte[]? ReadEmbeddedResourceBytes(string logicalName)
@@ -907,17 +935,31 @@ return;
                     });
                 }
 
+                // Chinook helicopter markers (Type 4) — direction is derived in 3D from movement between x/y updates
+                var chinookList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 4))
+                {
+                    chinookList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y
+                    });
+                }
+
                 var liveData = new { players = playersList, deaths = deathsList };
                 string liveJson  = JsonSerializer.Serialize(liveData);
                 string cargoJson = JsonSerializer.Serialize(cargoList);
                 string vendorJson = JsonSerializer.Serialize(vendorList);
                 string patrolHeliJson = JsonSerializer.Serialize(patrolHeliList);
+                string chinookJson = JsonSerializer.Serialize(chinookList);
 
                 string script = $$"""
                     if (window.updateLiveMarkers) window.updateLiveMarkers({{liveJson}}.players, {{liveJson}}.deaths);
                     if (window.updateCargoMarkers) window.updateCargoMarkers({{cargoJson}});
                     if (window.updateVendorMarkers) window.updateVendorMarkers({{vendorJson}});
                     if (window.updatePatrolHeliMarkers) window.updatePatrolHeliMarkers({{patrolHeliJson}});
+                    if (window.updateChinookMarkers) window.updateChinookMarkers({{chinookJson}});
                     """;
                 await _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
             }
