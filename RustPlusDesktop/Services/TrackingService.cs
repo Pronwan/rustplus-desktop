@@ -198,11 +198,15 @@ public static class TrackingService
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
 
+            bool changed = false;
             if (root.TryGetProperty("steam_id", out var sid) && sid.ValueKind == JsonValueKind.String)
             {
                 var s = sid.GetString() ?? "";
-                if (!string.IsNullOrEmpty(s) && string.IsNullOrEmpty(_settings.SteamId64))
+                if (!string.IsNullOrEmpty(s) && _settings.SteamId64 != s)
+                {
                     _settings.SteamId64 = s;
+                    changed = true;
+                }
             }
 
             if (root.TryGetProperty("issue_date", out var iss) && iss.ValueKind == JsonValueKind.String)
@@ -210,8 +214,12 @@ public static class TrackingService
                 if (DateTime.TryParse(iss.GetString(), null,
                     System.Globalization.DateTimeStyles.RoundtripKind, out var dt))
                 {
-                    if (_settings.FcmIssuedAt == null)
-                        _settings.FcmIssuedAt = dt.ToLocalTime();
+                    var localDt = dt.ToLocalTime();
+                    if (_settings.FcmIssuedAt != localDt)
+                    {
+                        _settings.FcmIssuedAt = localDt;
+                        changed = true;
+                    }
                 }
             }
 
@@ -220,9 +228,18 @@ public static class TrackingService
                 if (DateTime.TryParse(exp.GetString(), null,
                     System.Globalization.DateTimeStyles.RoundtripKind, out var dt))
                 {
-                    if (_settings.FcmExpiresAt == null)
-                        _settings.FcmExpiresAt = dt.ToLocalTime();
+                    var localDt = dt.ToLocalTime();
+                    if (_settings.FcmExpiresAt != localDt)
+                    {
+                        _settings.FcmExpiresAt = localDt;
+                        changed = true;
+                    }
                 }
+            }
+
+            if (changed)
+            {
+                SaveDB();
             }
         }
         catch { }
