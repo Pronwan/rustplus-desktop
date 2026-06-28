@@ -751,6 +751,17 @@ Aflaai en installeer nou?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM-kwalifikasies</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Wat is FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Wat is FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM staan vir Firebase Cloud Messaging. Rust+ gebruik dit om stootkennisgewings vir gekoppelde bedieners, toestelle, alarms, spanklets en ander regstreekse gebeure te stuur.
+
+Rust+ Desktop registreer jou plaaslike app by FCM sodat dit dieselfde Rust+-kennisgewings in die agtergrond kan ontvang. Die koppelbewyse word plaaslik op hierdie rekenaar gestoor en kan verwyder word deur die koppelkonfigurasie terug te stel.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Regskliek om te konfigureer</value>
   </data>

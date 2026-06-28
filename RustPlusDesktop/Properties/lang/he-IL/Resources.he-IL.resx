@@ -751,6 +751,17 @@
   <data name="FcmCredentials" xml:space="preserve">
     <value>אישורי FCM</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>מה זה FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>מה זה FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM הוא קיצור של Firebase Cloud Messaging. ‏Rust+ משתמש בו כדי לשלוח התראות דחיפה עבור שרתים, מכשירים, אזעקות, צאט צוות ואירועים חיים נוספים שהוצמדו.
+
+Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כדי שתוכל לקבל את אותן התראות Rust+ ברקע. פרטי הצימוד נשמרים מקומית במחשב הזה, וניתן למחוק אותם על ידי איפוס תצורת הצימוד.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>לחץ לחיצה ימנית כדי להגדיר</value>
   </data>

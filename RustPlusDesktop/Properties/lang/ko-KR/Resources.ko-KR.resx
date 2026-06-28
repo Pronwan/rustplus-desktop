@@ -751,6 +751,17 @@
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM 자격 증명</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>FCM이란?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>FCM이란?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM은 Firebase Cloud Messaging의 약자입니다. Rust+는 페어링된 서버, 장치, 알람, 팀 채팅 및 기타 실시간 이벤트의 푸시 알림을 보내는 데 사용합니다.
+
+Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일한 Rust+ 알림을 받을 수 있게 합니다. 페어링 자격 증명은 이 PC에 로컬로 저장되며 페어링 구성을 재설정하면 삭제할 수 있습니다.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>마우스 오른쪽 버튼을 클릭하여 구성</value>
   </data>

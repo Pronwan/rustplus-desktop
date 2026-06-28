@@ -751,6 +751,17 @@ Tải xuống và cài đặt ngay bây giờ?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Thông tin xác thực FCM</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>FCM la gi?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>FCM la gi?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM la viet tat cua Firebase Cloud Messaging. Rust+ dung no de gui thong bao day cho may chu da ghep noi, thiet bi, bao dong, chat doi va cac su kien truc tiep khac.
+
+Rust+ Desktop dang ky ung dung cuc bo cua ban voi FCM de co the nhan cung cac thong bao Rust+ do o che do nen. Thong tin dang nhap ghep noi duoc luu cuc bo tren PC nay va co the xoa bang cach dat lai cau hinh ghep noi.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Nhấp chuột phải để cấu hình</value>
   </data>

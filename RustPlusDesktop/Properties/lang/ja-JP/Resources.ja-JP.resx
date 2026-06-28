@@ -751,6 +751,17 @@
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM 資格情報</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>FCM とは?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>FCM とは?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM は Firebase Cloud Messaging の略です。Rust+ は、ペアリング済みサーバー、デバイス、アラーム、チームチャット、その他のライブイベントのプッシュ通知を送信するために使用します。
+
+Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知をバックグラウンドで受信できるようにします。ペアリング認証情報はこの PC にローカル保存され、ペアリング設定をリセットすると削除できます。</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>右クリックで設定</value>
   </data>

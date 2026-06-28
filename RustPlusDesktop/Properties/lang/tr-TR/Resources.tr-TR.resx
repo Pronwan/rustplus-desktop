@@ -751,6 +751,17 @@ Sürümler sayfasını aç?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM Kimlik Bilgileri</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>FCM nedir?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>FCM nedir?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM, Firebase Cloud Messaging anlamina gelir. Rust+ bunu eslestirilmis sunucular, cihazlar, alarmlar, takim sohbeti ve diger canli etkinlikler icin anlik bildirimler gondermekte kullanir.
+
+Rust+ Desktop, ayni Rust+ bildirimlerini arka planda alabilmesi icin yerel uygulamanizi FCM ile kaydeder. Eslestirme kimlik bilgileri bu bilgisayarda yerel olarak saklanir ve eslestirme yapilandirmasi sifirlanarak silinebilir.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Yapılandırmak için sağ tıklayın</value>
   </data>

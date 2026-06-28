@@ -751,6 +751,17 @@ Télécharger et installer maintenant ?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Identifiants FCM</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Qu est-ce que FCM ?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Qu est-ce que FCM ?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM signifie Firebase Cloud Messaging. Rust+ l utilise pour envoyer des notifications push pour les serveurs appaires, les appareils, les alarmes, le chat d equipe et les autres evenements en direct.
+
+Rust+ Desktop enregistre votre application locale aupres de FCM afin de recevoir ces memes notifications Rust+ en arriere-plan. Les identifiants d appairage sont enregistres localement sur ce PC et peuvent etre supprimes en reinitialisant la configuration d appairage.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Clic droit pour configurer</value>
   </data>

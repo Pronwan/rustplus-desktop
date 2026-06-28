@@ -751,6 +751,17 @@ Open Releases page?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Πιστοποιητικά FCM</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Τι είναι το FCM;</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Τι είναι το FCM;</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>Το FCM σημαίνει Firebase Cloud Messaging. Το Rust+ το χρησιμοποιεί για να στέλνει άμεσες ειδοποιήσεις για συζευγμένους διακομιστές, συσκευές, συναγερμούς, ομαδική συνομιλία και άλλα ζωντανά συμβάντα.
+
+Το Rust+ Desktop καταχωρεί την τοπική εφαρμογή σας στο FCM, ώστε να μπορεί να λαμβάνει τις ίδιες ειδοποιήσεις Rust+ στο παρασκήνιο. Τα διαπιστευτήρια σύζευξης αποθηκεύονται τοπικά σε αυτόν τον υπολογιστή και μπορούν να διαγραφούν με επαναφορά της διαμόρφωσης σύζευξης.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Δεξί κλικ για ρύθμιση</value>
   </data>

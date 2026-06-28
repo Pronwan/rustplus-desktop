@@ -751,6 +751,17 @@ Stáhnout a nainstalovat nyní?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Přihlašovací údaje pro FCM</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Co je FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Co je FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM znamena Firebase Cloud Messaging. Rust+ ho pouziva k odesilani push oznamení pro sparovane servery, zarizeni, alarmy, tymovy chat a dalsi zive udalosti.
+
+Rust+ Desktop zaregistruje mistni aplikaci ve FCM, aby mohla na pozadi prijimat stejna oznamení Rust+. Parovaci udaje jsou ulozeny lokalne v tomto pocitaci a lze je odstranit resetovanim konfigurace parovani.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Klikněte pravým tlačítkem myši pro konfiguraci</value>
   </data>

@@ -751,6 +751,17 @@
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM 凭据</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>什么是 FCM？</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>什么是 FCM？</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM 是 Firebase Cloud Messaging 的缩写。Rust+ 使用它为已配对的服务器、设备、警报、团队聊天和其他实时事件发送推送通知。
+
+Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相同的 Rust+ 通知。配对凭据会保存在这台电脑本地，并可通过重置配对配置删除。</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>点击右键配置</value>
   </data>

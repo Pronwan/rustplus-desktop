@@ -751,6 +751,17 @@ Letöltés és telepítés most?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM megbízólevelek</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Mi az az FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Mi az az FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>Az FCM a Firebase Cloud Messaging roviditese. A Rust+ ezt hasznalja push ertesitesek kuldesere a parositott szerverekrol, eszkozokrol, riasztasokrol, csapatcsevegésrol es mas elo esemenyekrol.
+
+A Rust+ Desktop regisztralja a helyi alkalmazast az FCM-ben, hogy a hatterben fogadhassa ugyanezeket a Rust+-ertesiteseket. A parositasi hitelesito adatok helyileg, ezen a PC-n vannak mentve, es a parositasi konfiguracio visszaallitasaval torolhetok.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Jobb gombbal kattintva konfigurálhatja</value>
   </data>

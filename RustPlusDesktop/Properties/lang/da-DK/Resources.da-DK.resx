@@ -751,6 +751,17 @@ Download og installer nu?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM Legitimationsoplysninger</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Hvad er FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Hvad er FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM star for Firebase Cloud Messaging. Rust+ bruger det til at sende push-notifikationer for parrede servere, enheder, alarmer, teamchat og andre live-hændelser.
+
+Rust+ Desktop registrerer din lokale app hos FCM, sa den kan modtage de samme Rust+-notifikationer i baggrunden. Parringsoplysningerne gemmes lokalt pa denne pc og kan slettes ved at nulstille parringskonfigurationen.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Højreklik for at konfigurere</value>
   </data>

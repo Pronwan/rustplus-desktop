@@ -751,6 +751,17 @@ Lataa ja asenna nyt?</value>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Fcm Tunnustiedot</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Mika FCM on?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Mika FCM on?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM tarkoittaa Firebase Cloud Messagingia. Rust+ kayttaa sita lahettaakseen push-ilmoituksia paritetuista palvelimista, laitteista, havalytyksista, tiimichatista ja muista live-tapahtumista.
+
+Rust+ Desktop rekisteroi paikallisen sovelluksesi FCM:aan, jotta se voi vastaanottaa samat Rust+-ilmoitukset taustalla. Paritustunnukset tallennetaan paikallisesti tälle tietokoneelle, ja ne voi poistaa nollaamalla paritusasetukset.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Napsauta hiiren oikealla konfiguroidaksesi</value>
   </data>
