@@ -2648,40 +2648,40 @@
     <value>متسلسل (مع تأخير)</value>
   </data>
   <data name="HotkeyParallel" xml:space="preserve">
-    <value>الموازي (فوري)</value>
+    <value>متوازٍ (فوري)</value>
   </data>
   <data name="HotkeyToggleDelay" xml:space="preserve">
-    <value>تبديل التأخير</value>
+    <value>تأخير التبديل</value>
   </data>
   <data name="HotkeyWarningInUse" xml:space="preserve">
     <value>تم تسجيل مفتاح التشغيل السريع هذا بالفعل بواسطة تطبيق آخر.</value>
   </data>
   <data name="KeepActive" xml:space="preserve">
-    <value>لا، واصل نشاطك</value>
+    <value>لا، أبقِه مفعلاً</value>
   </data>
   <data name="LoopAudioPrompt" xml:space="preserve">
-    <value>هل تريد إيقاف تشغيل حلقة التنبيه الصوتي؟</value>
+    <value>هل تريد إيقاف تكرار صوت التنبيه؟</value>
   </data>
   <data name="LoopAudioTillPopupClose" xml:space="preserve">
-    <value>قم بتكرار الصوت حتى إغلاق النافذة المنبثقة</value>
+    <value>كرّر الصوت حتى يتم إغلاق النافذة المنبثقة</value>
   </data>
   <data name="LoopAudioGlobalPrompt" xml:space="preserve">
-    <value>يتطلب ذلك إيقاف تشغيل حلقة التنبيه الصوتي لجميع الإنذارات الذكية.</value>
+    <value>سيؤدي ذلك إلى إيقاف تكرار صوت التنبيه لكل الإنذارات الذكية.</value>
   </data>
   <data name="TurnOffNow" xml:space="preserve">
-    <value>أطفئ الآن</value>
+    <value>إيقاف الآن</value>
   </data>
   <data name="TimeOfDeath" xml:space="preserve">
     <value>وقت الوفاة</value>
   </data>
   <data name="NotificationsTab" xml:space="preserve">
-    <value>إشعارات</value>
+    <value>الإشعارات</value>
   </data>
   <data name="NotificationCenterSettings" xml:space="preserve">
-    <value>مركز الإخطار</value>
+    <value>مركز الإشعارات</value>
   </data>
   <data name="ShowToastNotifications" xml:space="preserve">
-    <value>عرض إخطارات الخبز المحمص</value>
+    <value>عرض إشعارات سطح المكتب</value>
   </data>
   <data name="PlaySoundAlerts" xml:space="preserve">
     <value>تشغيل التنبيهات الصوتية</value>
@@ -2690,49 +2690,49 @@
     <value>فترة الاحتفاظ</value>
   </data>
   <data name="MutedServers" xml:space="preserve">
-    <value>خوادم مكتومة</value>
+    <value>السيرفرات المكتومة</value>
   </data>
   <data name="NoServersMuted" xml:space="preserve">
-    <value>لم يتم كتم أي خوادم</value>
+    <value>لا توجد سيرفرات مكتومة</value>
   </data>
   <data name="UnmuteServer" xml:space="preserve">
-    <value>إلغاء كتم الصوت</value>
+    <value>إلغاء كتم السيرفر</value>
   </data>
   <data name="NotificationsFilter" xml:space="preserve">
-    <value>فلتر:</value>
+    <value>التصفية:</value>
   </data>
   <data name="NotificationsAll" xml:space="preserve">
-    <value>الجميع</value>
+    <value>الكل</value>
   </data>
   <data name="NotificationsAlarms" xml:space="preserve">
-    <value>إنذار</value>
+    <value>الإنذارات</value>
   </data>
   <data name="NotificationsDeaths" xml:space="preserve">
-    <value>حالات الوفاة</value>
+    <value>الوفيات</value>
   </data>
   <data name="SearchNotificationsPlaceholder" xml:space="preserve">
-    <value>رسالة البحث...</value>
+    <value>البحث في الرسائل...</value>
   </data>
   <data name="MarkAllAsRead" xml:space="preserve">
-    <value>مارك اقرأ</value>
+    <value>تحديد الكل كمقروء</value>
   </data>
   <data name="ClearNotifications" xml:space="preserve">
-    <value>واضح</value>
+    <value>مسح الإشعارات</value>
   </data>
   <data name="NoNotificationsTitle" xml:space="preserve">
-    <value>لا توجد إخطارات هنا</value>
+    <value>لا توجد إشعارات هنا</value>
   </data>
   <data name="NoNotificationsSubtitle" xml:space="preserve">
-    <value>لقد تم القبض عليك جميعًا!</value>
+    <value>أنت مطّلع على كل شيء.</value>
   </data>
   <data name="ClearNotificationsConfirm" xml:space="preserve">
     <value>هل أنت متأكد أنك تريد مسح سجل الإشعارات بالكامل؟</value>
   </data>
   <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
-    <value>مسح التاريخ</value>
+    <value>مسح السجل</value>
   </data>
   <data name="ServerNotFoundMessage" xml:space="preserve">
-    <value>تعذر العثور على ملف تعريف خادم مقترن لـ{0}:{1}.
+    <value>تعذر العثور على ملف سيرفر مقترن لـ {0}:{1}.
 يرجى إقران هذا الخادم أولاً.</value>
   </data>
   <data name="ServerNotFoundTitle" xml:space="preserve">
