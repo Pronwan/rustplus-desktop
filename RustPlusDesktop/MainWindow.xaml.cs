@@ -552,6 +552,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 _vm.ForceShowLoginOverlay = true;
                 _vm.LoginOverlayMessage = "FCM is expired you need to relogin to rust+";
                 AppendLog("[pairing] FCM token is expired. Forcing login overlay display.");
+                SetSidebarExpanded(true);
             }
 
             StartPairingSilent(true);
@@ -3535,7 +3536,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 datesChanged = true;
             }
             
-            if (datesChanged) _vm.NotifyFcmChanged();
+            if (datesChanged)
+            {
+                _vm.NotifyFcmChanged();
+                SetSidebarExpanded(_isSidebarPinnedExpanded);
+            }
 
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
@@ -6320,6 +6325,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void SetSidebarExpanded(bool isExpanded)
     {
+        // If FCM is expired, force the sidebar to stay unfolded/expanded
+        bool isFcmExpired = TrackingService.IsFcmConfigured() && 
+                            TrackingService.FcmExpiresAt.HasValue && 
+                            TrackingService.FcmExpiresAt.Value < DateTime.Now;
+        if (isFcmExpired)
+        {
+            isExpanded = true;
+        }
+
         _isSidebarExpanded = isExpanded;
 
         if (ColSidebar == null || LeftPanelContent == null || CompactSidebarRail == null || LeftPanelBorder == null)
