@@ -1,5 +1,8 @@
 using Microsoft.Win32;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
@@ -8,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Windows.Threading;
 using RustPlusDesk.Views;
 using RustPlusDesk.Services;
 using System.Drawing;
@@ -26,6 +30,8 @@ public partial class App : Application
 
     private MainWindow? _main;
     private System.Windows.Forms.NotifyIcon? _trayIcon;
+    private static readonly ConcurrentDictionary<string, IReadOnlyDictionary<string, string>> _resourceCache = new();
+    private int _languageApplyVersion;
 
     [System.Runtime.InteropServices.DllImport("user32.dll")]
     private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -33,7 +39,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
-        SetLanguage();
+        SetLanguage(applySynchronously: true);
         base.OnStartup(e);
 
         EnsureUrlProtocolRegistered();
@@ -234,77 +240,107 @@ public partial class App : Application
 
     private static async Task SendLinkToRunningInstanceAsync(string link) => await SendCommandToRunningInstanceAsync(link);
 
-    public void SetLanguage()
+    public void SetLanguage(bool applySynchronously = false)
     {
         try
         {
             string lang = TrackingService.SelectedLanguage;
-            System.Globalization.CultureInfo culture;
+            CultureInfo culture;
 
             if (string.IsNullOrEmpty(lang))
             {
-                culture = System.Globalization.CultureInfo.InstalledUICulture;
+                culture = CultureInfo.InstalledUICulture;
             }
             else
             {
-                culture = new System.Globalization.CultureInfo(lang);
+                culture = new CultureInfo(lang);
             }
 
-            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
-            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = culture;
 
             // Also set it for the generated Resources class
             RustPlusDesk.Properties.Resources.Culture = culture;
 
-            UpdateDynamicResources();
-            CultureChanged?.Invoke();
+            int version = Interlocked.Increment(ref _languageApplyVersion);
+
+            if (applySynchronously)
+            {
+                ApplyDynamicResources(GetDynamicResourceMap(culture));
+                CultureChanged?.Invoke();
+            }
+            else
+            {
+                _ = ApplyLanguageResourcesAsync(culture, version);
+            }
         }
         catch { }
     }
 
     public static event Action? CultureChanged;
 
-    private void UpdateDynamicResources()
+    private async Task ApplyLanguageResourcesAsync(CultureInfo culture, int version)
+    {
+        try
+        {
+            var resourceMap = await Task.Run(() => GetDynamicResourceMap(culture));
+            if (version != Volatile.Read(ref _languageApplyVersion))
+                return;
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                if (version != Volatile.Read(ref _languageApplyVersion))
+                    return;
+
+                ApplyDynamicResources(resourceMap);
+                CultureChanged?.Invoke();
+            }, DispatcherPriority.Background);
+        }
+        catch { }
+    }
+
+    private static IReadOnlyDictionary<string, string> GetDynamicResourceMap(CultureInfo culture)
+    {
+        string cacheKey = string.IsNullOrEmpty(culture.Name) ? "invariant" : culture.Name;
+        return _resourceCache.GetOrAdd(cacheKey, _ => BuildDynamicResourceMap(culture));
+    }
+
+    private static IReadOnlyDictionary<string, string> BuildDynamicResourceMap(CultureInfo culture)
     {
         var rm = RustPlusDesk.Properties.Resources.ResourceManager;
-        var culture = RustPlusDesk.Properties.Resources.Culture;
+        var values = new Dictionary<string, string>(StringComparer.Ordinal);
 
-        // Step 1: load the base/neutral (invariant) resource set first so that keys
-        // which exist only in Resources.resx (and haven't been added to satellite files yet)
-        // are still registered as DynamicResources.
-        var neutralSet = rm.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, false);
+        var neutralSet = rm.GetResourceSet(CultureInfo.InvariantCulture, true, false);
         if (neutralSet != null)
         {
             foreach (System.Collections.DictionaryEntry entry in neutralSet)
             {
-                if (entry.Value is string s && !string.IsNullOrWhiteSpace(s))
-                    Resources[entry.Key] = s;
+                if (entry.Key is string key && entry.Value is string value && !string.IsNullOrWhiteSpace(value))
+                    values[key] = value;
             }
         }
 
-        // Step 2: overlay culture-specific translations, falling back to neutral for blank values.
         var resourceSet = rm.GetResourceSet(culture, true, true);
         if (resourceSet != null)
         {
             foreach (System.Collections.DictionaryEntry entry in resourceSet)
             {
-                if (entry.Value is string s)
-                {
-                    if (string.IsNullOrWhiteSpace(s))
-                    {
-                        var fallback = rm.GetString(entry.Key.ToString() ?? "", System.Globalization.CultureInfo.InvariantCulture);
-                        if (!string.IsNullOrWhiteSpace(fallback))
-                        {
-                            Resources[entry.Key] = fallback;
-                            continue;
-                        }
-                    }
-
-                    Resources[entry.Key] = s;
-                }
+                if (entry.Key is string key && entry.Value is string value && !string.IsNullOrWhiteSpace(value))
+                    values[key] = value;
             }
+        }
+
+        return values;
+    }
+
+    private void ApplyDynamicResources(IReadOnlyDictionary<string, string> resourceMap)
+    {
+        foreach (var entry in resourceMap)
+        {
+            if (!Resources.Contains(entry.Key) || !Equals(Resources[entry.Key], entry.Value))
+                Resources[entry.Key] = entry.Value;
         }
     }
 
