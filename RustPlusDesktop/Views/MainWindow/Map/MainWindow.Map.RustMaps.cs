@@ -454,7 +454,7 @@ return;
 
                 _fullscreenWindow.PreviewKeyDown += (s, ev) =>
                 {
-                    if ((System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) != 0 && ev.Key == System.Windows.Input.Key.F)
+                    if (ev.Key == System.Windows.Input.Key.F11)
                     {
                         ev.Handled = true;
                         ToggleWpfFullscreen();

@@ -795,7 +795,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0 && e.Key == Key.F)
+        if (e.Key == Key.F11)
         {
             if (_isMap3DActive)
             {
