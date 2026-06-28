@@ -266,6 +266,7 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
+        <conv:BoolToVisibilityConverter x:Key="Vis" />
         </ResourceDictionary>
     </ui:FluentWindow.Resources>
 
