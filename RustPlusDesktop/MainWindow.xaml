@@ -948,6 +948,17 @@
                                         Content="{DynamicResource Stop}"
                                         Icon="{ui:SymbolIcon Symbol=Stop24}"
                                         Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+
+                                    <ui:Button
+                                        x:Name="BtnFcmInfo"
+                                        Width="32"
+                                        Height="30"
+                                        Margin="6,0,0,0"
+                                        Padding="0"
+                                        Appearance="Transparent"
+                                        Click="BtnFcmInfo_Click"
+                                        Icon="{ui:SymbolIcon Symbol=Info24}"
+                                        ToolTip="{DynamicResource FcmInfoToolTip}" />
                                 </StackPanel>
 
                                 <StackPanel
