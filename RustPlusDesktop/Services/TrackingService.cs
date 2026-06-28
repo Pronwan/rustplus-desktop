@@ -83,6 +83,12 @@ public class TrackingSettings
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
     public double SidebarWidth { get; set; } = 600;
+    public bool SidebarPinned { get; set; } = true;
+    public double WindowWidth { get; set; } = 1280;
+    public double WindowHeight { get; set; } = 720;
+    public double WindowLeft { get; set; } = double.NaN;
+    public double WindowTop { get; set; } = double.NaN;
+    public bool WindowMaximized { get; set; } = false;
     public string SteamId64 { get; set; } = string.Empty;
     public bool AnnounceCargo { get; set; } = false;
     public bool AnnounceHeli { get; set; } = false;
@@ -529,6 +535,28 @@ public static class TrackingService
     {
         get => _settings.SidebarWidth;
         set { _settings.SidebarWidth = value; SaveDB(); }
+    }
+
+    public static bool SidebarPinned
+    {
+        get => _settings.SidebarPinned;
+        set { _settings.SidebarPinned = value; SaveDB(); }
+    }
+
+    public static double WindowWidth => _settings.WindowWidth;
+    public static double WindowHeight => _settings.WindowHeight;
+    public static double WindowLeft => _settings.WindowLeft;
+    public static double WindowTop => _settings.WindowTop;
+    public static bool WindowMaximized => _settings.WindowMaximized;
+
+    public static void SaveWindowBounds(double width, double height, double left, double top, bool maximized)
+    {
+        _settings.WindowWidth = width;
+        _settings.WindowHeight = height;
+        _settings.WindowLeft = left;
+        _settings.WindowTop = top;
+        _settings.WindowMaximized = maximized;
+        SaveDB();
     }
 
     public static string SteamId64

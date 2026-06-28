@@ -380,10 +380,46 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        
+        // Restore window dimensions and position
+        double savedWidth = TrackingService.WindowWidth;
+        double savedHeight = TrackingService.WindowHeight;
+        double savedLeft = TrackingService.WindowLeft;
+        double savedTop = TrackingService.WindowTop;
+        bool savedMaximized = TrackingService.WindowMaximized;
+
+        if (savedWidth > 100 && savedHeight > 100)
+        {
+            this.Width = savedWidth;
+            this.Height = savedHeight;
+        }
+
+        if (!double.IsNaN(savedLeft) && !double.IsNaN(savedTop))
+        {
+            double minLeft = SystemParameters.VirtualScreenLeft;
+            double minTop = SystemParameters.VirtualScreenTop;
+            double maxLeft = SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth;
+            double maxTop = SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight;
+
+            if (savedLeft >= minLeft && savedLeft < maxLeft - 100 &&
+                savedTop >= minTop && savedTop < maxTop - 100)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Left = savedLeft;
+                this.Top = savedTop;
+            }
+        }
+
+        if (savedMaximized)
+        {
+            this.WindowState = WindowState.Maximized;
+        }
+
         this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+        _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
         _expandedSidebarWidth = Math.Clamp(TrackingService.SidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
         TrackLeftPanelOverlayVisibility();
-        SetSidebarExpanded(false);
+        SetSidebarExpanded(_isSidebarPinnedExpanded);
         FlushPendingLogs();
         MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
@@ -2966,8 +3002,41 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return (s, offX, offY);
     }
 
+    private void SaveWindowSettings()
+    {
+        try
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, false);
+            }
+            else if (this.WindowState == WindowState.Maximized)
+            {
+                var bounds = this.RestoreBounds;
+                if (!bounds.IsEmpty)
+                {
+                    TrackingService.SaveWindowBounds(bounds.Width, bounds.Height, bounds.Left, bounds.Top, true);
+                }
+                else
+                {
+                    TrackingService.SaveWindowBounds(TrackingService.WindowWidth, TrackingService.WindowHeight, TrackingService.WindowLeft, TrackingService.WindowTop, true);
+                }
+            }
+            else if (this.WindowState == WindowState.Minimized)
+            {
+                var bounds = this.RestoreBounds;
+                if (!bounds.IsEmpty)
+                {
+                    TrackingService.SaveWindowBounds(bounds.Width, bounds.Height, bounds.Left, bounds.Top, TrackingService.WindowMaximized);
+                }
+            }
+        }
+        catch { }
+    }
+
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        SaveWindowSettings();
         if (_isShuttingDown) return;
 
         if (TrackingService.CloseToTrayEnabled)
@@ -5943,7 +6012,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             _expandedSidebarWidth = Math.Clamp(w, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
-            SetSidebarExpanded(_isSidebarExpanded);
+            _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+            SetSidebarExpanded(_isSidebarPinnedExpanded);
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
 
@@ -6222,6 +6292,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void BtnToggleSidebarPin_Click(object sender, RoutedEventArgs e)
     {
         _isSidebarPinnedExpanded = !_isSidebarPinnedExpanded;
+        TrackingService.SidebarPinned = _isSidebarPinnedExpanded;
 
         if (_isSidebarPinnedExpanded)
         {
