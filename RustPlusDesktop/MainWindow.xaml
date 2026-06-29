@@ -386,7 +386,8 @@
                                             <Image
                                                 x:Name="ImgSteam"
                                                 Source="{Binding MyAvatar}"
-                                                Stretch="UniformToFill">
+                                                Stretch="UniformToFill"
+                                                RenderOptions.BitmapScalingMode="HighQuality">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
                                                         <Setter Property="Visibility" Value="Visible" />
@@ -2344,7 +2345,7 @@
                                                             <!-- Real profile marker preview (lime dot with avatar) -->
                                                             <Ellipse Width="38" Height="38" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
                                                                 <Ellipse.Fill>
-                                                                    <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                    <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                 </Ellipse.Fill>
                                                             </Ellipse>
                                                             <!-- Fallback if unchecked -->
@@ -2384,7 +2385,7 @@
                                                                     <!-- Avatar Circle inside the pin -->
                                                                     <Ellipse Width="26" Height="26" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,5,0,0" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
                                                                         <Ellipse.Fill>
-                                                                            <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                            <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                         </Ellipse.Fill>
                                                                     </Ellipse>
 
@@ -2624,7 +2625,8 @@
                                         Symbol="Person24" />
                                     <Image
                                         Source="{Binding MyAvatar}"
-                                        Stretch="UniformToFill" />
+                                        Stretch="UniformToFill"
+                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Grid>
                             </Border>
 
@@ -5753,7 +5755,7 @@
                                                             <Border x:Name="LeftAvatarBorder" Grid.Column="0" Width="26" Height="26" Margin="0,0,8,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Visible">
                                                                 <Grid>
                                                                     <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                 </Grid>
                                                             </Border>
 
@@ -5775,7 +5777,7 @@
                                                             <Border x:Name="RightAvatarBorder" Grid.Column="2" Width="26" Height="26" Margin="8,0,0,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Collapsed">
                                                                 <Grid>
                                                                     <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                 </Grid>
                                                             </Border>
                                                         </Grid>
