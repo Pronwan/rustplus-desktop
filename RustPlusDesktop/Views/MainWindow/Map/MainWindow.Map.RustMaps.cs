@@ -402,20 +402,9 @@ namespace RustPlusDesk.Views
             const string host = "rustplus3d.local";
             bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));
 
-            // 3D settings are saved globally in DataManager.AppDir
-
-            string globalSettingsPath = System.IO.Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "map_settings.json");
-            string localSettingsPath = System.IO.Path.Combine(result.FolderPath, "map_settings.json");
-            if (!System.IO.File.Exists(globalSettingsPath) && System.IO.File.Exists(localSettingsPath))
-            {
-                try { System.IO.File.Copy(localSettingsPath, globalSettingsPath, true); } catch { }
-            }
-            bool hasSettings = System.IO.File.Exists(globalSettingsPath);
-
             bool hasBlocked = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "building_blocked.json"));
             string url = $"https://{host}/index.html?v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}&mapDataUrl=/maps/current/map_data_viewer.json&embedded=1&view=3d" +
                          $"{(hasBuildings ? "&hasBuildings=1" : "")}" +
-                         $"{(hasSettings ? "&hasSettings=1" : "")}" +
                          $"{(hasBlocked ? "&hasBlocked=1" : "")}";
 
             CloseMap3DView();
@@ -601,13 +590,6 @@ namespace RustPlusDesk.Views
                                 await File.WriteAllTextAsync(path, dataString ?? "[]");
                             }
                         }
-                        else if (typeStr == "save_settings")
-                        {
-                            var dataNode = doc.RootElement.GetProperty("data");
-                            var dataString = dataNode.ValueKind == System.Text.Json.JsonValueKind.String ? dataNode.GetString() : dataNode.GetRawText();
-                            string path = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "map_settings.json");
-                            await File.WriteAllTextAsync(path, dataString ?? "{}");
-                        }
                     }
                 }
                 catch { }
@@ -650,16 +632,6 @@ namespace RustPlusDesk.Views
             }
 
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
-
-            // 3D settings are saved globally in DataManager.AppDir
-
-            string globalSettingsPath = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "map_settings.json");
-            string localSettingsPath = Path.Combine(result.FolderPath, "map_settings.json");
-            if (!File.Exists(globalSettingsPath) && File.Exists(localSettingsPath))
-            {
-                try { File.Copy(localSettingsPath, globalSettingsPath, true); } catch { }
-            }
-            CopyFileIfExists(globalSettingsPath, Path.Combine(currentDir, "map_settings.json"));
 
             CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
             await WriteViewerMapDataAsync(Path.Combine(result.FolderPath, "map_data.json"), Path.Combine(currentDir, "map_data_viewer.json"), _worldRectPx, ImgMap.Width, ImgMap.Height);
