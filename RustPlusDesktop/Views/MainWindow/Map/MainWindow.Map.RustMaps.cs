@@ -400,7 +400,13 @@ return;
             LoadBuildingBlockedZonesForCurrentMap(result.FolderPath);
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             const string host = "rustplus3d.local";
-            string url = $"https://{host}/index.html?v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}&mapDataUrl=/maps/current/map_data_viewer.json&embedded=1&view=3d";
+            bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));
+            bool hasSettings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_settings.json"));
+            bool hasBlocked = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "building_blocked.json"));
+            string url = $"https://{host}/index.html?v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}&mapDataUrl=/maps/current/map_data_viewer.json&embedded=1&view=3d" +
+                         $"{(hasBuildings ? "&hasBuildings=1" : "")}" +
+                         $"{(hasSettings ? "&hasSettings=1" : "")}" +
+                         $"{(hasBlocked ? "&hasBlocked=1" : "")}";
 
             CloseMap3DView();
             _map3DWebView = new WebView2
