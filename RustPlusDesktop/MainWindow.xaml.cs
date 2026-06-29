@@ -61,6 +61,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     internal MainViewModel ViewModel => _vm;
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
+    private string? _fetchedSteamId64;
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
@@ -4248,6 +4249,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private string GetOwnAvatarCachePath(string steamId64)
+    {
+        var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "avatars");
+        if (!System.IO.Directory.Exists(dir))
+        {
+            System.IO.Directory.CreateDirectory(dir);
+        }
+        return System.IO.Path.Combine(dir, $"{steamId64}.png");
+    }
+
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
     {
         if (string.IsNullOrWhiteSpace(steamId64))
@@ -4256,26 +4267,57 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        var cachePath = GetOwnAvatarCachePath(steamId64);
+
+        // Try load from local cache first on start
+        if (System.IO.File.Exists(cachePath) && _vm.MyAvatar == null)
+        {
+            try
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(cachePath);
+                bmp.EndInit();
+                bmp.Freeze();
+                _vm.MyAvatar = bmp;
+            }
+            catch
+            {
+                // Ignore cache load failure, fallback to network
+            }
+        }
+
+        // Fetch once on start/session (skip if already fetched this steam ID in this session)
+        if (_fetchedSteamId64 == steamId64)
+        {
+            return;
+        }
+
         try
         {
             using var http = new HttpClient();
             var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId64}?xml=1");
 
-            // sehr einfache Extraktion
-            var nameMatch = Regex.Match(xml, "<steamID><!\\[CDATA\\[(.*?)\\]\\]>");
-            var avatarMatch = Regex.Match(xml, "<avatarFull><!\\[CDATA\\[(.*?)\\]\\]>");
+            var nameMatch = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]>");
+            var avatarMatch = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]>");
 
             if (avatarMatch.Success)
             {
                 var uri = new Uri(avatarMatch.Groups[1].Value);
+                var bytes = await http.GetByteArrayAsync(uri);
+                
+                await System.IO.File.WriteAllBytesAsync(cachePath, bytes);
+
                 var bmp = new BitmapImage();
                 bmp.BeginInit();
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
-                bmp.UriSource = uri;
+                bmp.UriSource = new Uri(cachePath);
                 bmp.EndInit();
                 bmp.Freeze();
 
                 _vm.MyAvatar = bmp;
+                _fetchedSteamId64 = steamId64;
             }
             if (nameMatch.Success)
             {
@@ -4286,8 +4328,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch
         {
-            // Avatar optional Ã¢â‚¬â€œ bei Fehlern still
-            _vm.MyAvatar = null;
+            // If network fails but cache exists, we keep the cached version. Otherwise set null.
+            if (!System.IO.File.Exists(cachePath))
+            {
+                _vm.MyAvatar = null;
+            }
         }
     }
 
