@@ -150,8 +150,17 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get => _isBusy;
-        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); }
+        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); OnPropertyChanged(nameof(IsGlobalBusyOverlayVisible)); }
     }
+
+    private bool _isConnectionLoading;
+    public bool IsConnectionLoading
+    {
+        get => _isConnectionLoading;
+        set { _isConnectionLoading = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsGlobalBusyOverlayVisible)); }
+    }
+
+    public bool IsGlobalBusyOverlayVisible => IsBusy && !IsConnectionLoading;
 
     private bool _isCloudConnected;
     public bool IsCloudConnected

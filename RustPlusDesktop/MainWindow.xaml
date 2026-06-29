@@ -3890,6 +3890,47 @@
                         ClipToBounds="True">
                         <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
 
+                        <Grid
+                            x:Name="MapConnectionLoader"
+                            Panel.ZIndex="90"
+                            Background="#88000000"
+                            IsHitTestVisible="True"
+                            Visibility="{Binding IsConnectionLoading, Converter={StaticResource BoolToVisibility}}">
+                            <Border
+                                Width="300"
+                                Padding="24"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="#E8101518"
+                                BorderBrush="#66FFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="14">
+                                <StackPanel>
+                                    <ui:ProgressRing
+                                        Width="44"
+                                        Height="44"
+                                        Margin="0,0,0,18"
+                                        HorizontalAlignment="Center"
+                                        Foreground="{DynamicResource Accent}"
+                                        IsIndeterminate="True" />
+                                    <TextBlock
+                                        FontSize="15"
+                                        FontWeight="SemiBold"
+                                        Foreground="White"
+                                        Text="{Binding BusyText}"
+                                        TextAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                    <TextBlock
+                                        Margin="0,8,0,0"
+                                        FontSize="12"
+                                        Foreground="#D9FFFFFF"
+                                        Text="{DynamicResource MayTakeAMoment}"
+                                        TextAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
                         <Border
                             x:Name="MapPlaceholder"
                             Panel.ZIndex="50"
@@ -6203,7 +6244,7 @@
                 Panel.ZIndex="9999"
                 Background="#AA000000"
                 IsHitTestVisible="True"
-                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+                Visibility="{Binding IsGlobalBusyOverlayVisible, Converter={StaticResource BoolToVisibility}}">
                 <Border
                     Width="340"
                     Padding="24"

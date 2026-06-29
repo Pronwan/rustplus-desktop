@@ -390,6 +390,7 @@ public partial class MainWindow
         {
             if (showBusy)
             {
+                _vm.IsConnectionLoading = true;
                 _vm.IsBusy = true;
                 _vm.BusyText = "Connecting …";
             }
@@ -507,6 +508,7 @@ public partial class MainWindow
             if (showBusy)
             {
                 _vm.IsInitializing = false;
+                _vm.IsConnectionLoading = false;
             }
             _vm.Selected.IsConnected = true;
             _vm.Selected.IsFullConnected = true;
@@ -560,6 +562,7 @@ public partial class MainWindow
             {
                 _vm.IsInitializing = false;
                 _vm.IsBusy = false;
+                _vm.IsConnectionLoading = false;
                 _vm.BusyText = "";
             }
             AppendLog("Fehler: " + ex.Message);

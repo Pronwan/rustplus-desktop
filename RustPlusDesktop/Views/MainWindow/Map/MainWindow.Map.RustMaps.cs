@@ -665,7 +665,11 @@ return;
                         return;
                     }
 
-                    if (isMapRuntimeFile) return;
+                    if (isMapRuntimeFile)
+                    {
+                        args.Response = CreateMap3D404Response();
+                        return;
+                    }
                 }
 
                 string resourceName = "Map3DViewer/" + relativePath.Replace(Path.DirectorySeparatorChar, '/');
@@ -673,12 +677,25 @@ return;
                 if (resourceBytes != null)
                 {
                     args.Response = CreateMap3DResponse(resourceBytes, GetMap3DContentType(resourceName));
+                    return;
                 }
+
+                args.Response = CreateMap3D404Response();
             }
             catch
             {
                 // Let WebView2 surface a normal load failure for unexpected request errors.
             }
+        }
+
+        private CoreWebView2WebResourceResponse CreateMap3D404Response()
+        {
+            var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Not Found"));
+            return _map3DWebView!.CoreWebView2.Environment.CreateWebResourceResponse(
+                stream,
+                404,
+                "Not Found",
+                "Content-Type: text/plain; charset=utf-8\r\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0");
         }
 
         private CoreWebView2WebResourceResponse CreateMap3DResponse(byte[] bytes, string contentType)
