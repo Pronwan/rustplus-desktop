@@ -189,7 +189,6 @@ jobs:
             --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
             --packAuthors "Pronwan" `
             --packTitle "RustPlusDesk" `
-            --noInst
 
           # Keep only the .nupkg and RELEASES file by removing the portable zip
           Remove-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/*.zip" -ErrorAction Ignore
