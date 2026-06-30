@@ -611,6 +611,9 @@ namespace RustPlusDesk.Views
             Directory.CreateDirectory(runtimeRoot);
             Directory.CreateDirectory(Path.Combine(runtimeRoot, "maps", "current"));
 
+            string? viewerRoot = ResolveMap3DViewerSourceRoot();
+            if (viewerRoot != null) CopyDirectoryIfExists(viewerRoot, runtimeRoot);
+
             string? iconsRoot = ResolveIconsSourceRoot();
             if (iconsRoot != null) CopyDirectoryIfExists(iconsRoot, Path.Combine(runtimeRoot, "Icons"));
 
@@ -647,19 +650,19 @@ namespace RustPlusDesk.Views
                 if (string.IsNullOrWhiteSpace(relativePath)) relativePath = "index.html";
                 if (relativePath.Contains("..")) return;
 
+                string diskPath = Path.GetFullPath(Path.Combine(runtimeRoot, relativePath));
+                string root = Path.GetFullPath(runtimeRoot);
+                if (diskPath.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(diskPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(diskPath);
+                    args.Response = CreateMap3DResponse(bytes, GetMap3DContentType(diskPath));
+                    return;
+                }
+
                 bool isMapRuntimeFile = relativePath.StartsWith($"maps{Path.DirectorySeparatorChar}current{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
                 bool isIconFile = relativePath.StartsWith($"Icons{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
                 if (isMapRuntimeFile || isIconFile)
                 {
-                    string diskPath = Path.GetFullPath(Path.Combine(runtimeRoot, relativePath));
-                    string root = Path.GetFullPath(runtimeRoot);
-                    if (diskPath.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(diskPath))
-                    {
-                        byte[] bytes = File.ReadAllBytes(diskPath);
-                        args.Response = CreateMap3DResponse(bytes, GetMap3DContentType(diskPath));
-                        return;
-                    }
-
                     if (isMapRuntimeFile)
                     {
                         args.Response = CreateMap3D404Response();
@@ -753,6 +756,7 @@ namespace RustPlusDesk.Views
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Assets", "icons")),
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "RustPlusDesktop", "Assets", "icons")),
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "RustPlusDesktop", "RustPlusDesktop", "Assets", "icons")),
+                Path.Combine(baseDir, "MapParser", "Icons"),
                 Path.Combine(baseDir, "Assets", "icons")
             };
 
@@ -760,7 +764,7 @@ namespace RustPlusDesk.Views
                 Directory.Exists(path) &&
                 (File.Exists(Path.Combine(path, "airfield.png")) || File.Exists(Path.Combine(path, "trainyard.png"))));
         }
-        private static string ResolveMap3DViewerSourceRoot()
+        private static string? ResolveMap3DViewerSourceRoot()
         {
             string baseDir = AppContext.BaseDirectory;
             string[] candidates =
@@ -771,7 +775,6 @@ namespace RustPlusDesk.Views
             };
 
             string? found = candidates.FirstOrDefault(p => File.Exists(Path.Combine(p, "index.html")) && File.Exists(Path.Combine(p, "app.js")));
-            if (found == null) throw new FileNotFoundException("3D map viewer files were not found.");
             return found;
         }
 

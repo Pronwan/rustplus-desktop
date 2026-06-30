@@ -330,27 +330,30 @@
   </ItemGroup>
 
   <ItemGroup Condition="Exists('..\MapParser\index.html')">
-    <EmbeddedResource Include="..\MapParser\index.html">
-      <LogicalName>Map3DViewer/index.html</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\app.js">
-      <LogicalName>Map3DViewer/app.js</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\style.css">
-      <LogicalName>Map3DViewer/style.css</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\modules\**\*" Condition="Exists('..\MapParser\modules')">
-      <LogicalName>Map3DViewer/modules/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
-      <LogicalName>Map3DViewer/draco_decoder.wasm</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
-      <LogicalName>Map3DViewer/Rust_Assets/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Assets\icons\**\*" Condition="Exists('Assets\icons')">
-      <LogicalName>Map3DViewer/Icons/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
+    <Content Include="..\MapParser\style.css">
+      <Link>MapParser\style.css</Link>
+      <TargetPath>MapParser\style.css</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
+      <Link>MapParser\draco_decoder.wasm</Link>
+      <TargetPath>MapParser\draco_decoder.wasm</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
+      <Link>MapParser\Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <TargetPath>MapParser\Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\icons\**\*" Condition="Exists('Assets\icons')">
+      <Link>MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <TargetPath>MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 
   <PropertyGroup>
@@ -365,17 +368,40 @@
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
   </Target>
 
-  <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserPublishedExe)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="IncludeMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserPublishedExe)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
-      <EmbeddedResource Include="$(MapParserPublishedExe)">
-        <LogicalName>Map3DParser/MapParser.exe</LogicalName>
-      </EmbeddedResource>
-      <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
-        <LogicalName>Map3DParser/prefabs_map.json</LogicalName>
-      </EmbeddedResource>
-      <EmbeddedResource Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
-        <LogicalName>Map3DParser/Rust_Assets/Metadata/carbon_prefabs.json</LogicalName>
-      </EmbeddedResource>
+      <MapParserPublishedAsset Include="$(MapParserPublishDir)assets\**\*" Condition="Exists('$(MapParserPublishDir)assets')" />
+
+      <Content Include="$(MapParserPublishedExe)">
+        <Link>MapParser\MapParser.exe</Link>
+        <TargetPath>MapParser\MapParser.exe</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="$(MapParserPublishDir)index.html" Condition="Exists('$(MapParserPublishDir)index.html')">
+        <Link>MapParser\index.html</Link>
+        <TargetPath>MapParser\index.html</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="@(MapParserPublishedAsset)">
+        <Link>MapParser\assets\%(MapParserPublishedAsset.RecursiveDir)%(MapParserPublishedAsset.Filename)%(MapParserPublishedAsset.Extension)</Link>
+        <TargetPath>MapParser\assets\%(MapParserPublishedAsset.RecursiveDir)%(MapParserPublishedAsset.Filename)%(MapParserPublishedAsset.Extension)</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
+        <Link>MapParser\prefabs_map.json</Link>
+        <TargetPath>MapParser\prefabs_map.json</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
+        <Link>MapParser\Rust_Assets\Metadata\carbon_prefabs.json</Link>
+        <TargetPath>MapParser\Rust_Assets\Metadata\carbon_prefabs.json</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
     </ItemGroup>
   </Target>
 
