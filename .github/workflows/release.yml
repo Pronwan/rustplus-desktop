@@ -186,8 +186,10 @@ jobs:
             --mainExe "RustPlusDesk.exe" `
             --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}" `
             --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
-            --noPortable `
             --noInst
+
+          # Keep only the .nupkg and RELEASES file by removing the portable zip
+          Remove-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/*.zip" -ErrorAction Ignore
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
