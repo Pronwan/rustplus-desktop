@@ -1767,8 +1767,8 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "large oil rig",           "pack://application:,,,/Assets/icons/largeoilrig.png" },
     { "small oil rig",           "pack://application:,,,/Assets/icons/oilrig.png" },
     { "underwater lab",          "pack://application:,,,/Assets/icons/underwater.png" },
-    { "underwater lab b",          "pack://application:,,,/Assets/icons/underwater.png" },
-    { "underwater labs",          "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater lab b",        "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater labs",         "pack://application:,,,/Assets/icons/underwater.png" },
     { "junkyard",                "pack://application:,,,/Assets/icons/junkyard.png" },
     { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
     { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
@@ -1785,6 +1785,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "small god rock",          "pack://application:,,,/Assets/icons/godrock_small.png" },
     { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
     { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
+    { "apartments complex",      "pack://application:,,,/Assets/icons/apartments_complex_1.png" },
 };
 
     private static double CalcOverlayScale(double effZoom, double exp, double baseMult = 1.0)
@@ -1897,6 +1898,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             .Replace("ice lake 2", "ice lake")
             .Replace("ice lake 3", "ice lake")
             .Replace("ice lake 4", "ice lake")
+            .Replace("apartments complex 1", "apartments complex")
             .Replace("train tunnel entrance", "tunnel entrance");
 
         return s;
