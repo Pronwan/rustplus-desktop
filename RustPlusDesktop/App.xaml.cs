@@ -53,10 +53,19 @@ public partial class App : Application
         SetLanguage(applySynchronously: true);
         base.OnStartup(e);
 
-        // Run legacy Inno Setup cleanup in the background
-        Task.Run(CleanupLegacyInnoSetupInstallation);
+        // Run legacy Inno Setup cleanup in the background after a 5-second delay to ensure smooth startup
+        Task.Run(async () =>
+        {
+            await Task.Delay(5000);
+            CleanupLegacyInnoSetupInstallation();
+        });
 
-        EnsureUrlProtocolRegistered();
+        // Run URL protocol registration in the background after a 1-second delay
+        Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            EnsureUrlProtocolRegistered();
+        });
 
         bool isBackgroundArg = e.Args.Contains("--background");
         bool createdNew;

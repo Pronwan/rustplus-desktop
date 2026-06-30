@@ -23,6 +23,8 @@ namespace RustPlusDesk.Services
         private readonly UpdateManager _updateManager;
         private UpdateInfo? _pendingUpdateInfo;
         private readonly bool _isVelopackSupported;
+        private bool _isInitialized = false;
+        private readonly object _initLock = new();
 
         public UpdateService()
         {
@@ -37,16 +39,41 @@ namespace RustPlusDesk.Services
             {
                 _isVelopackSupported = false;
             }
+        }
 
-            if (_isVelopackSupported && _updateManager.UpdatePendingRestart != null)
+        private void InitializeIfNeeded()
+        {
+            if (_isInitialized) return;
+            lock (_initLock)
             {
-                PendingInstallerPath = PendingVelopackUpdateMarker;
+                if (_isInitialized) return;
+                try
+                {
+                    if (_isVelopackSupported && _updateManager.UpdatePendingRestart != null)
+                    {
+                        _pendingInstallerPath = PendingVelopackUpdateMarker;
+                    }
+                }
+                catch { }
+                _isInitialized = true;
             }
         }
 
         public static string LatestReleaseUrl => $"https://github.com/{RepoOwner}/{RepoName}/releases/latest";
 
-        public string? PendingInstallerPath { get; set; }
+        private string? _pendingInstallerPath;
+        public string? PendingInstallerPath
+        {
+            get
+            {
+                InitializeIfNeeded();
+                return _pendingInstallerPath;
+            }
+            set
+            {
+                _pendingInstallerPath = value;
+            }
+        }
 
         public string VersionRaw
         {
@@ -81,6 +108,7 @@ namespace RustPlusDesk.Services
 
         public async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
         {
+            InitializeIfNeeded();
             LatestUpdateSize = null;
             if (_isVelopackSupported)
             {
@@ -171,6 +199,7 @@ namespace RustPlusDesk.Services
 
         public async Task<string?> DownloadInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
         {
+            InitializeIfNeeded();
             if (string.Equals(url, PendingVelopackUpdateMarker, StringComparison.OrdinalIgnoreCase))
             {
                 try
@@ -410,6 +439,7 @@ namespace RustPlusDesk.Services
 
         public void StartInstaller(string installerPath)
         {
+            InitializeIfNeeded();
             if (string.Equals(installerPath, PendingVelopackUpdateMarker, StringComparison.OrdinalIgnoreCase))
             {
                 var pending = _updateManager.UpdatePendingRestart ?? _pendingUpdateInfo?.TargetFullRelease;
