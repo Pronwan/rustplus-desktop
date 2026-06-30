@@ -335,7 +335,7 @@
     <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('..\MapParser\index.html')">
+  <ItemGroup Condition="Exists('..\MapParser\MapParser.csproj')">
     <Content Include="..\MapParser\style.css">
       <Link>MapParser\style.css</Link>
       <TargetPath>MapParser\style.css</TargetPath>
