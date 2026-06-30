@@ -18,7 +18,7 @@ on:
         default: "main"
         type: string
       publish_nuget:
-        description: "Push dotnet pack output to GitHub Packages."
+        description: "Push the MapParser NuGet package to GitHub Packages."
         required: true
         default: false
         type: boolean
@@ -149,19 +149,10 @@ jobs:
       - name: Build
         run: dotnet build "${{ env.SOLUTION }}" --configuration "${{ env.CONFIGURATION }}" --no-restore -p:Version="${{ env.VERSION }}"
 
-      - name: Pack NuGet packages
+      - name: Pack MapParser NuGet package
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path "${{ env.NUGET_OUTPUT_DIR }}" | Out-Null
-          dotnet pack "${{ env.APP_PROJECT }}" `
-            --configuration "${{ env.CONFIGURATION }}" `
-            --no-build `
-            --output "${{ env.NUGET_OUTPUT_DIR }}" `
-            -p:PackageVersion="${{ env.VERSION }}" `
-            -p:Version="${{ env.VERSION }}" `
-            -p:IncludeSymbols=true `
-            -p:SymbolPackageFormat=snupkg
-
           dotnet pack "MapParser/MapParser.csproj" `
             --configuration "${{ env.CONFIGURATION }}" `
             --no-build `

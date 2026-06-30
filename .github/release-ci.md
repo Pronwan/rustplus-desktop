@@ -1,6 +1,6 @@
 # Release CI
 
-The `Release` GitHub Actions workflow builds the Windows app, NuGet package artifacts, an Inno Setup installer, and Velopack update packages.
+The `Release` GitHub Actions workflow builds the Windows app, the MapParser NuGet package, an Inno Setup installer, and Velopack update packages.
 
 ## Manual Release
 
@@ -8,7 +8,7 @@ The `Release` GitHub Actions workflow builds the Windows app, NuGet package arti
 2. Run the `Release` workflow.
 3. Set `version` to the package version you want, for example `7.1.2`.
 4. Leave `MapParser` on `Pronwan/MapParser` and `main`, or point it at a branch/tag when testing parser changes.
-5. Enable `publish_nuget` only when the packages should be pushed to GitHub Packages.
+5. Enable `publish_nuget` only when the MapParser package should be pushed to GitHub Packages.
 6. Leave `create_github_release` enabled when you want the installer and update files uploaded to a GitHub Release.
 
 ## Tag Release
@@ -24,7 +24,7 @@ The workflow trims the leading `v` and uses `7.1.2` as the package version.
 
 ## Outputs
 
-- `artifacts/nuget`: `.nupkg` and `.snupkg` from `dotnet pack`.
+- `artifacts/nuget`: MapParser `.nupkg` and `.snupkg` from `dotnet pack`.
 - `artifacts/inno`: `RustPlusDesk-Setup-<version>.exe` from `Setup.iss`.
 - `artifacts/velopack`: Velopack `.nupkg`, installer `.exe`, portable `.zip`, and release metadata.
 
