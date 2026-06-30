@@ -77,6 +77,13 @@ begin
   RegDeleteKeyIncludingSubkeys(HKCU, Key);
   Key := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\RustPlusDesk';
   RegDeleteKeyIncludingSubkeys(HKLM, Key);
+
+  // Clean up Velopack registry entries to prevent duplicate installed app list entries
+  Key := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\Pronwan.RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+  RegDeleteKeyIncludingSubkeys(HKCU, Key);
+  Key := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Pronwan.RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);

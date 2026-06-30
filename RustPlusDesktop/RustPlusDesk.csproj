@@ -354,12 +354,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Include="Assets\icons\**\*" Condition="Exists('Assets\icons')">
-      <Link>MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <TargetPath>MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
+
   </ItemGroup>
 
 
@@ -715,5 +710,19 @@
 			<Compile Include="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
 		</ItemGroup>
 	</Target>
+
+  <Target Name="CopyIconsToMapParserBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(TargetDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <IconFiles Include="$(MSBuildProjectDirectory)\Assets\icons\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(TargetDir)MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyIconsToMapParserPublish" AfterTargets="Publish" Condition="'$(PublishDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <IconFiles Include="$(MSBuildProjectDirectory)\Assets\icons\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(PublishDir)MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
 	
 </Project>
