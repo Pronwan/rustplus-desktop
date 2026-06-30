@@ -46,7 +46,7 @@ env:
   RUNTIME_IDENTIFIER: "win-x64"
   APP_PROJECT: "RustPlusDesktop/RustPlusDesk.csproj"
   SOLUTION: "RustPlusDesk.sln"
-  PUBLISH_DIR: "${{ github.workspace }}/artifacts/publish"
+  PUBLISH_DIR: "${{ github.workspace }}/RustPlusDesktop/bin/Installer/publish"
   INNO_OUTPUT_DIR: "${{ github.workspace }}/artifacts/inno"
   NUGET_OUTPUT_DIR: "${{ github.workspace }}/artifacts/nuget"
   VELOPACK_OUTPUT_DIR: "${{ github.workspace }}/artifacts/velopack"
