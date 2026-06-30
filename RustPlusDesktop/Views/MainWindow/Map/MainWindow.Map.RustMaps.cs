@@ -605,11 +605,46 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private static void SafeDeleteDirectory(string path)
+        {
+            if (!Directory.Exists(path)) return;
+
+            try
+            {
+                foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        var attributes = File.GetAttributes(file);
+                        if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                        {
+                            File.SetAttributes(file, attributes & ~FileAttributes.ReadOnly);
+                        }
+                    }
+                    catch { }
+                }
+
+                Directory.Delete(path, recursive: true);
+            }
+            catch
+            {
+                // Best effort cleanup.
+            }
+        }
+
         private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
         {
             string runtimeRoot = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Map3DViewer");
             Directory.CreateDirectory(runtimeRoot);
             Directory.CreateDirectory(Path.Combine(runtimeRoot, "maps", "current"));
+
+            // Proactively clean up any legacy/unwanted directories in the viewer folder to avoid issues
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".git"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".agents"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".claude"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "node_modules"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "bin"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "obj"));
 
             string? viewerRoot = ResolveMap3DViewerSourceRoot();
             if (viewerRoot != null) CopyDirectoryIfExists(viewerRoot, runtimeRoot);
@@ -995,12 +1030,31 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private static bool IsIgnoredRuntimePath(string relativePath)
+        {
+            var segments = relativePath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var segment in segments)
+            {
+                if (segment.StartsWith('.') ||
+                    string.Equals(segment, "node_modules", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "bin", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "obj", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "maps", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static void CopyDirectoryIfExists(string sourceDir, string targetDir)
         {
             if (!Directory.Exists(sourceDir)) return;
             foreach (string sourceFile in Directory.EnumerateFiles(sourceDir, "*", SearchOption.AllDirectories))
             {
                 string relative = Path.GetRelativePath(sourceDir, sourceFile);
+                if (IsIgnoredRuntimePath(relative)) continue;
+
                 string target = Path.Combine(targetDir, relative);
                 Directory.CreateDirectory(Path.GetDirectoryName(target)!);
                 File.Copy(sourceFile, target, overwrite: true);
