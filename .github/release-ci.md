@@ -24,7 +24,7 @@ The workflow trims the leading `v` and uses `7.1.2` as the package version.
 ## Outputs
 
 - `artifacts/inno`: `RustPlusDesk-Setup-<version>.exe` from `Setup.iss`.
-- `artifacts/velopack`: Velopack `.nupkg`, installer `.exe`, portable `.zip`, and release metadata.
+- `artifacts/velopack`: Velopack `.nupkg` and release metadata.
 
 MapParser is checked out during CI and included in the RustPlusDesk publish output. It is not published as a separate NuGet package.
 

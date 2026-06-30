@@ -155,6 +155,7 @@ jobs:
           -p:InformationalVersion="${{ env.VERSION }}"
           -p:PublishSingleFile=false
           -p:PublishReadyToRun=false
+          -p:IncludeNativeLibrariesForSelfExtract=true
 
       - name: Build Inno Setup installer
         shell: pwsh
@@ -184,7 +185,9 @@ jobs:
             --packDir "${{ env.PUBLISH_DIR }}" `
             --mainExe "RustPlusDesk.exe" `
             --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}" `
-            --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico"
+            --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
+            --noPortable `
+            --noInst
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

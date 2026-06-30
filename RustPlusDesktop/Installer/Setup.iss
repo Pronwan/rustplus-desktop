@@ -50,6 +50,8 @@ Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\bin\Installer\publish\lang\*";      DestDir: "{app}\lang";      Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\MapParser\*"; DestDir: "{app}\MapParser"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -63,6 +65,7 @@ Type: filesandordirs; Name: "{app}\runtimes"
 Type: filesandordirs; Name: "{app}\runtime"
 Type: filesandordirs; Name: "{app}\Assets"
 Type: filesandordirs; Name: "{app}\lang"
+Type: filesandordirs; Name: "{app}\MapParser"
 
 [Code]
 // Jawads Aufräum-Logik (Sehr nützlich!)
