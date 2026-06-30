@@ -579,7 +579,7 @@ namespace RustPlusDesk.Views
         private void TxtSettingsDiscordWebhook_TextChanged(object sender, TextChangedEventArgs e)
         {
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            if (vm?.Selected != null)
+            if (vm?.Selected != null && ParentWindow != null)
             {
                 ParentWindow.SyncAlertMenuItems();
             }
@@ -588,7 +588,7 @@ namespace RustPlusDesk.Views
         private void BtnClearSettingsWebhook_Click(object sender, RoutedEventArgs e)
         {
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            if (vm?.Selected != null)
+            if (vm?.Selected != null && ParentWindow != null)
             {
                 vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
                 ParentWindow.SyncAlertMenuItems();

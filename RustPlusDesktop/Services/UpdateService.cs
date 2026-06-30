@@ -207,15 +207,16 @@ namespace RustPlusDesk.Services
                     var updateInfo = _pendingUpdateInfo ?? await _updateManager.CheckForUpdatesAsync();
                     if (updateInfo == null) return null;
 
-                    var isDelta = updateInfo.DeltasToTarget != null && updateInfo.DeltasToTarget.Any();
-                    var asset = isDelta ? updateInfo.DeltasToTarget.First() : updateInfo.TargetFullRelease;
+                    var deltas = updateInfo.DeltasToTarget;
+                    var isDelta = deltas != null && deltas.Any();
+                    var asset = isDelta ? deltas!.First() : updateInfo.TargetFullRelease;
                     
                     CurrentDownloadFile = isDelta ? "Delta Packages" : (asset?.FileName ?? "Velopack Package");
 
                     long totalBytes = 0;
                     if (isDelta)
                     {
-                        totalBytes = updateInfo.DeltasToTarget.Sum(d => d.Size);
+                        totalBytes = deltas?.Sum(d => d.Size) ?? 0;
                     }
                     else
                     {

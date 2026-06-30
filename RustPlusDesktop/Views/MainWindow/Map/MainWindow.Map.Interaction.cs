@@ -418,7 +418,6 @@ public partial class MainWindow
         }
     }
 
-    private int _smoothFollowId = 0;
     private bool _isSmoothingFollow = false;
     private double? _camTargetX, _camTargetY;
     private double? _currentCamX, _currentCamY;

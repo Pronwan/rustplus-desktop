@@ -397,9 +397,6 @@ Aflaai en installeer nou?</value>
     <value>Opdateringskontrole het misluk.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Geen toestelle.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Beskik oor profiel</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop registreer jou plaaslike app by FCM sodat dit dieselfde Rust+-kenn
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — Skoonmaak die sybalk vir alle instellings</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics-opsporing verwyder</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Jou basis word aangeval!</value>

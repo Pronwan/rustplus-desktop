@@ -493,7 +493,7 @@ public partial class MainWindow
             if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
             {
                 string grid = GetGridLabel(m.X, m.Y);
-                var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDocked", state.HarborName, grid);
+                var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDocked", state.HarborName ?? string.Empty, grid);
                 _ = SendTeamChatSafeAsync(msg, false, true);
                 _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                 state.AnnouncedDock = true;
@@ -546,7 +546,7 @@ public partial class MainWindow
                 else
                 {
                     string grid = GetGridLabel(m.X, m.Y);
-                    var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDeparting", state.HarborName, grid);
+                    var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDeparting", state.HarborName ?? string.Empty, grid);
                     _ = SendTeamChatSafeAsync(msg, false, true);
                     _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                     state.AnnouncedEgressWarning = true;
@@ -924,7 +924,7 @@ public partial class MainWindow
 
                 // Hover logic once
                 mainBorder.MouseEnter += (s, e) => {
-                    var items = stack.Children.OfType<Border>().Select(b => b.Child as Grid).Where(g => g != null).ToList();
+                    var items = stack.Children.OfType<Border>().Select(b => b.Child).OfType<Grid>().ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             lb.Visibility = Visibility.Visible;
@@ -933,7 +933,7 @@ public partial class MainWindow
                     }
                 };
                 mainBorder.MouseLeave += (s, e) => {
-                    var items = stack.Children.OfType<Border>().Select(b => b.Child as Grid).Where(g => g != null).ToList();
+                    var items = stack.Children.OfType<Border>().Select(b => b.Child).OfType<Grid>().ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));

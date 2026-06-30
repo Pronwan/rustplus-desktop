@@ -397,9 +397,6 @@
     <value>Перевірка оновлення не вдалася.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Немає пристроїв.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Дивитись профіль</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Чиста бічна панель для всіх налаштувань</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Видалено відстеження BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Вашу базу атакують!</value>

@@ -397,9 +397,6 @@ Sürümler sayfasını aç?</value>
     <value>Güncelleme kontrolü başarısız oldu.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Cihaz yok.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Profili Görüntüle</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop, ayni Rust+ bildirimlerini arka planda alabilmesi icin yerel uygul
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Tüm ayarlar için temiz kenar çubuğu</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics İzleme Kaldırıldı</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Üssünüz saldırı altında!</value>

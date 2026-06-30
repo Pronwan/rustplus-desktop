@@ -397,9 +397,6 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>Comprovació d'actualitzacions fallida.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Sense dispositius.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Veure el perfil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop registra la teva aplicacio local amb FCM per poder rebre aquestes 
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — Netejar la barra lateral per a tots els paràmetres</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Seguiment de BattleMetrics eliminat</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>La teva base està sota atac!</value>

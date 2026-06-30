@@ -397,9 +397,6 @@ Télécharger et installer maintenant ?</value>
     <value>La vérification de la mise à jour a échoué.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Aucun appareil.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Voir le profil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop enregistre votre application locale aupres de FCM afin de recevoir
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Nouvelle interface de la boutique</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Suppression du suivi de BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Votre base est attaquée !</value>

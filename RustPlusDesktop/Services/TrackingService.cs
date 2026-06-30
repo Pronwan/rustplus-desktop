@@ -284,7 +284,6 @@ public static class TrackingService
     private static string? _lastServerName;
 
     public static event Action? OnOnlinePlayersUpdated;
-    public static event Action<string>? OnServerInfoUpdated;
     public static event Action<string, string>? OnTrackingNotification;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
@@ -1362,17 +1361,11 @@ public static class TrackingService
             }
         }
 
-        bool updatedUi = false;
-
         foreach (var server in serversToPoll)
         {
             try
             {
                 await PollSingleServerAsync(server.Host, server.Port, server.Name);
-                if (server.Host == _lastServerHost && server.Port == _lastServerPort)
-                {
-                    updatedUi = true;
-                }
             }
             catch (Exception)
             {
@@ -1514,7 +1507,7 @@ public static class TrackingService
             // 3. Update Tracking stats
             await UpdateTrackingStatsAsync(currentlyOnlineInfo, serverName);
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
@@ -1532,7 +1525,8 @@ public static class TrackingService
             TrackedPlayer tp;
             lock (_dbLock)
             {
-                if (!_trackedPlayers.TryGetValue(cloneTp.BMId, out tp)) continue;
+                if (!_trackedPlayers.TryGetValue(cloneTp.BMId, out var trackedPlayer)) continue;
+                tp = trackedPlayer;
             }
             bool isOnline = currentlyOnlineInfo.TryGetValue(tp.BMId, out var info);
             if (!isOnline && tp.BMId != tp.Name)

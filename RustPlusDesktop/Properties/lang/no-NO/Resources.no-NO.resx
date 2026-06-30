@@ -397,9 +397,6 @@ Last ned og installer nå?</value>
     <value>Oppdatering sjekk mislyktes.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Ingen enheter.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Vis profil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop registrerer den lokale appen din hos FCM slik at den kan motta de 
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> – Rens sidepanelet for alle innstillinger</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Sporing Fjernet</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Din base er under angrep!</value>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -72,11 +73,12 @@ namespace RustPlusDesk.Services.Data
                 return false;
             }
 
-            var baseIcons = data.Icons.Where(icon =>
+            var icons = data.Icons ?? new List<SavedIcon>();
+            var baseIcons = icons.Where(icon =>
                 icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png")
             ).ToList();
 
-            var nonBaseIcons = data.Icons.Where(icon =>
+            var nonBaseIcons = icons.Where(icon =>
                 !(icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
             ).ToList();
 
@@ -100,10 +102,10 @@ namespace RustPlusDesk.Services.Data
             var overlayOnlyData = new OverlaySaveData
             {
                 LastUpdatedUnix = data.LastUpdatedUnix,
-                Strokes = data.Strokes,
+                Strokes = data.Strokes ?? new List<SavedStroke>(),
                 Icons = nonBaseIcons,
-                Texts = data.Texts,
-                Devices = data.Devices
+                Texts = data.Texts ?? new List<SavedText>(),
+                Devices = data.Devices ?? new List<ExportedDeviceDto>()
             };
 
             // Size limit check (excluding bases/screenshots)

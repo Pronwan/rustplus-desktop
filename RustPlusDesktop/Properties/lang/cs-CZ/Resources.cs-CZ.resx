@@ -397,9 +397,6 @@ Stáhnout a nainstalovat nyní?</value>
     <value>Kontrola aktualizací se nezdařila.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Žádná zařízení.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Zobrazit profil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop zaregistruje mistni aplikaci ve FCM, aby mohla na pozadi prijimat 
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Čistý postranní panel pro všechna nastavení</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Odstranění sledování BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Vaše základna je pod útokem!</value>

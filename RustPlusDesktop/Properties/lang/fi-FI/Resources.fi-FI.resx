@@ -397,9 +397,6 @@ Lataa ja asenna nyt?</value>
     <value>Päivityksen tarkistus epäonnistui.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Ei laitteita.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Näytä Profiili</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop rekisteroi paikallisen sovelluksesi FCM:aan, jotta se voi vastaano
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Siisti sivupalkki kaikille asetuksille</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics-seuranta poistettu</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Tukikohtaasi hyökätään!</value>

@@ -397,9 +397,6 @@
     <value>更新の確認に失敗しました。
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>デバイスがありません。</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>プロフィールを表示</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - すべての設定が可能なクリーンなサイドバー</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>バトルメトリクスのトラッキングが削除</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>基地が攻撃を受けている！</value>

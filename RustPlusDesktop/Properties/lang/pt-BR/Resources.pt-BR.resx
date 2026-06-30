@@ -397,9 +397,6 @@ Baixar e instalar agora?</value>
     <value>Verificação da atualização falhou.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Sem dispositivos.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Ver Perfil</value>
   </data>
@@ -1586,9 +1583,6 @@ O Rust+ Desktop registra seu app local no FCM para receber essas mesmas notifica
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Barra lateral limpa para todas as configurações</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Removido o rastreamento do BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Sua base está sendo atacada!</value>

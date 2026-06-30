@@ -397,9 +397,6 @@ Download and install now?</value>
     <value>Update check failed.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>No devices.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>View Profile</value>
   </data>
@@ -1601,9 +1598,6 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — Clean sidebar for all settings</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Tracking Removed</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Your base is under attack!</value>

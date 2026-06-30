@@ -11,7 +11,6 @@ public partial class MainWindow
 {
     private ServerProfile? _connectedProfile;
     private DispatcherTimer? _storageTimer;
-    private bool _storageTickBusy; // optionaler Reentrancy-Schutz
     private bool _isReconnecting = false;
 
     private async Task HardResetAsync(bool reconnect = false)

@@ -391,7 +391,7 @@ public class MainViewModel : INotifyPropertyChanged
         public List<StorageItemVM> Items { get; init; } = new();
     }
 
-    public sealed class StorageItemVM : INotifyPropertyChanged
+    public sealed class StorageItemVM
     {
         public int ItemId { get; init; }
         public string? ShortName { get; init; }
@@ -400,7 +400,6 @@ public class MainViewModel : INotifyPropertyChanged
 
         public string Display => MainWindow.ResolveItemName(ItemId, ShortName);
         public ImageSource? Icon => MainWindow.ResolveItemIcon(ItemId, ShortName, 32);
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 
     private string _serverPlayers = "-/-";

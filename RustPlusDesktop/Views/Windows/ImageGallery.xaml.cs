@@ -13,7 +13,7 @@ namespace RustPlusDesk.Views
     {
         public string ImagePath { get; set; } = "";
         public string Description { get; set; } = "";
-        internal ImageGallery ParentGallery { get; set; }
+        internal ImageGallery? ParentGallery { get; set; }
     }
 
     [ContentProperty("Items")]

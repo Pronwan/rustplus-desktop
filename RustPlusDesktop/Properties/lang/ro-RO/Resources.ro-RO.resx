@@ -397,9 +397,6 @@ Descărcați și instalați acum?</value>
     <value>Verificarea actualizării a eșuat.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Niciun dispozitiv.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Vezi profil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop inregistreaza aplicatia locala la FCM pentru a putea primi aceleas
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Bară laterală curată pentru toate setările</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Urmărirea BattleMetrics eliminată</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Baza ta este atacată!</value>

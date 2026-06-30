@@ -232,24 +232,27 @@ public partial class MainWindow
             bool success = false;
             try
             {
-                if (_rust is RustPlusClientReal real && _vm.Selected != null && _vm.Selected.IsConnected)
+                var vm = _vm!;
+                var selected = vm.Selected;
+                if (_rust is RustPlusClientReal real && selected != null && selected.IsConnected)
                 {
                     var st = await real.GetServerStatusAsync(ct);
                     if (st != null && st.Players >= 0)
                     {
                         success = true;
                         serverStatusFailCount = 0;
-                        _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
-                        _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
+                        vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
+                        vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
                         
                         if (!string.IsNullOrWhiteSpace(st.TimeString))
-                            _vm.ServerTime = st.TimeString;
+                            vm.ServerTime = st.TimeString;
                     }
                 }
             }
             catch { /* Keep last known values on error */ }
 
-            if (_vm.Selected != null && _vm.Selected.IsConnected)
+            var currentSelected = _vm!.Selected;
+            if (currentSelected != null && currentSelected.IsConnected)
             {
                 if (!success)
                 {
@@ -507,26 +510,30 @@ public partial class MainWindow
             
             if (showBusy)
             {
-                _vm.IsInitializing = false;
+                _vm!.IsInitializing = false;
                 _vm.IsConnectionLoading = false;
             }
-            _vm.Selected.IsConnected = true;
-            _vm.Selected.IsFullConnected = true;
+            var connectedProfile = _vm!.Selected;
+            if (connectedProfile == null)
+                throw new InvalidOperationException("No selected server profile after connection initialization.");
+
+            connectedProfile.IsConnected = true;
+            connectedProfile.IsFullConnected = true;
 
             _vm.NotifyDevicesChanged();
             _ = SearchRustMapsAsync(false);
-            AppendLog($"Connection initialization complete. Server: {_vm.Selected.Name}");
+            AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
 
             // Finally, refresh all device statuses to ensure the UI reflects the current server state
             _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
 
             // Finally, prime subscriptions for all devices to receive real-time updates
-            if (real != null && _vm.Selected?.Devices?.Any() == true)
+            if (real != null && connectedProfile.Devices?.Any() == true)
             {
                 try
                 {
                     // Batching all entity subscriptions into one call
-                    var allIds = _vm.Selected.Devices.Select(d => d.EntityId).Distinct().ToList();
+                    var allIds = connectedProfile.Devices.Select(d => d.EntityId).Distinct().ToList();
                     await real.PrimeSubscriptionsAsync(allIds);
                     AppendLog($"Subscribed to {allIds.Count} entities.");
                 }
@@ -552,10 +559,11 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            if (_vm?.Selected != null)
+            var selectedOnError = _vm.Selected;
+            if (selectedOnError != null)
             {
-                _vm.Selected.IsConnected = false;
-                _vm.Selected.IsFullConnected = false;
+                selectedOnError.IsConnected = false;
+                selectedOnError.IsFullConnected = false;
                 _vm.NotifyDevicesChanged();
             }
             if (showBusy)

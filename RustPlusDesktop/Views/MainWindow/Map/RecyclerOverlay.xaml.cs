@@ -14,7 +14,7 @@ namespace RustPlusDesk.Views
 {
     public partial class RecyclerOverlay : UserControl
     {
-        public event RoutedEventHandler CloseRequested;
+        public event RoutedEventHandler? CloseRequested;
 
         public ObservableCollection<RecyclerItemViewModel> Items { get; } = new();
         public ObservableCollection<RecyclerOutputViewModel> Outputs { get; } = new();
@@ -285,7 +285,7 @@ namespace RustPlusDesk.Views
                             break;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         // Tolerate resource exceptions during check
                     }
@@ -540,7 +540,7 @@ namespace RustPlusDesk.Views
                 var safe = safeYields.GetValueOrDefault(sn);
                 if (wild.Expected <= 0 && safe.Expected <= 0) continue;
 
-                string BuildTooltip((double Expected, double Min, double Max) val)
+                string? BuildTooltip((double Expected, double Min, double Max) val)
                 {
                     if (val.Min < val.Max) return $"Range: {val.Min:0.#} - {val.Max:0.#}";
                     return null;
@@ -638,7 +638,7 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private bool IsChildOfTextBox(DependencyObject obj)
+        private bool IsChildOfTextBox(DependencyObject? obj)
         {
             while (obj != null)
             {
@@ -657,7 +657,7 @@ namespace RustPlusDesk.Views
         {
             if (e.DataObject.GetDataPresent(typeof(string)))
             {
-                string text = (string)e.DataObject.GetData(typeof(string));
+                string text = (string?)e.DataObject.GetData(typeof(string)) ?? string.Empty;
                 if (!int.TryParse(text, out _))
                 {
                     e.CancelCommand();
@@ -691,13 +691,13 @@ namespace RustPlusDesk.Views
 
     public class RecyclerItemViewModel : INotifyPropertyChanged
     {
-        public string Id { get; set; }
-        public string ShortName { get; set; }
-        public string DisplayName { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string ShortName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
         public int StackSize { get; set; }
 
-        private ImageSource _icon;
-        public ImageSource Icon
+        private ImageSource? _icon;
+        public ImageSource? Icon
         {
             get => _icon;
             set
@@ -725,12 +725,12 @@ namespace RustPlusDesk.Views
             }
         }
 
-        public RecyclerItemData Data { get; set; }
+        public RecyclerItemData Data { get; set; } = new();
         public JsonElement? WildRecyclerNode { get; set; }
         public JsonElement? SafeRecyclerNode { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler QuantityChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler? QuantityChanged;
 
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -764,8 +764,8 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private string _wildToolTip;
-        public string WildToolTip
+        private string? _wildToolTip;
+        public string? WildToolTip
         {
             get => _wildToolTip;
             set
@@ -775,8 +775,8 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private string _safeToolTip;
-        public string SafeToolTip
+        private string? _safeToolTip;
+        public string? SafeToolTip
         {
             get => _safeToolTip;
             set
@@ -786,11 +786,11 @@ namespace RustPlusDesk.Views
             }
         }
 
-        public string ShortName { get; set; }
-        public string DisplayName { get; set; }
+        public string ShortName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
 
-        private ImageSource _icon;
-        public ImageSource Icon
+        private ImageSource? _icon;
+        public ImageSource? Icon
         {
             get => _icon;
             set
@@ -807,34 +807,34 @@ namespace RustPlusDesk.Views
         public string WildText => WildAmount > 0 ? Math.Round(WildAmount).ToString("0") : "0";
         public string SafeText => SafeAmount > 0 ? Math.Round(SafeAmount).ToString("0") : "0";
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
     public class RecyclerItemData
     {
-        public string id { get; set; }
-        public string shortName { get; set; }
-        public string category { get; set; }
-        public string displayName { get; set; }
+        public string id { get; set; } = string.Empty;
+        public string shortName { get; set; } = string.Empty;
+        public string category { get; set; } = string.Empty;
+        public string displayName { get; set; } = string.Empty;
         public int stackSize { get; set; }
         public bool canBeRecycled { get; set; }
-        public List<RecycleInfoData> recycleInfo { get; set; }
+        public List<RecycleInfoData> recycleInfo { get; set; } = new();
     }
 
     public class RecycleInfoData
     {
-        public string recyclerId { get; set; }
-        public string recyclerLink { get; set; }
-        public List<RecycleOutputData> guaranteedOutput { get; set; }
-        public List<RecycleOutputData> percentageBasedOutput { get; set; }
+        public string recyclerId { get; set; } = string.Empty;
+        public string recyclerLink { get; set; } = string.Empty;
+        public List<RecycleOutputData> guaranteedOutput { get; set; } = new();
+        public List<RecycleOutputData> percentageBasedOutput { get; set; } = new();
     }
 
     public class RecycleOutputData
     {
-        public string itemId { get; set; }
-        public string itemLink { get; set; }
+        public string itemId { get; set; } = string.Empty;
+        public string itemLink { get; set; } = string.Empty;
         /// <summary>Guaranteed quantity (whole units) or percentage chance (0-100) for probabilistic items.</summary>
         public double amount { get; set; }
     }

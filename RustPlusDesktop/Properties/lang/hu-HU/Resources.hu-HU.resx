@@ -397,9 +397,6 @@ Letöltés és telepítés most?</value>
     <value>A frissítés ellenőrzése sikertelen.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Nincs eszköz.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Profil megtekintése</value>
   </data>
@@ -1586,9 +1583,6 @@ A Rust+ Desktop regisztralja a helyi alkalmazast az FCM-ben, hogy a hatterben fo
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Tiszta oldalsáv minden beállításhoz</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics nyomkövetés eltávolítva</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>A bázisodat megtámadták!</value>

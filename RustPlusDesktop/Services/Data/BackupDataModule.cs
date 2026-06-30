@@ -213,7 +213,7 @@ namespace RustPlusDesk.Services.Data
                     string targetFcm = Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                         "RustPlusDesk", "rustplusjs-config.json");
-                    string targetDir = Path.GetDirectoryName(targetFcm);
+                    string? targetDir = Path.GetDirectoryName(targetFcm);
                     if (targetDir != null)
                     {
                         Directory.CreateDirectory(targetDir);
@@ -260,7 +260,7 @@ namespace RustPlusDesk.Services.Data
                     string targetCrosshairs = Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                         "RustPlusDesk", "custom_crosshairs.json");
-                    string targetDir = Path.GetDirectoryName(targetCrosshairs);
+                    string? targetDir = Path.GetDirectoryName(targetCrosshairs);
                     if (targetDir != null)
                     {
                         Directory.CreateDirectory(targetDir);

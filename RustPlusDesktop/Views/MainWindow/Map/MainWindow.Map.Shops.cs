@@ -117,7 +117,7 @@ public partial class MainWindow
     {
         if (sender is FrameworkElement fe)
         {
-            List<RustPlusClientReal.ShopMarker> cluster = null;
+            List<RustPlusClientReal.ShopMarker>? cluster = null;
             if (fe.Tag is RustPlusClientReal.ShopMarker s) cluster = new List<RustPlusClientReal.ShopMarker> { s };
             else if (fe.Tag is IEnumerable<RustPlusClientReal.ShopMarker> c) cluster = c.ToList();
 
@@ -187,7 +187,7 @@ public partial class MainWindow
                 return;
             }
 
-            List<RustPlusClientReal.ShopMarker> shops = null;
+            List<RustPlusClientReal.ShopMarker>? shops = null;
             int retries = 0;
             while (retries < 3)
             {
@@ -534,8 +534,8 @@ public partial class MainWindow
         PrefetchShopIcons(shops);
     }
 
-    private DispatcherTimer _shopDetailHideTimer;
-    private DispatcherTimer _shopDetailShowTimer;
+    private DispatcherTimer? _shopDetailHideTimer;
+    private DispatcherTimer? _shopDetailShowTimer;
 
     private void ShopElement_MouseEnter(object sender, MouseEventArgs e)
     {

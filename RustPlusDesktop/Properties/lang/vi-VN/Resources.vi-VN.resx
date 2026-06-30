@@ -397,9 +397,6 @@ Tải xuống và cài đặt ngay bây giờ?</value>
     <value>Không thể kiểm tra bản cập nhật.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Không có thiết bị nào.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Xem hồ sơ</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop dang ky ung dung cuc bo cua ban voi FCM de co the nhan cung cac th
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — Thanh bên gọn gàng cho tất cả các cài đặt</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Đã gỡ bỏ tính năng theo dõi BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Căn cứ của bạn đang bị tấn công!</value>

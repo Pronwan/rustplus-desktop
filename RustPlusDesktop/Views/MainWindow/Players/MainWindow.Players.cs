@@ -371,7 +371,7 @@ public partial class MainWindow
                         {
                             try
                             {
-                                var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
+                                var groupColorBrush = new BrushConverter().ConvertFromString(headerColor) as SolidColorBrush ?? Brushes.Transparent;
                                 var dot = new Ellipse
                                 {
                                     Width = 10,
@@ -610,7 +610,7 @@ public partial class MainWindow
         foreach (var c in colors)
         {
             var stack = new StackPanel { Orientation = Orientation.Horizontal };
-            var brush = c == "None" ? Brushes.Transparent : (SolidColorBrush)new BrushConverter().ConvertFromString(c);
+            var brush = c == "None" ? Brushes.Transparent : new BrushConverter().ConvertFromString(c) as SolidColorBrush ?? Brushes.Transparent;
             
             stack.Children.Add(new System.Windows.Shapes.Ellipse { 
                 Width = 12, Height = 12, 
@@ -645,7 +645,10 @@ public partial class MainWindow
 
         return (combo, () => {
             if (combo.SelectedItem is ComboBoxItem selectedItem)
-                return selectedItem.Tag.ToString() == "None" ? "" : selectedItem.Tag.ToString();
+            {
+                var tag = selectedItem.Tag?.ToString() ?? "None";
+                return tag == "None" ? "" : tag;
+            }
             return "";
         }, setter);
     }
@@ -1086,7 +1089,7 @@ public partial class MainWindow
                     VerticalAlignment = VerticalAlignment.Center,
                     Fill = p.IsTracked
                         ? new SolidColorBrush(Color.FromRgb(0xFF, 0xD1, 0x66))
-                        : (SolidColorBrush)new BrushConverter().ConvertFromString("#60CDFF"),
+                        : new BrushConverter().ConvertFromString("#60CDFF") as SolidColorBrush ?? Brushes.DeepSkyBlue,
                 };
                 hp.Children.Add(dot);
 
@@ -1191,7 +1194,7 @@ public partial class MainWindow
                         {
                             try
                             {
-                                var groupColorBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(headerColor);
+                                var groupColorBrush = new BrushConverter().ConvertFromString(headerColor) as SolidColorBrush ?? Brushes.Transparent;
                                 var dot = new Ellipse
                                 {
                                     Width = 10, Height = 10, Fill = groupColorBrush,

@@ -490,7 +490,7 @@ namespace RustPlusDesk.Views
                 win.Content = null;
                 win.Close();
 
-                if (_map3DWebView.Parent == null)
+                if (_map3DWebView != null && _map3DWebView.Parent == null)
                 {
                     Map3DHost.Children.Add(_map3DWebView);
                 }
@@ -579,7 +579,7 @@ namespace RustPlusDesk.Views
                     using var doc = System.Text.Json.JsonDocument.Parse(message);
                     if (doc.RootElement.TryGetProperty("type", out var typeProp))
                     {
-                        string typeStr = typeProp.GetString();
+                        string? typeStr = typeProp.GetString();
                         if (typeStr == "save_buildings")
                         {
                             if (!string.IsNullOrEmpty(_currentMapFolderPath))
@@ -1176,7 +1176,7 @@ namespace RustPlusDesk.Views
                     {
                         var data = new { type = "CLEAR_HEATMAP" };
                         string json = JsonSerializer.Serialize(data);
-                        _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
+                        _ = _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
                     }
                     return;
                 }

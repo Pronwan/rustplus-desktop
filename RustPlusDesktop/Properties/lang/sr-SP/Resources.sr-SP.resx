@@ -397,9 +397,6 @@
     <value>Проверка ажурирања није успела.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Ниједан уређај.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Прикажи профил</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — Очистите бочну траку за све поставке</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Уклањање праћења BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Ваша база је под нападом!</value>

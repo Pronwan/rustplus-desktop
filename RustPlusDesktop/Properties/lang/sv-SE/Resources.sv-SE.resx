@@ -397,9 +397,6 @@ Ladda ner och installera nu?</value>
     <value>Uppdateringskontrollen misslyckades.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Inga enheter.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Visa profil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Ren sidofält för alla inställningar</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Tracking borttagen</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Din bas är under attack!</value>

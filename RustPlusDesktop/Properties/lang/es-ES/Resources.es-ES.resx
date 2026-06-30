@@ -397,9 +397,6 @@ Necesitarás emparejar de nuevo el próximo comienzo.</value>
     <value>Falló la comprobación de actualización.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>No hay dispositivos.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Ver perfil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Nueva interfaz de usuario de la tienda</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Eliminado el seguimiento de BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>¡Su base está siendo atacada!</value>

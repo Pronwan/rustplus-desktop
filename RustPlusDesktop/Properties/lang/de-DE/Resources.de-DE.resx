@@ -2716,9 +2716,6 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="GenericClose" xml:space="preserve">
     <value>Schließen</value>
   </data>
-  <data name="AppTitle" xml:space="preserve">
-    <value>ROST+ DESKTOP</value>
-  </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
     <value>Teammarker</value>
   </data>

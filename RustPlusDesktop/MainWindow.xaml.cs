@@ -667,8 +667,6 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
-        TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
-        TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
         TrackingService.OnTrackingNotification -= OnTrackingNotification;
         TrackingService.OnTrackingNotification += OnTrackingNotification;
         OnOnlinePlayersUpdated();
@@ -1317,7 +1315,6 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     // === Layers ===
     // Optional: externe ErgÃ¤nzungen laden (Datei neben der EXE)
-    private static bool _itemMapLoaded;
     /// <summary>lÃ¤dt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
     /// 
 
@@ -1339,7 +1336,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                     p.Kill(true); // Kill den Prozess und seine Unterprozesse
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Dies fÃ¤ngt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
                 // Ignoriere die Ausnahme, da das erwartete Verhalten ist.
@@ -1362,7 +1359,10 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
 
             // KontextmenÃ¼ sauber schlieÃŸen (optional)
-            BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
+            if (BtnCrosshair.ContextMenu != null)
+            {
+                BtnCrosshair.ContextMenu.IsOpen = false;
+            }
 
             // Apply a pending Velopack update if available.
             if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
@@ -1370,7 +1370,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 _updateService.StartInstaller(_updateService.PendingInstallerPath);
             }
         }
-        catch (Exception ex)
+        catch
         { }
     }
 
@@ -3218,7 +3218,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 rawLink = rawLink[0] + @":\" + rest;
             }
 
-            if (!link.Contains("?") && !link.Contains("ip=") && !link.Contains("address=") &&
+            if (!rawLink.Contains("?") && !rawLink.Contains("ip=") && !rawLink.Contains("address=") &&
                 (rawLink.Contains(":") || rawLink.Contains("\\") || Directory.Exists(rawLink) || File.Exists(rawLink)))
             {
                 isOfflineMapImport = true;
@@ -3380,10 +3380,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            if (link.Contains("?") && (link.Contains("address=") || link.Contains("ip=")))
+            if (rawLink.Contains("?") && (rawLink.Contains("address=") || rawLink.Contains("ip=")))
             {
                 // --- FALL A: Offizieller Link (mit Parametern) ---
-                var p = ParseRustPlusLink(link);
+                var p = ParseRustPlusLink(link ?? string.Empty);
                 host = p.host;
                 port = p.port;
                 playerId = p.playerId != 0 ? p.playerId.ToString() : playerId;
@@ -3394,7 +3394,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 // --- FALL B: Manueller Link (z.B. rustplus://1.2.3.4:28082) ---
                 // Wir entfernen das Protokoll "rustplus://"
-                var raw = link.Replace("rustplus://", "").TrimEnd('/');
+                var raw = (link ?? string.Empty).Replace("rustplus://", "").TrimEnd('/');
 
                 if (raw.Contains(":"))
                 {
@@ -3569,7 +3569,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 prof = new ServerProfile
                 {
                     Name = serverName,
-                    Host = e.Host,
+                    Host = e.Host ?? string.Empty,
                     Port = e.Port,
                     SteamId64 = keySteam,
                     PlayerToken = e.PlayerToken,
@@ -3666,7 +3666,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
                 {
                     // 1) Cache Ã¢â€ â€™ UI (falls vorhanden), sonst HÃƒÂ¼lle
-                    if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached))
+                    if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached) && cached != null)
                     {
                         dev.IsMissing = false;
                         Dispatcher.Invoke(() =>
@@ -4239,7 +4239,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void BtnToggleServerArea_Click(object sender, RoutedEventArgs e)
+    private void BtnToggleServerArea_Click(object? sender, RoutedEventArgs? e)
     {
         if (PanelServerArea == null || IconToggleServerArea == null) return;
 
@@ -4650,8 +4650,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (s.Length <= max) return s;
         return s.Substring(0, Math.Max(1, max - 1)) + "Ã¢â‚¬Â¦";
     }
-    private int _shopAutoSeq = 1; // Fallback-Sequenz, wenn ID fehlt
-
     // stabiler Fallback-Key-Hasher (aus X,Y,Label)
     private static uint ShopFallbackKey(double x, double y, string? label)
     {
@@ -5249,8 +5247,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 rule.Baseline.Add(new AlertSeenOrder
                 {
                     ShopId = shop.Id,
-                    ItemShort = o.ItemShortName,
-                    CurrencyShort = o.CurrencyShortName,
+                    ItemShort = o.ItemShortName ?? "",
+                    CurrencyShort = o.CurrencyShortName ?? "",
                     Stock = o.Stock,
                     Quantity = o.Quantity,
                     CurrencyAmount = o.CurrencyAmount
@@ -5524,8 +5522,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         rule.Baseline.Add(new AlertSeenOrder
                         {
                             ShopId = shop.Id,
-                            ItemShort = o.ItemShortName,
-                            CurrencyShort = o.CurrencyShortName,
+                            ItemShort = o.ItemShortName ?? "",
+                            CurrencyShort = o.CurrencyShortName ?? "",
                             Stock = o.Stock,
                             Quantity = o.Quantity,
                             CurrencyAmount = o.CurrencyAmount
@@ -5548,8 +5546,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     public class AlertSeenOrder
     {
         public uint ShopId;
-        public string ItemShort;
-        public string CurrencyShort;
+        public string ItemShort = "";
+        public string CurrencyShort = "";
         public int Quantity;
         public float CurrencyAmount;
         public int Stock;
@@ -5623,8 +5621,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     baseline = new AlertSeenOrder
                     {
                         ShopId        = shop.Id,
-                        ItemShort     = order.ItemShortName,
-                        CurrencyShort = order.CurrencyShortName,
+                        ItemShort     = order.ItemShortName ?? "",
+                        CurrencyShort = order.CurrencyShortName ?? "",
                         Quantity      = order.Quantity,
                         CurrencyAmount= order.CurrencyAmount,
                         Stock         = curStock
@@ -5737,8 +5735,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     rule.Baseline.Add(new AlertSeenOrder
                     {
                         ShopId = shop.Id,
-                        ItemShort = o.ItemShortName,
-                        CurrencyShort = o.CurrencyShortName,
+                        ItemShort = o.ItemShortName ?? "",
+                        CurrencyShort = o.CurrencyShortName ?? "",
                         Quantity = o.Quantity,
                         CurrencyAmount = o.CurrencyAmount,
                         Stock = o.Stock
@@ -7346,7 +7344,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _globalToggleBusy = false;
         _isDynPollBusy = false;
-        _storageTickBusy = false;
         _apiConsecutiveTimeouts = 0;
         System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0);
         System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
@@ -7552,7 +7549,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 public class RenameDialog : Window
 {
-    public string InputText { get; private set; }
+    public string InputText { get; private set; } = string.Empty;
     public RenameDialog(string defaultText)
     {
         Title = "Rename Custom Crosshair";

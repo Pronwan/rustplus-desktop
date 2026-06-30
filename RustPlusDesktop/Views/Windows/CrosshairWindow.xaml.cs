@@ -110,7 +110,8 @@ namespace RustPlusDesk
                 _ => BuildGreenDot()
             };
 
-            Presenter.Content = el;
+            if (Presenter != null)
+                Presenter.Content = el;
         }
 
         private UIElement BuildCustom()

@@ -397,9 +397,6 @@
     <value>בדיקת העדכונים נכשלה.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>אין מכשירים.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>הצג פרופיל</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — סרגל צד נקי לכל ההגדרות</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>מעקב BattleMetrics הוסר</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>הבסיס שלך נמצא תחת מתקפה!</value>

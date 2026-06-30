@@ -20,10 +20,10 @@ namespace RustPlusDesk.Services.Auth
 {
     public static class SupabaseAuthManager
     {
-        public static Supabase.Client Client { get; private set; }
+        public static Supabase.Client Client { get; private set; } = null!;
         public static bool IsPremium { get; private set; }
         public static string CurrentTier { get; private set; } = "free";
-        public static string DiscordProviderToken { get; private set; }
+        public static string DiscordProviderToken { get; private set; } = string.Empty;
         public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
         private static bool CloudAccountPromptShownThisSession;
@@ -393,6 +393,7 @@ namespace RustPlusDesk.Services.Auth
                 return IsGuestAuthenticated;
             }
 
+            if (string.IsNullOrEmpty(session.AccessToken)) return false;
             var expiresAt = GetJwtExpiration(session.AccessToken);
             if (expiresAt > DateTime.UtcNow.AddMinutes(2))
                 return true;
@@ -403,12 +404,15 @@ namespace RustPlusDesk.Services.Auth
                 session = Client?.Auth?.CurrentSession;
                 if (session == null) return true;
 
+                if (string.IsNullOrEmpty(session.AccessToken)) return false;
                 expiresAt = GetJwtExpiration(session.AccessToken);
                 if (expiresAt > DateTime.UtcNow.AddMinutes(2))
                     return true;
 
                 AppendLog("[Cloud/Debug] Refreshing expired Supabase session...");
-                var refreshed = await Client.Auth.RefreshSession();
+                var auth = Client?.Auth;
+                if (auth == null) return false;
+                var refreshed = await auth.RefreshSession();
                 if (refreshed != null)
                     return true;
 
@@ -618,7 +622,7 @@ namespace RustPlusDesk.Services.Auth
             // Run for Discord OR Email auth (not anon/guest — they use handshake)
             if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return;
             if (!await EnsureFreshSessionAsync()) return;
-            string discordId = null;
+            string? discordId = null;
             if (Client.Auth.CurrentUser?.UserMetadata != null)
             {
                 if (Client.Auth.CurrentUser.UserMetadata.TryGetValue("provider_id", out var pidObj) && pidObj != null)
@@ -634,7 +638,7 @@ namespace RustPlusDesk.Services.Auth
             }
             if (discordId == null) return;
 
-            string steamId = null;
+            string? steamId = null;
             if (Application.Current != null)
             {
                 Application.Current.Dispatcher.Invoke(() =>
@@ -801,7 +805,13 @@ namespace RustPlusDesk.Services.Auth
                     var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-roles";
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);
                     request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
-                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
+                    var accessToken = Client.Auth.CurrentSession?.AccessToken;
+                    if (string.IsNullOrEmpty(accessToken))
+                    {
+                        AppendLog("[Cloud/Error] Cannot sync roles: missing Supabase access token.");
+                        return;
+                    }
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
                     request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
                     request.Content = new System.Net.Http.StringContent(jsonBody, Encoding.UTF8, "application/json");
 
@@ -834,7 +844,7 @@ namespace RustPlusDesk.Services.Auth
             var req = context.Request;
             var res = context.Response;
 
-            if (req.HttpMethod == "GET" && !req.Url.Query.Contains("access_token") && !req.Url.Query.Contains("code"))
+            if (req.HttpMethod == "GET" && req.Url != null && !req.Url.Query.Contains("access_token") && !req.Url.Query.Contains("code"))
             {
                 // Serve interceptor
                 var html = @"<!DOCTYPE html><html><body><script>var h=window.location.hash.substring(1);var s=window.location.search.substring(1);if(h)window.location.href='/callback/?'+h;else if(s)window.location.href='/callback/?'+s;else document.body.innerHTML='Auth failed.';</script><p>Authenticating...</p></body></html>";
@@ -855,10 +865,12 @@ namespace RustPlusDesk.Services.Auth
             {
                 var accessToken = qs["access_token"];
                 var refreshToken = qs["refresh_token"];
+                if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+                    return false;
                 await Client.Auth.SetSession(accessToken, refreshToken);
                 if (qs["provider_token"] != null)
                 {
-                    DiscordProviderToken = qs["provider_token"];
+                    DiscordProviderToken = qs["provider_token"] ?? string.Empty;
                 }
                 success = true;
             }
@@ -1426,7 +1438,7 @@ namespace RustPlusDesk.Services.Auth
         private const string CacheKey = "supabase_session";
         public void SaveSession(Session session) => DataManager.SaveCache(CacheKey, session);
         public Session? LoadSession() => DataManager.LoadCache<Session>(CacheKey);
-        public void DestroySession() => DataManager.SaveCache<Session>(CacheKey, null);
+        public void DestroySession() => DataManager.SaveCache<Session?>(CacheKey, null);
     }
 }
 

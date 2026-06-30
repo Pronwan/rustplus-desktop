@@ -397,9 +397,6 @@ Open Releases page?</value>
     <value>Ο έλεγχος ενημερώσεων απέτυχε.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Δεν υπάρχουν συσκευές.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Προβολή Προφίλ</value>
   </data>
@@ -1586,9 +1583,6 @@ Open Releases page?</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Καθαρή πλευρική γραμμή για όλες τις ρυθμίσεις</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Απομακρύνεται η παρακολούθηση BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Η βάση σας δέχεται επίθεση!</value>

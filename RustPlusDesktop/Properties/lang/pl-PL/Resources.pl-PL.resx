@@ -397,9 +397,6 @@ Pobrać i zainstalować teraz?</value>
     <value>Sprawdzanie aktualizacji nie powiodło się.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Brak urządzeń.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Zobacz profil</value>
   </data>
@@ -1586,9 +1583,6 @@ Rust+ Desktop rejestruje lokalna aplikacje w FCM, aby mogla odbierac te same pow
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Czysty pasek boczny dla wszystkich ustawień</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Usunięto śledzenie BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Twoja baza jest atakowana!</value>
