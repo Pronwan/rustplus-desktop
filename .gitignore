@@ -14,7 +14,7 @@
 *.nupkg
 **/packages/
 *.snupkg
-
+Releases/
 # Build-Artefakte / Temp
 *.tmp
 *.tmp.*

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Windows.Forms;
 using RustPlusDesk.Services.Auth;
 using Application = System.Windows.Application;
+using Velopack;
 
 namespace RustPlusDesk;
 
@@ -35,6 +36,16 @@ public partial class App : Application
 
     [System.Runtime.InteropServices.DllImport("user32.dll")]
     private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [STAThread]
+    private static void Main(string[] args)
+    {
+        VelopackApp.Build().Run();
+
+        var app = new App();
+        app.InitializeComponent();
+        app.Run();
+    }
 
     protected override void OnStartup(StartupEventArgs e)
     {

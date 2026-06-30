@@ -1,12 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading.Tasks;
 using RustPlusDesk.Models;
+using Velopack;
+using Velopack.Exceptions;
+using Velopack.Sources;
 
 namespace RustPlusDesk.Services
 {
@@ -14,7 +14,21 @@ namespace RustPlusDesk.Services
     {
         private const string RepoOwner = "Pronwan";
         private const string RepoName = "rustplus-desktop";
-        private const string InstallerAssetName = "RustPlusDesk-Setup.exe";
+        private const string PendingVelopackUpdateMarker = "velopack-pending";
+
+        private readonly UpdateManager _updateManager;
+        private UpdateInfo? _pendingUpdateInfo;
+
+        public UpdateService()
+        {
+            _updateManager = new UpdateManager(
+                new GithubSource($"https://github.com/{RepoOwner}/{RepoName}", accessToken: null, prerelease: false));
+
+            if (_updateManager.UpdatePendingRestart != null)
+            {
+                PendingInstallerPath = PendingVelopackUpdateMarker;
+            }
+        }
 
         public static string LatestReleaseUrl => $"https://github.com/{RepoOwner}/{RepoName}/releases/latest";
 
@@ -53,42 +67,23 @@ namespace RustPlusDesk.Services
         {
             try
             {
-                using var http = new HttpClient();
-                http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
-                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-                http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+                _pendingUpdateInfo = await _updateManager.CheckForUpdatesAsync();
+                if (_pendingUpdateInfo == null)
+                {
+                    return (VersionForCompare, $"v{VersionShort}", null);
+                }
 
-                var url = $"https://api.github.com/repos/{RepoOwner}/{RepoName}/releases/latest";
-                using var resp = await http.GetAsync(url);
-                if (!resp.IsSuccessStatusCode)
+                string version = _pendingUpdateInfo.TargetFullRelease.Version.ToString();
+                if (!Version.TryParse(NormalizeVer(version), out var latest))
                 {
                     return null;
                 }
 
-                using var stream = await resp.Content.ReadAsStreamAsync();
-                using var doc = await JsonDocument.ParseAsync(stream);
-                var root = doc.RootElement;
-
-                var tag = root.GetProperty("tag_name").GetString() ?? "";
-                var assets = root.GetProperty("assets").EnumerateArray();
-
-                string? dl = null;
-                foreach (var a in assets)
-                {
-                    var name = a.GetProperty("name").GetString() ?? "";
-                    if (string.Equals(name, InstallerAssetName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        dl = a.GetProperty("browser_download_url").GetString();
-                        break;
-                    }
-                }
-
-                var v = NormalizeVer(tag);
-                if (!Version.TryParse(v, out var latest))
-                {
-                    return null;
-                }
-                return (latest, tag, dl);
+                return (latest, $"v{version}", PendingVelopackUpdateMarker);
+            }
+            catch (NotInstalledException)
+            {
+                return null;
             }
             catch
             {
@@ -98,46 +93,29 @@ namespace RustPlusDesk.Services
 
         public async Task<string?> DownloadInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
         {
-            var target = Path.Combine(Path.GetTempPath(), InstallerAssetName);
             try
             {
-                using var http = new HttpClient();
-                http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
+                var updateInfo = _pendingUpdateInfo ?? await _updateManager.CheckForUpdatesAsync();
+                if (updateInfo == null) return null;
 
-                using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                resp.EnsureSuccessStatusCode();
-
-                var total = resp.Content.Headers.ContentLength;
-                using var input = await resp.Content.ReadAsStreamAsync();
-                using var file = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                var buffer = new byte[81920];
-                long readTotal = 0;
-                int read;
-                var sw = Stopwatch.StartNew();
-                var lastReport = sw.ElapsedMilliseconds;
-
-                while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                await _updateManager.DownloadUpdatesAsync(updateInfo, percent =>
                 {
-                    await file.WriteAsync(buffer, 0, read);
-                    readTotal += read;
-
-                    var now = sw.ElapsedMilliseconds;
-                    if (now - lastReport > 200 || readTotal == total)
+                    progress?.Report(new DownloadReport
                     {
-                        lastReport = now;
-                        var report = new DownloadReport
-                        {
-                            Progress = total.HasValue ? (double)readTotal / total.Value : 0,
-                            Percentage = total.HasValue ? $"{(double)readTotal / total.Value:P0}" : "0%",
-                            BytesReceived = FormatBytes(readTotal),
-                            TotalBytes = total.HasValue ? FormatBytes(total.Value) : "Unknown",
-                            Speed = FormatBytes((long)(readTotal / (sw.Elapsed.TotalSeconds > 0 ? sw.Elapsed.TotalSeconds : 1))) + "/s"
-                        };
-                        progress?.Report(report);
-                    }
-                }
-                return target;
+                        Progress = percent / 100.0,
+                        Percentage = $"{percent}%",
+                        BytesReceived = "Downloaded",
+                        TotalBytes = "Velopack package",
+                        Speed = string.Empty
+                    });
+                });
+
+                PendingInstallerPath = PendingVelopackUpdateMarker;
+                return PendingInstallerPath;
+            }
+            catch (NotInstalledException)
+            {
+                return null;
             }
             catch
             {
@@ -147,13 +125,10 @@ namespace RustPlusDesk.Services
 
         public void StartInstaller(string installerPath)
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = installerPath,
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-            Process.Start(psi);
+            var pending = _updateManager.UpdatePendingRestart ?? _pendingUpdateInfo?.TargetFullRelease;
+            if (pending == null) return;
+
+            _updateManager.ApplyUpdatesAndRestart(pending);
         }
 
         private static string NormalizeVer(string s)
@@ -164,18 +139,6 @@ namespace RustPlusDesk.Services
             int dash = s.IndexOfAny(new[] { '-', '+' });
             if (dash > 0) s = s[..dash];
             return s;
-        }
-
-        private static string FormatBytes(long bytes)
-        {
-            string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
-            int i;
-            double dblSByte = bytes;
-            for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
-            {
-                dblSByte = bytes / 1024.0;
-            }
-            return $"{dblSByte:0.##} {Suffix[i]}";
         }
     }
 }

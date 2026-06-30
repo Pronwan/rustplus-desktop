@@ -1358,7 +1358,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             // KontextmenÃ¼ sauber schlieÃŸen (optional)
             BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
 
-            // Launch pending update installer if available
+            // Apply a pending Velopack update if available.
             if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
             {
                 _updateService.StartInstaller(_updateService.PendingInstallerPath);
@@ -6732,7 +6732,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsDownloadingUpdate = true;
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer Ã¢â‚¬Â¦ {r.Percentage}";
+                _vm.BusyText = $"Downloading update ... {r.Percentage}";
                 _vm.UpdateDownloadProgress = r.Progress * 100;
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
@@ -6821,7 +6821,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsDownloadingUpdate = true;
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer Ã¢â‚¬Â¦ {r.Percentage}";
+                _vm.BusyText = $"Downloading update ... {r.Percentage}";
                 _vm.UpdateDownloadProgress = r.Progress * 100;
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
@@ -6837,7 +6837,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            AppendLog("Starting installer...");
+            AppendLog("Applying update...");
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
