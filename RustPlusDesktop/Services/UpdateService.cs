@@ -15,7 +15,7 @@ namespace RustPlusDesk.Services
 {
     public class UpdateService
     {
-        private const string RepoOwner = "JawadYzbk";
+        private const string RepoOwner = "Pronwan";
         private const string RepoName = "rustplus-desktop";
         private const string PendingVelopackUpdateMarker = "velopack-pending";
         private const string InstallerAssetName = "RustPlusDesk-Setup.exe";
