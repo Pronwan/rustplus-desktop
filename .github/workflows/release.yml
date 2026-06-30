@@ -177,7 +177,8 @@ jobs:
 
           vpk download github `
             --repoUrl "https://github.com/${{ github.repository }}" `
-            --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}"
+            --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}" `
+            --token "${{ secrets.GITHUB_TOKEN }}"
 
           vpk pack `
             --packId "${{ env.VELOPACK_ID }}" `
