@@ -222,10 +222,17 @@ jobs:
         if: ${{ (github.event_name == 'workflow_dispatch' && inputs.publish_nuget) || github.ref_type == 'tag' }}
         shell: pwsh
         run: |
-          dotnet nuget push "${{ env.NUGET_OUTPUT_DIR }}/*.nupkg" `
-            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
-            --api-key "${{ secrets.GITHUB_TOKEN }}" `
-            --skip-duplicate
+          $packages = Get-ChildItem -Path "${{ env.NUGET_OUTPUT_DIR }}" -Filter "*.nupkg" -File
+          if ($packages.Count -eq 0) {
+            throw "No .nupkg files found in ${{ env.NUGET_OUTPUT_DIR }}"
+          }
+
+          foreach ($package in $packages) {
+            dotnet nuget push $package.FullName `
+              --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
+              --api-key "${{ secrets.GITHUB_TOKEN }}" `
+              --skip-duplicate
+          }
 
       - name: Create or update GitHub Release
         if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.create_github_release) }}
