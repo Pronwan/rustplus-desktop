@@ -6038,8 +6038,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             HorizontalAlignment = HorizontalAlignment.Right
         };
 
+        var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
         var stack = new StackPanel { Orientation = Orientation.Vertical };
-        stack.Children.Add(new TextBlock { Text = $"Version {tag} is available. Download now?", Margin = new Thickness(0, 0, 0, 8) });
+        stack.Children.Add(new TextBlock { Text = $"Version {tag}{sizeStr} is available. Download now?", Margin = new Thickness(0, 0, 0, 8) });
 
         if (!string.IsNullOrEmpty(dlUrl))
         {
@@ -6821,10 +6822,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsUpdateAvailable = true;
             _vm.UpdateTag = tag;
 
+            var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
+
             if (string.IsNullOrWhiteSpace(dlUrl))
             {
                 var open = System.Windows.MessageBox.Show(
-                    $"New version available: {tag}\nOpen Releases page?",
+                    $"New version available: {tag}{sizeStr}\nOpen Releases page?",
                     "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (open == MessageBoxResult.Yes)
                     Process.Start(new ProcessStartInfo(UpdateService.LatestReleaseUrl) { UseShellExecute = true });
@@ -6832,7 +6835,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             var ask = System.Windows.MessageBox.Show(
-                $"New version available: {tag}\nDownload and install now?",
+                $"New version available: {tag}{sizeStr}\nDownload and install now?",
                 "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (ask != MessageBoxResult.Yes) return;

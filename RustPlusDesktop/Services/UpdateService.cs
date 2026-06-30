@@ -77,8 +77,11 @@ namespace RustPlusDesk.Services
         public Version VersionForCompare =>
             Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
 
+        public long? LatestUpdateSize { get; private set; }
+
         public async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
         {
+            LatestUpdateSize = null;
             if (_isVelopackSupported)
             {
                 try
@@ -93,6 +96,15 @@ namespace RustPlusDesk.Services
                     if (!Version.TryParse(NormalizeVer(version), out var latest))
                     {
                         return null;
+                    }
+
+                    if (_pendingUpdateInfo.DeltasToTarget != null && _pendingUpdateInfo.DeltasToTarget.Any())
+                    {
+                        LatestUpdateSize = _pendingUpdateInfo.DeltasToTarget.Sum(d => d.Size);
+                    }
+                    else
+                    {
+                        LatestUpdateSize = _pendingUpdateInfo.TargetFullRelease?.Size;
                     }
 
                     return (latest, $"v{version}", PendingVelopackUpdateMarker);
@@ -136,6 +148,10 @@ namespace RustPlusDesk.Services
                     if (string.Equals(name, InstallerAssetName, StringComparison.OrdinalIgnoreCase))
                     {
                         dl = a.GetProperty("browser_download_url").GetString();
+                        if (a.TryGetProperty("size", out var sizeProp))
+                        {
+                            LatestUpdateSize = sizeProp.GetInt64();
+                        }
                         break;
                     }
                 }
@@ -162,23 +178,52 @@ namespace RustPlusDesk.Services
                     var updateInfo = _pendingUpdateInfo ?? await _updateManager.CheckForUpdatesAsync();
                     if (updateInfo == null) return null;
 
+                    var isDelta = updateInfo.DeltasToTarget != null && updateInfo.DeltasToTarget.Any();
+                    var asset = isDelta ? updateInfo.DeltasToTarget.First() : updateInfo.TargetFullRelease;
+                    
+                    CurrentDownloadFile = isDelta ? "Delta Packages" : (asset?.FileName ?? "Velopack Package");
+
+                    long totalBytes = 0;
+                    if (isDelta)
+                    {
+                        totalBytes = updateInfo.DeltasToTarget.Sum(d => d.Size);
+                    }
+                    else
+                    {
+                        totalBytes = updateInfo.TargetFullRelease?.Size ?? 0;
+                    }
+
+                    var sw = Stopwatch.StartNew();
+                    long lastReportTime = sw.ElapsedMilliseconds;
+                    long lastReportedBytes = 0;
+
                     await _updateManager.DownloadUpdatesAsync(updateInfo, percent =>
                     {
+                        long currentTotal = totalBytes > 0 ? (long)((percent / 100.0) * totalBytes) : 0;
+                        long nowTime = sw.ElapsedMilliseconds;
+                        double seconds = (nowTime - lastReportTime) / 1000.0;
+                        if (seconds <= 0) seconds = 0.1;
+
+                        long speedBytes = seconds > 0 ? (long)((currentTotal - lastReportedBytes) / seconds) : 0;
+                        lastReportedBytes = currentTotal;
+                        lastReportTime = nowTime;
+
                         progress?.Report(new DownloadReport
                         {
                             Progress = percent / 100.0,
                             Percentage = $"{percent}%",
-                            BytesReceived = "Downloaded",
-                            TotalBytes = "Velopack package",
-                            Speed = string.Empty
+                            BytesReceived = FormatBytes(currentTotal),
+                            TotalBytes = totalBytes > 0 ? FormatBytes(totalBytes) : "Unknown",
+                            Speed = FormatBytes(speedBytes) + "/s"
                         });
                     });
 
                     PendingInstallerPath = PendingVelopackUpdateMarker;
                     return PendingInstallerPath;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Debug.WriteLine("Velopack download failed: " + ex.Message);
                     return null;
                 }
             }
@@ -397,7 +442,7 @@ namespace RustPlusDesk.Services
             return s;
         }
 
-        private static string FormatBytes(long bytes)
+        public static string FormatBytes(long bytes)
         {
             string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
             int i;
