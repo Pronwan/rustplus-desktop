@@ -31,6 +31,10 @@ The workflow trims the leading `v` and uses `7.1.2` as the package version.
 ## Secrets
 
 - `MAP_PARSER_TOKEN`: required when `MapParser` is private or belongs to a different account/org. Use a fine-grained GitHub token with read-only Contents access to the MapParser repository.
+- `OVERLAY_SYNC_SECRET_HEX`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
+- `OVERLAY_SYNC_BASEURL`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
+- `SUPABASE_URL`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
+- `SUPABASE_ANON_KEY`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - GitHub Packages and GitHub Releases use the workflow `GITHUB_TOKEN`.
 
 To publish to nuget.org later, add a `NUGET_API_KEY` secret and add a `dotnet nuget push` step that targets `https://api.nuget.org/v3/index.json`.

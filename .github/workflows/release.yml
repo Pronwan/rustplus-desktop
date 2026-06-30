@@ -111,6 +111,33 @@ jobs:
       - name: Restore
         run: dotnet restore "${{ env.SOLUTION }}"
 
+      - name: Create build .env
+        shell: pwsh
+        env:
+          OVERLAY_SYNC_SECRET_HEX: ${{ secrets.OVERLAY_SYNC_SECRET_HEX }}
+          OVERLAY_SYNC_BASEURL: ${{ secrets.OVERLAY_SYNC_BASEURL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          $required = @(
+            "OVERLAY_SYNC_SECRET_HEX",
+            "OVERLAY_SYNC_BASEURL",
+            "SUPABASE_URL",
+            "SUPABASE_ANON_KEY"
+          )
+
+          $missing = $required | Where-Object { [string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($_)) }
+          if ($missing.Count -gt 0) {
+            throw "Missing required GitHub Actions secrets: $($missing -join ', ')"
+          }
+
+          @"
+          OVERLAY_SYNC_SECRET_HEX=$env:OVERLAY_SYNC_SECRET_HEX
+          OVERLAY_SYNC_BASEURL=$env:OVERLAY_SYNC_BASEURL
+          SUPABASE_URL=$env:SUPABASE_URL
+          SUPABASE_ANON_KEY=$env:SUPABASE_ANON_KEY
+          "@.Trim() | Set-Content -LiteralPath ".env" -Encoding UTF8
+
       - name: Build
         run: dotnet build "${{ env.SOLUTION }}" --configuration "${{ env.CONFIGURATION }}" --no-restore -p:Version="${{ env.VERSION }}"
 
