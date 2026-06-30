@@ -17,11 +17,6 @@ on:
         required: true
         default: "main"
         type: string
-      publish_nuget:
-        description: "Push the MapParser NuGet package to GitHub Packages."
-        required: true
-        default: false
-        type: boolean
       create_github_release:
         description: "Create or update a GitHub Release with installer artifacts."
         required: true
@@ -38,7 +33,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
 
 env:
   DOTNET_VERSION: "8.0.x"
@@ -48,7 +42,6 @@ env:
   SOLUTION: "RustPlusDesk.sln"
   PUBLISH_DIR: "${{ github.workspace }}/RustPlusDesktop/bin/Installer/publish"
   INNO_OUTPUT_DIR: "${{ github.workspace }}/artifacts/inno"
-  NUGET_OUTPUT_DIR: "${{ github.workspace }}/artifacts/nuget"
   VELOPACK_OUTPUT_DIR: "${{ github.workspace }}/artifacts/velopack"
   VELOPACK_ID: "RustPlusDesk"
 
@@ -149,19 +142,6 @@ jobs:
       - name: Build
         run: dotnet build "${{ env.SOLUTION }}" --configuration "${{ env.CONFIGURATION }}" --no-restore -p:Version="${{ env.VERSION }}"
 
-      - name: Pack MapParser NuGet package
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path "${{ env.NUGET_OUTPUT_DIR }}" | Out-Null
-          dotnet pack "MapParser/MapParser.csproj" `
-            --configuration "${{ env.CONFIGURATION }}" `
-            --no-build `
-            --output "${{ env.NUGET_OUTPUT_DIR }}" `
-            -p:PackageVersion="${{ env.VERSION }}" `
-            -p:Version="${{ env.VERSION }}" `
-            -p:IncludeSymbols=true `
-            -p:SymbolPackageFormat=snupkg
-
       - name: Publish Windows app
         run: >
           dotnet publish "${{ env.APP_PROJECT }}"
@@ -211,27 +191,9 @@ jobs:
         with:
           name: rustplusdesk-${{ env.VERSION }}-release-artifacts
           path: |
-            ${{ env.NUGET_OUTPUT_DIR }}/*.nupkg
-            ${{ env.NUGET_OUTPUT_DIR }}/*.snupkg
             ${{ env.INNO_OUTPUT_DIR }}/*.exe
             ${{ env.VELOPACK_OUTPUT_DIR }}/**
           if-no-files-found: error
-
-      - name: Publish NuGet packages to GitHub Packages
-        if: ${{ (github.event_name == 'workflow_dispatch' && inputs.publish_nuget) || github.ref_type == 'tag' }}
-        shell: pwsh
-        run: |
-          $packages = Get-ChildItem -Path "${{ env.NUGET_OUTPUT_DIR }}" -Filter "*.nupkg" -File
-          if ($packages.Count -eq 0) {
-            throw "No .nupkg files found in ${{ env.NUGET_OUTPUT_DIR }}"
-          }
-
-          foreach ($package in $packages) {
-            dotnet nuget push $package.FullName `
-              --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
-              --api-key "${{ secrets.GITHUB_TOKEN }}" `
-              --skip-duplicate
-          }
 
       - name: Create or update GitHub Release
         if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.create_github_release) }}
@@ -244,7 +206,6 @@ jobs:
           $notes = "Automated RustPlusDesk release for $tag."
           $assets = @(
             Get-ChildItem -Path "${{ env.INNO_OUTPUT_DIR }}" -Filter "*.exe" -File
-            Get-ChildItem -Path "${{ env.NUGET_OUTPUT_DIR }}" -Include "*.nupkg","*.snupkg" -File -Recurse
             Get-ChildItem -Path "${{ env.VELOPACK_OUTPUT_DIR }}" -File -Recurse
           ) | Select-Object -ExpandProperty FullName -Unique
 

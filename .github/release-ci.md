@@ -1,6 +1,6 @@
 # Release CI
 
-The `Release` GitHub Actions workflow builds the Windows app, the MapParser NuGet package, an Inno Setup installer, and Velopack update packages.
+The `Release` GitHub Actions workflow builds the RustPlusDesk Windows app, bundles MapParser into the app output, then creates an Inno Setup installer and Velopack update packages.
 
 ## Manual Release
 
@@ -8,8 +8,7 @@ The `Release` GitHub Actions workflow builds the Windows app, the MapParser NuGe
 2. Run the `Release` workflow.
 3. Set `version` to the package version you want, for example `7.1.2`.
 4. Leave `MapParser` on `Pronwan/MapParser` and `main`, or point it at a branch/tag when testing parser changes.
-5. Enable `publish_nuget` only when the MapParser package should be pushed to GitHub Packages.
-6. Leave `create_github_release` enabled when you want the installer and update files uploaded to a GitHub Release.
+5. Leave `create_github_release` enabled when you want the installer and update files uploaded to a GitHub Release.
 
 ## Tag Release
 
@@ -24,9 +23,10 @@ The workflow trims the leading `v` and uses `7.1.2` as the package version.
 
 ## Outputs
 
-- `artifacts/nuget`: MapParser `.nupkg` and `.snupkg` from `dotnet pack`.
 - `artifacts/inno`: `RustPlusDesk-Setup-<version>.exe` from `Setup.iss`.
 - `artifacts/velopack`: Velopack `.nupkg`, installer `.exe`, portable `.zip`, and release metadata.
+
+MapParser is checked out during CI and included in the RustPlusDesk publish output. It is not published as a separate NuGet package.
 
 ## Caching
 
@@ -41,6 +41,4 @@ Do not add `.env`, generated secret files, tokens, or release outputs to cache p
 - `OVERLAY_SYNC_BASEURL`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - `SUPABASE_URL`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - `SUPABASE_ANON_KEY`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
-- GitHub Packages and GitHub Releases use the workflow `GITHUB_TOKEN`.
-
-To publish to nuget.org later, add a `NUGET_API_KEY` secret and add a `dotnet nuget push` step that targets `https://api.nuget.org/v3/index.json`.
+- GitHub Releases use the workflow `GITHUB_TOKEN`.
