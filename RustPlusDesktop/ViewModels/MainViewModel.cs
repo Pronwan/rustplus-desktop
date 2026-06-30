@@ -231,6 +231,27 @@ public class MainViewModel : INotifyPropertyChanged
         set { _updateDownloadPercentage = value; OnPropertyChanged(); }
     }
 
+    private string _currentDownloadFile = "";
+    public string CurrentDownloadFile
+    {
+        get => _currentDownloadFile;
+        set { _currentDownloadFile = value; OnPropertyChanged(); }
+    }
+
+    private bool _isDownloadPaused;
+    public bool IsDownloadPaused
+    {
+        get => _isDownloadPaused;
+        set { _isDownloadPaused = value; OnPropertyChanged(); }
+    }
+
+    private string _pauseResumeButtonText = "Pause";
+    public string PauseResumeButtonText
+    {
+        get => _pauseResumeButtonText;
+        set { _pauseResumeButtonText = value; OnPropertyChanged(); }
+    }
+
     private string _busyText = "";
     public string BusyText
     {

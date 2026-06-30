@@ -529,7 +529,9 @@
                                             IsOpen="False"
                                             Placement="Bottom"
                                             PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
-                                            VerticalOffset="5">
+                                            VerticalOffset="5"
+                                            MouseEnter="UpdateDownloadPopup_MouseEnter"
+                                            MouseLeave="UpdateDownloadPopup_MouseLeave">
                                             <Border
                                                 Width="220"
                                                 Padding="12"
@@ -546,9 +548,21 @@
 
                                                     <Grid Margin="0,0,0,4">
                                                         <TextBlock
+                                                            x:Name="DownloadingStatusText"
                                                             FontSize="11"
-                                                            Foreground="#BBFFFFFF"
-                                                            Text="{DynamicResource Downloading}" />
+                                                            Foreground="#BBFFFFFF">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Text" Value="Downloading..." />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsDownloadPaused}" Value="True">
+                                                                            <Setter Property="Text" Value="Paused" />
+                                                                            <Setter Property="Foreground" Value="#FFAAAAAA" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
                                                         <TextBlock
                                                             HorizontalAlignment="Right"
                                                             FontSize="11"
@@ -573,8 +587,29 @@
                                                                 FontSize="10"
                                                                 Foreground="#88FFFFFF"
                                                                 Text="{Binding UpdateDownloadSize}" />
+                                                            <TextBlock
+                                                                Margin="0,4,0,4"
+                                                                FontSize="10"
+                                                                Foreground="#88FFFFFF"
+                                                                Text="{Binding CurrentDownloadFile, StringFormat='File: {0}'}" />
                                                         </StackPanel>
                                                     </Grid>
+
+                                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" HorizontalAlignment="Right">
+                                                        <ui:Button
+                                                            Content="{Binding PauseResumeButtonText}"
+                                                            Appearance="Secondary"
+                                                            FontSize="10"
+                                                            Padding="8,4"
+                                                            Margin="0,0,8,0"
+                                                            Click="PauseResumeDownload_Click" />
+                                                        <ui:Button
+                                                            Content="Cancel"
+                                                            Appearance="Danger"
+                                                            FontSize="10"
+                                                            Padding="8,4"
+                                                            Click="CancelDownload_Click" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </Border>
                                         </Popup>

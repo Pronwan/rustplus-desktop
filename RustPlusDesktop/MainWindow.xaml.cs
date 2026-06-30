@@ -6729,13 +6729,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _chatOpenedForCommandsOnly = false;
         }
         BtnOpenChatCommands_Click(null, null);
-    }
-
-    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
+    }    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
     {
         try
         {
+            _lastDownloadUrl = dlUrl;
+            _lastDownloadTag = tag;
+
             _vm.IsDownloadingUpdate = true;
+            _vm.IsDownloadPaused = false;
+            _vm.PauseResumeButtonText = "Pause";
+            _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+
             var prog = new Progress<DownloadReport>(r =>
             {
                 _vm.BusyText = $"Downloading update ... {r.Percentage}";
@@ -6743,9 +6748,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
                 _vm.UpdateDownloadPercentage = r.Percentage;
+                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
             });
 
             var path = await _updateService.DownloadInstallerAsync(dlUrl, prog);
+            
+            if (path == "PAUSED")
+            {
+                _vm.IsDownloadingUpdate = true;
+                _vm.IsDownloadPaused = true;
+                _vm.PauseResumeButtonText = "Resume";
+                return;
+            }
+
             _vm.IsDownloadingUpdate = false;
 
             if (path == null)
@@ -6760,12 +6775,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
-            AppendLog("Ã¢ÂÅ’ Update download failed: " + ex.Message);
+            AppendLog("❌ Update download failed: " + ex.Message);
             ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
         }
-    }
-
-    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    }    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting || _vm.IsDownloadingUpdate) return;
         if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
@@ -6824,7 +6837,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (ask != MessageBoxResult.Yes) return;
 
+            _lastDownloadUrl = dlUrl;
+            _lastDownloadTag = tag;
+
             _vm.IsDownloadingUpdate = true;
+            _vm.IsDownloadPaused = false;
+            _vm.PauseResumeButtonText = "Pause";
+            _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+
             var prog = new Progress<DownloadReport>(r =>
             {
                 _vm.BusyText = $"Downloading update ... {r.Percentage}";
@@ -6832,8 +6852,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
                 _vm.UpdateDownloadPercentage = r.Percentage;
+                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
             });
             var path = await _updateService.DownloadInstallerAsync(dlUrl!, prog);
+
+            if (path == "PAUSED")
+            {
+                _vm.IsDownloadingUpdate = true;
+                _vm.IsDownloadPaused = true;
+                _vm.PauseResumeButtonText = "Resume";
+                return;
+            }
 
             _vm.IsDownloadingUpdate = false;
 
@@ -6853,21 +6882,90 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
-            AppendLog("Ã¢ÂÅ’ Update check failed: " + ex.Message);
+            AppendLog("❌ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-    }
+    }    private System.Windows.Threading.DispatcherTimer? _popupCloseTimer;
+    private string? _lastDownloadUrl;
+    private string? _lastDownloadTag;
 
     private void BtnCheckUpdates_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (_vm.IsDownloadingUpdate)
+        {
+            _popupCloseTimer?.Stop();
             UpdateDownloadPopup.IsOpen = true;
+        }
     }
 
     private void BtnCheckUpdates_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        UpdateDownloadPopup.IsOpen = false;
+        StartPopupCloseTimer();
     }
+
+    private void UpdateDownloadPopup_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        _popupCloseTimer?.Stop();
+    }
+
+    private void UpdateDownloadPopup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        StartPopupCloseTimer();
+    }
+
+    private void StartPopupCloseTimer()
+    {
+        if (_popupCloseTimer == null)
+        {
+            _popupCloseTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(500)
+            };
+            _popupCloseTimer.Tick += (s, ev) =>
+            {
+                _popupCloseTimer.Stop();
+                if (!BtnCheckUpdates.IsMouseOver && !UpdateDownloadPopup.IsMouseOver)
+                {
+                    UpdateDownloadPopup.IsOpen = false;
+                }
+            };
+        }
+        _popupCloseTimer.Stop();
+        _popupCloseTimer.Start();
+    }
+
+    public void PauseResumeDownload_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsDownloadPaused)
+        {
+            _updateService.ResumeDownload();
+            _vm.IsDownloadPaused = false;
+            _vm.PauseResumeButtonText = "Pause";
+            if (!string.IsNullOrEmpty(_lastDownloadUrl))
+            {
+                _ = PerformUpdateDownloadAsync(_lastDownloadTag ?? "Update", _lastDownloadUrl);
+            }
+        }
+        else
+        {
+            _updateService.PauseDownload();
+            _vm.IsDownloadPaused = true;
+            _vm.PauseResumeButtonText = "Resume";
+        }
+    }
+
+    public void CancelDownload_Click(object sender, RoutedEventArgs e)
+    {
+        _updateService.CancelDownload();
+        _vm.IsDownloadingUpdate = false;
+        _vm.IsDownloadPaused = false;
+        _vm.UpdateDownloadProgress = 0;
+        _vm.UpdateDownloadPercentage = "0%";
+        _vm.UpdateDownloadSpeed = "";
+        _vm.UpdateDownloadSize = "";
+    }
+
+
 
     /// DEVICE HOTKEYS
     /// 
