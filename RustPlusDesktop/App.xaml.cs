@@ -409,24 +409,36 @@ public partial class App : Application
             }
 
             // Find the Inno Setup uninstaller path from the registry.
-            // AppID: {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1
-            const string uninstallKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1";
+            // AppID could have one or two closing braces due to Inno Setup escaping: {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1 or {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}_is1
+            string[] possibleKeys = new[]
+            {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}_is1",
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1"
+            };
+
             string? uninstallString = null;
-
-            // Try 64-bit Registry View
-            using (var baseKey64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-            using (var subKey64 = baseKey64.OpenSubKey(uninstallKeyPath))
+            foreach (var keyPath in possibleKeys)
             {
-                uninstallString = subKey64?.GetValue("UninstallString")?.ToString();
-            }
-
-            // Try 32-bit Registry View if not found
-            if (string.IsNullOrEmpty(uninstallString))
-            {
-                using (var baseKey32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
-                using (var subKey32 = baseKey32.OpenSubKey(uninstallKeyPath))
+                // Try 64-bit Registry View
+                using (var baseKey64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var subKey64 = baseKey64.OpenSubKey(keyPath))
                 {
-                    uninstallString = subKey32?.GetValue("UninstallString")?.ToString();
+                    uninstallString = subKey64?.GetValue("UninstallString")?.ToString();
+                }
+
+                // Try 32-bit Registry View if not found
+                if (string.IsNullOrEmpty(uninstallString))
+                {
+                    using (var baseKey32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                    using (var subKey32 = baseKey32.OpenSubKey(keyPath))
+                    {
+                        uninstallString = subKey32?.GetValue("UninstallString")?.ToString();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(uninstallString))
+                {
+                    break;
                 }
             }
 
