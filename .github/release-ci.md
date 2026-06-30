@@ -28,6 +28,12 @@ The workflow trims the leading `v` and uses `7.1.2` as the package version.
 - `artifacts/inno`: `RustPlusDesk-Setup-<version>.exe` from `Setup.iss`.
 - `artifacts/velopack`: Velopack `.nupkg`, installer `.exe`, portable `.zip`, and release metadata.
 
+## Caching
+
+The workflow caches NuGet packages from `~/.nuget/packages` with a key derived from solution, project, lock, and NuGet config files. It also uses `actions/setup-node` npm caching for `MapParser/package-lock.json`.
+
+Do not add `.env`, generated secret files, tokens, or release outputs to cache paths.
+
 ## Secrets
 
 - `MAP_PARSER_TOKEN`: required when `MapParser` is private or belongs to a different account/org. Use a fine-grained GitHub token with read-only Contents access to the MapParser repository.
