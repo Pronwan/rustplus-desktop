@@ -640,8 +640,14 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
             else
             {
-                // Kommt von einer neueren/gleichen Version: Einfach Version updaten
+                // Upgrade from a previous version: show success notification
+                string oldVersion = TrackingService.LastSeenVersion;
                 TrackingService.LastSeenVersion = AppVersion;
+                
+                Dispatcher.InvokeAsync(() =>
+                {
+                    ShowInfoSnackbar("Update Successful", $"Rust+ Desktop has been successfully updated to v{AppVersion}!", WpfUi.ControlAppearance.Success);
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
         }
 

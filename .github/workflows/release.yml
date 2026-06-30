@@ -193,6 +193,11 @@ jobs:
           # Keep only the .nupkg and RELEASES file by removing the portable zip
           Remove-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/*.zip" -ErrorAction Ignore
 
+          # Rename the Velopack installer to match legacy naming (so old apps find it)
+          if (Test-Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe") {
+              Rename-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe" -NewName "RustPlusDesk-Setup.exe"
+          }
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:

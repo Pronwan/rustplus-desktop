@@ -53,6 +53,9 @@ public partial class App : Application
         SetLanguage(applySynchronously: true);
         base.OnStartup(e);
 
+        // Run legacy Inno Setup cleanup in the background
+        Task.Run(CleanupLegacyInnoSetupInstallation);
+
         EnsureUrlProtocolRegistered();
 
         bool isBackgroundArg = e.Args.Contains("--background");
@@ -390,6 +393,68 @@ public partial class App : Application
             {
                 // Pipe neu starten, wenn irgendwas schief ging
             }
+        }
+    }
+
+    private static void CleanupLegacyInnoSetupInstallation()
+    {
+        try
+        {
+            string baseDir = AppContext.BaseDirectory;
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            if (!baseDir.StartsWith(localAppData, StringComparison.OrdinalIgnoreCase))
+            {
+                // Not running from AppData (e.g. running from C:\Program Files or development folder)
+                return;
+            }
+
+            // Find the Inno Setup uninstaller path from the registry.
+            // AppID: {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1
+            const string uninstallKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1";
+            string? uninstallString = null;
+
+            // Try 64-bit Registry View
+            using (var baseKey64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+            using (var subKey64 = baseKey64.OpenSubKey(uninstallKeyPath))
+            {
+                uninstallString = subKey64?.GetValue("UninstallString")?.ToString();
+            }
+
+            // Try 32-bit Registry View if not found
+            if (string.IsNullOrEmpty(uninstallString))
+            {
+                using (var baseKey32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                using (var subKey32 = baseKey32.OpenSubKey(uninstallKeyPath))
+                {
+                    uninstallString = subKey32?.GetValue("UninstallString")?.ToString();
+                }
+            }
+
+            if (string.IsNullOrEmpty(uninstallString))
+            {
+                return; // Inno Setup version is not installed.
+            }
+
+            string uninstallerExe = uninstallString.Replace("\"", "").Trim();
+            if (!File.Exists(uninstallerExe))
+            {
+                return;
+            }
+
+            // Run the uninstaller silently (will prompt for UAC)
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = uninstallerExe,
+                Arguments = "/SILENT /SUPPRESSMSGBOXES /NORESTART",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+
+            System.Diagnostics.Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to trigger legacy cleanup: {ex.Message}");
         }
     }
 }
