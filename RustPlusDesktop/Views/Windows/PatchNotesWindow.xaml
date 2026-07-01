@@ -33,7 +33,41 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v7.1.0 PATCH NOTES -->
+                    <!-- NEW v7.1.5 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v7.1.5 | Velopack Update Flow &amp; Item Lists Update" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold" Foreground="{DynamicResource Accent}">&#x2022; Velopack Auto-Updates:</Run>
+                                Integrated Velopack update system for modern, fast background auto-updates. Update package sizes are now reduced by 90% to 99% using delta patches!
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Compiled MapParser Runtime:</Run>
+                                Replaced raw JS files with minified and obfuscated client assets compiled via a new JS build pipeline (esbuild), improving security and 3D rendering speed.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; New Item &amp; Recycling Data:</Run>
+                                Integrated all newly released Rust items, stack sizes, and recycling yields into the item list and Recycler Calculator.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; 3D Map &amp; UI Enhancements:</Run>
+                                Improved 3D terrain rendering, nature assets, live markers, camera/follow behaviors, Steam avatar caching, and chat sanitization.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Expanded Localization:</Run>
+                                Heavy expansion of localizations across dozens of language resource files.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- OLD v7.1.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
