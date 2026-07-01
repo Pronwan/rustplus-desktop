@@ -565,16 +565,22 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 73681876,
-          "shortname": "techparts",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "metal.refined",
+          "quantity": 3,
+          "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 90,
+          "quantity": 100,
           "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "gears",
+          "quantity": 1,
+          "probability": 0.5
         }
       ]
     },
@@ -582,15 +588,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 73681876,
-          "shortname": "techparts",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 66,
+          "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 60,
+          "itemId": -1,
+          "shortname": "metal.refined",
+          "quantity": 2,
           "probability": 1.0
         }
       ]
@@ -1462,21 +1468,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 30,
+          "quantity": 15,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 6,
-          "probability": 1.0
-        },
-        {
-          "itemId": -946369541,
+          "itemId": -1,
           "shortname": "lowgradefuel",
-          "quantity": 6,
+          "quantity": 5,
           "probability": 1.0
         }
       ]
@@ -1485,21 +1485,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 20,
+          "quantity": 10,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 4,
-          "probability": 1.0
-        },
-        {
-          "itemId": -946369541,
+          "itemId": -1,
           "shortname": "lowgradefuel",
-          "quantity": 4,
+          "quantity": 3,
           "probability": 1.0
         }
       ]
@@ -1591,28 +1585,28 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
           "quantity": 150,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
+          "itemId": -1,
           "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.6
-        },
-        {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
           "quantity": 1,
           "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.2
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.refined",
+          "quantity": 3,
+          "probability": 1.0
         }
       ]
     },
@@ -1620,22 +1614,22 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
           "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
+          "itemId": -1,
+          "shortname": "rope",
           "quantity": 1,
-          "probability": 0.4
+          "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.8
+          "itemId": -1,
+          "shortname": "metal.refined",
+          "quantity": 2,
+          "probability": 1.0
         }
       ]
     }
@@ -1648,28 +1642,28 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 150,
+          "quantity": 200,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
+          "itemId": -1,
           "shortname": "gears",
           "quantity": 1,
-          "probability": 0.6
-        },
-        {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
           "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.2
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 3,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
+          "probability": 1.0
         }
       ]
     },
@@ -1677,22 +1671,22 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 100,
+          "quantity": 133,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
+          "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.8
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
+          "probability": 1.0
         }
       ]
     }
@@ -1705,33 +1699,21 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 300,
-          "probability": 1.0
-        },
-        {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 1.0
-        },
-        {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.2
-        },
-        {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.6
-        },
-        {
-          "itemId": 317398316,
+          "itemId": -1,
           "shortname": "metal.refined",
-          "quantity": 60,
+          "quantity": 5,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 150,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 200,
           "probability": 1.0
         }
       ]
@@ -1740,27 +1722,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 200,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.8
-        },
-        {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.4
-        },
-        {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 40,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 133,
           "probability": 1.0
         }
       ]
@@ -1801,21 +1771,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 1168916338,
-          "shortname": "grenade.bee",
-          "quantity": 1,
+          "itemId": -1,
+          "shortname": "gunpowder",
+          "quantity": 10,
           "probability": 1.0
         },
         {
-          "itemId": 1168916338,
-          "shortname": "grenade.bee",
-          "quantity": 1,
-          "probability": 0.2
-        },
-        {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 120,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
           "probability": 1.0
         }
       ]
@@ -1824,15 +1788,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 1168916338,
-          "shortname": "grenade.bee",
-          "quantity": 1,
-          "probability": 0.8
+          "itemId": -1,
+          "shortname": "gunpowder",
+          "quantity": 6,
+          "probability": 1.0
         },
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 80,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 13,
           "probability": 1.0
         }
       ]
@@ -1897,28 +1861,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -265876753,
-          "shortname": "gunpowder",
-          "quantity": 90,
-          "probability": 1.0
-        },
-        {
-          "itemId": -946369541,
+          "itemId": -1,
           "shortname": "lowgradefuel",
           "quantity": 30,
           "probability": 1.0
         },
         {
-          "itemId": 1414245522,
-          "shortname": "rope",
-          "quantity": 1,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
           "probability": 1.0
-        },
-        {
-          "itemId": 1414245522,
-          "shortname": "rope",
-          "quantity": 1,
-          "probability": 0.2
         }
       ]
     },
@@ -1926,22 +1878,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -265876753,
-          "shortname": "gunpowder",
-          "quantity": 60,
-          "probability": 1.0
-        },
-        {
-          "itemId": -946369541,
+          "itemId": -1,
           "shortname": "lowgradefuel",
           "quantity": 20,
           "probability": 1.0
         },
         {
-          "itemId": 1414245522,
-          "shortname": "rope",
-          "quantity": 1,
-          "probability": 0.8
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
         }
       ]
     }
@@ -1981,28 +1927,28 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 300,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 150,
           "probability": 1.0
         },
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 12,
-          "probability": 1.0
-        },
-        {
-          "itemId": 1414245522,
-          "shortname": "rope",
-          "quantity": 1,
-          "probability": 0.6
-        },
-        {
-          "itemId": 479143914,
+          "itemId": -1,
           "shortname": "gears",
           "quantity": 1,
-          "probability": 0.6
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 250,
+          "probability": 1.0
         }
       ]
     },
@@ -2010,28 +1956,22 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 200,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 8,
-          "probability": 1.0
-        },
-        {
-          "itemId": 1414245522,
+          "itemId": -1,
           "shortname": "rope",
           "quantity": 1,
-          "probability": 0.4
+          "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 166,
+          "probability": 1.0
         }
       ]
     }
@@ -2044,22 +1984,22 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 300,
+          "quantity": 400,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 150,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 4,
+          "probability": 1.0
         }
       ]
     },
@@ -2067,22 +2007,22 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 200,
+          "quantity": 266,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 100,
+          "quantity": 66,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
+          "probability": 1.0
         }
       ]
     }
@@ -4075,28 +4015,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -316250604,
-          "shortname": "ladder.wooden.wall",
-          "quantity": 1,
-          "probability": 0.6
-        },
-        {
-          "itemId": 317398316,
+          "itemId": -1,
           "shortname": "metal.refined",
-          "quantity": 21,
+          "quantity": 8,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 3,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
           "probability": 1.0
-        },
-        {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.6
         }
       ]
     },
@@ -4104,28 +4032,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -316250604,
-          "shortname": "ladder.wooden.wall",
-          "quantity": 1,
-          "probability": 0.4
-        },
-        {
-          "itemId": 317398316,
+          "itemId": -1,
           "shortname": "metal.refined",
-          "quantity": 14,
+          "quantity": 5,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 2,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 33,
           "probability": 1.0
-        },
-        {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.4
         }
       ]
     }
@@ -4138,28 +4054,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -316250604,
-          "shortname": "ladder.wooden.wall",
-          "quantity": 1,
-          "probability": 0.6
-        },
-        {
-          "itemId": 317398316,
+          "itemId": -1,
           "shortname": "metal.refined",
-          "quantity": 21,
+          "quantity": 8,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 3,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
           "probability": 1.0
-        },
-        {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.6
         }
       ]
     },
@@ -4167,28 +4071,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -316250604,
-          "shortname": "ladder.wooden.wall",
-          "quantity": 1,
-          "probability": 0.4
-        },
-        {
-          "itemId": 317398316,
+          "itemId": -1,
           "shortname": "metal.refined",
-          "quantity": 14,
+          "quantity": 5,
           "probability": 1.0
         },
         {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 2,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 33,
           "probability": 1.0
-        },
-        {
-          "itemId": 479143914,
-          "shortname": "gears",
-          "quantity": 1,
-          "probability": 0.4
         }
       ]
     }
@@ -10102,10 +9994,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 30,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 25,
           "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "sewingkit",
+          "quantity": 1,
+          "probability": 0.5
         }
       ]
     },
@@ -10113,9 +10011,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 20,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 17,
           "probability": 1.0
         }
       ]
@@ -10129,16 +10027,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 2,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
           "probability": 1.0
         },
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 10,
+          "probability": 0.5
         }
       ]
     },
@@ -10146,16 +10044,10 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 1,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 33,
           "probability": 1.0
-        },
-        {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 1,
-          "probability": 0.6
         }
       ]
     }
@@ -10168,10 +10060,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 3,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 75,
           "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 5,
+          "probability": 0.5
         }
       ]
     },
@@ -10179,9 +10077,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 2,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -10195,10 +10093,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 90,
+          "quantity": 75,
           "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 5,
+          "probability": 0.5
         }
       ]
     },
@@ -10206,9 +10110,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 60,
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -11428,13 +11332,13 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
           "quantity": 30,
           "probability": 1.0
@@ -11445,13 +11349,13 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
+          "quantity": 66,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
           "quantity": 20,
           "probability": 1.0
@@ -11855,16 +11759,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 150,
           "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
+          "probability": 1.0
         }
       ]
     },
@@ -11872,16 +11776,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": -1994909036,
-          "shortname": "sheetmetal",
+          "itemId": -1,
+          "shortname": "rope",
           "quantity": 1,
-          "probability": 0.4
+          "probability": 1.0
         }
       ]
     }
@@ -11894,16 +11798,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 120,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 200,
           "probability": 1.0
         },
         {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 300,
+          "probability": 1.0
         }
       ]
     },
@@ -11911,16 +11815,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 80,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 133,
           "probability": 1.0
         },
         {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 200,
+          "probability": 1.0
         }
       ]
     }
@@ -12044,9 +11948,9 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 60,
+          "quantity": 10,
           "probability": 1.0
         }
       ]
@@ -12055,9 +11959,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 40,
+          "quantity": 6,
           "probability": 1.0
         }
       ]
@@ -12071,16 +11975,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 90,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 50,
           "probability": 1.0
         },
         {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 3,
+          "probability": 1.0
         }
       ]
     },
@@ -12088,16 +11992,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 60,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 33,
           "probability": 1.0
         },
         {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
+          "probability": 1.0
         }
       ]
     }
@@ -12581,21 +12485,21 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 200,
           "probability": 1.0
         },
         {
-          "itemId": 1414245522,
-          "shortname": "rope",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
+          "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 45,
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 2,
           "probability": 1.0
         }
       ]
@@ -12604,21 +12508,21 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
+          "quantity": 133,
           "probability": 1.0
         },
         {
-          "itemId": 1414245522,
-          "shortname": "rope",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 33,
+          "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 30,
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 1,
           "probability": 1.0
         }
       ]
@@ -12779,22 +12683,22 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 120,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": -2099697608,
-          "shortname": "stones",
-          "quantity": 120,
-          "probability": 1.0
-        },
-        {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 60,
+          "quantity": 150,
           "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "gears",
+          "quantity": 1,
+          "probability": 0.5
         }
       ]
     },
@@ -12802,21 +12706,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 80,
+          "quantity": 66,
           "probability": 1.0
         },
         {
-          "itemId": -2099697608,
-          "shortname": "stones",
-          "quantity": 80,
-          "probability": 1.0
-        },
-        {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 40,
+          "quantity": 100,
           "probability": 1.0
         }
       ]
@@ -14144,16 +14042,22 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 300,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 60,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
           "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "techparts",
+          "quantity": 1,
+          "probability": 0.5
         }
       ]
     },
@@ -14161,15 +14065,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 200,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 66,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 40,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
           "probability": 1.0
         }
       ]
@@ -14366,15 +14270,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 150,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 45,
+          "quantity": 75,
           "probability": 1.0
         }
       ]
@@ -14383,15 +14287,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 30,
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -14405,15 +14309,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 150,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 45,
+          "quantity": 75,
           "probability": 1.0
         }
       ]
@@ -14422,15 +14326,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 30,
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -15146,15 +15050,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 75,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 45,
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 1,
           "probability": 1.0
         }
       ]
@@ -15163,15 +15067,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
-          "probability": 1.0
-        },
-        {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 30,
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -15185,15 +15083,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 180,
+          "quantity": 100,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 45,
+          "quantity": 25,
           "probability": 1.0
         }
       ]
@@ -15202,15 +15100,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 120,
+          "quantity": 66,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 30,
+          "quantity": 16,
           "probability": 1.0
         }
       ]
@@ -15590,15 +15488,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 60,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 20,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 30,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
           "probability": 1.0
         }
       ]
@@ -15607,15 +15505,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 40,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 13,
           "probability": 1.0
         },
         {
-          "itemId": 69511070,
-          "shortname": "metal.fragments",
-          "quantity": 20,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -16064,16 +15962,16 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 90,
+          "quantity": 50,
           "probability": 1.0
         },
         {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
         }
       ]
     },
@@ -16081,16 +15979,16 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 60,
+          "quantity": 33,
           "probability": 1.0
         },
         {
-          "itemId": 2019042823,
-          "shortname": "tarp",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 6,
+          "probability": 1.0
         }
       ]
     }
@@ -17537,9 +17435,9 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 3,
+          "quantity": 15,
           "probability": 1.0
         }
       ]
@@ -17548,9 +17446,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 69511070,
+          "itemId": -1,
           "shortname": "metal.fragments",
-          "quantity": 2,
+          "quantity": 10,
           "probability": 1.0
         }
       ]
@@ -19877,9 +19775,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 60,
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
           "probability": 1.0
         }
       ]
@@ -19888,9 +19792,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
+          "itemId": -1,
           "shortname": "wood",
-          "quantity": 40,
+          "quantity": 33,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 6,
           "probability": 1.0
         }
       ]
@@ -21461,15 +21371,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 105,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 15,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 18,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
           "probability": 1.0
         }
       ]
@@ -21478,15 +21388,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 70,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 10,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -21500,15 +21410,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 105,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 12,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 18,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 60,
           "probability": 1.0
         }
       ]
@@ -21517,15 +21427,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 70,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 8,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 40,
           "probability": 1.0
         }
       ]
@@ -21578,15 +21488,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 105,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 20,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 18,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
           "probability": 1.0
         }
       ]
@@ -21595,15 +21505,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 70,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 13,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
           "probability": 1.0
         }
       ]
@@ -21617,15 +21527,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 105,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 10,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 18,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
           "probability": 1.0
         }
       ]
@@ -21634,15 +21544,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 70,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 7,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 33,
           "probability": 1.0
         }
       ]
@@ -21656,15 +21566,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 105,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 25,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 18,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 125,
           "probability": 1.0
         }
       ]
@@ -21673,15 +21583,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 70,
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 17,
           "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 83,
           "probability": 1.0
         }
       ]
@@ -24416,16 +24326,10 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 1,
+          "itemId": -1,
+          "shortname": "scrap",
+          "quantity": 10,
           "probability": 1.0
-        },
-        {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 1,
-          "probability": 0.2
         }
       ]
     },
@@ -24433,10 +24337,10 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": 317398316,
-          "shortname": "metal.refined",
-          "quantity": 1,
-          "probability": 0.8
+          "itemId": -1,
+          "shortname": "scrap",
+          "quantity": 6,
+          "probability": 1.0
         }
       ]
     }
@@ -30416,9 +30320,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "rope",
+          "quantity": 1,
           "probability": 1.0
         }
       ]
@@ -30427,9 +30337,9 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -151838493,
-          "shortname": "wood",
-          "quantity": 8,
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
           "probability": 1.0
         }
       ]
@@ -33083,15 +32993,15 @@
       "efficiency": 0.6,
       "yield": [
         {
-          "itemId": -1811234677,
-          "shortname": "nucleus",
-          "quantity": 1,
-          "probability": 0.6
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 18,
+          "itemId": -1,
+          "shortname": "lowgradefuel",
+          "quantity": 5,
           "probability": 1.0
         }
       ]
@@ -33100,15 +33010,15 @@
       "efficiency": 0.4,
       "yield": [
         {
-          "itemId": -1811234677,
-          "shortname": "nucleus",
-          "quantity": 1,
-          "probability": 0.4
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
         },
         {
-          "itemId": -858312878,
-          "shortname": "cloth",
-          "quantity": 12,
+          "itemId": -1,
+          "shortname": "lowgradefuel",
+          "quantity": 3,
           "probability": 1.0
         }
       ]
@@ -38002,6 +37912,1770 @@
           "itemId": -151838493,
           "shortname": "wood",
           "quantity": 120,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "pistol.revolver2": {
+    "displayName": "High Caliber Revolver",
+    "itemId": -262731742,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "shortname": "metal.refined",
+          "quantity": 2,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 33,
+          "probability": 1.0
+        },
+        {
+          "shortname": "metal.refined",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    }
+  },
+  "weapon.mod.oilfilter": {
+    "displayName": "Oil Filter Silencer",
+    "itemId": -419069863,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "weapon.mod.targeting": {
+    "displayName": "Targeting Attachment",
+    "itemId": 1498516813,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        },
+        {
+          "shortname": "techparts",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        },
+        {
+          "shortname": "techparts",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    }
+  },
+  "wall.lunar.inlay": {
+    "displayName": "Lunar Wall Frame Inlay",
+    "itemId": -1469307354,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 30,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 6,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "halfheight.bamboo.shelves": {
+    "displayName": "Half Height Bamboo Shelves",
+    "itemId": -391048847,
+    "stackSize": 10,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "heavyscientistplushy": {
+    "displayName": "Heavy Scientist Plushie",
+    "itemId": -1012406962,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 9,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 6,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "krieg.barrel.storage": {
+    "displayName": "Krieg Storage Barrel",
+    "itemId": -521212621,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "krieg.crate.storage": {
+    "displayName": "Krieg Storage Crates",
+    "itemId": -1389797867,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 13,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.lightupframe.m": {
+    "displayName": "Light Up Frame Large",
+    "itemId": -1098800370,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 60,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 13,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 40,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.lightupframe.xs": {
+    "displayName": "Light Up Frame Small",
+    "itemId": 1299490448,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 40,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 26,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.lightupframe.l": {
+    "displayName": "Light Up Frame Standing",
+    "itemId": -1098800371,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.lightupframe.xl": {
+    "displayName": "Light Up Frame XL",
+    "itemId": -1098800372,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 30,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.lightupframe.xxl": {
+    "displayName": "Light Up Frame XXL",
+    "itemId": -1098800373,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 40,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 125,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 26,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 83,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.ornateframe.s": {
+    "displayName": "Ornate Frame Small",
+    "itemId": -1429647768,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 33,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.ornateframe.l": {
+    "displayName": "Ornate Frame Standing",
+    "itemId": -1429647769,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 13,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.ornateframe.xl": {
+    "displayName": "Ornate Frame XL",
+    "itemId": -1429647770,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.ornateframe.xxl": {
+    "displayName": "Ornate Frame XXL",
+    "itemId": -1429647771,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 125,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 30,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 83,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.ornateframe.m": {
+    "displayName": "Ornate Frame Large",
+    "itemId": -1429647767,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 60,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 18,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 40,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 12,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "pookiebear": {
+    "displayName": "Pookie Bear",
+    "itemId": -152946823,
+    "stackSize": 1
+  },
+  "portable.easel": {
+    "displayName": "Portable Easel",
+    "itemId": -1406959751,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "scientistplushy": {
+    "displayName": "Scientist Plushie",
+    "itemId": -1012406961,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 30,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.shutterframe.s": {
+    "displayName": "Shutter Frame Small",
+    "itemId": -1947588614,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 40,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 26,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 6,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.shutterframe.l": {
+    "displayName": "Shutter Frame Standing",
+    "itemId": -1947588615,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 65,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 43,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.shutterframe.xl": {
+    "displayName": "Shutter Frame XL",
+    "itemId": -1947588616,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 90,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 60,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 13,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.shutterframe.xxl": {
+    "displayName": "Shutter Frame XXL",
+    "itemId": -1947588617,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 115,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 76,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.shutterframe.m": {
+    "displayName": "Shutter Frame Large",
+    "itemId": -1947588613,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 12,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 33,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 8,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "smallboatengine": {
+    "displayName": "Small Boat Engine",
+    "itemId": -1628361276,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 100,
+          "probability": 1.0
+        },
+        {
+          "shortname": "gears",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 66,
+          "probability": 1.0
+        },
+        {
+          "shortname": "gears",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    }
+  },
+  "smallramp": {
+    "displayName": "Small Ramp",
+    "itemId": -2021642194,
+    "stackSize": 5,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 30,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 8,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 20,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 5,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "steeringwheel": {
+    "displayName": "Steering Wheel",
+    "itemId": -1512437116,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "shortname": "wood",
+          "quantity": 30,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 33,
+          "probability": 1.0
+        },
+        {
+          "shortname": "wood",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "planter.box.triangle": {
+    "displayName": "Triangle Planter Box",
+    "itemId": -1546832450,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 90,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 60,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sofa.twitchrivals2025": {
+    "displayName": "Twitch Rivals 2025 Sofa",
+    "itemId": -1549218439,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 15,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 10,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "wall.cabinet": {
+    "displayName": "Wall Cabinet",
+    "itemId": -1281193840,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 100,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 66,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "hat.horse": {
+    "displayName": "Horse Mask",
+    "itemId": -814975849,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 6,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 4,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "hat.mummy": {
+    "displayName": "Mummy Mask",
+    "itemId": -1519100316,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 6,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 4,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "paintball.overalls": {
+    "displayName": "Paintball Overalls",
+    "itemId": -1741495848,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 20,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "sewingkit",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "cloth",
+          "quantity": 13,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "shield.wooden.reinforced": {
+    "displayName": "Reinforced Wooden Shield",
+    "itemId": -369248394,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 100,
+          "probability": 1.0
+        },
+        {
+          "shortname": "metal.fragments",
+          "quantity": 25,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 66,
+          "probability": 1.0
+        },
+        {
+          "shortname": "metal.fragments",
+          "quantity": 16,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "hat.snake": {
+    "displayName": "Snake Mask",
+    "itemId": -1468394933,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 6,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 4,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "jumpsuit.waterwell": {
+    "displayName": "Waterwell NPC Jumpsuit",
+    "itemId": -974343779,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 30,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -858312878,
+          "shortname": "cloth",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "wood.armor.gloves": {
+    "displayName": "Wood Armor Gloves",
+    "itemId": 1425288753,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 33,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "shield.wooden": {
+    "displayName": "Wooden Shield",
+    "itemId": -1776428004,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 75,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "blowpipe.dart.incapacitate": {
+    "displayName": "Incapacitate Dart",
+    "itemId": 1413443845,
+    "stackSize": 10,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 1,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 1,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "paintball.ammo": {
+    "displayName": "Paintball",
+    "itemId": -1490601272,
+    "stackSize": 64
+  },
+  "catapult.ammo.propane": {
+    "displayName": "Propane Explosive Bomb",
+    "itemId": -1588478452,
+    "stackSize": 5,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 40,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "lowgradefuel",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 26,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "lowgradefuel",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "blowpipe.dart.radiation": {
+    "displayName": "Radiation Dart",
+    "itemId": -1174165739,
+    "stackSize": 10,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 7,
+          "probability": 1.0
+        },
+        {
+          "itemId": 69511070,
+          "shortname": "metal.fragments",
+          "quantity": 1,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 5,
+          "probability": 1.0
+        },
+        {
+          "itemId": 69511070,
+          "shortname": "metal.fragments",
+          "quantity": 1,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "blowpipe.dart.scatter": {
+    "displayName": "Scatter Dart",
+    "itemId": 1413443846,
+    "stackSize": 10,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 7,
+          "probability": 1.0
+        },
+        {
+          "itemId": -2099697608,
+          "shortname": "stones",
+          "quantity": 3,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -151838493,
+          "shortname": "wood",
+          "quantity": 5,
+          "probability": 1.0
+        },
+        {
+          "itemId": -2099697608,
+          "shortname": "stones",
+          "quantity": 2,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "catapult.ammo.scattershot": {
+    "displayName": "Scattershot",
+    "itemId": -1588478453,
+    "stackSize": 5,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 30,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "stones",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "stones",
+          "quantity": 13,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "blowpipe.dart.wood": {
+    "displayName": "Wood Dart",
+    "itemId": 1413443847,
+    "stackSize": 10,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 5,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 3,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "spikes.floor.small": {
+    "displayName": "Small Spike Trap",
+    "itemId": -365097949,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "shortname": "metal.fragments",
+          "quantity": 15,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "wood",
+          "quantity": 33,
+          "probability": 1.0
+        },
+        {
+          "shortname": "metal.fragments",
+          "quantity": 10,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "industrial.hopper": {
+    "displayName": "Hopper",
+    "itemId": -1270220870,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 75,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "gears",
+          "quantity": 1,
+          "probability": 0.5
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.refined",
+          "quantity": 2,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "fridge.small": {
+    "displayName": "Mini Fridge",
+    "itemId": -1305790384,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 50,
+          "probability": 1.0
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "shortname": "metal.fragments",
+          "quantity": 33,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "sign.neon.twitchrivals": {
+    "displayName": "Twitch Rivals Neon Sign",
+    "itemId": -1477715295,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 30,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "techparts",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 20,
+          "probability": 1.0
+        }
+      ]
+    }
+  },
+  "electric.waterwheel": {
+    "displayName": "Water Wheel",
+    "itemId": -1594242662,
+    "stackSize": 1,
+    "recycler": {
+      "efficiency": 0.6,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 200,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 50,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "gears",
+          "quantity": 1,
+          "probability": 0.5
+        }
+      ]
+    },
+    "safe-zone-recycler": {
+      "efficiency": 0.4,
+      "yield": [
+        {
+          "itemId": -1,
+          "shortname": "wood",
+          "quantity": 133,
+          "probability": 1.0
+        },
+        {
+          "itemId": -1,
+          "shortname": "metal.fragments",
+          "quantity": 33,
           "probability": 1.0
         }
       ]
