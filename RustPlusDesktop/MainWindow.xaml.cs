@@ -4275,6 +4275,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        ImgSteam.ToolTip = "Logged In";
+        TxtSteamName.Text = "Logged In";
+
         var cachePath = GetOwnAvatarCachePath(steamId64);
 
         // Try load from local cache first on start
