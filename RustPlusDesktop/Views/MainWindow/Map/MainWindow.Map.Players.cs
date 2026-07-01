@@ -953,7 +953,7 @@ public partial class MainWindow
             if (!TrackingService.HideConsole)
             {
                 TrackingService.HideConsole = true;
-                if (TxtLog != null) TxtLog.Visibility = Visibility.Collapsed;
+                ApplySettings();
             }
         }
 
