@@ -15,6 +15,7 @@
 	<ItemGroup>
 	  
 	  <Compile Remove="RustPlusClientStub.cs" />
+	  <Compile Remove="Services\Data\ObfuscatedSecrets.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -245,6 +246,7 @@
 	  <None Remove="Assets\Screenshots\Tracking3.jpg" />
 	  <None Remove="Assets\Screenshots\Tracking4.jpg" />
 	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
+	  <None Remove="Assets\Screenshots\v7.1.5\*.png" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -564,6 +566,7 @@
     <Resource Include="Assets\Screenshots\Tracking3.jpg" />
     <Resource Include="Assets\Screenshots\Tracking4.jpg" />
     <Resource Include="Assets\Screenshots\Tracking5.jpg" />
+    <Resource Include="Assets\Screenshots\v7.1.5\*.png" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">
@@ -703,7 +706,7 @@
 		<CopyRetryDelayMilliseconds>250</CopyRetryDelayMilliseconds>
 	</PropertyGroup>
 
-	<Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild">
+	<Target Name="ObfuscateSecretsTarget" BeforeTargets="CoreCompile">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
 		<ItemGroup>
 			<Compile Remove="Services\Data\ObfuscatedSecrets.cs" />

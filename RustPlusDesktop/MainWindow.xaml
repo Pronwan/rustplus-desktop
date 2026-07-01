@@ -3922,7 +3922,7 @@
                     <Grid
                         x:Name="WebViewHost"
                         Grid.Row="1"
-                        Margin="0,8,0,8"
+                        Margin="-12,0,-12,-12"
                         Background="#0B3A4A"
                         ClipToBounds="True">
                         <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
