@@ -63,6 +63,16 @@
                                 <Run FontWeight="Bold">&#x2022; Expanded Localization:</Run>
                                 Heavy expansion of localizations across dozens of language resource files.
                             </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/cleaner-ui-pin.png" Description="Cleaner map UI with pinned overlay controls"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/appartment-new-monument.png" Description="New apartment monument support"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/filter-in-extramonuments.png" Description="Extra monument filters"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/monuments-search-and-goto.png" Description="Monument search and go-to navigation"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/new-3d-settings.png" Description="New 3D map settings"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/view-live-events-more-nature-details.png" Description="Live events and richer nature details"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.1.5/newcompass-betterrivers.png" Description="Improved compass and river visuals"/>
+                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
 

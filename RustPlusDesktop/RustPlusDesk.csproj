@@ -667,6 +667,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Remove="Assets\Images\**\*;Assets\Screenshots\**\*" />
+    <Content Include="Assets\Images\**\*;Assets\Screenshots\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Models\AlarmNotification.cs">
       <CustomToolNamespace></CustomToolNamespace>
     </Compile>

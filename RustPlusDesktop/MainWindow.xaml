@@ -4042,7 +4042,7 @@
                             VerticalAlignment="Center"
                             IsHitTestVisible="False"
                             Opacity="0.95"
-                            Source="pack://application:,,,/Assets/Images/TitleScreen-rust-plus-desktop.png"
+                            Source="pack://application:,,,/Assets/TitleScreen-rust-plus-desktop.png"
                             Stretch="Uniform"
                             Visibility="Collapsed" />
                         <Image
@@ -6292,7 +6292,7 @@
 
                                     <ui:TextBox
                                         x:Name="TxtLogFilter"
-                                        Height="28"
+                                        Height="36"
                                         ClearButtonEnabled="True"
                                         PlaceholderText="Filter logs..."
                                         TextChanged="TxtLogFilter_TextChanged" />
@@ -6300,7 +6300,7 @@
                                     <ui:Button
                                         x:Name="BtnToggleLogExpand"
                                         Grid.Column="1"
-                                        Height="28"
+                                        Height="36"
                                         Margin="6,0,0,0"
                                         Padding="12,0"
                                         Click="BtnToggleLogExpand_Click"

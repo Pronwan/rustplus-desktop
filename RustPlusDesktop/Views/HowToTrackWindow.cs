@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -289,7 +290,7 @@ public static class HowToTrackWindow
 
         try
         {
-            var uri = new Uri($"pack://application:,,,/Assets/Screenshots/{resourceName}");
+            var uri = ResolveScreenshotUri(resourceName);
             var bmp = new BitmapImage();
             bmp.BeginInit();
             bmp.UriSource = uri;
@@ -330,6 +331,14 @@ public static class HowToTrackWindow
 
         card.Child = sp;
         return card;
+    }
+
+    private static Uri ResolveScreenshotUri(string resourceName)
+    {
+        var contentPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "Screenshots", resourceName);
+        return File.Exists(contentPath)
+            ? new Uri(contentPath, UriKind.Absolute)
+            : new Uri($"pack://application:,,,/Assets/Screenshots/{resourceName}");
     }
 
     private static UIElement TwoColumnCards((string title, string body) left, (string title, string body) right)
