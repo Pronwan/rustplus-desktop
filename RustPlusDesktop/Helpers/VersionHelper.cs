@@ -22,7 +22,7 @@ namespace RustPlusDesk.Helpers
             }
             catch { }
 
-            _cachedVersion = "6.2.0"; // Default fallback matching RustPlusDesk.csproj version
+            _cachedVersion = "7.1.5"; // Default fallback matching RustPlusDesk.csproj version
             return _cachedVersion;
         }
 

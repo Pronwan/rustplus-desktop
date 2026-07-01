@@ -24,12 +24,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.1.1</Version>
+		<Version>7.1.5</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.1.1</AssemblyVersion>
-		<FileVersion>7.1.1</FileVersion>
-		<InformationalVersion>7.1.1</InformationalVersion>
+		<AssemblyVersion>7.1.5</AssemblyVersion>
+		<FileVersion>7.1.5</FileVersion>
+		<InformationalVersion>7.1.5</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -245,6 +245,7 @@
 	  <None Remove="Assets\Screenshots\Tracking3.jpg" />
 	  <None Remove="Assets\Screenshots\Tracking4.jpg" />
 	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
+	  <None Remove="Assets\Screenshots\v7.1.5\*.png" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -564,6 +565,7 @@
     <Resource Include="Assets\Screenshots\Tracking3.jpg" />
     <Resource Include="Assets\Screenshots\Tracking4.jpg" />
     <Resource Include="Assets\Screenshots\Tracking5.jpg" />
+    <Resource Include="Assets\Screenshots\v7.1.5\*.png" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">

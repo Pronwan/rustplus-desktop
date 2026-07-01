@@ -5,7 +5,7 @@
 
 #define MyAppName      "RustPlusDesk"
 #ifndef MyAppVersion
-#define MyAppVersion   "7.1.1"
+#define MyAppVersion   "7.1.5"
 #endif
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
