@@ -709,7 +709,8 @@
 	<Target Name="ObfuscateSecretsTarget" BeforeTargets="CoreCompile">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
 		<ItemGroup>
-			<Compile Include="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
+			<Compile Remove="Services\Data\ObfuscatedSecrets.cs" />
+			<Compile Include="Services\Data\ObfuscatedSecrets.cs" />
 		</ItemGroup>
 	</Target>
 
