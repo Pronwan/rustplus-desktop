@@ -1943,10 +1943,10 @@ public partial class MainWindow : WpfUi.FluentWindow
                 Padding = new Thickness(2, 1, 2, 1),
                 Background = Brushes.Transparent,
                 BorderBrush = Brushes.Transparent,
-                BorderThickness = new Thickness(0)
+                BorderThickness = new Thickness(0),
+                IsHitTestVisible = false
             };
 
-            ToolTipService.SetToolTip(textBorder, tooltip);
             return textBorder;
         }
 
