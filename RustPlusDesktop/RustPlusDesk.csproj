@@ -24,12 +24,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.1.1</Version>
+		<Version>7.1.5</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.1.1</AssemblyVersion>
-		<FileVersion>7.1.1</FileVersion>
-		<InformationalVersion>7.1.1</InformationalVersion>
+		<AssemblyVersion>7.1.5</AssemblyVersion>
+		<FileVersion>7.1.5</FileVersion>
+		<InformationalVersion>7.1.5</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
