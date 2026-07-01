@@ -15,6 +15,7 @@
 	<ItemGroup>
 	  
 	  <Compile Remove="RustPlusClientStub.cs" />
+	  <Compile Remove="Services\Data\ObfuscatedSecrets.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -705,8 +706,11 @@
 		<CopyRetryDelayMilliseconds>250</CopyRetryDelayMilliseconds>
 	</PropertyGroup>
 
-	<Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild">
+	<Target Name="ObfuscateSecretsTarget" BeforeTargets="CoreCompile">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
+		<ItemGroup>
+			<Compile Include="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
+		</ItemGroup>
 	</Target>
 
   <Target Name="CopyIconsToMapParserBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(TargetDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">

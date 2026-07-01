@@ -123,7 +123,37 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(mapSettingsPath, Path.Combine(tempDir, "map_settings.json"), true);
                 }
 
-                string shopAlertsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shop_alerts.json");
+                string customAlertsPath = Path.Combine(DataManager.AppDir, "custom_alerts.json");
+
+                if (File.Exists(customAlertsPath))
+
+                {
+
+                    File.Copy(customAlertsPath, Path.Combine(tempDir, "custom_alerts.json"), true);
+
+                }
+
+                string notificationHistoryPath = Path.Combine(DataManager.CacheDir, "notifications_history.json");
+
+                if (File.Exists(notificationHistoryPath))
+
+                {
+
+                    File.Copy(notificationHistoryPath, Path.Combine(tempDir, "notifications_history.json"), true);
+
+                }
+
+                string map3DConsentPath = Path.Combine(DataManager.CacheDir, "map3d_consent.json");
+
+                if (File.Exists(map3DConsentPath))
+
+                {
+
+                    File.Copy(map3DConsentPath, Path.Combine(tempDir, "map3d_consent.json"), true);
+
+                }
+
+                string shopAlertsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shop_alerts.json");
                 if (File.Exists(shopAlertsPath))
                 {
                     File.Copy(shopAlertsPath, Path.Combine(tempDir, "shop_alerts.json"), true);
@@ -253,7 +283,19 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(stagingMapSettings, Path.Combine(DataManager.AppDir, "map_settings.json"), true);
                 }
 
-                // 5. Restore custom_crosshairs.json
+                string stagingCustomAlerts = Path.Combine(tempDir, "custom_alerts.json");
+
+                if (File.Exists(stagingCustomAlerts))
+
+                {
+
+                    Directory.CreateDirectory(DataManager.AppDir);
+
+                    File.Copy(stagingCustomAlerts, Path.Combine(DataManager.AppDir, "custom_alerts.json"), true);
+
+                }
+
+                // 5. Restore custom_crosshairs.json
                 string stagingCrosshairs = Path.Combine(tempDir, "custom_crosshairs.json");
                 if (File.Exists(stagingCrosshairs))
                 {
@@ -297,7 +339,31 @@ namespace RustPlusDesk.Services.Data
                     File.Copy(stagingHandshakeJwt, Path.Combine(DataManager.CacheDir, "handshake_jwt.json"), true);
                 }
 
-                string stagingShopAlerts = Path.Combine(tempDir, "shop_alerts.json");
+                string stagingNotificationHistory = Path.Combine(tempDir, "notifications_history.json");
+
+                if (File.Exists(stagingNotificationHistory))
+
+                {
+
+                    Directory.CreateDirectory(DataManager.CacheDir);
+
+                    File.Copy(stagingNotificationHistory, Path.Combine(DataManager.CacheDir, "notifications_history.json"), true);
+
+                }
+
+                string stagingMap3DConsent = Path.Combine(tempDir, "map3d_consent.json");
+
+                if (File.Exists(stagingMap3DConsent))
+
+                {
+
+                    Directory.CreateDirectory(DataManager.CacheDir);
+
+                    File.Copy(stagingMap3DConsent, Path.Combine(DataManager.CacheDir, "map3d_consent.json"), true);
+
+                }
+
+                string stagingShopAlerts = Path.Combine(tempDir, "shop_alerts.json");
                 if (File.Exists(stagingShopAlerts))
                 {
                     string targetShopAlerts = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shop_alerts.json");
