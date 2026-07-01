@@ -31,6 +31,20 @@ public class ServerProfile : INotifyPropertyChanged
     public string PlayerToken { get; set; } = "";
     public string? BattleMetricsId { get; set; } = null;
 
+    private string? _localMapFilePath;
+    public string? LocalMapFilePath
+    {
+        get => _localMapFilePath;
+        set { _localMapFilePath = value; OnProp(); }
+    }
+
+    private string? _localMapImagePath;
+    public string? LocalMapImagePath
+    {
+        get => _localMapImagePath;
+        set { _localMapImagePath = value; OnProp(); }
+    }
+
     private bool _isConnected;
     public bool IsConnected
     {

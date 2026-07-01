@@ -397,9 +397,6 @@
     <value>Ошибка проверки обновлений.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Нет устройств.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Просмотр профиля</value>
   </data>
@@ -750,6 +747,17 @@
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Учетные данные FCM</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Что такое FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Что такое FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM означает Firebase Cloud Messaging. Rust+ использует его для отправки push-уведомлений для привязанных серверов, устройств, сигнализаций, командного чата и других событий в реальном времени.
+
+Rust+ Desktop регистрирует локальное приложение в FCM, чтобы оно могло получать те же уведомления Rust+ в фоновом режиме. Учетные данные привязки сохраняются локально на этом ПК и могут быть удалены при сбросе конфигурации привязки.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Щелкните правой кнопкой мыши для настройки</value>
@@ -1575,9 +1583,6 @@
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Чистая боковая панель для всех настроек</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Отслеживание BattleMetrics удалено</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Ваша база атакована!</value>
@@ -2545,5 +2550,195 @@
   </data>
   <data name="GenericClose" xml:space="preserve">
     <value>Закрыть</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Командные маркеры</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Режим выполнения</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Последовательный (с задержкой)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Параллельный (мгновенный)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Переключить задержку</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Эта горячая клавиша уже зарегистрирована другим приложением.</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Время смерти</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Оповещения по таймеру</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 м до конца</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Согласие на перевод</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Если нажать «Принять», содержимое примечаний к патчу будет отправлено в Google Translate (США) для перевода. Вы принимаете?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Условия API Google Переводчика</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Перевести через Google</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 Обновить</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Сравните возможности облака</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Сравнение облачных функций</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Добро пожаловать в облако</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Выберите уровень, который лучше всего соответствует вашим потребностям.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Нет аккаунта</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Ваши данные остаются на 100% локальными. Лучше всего для одиночных игроков.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Нет облачной синхронизации или резервного копирования</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Нет совместного использования устройств</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Нет доступа к веб-порталу</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Бесплатная облачная учетная запись</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Базовые функции облака, которые помогут вам начать делиться файлами.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Базовые оповещения Discord Webhook</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Совместное использование до 10 устройств</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Совместное использование карт (300 КБ, 2 базы, 1 скриншот)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Действуйте как помощник болельщика</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Доступ к облачному веб-порталу</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Облако сторонников</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Лучший опыт Rust+ для кланов и опытных пользователей.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Pro Map Sharing (3 МБ, 10 баз, 5 скриншотов)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Мастер-система чата</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Продвинутый двунаправленный бот Discord</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Ранние бета-версии и тестовые версии через Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Стать сторонником</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Поддержите нас на</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Свяжите Patreon с Discord для автоматической роли сторонника и обнаружения приложений.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Совет через</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Нажмите Джавада или Пронвана в Discord для получения роли сторонника вручную (сумма / 2,50 доллара США = месяцы).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Открытый облачный веб-портал</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Уведомления</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Центр уведомлений</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Показать всплывающие уведомления</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Воспроизвести звуковые оповещения</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Срок хранения</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Серверы с отключенным звуком</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Ни один сервер не отключен</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Включить звук</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Фильтр:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Сигнализация</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Летальные исходы</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Найти сообщение...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Отметить прочитанным</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Прозрачный</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Здесь нет уведомлений</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Вы все в плену!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Вы уверены, что хотите очистить всю историю уведомлений?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Очистить историю</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Не удалось найти профиль сопряженного сервера для{0}:{1}.
+Пожалуйста, сначала подключите этот сервер.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Сервер не найден</value>
   </data>
 </root>

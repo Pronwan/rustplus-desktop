@@ -1,0 +1,237 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version. Leave empty to use the RustPlusDesk.csproj version."
+        required: false
+        type: string
+      mapparser_repository:
+        description: "Repository to checkout into ./MapParser."
+        required: true
+        default: "Pronwan/MapParser"
+        type: string
+      mapparser_ref:
+        description: "MapParser branch, tag, or SHA."
+        required: true
+        default: "main"
+        type: string
+      create_github_release:
+        description: "Create or update a GitHub Release with installer artifacts."
+        required: true
+        default: true
+        type: boolean
+      prerelease:
+        description: "Mark the GitHub Release as a prerelease."
+        required: true
+        default: false
+        type: boolean
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_VERSION: "8.0.x"
+  CONFIGURATION: "Release"
+  RUNTIME_IDENTIFIER: "win-x64"
+  APP_PROJECT: "RustPlusDesktop/RustPlusDesk.csproj"
+  SOLUTION: "RustPlusDesk.sln"
+  PUBLISH_DIR: "${{ github.workspace }}/RustPlusDesktop/bin/Installer/publish"
+  INNO_OUTPUT_DIR: "${{ github.workspace }}/artifacts/inno"
+  VELOPACK_OUTPUT_DIR: "${{ github.workspace }}/artifacts/velopack"
+  VELOPACK_ID: "RustPlusDesk"
+
+jobs:
+  release:
+    name: Build packages and installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout rustplus-desktop
+        uses: actions/checkout@v4
+
+      - name: Checkout MapParser
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.mapparser_repository || 'Pronwan/MapParser' }}
+          ref: ${{ inputs.mapparser_ref || 'main' }}
+          token: ${{ secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
+          path: MapParser
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.sln', '**/packages.lock.json', '**/nuget.config') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: MapParser/package-lock.json
+
+      - name: Resolve release version
+        id: version
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.version }}"
+
+          if ([string]::IsNullOrWhiteSpace($version) -and "${{ github.ref_type }}" -eq "tag") {
+            $version = "${{ github.ref_name }}".TrimStart("v")
+          }
+
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            [xml]$project = Get-Content -LiteralPath "${{ env.APP_PROJECT }}"
+            $version = $project.Project.PropertyGroup.Version |
+              Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+              Select-Object -First 1
+          }
+
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            throw "Could not resolve a package version."
+          }
+
+          $tag = "v$version"
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "tag=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Restore
+        run: dotnet restore "${{ env.SOLUTION }}"
+
+      - name: Create build .env
+        shell: pwsh
+        env:
+          OVERLAY_SYNC_SECRET_HEX: ${{ secrets.OVERLAY_SYNC_SECRET_HEX }}
+          OVERLAY_SYNC_BASEURL: ${{ secrets.OVERLAY_SYNC_BASEURL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          $required = @(
+            "OVERLAY_SYNC_SECRET_HEX",
+            "OVERLAY_SYNC_BASEURL",
+            "SUPABASE_URL",
+            "SUPABASE_ANON_KEY"
+          )
+
+          $missing = $required | Where-Object { [string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($_)) }
+          if ($missing.Count -gt 0) {
+            throw "Missing required GitHub Actions secrets: $($missing -join ', ')"
+          }
+
+          @"
+          OVERLAY_SYNC_SECRET_HEX=$env:OVERLAY_SYNC_SECRET_HEX
+          OVERLAY_SYNC_BASEURL=$env:OVERLAY_SYNC_BASEURL
+          SUPABASE_URL=$env:SUPABASE_URL
+          SUPABASE_ANON_KEY=$env:SUPABASE_ANON_KEY
+          "@.Trim() | Set-Content -LiteralPath ".env" -Encoding UTF8
+
+      - name: Build
+        run: dotnet build "${{ env.SOLUTION }}" --configuration "${{ env.CONFIGURATION }}" --no-restore -p:Version="${{ env.VERSION }}"
+
+      - name: Publish Windows app
+        run: >
+          dotnet publish "${{ env.APP_PROJECT }}"
+          --configuration "${{ env.CONFIGURATION }}"
+          --runtime "${{ env.RUNTIME_IDENTIFIER }}"
+          --self-contained true
+          --output "${{ env.PUBLISH_DIR }}"
+          -p:Version="${{ env.VERSION }}"
+          -p:AssemblyVersion="${{ env.VERSION }}"
+          -p:FileVersion="${{ env.VERSION }}"
+          -p:InformationalVersion="${{ env.VERSION }}"
+          -p:PublishSingleFile=false
+          -p:PublishReadyToRun=false
+          -p:IncludeNativeLibrariesForSelfExtract=true
+
+      - name: Build Inno Setup installer
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          New-Item -ItemType Directory -Force -Path "${{ env.INNO_OUTPUT_DIR }}" | Out-Null
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
+            "RustPlusDesktop/Installer/Setup.iss" `
+            "/DMyAppVersion=${{ env.VERSION }}" `
+            "/O${{ env.INNO_OUTPUT_DIR }}" `
+            "/FRustPlusDesk-Setup-${{ env.VERSION }}"
+
+      - name: Build Velopack release
+        shell: pwsh
+        run: |
+          dotnet tool update -g vpk --version 1.2.0
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          New-Item -ItemType Directory -Force -Path "${{ env.VELOPACK_OUTPUT_DIR }}" | Out-Null
+
+          vpk download github `
+            --repoUrl "https://github.com/${{ github.repository }}" `
+            --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}" `
+            --token "${{ secrets.GITHUB_TOKEN }}"
+
+          vpk pack `
+            --packId "${{ env.VELOPACK_ID }}" `
+            --packVersion "${{ env.VERSION }}" `
+            --packDir "${{ env.PUBLISH_DIR }}" `
+            --mainExe "RustPlusDesk.exe" `
+            --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}" `
+            --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
+            --packAuthors "Pronwan" `
+            --packTitle "RustPlusDesk" `
+
+          # Keep only the .nupkg and RELEASES file by removing the portable zip
+          Remove-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/*.zip" -ErrorAction Ignore
+
+          # Rename the Velopack installer to match legacy naming (so old apps find it)
+          if (Test-Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe") {
+              Rename-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe" -NewName "RustPlusDesk-Setup.exe"
+          }
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustplusdesk-${{ env.VERSION }}-release-artifacts
+          path: |
+            ${{ env.INNO_OUTPUT_DIR }}/*.exe
+            ${{ env.VELOPACK_OUTPUT_DIR }}/**
+          if-no-files-found: error
+
+      - name: Create or update GitHub Release
+        if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.create_github_release) }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ steps.version.outputs.tag }}"
+          $title = "RustPlusDesk ${{ steps.version.outputs.version }}"
+          $notes = "Automated RustPlusDesk release for $tag."
+          $assets = @(
+            Get-ChildItem -Path "${{ env.INNO_OUTPUT_DIR }}" -Filter "*.exe" -File
+            Get-ChildItem -Path "${{ env.VELOPACK_OUTPUT_DIR }}" -File -Recurse
+          ) | Select-Object -ExpandProperty FullName -Unique
+
+          $prerelease = "${{ inputs.prerelease }}" -eq "true"
+          $releaseExists = $false
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            $releaseExists = $true
+          }
+
+          if (-not $releaseExists) {
+            $args = @("release", "create", $tag, "--target", "${{ github.sha }}", "--title", $title, "--notes", $notes)
+            if ($prerelease) { $args += "--prerelease" }
+            gh @args
+          }
+
+          gh release upload $tag @assets --clobber

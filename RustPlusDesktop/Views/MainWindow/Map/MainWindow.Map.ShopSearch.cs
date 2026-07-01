@@ -18,13 +18,13 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     // ── Fields ──────────────────────────────────────────────────────────────
-    private Window?   _shopSearchWin;
+    private Window?   _shopSearchWin { get; set; }
 
     // Proxy controls kept for backward compatibility if referenced elsewhere
-    private TextBox?  _searchTb;
-    private CheckBox? _chkSell;
-    private CheckBox? _chkBuy;
-    private ListBox?  _alertList;
+    private TextBox?  _searchTb { get; set; }
+    private CheckBox? _chkSell { get; set; }
+    private CheckBox? _chkBuy { get; set; }
+    private ListBox?  _alertList { get; set; }
 
     // ── WPF card builder — still used by PathFinder, map hover popup & ShopSearchControl ─────────
     internal FrameworkElement BuildShopSearchCard(

@@ -55,8 +55,8 @@ namespace RustPlusDesk.Services
         // Timer: 14 Min 15 Sek (855s) - Standard for early hover trigger
         private const int HackDurationSeconds = 855;
 
-        public event EventHandler<(string Name, int Duration)> OnOilRigTriggered;
-        public event EventHandler<string> OnOilRigChatUpdate;
+        public event EventHandler<(string Name, int Duration)>? OnOilRigTriggered;
+        public event EventHandler<string>? OnOilRigChatUpdate;
         public event EventHandler<string>? OnDebug;
 
         public bool HasSmallOil => _smallOilPos.HasValue;

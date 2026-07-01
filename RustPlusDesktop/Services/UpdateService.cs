@@ -1,12 +1,15 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Net.Http;
 using RustPlusDesk.Models;
+using Velopack;
+using Velopack.Exceptions;
+using Velopack.Sources;
 
 namespace RustPlusDesk.Services
 {
@@ -14,11 +17,63 @@ namespace RustPlusDesk.Services
     {
         private const string RepoOwner = "Pronwan";
         private const string RepoName = "rustplus-desktop";
+        private const string PendingVelopackUpdateMarker = "velopack-pending";
         private const string InstallerAssetName = "RustPlusDesk-Setup.exe";
+
+        private readonly UpdateManager _updateManager;
+        private UpdateInfo? _pendingUpdateInfo;
+        private readonly bool _isVelopackSupported;
+        private bool _isInitialized = false;
+        private readonly object _initLock = new();
+
+        public UpdateService()
+        {
+            _updateManager = new UpdateManager(
+                new GithubSource($"https://github.com/{RepoOwner}/{RepoName}", accessToken: null, prerelease: false));
+
+            try
+            {
+                _isVelopackSupported = _updateManager.IsInstalled;
+            }
+            catch
+            {
+                _isVelopackSupported = false;
+            }
+        }
+
+        private void InitializeIfNeeded()
+        {
+            if (_isInitialized) return;
+            lock (_initLock)
+            {
+                if (_isInitialized) return;
+                try
+                {
+                    if (_isVelopackSupported && _updateManager.UpdatePendingRestart != null)
+                    {
+                        _pendingInstallerPath = PendingVelopackUpdateMarker;
+                    }
+                }
+                catch { }
+                _isInitialized = true;
+            }
+        }
 
         public static string LatestReleaseUrl => $"https://github.com/{RepoOwner}/{RepoName}/releases/latest";
 
-        public string? PendingInstallerPath { get; set; }
+        private string? _pendingInstallerPath;
+        public string? PendingInstallerPath
+        {
+            get
+            {
+                InitializeIfNeeded();
+                return _pendingInstallerPath;
+            }
+            set
+            {
+                _pendingInstallerPath = value;
+            }
+        }
 
         public string VersionRaw
         {
@@ -49,13 +104,55 @@ namespace RustPlusDesk.Services
         public Version VersionForCompare =>
             Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
 
+        public long? LatestUpdateSize { get; private set; }
+
         public async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
+        {
+            InitializeIfNeeded();
+            LatestUpdateSize = null;
+            if (_isVelopackSupported)
+            {
+                try
+                {
+                    _pendingUpdateInfo = await _updateManager.CheckForUpdatesAsync();
+                    if (_pendingUpdateInfo == null)
+                    {
+                        return (VersionForCompare, $"v{VersionShort}", null);
+                    }
+
+                    string version = _pendingUpdateInfo.TargetFullRelease.Version.ToString();
+                    if (!Version.TryParse(NormalizeVer(version), out var latest))
+                    {
+                        return null;
+                    }
+
+                    if (_pendingUpdateInfo.DeltasToTarget != null && _pendingUpdateInfo.DeltasToTarget.Any())
+                    {
+                        LatestUpdateSize = _pendingUpdateInfo.DeltasToTarget.Sum(d => d.Size);
+                    }
+                    else
+                    {
+                        LatestUpdateSize = _pendingUpdateInfo.TargetFullRelease?.Size;
+                    }
+
+                    return (latest, $"v{version}", PendingVelopackUpdateMarker);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Velopack CheckForUpdatesAsync failed: {ex.Message}. Falling back to GitHub Releases API.");
+                }
+            }
+
+            return await GetLatestReleaseFromGitHubAsync();
+        }
+
+        private async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseFromGitHubAsync()
         {
             try
             {
-                using var http = new HttpClient();
-                http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
-                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+                using var http = new System.Net.Http.HttpClient();
+                http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
+                http.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
                 http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
 
                 var url = $"https://api.github.com/repos/{RepoOwner}/{RepoName}/releases/latest";
@@ -66,7 +163,7 @@ namespace RustPlusDesk.Services
                 }
 
                 using var stream = await resp.Content.ReadAsStreamAsync();
-                using var doc = await JsonDocument.ParseAsync(stream);
+                using var doc = await System.Text.Json.JsonDocument.ParseAsync(stream);
                 var root = doc.RootElement;
 
                 var tag = root.GetProperty("tag_name").GetString() ?? "";
@@ -79,6 +176,10 @@ namespace RustPlusDesk.Services
                     if (string.Equals(name, InstallerAssetName, StringComparison.OrdinalIgnoreCase))
                     {
                         dl = a.GetProperty("browser_download_url").GetString();
+                        if (a.TryGetProperty("size", out var sizeProp))
+                        {
+                            LatestUpdateSize = sizeProp.GetInt64();
+                        }
                         break;
                     }
                 }
@@ -98,62 +199,268 @@ namespace RustPlusDesk.Services
 
         public async Task<string?> DownloadInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
         {
+            InitializeIfNeeded();
+            if (string.Equals(url, PendingVelopackUpdateMarker, StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var updateInfo = _pendingUpdateInfo ?? await _updateManager.CheckForUpdatesAsync();
+                    if (updateInfo == null) return null;
+
+                    var deltas = updateInfo.DeltasToTarget;
+                    var isDelta = deltas != null && deltas.Any();
+                    var asset = isDelta ? deltas!.First() : updateInfo.TargetFullRelease;
+                    
+                    CurrentDownloadFile = isDelta ? "Delta Packages" : (asset?.FileName ?? "Velopack Package");
+
+                    long totalBytes = 0;
+                    if (isDelta)
+                    {
+                        totalBytes = deltas?.Sum(d => d.Size) ?? 0;
+                    }
+                    else
+                    {
+                        totalBytes = updateInfo.TargetFullRelease?.Size ?? 0;
+                    }
+
+                    var sw = Stopwatch.StartNew();
+                    long lastReportTime = sw.ElapsedMilliseconds;
+                    long lastReportedBytes = 0;
+
+                    await _updateManager.DownloadUpdatesAsync(updateInfo, percent =>
+                    {
+                        long currentTotal = totalBytes > 0 ? (long)((percent / 100.0) * totalBytes) : 0;
+                        long nowTime = sw.ElapsedMilliseconds;
+                        double seconds = (nowTime - lastReportTime) / 1000.0;
+                        if (seconds <= 0) seconds = 0.1;
+
+                        long speedBytes = seconds > 0 ? (long)((currentTotal - lastReportedBytes) / seconds) : 0;
+                        lastReportedBytes = currentTotal;
+                        lastReportTime = nowTime;
+
+                        progress?.Report(new DownloadReport
+                        {
+                            Progress = percent / 100.0,
+                            Percentage = $"{percent}%",
+                            BytesReceived = FormatBytes(currentTotal),
+                            TotalBytes = totalBytes > 0 ? FormatBytes(totalBytes) : "Unknown",
+                            Speed = FormatBytes(speedBytes) + "/s"
+                        });
+                    });
+
+                    PendingInstallerPath = PendingVelopackUpdateMarker;
+                    return PendingInstallerPath;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Velopack download failed: " + ex.Message);
+                    return null;
+                }
+            }
+
+            return await DownloadExeInstallerAsync(url, progress);
+        }
+
+        private const int _downloadChunksCount = 4;
+        private bool _isDownloadPaused = false;
+        private CancellationTokenSource? _downloadCts = null;
+        public string CurrentDownloadFile { get; private set; } = string.Empty;
+
+        public bool IsDownloadPaused => _isDownloadPaused;
+
+        public void PauseDownload()
+        {
+            _isDownloadPaused = true;
+            _downloadCts?.Cancel();
+        }
+
+        public void ResumeDownload()
+        {
+            _isDownloadPaused = false;
+        }
+
+        public void CancelDownload()
+        {
+            _isDownloadPaused = false;
+            _downloadCts?.Cancel();
+            CleanupPartFiles();
+        }
+
+        public void CleanupPartFiles()
+        {
             var target = Path.Combine(Path.GetTempPath(), InstallerAssetName);
+            for (int i = 0; i < _downloadChunksCount; i++)
+            {
+                string partPath = $"{target}.part{i}";
+                if (File.Exists(partPath))
+                {
+                    try { File.Delete(partPath); } catch { }
+                }
+            }
+            if (File.Exists(target))
+            {
+                try { File.Delete(target); } catch { }
+            }
+        }
+
+        private async Task<string?> DownloadExeInstallerAsync(string url, IProgress<DownloadReport>? progress = null)
+        {
+            var target = Path.Combine(Path.GetTempPath(), InstallerAssetName);
+            CurrentDownloadFile = InstallerAssetName;
+            _downloadCts = new CancellationTokenSource();
+            var token = _downloadCts.Token;
+
             try
             {
                 using var http = new HttpClient();
-                http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
+                http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
 
-                using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                resp.EnsureSuccessStatusCode();
-
-                var total = resp.Content.Headers.ContentLength;
-                using var input = await resp.Content.ReadAsStreamAsync();
-                using var file = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                var buffer = new byte[81920];
-                long readTotal = 0;
-                int read;
-                var sw = Stopwatch.StartNew();
-                var lastReport = sw.ElapsedMilliseconds;
-
-                while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                long totalBytes;
+                using (var headResp = await http.SendAsync(new HttpRequestMessage(HttpMethod.Head, url), token))
                 {
-                    await file.WriteAsync(buffer, 0, read);
-                    readTotal += read;
+                    headResp.EnsureSuccessStatusCode();
+                    totalBytes = headResp.Content.Headers.ContentLength ?? throw new Exception("Failed to get content length.");
+                }
 
-                    var now = sw.ElapsedMilliseconds;
-                    if (now - lastReport > 200 || readTotal == total)
+                int chunksCount = _downloadChunksCount;
+                long chunkLength = totalBytes / chunksCount;
+
+                var tasks = new Task[chunksCount];
+                long[] downloadedBytes = new long[chunksCount];
+
+                for (int i = 0; i < chunksCount; i++)
+                {
+                    string partPath = $"{target}.part{i}";
+                    if (File.Exists(partPath))
                     {
-                        lastReport = now;
-                        var report = new DownloadReport
-                        {
-                            Progress = total.HasValue ? (double)readTotal / total.Value : 0,
-                            Percentage = total.HasValue ? $"{(double)readTotal / total.Value:P0}" : "0%",
-                            BytesReceived = FormatBytes(readTotal),
-                            TotalBytes = total.HasValue ? FormatBytes(total.Value) : "Unknown",
-                            Speed = FormatBytes((long)(readTotal / (sw.Elapsed.TotalSeconds > 0 ? sw.Elapsed.TotalSeconds : 1))) + "/s"
-                        };
-                        progress?.Report(report);
+                        downloadedBytes[i] = new FileInfo(partPath).Length;
                     }
                 }
+
+                var sw = Stopwatch.StartNew();
+                long lastReportedBytes = downloadedBytes.Sum();
+                var lastReportTime = sw.ElapsedMilliseconds;
+
+                var progressTask = Task.Run(async () =>
+                {
+                    while (!token.IsCancellationRequested)
+                    {
+                        await Task.Delay(250, token);
+                        long currentTotal = downloadedBytes.Sum();
+                        long nowTime = sw.ElapsedMilliseconds;
+                        double seconds = (nowTime - lastReportTime) / 1000.0;
+                        if (seconds <= 0) seconds = 0.25;
+
+                        long speedBytes = (long)((currentTotal - lastReportedBytes) / seconds);
+                        lastReportedBytes = currentTotal;
+                        lastReportTime = nowTime;
+
+                        progress?.Report(new DownloadReport
+                        {
+                            Progress = (double)currentTotal / totalBytes,
+                            Percentage = $"{((double)currentTotal / totalBytes):P0}",
+                            BytesReceived = FormatBytes(currentTotal),
+                            TotalBytes = FormatBytes(totalBytes),
+                            Speed = FormatBytes(speedBytes) + "/s"
+                        });
+
+                        if (currentTotal >= totalBytes) break;
+                    }
+                }, token);
+
+                for (int i = 0; i < chunksCount; i++)
+                {
+                    int chunkIndex = i;
+                    long start = chunkIndex * chunkLength;
+                    long end = (chunkIndex == chunksCount - 1) ? totalBytes - 1 : (chunkIndex + 1) * chunkLength - 1;
+
+                    tasks[chunkIndex] = DownloadChunkAsync(url, target, chunkIndex, start, end, downloadedBytes, token);
+                }
+
+                await Task.WhenAll(tasks);
+                try { await progressTask; } catch { }
+
+                using (var outputStream = File.Create(target))
+                {
+                    for (int i = 0; i < chunksCount; i++)
+                    {
+                        string partPath = $"{target}.part{i}";
+                        using (var partStream = File.OpenRead(partPath))
+                        {
+                            await partStream.CopyToAsync(outputStream);
+                        }
+                        File.Delete(partPath);
+                    }
+                }
+
+                PendingInstallerPath = target;
                 return target;
             }
-            catch
+            catch (OperationCanceledException)
             {
+                return _isDownloadPaused ? "PAUSED" : null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Multi-part download failed: {ex.Message}");
                 return null;
+            }
+        }
+
+        private async Task DownloadChunkAsync(string url, string target, int chunkIndex, long start, long end, long[] downloadedBytes, CancellationToken token)
+        {
+            string partPath = $"{target}.part{chunkIndex}";
+            long currentStart = start + downloadedBytes[chunkIndex];
+
+            if (currentStart >= end)
+            {
+                return;
+            }
+
+            using var http = new HttpClient();
+            http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
+
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(currentStart, end);
+
+            using var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token);
+            response.EnsureSuccessStatusCode();
+
+            using var responseStream = await response.Content.ReadAsStreamAsync(token);
+            using var fileStream = new FileStream(partPath, FileMode.Append, FileAccess.Write, FileShare.None, 4096, true);
+
+            var buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length, token)) > 0)
+            {
+                await fileStream.WriteAsync(buffer, 0, bytesRead, token);
+                downloadedBytes[chunkIndex] += bytesRead;
             }
         }
 
         public void StartInstaller(string installerPath)
         {
-            var psi = new ProcessStartInfo
+            InitializeIfNeeded();
+            if (string.Equals(installerPath, PendingVelopackUpdateMarker, StringComparison.OrdinalIgnoreCase))
             {
-                FileName = installerPath,
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-            Process.Start(psi);
+                var pending = _updateManager.UpdatePendingRestart ?? _pendingUpdateInfo?.TargetFullRelease;
+                if (pending != null)
+                {
+                    _updateManager.ApplyUpdatesAndRestart(pending);
+                    return;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(installerPath) && File.Exists(installerPath))
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = installerPath,
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+                Process.Start(psi);
+            }
         }
 
         private static string NormalizeVer(string s)
@@ -166,7 +473,7 @@ namespace RustPlusDesk.Services
             return s;
         }
 
-        private static string FormatBytes(long bytes)
+        public static string FormatBytes(long bytes)
         {
             string[] Suffix = { "B", "KB", "MB", "GB", "TB" };
             int i;
@@ -179,3 +486,4 @@ namespace RustPlusDesk.Services
         }
     }
 }
+

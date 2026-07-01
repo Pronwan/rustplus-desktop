@@ -266,6 +266,7 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
+        <conv:BoolToVisibilityConverter x:Key="Vis" />
         </ResourceDictionary>
     </ui:FluentWindow.Resources>
 
@@ -299,35 +300,42 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     x:Name="ColSidebar"
-                    Width="600"
-                    MinWidth="400"
+                    Width="72"
+                    MinWidth="72"
                     MaxWidth="600" />
                 <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="*" MinWidth="400" />
             </Grid.ColumnDefinitions>
 
             <GridSplitter
+                x:Name="SidebarSplitter"
                 Grid.Column="1"
                 Width="8"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="Transparent"
                 DragCompleted="SidebarSplitter_DragCompleted"
+                MouseEnter="LeftPanelBorder_MouseEnter"
+                MouseLeave="LeftPanelBorder_MouseLeave"
                 ResizeBehavior="PreviousAndNext"
                 ResizeDirection="Columns"
                 ShowsPreview="False" />
 
             <!--  Left Panel  -->
             <Border
+                x:Name="LeftPanelBorder"
                 Grid.Column="0"
-                MinWidth="400"
+                MinWidth="72"
                 MaxWidth="600"
                 Margin="0,0,0,0"
-                Padding="16"
+                Padding="0"
                 Background="{DynamicResource Surface}"
                 BorderBrush="#1AFFFFFF"
                 BorderThickness="0,0,1,0"
+                ClipToBounds="True"
                 CornerRadius="0"
+                MouseEnter="LeftPanelBorder_MouseEnter"
+                MouseLeave="LeftPanelBorder_MouseLeave"
                 TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
                 <Border.Effect>
                     <DropShadowEffect
@@ -337,7 +345,10 @@
                         Color="#000000" />
                 </Border.Effect>
                 <Grid>
-                    <DockPanel x:Name="LeftPanelContent" LastChildFill="True">
+                    <DockPanel
+                        x:Name="LeftPanelContent"
+                        LastChildFill="True"
+                        Visibility="Collapsed">
 
                     <!--  TOP: Account + Serverliste  -->
                     <StackPanel DockPanel.Dock="Top">
@@ -375,7 +386,8 @@
                                             <Image
                                                 x:Name="ImgSteam"
                                                 Source="{Binding MyAvatar}"
-                                                Stretch="UniformToFill">
+                                                Stretch="UniformToFill"
+                                                RenderOptions.BitmapScalingMode="HighQuality">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
                                                         <Setter Property="Visibility" Value="Visible" />
@@ -517,7 +529,9 @@
                                             IsOpen="False"
                                             Placement="Bottom"
                                             PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
-                                            VerticalOffset="5">
+                                            VerticalOffset="5"
+                                            MouseEnter="UpdateDownloadPopup_MouseEnter"
+                                            MouseLeave="UpdateDownloadPopup_MouseLeave">
                                             <Border
                                                 Width="220"
                                                 Padding="12"
@@ -534,9 +548,21 @@
 
                                                     <Grid Margin="0,0,0,4">
                                                         <TextBlock
+                                                            x:Name="DownloadingStatusText"
                                                             FontSize="11"
-                                                            Foreground="#BBFFFFFF"
-                                                            Text="{DynamicResource Downloading}" />
+                                                            Foreground="#BBFFFFFF">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Text" Value="Downloading..." />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsDownloadPaused}" Value="True">
+                                                                            <Setter Property="Text" Value="Paused" />
+                                                                            <Setter Property="Foreground" Value="#FFAAAAAA" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
                                                         <TextBlock
                                                             HorizontalAlignment="Right"
                                                             FontSize="11"
@@ -561,8 +587,29 @@
                                                                 FontSize="10"
                                                                 Foreground="#88FFFFFF"
                                                                 Text="{Binding UpdateDownloadSize}" />
+                                                            <TextBlock
+                                                                Margin="0,4,0,4"
+                                                                FontSize="10"
+                                                                Foreground="#88FFFFFF"
+                                                                Text="{Binding CurrentDownloadFile, StringFormat='File: {0}'}" />
                                                         </StackPanel>
                                                     </Grid>
+
+                                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" HorizontalAlignment="Right">
+                                                        <ui:Button
+                                                            Content="{Binding PauseResumeButtonText}"
+                                                            Appearance="Secondary"
+                                                            FontSize="10"
+                                                            Padding="8,4"
+                                                            Margin="0,0,8,0"
+                                                            Click="PauseResumeDownload_Click" />
+                                                        <ui:Button
+                                                            Content="Cancel"
+                                                            Appearance="Danger"
+                                                            FontSize="10"
+                                                            Padding="8,4"
+                                                            Click="CancelDownload_Click" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </Border>
                                         </Popup>
@@ -595,6 +642,14 @@
                                         Click="BtnSettings_Click"
                                         Icon="{ui:SymbolIcon Symbol=Settings24}"
                                         ToolTip="{DynamicResource Settings}" />
+                                    <ui:Button
+                                        x:Name="BtnPinSidebar"
+                                        Margin="2,0,0,0"
+                                        Padding="6,4"
+                                        Appearance="Transparent"
+                                        Click="BtnToggleSidebarPin_Click"
+                                        Icon="{ui:SymbolIcon Symbol=Pin24}"
+                                        ToolTip="Keep sidebar unfolded" />
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -661,6 +716,7 @@
                                 SelectionChanged="ListServers_SelectionChanged">
 
                                 <ListBox.Resources>
+                                    <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                     <ContextMenu
                                         x:Key="ServerCtx"
                                         Foreground="White"
@@ -672,6 +728,26 @@
                                             <MenuItem.Header>
                                                 <TextBlock>
                                                     <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
+                                                </TextBlock>
+                                            </MenuItem.Header>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Server_CopyMap_Click"
+                                            Foreground="Black"
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Style>
+                                                <Style TargetType="MenuItem">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding PlacementTarget.DataContext.LocalMapFilePath, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource LocalNotNull}}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                            <MenuItem.Header>
+                                                <TextBlock>
+                                                    <Run Text="🗺️ " /><Run Text="Copy map to server..." />
                                                 </TextBlock>
                                             </MenuItem.Header>
                                         </MenuItem>
@@ -908,6 +984,17 @@
                                         Content="{DynamicResource Stop}"
                                         Icon="{ui:SymbolIcon Symbol=Stop24}"
                                         Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+
+                                    <ui:Button
+                                        x:Name="BtnFcmInfo"
+                                        Width="32"
+                                        Height="30"
+                                        Margin="6,0,0,0"
+                                        Padding="0"
+                                        Appearance="Transparent"
+                                        Click="BtnFcmInfo_Click"
+                                        Icon="{ui:SymbolIcon Symbol=Info24}"
+                                        ToolTip="{DynamicResource FcmInfoToolTip}" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -919,14 +1006,51 @@
                                         FontSize="11"
                                         FontWeight="SemiBold"
                                         Foreground="{StaticResource TextSubtle}"
-                                        Text="{DynamicResource PairingIdle}" />
-                                    <ProgressBar
-                                        Height="3"
-                                        Margin="0,4,0,0"
-                                        Background="#1AFFFFFF"
-                                        Foreground="{DynamicResource SystemAccentBrush}"
-                                        IsIndeterminate="True"
-                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                                        Text="{DynamicResource PairingIdle}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}">
+                                        <Ellipse
+                                            Width="8"
+                                            Height="8"
+                                            VerticalAlignment="Center"
+                                            Fill="#4CAF50">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#4CAF50" Opacity="0.6" />
+                                            </Ellipse.Effect>
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
+                                                            <DataTrigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation
+                                                                            AutoReverse="True"
+                                                                            RepeatBehavior="Forever"
+                                                                            Storyboard.TargetProperty="Opacity"
+                                                                            From="1"
+                                                                            To="0.3"
+                                                                            Duration="0:0:1" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.EnterActions>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                        <TextBlock Text="Listening" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                        <TextBlock Text="FCM" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                    </StackPanel>
                                 </StackPanel>
 
                                 <TextBlock
@@ -2256,7 +2380,7 @@
                                                             <!-- Real profile marker preview (lime dot with avatar) -->
                                                             <Ellipse Width="38" Height="38" Stroke="Black" StrokeThickness="2" Visibility="{Binding IsChecked, ElementName=ChkProfileMarkers, Converter={StaticResource BoolToVisibility}}">
                                                                 <Ellipse.Fill>
-                                                                    <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                    <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                 </Ellipse.Fill>
                                                             </Ellipse>
                                                             <!-- Fallback if unchecked -->
@@ -2296,7 +2420,7 @@
                                                                     <!-- Avatar Circle inside the pin -->
                                                                     <Ellipse Width="26" Height="26" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,5,0,0" Visibility="{Binding IsChecked, ElementName=ChkDeathMarkers, Converter={StaticResource BoolToVisibility}}">
                                                                         <Ellipse.Fill>
-                                                                            <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                                                            <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                         </Ellipse.Fill>
                                                                     </Ellipse>
 
@@ -2500,6 +2624,98 @@
                     </TabControl>
 
                     </DockPanel>
+
+                    <Grid
+                        x:Name="CompactSidebarRail"
+                        Width="72"
+                        HorizontalAlignment="Left"
+                        Background="{DynamicResource Surface}">
+                        <StackPanel
+                            Margin="0,14"
+                            HorizontalAlignment="Center">
+                            <ui:Button
+                                x:Name="BtnCompactPinSidebar"
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="BtnToggleSidebarPin_Click"
+                                Icon="{ui:SymbolIcon Symbol=Pin24}"
+                                ToolTip="Keep sidebar unfolded" />
+
+                            <Border
+                                Width="40"
+                                Height="40"
+                                Margin="0,0,0,14"
+                                Background="#1AFFFFFF"
+                                ClipToBounds="True"
+                                CornerRadius="20"
+                                ToolTip="{DynamicResource SteamAccount}">
+                                <Grid>
+                                    <ui:SymbolIcon
+                                        FontSize="20"
+                                        Foreground="White"
+                                        Opacity="0.4"
+                                        Symbol="Person24" />
+                                    <Image
+                                        Source="{Binding MyAvatar}"
+                                        Stretch="UniformToFill"
+                                        RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Grid>
+                            </Border>
+
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Connector24}"
+                                Tag="0"
+                                ToolTip="{DynamicResource DevicesTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=People24}"
+                                Tag="1"
+                                ToolTip="{DynamicResource TeamTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Video24}"
+                                Tag="2"
+                                ToolTip="{DynamicResource CamerasTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Globe24}"
+                                Tag="3"
+                                ToolTip="{DynamicResource PlayersTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Alert24}"
+                                Tag="4"
+                                ToolTip="{DynamicResource NotificationsTab}" />
+                        </StackPanel>
+                    </Grid>
 
                     <!--  Profit Trades Overlay  -->
                     <Border
@@ -3711,6 +3927,47 @@
                         ClipToBounds="True">
                         <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
 
+                        <Grid
+                            x:Name="MapConnectionLoader"
+                            Panel.ZIndex="90"
+                            Background="#88000000"
+                            IsHitTestVisible="True"
+                            Visibility="{Binding IsConnectionLoading, Converter={StaticResource BoolToVisibility}}">
+                            <Border
+                                Width="300"
+                                Padding="24"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="#E8101518"
+                                BorderBrush="#66FFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="14">
+                                <StackPanel>
+                                    <ui:ProgressRing
+                                        Width="44"
+                                        Height="44"
+                                        Margin="0,0,0,18"
+                                        HorizontalAlignment="Center"
+                                        Foreground="{DynamicResource Accent}"
+                                        IsIndeterminate="True" />
+                                    <TextBlock
+                                        FontSize="15"
+                                        FontWeight="SemiBold"
+                                        Foreground="White"
+                                        Text="{Binding BusyText}"
+                                        TextAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                    <TextBlock
+                                        Margin="0,8,0,0"
+                                        FontSize="12"
+                                        Foreground="#D9FFFFFF"
+                                        Text="{DynamicResource MayTakeAMoment}"
+                                        TextAlignment="Center"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
                         <Border
                             x:Name="MapPlaceholder"
                             Panel.ZIndex="50"
@@ -4072,6 +4329,7 @@
                                             Appearance="Transparent"
                                             BorderThickness="0"
                                             Click="BtnSendMapToDiscord_Click"
+                                            IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
                                             ToolTip="Send current map view to Discord channel"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center">
@@ -4098,135 +4356,453 @@
                                         </ui:Button>
 
                                         <!-- Heatmap Button -->
-                                        <ToggleButton
-                                            x:Name="BtnToggleHeatmap"
-                                            Margin="0,2,0,0"
-                                            Padding="6,4"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            ToolTip="Show Spawn Heatmaps"
-                                            Visibility="Collapsed"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Center">
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Image Source="pack://application:,,,/Assets/icons/map-markers/Heatmap.png" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                                <TextBlock Text="Heatmaps" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </ToggleButton>
+                                        <Grid Margin="0,2,0,0">
+                                            <Border x:Name="HeatmapActiveGlow" Background="#FF8A00" Opacity="0.18" CornerRadius="4" Visibility="Collapsed" />
+                                            <ui:Button
+                                                x:Name="BtnToggleHeatmap"
+                                                Padding="6,4"
+                                                Appearance="Transparent"
+                                                BorderThickness="0"
+                                                Click="BtnToggleHeatmap_Click"
+                                                IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
+                                                ToolTip="Show Spawn Heatmaps"
+                                                Visibility="Collapsed"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Image Source="pack://application:,,,/Assets/icons/map-markers/Heatmap.png" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                    <TextBlock Text="Heatmaps" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </ui:Button>
+                                        </Grid>
                                         <Popup
                                             x:Name="HeatmapPopup"
                                             AllowsTransparency="True"
-                                            IsOpen="{Binding IsChecked, ElementName=BtnToggleHeatmap}"
+                                            PopupAnimation="Fade"
+                                            IsOpen="False"
                                             Placement="Right"
                                             PlacementTarget="{Binding ElementName=BtnToggleHeatmap}"
                                             StaysOpen="False"
                                             VerticalOffset="0">
-                                            <ui:Card
-                                                Margin="4,0,0,0"
-                                                Padding="0"
-                                                Background="#AA16181C"
-                                                BorderBrush="#40FFFFFF"
-                                                BorderThickness="1"
-                                                VerticalAlignment="Top">
-                                                <StackPanel Orientation="Vertical">
-                                                    <Border
-                                                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                                                        BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
-                                                        BorderThickness="1"
-                                                        CornerRadius="8"
-                                                        Padding="8">
-                                                        <Grid>
+                                            <ui:Card Margin="8,0,0,0" Padding="0" Background="#D60E1117" BorderBrush="#33FFFFFF" BorderThickness="1" MaxWidth="620" MaxHeight="560">
+                                                <ui:Card.Resources>
+
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <!--  BENTO TILE CONTAINER (selection border)   -->
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <Style x:Key="HeatmapTileContainer" TargetType="Border">
+                                                        <Setter Property="Width" Value="64" />
+                                                        <Setter Property="Height" Value="64" />
+                                                        <Setter Property="CornerRadius" Value="8" />
+                                                        <Setter Property="BorderThickness" Value="1.5" />
+                                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                                        <Setter Property="Margin" Value="2" />
+                                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="Background" Value="#1A1F2E" />
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect BlurRadius="6" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.4" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <!--  BENTO TILE BUTTON (icon-only + hover)    -->
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <Style x:Key="HeatmapTileButton" TargetType="Button">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                        <Setter Property="BorderThickness" Value="0" />
+                                                        <Setter Property="Padding" Value="2" />
+                                                        <Setter Property="Margin" Value="0" />
+                                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                        <Grid>
+                                                                        <Grid.RenderTransform>
+                                                                             <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                        </Grid.RenderTransform>
+
+                                                                         <!-- Full-area hit-test background -->
+                                                                         <Border Background="Transparent" />
+
+                                                                         <!-- Hover glow layer -->
+                                                                        <Border x:Name="HoverGlow" CornerRadius="8" Background="#FF8A00" Opacity="0" IsHitTestVisible="False" />
+
+                                                                         <!-- Icon content (no label) -->
+                                                                        <Border CornerRadius="8" Padding="0">
+                                                                            <ContentPresenter x:Name="IconContent" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                                              Width="42" Height="42">
+                                                                                <ContentPresenter.RenderTransform>
+                                                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                                </ContentPresenter.RenderTransform>
+                                                                            </ContentPresenter>
+                                                                        </Border>
+
+                                                                        <!-- Selection indicator ring -->
+                                                                        <Border x:Name="SelectedRing" CornerRadius="8" BorderThickness="2" BorderBrush="#FF8A00"
+                                                                                Opacity="0" IsHitTestVisible="False" />
+                                                                        <!-- Checkmark badge -->
+                                                                        <Border x:Name="CheckBadge" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                                                                Width="14" Height="14" CornerRadius="7" Background="#FF8A00"
+                                                                                Margin="0,-3,-3,0" IsHitTestVisible="False" Opacity="0">
+                                                                            <TextBlock Text="✓" FontSize="9" Foreground="White"
+                                                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                        </Border>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <!-- HOVER: glow + scale-up -->
+                                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                                            <EventTrigger.Actions>
+                                                                                <BeginStoryboard Name="HoverOn">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="HoverGlow" Storyboard.TargetProperty="Opacity" To="0.18" Duration="0:0:0.15" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.05" Duration="0:0:0.15" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.05" Duration="0:0:0.15" />
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </EventTrigger.Actions>
+                                                                        </EventTrigger>
+                                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                                            <EventTrigger.Actions>
+                                                                                <BeginStoryboard Name="HoverOff">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="HoverGlow" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.0" Duration="0:0:0.2" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.0" Duration="0:0:0.2" />
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </EventTrigger.Actions>
+                                                                        </EventTrigger>
+                                                                        <!-- PRESSED: subtle scale down -->
+                                                                        <Trigger Property="IsPressed" Value="True">
+                                                                            <Setter TargetName="IconContent" Property="RenderTransform">
+                                                                                <Setter.Value>
+                                                                                    <ScaleTransform ScaleX="0.9" ScaleY="0.9" />
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                        </Trigger>
+                                                                        <!-- DISABLED: dim -->
+                                                                        <Trigger Property="IsEnabled" Value="False">
+                                                                            <Setter TargetName="IconContent" Property="Opacity" Value="0.35" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <!--  CATEGORY CARD CONTAINER                   -->
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <Style x:Key="CategoryCard" TargetType="Border">
+                                                        <Setter Property="Background" Value="#121824" />
+                                                        <Setter Property="BorderBrush" Value="#22FFFFFF" />
+                                                        <Setter Property="BorderThickness" Value="1" />
+                                                        <Setter Property="CornerRadius" Value="10" />
+                                                        <Setter Property="Padding" Value="8" />
+                                                    </Style>
+
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <!--  ACTIVE HEATMAP TITLE BADGE                -->
+                                                    <!-- ════════════════════════════════════════════ -->
+                                                    <Style x:Key="ActiveBadge" TargetType="ui:Badge">
+                                                        <Setter Property="Appearance" Value="Success" />
+                                                        <Setter Property="Padding" Value="8,4" />
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </Style>
+
+                                                </ui:Card.Resources>
+
+                                                <!-- ════════════════════════════════════════════ -->
+                                                <!--  MAIN LAYOUT                                -->
+                                                <!-- ════════════════════════════════════════════ -->
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <!-- ── ROW 0: HEADER ── -->
+                                                    <Grid Grid.Row="0" Margin="14,12,14,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <!-- Title area -->
+                                                        <Grid VerticalAlignment="Center">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="16" />
                                                                 <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="◉" FontSize="14" Foreground="#FF8A00" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                            <StackPanel Grid.Column="1">
+                                                                <TextBlock Text="Procedural Heatmaps" FontSize="14" FontWeight="Bold" Foreground="#F2F2F2" />
+                                                                <TextBlock Text="Select a layer to view spawn density" FontSize="10" Foreground="#9AA4B6" Margin="0,1,0,0" />
+                                                            </StackPanel>
+                                                            <!-- Active heatmap indicator -->
+                                                            <ui:Badge x:Name="ActiveHeatmapBadge" Grid.Column="2" Style="{StaticResource ActiveBadge}" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Ellipse Width="6" Height="6" Fill="#22C55E" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                                    <TextBlock x:Name="ActiveHeatmapLabel" Text="No heatmap active" FontSize="10" Foreground="#9CA3AF" />
+                                                                </StackPanel>
+                                                            </ui:Badge>
+                                                        </Grid>
+
+                                                        <!-- Clear button -->
+                                                        <ui:Button Grid.Column="1" Padding="8,6" Appearance="Secondary" Tag="clear"
+                                                                   Click="BtnHeatmapIcon_Click" Height="30" VerticalAlignment="Top">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <ui:SymbolIcon Symbol="Dismiss20" FontSize="12" Foreground="#FF8A00" Margin="0,0,4,0" />
+                                                                <TextBlock Text="Clear" FontSize="11" FontWeight="SemiBold" Foreground="#FF8A00" />
+                                                            </StackPanel>
+                                                        </ui:Button>
+                                                    </Grid>
+
+                                                    <!-- ── ROW 1: BENTO CATEGORY GRID ── -->
+                                                    <ScrollViewer Grid.Row="1" Margin="14,10,14,14" VerticalScrollBarVisibility="Auto"
+                                                                  HorizontalScrollBarVisibility="Disabled">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="1*" />
+                                                                <ColumnDefinition Width="1*" />
                                                             </Grid.ColumnDefinitions>
 
-                                                            <!-- Left Column: Resources & Food -->
-                                                            <StackPanel Grid.Column="0" Orientation="Vertical">
-                                                                <TextBlock Text="Resources" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,0,4,4"/>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="ores" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="⛰️" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Ores" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="wood" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌳" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Wood Piles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="logs" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌲" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Log Piles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
+                                                            <!-- ──── LEFT COLUMN ──── -->
 
-                                                                <TextBlock Text="Food" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,12,4,4"/>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="mushroom" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🍄" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Mushrooms" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="berries" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🍓" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Berries" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="corn" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌽" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Corn" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="pumpkin" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🎃" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Pumpkins" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="potato" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🥔" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Potatoes" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="wheat" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🌾" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Wheat" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                            </StackPanel>
+                                                            <!-- Resources & Forestry -->
+                                                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CategoryCard}" Margin="0,0,6,8">
+                                                                <StackPanel>
+                                                                    <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
+    <Run Text="⛏" /><Run Text="  Resources &amp; Forestry" FontSize="11" />
+</TextBlock>
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="*" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Border x:Name="Bento_ores" Grid.Column="0" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="ores" ToolTip="Ores" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/nodes.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_wood" Grid.Column="1" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="wood" ToolTip="Wood Piles" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/wood-pile.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_logs" Grid.Column="2" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="logs" ToolTip="Log Piles" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/logs.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                    <Grid Margin="0,6,0,0">
+                                                                        <Border x:Name="Bento_flowers" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="flowers" ToolTip="Flowers" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Flowers/flowers.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </StackPanel>
+                                                            </Border>
 
-                                                            <!-- Right Column: Animals & Loot -->
-                                                            <StackPanel Grid.Column="2" Orientation="Vertical">
-                                                                <TextBlock Text="Animals" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,0,4,4"/>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="bear" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐻" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Bears" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="boar" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐗" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Boars" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="chicken" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐔" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Chickens" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="wolf" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐺" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Wolves" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="stag" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🦌" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Deers" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="crocodile" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐊" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Crocodiles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="tiger" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐅" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Tigers" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="snake" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🐍" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Snakes" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
+                                                            <!-- Agriculture & Food -->
+                                                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CategoryCard}" Margin="0,0,6,0">
+                                                                <StackPanel>
+                                                                    <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
+    <Run Text="🌾" /><Run Text="  Agriculture &amp; Food" FontSize="11" />
+</TextBlock>
+                                                                    <UniformGrid Columns="3">
+                                                                        <Border x:Name="Bento_mushroom" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="mushroom" ToolTip="Mushrooms" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Food/mushroom.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_berries" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="berries" ToolTip="Berries" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Food/red-berry.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_corn" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="corn" ToolTip="Corn" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Food/corn.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_pumpkin" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="pumpkin" ToolTip="Pumpkins" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Food/pumpkin.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_potato" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="potato" ToolTip="Potatoes" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Food/potato.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_wheat" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="wheat" ToolTip="Wheat" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/Food/wheat.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </UniformGrid>
+                                                                </StackPanel>
+                                                            </Border>
 
-                                                                <TextBlock Text="Loot &amp; Vehicles" FontWeight="SemiBold" FontSize="11" Foreground="#AAFFFFFF" Margin="4,12,4,4"/>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="junkpiles" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🛢️" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Junkpiles" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="rowboat" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🚤" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Rowboats" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="modularcar" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal"><TextBlock Text="🚙" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" /><TextBlock Text="Cars" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" /></StackPanel>
-                                                                </ui:Button>
+                                                            <!-- ──── RIGHT COLUMN ──── -->
 
-                                                                <Rectangle Height="1" Fill="#33FFFFFF" Margin="4,12,4,8" />
-                                                                
-                                                                <ui:Button Margin="2" Padding="6,4" Appearance="Transparent" BorderThickness="0" Tag="clear" Click="BtnHeatmapIcon_Click" HorizontalAlignment="Stretch">
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <ui:SymbolIcon Symbol="Dismiss20" FontSize="16" Foreground="#FF5555" Margin="0,0,6,0" />
-                                                                        <TextBlock Text="Clear Heatmap" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
-                                                                    </StackPanel>
-                                                                </ui:Button>
-                                                            </StackPanel>
+                                                            <!-- Loot & Transport -->
+                                                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CategoryCard}" Margin="6,0,0,8">
+                                                                <StackPanel>
+                                                                    <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
+    <Run Text="📦" /><Run Text="  Loot &amp; Transport" FontSize="11" />
+</TextBlock>
+                                                                    <UniformGrid Columns="3">
+                                                                        <Border x:Name="Bento_junkpiles" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="junkpiles" ToolTip="Junkpiles" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_rowboat" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="rowboat" ToolTip="Rowboats" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_modularcar" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="modularcar" ToolTip="Modular Cars" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_horse" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="horse" ToolTip="Horses" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/horse.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_pedalbike" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="pedalbike" ToolTip="Bicycles" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/bicycle.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_hab" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="hab" ToolTip="Hot Air Balloons" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/hab.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </UniformGrid>
+                                                                </StackPanel>
+                                                            </Border>
+
+                                                            <!-- Fauna & Wildlife -->
+                                                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CategoryCard}" Margin="6,0,0,0">
+                                                                <StackPanel>
+                                                                    <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
+    <Run Text="🐾" /><Run Text="  Fauna &amp; Wildlife" FontSize="11" />
+</TextBlock>
+                                                                    <UniformGrid Columns="4">
+                                                                        <Border x:Name="Bento_bear" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="bear" ToolTip="Bears" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/bear.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_boar" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="boar" ToolTip="Boars" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/boar.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_chicken" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="chicken" ToolTip="Chickens" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/chicken.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_wolf" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="wolf" ToolTip="Wolves" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/wolf.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_stag" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="stag" ToolTip="Deers" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/stag.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_crocodile" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="crocodile" ToolTip="Crocodiles" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/crocodile.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_tiger" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="tiger" ToolTip="Tigers" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/tiger.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_snake" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="snake" ToolTip="Snakes" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/snake.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                    </UniformGrid>
+                                                                </StackPanel>
+                                                            </Border>
+
                                                         </Grid>
-                                                    </Border>
-                                                </StackPanel>
+                                                    </ScrollViewer>
+                                                </Grid>
                                             </ui:Card>
                                         </Popup>
 
@@ -5214,7 +5790,7 @@
                                                             <Border x:Name="LeftAvatarBorder" Grid.Column="0" Width="26" Height="26" Margin="0,0,8,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Visible">
                                                                 <Grid>
                                                                     <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                 </Grid>
                                                             </Border>
 
@@ -5236,7 +5812,7 @@
                                                             <Border x:Name="RightAvatarBorder" Grid.Column="2" Width="26" Height="26" Margin="8,0,0,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Collapsed">
                                                                 <Grid>
                                                                     <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
                                                                 </Grid>
                                                             </Border>
                                                         </Grid>
@@ -5705,7 +6281,7 @@
                 Panel.ZIndex="9999"
                 Background="#AA000000"
                 IsHitTestVisible="True"
-                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+                Visibility="{Binding IsGlobalBusyOverlayVisible, Converter={StaticResource BoolToVisibility}}">
                 <Border
                     Width="340"
                     Padding="24"
@@ -5792,6 +6368,17 @@
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
+                        <TextBlock
+                            x:Name="TxtLoginOverlayMessage"
+                            Margin="0,-16,0,24"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#FFFF4B4B"
+                            Text="{Binding LoginOverlayMessage}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding HasLoginOverlayMessage, Converter={StaticResource Vis}}" />
+
                         <ui:Button
                             x:Name="BtnOverlayPair"
                             Height="50"
@@ -5817,6 +6404,21 @@
                             Icon="{ui:SymbolIcon Symbol=ArrowDownload24}">
                             <ui:Button.Content>
                                 <TextBlock Margin="8,0,0,0" Text="{DynamicResource RestoreData}" />
+                            </ui:Button.Content>
+                        </ui:Button>
+
+                        <ui:Button
+                            x:Name="BtnOverlayFcmInfo"
+                            Height="36"
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Transparent"
+                            Click="BtnFcmInfo_Click"
+                            FontSize="13"
+                            Icon="{ui:SymbolIcon Symbol=Info24}"
+                            ToolTip="{DynamicResource FcmInfoToolTip}">
+                            <ui:Button.Content>
+                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource FcmInfoToolTip}" />
                             </ui:Button.Content>
                         </ui:Button>
 

@@ -397,9 +397,6 @@ Download and install now?</value>
     <value>Update check failed.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>No devices.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>View Profile</value>
   </data>
@@ -750,6 +747,17 @@ Download and install now?</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM Credentials</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>What is FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>What is FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM stands for Firebase Cloud Messaging. Rust+ uses it to send push notifications for paired servers, devices, alarms, team chat, and other live events.
+
+Rust+ Desktop registers your local app with FCM so it can receive those same Rust+ notifications in the background. The pairing credentials are saved locally on this PC and can be deleted by resetting the pairing config.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Right-click to configure</value>
@@ -1593,9 +1601,6 @@ Download and install now?</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - New Shop UI</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics Tracking Removed</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Your base is under attack!</value>

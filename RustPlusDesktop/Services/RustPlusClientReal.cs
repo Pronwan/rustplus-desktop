@@ -14,7 +14,6 @@ using System.IO;
 using System.Linq;
 using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
 using StorageItemVM = RustPlusDesk.Models.StorageItemVM;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text; // <— hinzufügen
@@ -132,7 +131,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     public void EnsureEventsHooked() => HookEventsIfNeeded();
     private readonly Dictionary<uint, RustPlusDesk.Models.StorageSnapshot> _storageCache
     = new Dictionary<uint, RustPlusDesk.Models.StorageSnapshot>();
-    public bool TryGetCachedStorage(uint id, out RustPlusDesk.Models.StorageSnapshot snap)
+    public bool TryGetCachedStorage(uint id, out RustPlusDesk.Models.StorageSnapshot? snap)
      => _storageCache.TryGetValue(id, out snap);
     public event Action<uint, StorageSnapshot>? StorageSnapshotReceived;
 
@@ -143,7 +142,6 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         _storageCache[id] = snap;
     }
 
-    private bool _chatHooked;
     public event EventHandler<TeamChatMessage>? TeamChatReceived;
     // Overload ohne Token (falls irgendwo so aufgerufen wird)
     public Task ConnectAsync(ServerProfile profile) =>
@@ -294,7 +292,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
         static IEnumerable<object> AsEnum(object? o)
             => (o is System.Collections.IEnumerable en && o is not string)
-               ? en.Cast<object?>().Where(x => x != null)!
+               ? en.Cast<object>().Where(x => x != null)
                : Array.Empty<object>();
 
         // Reccy-Dumper (Properties + kindliche IEnumerables, begrenzt)
@@ -1324,7 +1322,6 @@ rp.connect();
     }
 
     // universeller Event-Slot: wir versuchen, CameraFrames aus beliebigen EventArgs zu lesen
-    private int _anyEvCount;
     private void OnAnyApiEvent(object? sender, object e)
     {
         try
@@ -1605,8 +1602,6 @@ rp.connect();
     }
 
     private readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
-    private int _camThumbIndex = 0; // rotiert über die Tiles, damit alle mal dran kommen
-
     public async Task<CameraFrame?> GetCameraFrameAsync(string identifier, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(identifier)) throw new ArgumentException("identifier required");
@@ -2196,7 +2191,7 @@ rp.connect();
                        TryGetProp(envelope, "StorageMonitor", "storageMonitor",
                                                 "Storage", "Container", "Box",
                                                 "ToolCupboard", "Cupboard");
-                storDirect = UnpackAnyRecursive(storDirect) ?? storDirect;
+                storDirect = storDirect != null ? UnpackAnyRecursive(storDirect) ?? storDirect : null;
 
                 if (storDirect != null)
                 {
@@ -2223,7 +2218,7 @@ rp.connect();
                     return;
 
                 var payload = TryGetProp(entityInfoOrInfo, "Payload");
-                payload = UnpackAnyRecursive(payload) ?? payload ?? entityInfoOrInfo;
+                payload = payload != null ? UnpackAnyRecursive(payload) ?? payload : entityInfoOrInfo;
 
                 var typeStr =
                        TryReadStringN(entityInfoOrInfo, "Type", "EntityType")
@@ -4079,7 +4074,7 @@ rp.connect();
     sealed class ReferenceEqualityComparer : IEqualityComparer<object>
     {
         public static readonly ReferenceEqualityComparer Instance = new();
-        public new bool Equals(object x, object y) => ReferenceEquals(x, y);
+        public new bool Equals(object? x, object? y) => ReferenceEquals(x, y);
         public int GetHashCode(object obj) => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
     }
 
@@ -4346,7 +4341,7 @@ rp.connect();
 
                         if (!IsResponseValid(resp))
                         {
-                            return null;
+                            return shops;
                         }
 
                         {
@@ -4371,7 +4366,7 @@ rp.connect();
             catch (Exception ex)
             {
                 L("Error in GetVendingShopsAsync: " + ex.Message);
-                return null;
+                return shops;
             }
         }
 
@@ -4384,7 +4379,7 @@ rp.connect();
 
 
 
-    public sealed record ServerStatus(int Players, int MaxPlayers, int Queue, string TimeString);
+    public sealed record ServerStatus(int Players, int MaxPlayers, int Queue, string? TimeString);
 
     public async Task<ServerStatus?> GetServerStatusAsync(CancellationToken ct = default)
     {
@@ -5587,7 +5582,9 @@ rp.connect();
         if (_dumpedLegacy) return;
         _dumpedLegacy = true;
 
+#pragma warning disable CS0618 // Intentionally inspecting legacy protocol types for diagnostics.
         var asm = typeof(RustPlusLegacy).Assembly;
+#pragma warning restore CS0618
         var names = new[] { "AppRequest", "AppTurnSmartSwitch", "AppSetEntityValue", "AppResponse", "AppMessage" };
         foreach (var ty in asm.GetTypes().Where(t => names.Any(n => t.Name.IndexOf(n, StringComparison.OrdinalIgnoreCase) >= 0)))
         {
@@ -6122,7 +6119,7 @@ rp.connect();
 
         // ✳️ AppEntityInfo → Payload (Any) auspacken
         var payload = TryGetProp(ent, "Payload");
-        payload = UnpackAnyRecursive(payload) ?? payload;
+        payload = payload != null ? UnpackAnyRecursive(payload) ?? payload : null;
         DumpShapeLog(payload, "pull.payload");
 
         // Optional: Info-Feld tolerant
@@ -6323,7 +6320,7 @@ rp.connect();
                 continue;
 
             object? val = null; try { val = p.GetValue(src); } catch { }
-            val = UnpackAnyRecursive(val) ?? val;
+            val = val != null ? UnpackAnyRecursive(val) ?? val : null;
             if (val == null || val is string) continue;
 
             if (TryReadUpkeepSeconds(val, out seconds)) return true;

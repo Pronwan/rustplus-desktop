@@ -40,6 +40,24 @@ public static class Map3DLocalBuildService
     private const int NameCandidateCount = 5;
     private const double MatchDistanceWorldUnits = 300.0;
 
+    private static BitmapSource CreateDummyTexture()
+    {
+        int width = 512;
+        int height = 512;
+        byte[] pixels = new byte[width * height * 4];
+        for (int i = 0; i < pixels.Length; i += 4)
+        {
+            pixels[i] = 128;     // B
+            pixels[i + 1] = 128; // G
+            pixels[i + 2] = 128; // R
+            pixels[i + 3] = 255; // A
+        }
+        return BitmapSource.Create(
+            width, height, 96, 96,
+            System.Windows.Media.PixelFormats.Bgra32,
+            null, pixels, width * 4);
+    }
+
     public static async Task<Map3DLocalBuildResult> PrepareAsync(
         ServerProfile profile,
         BitmapSource? currentMapTexture,
@@ -51,9 +69,34 @@ public static class Map3DLocalBuildService
     {
         ArgumentNullException.ThrowIfNull(profile);
 
+        if (currentMapTexture == null && !string.IsNullOrEmpty(profile.LocalMapImagePath) && File.Exists(profile.LocalMapImagePath))
+        {
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(profile.LocalMapImagePath);
+                bitmap.EndInit();
+                currentMapTexture = bitmap;
+            }
+            catch { }
+        }
+
+
+
         string serverKey = BuildServerKey(profile, rustMapsMapId);
         string folder = Path.Combine(DataManager.AppDir, "3DMaps", serverKey);
         Directory.CreateDirectory(folder);
+
+        if (currentMapTexture == null)
+        {
+            string oldTexture = Path.Combine(folder, "map_texture.png");
+            if (File.Exists(oldTexture))
+            {
+                try { File.Delete(oldTexture); } catch { }
+            }
+        }
 
         string? texturePath = null;
         string? pendingTexturePath = null;
@@ -217,8 +260,7 @@ public static class Map3DLocalBuildService
         cached = default;
         string mapDataPath = Path.Combine(folder, "map_data.json");
         string mapResolvedPath = Path.Combine(folder, "map_resolved.json");
-        string texturePath = Path.Combine(folder, "map_texture.png");
-        if (!File.Exists(manifestPath) || !File.Exists(mapDataPath) || !File.Exists(mapResolvedPath) || !File.Exists(texturePath)) return false;
+        if (!File.Exists(manifestPath) || !File.Exists(mapDataPath) || !File.Exists(mapResolvedPath)) return false;
 
         try
         {
@@ -229,8 +271,14 @@ public static class Map3DLocalBuildService
             string? selectedMap = root.TryGetProperty("SelectedMapFile", out var selectedEl) ? selectedEl.GetString() : null;
 
             if (!string.Equals(manifestMapId ?? string.Empty, rustMapsMapId ?? string.Empty, StringComparison.OrdinalIgnoreCase)) return false;
-            if (!string.IsNullOrWhiteSpace(textureSha256) && !string.Equals(manifestTextureHash, textureSha256, StringComparison.OrdinalIgnoreCase)) return false;
+            if (!string.Equals(manifestTextureHash ?? string.Empty, textureSha256 ?? string.Empty, StringComparison.Ordinal)) return false;
             if (string.IsNullOrWhiteSpace(selectedMap) || !File.Exists(selectedMap)) return false;
+
+            string? manifestTextureFile = root.TryGetProperty("MapTexture", out var texFileEl) ? texFileEl.GetString() : null;
+            if (!string.IsNullOrEmpty(manifestTextureFile))
+            {
+                if (!File.Exists(Path.Combine(folder, manifestTextureFile))) return false;
+            }
 
             cached = new CachedMap3DManifest(selectedMap);
             return true;
@@ -399,36 +447,86 @@ public static class Map3DLocalBuildService
 
     private static string? ResolveParserExecutable()
     {
-        string baseDir = AppContext.BaseDirectory;
+        // 1. Embedded parser is always the primary source.
+        //    It is extracted to AppData\Roaming\RustPlusDesk\cache\map3d-parser-runtime
+        //    and re-extracted only when the embedded content has changed (build-id stamp).
         string? embeddedParser = ExtractEmbeddedParserRuntime();
         if (embeddedParser != null) return embeddedParser;
 
-        string[] candidates =
-        {
-            Path.Combine(baseDir, "MapParser.exe"),
-            Path.Combine(baseDir, "MapParser", "MapParser.exe"),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net9.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Release", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Release", "net9.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Debug", "net9.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Release", "net8.0", "MapParser.exe")),
-            Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Release", "net9.0", "MapParser.exe"))
-        };
+        // 2. Fallback: local MapParser.exe next to the running executable (installed layout).
+        string baseDir = AppContext.BaseDirectory;
+        string localExe = Path.Combine(baseDir, "MapParser.exe");
+        if (IsRunnableParserExecutable(localExe)) return localExe;
 
-        return candidates.FirstOrDefault(File.Exists);
+        string localSubExe = Path.Combine(baseDir, "MapParser", "MapParser.exe");
+        if (IsRunnableParserExecutable(localSubExe)) return localSubExe;
+
+        // 3. Last resort: development sibling build (source checkout layout).
+        return ResolveDevelopmentParserExecutable(baseDir);
     }
 
+    private static bool IsRunnableParserExecutable(string path)
+    {
+        if (!File.Exists(path)) return false;
+
+        var info = new FileInfo(path);
+        if (info.Length >= 5 * 1024 * 1024) return true;
+
+        string parserDll = Path.ChangeExtension(path, ".dll");
+        return File.Exists(parserDll);
+    }
+
+    private static string? ResolveDevelopmentParserExecutable(string baseDir)
+    {
+        var candidates = new List<string>();
+
+        foreach (string root in EnumerateAncestorDirectories(baseDir))
+        {
+            string parserRoot = Path.Combine(root, "MapParser");
+            if (!File.Exists(Path.Combine(parserRoot, "MapParser.csproj"))) continue;
+
+            candidates.Add(Path.Combine(parserRoot, "bin", "Debug", "net8.0", "win-x64", "publish", "MapParser.exe"));
+            candidates.Add(Path.Combine(parserRoot, "bin", "Release", "net8.0", "win-x64", "publish", "MapParser.exe"));
+            candidates.Add(Path.Combine(parserRoot, "bin", "Debug", "net8.0", "MapParser.exe"));
+            candidates.Add(Path.Combine(parserRoot, "bin", "Release", "net8.0", "MapParser.exe"));
+        }
+
+        return candidates
+            .Where(IsRunnableParserExecutable)
+            .OrderByDescending(path => new FileInfo(path).LastWriteTimeUtc)
+            .FirstOrDefault();
+    }
+
+    private static IEnumerable<string> EnumerateAncestorDirectories(string start)
+    {
+        var dir = new DirectoryInfo(Path.GetFullPath(start));
+        while (dir != null)
+        {
+            yield return dir.FullName;
+            dir = dir.Parent;
+        }
+    }
+
+    /// <summary>
+    /// Extracts the embedded Map3DParser resources to
+    /// <c>AppData\Roaming\RustPlusDesk\cache\map3d-parser-runtime</c> when needed
+    /// and returns the path to <c>MapParser.exe</c> inside that directory.
+    /// Extraction is skipped when the directory already contains an up-to-date build
+    /// (verified via a build-id stamp derived from the embedded resource manifest).
+    /// Returns <c>null</c> if no embedded parser resources are present in the assembly.
+    /// </summary>
     private static string? ExtractEmbeddedParserRuntime()
     {
         var assembly = Assembly.GetExecutingAssembly();
         string[] resourceNames = assembly.GetManifestResourceNames()
             .Where(name => name.StartsWith("Map3DParser/", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(n => n, StringComparer.Ordinal)
             .ToArray();
         if (resourceNames.Length == 0) return null;
 
         string targetRoot = Path.Combine(DataManager.CacheDir, "map3d-parser-runtime");
+        string exePath = Path.Combine(targetRoot, "MapParser.exe");
+
         try
         {
             Directory.CreateDirectory(targetRoot);
@@ -449,7 +547,6 @@ public static class Map3DLocalBuildService
                 source.CopyTo(target);
             }
 
-            string exePath = Path.Combine(targetRoot, "MapParser.exe");
             return File.Exists(exePath) ? exePath : null;
         }
         catch
@@ -457,6 +554,7 @@ public static class Map3DLocalBuildService
             return null;
         }
     }
+
 
     private static void TryHideDirectory(string path)
     {
@@ -503,7 +601,7 @@ public static class Map3DLocalBuildService
         return (success, process.ExitCode, string.IsNullOrWhiteSpace(stderr) ? null : stderr.Trim());
     }
 
-    private static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
+    public static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
     {
         if (refs == null || refs.Count == 0 || worldSize <= 0 || !File.Exists(resolvedPath)) return default;
 
@@ -578,7 +676,7 @@ public static class Map3DLocalBuildService
         };
     }
 
-    private static bool IsGoodMatch(MapMatchScore score, IReadOnlyList<Map3DReferenceMonument>? refs)
+    public static bool IsGoodMatch(MapMatchScore score, IReadOnlyList<Map3DReferenceMonument>? refs)
     {
         int available = refs?.Count(r => !string.IsNullOrWhiteSpace(r.Name)) ?? 0;
         int required = Math.Min(3, Math.Max(1, available));
@@ -695,7 +793,7 @@ public static class Map3DLocalBuildService
 
     private readonly record struct ParsedPoint(double X, double Y, string Name);
     private readonly record struct CachedMap3DManifest(string SelectedMapFile);
-    private readonly record struct MapMatchScore(int MatchedCount, double TotalDistance)
+    public readonly record struct MapMatchScore(int MatchedCount, double TotalDistance)
     {
         public bool IsBetterThan(MapMatchScore other)
         {

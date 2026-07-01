@@ -4,7 +4,9 @@
 ; =============================================
 
 #define MyAppName      "RustPlusDesk"
-#define MyAppVersion   "7.1.0"
+#ifndef MyAppVersion
+#define MyAppVersion   "7.1.1"
+#endif
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
 #define MyAppExeName   "RustPlusDesk.exe"
@@ -46,7 +48,10 @@ Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; 2. Die Unterordner direkt aus dem Release-Verzeichnis
 Source: "..\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\lang\*";      DestDir: "{app}\lang";      Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Installer\publish\MapParser\*"; DestDir: "{app}\MapParser"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -59,6 +64,8 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}
 Type: filesandordirs; Name: "{app}\runtimes"
 Type: filesandordirs; Name: "{app}\runtime"
 Type: filesandordirs; Name: "{app}\Assets"
+Type: filesandordirs; Name: "{app}\lang"
+Type: filesandordirs; Name: "{app}\MapParser"
 
 [Code]
 // Jawads Aufräum-Logik (Sehr nützlich!)
@@ -69,6 +76,13 @@ begin
   RegDeleteKeyIncludingSubkeys(HKLM, Key);
   RegDeleteKeyIncludingSubkeys(HKCU, Key);
   Key := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+
+  // Clean up Velopack registry entries to prevent duplicate installed app list entries
+  Key := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\Pronwan.RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+  RegDeleteKeyIncludingSubkeys(HKCU, Key);
+  Key := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Pronwan.RustPlusDesk';
   RegDeleteKeyIncludingSubkeys(HKLM, Key);
 end;
 

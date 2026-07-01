@@ -17,19 +17,16 @@ namespace RustPlusDesk.Services;
 public class PairingListenerStub : IPairingListener
 {
     public event EventHandler<PairingPayload>? Paired;
-    public event EventHandler<TeamChatMessage>? ChatReceived;
+    public event EventHandler<TeamChatMessage>? ChatReceived { add { } remove { } }
     private CancellationTokenSource? _cts;
     private readonly Action<string> _log;
     public event EventHandler? Listening;
-    public event EventHandler? RegistrationCompleted;
+    public event EventHandler? RegistrationCompleted { add { } remove { } }
     public event EventHandler? Stopped;
-    public event EventHandler<string>? Failed;
-    private (string? server, string? entityName, uint? entityId)? _pendingAlarm;
-    private string? _pendingAlarmMsg;
-    private DateTime? _pendingAlarmMsgTs;
+    public event EventHandler<string>? Failed { add { } remove { } }
 
     public event EventHandler<AlarmNotification>? AlarmReceived;
-    public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
+    public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived { add { } remove { } }
     private volatile bool _running;
     public bool IsRunning => _running;
     public bool IsConfigured => true;
@@ -38,6 +35,8 @@ public class PairingListenerStub : IPairingListener
     public Task StartAsync(CancellationToken ct = default)
     {
         _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        _running = true;
+        Listening?.Invoke(this, EventArgs.Empty);
         _log("Pairing-Listener: gestartet (Stub). Drücke STRG+P im Fenster, um Pairing zu simulieren.");
         return Task.CompletedTask;
     }
@@ -71,6 +70,8 @@ public class PairingListenerStub : IPairingListener
     {
         _cts?.Cancel();
         _cts = null;
+        _running = false;
+        Stopped?.Invoke(this, EventArgs.Empty);
         _log("Pairing-Listener: gestoppt.");
         return Task.CompletedTask;
     }

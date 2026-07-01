@@ -397,9 +397,6 @@ Télécharger et installer maintenant ?</value>
     <value>La vérification de la mise à jour a échoué.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Aucun appareil.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Voir le profil</value>
   </data>
@@ -750,6 +747,17 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Identifiants FCM</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Qu est-ce que FCM ?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Qu est-ce que FCM ?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM signifie Firebase Cloud Messaging. Rust+ l utilise pour envoyer des notifications push pour les serveurs appaires, les appareils, les alarmes, le chat d equipe et les autres evenements en direct.
+
+Rust+ Desktop enregistre votre application locale aupres de FCM afin de recevoir ces memes notifications Rust+ en arriere-plan. Les identifiants d appairage sont enregistres localement sur ce PC et peuvent etre supprimes en reinitialisant la configuration d appairage.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Clic droit pour configurer</value>
@@ -1575,9 +1583,6 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Nouvelle interface de la boutique</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Suppression du suivi de BattleMetrics</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Votre base est attaquée !</value>
@@ -2644,5 +2649,96 @@ Télécharger et installer maintenant ?</value>
   </data>
   <data name="GenericClose" xml:space="preserve">
     <value>Fermer</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Marqueurs d'équipe</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Mode d'exécution</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Séquentiel (avec retard)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Parallèle (instantané)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Basculer le délai</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Ce raccourci clavier est déjà enregistré par une autre application.</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Heure du décès</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Échec de la connexion : Rust+ est inaccessible.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Soit votre pare-feu bloque la connexion, soit l'API Rust+ sur le serveur ne fonctionne pas correctement.</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Centre de notifications</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Afficher les notifications Toast</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Lire des alertes sonores</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Période de conservation</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Serveurs muets</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Aucun serveur mis en sourdine</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Activer le son</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtre:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarmes</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Décès</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Rechercher un message...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Marquer comme lu</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Aucune notification ici</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Vous êtes tous rattrapés !</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir effacer tout l'historique des notifications ?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Effacer l'historique</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Impossible de trouver un profil de serveur associé pour{0}:{1}.
+Veuillez d'abord associer ce serveur.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Serveur introuvable</value>
   </data>
 </root>

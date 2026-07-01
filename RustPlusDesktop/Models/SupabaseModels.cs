@@ -18,17 +18,17 @@ namespace RustPlusDesk.Models
         [Column("server_key")]
         [JsonProperty("server_key")]
         [JsonPropertyName("server_key")]
-        public string ServerKey { get; set; }
+        public string ServerKey { get; set; } = string.Empty;
 
         [Column("steam_id")]
         [JsonProperty("steam_id")]
         [JsonPropertyName("steam_id")]
-        public string SteamId { get; set; }
+        public string SteamId { get; set; } = string.Empty;
 
         [Column("overlay_data")]
         [JsonProperty("overlay_data")]
         [JsonPropertyName("overlay_data")]
-        public string OverlayData { get; set; } // We can store the JSON string directly
+        public string OverlayData { get; set; } = string.Empty; // We can store the JSON string directly
 
         [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
         [JsonProperty("created_at")]
@@ -58,17 +58,17 @@ namespace RustPlusDesk.Models
         [Column("server_key")]
         [JsonProperty("server_key")]
         [JsonPropertyName("server_key")]
-        public string ServerKey { get; set; }
+        public string ServerKey { get; set; } = string.Empty;
 
         [Column("steam_id")]
         [JsonProperty("steam_id")]
         [JsonPropertyName("steam_id")]
-        public string SteamId { get; set; }
+        public string SteamId { get; set; } = string.Empty;
 
         [Column("device_data")]
         [JsonProperty("device_data")]
         [JsonPropertyName("device_data")]
-        public string DeviceData { get; set; }
+        public string DeviceData { get; set; } = string.Empty;
 
         [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
         [JsonProperty("created_at")]
@@ -88,27 +88,27 @@ namespace RustPlusDesk.Models
         [Column("steam_id")]
         [JsonProperty("steam_id")]
         [JsonPropertyName("steam_id")]
-        public string SteamId { get; set; }
+        public string SteamId { get; set; } = string.Empty;
 
         [Column("discord_id")]
         [JsonProperty("discord_id")]
         [JsonPropertyName("discord_id")]
-        public string DiscordId { get; set; }
+        public string DiscordId { get; set; } = string.Empty;
 
         [Column("user_id")]
         [JsonProperty("user_id")]
         [JsonPropertyName("user_id")]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [Column("subscription_tier")]
         [JsonProperty("subscription_tier")]
         [JsonPropertyName("subscription_tier")]
-        public string SubscriptionTier { get; set; }
+        public string SubscriptionTier { get; set; } = string.Empty;
 
         [Column("discord_name")]
         [JsonProperty("discord_name")]
         [JsonPropertyName("discord_name")]
-        public string DiscordName { get; set; }
+        public string DiscordName { get; set; } = string.Empty;
 
         [Column("sync_accepted")]
         [JsonProperty("sync_accepted")]
@@ -143,12 +143,12 @@ namespace RustPlusDesk.Models
         [Column("current_server_key")]
         [JsonProperty("current_server_key")]
         [JsonPropertyName("current_server_key")]
-        public string CurrentServerKey { get; set; }
+        public string CurrentServerKey { get; set; } = string.Empty;
 
         [Column("current_server_name")]
         [JsonProperty("current_server_name")]
         [JsonPropertyName("current_server_name")]
-        public string CurrentServerName { get; set; }
+        public string CurrentServerName { get; set; } = string.Empty;
 
         [Column("team_member_count")]
         [JsonProperty("team_member_count")]
@@ -158,7 +158,7 @@ namespace RustPlusDesk.Models
         [Column("team_members_json")]
         [JsonProperty("team_members_json")]
         [JsonPropertyName("team_members_json")]
-        public string TeamMembersJson { get; set; }
+        public string TeamMembersJson { get; set; } = string.Empty;
     }
 
     public class TeamFeatureMasterState
@@ -219,12 +219,12 @@ namespace RustPlusDesk.Models
         [Column("guild_id")]
         [JsonProperty("guild_id")]
         [JsonPropertyName("guild_id")]
-        public string GuildId { get; set; }
+        public string GuildId { get; set; } = string.Empty;
 
         [Column("owner_steam_id")]
         [JsonProperty("owner_steam_id")]
         [JsonPropertyName("owner_steam_id")]
-        public string OwnerSteamId { get; set; }
+        public string OwnerSteamId { get; set; } = string.Empty;
 
         [Column("commands_enabled")]
         [JsonProperty("commands_enabled")]
@@ -274,17 +274,17 @@ namespace RustPlusDesk.Models
         [Column("guild_id")]
         [JsonProperty("guild_id")]
         [JsonPropertyName("guild_id")]
-        public string GuildId { get; set; }
+        public string GuildId { get; set; } = string.Empty;
 
         [Column("notification_type")]
         [JsonProperty("notification_type")]
         [JsonPropertyName("notification_type")]
-        public string NotificationType { get; set; }
+        public string NotificationType { get; set; } = string.Empty;
 
         [Column("channel_id")]
         [JsonProperty("channel_id")]
         [JsonPropertyName("channel_id")]
-        public string ChannelId { get; set; }
+        public string ChannelId { get; set; } = string.Empty;
 
         [Column("tts_enabled")]
         [JsonProperty("tts_enabled")]
@@ -314,12 +314,12 @@ namespace RustPlusDesk.Models
         [Column("guild_id")]
         [JsonProperty("guild_id")]
         [JsonPropertyName("guild_id")]
-        public string GuildId { get; set; }
+        public string GuildId { get; set; } = string.Empty;
 
         [Column("command_type")]
         [JsonProperty("command_type")]
         [JsonPropertyName("command_type")]
-        public string CommandType { get; set; }
+        public string CommandType { get; set; } = string.Empty;
 
         [Column("payload")]
         [JsonProperty("payload")]
@@ -389,17 +389,17 @@ namespace RustPlusDesk.Models
         [Column("server_key")]
         [JsonProperty("server_key")]
         [JsonPropertyName("server_key")]
-        public string ServerKey { get; set; }
+        public string ServerKey { get; set; } = string.Empty;
 
         [Column("steam_id")]
         [JsonProperty("steam_id")]
         [JsonPropertyName("steam_id")]
-        public string SteamId { get; set; }
+        public string SteamId { get; set; } = string.Empty;
 
         [Column("marker_data")]
         [JsonProperty("marker_data")]
         [JsonPropertyName("marker_data")]
-        public string MarkerData { get; set; }
+        public string MarkerData { get; set; } = string.Empty;
 
         [Column("created_at", NullValueHandling = NullValueHandling.Ignore)]
         [JsonProperty("created_at")]

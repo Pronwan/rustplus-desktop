@@ -20,8 +20,7 @@ namespace RustPlusDesk.Services
     {
         public static async Task<List<A2SPlayer>> QueryPlayersAsync(string host, int port, int timeoutMs = 3000)
         {
-            IPAddress ip;
-            if (!IPAddress.TryParse(host, out ip))
+            if (!IPAddress.TryParse(host, out var ip))
             {
                 var addrs = await Dns.GetHostAddressesAsync(host);
                 if (addrs.Length == 0) throw new Exception("Could not resolve host.");

@@ -61,6 +61,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     internal MainViewModel ViewModel => _vm;
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
+    private string? _fetchedSteamId64;
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
@@ -221,6 +222,20 @@ public partial class MainWindow : WpfUi.FluentWindow
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     private bool _isShuttingDown = false;
+    private const double CompactSidebarWidth = 72;
+    private const double MinExpandedSidebarWidth = 400;
+    private const double MaxExpandedSidebarWidth = 600;
+    private const int SidebarAnimationDurationMs = 180;
+    private double _expandedSidebarWidth = 600;
+    private bool _isSidebarExpanded;
+    private bool _isSidebarPinnedExpanded;
+    private bool _isSidebarTemporarilyExpandedForOverlay;
+    private bool _sidebarOverlayVisibilityUpdateQueued;
+    private System.Windows.Threading.DispatcherTimer? _sidebarAnimationTimer;
+    private DateTime _sidebarAnimationStartedAt;
+    private double _sidebarAnimationStartWidth;
+    private double _sidebarAnimationTargetWidth;
+    private Action? _sidebarAnimationCompleted;
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
@@ -239,7 +254,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         if (ColSidebar != null)
         {
-            TrackingService.SidebarWidth = ColSidebar.ActualWidth;
+            TrackingService.SidebarWidth = _expandedSidebarWidth;
         }
 
         base.OnClosing(e);
@@ -366,6 +381,46 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        
+        // Restore window dimensions and position
+        double savedWidth = TrackingService.WindowWidth;
+        double savedHeight = TrackingService.WindowHeight;
+        double savedLeft = TrackingService.WindowLeft;
+        double savedTop = TrackingService.WindowTop;
+        bool savedMaximized = TrackingService.WindowMaximized;
+
+        if (savedWidth > 100 && savedHeight > 100)
+        {
+            this.Width = savedWidth;
+            this.Height = savedHeight;
+        }
+
+        if (!double.IsNaN(savedLeft) && !double.IsNaN(savedTop))
+        {
+            double minLeft = SystemParameters.VirtualScreenLeft;
+            double minTop = SystemParameters.VirtualScreenTop;
+            double maxLeft = SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth;
+            double maxTop = SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight;
+
+            if (savedLeft >= minLeft && savedLeft < maxLeft - 100 &&
+                savedTop >= minTop && savedTop < maxTop - 100)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Left = savedLeft;
+                this.Top = savedTop;
+            }
+        }
+
+        if (savedMaximized)
+        {
+            this.WindowState = WindowState.Maximized;
+        }
+
+        this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+        _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+        _expandedSidebarWidth = Math.Clamp(TrackingService.SidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+        TrackLeftPanelOverlayVisibility();
+        SetSidebarExpanded(_isSidebarPinnedExpanded);
         FlushPendingLogs();
         MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
@@ -492,6 +547,23 @@ public partial class MainWindow : WpfUi.FluentWindow
             TrackingService.ReadFcmConfig();
             _vm.NotifyFcmChanged();
 
+            // Check if FCM config is missing/expired and show login overlay
+            bool isFcmConfigured = TrackingService.IsFcmConfigured();
+            bool isFcmExpired = isFcmConfigured &&
+                                TrackingService.FcmExpiresAt.HasValue &&
+                                TrackingService.FcmExpiresAt.Value < DateTime.Now;
+            if (!isFcmConfigured || isFcmExpired)
+            {
+                _vm.ForceShowLoginOverlay = true;
+                _vm.LoginOverlayMessage = isFcmExpired
+                    ? "FCM is expired you need to relogin to rust+"
+                    : "FCM is not configured. Please login to Rust+.";
+                AppendLog(isFcmExpired
+                    ? "[pairing] FCM token is expired. Forcing login overlay display."
+                    : "[pairing] No FCM config saved. Forcing login overlay display.");
+                SetSidebarExpanded(true);
+            }
+
             StartPairingSilent(true);
             
             // Auto-connect if enabled and not already connected
@@ -568,8 +640,14 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
             else
             {
-                // Kommt von einer neueren/gleichen Version: Einfach Version updaten
+                // Upgrade from a previous version: show success notification
+                string oldVersion = TrackingService.LastSeenVersion;
                 TrackingService.LastSeenVersion = AppVersion;
+                
+                Dispatcher.InvokeAsync(() =>
+                {
+                    ShowInfoSnackbar("Update Successful", $"Rust+ Desktop has been successfully updated to v{AppVersion}!", WpfUi.ControlAppearance.Success);
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
         }
 
@@ -589,8 +667,6 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
-        TrackingService.OnServerInfoUpdated -= OnServerInfoUpdated;
-        TrackingService.OnServerInfoUpdated += OnServerInfoUpdated;
         TrackingService.OnTrackingNotification -= OnTrackingNotification;
         TrackingService.OnTrackingNotification += OnTrackingNotification;
         OnOnlinePlayersUpdated();
@@ -618,7 +694,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = true;
             _vm.IsPairingBusy = true; // Update UI button state
-            TxtPairingState.Text = Properties.Resources.PairingListening;
+            TxtPairingState.Text = "";
             UpdatePairingGuideSnackbar();
         }));
         _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
@@ -773,6 +849,18 @@ public partial class MainWindow : WpfUi.FluentWindow
                 UpdateLanguageFlag();
             }));
         };
+    }
+
+    private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F11)
+        {
+            if (_isMap3DActive)
+            {
+                e.Handled = true;
+                ToggleWpfFullscreen();
+            }
+        }
     }
 
     private void OnTrackingNotification(string msg, string serverName)
@@ -1227,7 +1315,6 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     // === Layers ===
     // Optional: externe ErgÃ¤nzungen laden (Datei neben der EXE)
-    private static bool _itemMapLoaded;
     /// <summary>lÃ¤dt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
     /// 
 
@@ -1249,7 +1336,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                     p.Kill(true); // Kill den Prozess und seine Unterprozesse
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Dies fÃ¤ngt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
                 // Ignoriere die Ausnahme, da das erwartete Verhalten ist.
@@ -1272,15 +1359,18 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
 
             // KontextmenÃ¼ sauber schlieÃŸen (optional)
-            BtnCrosshair.ContextMenu?.IsOpen.Equals(false);
+            if (BtnCrosshair.ContextMenu != null)
+            {
+                BtnCrosshair.ContextMenu.IsOpen = false;
+            }
 
-            // Launch pending update installer if available
+            // Apply a pending Velopack update if available.
             if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
             {
                 _updateService.StartInstaller(_updateService.PendingInstallerPath);
             }
         }
-        catch (Exception ex)
+        catch
         { }
     }
 
@@ -1677,21 +1767,25 @@ public partial class MainWindow : WpfUi.FluentWindow
     { "large oil rig",           "pack://application:,,,/Assets/icons/largeoilrig.png" },
     { "small oil rig",           "pack://application:,,,/Assets/icons/oilrig.png" },
     { "underwater lab",          "pack://application:,,,/Assets/icons/underwater.png" },
-    { "underwater lab b",          "pack://application:,,,/Assets/icons/underwater.png" },
-    { "underwater labs",          "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater lab b",        "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater labs",         "pack://application:,,,/Assets/icons/underwater.png" },
     { "junkyard",                "pack://application:,,,/Assets/icons/junkyard.png" },
     { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
     { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
-    { "jungle ziggurat",         "pack://application:,,,/Assets/icons/jungle.png" },
+    { "jungle ziggurat",         "pack://application:,,,/Assets/icons/jungle_ziggurat.png" },
     { "jungle ruins",            "pack://application:,,,/Assets/icons/jungle.png" },
+    { "jungle swamp",            "pack://application:,,,/Assets/icons/jungle_swamp.png" },
     { "cave",                    "pack://application:,,,/Assets/icons/cave.png" },
     { "iceberg",                 "pack://application:,,,/Assets/icons/iceberg.png" },
     { "water well",              "pack://application:,,,/Assets/icons/waterwell.png" },
     { "ice lake",                "pack://application:,,,/Assets/icons/ice_lake.png" },
     { "god rock",                "pack://application:,,,/Assets/icons/godrock.png" },
-    { "large god rock",          "pack://application:,,,/Assets/icons/godrock.png" },
+    { "large god rock",          "pack://application:,,,/Assets/icons/godrock_large.png" },
+    { "medium god rock",         "pack://application:,,,/Assets/icons/godrock_medium.png" },
+    { "small god rock",          "pack://application:,,,/Assets/icons/godrock_small.png" },
     { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
     { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
+    { "apartments complex",      "pack://application:,,,/Assets/icons/apartments_complex_1.png" },
 };
 
     private static double CalcOverlayScale(double effZoom, double exp, double baseMult = 1.0)
@@ -1703,6 +1797,14 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private static readonly Dictionary<string, string> sMonIconByKey =
     BuildCanonIconMap(sMonIconByKeyRaw);
+
+    // Per-monument icon size multipliers (relative to the caller's requested size).
+    // Keys must match the canonicalized name produced by Canon().
+    private static readonly Dictionary<string, double> sMonIconSizeScale = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "swamp",         0.6 },
+        { "jungle swamp",  0.6 },
+    };
 
     private static Dictionary<string, string> BuildCanonIconMap(
         Dictionary<string, string> raw)
@@ -1796,7 +1898,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             .Replace("ice lake 2", "ice lake")
             .Replace("ice lake 3", "ice lake")
             .Replace("ice lake 4", "ice lake")
-            .Replace("large god rock", "god rock")
+            .Replace("apartments complex 1", "apartments complex")
             .Replace("train tunnel entrance", "tunnel entrance");
 
         return s;
@@ -1805,6 +1907,10 @@ public partial class MainWindow : WpfUi.FluentWindow
     private FrameworkElement MakeMonIcon(string key, string tooltip, int size = 64)
     {
         key = Canon(key);
+
+        // Apply per-monument size scale if defined
+        if (sMonIconSizeScale.TryGetValue(key, out double sizeScale))
+            size = Math.Max(8, (int)Math.Round(size * sizeScale));
 
         if (TrackingService.MapMonumentDisplayMode == 1) // Original text monument names
         {
@@ -2922,8 +3028,41 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return (s, offX, offY);
     }
 
+    private void SaveWindowSettings()
+    {
+        try
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, false);
+            }
+            else if (this.WindowState == WindowState.Maximized)
+            {
+                var bounds = this.RestoreBounds;
+                if (!bounds.IsEmpty)
+                {
+                    TrackingService.SaveWindowBounds(bounds.Width, bounds.Height, bounds.Left, bounds.Top, true);
+                }
+                else
+                {
+                    TrackingService.SaveWindowBounds(TrackingService.WindowWidth, TrackingService.WindowHeight, TrackingService.WindowLeft, TrackingService.WindowTop, true);
+                }
+            }
+            else if (this.WindowState == WindowState.Minimized)
+            {
+                var bounds = this.RestoreBounds;
+                if (!bounds.IsEmpty)
+                {
+                    TrackingService.SaveWindowBounds(bounds.Width, bounds.Height, bounds.Left, bounds.Top, TrackingService.WindowMaximized);
+                }
+            }
+        }
+        catch { }
+    }
+
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        SaveWindowSettings();
         if (_isShuttingDown) return;
 
         if (TrackingService.CloseToTrayEnabled)
@@ -2963,20 +3102,290 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         });
     }
 
+    public void ManuallyImportMapFile()
+    {
+        try
+        {
+            var picker = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Select Rust .map file",
+                Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
+                InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
+                CheckFileExists = true,
+                Multiselect = false
+            };
+
+            if (picker.ShowDialog(this) == true)
+            {
+                string mapFilePath = picker.FileName;
+                string? directoryPath = IOPath.GetDirectoryName(mapFilePath);
+                
+                string? localMapImagePath = null;
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    string mapName = IOPath.GetFileNameWithoutExtension(mapFilePath);
+                    var imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                    var imageFiles = Directory.GetFiles(directoryPath)
+                        .Where(f => imageExtensions.Contains(IOPath.GetExtension(f).ToLower()))
+                        .ToList();
+
+                    var exactMatch = imageFiles.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (exactMatch != null)
+                    {
+                        localMapImagePath = exactMatch;
+                    }
+                    else if (imageFiles.Count == 1)
+                    {
+                        localMapImagePath = imageFiles[0];
+                    }
+                }
+
+                int count = 1;
+                while (_vm.Servers.Any(s => s.Name == $"3D-Map-Parsing {count}"))
+                {
+                    count++;
+                }
+                string importedServerName = $"3D-Map-Parsing {count}";
+
+                var prof = new ServerProfile
+                {
+                    Name = importedServerName,
+                    Host = "127.0.0.1",
+                    Port = 0,
+                    SteamId64 = _vm.SteamId64 ?? "0",
+                    PlayerToken = "offline",
+                    LocalMapFilePath = mapFilePath,
+                    LocalMapImagePath = localMapImagePath,
+                    Devices = new ObservableCollection<SmartDevice>()
+                };
+
+                _vm.AddServer(prof);
+                _vm.Selected = prof;
+                _vm.Save();
+                
+                AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
+                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Offline Map] Manual import failed: {ex.Message}");
+            MessageBox.Show($"Failed to import map: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void Server_CopyMap_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem menuItem && menuItem.Tag is ServerProfile sourceProfile)
+        {
+            if (string.IsNullOrEmpty(sourceProfile.LocalMapFilePath))
+            {
+                MessageBox.Show("Only manually parsed offline maps can be copied to other servers.", "Copy Map", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            _copyMapSourceProfile = sourceProfile;
+            AppendLog($"[Offline Map] Staged source map for copy: {sourceProfile.Name} ({sourceProfile.LocalMapFilePath})");
+            MessageBox.Show($"Please select/connect to a paired server in the list. If its layout matches, the map will be copied automatically.", "Copy Map Staged", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
     public void HandleRustPlusLink(string link)
     {
         try
         {
+            if (link != null) link = link.Trim().Trim('"', '\'').Trim();
+
             string host = "";
             int port = 28082; // Standard Rust+ Port
             string playerId = _vm.SteamId64 ?? "0";
             string playerToken = "0";
             string serverName = "Manual Server";
 
-            if (link.Contains("?") && (link.Contains("address=") || link.Contains("ip=")))
+            bool isOfflineMapImport = false;
+            string rawLink = (link ?? "").Replace("rustplus://", "").Trim().TrimEnd('/', '\\').Trim();
+            rawLink = Uri.UnescapeDataString(rawLink);
+
+            // Replace forward slashes with backslashes on Windows for local paths
+            rawLink = rawLink.Replace('/', '\\');
+
+            // Handle normalized drive letters (e.g., G\\SteamLibrary -> G:\SteamLibrary)
+            if (rawLink.Length >= 2 && char.IsLetter(rawLink[0]) && rawLink[1] == '\\')
+            {
+                string rest = rawLink.Substring(2);
+                while (rest.StartsWith("\\"))
+                {
+                    rest = rest.Substring(1);
+                }
+                rawLink = rawLink[0] + @":\" + rest;
+            }
+
+            if (!rawLink.Contains("?") && !rawLink.Contains("ip=") && !rawLink.Contains("address=") &&
+                (rawLink.Contains(":") || rawLink.Contains("\\") || Directory.Exists(rawLink) || File.Exists(rawLink)))
+            {
+                isOfflineMapImport = true;
+            }
+
+            if (isOfflineMapImport)
+            {
+                string? mapFilePath = null;
+                string? directoryPath = null;
+
+                // Helper to resolve map file from a directory
+                string? ResolveMapFromDir(string dir)
+                {
+                    if (!Directory.Exists(dir)) return null;
+
+                    var files = Directory.GetFiles(dir, "*.map");
+                    if (files.Length == 1) return files[0];
+                    if (files.Length > 1)
+                    {
+                        // Try to find one matching folder name, else first
+                        string dirName = IOPath.GetFileName(dir);
+                        return files.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(dirName, StringComparison.OrdinalIgnoreCase)) ?? files[0];
+                    }
+                    return null;
+                }
+
+                // Clean the rawLink to see if we can find the file
+                if (File.Exists(rawLink))
+                {
+                    mapFilePath = rawLink;
+                    directoryPath = IOPath.GetDirectoryName(rawLink);
+                }
+                else if (Directory.Exists(rawLink))
+                {
+                    // Check directly in directory
+                    mapFilePath = ResolveMapFromDir(rawLink);
+                    directoryPath = rawLink;
+
+                    // If not found, try "maps" subdirectory
+                    if (string.IsNullOrEmpty(mapFilePath))
+                    {
+                        string subMapsDir = IOPath.Combine(rawLink, "maps");
+                        if (Directory.Exists(subMapsDir))
+                        {
+                            mapFilePath = ResolveMapFromDir(subMapsDir);
+                            if (!string.IsNullOrEmpty(mapFilePath))
+                            {
+                                directoryPath = subMapsDir;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // It's a file path that doesn't exist directly.
+                    // Try with .map suffix if it wasn't there
+                    string pathToCheck = rawLink;
+                    if (!pathToCheck.EndsWith(".map", StringComparison.OrdinalIgnoreCase))
+                    {
+                        pathToCheck += ".map";
+                    }
+
+                    if (File.Exists(pathToCheck))
+                    {
+                        mapFilePath = pathToCheck;
+                        directoryPath = IOPath.GetDirectoryName(pathToCheck);
+                    }
+                    else
+                    {
+                        // Let's check in "maps" subdirectory of the parent folder
+                        string parent = IOPath.GetDirectoryName(pathToCheck) ?? "";
+                        string filename = IOPath.GetFileName(pathToCheck);
+
+                        if (!string.IsNullOrEmpty(parent) && Directory.Exists(parent))
+                        {
+                            string subMapsDir = IOPath.Combine(parent, "maps");
+                            string subMapFile = IOPath.Combine(subMapsDir, filename);
+                            if (File.Exists(subMapFile))
+                            {
+                                mapFilePath = subMapFile;
+                                directoryPath = subMapsDir;
+                            }
+                            else if (Directory.Exists(subMapsDir))
+                            {
+                                // Try finding any file matching filename in the maps subfolder
+                                var matchedFiles = Directory.GetFiles(subMapsDir, filename + "*.map");
+                                if (matchedFiles.Length > 0)
+                                {
+                                    mapFilePath = matchedFiles[0];
+                                    directoryPath = subMapsDir;
+                                }
+                            }
+                        }
+
+                        // Last resort: search parent folder itself if parent is a "maps" directory, or search parent directory's wildcard files
+                        if (string.IsNullOrEmpty(mapFilePath) && !string.IsNullOrEmpty(parent) && Directory.Exists(parent))
+                        {
+                            var matchedFiles = Directory.GetFiles(parent, filename + "*.map");
+                            if (matchedFiles.Length > 0)
+                            {
+                                mapFilePath = matchedFiles[0];
+                                directoryPath = parent;
+                            }
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(mapFilePath) || !File.Exists(mapFilePath))
+                {
+                    throw new FileNotFoundException($"No .map file resolved from link path: '{rawLink}'");
+                }
+
+                string? localMapImagePath = null;
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    string mapName = IOPath.GetFileNameWithoutExtension(mapFilePath);
+                    var imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                    var imageFiles = Directory.GetFiles(directoryPath)
+                        .Where(f => imageExtensions.Contains(IOPath.GetExtension(f).ToLower()))
+                        .ToList();
+
+                    var exactMatch = imageFiles.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (exactMatch != null)
+                    {
+                        localMapImagePath = exactMatch;
+                    }
+                    else if (imageFiles.Count == 1)
+                    {
+                        localMapImagePath = imageFiles[0];
+                    }
+                }
+
+                int count = 1;
+                while (_vm.Servers.Any(s => s.Name == $"3D-Map-Parsing {count}"))
+                {
+                    count++;
+                }
+                string importedServerName = $"3D-Map-Parsing {count}";
+
+                var prof = new ServerProfile
+                {
+                    Name = importedServerName,
+                    Host = "127.0.0.1",
+                    Port = 0,
+                    SteamId64 = _vm.SteamId64 ?? "0",
+                    PlayerToken = "offline",
+                    LocalMapFilePath = mapFilePath,
+                    LocalMapImagePath = localMapImagePath,
+                    Devices = new ObservableCollection<SmartDevice>()
+                };
+
+                _vm.AddServer(prof);
+                _vm.Selected = prof;
+                _vm.Save();
+
+                AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
+                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.Activate();
+                return;
+            }
+
+            if (rawLink.Contains("?") && (rawLink.Contains("address=") || rawLink.Contains("ip=")))
             {
                 // --- FALL A: Offizieller Link (mit Parametern) ---
-                var p = ParseRustPlusLink(link);
+                var p = ParseRustPlusLink(link ?? string.Empty);
                 host = p.host;
                 port = p.port;
                 playerId = p.playerId != 0 ? p.playerId.ToString() : playerId;
@@ -2987,7 +3396,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 // --- FALL B: Manueller Link (z.B. rustplus://1.2.3.4:28082) ---
                 // Wir entfernen das Protokoll "rustplus://"
-                var raw = link.Replace("rustplus://", "").TrimEnd('/');
+                var raw = (link ?? string.Empty).Replace("rustplus://", "").TrimEnd('/');
 
                 if (raw.Contains(":"))
                 {
@@ -3144,7 +3553,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 datesChanged = true;
             }
             
-            if (datesChanged) _vm.NotifyFcmChanged();
+            if (datesChanged)
+            {
+                _vm.NotifyFcmChanged();
+                SetSidebarExpanded(_isSidebarPinnedExpanded);
+            }
 
             var prof = _vm.Servers.FirstOrDefault(s =>
                 s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
@@ -3158,7 +3571,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 prof = new ServerProfile
                 {
                     Name = serverName,
-                    Host = e.Host,
+                    Host = e.Host ?? string.Empty,
                     Port = e.Port,
                     SteamId64 = keySteam,
                     PlayerToken = e.PlayerToken,
@@ -3255,7 +3668,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
                 {
                     // 1) Cache Ã¢â€ â€™ UI (falls vorhanden), sonst HÃƒÂ¼lle
-                    if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached))
+                    if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached) && cached != null)
                     {
                         dev.IsMissing = false;
                         Dispatcher.Invoke(() =>
@@ -3388,7 +3801,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_pairing.IsRunning)
         {
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            TxtPairingState.Text = Properties.Resources.PairingListening;
+            TxtPairingState.Text = "";
             AppendLog("Listener already running.");
             return;
         }
@@ -3416,7 +3829,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Failed -= onFail;
 
             _vm.IsPairingBusy = false; _vm.BusyText = "";
-            if (ok) { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); }
+            if (ok) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
         }
         finally { _listenerStarting = false; }
     }
@@ -3427,13 +3840,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             if (st == "starting") _vm.BusyText = Properties.Resources.StartingPairingListener;
-            else if (st == "listening") { TxtPairingState.Text = Properties.Resources.PairingListening; UpdatePairingGuideSnackbar(); }
+            else if (st == "listening") { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
             else if (st == "error") TxtPairingState.Text = Properties.Resources.PairingError;
         });
     }
     private void Real_Listening(object? s, EventArgs e)
     {
-        Dispatcher.Invoke(() => { TxtPairingState.Text = "Pairing: listening."; UpdatePairingGuideSnackbar(); });
+        Dispatcher.Invoke(() => { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); });
     }
     private void Real_Failed(object? s, string msg)
     {
@@ -3448,7 +3861,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _vm.IsBusy = false;
         _vm.BusyText = "";
-        TxtPairingState.Text = Properties.Resources.PairingListening;
+        TxtPairingState.Text = "";
         UpdatePairingGuideSnackbar();
     }
 
@@ -3828,7 +4241,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void BtnToggleServerArea_Click(object sender, RoutedEventArgs e)
+    private void BtnToggleServerArea_Click(object? sender, RoutedEventArgs? e)
     {
         if (PanelServerArea == null || IconToggleServerArea == null) return;
 
@@ -3844,6 +4257,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private string GetOwnAvatarCachePath(string steamId64)
+    {
+        var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "avatars");
+        if (!System.IO.Directory.Exists(dir))
+        {
+            System.IO.Directory.CreateDirectory(dir);
+        }
+        return System.IO.Path.Combine(dir, $"{steamId64}.png");
+    }
+
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
     {
         if (string.IsNullOrWhiteSpace(steamId64))
@@ -3852,26 +4275,57 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        var cachePath = GetOwnAvatarCachePath(steamId64);
+
+        // Try load from local cache first on start
+        if (System.IO.File.Exists(cachePath) && _vm.MyAvatar == null)
+        {
+            try
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(cachePath);
+                bmp.EndInit();
+                bmp.Freeze();
+                _vm.MyAvatar = bmp;
+            }
+            catch
+            {
+                // Ignore cache load failure, fallback to network
+            }
+        }
+
+        // Fetch once on start/session (skip if already fetched this steam ID in this session)
+        if (_fetchedSteamId64 == steamId64)
+        {
+            return;
+        }
+
         try
         {
             using var http = new HttpClient();
             var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId64}?xml=1");
 
-            // sehr einfache Extraktion
-            var nameMatch = Regex.Match(xml, "<steamID><!\\[CDATA\\[(.*?)\\]\\]>");
-            var avatarMatch = Regex.Match(xml, "<avatarFull><!\\[CDATA\\[(.*?)\\]\\]>");
+            var nameMatch = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]>");
+            var avatarMatch = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]>");
 
             if (avatarMatch.Success)
             {
                 var uri = new Uri(avatarMatch.Groups[1].Value);
+                var bytes = await http.GetByteArrayAsync(uri);
+                
+                await System.IO.File.WriteAllBytesAsync(cachePath, bytes);
+
                 var bmp = new BitmapImage();
                 bmp.BeginInit();
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
-                bmp.UriSource = uri;
+                bmp.UriSource = new Uri(cachePath);
                 bmp.EndInit();
                 bmp.Freeze();
 
                 _vm.MyAvatar = bmp;
+                _fetchedSteamId64 = steamId64;
             }
             if (nameMatch.Success)
             {
@@ -3882,8 +4336,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch
         {
-            // Avatar optional Ã¢â‚¬â€œ bei Fehlern still
-            _vm.MyAvatar = null;
+            // If network fails but cache exists, we keep the cached version. Otherwise set null.
+            if (!System.IO.File.Exists(cachePath))
+            {
+                _vm.MyAvatar = null;
+            }
         }
     }
 
@@ -4195,8 +4652,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (s.Length <= max) return s;
         return s.Substring(0, Math.Max(1, max - 1)) + "Ã¢â‚¬Â¦";
     }
-    private int _shopAutoSeq = 1; // Fallback-Sequenz, wenn ID fehlt
-
     // stabiler Fallback-Key-Hasher (aus X,Y,Label)
     private static uint ShopFallbackKey(double x, double y, string? label)
     {
@@ -4794,8 +5249,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 rule.Baseline.Add(new AlertSeenOrder
                 {
                     ShopId = shop.Id,
-                    ItemShort = o.ItemShortName,
-                    CurrencyShort = o.CurrencyShortName,
+                    ItemShort = o.ItemShortName ?? "",
+                    CurrencyShort = o.CurrencyShortName ?? "",
                     Stock = o.Stock,
                     Quantity = o.Quantity,
                     CurrencyAmount = o.CurrencyAmount
@@ -5069,8 +5524,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         rule.Baseline.Add(new AlertSeenOrder
                         {
                             ShopId = shop.Id,
-                            ItemShort = o.ItemShortName,
-                            CurrencyShort = o.CurrencyShortName,
+                            ItemShort = o.ItemShortName ?? "",
+                            CurrencyShort = o.CurrencyShortName ?? "",
                             Stock = o.Stock,
                             Quantity = o.Quantity,
                             CurrencyAmount = o.CurrencyAmount
@@ -5093,8 +5548,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     public class AlertSeenOrder
     {
         public uint ShopId;
-        public string ItemShort;
-        public string CurrencyShort;
+        public string ItemShort = "";
+        public string CurrencyShort = "";
         public int Quantity;
         public float CurrencyAmount;
         public int Stock;
@@ -5168,8 +5623,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     baseline = new AlertSeenOrder
                     {
                         ShopId        = shop.Id,
-                        ItemShort     = order.ItemShortName,
-                        CurrencyShort = order.CurrencyShortName,
+                        ItemShort     = order.ItemShortName ?? "",
+                        CurrencyShort = order.CurrencyShortName ?? "",
                         Quantity      = order.Quantity,
                         CurrencyAmount= order.CurrencyAmount,
                         Stock         = curStock
@@ -5282,8 +5737,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     rule.Baseline.Add(new AlertSeenOrder
                     {
                         ShopId = shop.Id,
-                        ItemShort = o.ItemShortName,
-                        CurrencyShort = o.CurrencyShortName,
+                        ItemShort = o.ItemShortName ?? "",
+                        CurrencyShort = o.CurrencyShortName ?? "",
                         Quantity = o.Quantity,
                         CurrencyAmount = o.CurrencyAmount,
                         Stock = o.Stock
@@ -5583,8 +6038,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             HorizontalAlignment = HorizontalAlignment.Right
         };
 
+        var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
         var stack = new StackPanel { Orientation = Orientation.Vertical };
-        stack.Children.Add(new TextBlock { Text = $"Version {tag} is available. Download now?", Margin = new Thickness(0, 0, 0, 8) });
+        stack.Children.Add(new TextBlock { Text = $"Version {tag}{sizeStr} is available. Download now?", Margin = new Thickness(0, 0, 0, 8) });
 
         if (!string.IsNullOrEmpty(dlUrl))
         {
@@ -5619,16 +6075,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (ColSidebar != null)
         {
             double w = TrackingService.SidebarWidth;
-            if (w < 400) w = 400;
+            if (w < MinExpandedSidebarWidth) w = MinExpandedSidebarWidth;
 
             // Ensure we don't squash the map below 800 if window is small
             if (this.ActualWidth > 0)
             {
                 double maxW = this.ActualWidth - 850; // 800 map + 50 padding/splitter
-                if (w > maxW && maxW > 400) w = maxW;
+                if (w > maxW && maxW > MinExpandedSidebarWidth) w = maxW;
             }
 
-            ColSidebar.Width = new GridLength(w, GridUnitType.Pixel);
+            _expandedSidebarWidth = Math.Clamp(w, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+            SetSidebarExpanded(_isSidebarPinnedExpanded);
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
 
@@ -5825,7 +6283,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        bool isListening = TxtPairingState.Text != null && TxtPairingState.Text.Contains("listening");
+        bool isListening = _vm.IsPairingBusy;
 
         string title = isListening ? "Pairing Active" : "Action Required";
         string msg = isListening 
@@ -5862,7 +6320,272 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (ColSidebar != null)
         {
-            TrackingService.SidebarWidth = ColSidebar.ActualWidth;
+            _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            TrackingService.SidebarWidth = _expandedSidebarWidth;
+        }
+    }
+
+    private void LeftPanelBorder_MouseEnter(object sender, MouseEventArgs e)
+    {
+        SetSidebarExpanded(true);
+    }
+
+    private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (_isSidebarPinnedExpanded)
+        {
+            return;
+        }
+
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (_isSidebarPinnedExpanded)
+            {
+                return;
+            }
+
+            if (LeftPanelBorder?.IsMouseOver == true || SidebarSplitter?.IsMouseOver == true)
+            {
+                return;
+            }
+
+            SetSidebarExpanded(false);
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void CompactSidebarTab_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string tag } && int.TryParse(tag, out int index))
+        {
+            MainTabs.SelectedIndex = index;
+            SetSidebarExpanded(true);
+        }
+    }
+
+    private void BtnToggleSidebarPin_Click(object sender, RoutedEventArgs e)
+    {
+        _isSidebarPinnedExpanded = !_isSidebarPinnedExpanded;
+        TrackingService.SidebarPinned = _isSidebarPinnedExpanded;
+
+        if (_isSidebarPinnedExpanded)
+        {
+            SetSidebarExpanded(true);
+        }
+        else
+        {
+            UpdateSidebarForOverlayVisibility();
+            if (!_isSidebarTemporarilyExpandedForOverlay)
+            {
+                SetSidebarExpanded(false);
+            }
+        }
+
+        UpdateSidebarPinButtons();
+    }
+
+    private void SetSidebarExpanded(bool isExpanded)
+    {
+        // If FCM needs attention, force the sidebar to stay unfolded/expanded
+        bool isFcmConfigured = TrackingService.IsFcmConfigured();
+        bool needsFcmLogin = !isFcmConfigured ||
+                            TrackingService.FcmExpiresAt.HasValue &&
+                            TrackingService.FcmExpiresAt.Value < DateTime.Now;
+        if (needsFcmLogin)
+        {
+            isExpanded = true;
+        }
+
+        _isSidebarExpanded = isExpanded;
+
+        if (ColSidebar == null || LeftPanelContent == null || CompactSidebarRail == null || LeftPanelBorder == null)
+        {
+            return;
+        }
+
+        if (isExpanded)
+        {
+            double width = Math.Clamp(_expandedSidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            ColSidebar.MinWidth = CompactSidebarWidth;
+            LeftPanelBorder.Padding = new Thickness(16);
+            LeftPanelContent.Visibility = Visibility.Visible;
+            CompactSidebarRail.Visibility = Visibility.Collapsed;
+            AnimateSidebarWidth(width, () =>
+            {
+                if (_isSidebarExpanded)
+                {
+                    ColSidebar.MinWidth = MinExpandedSidebarWidth;
+                }
+            });
+            UpdateSidebarPinButtons();
+            return;
+        }
+
+        if (ColSidebar.ActualWidth >= MinExpandedSidebarWidth)
+        {
+            _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+        }
+
+        ColSidebar.MinWidth = CompactSidebarWidth;
+        LeftPanelBorder.Padding = new Thickness(0);
+        AnimateSidebarWidth(CompactSidebarWidth, () =>
+        {
+            if (!_isSidebarExpanded)
+            {
+                LeftPanelContent.Visibility = Visibility.Collapsed;
+                CompactSidebarRail.Visibility = Visibility.Visible;
+            }
+        });
+        UpdateSidebarPinButtons();
+    }
+
+    private void AnimateSidebarWidth(double targetWidth, Action? completed = null)
+    {
+        if (ColSidebar == null)
+        {
+            return;
+        }
+
+        _sidebarAnimationTimer?.Stop();
+        _sidebarAnimationCompleted = completed;
+        _sidebarAnimationStartWidth = GetCurrentSidebarWidth();
+        _sidebarAnimationTargetWidth = targetWidth;
+
+        if (Math.Abs(_sidebarAnimationStartWidth - _sidebarAnimationTargetWidth) < 1)
+        {
+            SetSidebarWidth(_sidebarAnimationTargetWidth);
+            _sidebarAnimationCompleted?.Invoke();
+            _sidebarAnimationCompleted = null;
+            return;
+        }
+
+        _sidebarAnimationStartedAt = DateTime.UtcNow;
+        _sidebarAnimationTimer ??= new System.Windows.Threading.DispatcherTimer(
+            System.Windows.Threading.DispatcherPriority.Render)
+        {
+            Interval = TimeSpan.FromMilliseconds(16)
+        };
+
+        _sidebarAnimationTimer.Tick -= SidebarAnimationTimer_Tick;
+        _sidebarAnimationTimer.Tick += SidebarAnimationTimer_Tick;
+        _sidebarAnimationTimer.Start();
+    }
+
+    private void SidebarAnimationTimer_Tick(object? sender, EventArgs e)
+    {
+        double elapsedMs = (DateTime.UtcNow - _sidebarAnimationStartedAt).TotalMilliseconds;
+        double progress = Math.Clamp(elapsedMs / SidebarAnimationDurationMs, 0, 1);
+        double eased = 1 - Math.Pow(1 - progress, 3);
+        double width = _sidebarAnimationStartWidth + ((_sidebarAnimationTargetWidth - _sidebarAnimationStartWidth) * eased);
+
+        SetSidebarWidth(width);
+
+        if (progress < 1)
+        {
+            return;
+        }
+
+        _sidebarAnimationTimer?.Stop();
+        SetSidebarWidth(_sidebarAnimationTargetWidth);
+        _sidebarAnimationCompleted?.Invoke();
+        _sidebarAnimationCompleted = null;
+    }
+
+    private double GetCurrentSidebarWidth()
+    {
+        if (ColSidebar == null)
+        {
+            return CompactSidebarWidth;
+        }
+
+        if (ColSidebar.Width.IsAbsolute && ColSidebar.Width.Value > 0)
+        {
+            return ColSidebar.Width.Value;
+        }
+
+        if (ColSidebar.ActualWidth > 0)
+        {
+            return ColSidebar.ActualWidth;
+        }
+
+        return _isSidebarExpanded ? _expandedSidebarWidth : CompactSidebarWidth;
+    }
+
+    private void SetSidebarWidth(double width)
+    {
+        if (ColSidebar != null)
+        {
+            ColSidebar.Width = new GridLength(Math.Clamp(width, CompactSidebarWidth, MaxExpandedSidebarWidth), GridUnitType.Pixel);
+        }
+    }
+
+    private void TrackLeftPanelOverlayVisibility()
+    {
+        if (AppSettingsPanel != null) AppSettingsPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (ProfitTradesPanel != null) ProfitTradesPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (BuyXForYPanel != null) BuyXForYPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+    }
+
+    private void LeftPanelOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        QueueSidebarOverlayVisibilityUpdate();
+    }
+
+    private void QueueSidebarOverlayVisibilityUpdate()
+    {
+        if (_sidebarOverlayVisibilityUpdateQueued)
+        {
+            return;
+        }
+
+        _sidebarOverlayVisibilityUpdateQueued = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            _sidebarOverlayVisibilityUpdateQueued = false;
+            UpdateSidebarForOverlayVisibility();
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void UpdateSidebarForOverlayVisibility()
+    {
+        bool hasLeftOverlayOpen =
+            AppSettingsPanel?.Visibility == Visibility.Visible ||
+            ProfitTradesPanel?.Visibility == Visibility.Visible ||
+            BuyXForYPanel?.Visibility == Visibility.Visible;
+
+        if (hasLeftOverlayOpen)
+        {
+            if (!_isSidebarPinnedExpanded)
+            {
+                _isSidebarTemporarilyExpandedForOverlay = true;
+                SetSidebarExpanded(true);
+            }
+
+            return;
+        }
+
+        if (_isSidebarTemporarilyExpandedForOverlay)
+        {
+            _isSidebarTemporarilyExpandedForOverlay = false;
+
+            if (!_isSidebarPinnedExpanded)
+            {
+                SetSidebarExpanded(false);
+            }
+        }
+    }
+
+    private void UpdateSidebarPinButtons()
+    {
+        var tooltip = _isSidebarPinnedExpanded ? "Fold sidebar" : "Keep sidebar unfolded";
+
+        if (BtnPinSidebar != null)
+        {
+            BtnPinSidebar.ToolTip = tooltip;
+        }
+
+        if (BtnCompactPinSidebar != null)
+        {
+            BtnCompactPinSidebar.ToolTip = tooltip;
         }
     }
 
@@ -6007,23 +6730,38 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _chatOpenedForCommandsOnly = false;
         }
         BtnOpenChatCommands_Click(null, null);
-    }
-
-    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
+    }    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
     {
         try
         {
+            _lastDownloadUrl = dlUrl;
+            _lastDownloadTag = tag;
+
             _vm.IsDownloadingUpdate = true;
+            _vm.IsDownloadPaused = false;
+            _vm.PauseResumeButtonText = "Pause";
+            _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer Ã¢â‚¬Â¦ {r.Percentage}";
+                _vm.BusyText = $"Downloading update ... {r.Percentage}";
                 _vm.UpdateDownloadProgress = r.Progress * 100;
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
                 _vm.UpdateDownloadPercentage = r.Percentage;
+                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
             });
 
             var path = await _updateService.DownloadInstallerAsync(dlUrl, prog);
+            
+            if (path == "PAUSED")
+            {
+                _vm.IsDownloadingUpdate = true;
+                _vm.IsDownloadPaused = true;
+                _vm.PauseResumeButtonText = "Resume";
+                return;
+            }
+
             _vm.IsDownloadingUpdate = false;
 
             if (path == null)
@@ -6038,12 +6776,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
-            AppendLog("Ã¢ÂÅ’ Update download failed: " + ex.Message);
+            AppendLog("❌ Update download failed: " + ex.Message);
             ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
         }
-    }
-
-    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    }    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting || _vm.IsDownloadingUpdate) return;
         if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
@@ -6086,10 +6822,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsUpdateAvailable = true;
             _vm.UpdateTag = tag;
 
+            var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
+
             if (string.IsNullOrWhiteSpace(dlUrl))
             {
                 var open = System.Windows.MessageBox.Show(
-                    $"New version available: {tag}\nOpen Releases page?",
+                    $"New version available: {tag}{sizeStr}\nOpen Releases page?",
                     "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (open == MessageBoxResult.Yes)
                     Process.Start(new ProcessStartInfo(UpdateService.LatestReleaseUrl) { UseShellExecute = true });
@@ -6097,21 +6835,37 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             var ask = System.Windows.MessageBox.Show(
-                $"New version available: {tag}\nDownload and install now?",
+                $"New version available: {tag}{sizeStr}\nDownload and install now?",
                 "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (ask != MessageBoxResult.Yes) return;
 
+            _lastDownloadUrl = dlUrl;
+            _lastDownloadTag = tag;
+
             _vm.IsDownloadingUpdate = true;
+            _vm.IsDownloadPaused = false;
+            _vm.PauseResumeButtonText = "Pause";
+            _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading installer Ã¢â‚¬Â¦ {r.Percentage}";
+                _vm.BusyText = $"Downloading update ... {r.Percentage}";
                 _vm.UpdateDownloadProgress = r.Progress * 100;
                 _vm.UpdateDownloadSpeed = r.Speed;
                 _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
                 _vm.UpdateDownloadPercentage = r.Percentage;
+                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
             });
             var path = await _updateService.DownloadInstallerAsync(dlUrl!, prog);
+
+            if (path == "PAUSED")
+            {
+                _vm.IsDownloadingUpdate = true;
+                _vm.IsDownloadPaused = true;
+                _vm.PauseResumeButtonText = "Resume";
+                return;
+            }
 
             _vm.IsDownloadingUpdate = false;
 
@@ -6121,7 +6875,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            AppendLog("Starting installer...");
+            AppendLog("Applying update...");
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
@@ -6131,21 +6885,90 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
-            AppendLog("Ã¢ÂÅ’ Update check failed: " + ex.Message);
+            AppendLog("❌ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-    }
+    }    private System.Windows.Threading.DispatcherTimer? _popupCloseTimer;
+    private string? _lastDownloadUrl;
+    private string? _lastDownloadTag;
 
     private void BtnCheckUpdates_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (_vm.IsDownloadingUpdate)
+        {
+            _popupCloseTimer?.Stop();
             UpdateDownloadPopup.IsOpen = true;
+        }
     }
 
     private void BtnCheckUpdates_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        UpdateDownloadPopup.IsOpen = false;
+        StartPopupCloseTimer();
     }
+
+    private void UpdateDownloadPopup_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        _popupCloseTimer?.Stop();
+    }
+
+    private void UpdateDownloadPopup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        StartPopupCloseTimer();
+    }
+
+    private void StartPopupCloseTimer()
+    {
+        if (_popupCloseTimer == null)
+        {
+            _popupCloseTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(500)
+            };
+            _popupCloseTimer.Tick += (s, ev) =>
+            {
+                _popupCloseTimer.Stop();
+                if (!BtnCheckUpdates.IsMouseOver && !UpdateDownloadPopup.IsMouseOver)
+                {
+                    UpdateDownloadPopup.IsOpen = false;
+                }
+            };
+        }
+        _popupCloseTimer.Stop();
+        _popupCloseTimer.Start();
+    }
+
+    public void PauseResumeDownload_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsDownloadPaused)
+        {
+            _updateService.ResumeDownload();
+            _vm.IsDownloadPaused = false;
+            _vm.PauseResumeButtonText = "Pause";
+            if (!string.IsNullOrEmpty(_lastDownloadUrl))
+            {
+                _ = PerformUpdateDownloadAsync(_lastDownloadTag ?? "Update", _lastDownloadUrl);
+            }
+        }
+        else
+        {
+            _updateService.PauseDownload();
+            _vm.IsDownloadPaused = true;
+            _vm.PauseResumeButtonText = "Resume";
+        }
+    }
+
+    public void CancelDownload_Click(object sender, RoutedEventArgs e)
+    {
+        _updateService.CancelDownload();
+        _vm.IsDownloadingUpdate = false;
+        _vm.IsDownloadPaused = false;
+        _vm.UpdateDownloadProgress = 0;
+        _vm.UpdateDownloadPercentage = "0%";
+        _vm.UpdateDownloadSpeed = "";
+        _vm.UpdateDownloadSize = "";
+    }
+
+
 
     /// DEVICE HOTKEYS
     /// 
@@ -6523,7 +7346,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _globalToggleBusy = false;
         _isDynPollBusy = false;
-        _storageTickBusy = false;
         _apiConsecutiveTimeouts = 0;
         System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0);
         System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
@@ -6561,6 +7383,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void BtnPremiumInfoMap_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new Views.Windows.PremiumInfoWindow(Properties.Resources.PremiumInfoMapDesc) { Owner = this }; dlg.ShowDialog();
+    }
+
+    private async void BtnFcmInfo_Click(object sender, RoutedEventArgs e)
+    {
+        string title = Properties.Resources.ResourceManager.GetString("FcmInfoTitle") ?? "What is FCM?";
+        string message = Properties.Resources.ResourceManager.GetString("FcmInfoMessage") ??
+                         "FCM stands for Firebase Cloud Messaging. Rust+ uses it to send push notifications for paired servers, devices, alarms, team chat, and other live events.\n\nRust+ Desktop registers your local app with FCM so it can receive those same Rust+ notifications in the background. The pairing credentials are saved locally on this PC and can be deleted by resetting the pairing config.";
+
+        var msgBox = new WpfUi.MessageBox
+        {
+            Title = title,
+            Content = message,
+            CloseButtonText = Properties.Resources.ResourceManager.GetString("GenericClose") ?? "Close"
+        };
+        msgBox.Owner = this;
+        msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        await msgBox.ShowDialogAsync();
     }
 
     private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
@@ -6712,7 +7551,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
 public class RenameDialog : Window
 {
-    public string InputText { get; private set; }
+    public string InputText { get; private set; } = string.Empty;
     public RenameDialog(string defaultText)
     {
         Title = "Rename Custom Crosshair";

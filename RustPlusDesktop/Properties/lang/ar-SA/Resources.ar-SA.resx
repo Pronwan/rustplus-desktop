@@ -747,6 +747,17 @@
   <data name="FcmCredentials" xml:space="preserve">
     <value>بيانات اعتماد FCM</value>
   </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>ما هو FCM؟</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>ما هو FCM؟</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM هو اختصار لـ Firebase Cloud Messaging. يستخدمه Rust+ لإرسال إشعارات فورية للخوادم والأجهزة والإنذارات ودردشة الفريق والأحداث المباشرة الأخرى المرتبطة.
+
+يقوم Rust+ Desktop بتسجيل التطبيق المحلي لديك مع FCM حتى يتمكن من تلقي إشعارات Rust+ نفسها في الخلفية. يتم حفظ بيانات الاقتران محليًا على هذا الكمبيوتر، ويمكن حذفها عن طريق إعادة تعيين إعدادات الاقتران.</value>
+  </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>انقر بزر الماوس الأيمن للإعداد</value>
   </data>
@@ -2626,5 +2637,105 @@
   </data>
   <data name="GenericClose" xml:space="preserve">
     <value>إغلاق</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>علامات الفريق</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>وضع التنفيذ</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>متسلسل (مع تأخير)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>متوازٍ (فوري)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>تأخير التبديل</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>تم تسجيل مفتاح التشغيل السريع هذا بالفعل بواسطة تطبيق آخر.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>لا، أبقِه مفعلاً</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>هل تريد إيقاف تكرار صوت التنبيه؟</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>كرّر الصوت حتى يتم إغلاق النافذة المنبثقة</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>سيؤدي ذلك إلى إيقاف تكرار صوت التنبيه لكل الإنذارات الذكية.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>إيقاف الآن</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>وقت الوفاة</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>الإشعارات</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>مركز الإشعارات</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>عرض إشعارات سطح المكتب</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>تشغيل التنبيهات الصوتية</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>فترة الاحتفاظ</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>السيرفرات المكتومة</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>لا توجد سيرفرات مكتومة</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>إلغاء كتم السيرفر</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>التصفية:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>الكل</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>الإنذارات</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>الوفيات</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>البحث في الرسائل...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>تحديد الكل كمقروء</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>مسح الإشعارات</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>لا توجد إشعارات هنا</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>أنت مطّلع على كل شيء.</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد مسح سجل الإشعارات بالكامل؟</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>مسح السجل</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>تعذر العثور على ملف سيرفر مقترن لـ {0}:{1}.
+يرجى إقران هذا الخادم أولاً.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>لم يتم العثور على الخادم</value>
   </data>
 </root>

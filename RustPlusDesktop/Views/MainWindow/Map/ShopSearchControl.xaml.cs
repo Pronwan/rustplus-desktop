@@ -16,8 +16,8 @@ namespace RustPlusDesk.Views
 {
     public partial class ShopSearchControl : UserControl
     {
-        private MainWindow _mainWindow;
-        private AutocompleteItem _selectedItem;
+        private MainWindow? _mainWindow;
+        private AutocompleteItem? _selectedItem;
         private System.Threading.CancellationTokenSource? _searchCts;
 
         private bool _filterSell = true;
@@ -66,8 +66,8 @@ namespace RustPlusDesk.Views
         public class ResourceItem
         {
             public int Id { get; set; }
-            public string Display { get; set; }
-            public string Tag { get; set; }
+            public string Display { get; set; } = string.Empty;
+            public string Tag { get; set; } = string.Empty;
             public ImageSource? Icon { get; set; }
         }
 
@@ -99,9 +99,9 @@ namespace RustPlusDesk.Views
         public class AutocompleteItem
         {
             public int Id { get; set; }
-            public string Display { get; set; }
-            public string ShortName { get; set; }
-            public ImageSource Icon { get; set; }
+            public string Display { get; set; } = string.Empty;
+            public string ShortName { get; set; } = string.Empty;
+            public ImageSource? Icon { get; set; }
         }
 
         // Autocomplete filtering logic
@@ -184,7 +184,7 @@ namespace RustPlusDesk.Views
             await RefreshSearchResultsAsync(lowercaseQuery, token);
         }
 
-        private void LstAutocomplete_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LstAutocomplete_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
             if (LstAutocomplete.SelectedItem is AutocompleteItem selected)
             {

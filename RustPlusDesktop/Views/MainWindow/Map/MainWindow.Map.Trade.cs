@@ -16,10 +16,10 @@ public partial class MainWindow
 {
     private class TwoStepFlip
     {
-        public RustPlusClientReal.ShopMarker ShopFirst;
-        public RustPlusClientReal.ShopMarker ShopSecond;
-        public RustPlusClientReal.ShopOrder OfferFirst;
-        public RustPlusClientReal.ShopOrder OfferSecond;
+        public RustPlusClientReal.ShopMarker ShopFirst = null!;
+        public RustPlusClientReal.ShopMarker ShopSecond = null!;
+        public RustPlusClientReal.ShopOrder OfferFirst = null!;
+        public RustPlusClientReal.ShopOrder OfferSecond = null!;
 
         public string StartCurrencyName = "";  // Währung, mit der wir anfangen und am Ende wieder rauskommen
         public string MidItemName = "";        // Zwischen-Item
@@ -422,17 +422,17 @@ public partial class MainWindow
 
     private void RunShopAnalysis()
     {
-        if (_analysisList == null) return;
+        if (_analysisListBox == null) return;
 
         // TODO: tatsächliche Arbitrage-Logik bauen.
         // Für jetzt nur ein Placeholder, damit's kompiliert.
-        _analysisList.Items.Clear();
-        _analysisList.Items.Add(new TextBlock
+        _analysisListBox.Items.Clear();
+        _analysisListBox.Items.Add(new TextBlock
         {
             Text = "Analysis coming soon...",
             Foreground = SearchText
         });
-        _analysisList.Visibility = Visibility.Visible;
+        _analysisListBox.Visibility = Visibility.Visible;
     }
 
     private TextBox? _wantTb;
@@ -966,23 +966,19 @@ public partial class MainWindow
 
     private class PathStep
     {
-        public RustPlusClientReal.ShopMarker Shop;
-        public RustPlusClientReal.ShopOrder Order;
+        public RustPlusClientReal.ShopMarker Shop = null!;
+        public RustPlusClientReal.ShopOrder Order = null!;
 
         public string FromItem = "";
         public string ToItem = "";
 
         public double PayAmount;
-        public string PayPrettyName;
+        public string PayPrettyName = "";
         public double GetAmount;
-        public string GetPrettyName;
+        public string GetPrettyName = "";
 
-        public string FromKey;
-        public string ToKey;
-        public int PayItemId;
-        public string PayShortName;
-        public string GetShortName;
-        public int GetItemId;
+        public string FromKey = "";
+        public string ToKey = "";
     }
 
     private class TradePathResult
@@ -1005,8 +1001,8 @@ public partial class MainWindow
         public string PayPrettyName = "";
         public string GetPrettyName = "";
 
-        public RustPlusClientReal.ShopMarker Shop;
-        public RustPlusClientReal.ShopOrder Order;
+        public RustPlusClientReal.ShopMarker Shop = null!;
+        public RustPlusClientReal.ShopOrder Order = null!;
     }
 
 
@@ -1446,14 +1442,12 @@ public partial class MainWindow
         public double[] MaxRuns = Array.Empty<double>();
         public double MaxStartCost;   // Kosten bei Bottleneck-Max
         public double MaxFinalGain;   // Output bei Bottleneck-Max
-        public double DroneCost;      // Steps * 20
         public double DroneCostMin;   // Steps * 20
         public double DroneCostMax;   // Steps * 20
 
         public List<(int stepIndex, double runs)> RunsByStep = new();
         public List<(int stepIndex, double runs)> MinRunsByStep = new(); // <-- NEU
         public Dictionary<string, double> Leftovers = new(StringComparer.OrdinalIgnoreCase);
-        public bool MinChainFeasible;
         public List<string> Blockers = new();
     }
 
@@ -1875,7 +1869,7 @@ public partial class MainWindow
         });
 
         // Drone costs – nimm DroneCostMax, sonst auf DroneCost/n*20 zurückfallen
-        double drone = sum.DroneCostMax > 0 ? sum.DroneCostMax : (sum.DroneCost > 0 ? sum.DroneCost : path.Steps.Count * 20);
+        double drone = sum.DroneCostMax > 0 ? sum.DroneCostMax : path.Steps.Count * 20;
         st.Children.Add(new TextBlock
         {
             Text = $"🚀 Drone costs: {Math.Floor(drone)} Scrap",
@@ -1925,7 +1919,7 @@ public partial class MainWindow
 
         // Min-Chain ganz unten
         var minLine = $"Min chain: Pay {Math.Floor(sum.MinStartCost)} {sum.StartName} → Get {Math.Floor(sum.MinFinalGain)} {sum.FinalName}";
-        if (!sum.MinChainFeasible && (sum.Blockers?.Count > 0))
+        if (sum.Blockers.Count > 0)
             minLine += "  (not feasible at current stock)";
 
         st.Children.Add(new TextBlock 
@@ -1936,7 +1930,7 @@ public partial class MainWindow
             TextWrapping = TextWrapping.Wrap
         });
 
-        if (!sum.MinChainFeasible && (sum.Blockers?.Count > 0))
+        if (sum.Blockers.Count > 0)
         {
             st.Children.Add(new TextBlock
             {
@@ -2233,5 +2227,4 @@ public partial class MainWindow
         }
     }
 
-    private ListBox? _analysisList;             // Ergebnisse der Analyse
 }

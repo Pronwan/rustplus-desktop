@@ -102,7 +102,8 @@ namespace RustPlusDesk.Views
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
             SliderMonumentScale.Value = TrackingService.MapMonumentScale;
             SliderMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
-            
+            PopulateExtraMonumentFilters();
+
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
 
@@ -295,6 +296,43 @@ namespace RustPlusDesk.Views
             ParentWindow?.ApplySettings();
         }
 
+        private void PopulateExtraMonumentFilters()
+        {
+            PnlExtraMonumentFilters.Children.Clear();
+
+            var types = ParentWindow?.GetKnownExtraMonumentTypes();
+            if (types == null || types.Count == 0)
+            {
+                PnlExtraMonumentFilters.Children.Add(TxtExtraMonFiltersEmpty);
+                return;
+            }
+
+            var dotStyle = TryFindResource("DotCheckBox") as System.Windows.Style;
+            foreach (var name in types)
+            {
+                var chk = new System.Windows.Controls.CheckBox
+                {
+                    Content = name,
+                    IsChecked = !TrackingService.IsExtraMonumentTypeHidden(name),
+                    Margin = new System.Windows.Thickness(0, 3, 0, 3),
+                    Tag = name,
+                    FontSize = 12,
+                    Style = dotStyle,
+                };
+                chk.Checked += OnExtraMonumentFilterChanged;
+                chk.Unchecked += OnExtraMonumentFilterChanged;
+                PnlExtraMonumentFilters.Children.Add(chk);
+            }
+        }
+
+        private void OnExtraMonumentFilterChanged(object? sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            if (sender is not System.Windows.Controls.CheckBox chk || chk.Tag is not string name) return;
+            TrackingService.SetExtraMonumentTypeHidden(name, chk.IsChecked != true);
+            ParentWindow?.RebuildExtraMonumentOverlay();
+        }
+
         private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)
         {
             if (!_isSettingsInitialized) return;
@@ -341,6 +379,11 @@ namespace RustPlusDesk.Views
             ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
             ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
             MessageBox.Show(owner, "Cached 3D map data deleted. It will be rebuilt when you open a 3D map again.", "3D Map Data", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void BtnManuallyParseMap_Click(object sender, RoutedEventArgs e)
+        {
+            ParentWindow?.ManuallyImportMapFile();
         }
         private void BtnBackupData_Click(object sender, RoutedEventArgs e)
         {
@@ -536,7 +579,7 @@ namespace RustPlusDesk.Views
         private void TxtSettingsDiscordWebhook_TextChanged(object sender, TextChangedEventArgs e)
         {
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            if (vm?.Selected != null)
+            if (vm?.Selected != null && ParentWindow != null)
             {
                 ParentWindow.SyncAlertMenuItems();
             }
@@ -545,7 +588,7 @@ namespace RustPlusDesk.Views
         private void BtnClearSettingsWebhook_Click(object sender, RoutedEventArgs e)
         {
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            if (vm?.Selected != null)
+            if (vm?.Selected != null && ParentWindow != null)
             {
                 vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
                 ParentWindow.SyncAlertMenuItems();

@@ -397,9 +397,6 @@
     <value>업데이트 확인에 실패했습니다.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>장치가 없습니다.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>프로필 보기</value>
   </data>
@@ -750,6 +747,17 @@
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM 자격 증명</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>FCM이란?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>FCM이란?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM은 Firebase Cloud Messaging의 약자입니다. Rust+는 페어링된 서버, 장치, 알람, 팀 채팅 및 기타 실시간 이벤트의 푸시 알림을 보내는 데 사용합니다.
+
+Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일한 Rust+ 알림을 받을 수 있게 합니다. 페어링 자격 증명은 이 PC에 로컬로 저장되며 페어링 구성을 재설정하면 삭제할 수 있습니다.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>마우스 오른쪽 버튼을 클릭하여 구성</value>
@@ -1576,9 +1584,6 @@
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - 모든 설정에 대한 사이드바 정리</value>
   </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>배틀메트릭스 추적 제거</value>
-  </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>기지가 공격받고 있습니다!</value>
   </data>
@@ -1848,6 +1853,894 @@
 
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0}일</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>팀 마커</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>실행 모드</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>순차(지연 포함)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>병렬(즉시)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>토글 지연</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>이 단축키는 이미 다른 애플리케이션에 의해 등록되었습니다.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>아니요, 계속 활동하세요</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>오디오 경고 루프를 끄시겠습니까?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>팝업이 닫힐 때까지 오디오 반복</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>이를 위해서는 모든 스마트 알람에 대한 오디오 경고 루프를 꺼야 합니다.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>지금 끄세요</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>새로운 맞춤 타이머에 대한 채팅 알림 설정을 확인하세요. 또한 이제 사망 표시는 항상 로컬에 저장됩니다. 이제 미니맵이 최소화된 상태에서도 업데이트됩니다.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>참고하세요</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>데스 마커</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- 팀을 위한 맞춤 마커</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>죽음의 시간</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>맞춤 타이머</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>타이머{0}이{1}h{2}m{3}s에 대해 생성되었습니다.</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>맞춤 타이머</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>활성 타이머</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>타이머 추가</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>타이머 이름</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>채팅 명령:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>상태를 확인하려면 아래 채팅 명령어를 사용하세요.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>최대 5개의 타이머가 허용됩니다.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>타이머 기간(시간, 분, 초)을 입력하세요.</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>타이머 이름은 문자로 시작해야 합니다.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>타이머 알림</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 종료 전 60,30,10,3m</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>번역 동의</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>동의를 클릭하면 패치 노트의 내용이 번역을 위해 Google 번역(미국)으로 전송됩니다. 당신은 동의합니까?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google 번역 API 약관</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Google을 통해 번역</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>개인정보 보호 및 클라우드 동기화</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>지도 오버레이 및 스마트 장치에 대한 실시간 동기화를 활성화하려면 데이터를 보안 클라우드로 전송해야 합니다. 또한 기능 개선을 위해 익명화된 사용 원격 측정을 수집합니다.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>클라우드 수락 및 활성화</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>클라우드 거부</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>서포터 혜택</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>10개 이상의 장치를 로컬 또는 수입품에서 사용할 수 있습니다. 무료 클라우드 동기화는 처음 10개의 장치를 유지합니다. 서포터는 무제한의 장치를 동기화할 수 있습니다.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>이 오버레이는 무료 클라우드 동기화 한도보다 큽니다. 지지자들은 10배 더 큰 오버레이 크기, 더 많은 지도 마커 및 더 많은 스크린샷을 얻을 수 있습니다.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Discord를 연결해 서포터 혜택을 받으세요</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>불일치 연결 끊기</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>연결 중...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>클라우드 동기화 및 실시간 업로드</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>클라우드에서 안전하게 스마트 장치와 지도 오버레이를 실시간 업로드하고 동기화합니다.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>서포터 설정</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>이러한 기능은 Discord 로그인을 통해 후원자와 개발자에게만 제공됩니다.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>고급 Discord 통합(웹후크, 오디오 경고)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>전보 알림 통합</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>동기화 중지</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>무료로 숙박하세요</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>지금 지원하세요</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>오버레이 동기화됨{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>무료 등급에서는 최대 10개 장치</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0}기기가 동기화되었습니다.{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>동기화하기에는 오버레이 크기가 너무 큼({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>클라우드 동기화 활성화</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>클라우드 동기화 활성</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>클라우드 계정</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>클라우드 계정 로그인</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>로그인</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>계정 만들기</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>이메일 주소</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>비밀번호</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>비밀번호(최소 6자)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>비밀번호 확인</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>로그인</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>계정 만들기</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>확인 이메일이 전송되었습니다!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>이메일에 있는 링크를 클릭하세요. 앱은 몇 초마다 자동으로 확인합니다...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>확인을 기다리는 중...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>확인을 기다리는 중...({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>문제가 있나요?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>브라우저에서 열기</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>이메일과 비밀번호를 입력해주세요.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>이메일 주소를 입력해주세요.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>비밀번호는 6자 이상이어야 합니다.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>비밀번호가 일치하지 않습니다.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>로그인 중...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>성공적으로 로그인되었습니다!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>로그인에 실패했습니다.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>등록 진행 중...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>등록에 실패했습니다.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>시간 초과: 5분 이내에 이메일이 확인되지 않았습니다. 나중에 로그인할 수 있습니다.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>자격 증명이 잘못되었습니다. 이메일과 비밀번호를 확인해주세요.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>자격 증명이 잘못되었습니다.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>이메일 주소가 아직 확인되지 않았습니다. 받은 편지함에서 확인 링크를 클릭하세요.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>이 이메일 주소는 이미 등록되어 있습니다. 로그인하세요.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>불일치 연결 끊기</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord 연결됨 - 등급:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>연결된 이메일:{0}- 등급:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>연결되지 않음 - Cloud Sync 및 백업을 사용하려면 로그인하세요.</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>연결 해제 중...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>연결 중...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>이메일/계정</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>이메일 계정에서 로그아웃하시겠습니까?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>클라우드 동기화</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Cloud Sync에 필요한 계정</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>동기화 및 백업 스토리지와 같은 클라우드 서비스에는 무료 계정이 필요합니다. 장치, 오버레이 및 백업을 계속 동기화하려면 이메일 또는 Discord를 선택하세요.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>이메일을 통해 동기화</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Discord를 통해 동기화</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>아니요</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>동기화 한도에 도달했습니다.</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>기본 한도 도달(무료: 최대 2개 베이스, 프리미엄: 최대 10개 베이스)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>스크린샷 추가</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>여기에 이미지를 드래그 앤 드롭하세요.</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>또는 Ctrl+V를 눌러 스크린샷을 붙여넣으세요.</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>클립보드에 이미지가 없습니다.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>붙여넣기 오류</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>이미지 붙여넣기 실패:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>이미지 파일을 로드하지 못했습니다:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>압축 오류</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>이미지 압축 중 오류 발생:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>해결 방법:{0}x{1}| 크기:{2}KB(품질 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>기본 메모 편집</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>베이스 노트</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>메모 추가</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>메모 편집</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>메모 삭제</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>스크린샷 삭제{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>스크린샷 추가{0}(프리미엄 필요)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>아직 추가된 메모가 없습니다.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>아직 추가된 스크린샷이 없습니다.</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>온라인 채팅 마스터</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}은 이 팀의 채팅 알림 및 채팅 명령을 제어하고 있습니다.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>마스터{0}을 온라인으로 채팅하세요. 이 장치에서는 채팅 알림 및 채팅 명령이 일시중지되었습니다.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>당신은 채팅 마스터입니다</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>이제 이 장치가 팀의 채팅 알림 및 채팅 명령을 제어하고 있습니다.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>수용하다</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>부인하다</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 업데이트</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>클라우드 기능 비교</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>클라우드 기능 비교</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>클라우드에 오신 것을 환영합니다</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>귀하의 요구 사항에 가장 적합한 계층을 선택하십시오.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>계정 없음</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>귀하의 데이터는 100% 로컬에 유지됩니다. 솔로 플레이어에게 가장 적합합니다.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>클라우드 동기화 또는 백업 없음</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>장치 공유 없음</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>웹 포털 액세스 불가</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>무료 클라우드 계정</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>공유를 시작하는 데 도움이 되는 기본 클라우드 기능입니다.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>기본 Discord 웹훅 알림</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>최대 10개의 장치 공유</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>지도 공유(300KB, 베이스 2개, 스크린샷 1개)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>서포터 도우미로 활동</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>클라우드 웹 포털에 액세스</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>서포터 클라우드</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>클랜과 고급 사용자를 위한 최고의 Rust+ 경험입니다.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>전문 지도 공유(3MB, 베이스 10개, 스크린샷 5개)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>채팅 마스터 시스템</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>고급 양방향 Discord Bot</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Discord를 통한 초기 베타 및 테스트 버전</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>서포터가 되어보세요</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>우리를 지원하세요</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- 자동 서포터 역할 및 앱 감지를 위해 Patreon을 Discord와 연결하세요.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>팁을 통해</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- 수동 서포터 역할을 위해 Discord에서 Jawad 또는 Pronwan을 찌르십시오(금액 / $2.50 = 개월).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>클라우드 웹 포털 열기</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>연결 실패: Rust+에 연결할 수 없습니다.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>방화벽이 연결을 차단하고 있거나 서버의 Rust+ API가 제대로 실행되지 않고 있습니다.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>오프라인 죽음</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>귀하는{1}의{0}에 의해 ​​살해되었습니다.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>소리 중지</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>오프라인 사망 알림</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>오프라인 사망 알림 활성화</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>경고음</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>기본값: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>선택하다...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>루프 경고음</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Discord Raid 알림으로 보내기(서포터)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>오프라인 사망 기록 열기</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>알림</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>알림 센터</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>토스트 알림 표시</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>소리 알림 재생</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>보유기간</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>음소거된 서버</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>음소거된 서버 없음</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>음소거 해제</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>필터:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>모두</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>알람</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>사망자</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>메시지 검색...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>읽은 것으로 표시</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>분명한</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>여기에는 알림이 없습니다.</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>여러분 모두 따라잡혔어요!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>모든 알림 기록을 지우시겠습니까?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>기록 지우기</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>{0}:{1}에 대해 페어링된 서버 프로필을 찾을 수 없습니다.
+먼저 이 서버를 페어링하세요.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>서버를 찾을 수 없음</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>오프라인 사망 기록</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>로그 지우기</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>오프라인 사망은 기록되지 않았습니다.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>살해당한 사람</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>채팅 알림 사용자 정의</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>채팅 알림 템플릿 사용자 정의</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>여기에서 자동 채팅 알림의 템플릿을 편집할 수 있습니다. 변수(예:{0},{1})는 자동으로 대체됩니다.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>변수:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>'{0}'의 템플릿이 성공적으로 저장되었습니다.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>'{0}' 템플릿이 기본값으로 재설정되었습니다.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>성공을 저장</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>다시 놓기</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>석유 굴착 장치가 작동됨</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Oil Rig 이벤트가 시작되면 전송됩니다.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: 리그 이름,{1}: 오픈 시간</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>상자 잠금 해제(10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>상자가 잠금 해제되기 10분 전에 경고가 전송됩니다.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: 리그 이름</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>상자 잠금 해제(5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>상자가 잠금 해제되기 5분 전에 경고가 전송됩니다.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: 리그 이름</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>스마트 알람이 실행됨</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>스마트 알람이 실행되면 전송됩니다.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: 알람 이름</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>심해 이벤트 활성화</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>심해 이벤트가 활성화되면 전송됩니다.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>없음</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>새로운 자동 판매기</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>새로운 자동 판매기가 감지되면 전송됩니다.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: 상점 이름,{1}: 그리드,{2}: 제안</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>수상한 가게</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>자동 판매기가 매우 짧은 시간 동안 온라인 상태일 때 전송됩니다.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: 상점 이름,{1}: 그리드,{2}: 온라인 시간,{3}: 제안</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>자동 판매기 품목 일치</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>자동 판매기에서 관심 목록에 있는 항목을 판매할 때 전송됩니다.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: 상점 이름,{1}: 그리드,{2}: 품목,{3}: 비용 수량,{4}: 비용 항목,{5}: 재고,{6}: 판매 수량,{7}: 판매 항목</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>화물선 생성</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>화물선이 생성될 때 전송됩니다.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: 위치 / 설명</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>정박된 화물선</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>화물선이 항구에 정박할 때 전송됩니다.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: 항구 이름,{1}: 그리드</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>화물선 접근</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>화물선이 5분 후에 정박할 것으로 예상되면 전송됩니다.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: 항구 이름,{1}: 그리드</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>화물선 출발</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>화물선 출발 5분 전에 발송됩니다.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: 항구 이름,{1}: 그리드</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>이벤트 발생</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>일반 이벤트(예: Heli)가 생성될 때 전송됩니다.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: 이벤트 이름,{1}: 그리드</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>헬기 충돌 허위 경보</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>감지된 Heli 충돌이 실제로 서버 지연일 때 전송됩니다.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: 그리드</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>순찰 헬기 격추</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Patrol Heli가 격추되었을 때 전송됩니다.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: 그리드</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>플레이어 온라인</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>추적 중인 팀원이 온라인 상태가 되면 전송됩니다.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름,{1}: 그리드/위치</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>플레이어 오프라인</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>추적 중인 팀원이 오프라인 상태가 되면 전송됩니다.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>플레이어 사망</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>추적 중인 팀원이 사망하면 전송됩니다.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름,{1}: 그리드/위치</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>플레이어가 부활했습니다</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>추적 중인 팀원이 부활할 때 전송됩니다.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름,{1}: 그리드/위치</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>온라인 추적</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>추적된 플레이어가 온라인 상태가 되면 전송됩니다.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름,{1}: 그룹 정보</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>오프라인 추적</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>추적된 플레이어가 오프라인 상태가 되면 전송됩니다.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름,{1}: 그룹 정보</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>추적 이름이 변경됨</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>추적된 플레이어가 이름을 변경할 때 전송됩니다.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: 이전 이름,{1}: 그룹 정보,{2}: 새 이름</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>채팅 알림 사용자 정의</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>AFK 플레이어</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>AFK는 아무도 없습니다.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>플레이어 AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>팀 구성원이 너무 오랫동안 AFK 상태인 경우 전송됩니다.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: 플레이어 이름,{1}: 시간</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>모든 3D 지도 데이터 삭제</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>구성 요소 등을 위한 재활용 계산기. 안전지대와 일반 재활용의 차이점을 바로 확인해보세요.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>버전 7.0 - 주요 변경 사항</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 실시간 플레이어 위치 및 사망 표시가 포함된 3D 지도
+• 지도는 로컬 지도 파일로 작성되며 건물이 막힌 구역, 빙산, 동굴과 같은 추가 정보를 가져와 2D 지도에 표시합니다.
+• 3D 베이스 풋프린트 빌더 통합
+• 정제된 논리 엔진
+• 이제 게임 내 팀 마커가 2D 지도에 표시됩니다.
+• 스마트 장치용 맞춤형 아이콘</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D 지도 설정</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>다운로드한 3D 지도 경계와 캐시된 데이터를 모두 삭제하여 디스크 공간을 확보합니다.</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ 데스크톱 v7.0.0 업데이트</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D 지도 개선</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>2D 지도에 동굴 및 정글 유적 마커에 대한 지원이 추가되었습니다.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D 지도 통합</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>기본 제공되는 기본 발자국과 맞춤형 기념물을 사용하여 대화형 3D 지도 모델을 자동으로 구성하고 볼 수 있습니다.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>재활용 계산기</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>구성 요소 등을 위한 재활용 계산기. 안전지대와 일반 재활용의 차이점을 바로 확인해보세요.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>설정 및 정리</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>설정에서 오래된 3D 지도 경계와 캐시된 데이터를 쉽게 삭제하여 저장 공간을 확보하세요.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>다시 표시하지 않음</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>닫다</value>
   </data>
 </root>
 

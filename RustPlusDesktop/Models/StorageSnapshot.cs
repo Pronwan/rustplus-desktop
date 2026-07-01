@@ -44,7 +44,7 @@ namespace RustPlusDesk.Models
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
-    public sealed class StorageItemVM : INotifyPropertyChanged
+    public sealed class StorageItemVM
     {
         public int ItemId { get; init; }
         public string? ShortName { get; init; }
@@ -55,7 +55,5 @@ namespace RustPlusDesk.Models
         public string Display => MainWindow.ResolveItemName(ItemId, ShortName);
         [JsonIgnore]
         public System.Windows.Media.ImageSource? Icon => MainWindow.ResolveItemIcon(ItemId, ShortName, 32);
-
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

@@ -83,6 +83,12 @@ public class TrackingSettings
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
     public double SidebarWidth { get; set; } = 600;
+    public bool SidebarPinned { get; set; } = true;
+    public double WindowWidth { get; set; } = 1280;
+    public double WindowHeight { get; set; } = 720;
+    public double WindowLeft { get; set; } = double.NaN;
+    public double WindowTop { get; set; } = double.NaN;
+    public bool WindowMaximized { get; set; } = false;
     public string SteamId64 { get; set; } = string.Empty;
     public bool AnnounceCargo { get; set; } = false;
     public bool AnnounceHeli { get; set; } = false;
@@ -139,6 +145,9 @@ public class TrackingSettings
     public bool NotificationsSoundsEnabled { get; set; } = true;
     public int NotificationsRetentionDays { get; set; } = 30;
     public List<string> MutedNotificationServers { get; set; } = new();
+
+    /// <summary>Extra monument type names (e.g. "Cave", "God Rock") that the user has chosen to hide on the map.</summary>
+    public List<string> HiddenExtraMonumentTypes { get; set; } = new();
 }
 
 
@@ -189,11 +198,15 @@ public static class TrackingService
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
 
+            bool changed = false;
             if (root.TryGetProperty("steam_id", out var sid) && sid.ValueKind == JsonValueKind.String)
             {
                 var s = sid.GetString() ?? "";
-                if (!string.IsNullOrEmpty(s) && string.IsNullOrEmpty(_settings.SteamId64))
+                if (!string.IsNullOrEmpty(s) && _settings.SteamId64 != s)
+                {
                     _settings.SteamId64 = s;
+                    changed = true;
+                }
             }
 
             if (root.TryGetProperty("issue_date", out var iss) && iss.ValueKind == JsonValueKind.String)
@@ -201,8 +214,12 @@ public static class TrackingService
                 if (DateTime.TryParse(iss.GetString(), null,
                     System.Globalization.DateTimeStyles.RoundtripKind, out var dt))
                 {
-                    if (_settings.FcmIssuedAt == null)
-                        _settings.FcmIssuedAt = dt.ToLocalTime();
+                    var localDt = dt.ToLocalTime();
+                    if (_settings.FcmIssuedAt != localDt)
+                    {
+                        _settings.FcmIssuedAt = localDt;
+                        changed = true;
+                    }
                 }
             }
 
@@ -211,9 +228,18 @@ public static class TrackingService
                 if (DateTime.TryParse(exp.GetString(), null,
                     System.Globalization.DateTimeStyles.RoundtripKind, out var dt))
                 {
-                    if (_settings.FcmExpiresAt == null)
-                        _settings.FcmExpiresAt = dt.ToLocalTime();
+                    var localDt = dt.ToLocalTime();
+                    if (_settings.FcmExpiresAt != localDt)
+                    {
+                        _settings.FcmExpiresAt = localDt;
+                        changed = true;
+                    }
                 }
+            }
+
+            if (changed)
+            {
+                SaveDB();
             }
         }
         catch { }
@@ -258,7 +284,6 @@ public static class TrackingService
     private static string? _lastServerName;
 
     public static event Action? OnOnlinePlayersUpdated;
-    public static event Action<string>? OnServerInfoUpdated;
     public static event Action<string, string>? OnTrackingNotification;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
@@ -528,6 +553,28 @@ public static class TrackingService
         set { _settings.SidebarWidth = value; SaveDB(); }
     }
 
+    public static bool SidebarPinned
+    {
+        get => _settings.SidebarPinned;
+        set { _settings.SidebarPinned = value; SaveDB(); }
+    }
+
+    public static double WindowWidth => _settings.WindowWidth;
+    public static double WindowHeight => _settings.WindowHeight;
+    public static double WindowLeft => _settings.WindowLeft;
+    public static double WindowTop => _settings.WindowTop;
+    public static bool WindowMaximized => _settings.WindowMaximized;
+
+    public static void SaveWindowBounds(double width, double height, double left, double top, bool maximized)
+    {
+        _settings.WindowWidth = width;
+        _settings.WindowHeight = height;
+        _settings.WindowLeft = left;
+        _settings.WindowTop = top;
+        _settings.WindowMaximized = maximized;
+        SaveDB();
+    }
+
     public static string SteamId64
     {
         get => _settings.SteamId64;
@@ -777,6 +824,32 @@ public static class TrackingService
     {
         get => _settings.MapMonumentOpacity;
         set { _settings.MapMonumentOpacity = value; SaveDB(); }
+    }
+
+    /// <summary>Returns a snapshot of the extra monument type names that are currently hidden by the user.</summary>
+    public static IReadOnlyList<string> HiddenExtraMonumentTypes
+        => _settings.HiddenExtraMonumentTypes;
+
+    /// <summary>Returns <c>true</c> if the given extra monument type name is hidden.</summary>
+    public static bool IsExtraMonumentTypeHidden(string name)
+        => _settings.HiddenExtraMonumentTypes.Contains(name, StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Sets the visibility of a named extra monument group and persists the change.</summary>
+    public static void SetExtraMonumentTypeHidden(string name, bool hidden)
+    {
+        bool changed;
+        if (hidden)
+        {
+            if (!_settings.HiddenExtraMonumentTypes.Contains(name, StringComparer.OrdinalIgnoreCase))
+            {
+                _settings.HiddenExtraMonumentTypes.Add(name);
+                changed = true;
+            }
+            else changed = false;
+        }
+        else
+            changed = _settings.HiddenExtraMonumentTypes.RemoveAll(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase)) > 0;
+        if (changed) SaveDB();
     }
     public static string LastSeenVersion
     {
@@ -1288,17 +1361,11 @@ public static class TrackingService
             }
         }
 
-        bool updatedUi = false;
-
         foreach (var server in serversToPoll)
         {
             try
             {
                 await PollSingleServerAsync(server.Host, server.Port, server.Name);
-                if (server.Host == _lastServerHost && server.Port == _lastServerPort)
-                {
-                    updatedUi = true;
-                }
             }
             catch (Exception)
             {
@@ -1440,7 +1507,7 @@ public static class TrackingService
             // 3. Update Tracking stats
             await UpdateTrackingStatsAsync(currentlyOnlineInfo, serverName);
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
@@ -1458,7 +1525,8 @@ public static class TrackingService
             TrackedPlayer tp;
             lock (_dbLock)
             {
-                if (!_trackedPlayers.TryGetValue(cloneTp.BMId, out tp)) continue;
+                if (!_trackedPlayers.TryGetValue(cloneTp.BMId, out var trackedPlayer)) continue;
+                tp = trackedPlayer;
             }
             bool isOnline = currentlyOnlineInfo.TryGetValue(tp.BMId, out var info);
             if (!isOnline && tp.BMId != tp.Name)

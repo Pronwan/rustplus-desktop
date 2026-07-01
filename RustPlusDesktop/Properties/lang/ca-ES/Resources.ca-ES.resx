@@ -397,9 +397,6 @@ Hauràs d'emparellar de nou en el proper inici.</value>
     <value>Comprovació d'actualitzacions fallida.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Sense dispositius.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Veure el perfil</value>
   </data>
@@ -750,6 +747,17 @@ Hauràs d'emparellar de nou en el proper inici.</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Credencials FCM</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Que es FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Que es FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM vol dir Firebase Cloud Messaging. Rust+ l utilitza per enviar notificacions push de servidors, dispositius, alarmes, xat d equip i altres esdeveniments en directe vinculats.
+
+Rust+ Desktop registra la teva aplicacio local amb FCM per poder rebre aquestes mateixes notificacions de Rust+ en segon pla. Les credencials d aparellament es desen localment en aquest PC i es poden eliminar restablint la configuracio d aparellament.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Feu clic amb el botó dret per configurar</value>
@@ -1576,9 +1584,6 @@ Hauràs d'emparellar de nou en el proper inici.</value>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> — Netejar la barra lateral per a tots els paràmetres</value>
   </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Seguiment de BattleMetrics eliminat</value>
-  </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>La teva base està sota atac!</value>
   </data>
@@ -1848,6 +1853,894 @@ Estàs segur que vols continuar?</value>
 
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dies</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Marcadors d'equip</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Mode d'execució</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Seqüencial (amb retard)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Paral·lel (instant)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Commuta el retard</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Aquesta tecla d'accés directe ja està registrada per una altra aplicació.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>No, segueix actiu</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Voleu desactivar el bucle d'alerta d'àudio?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Bucle d'àudio fins que es tanqui la finestra emergent</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Això requereix desactivar el bucle d'alerta d'àudio per a totes les alarmes intel·ligents.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Apagueu ara</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Comproveu la configuració d'alerta de xat per als nous temporitzadors personalitzats. A més, ara els marcadors de mort sempre es guarden localment. El mapa mínim ara també s'actualitza mentre es minimitza.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Si us plau, tingueu en compte</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Marcador de mort</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Marcadors personalitzats per a l'equip</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Temps de la Mort</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Temporitzador personalitzat</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Temporitzador{0}creat per{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Temporitzador personalitzat</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Temporitzadors actius</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Afegeix un temporitzador</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Nom del temporitzador</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Ordre de xat:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Utilitzeu la comanda de xat a continuació per comprovar l'estat.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Es permet un màxim de 5 temporitzadors.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Introduïu una durada del temporitzador (hores, minuts o segons).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>El nom del temporitzador ha de començar amb una lletra.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Alertes del temporitzador</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m abans del final</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Consentiment de traducció</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Si feu clic a Accepta, el contingut de les notes del pedaç s'enviarà a Google Translate (EUA) per a la traducció. Acceptes?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Condicions de l'API de Google Translate</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Tradueix a través de Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privadesa i sincronització al núvol</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Per habilitar la sincronització en directe per a superposicions de mapes i dispositius intel·ligents, les dades s'han d'enviar al nostre núvol segur. També recollim telemetria d'ús anònim per millorar les funcions.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Accepta i activa el núvol</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Declinar el núvol</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Beneficis de suport</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Hi ha més de 10 dispositius disponibles localment o d'importació. La sincronització gratuïta al núvol manté els 10 primers dispositius; Els seguidors poden sincronitzar dispositius il·limitats.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Aquesta superposició és més gran que el límit de sincronització gratuïta al núvol. Els seguidors obtenen mides de superposició 10 vegades més grans, més marcadors de mapes i més captures de pantalla.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Connecta Discord per obtenir els avantatges dels seguidors</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Desconnecta Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>S'està connectant...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Sincronització al núvol i càrrega en directe</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Penja i sincronitza en directe dispositius intel·ligents i superposicions de mapes de manera segura al núvol.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Configuració del suport</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Aquestes funcions estan disponibles exclusivament per als nostres seguidors i desenvolupadors mitjançant l'inici de sessió de Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Integració avançada de Discord (Webhooks, alertes d'àudio)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integració d'alertes de Telegram</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Atura la sincronització</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Sigues lliure</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Suport ara</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Superposició sincronitzada{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>10 dispositius com a màxim al nivell gratuït</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Dispositius{0}sincronitzats{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Mida de la superposició massa gran per a la sincronització (PHLACEHOLDER0TOKEN KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activeu Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync activa</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Compte al núvol</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Inici de sessió al compte del núvol</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Inicia sessió</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Crea un compte</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Adreça de correu electrònic</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Contrasenya</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Contrasenya (mínim 6 caràcters)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirmeu la contrasenya</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Inicia sessió</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Crea un compte</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Correu electrònic de confirmació enviat!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Feu clic a l'enllaç del vostre correu electrònic. L'aplicació comprova automàticament cada pocs segons...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Esperant la confirmació...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>S'està esperant la confirmació... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Problemes?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Obre al navegador</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Introduïu el correu electrònic i la contrasenya.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Introduïu una adreça de correu electrònic.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>La contrasenya ha de tenir almenys 6 caràcters.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Les contrasenyes no coincideixen.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>S'està iniciant la sessió...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>S'ha iniciat la sessió correctament!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>No s'ha pogut iniciar la sessió.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Inscripcions en curs...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>El registre ha fallat.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Temps d'espera: el correu electrònic no s'ha confirmat en 5 minuts. Podeu iniciar la sessió més tard.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Credencials no vàlides. Si us plau, comproveu el vostre correu electrònic i contrasenya.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Credencials no vàlides.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>L'adreça de correu electrònic encara no s'ha confirmat. Feu clic a l'enllaç de confirmació de la vostra safata d'entrada.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Aquesta adreça de correu electrònic ja està registrada. Si us plau, inicieu la sessió.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Desconnecta Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord connectat - Nivell:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Correu electrònic connectat:{0}- Nivell:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>No connectat: inicieu la sessió per utilitzar Cloud Sync i còpies de seguretat</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>S'està desconnectant...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>S'està connectant...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>Correu electrònic / Compte</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Tanqueu la sessió del compte de correu electrònic?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Sincronització al núvol</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Compte necessari per a Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Els serveis al núvol com la sincronització i l'emmagatzematge de còpia de seguretat requereixen un compte gratuït. Trieu correu electrònic o Discord per continuar sincronitzant els vostres dispositius, superposicions i còpies de seguretat.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Sincronització per correu electrònic</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Sincronització mitjançant Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>No gràcies</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>S'ha arribat al límit de sincronització</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>S'ha assolit el límit bàsic (gratuït: màxim 2 bases, Premium: màxim 10 bases)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Afegeix una captura de pantalla</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Arrossega i deixa anar una imatge aquí</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>o premeu CTRL+V per enganxar una captura de pantalla</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>No s'ha trobat cap imatge al porta-retalls.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Error d'enganxar</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>No s'ha pogut enganxar la imatge:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>No s'ha pogut carregar el fitxer d'imatge:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Error de compressió</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Error en comprimir la imatge:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Resolució:{0}x{1}| Mida:{2}KB (Qualitat 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Edita la nota base</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Nota base</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Afegeix una nota</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Edita la nota</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Suprimeix la nota</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Suprimeix la captura de pantalla{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Afegeix una captura de pantalla{0}(necessita la Premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Encara no s'ha afegit cap nota.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Encara no s'ha afegit cap captura de pantalla</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Xat Master en línia</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}controla les alertes de xat i les ordres de xat per a aquest equip.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Xateja Master{0}en línia. Les alertes de xat i les ordres de xat estan en pausa en aquest dispositiu.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Ets el mestre de xat</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Aquest dispositiu ara controla les alertes de xat i les ordres de xat per al teu equip.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Acceptar</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Negar</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>Actualització v6.0.0</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Compara les funcions del núvol</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Comparació de funcions del núvol</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Benvinguts al núvol</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Trieu el nivell que millor s'adapti a les vostres necessitats.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Sense compte</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Les teves dades es mantenen 100% locals. El millor per a jugadors solistes.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>No hi ha sincronització al núvol ni còpies de seguretat</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>No es comparteix dispositiu</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>No hi ha accés al portal web</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Compte al núvol gratuït</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Funcions bàsiques del núvol per començar a compartir.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Alertes bàsiques del webhook de Discord</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Comparteix fins a 10 dispositius</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Compartició de mapes (300 KB, 2 bases, 1 captura de pantalla)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Actuar com a ajudant de suport</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Accés al portal web del núvol</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Núvol de suport</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>L'experiència Rust+ definitiva per a clans i usuaris avançats.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Compartició de mapes professional (3 MB, 10 bases, 5 captures de pantalla)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Sistema mestre de xat</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Bot de Discord bidireccional avançat</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Primeres versions beta i de prova mitjançant Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Fes-te partidari</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Doneu-nos suport</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Enllaceu Patreon amb Discord per a la detecció automàtica de rols de suport i d'aplicacions.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Propina via</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad o Pronwan a Discord per a la funció de suport manual (Quant / 2,50 $ = Mesos).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Obriu el portal web del núvol</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>La connexió ha fallat: Rust+ no és accessible.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>O el vostre tallafoc bloqueja la connexió o l'API Rust+ del servidor no s'executa correctament.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Mort fora de línia</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>{0}et va matar a{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Atura el so</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Notificacions de defunció fora de línia</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Activa les alertes de mort fora de línia</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>So d'alerta</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Per defecte: mort.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Selecciona...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>So d'alerta de bucle</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Envia alertes d'incursió a Discord (Suport)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Obriu el registre de morts fora de línia</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Notificacions</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Centre de notificacions</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Mostra les notificacions de brindis</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Reprodueix alertes sonores</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Període de retenció</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Servidors silenciats</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>No hi ha servidors silenciats</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Activa el so</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtre:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Tots</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarmes</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Defuncions</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Cerca missatge...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Mark va llegir</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Clar</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>No hi ha notificacions aquí</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Esteu tots atrapats!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Esteu segur que voleu esborrar tot l'historial de notificacions?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Esborra l'historial</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>No s'ha pogut trobar un perfil de servidor emparellat per a{0}:{1}.
+Si us plau, emparellar aquest servidor primer.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>No s'ha trobat el servidor</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Registre de mort fora de línia</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Esborra el registre</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>No s'han registrat morts fora de línia.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Mort per</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Personalitza les alertes de xat</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Personalitza les plantilles d'alerta de xat</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Aquí podeu editar les plantilles per a les alertes de xat automatitzades. Les variables (com{0},{1}) es substituiran automàticament.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Variables:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>La plantilla per a "{0}" s'ha desat correctament.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>La plantilla per a "{0}" s'ha restablert al valor predeterminat.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Salvar l'èxit</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Restableix</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Plataforma petroliera activada</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>S'envia quan comença l'esdeveniment Oil Rig.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: nom de la plataforma,{1}: hora d'obrir</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Desbloqueig de caixes (10 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>L'avís s'ha enviat 10 minuts abans del desbloqueig de la caixa.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Nom de la plataforma</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Desbloqueig de caixes (5 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Avís enviat 5 minuts abans de desbloquejar la caixa.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Nom de la plataforma</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Alarma intel·ligent activada</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>S'envia quan s'activa una alarma intel·ligent.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Nom de l'alarma</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Esdeveniment de mar profund actiu</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>S'envia quan l'esdeveniment Deep Sea està actiu.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Cap</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Nova màquina expenedora</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>S'envia quan es detecta una màquina expenedora nova.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: nom de la botiga,{1}: quadrícula,{2}: ofertes</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Botiga sospitosa</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Enviat quan una màquina expenedora va estar en línia durant molt poc temps.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: nom de la botiga,{1}: quadrícula,{2}: temps en línia,{3}: ofertes</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Coincidència d'articles de màquines expenedores</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>S'envia quan una màquina expenedora ven un article de la teva llista de seguiment.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Nom de la botiga,{1}: quadrícula,{2}: article,{3}: Quantitat de cost,{4}: article de cost,{5}: estoc,{6}: article{6}: Venda Qty,{4}: article de venda</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Vaixell de càrrega generat</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>S'envia quan apareix el vaixell de càrrega.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Ubicació / Descripció</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Vaixell de càrrega atracat</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Enviat quan el vaixell de càrrega atraca en un port.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: nom del port,{1}: quadrícula</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Vaixell de càrrega apropant-se</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>S'envia quan s'espera que el vaixell de càrrega atracarà en 5 minuts.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: nom del port,{1}: quadrícula</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Vaixell de càrrega amb sortida</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Enviat 5 minuts abans de la sortida del vaixell de càrrega.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: nom del port,{1}: quadrícula</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Es va generar un esdeveniment</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>S'envia quan apareixen esdeveniments generals (com Heli).</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: nom de l'esdeveniment,{1}: quadrícula</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Falsa alarma Heli Crash</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>S'ha enviat quan s'ha detectat una fallada d'Heli en realitat un retard del servidor.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: quadrícula</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Patrulla Heli abatut</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Enviat quan el Patrol Heli és abatut.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: quadrícula</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Jugador en línia</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>S'envia quan un membre de l'equip de seguiment es connecta.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: nom del jugador,{1}: quadrícula/posició</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Jugador fora de línia</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>S'envia quan un membre de l'equip de seguiment es desconnecta.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Nom del jugador</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>El jugador va morir</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>S'envia quan mor un membre de l'equip rastrejat.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: nom del jugador,{1}: quadrícula/posició</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>El jugador ha reaparegut</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>S'envia quan reapareix un membre de l'equip amb seguiment.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: nom del jugador,{1}: quadrícula/posició</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Seguiment en línia</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>S'envia quan un jugador amb seguiment es connecta.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Nom del jugador,{1}: Informació del grup</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Seguiment fora de línia</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>S'envia quan un jugador amb seguiment es desconnecta.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Nom del jugador,{1}: Informació del grup</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Seguiment canviat de nom</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>S'envia quan un jugador amb seguiment canvia de nom.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: nom antic,{1}: informació del grup,{2}: nom nou</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Personalitza les alertes de xat</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>Jugadors de l'AFK</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Ningú és AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Jugador AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>S'envia quan un membre de l'equip és AFK durant massa temps.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Nom del jugador,{1}: Hora</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Suprimeix totes les dades del mapa 3D</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Calculadora de reciclatge per als vostres components i molt més. Vegeu immediatament la diferència entre el reciclatge normal i la zona segura.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Versió 7.0 - Canvis importants</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• Mapa 3D amb posicions de jugador en viu i marcadors de mort
+• El mapa es construeix a partir d'un fitxer de mapa local, obté informació addicional com ara zones bloquejades, icebergs, coves i la mostra al mapa 2D
+• 3D Base Footprint-Builder integrat
+• Motor lògic refinat
+• Els marcadors d'equip del joc ara es mostren al mapa 2D
+• Icones personalitzades per a dispositius intel·ligents</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Configuració del mapa 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Suprimeix tots els límits del mapa 3D descarregats i les dades emmagatzemades a la memòria cau per alliberar espai al disc</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Actualització Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Millores del mapa 2D</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>S'ha afegit suport per als marcadors de Ruïnes de la Cova i de la Selva als vostres mapes 2D.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Integració de mapes 3D</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Construeix i visualitza automàticament models de mapes en 3D interactius amb petjades de base integrades i monuments personalitzats.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Calculadora de reciclatge</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Calculadora de reciclatge per als vostres components i molt més. Vegeu immediatament la diferència entre el reciclatge normal i la zona segura.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Configuració i neteja</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Suprimeix fàcilment els límits de mapes en 3D antics i les dades emmagatzemades a la memòria cau de la configuració per alliberar espai d'emmagatzematge.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>No tornis a mostrar això</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Tancar</value>
   </data>
 </root>
 

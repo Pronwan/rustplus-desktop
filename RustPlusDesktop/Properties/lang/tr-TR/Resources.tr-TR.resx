@@ -397,9 +397,6 @@ Sürümler sayfasını aç?</value>
     <value>Güncelleme kontrolü başarısız oldu.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Cihaz yok.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Profili Görüntüle</value>
   </data>
@@ -750,6 +747,17 @@ Sürümler sayfasını aç?</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM Kimlik Bilgileri</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>FCM nedir?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>FCM nedir?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM, Firebase Cloud Messaging anlamina gelir. Rust+ bunu eslestirilmis sunucular, cihazlar, alarmlar, takim sohbeti ve diger canli etkinlikler icin anlik bildirimler gondermekte kullanir.
+
+Rust+ Desktop, ayni Rust+ bildirimlerini arka planda alabilmesi icin yerel uygulamanizi FCM ile kaydeder. Eslestirme kimlik bilgileri bu bilgisayarda yerel olarak saklanir ve eslestirme yapilandirmasi sifirlanarak silinebilir.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Yapılandırmak için sağ tıklayın</value>
@@ -1576,9 +1584,6 @@ Sürümler sayfasını aç?</value>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Tüm ayarlar için temiz kenar çubuğu</value>
   </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics İzleme Kaldırıldı</value>
-  </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Üssünüz saldırı altında!</value>
   </data>
@@ -1848,6 +1853,894 @@ Devam etmek istediğinizden emin misiniz?</value>
 
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} gün</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Takım İşaretleyicileri</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Yürütme Modu</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Sıralı (gecikmeli)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Paralel (anlık)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Gecikmeyi Değiştir</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Bu kısayol tuşu zaten başka bir uygulama tarafından kayıtlı.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Hayır, aktif olmaya devam et</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Sesli uyarı döngüsünü kapatmak istiyor musunuz?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Açılır pencere kapanana kadar Sesi döngüye al</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Bu, tüm Akıllı Alarmlar için sesli uyarı döngüsünün kapatılmasını gerektirir.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Şimdi kapat</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Yeni özel zamanlayıcılar için Sohbet Uyarısı ayarlarınızı kontrol edin. Ayrıca ölüm işaretleri artık her zaman yerel olarak kaydediliyor. Mini harita artık simge durumuna küçültülmüş haldeyken de güncelleniyor.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>lütfen aklınızda bulundurun</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Ölüm İşareti</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Takım için özel işaretleyiciler</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Ölüm Zamanı</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Özel Zamanlayıcı</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>{1}için oluşturulan zamanlayıcı{0}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Özel Zamanlayıcı</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Aktif Zamanlayıcılar</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Zamanlayıcı Ekle</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Zamanlayıcı Adı</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Sohbet Komutu:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Durumu kontrol etmek için aşağıdaki sohbet komutunu kullanın.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maksimum 5 zamanlayıcıya izin verilir.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Lütfen bir zamanlayıcı süresi girin (saat, dakika veya saniye).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Zamanlayıcı adı bir harfle başlamalıdır.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Zamanlayıcı Uyarıları</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- Bitişten 60,30,10,3 m önce</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Çeviri Onayı</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Kabul Et'e tıkladığınızda yama notlarının içeriği çeviri için Google Translate'e (ABD) gönderilecektir. Kabul ediyor musun?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Google Çeviri API'si Şartları</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Google aracılığıyla çevir</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Gizlilik ve Bulut Senkronizasyonu</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Harita katmanları ve akıllı cihazlar için canlı senkronizasyonu etkinleştirmek amacıyla verilerin güvenli bulutumuza gönderilmesi gerekir. Özellikleri geliştirmek için anonimleştirilmiş kullanım telemetrisini de topluyoruz.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Bulutu Kabul Et ve Etkinleştir</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Bulutu Reddet</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Destekçi Avantajları</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Yerel olarak veya ithalat yoluyla 10'dan fazla cihaz mevcuttur. Ücretsiz bulut senkronizasyonu ilk 10 cihazı korur; Destekçiler sınırsız sayıda cihazı senkronize edebilir.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Bu yer paylaşımı, ücretsiz bulut senkronizasyon sınırından daha büyük. Destekleyenler 10 kat daha yüksek katman boyutlarına, daha fazla harita işaretçisine ve daha fazla ekran görüntüsüne sahip oluyor.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Destekçi Avantajları için Discord'u Bağlayın</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Discord'un bağlantısını kes</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Bağlanıyor...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Bulut Senkronizasyonu ve Canlı Yükleme</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Akıllı cihazları ve harita katmanlarını bulutta güvenli bir şekilde canlı olarak yükleyin ve senkronize edin.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Destekçi Ayarları</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Bu özellikler yalnızca Discord'a giriş yaparak Destekçilerimize ve Geliştiricilerimize sunulmaktadır.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Gelişmiş Discord Entegrasyonu (Web Kancaları, Sesli Uyarılar)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Telegram Uyarı Entegrasyonu</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Senkronizasyonu Durdur</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Ücretsiz Kalın</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Şimdi Destekleyin</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Yer Paylaşımı Senkronize Edildi{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Ücretsiz Kullanımda maksimum 10 Cihaz</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0}cihazları senkronize edildi{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Yer Paylaşımı Boyutu senkronizasyon için çok büyük ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Bulut Senkronizasyonunu Etkinleştir</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Bulut Senkronizasyonu etkin</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Bulut Hesabı</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Bulut Hesabı Girişi</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Oturum aç</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Hesap oluşturmak</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>E-posta adresi</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Şifre</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Şifre (en az 6 karakter)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Şifreyi onayla</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Oturum aç</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Hesap oluşturmak</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Onay e-postası gönderildi!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>E-postanızdaki bağlantıya tıklayın. Uygulama birkaç saniyede bir otomatik olarak kontrol eder...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Onay bekleniyor...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Onay bekleniyor... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Sorun mu var?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Tarayıcıda aç</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Lütfen e-posta ve şifreyi girin.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Lütfen bir e-posta adresi girin.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Şifre en az 6 karakter uzunluğunda olmalıdır.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Şifreler eşleşmiyor.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Oturum açılıyor...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Başarıyla oturum açıldı!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Oturum açma başarısız oldu.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Kayıt yapılıyor...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Kayıt başarısız oldu.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Zaman aşımı: E-posta 5 dakika içinde onaylanmadı. Daha sonra oturum açabilirsiniz.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Geçersiz kimlik bilgileri. Lütfen e-postanızı ve şifrenizi kontrol edin.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Geçersiz kimlik bilgileri.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>E-posta adresi henüz onaylanmadı. Lütfen gelen kutunuzdaki onay bağlantısını tıklayın.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Bu e-posta adresi zaten kayıtlı. Lütfen oturum açın.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Discord'un bağlantısını kes</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord bağlanıldı - Seviye:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Bağlı e-posta:{0}- Katman:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Bağlı değil - Bulut Senkronizasyonu ve yedeklemeleri kullanmak için oturum açın</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Bağlantı kesiliyor...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Bağlanıyor...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>E-posta / Hesap</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>E-posta hesabındaki oturum kapatılsın mı?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Bulut Senkronizasyonu</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Bulut Senkronizasyonu için hesap gerekli</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Senkronizasyon ve yedekleme depolama gibi bulut hizmetleri ücretsiz bir hesap gerektirir. Cihazlarınızı, katmanlarınızı ve yedeklemelerinizi senkronize etmeye devam etmek için e-postayı veya Discord'u seçin.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>E-postayla senkronizasyon</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Discord aracılığıyla senkronize et</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Hayır, teşekkürler</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Senkronizasyon sınırına ulaşıldı</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Temel sınıra ulaşıldı (Ücretsiz: maksimum 2 üs, Premium: maksimum 10 üs)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Ekran Görüntüsü Ekle</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Bir resmi buraya sürükleyip bırakın</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>veya ekran görüntüsünü yapıştırmak için CTRL+V tuşlarına basın</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Panoda resim bulunamadı.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Yapıştırma Hatası</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Resim yapıştırılamadı:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Resim dosyası yüklenemedi:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Sıkıştırma Hatası</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Resim sıkıştırılırken hata oluştu:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Çözünürlük:{0}x{1}| Boyut:{2}KB (Kalite %25)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Temel Notu Düzenle</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Temel Not</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Not Ekle</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Notu Düzenle</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Notu Sil</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Ekran Görüntüsünü Sil{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Ekran Görüntüsü Ekle{0}(Premium gerekli)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Henüz not eklenmedi.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Henüz ekran görüntüsü eklenmedi</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Çevrimiçi Sohbet Ustası</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}bu ekip için Sohbet Uyarılarını ve Sohbet Komutlarını kontrol ediyor.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Master{0}çevrimiçi sohbet edin. Bu cihazda Sohbet Uyarıları ve Sohbet Komutları duraklatıldı.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Sen Sohbet Ustasısın</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Bu cihaz artık ekibiniz için Sohbet Uyarılarını ve Sohbet Komutlarını kontrol ediyor.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Kabul etmek</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Reddetmek</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0 Güncellemesi</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Bulut Özelliklerini Karşılaştırın</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Bulut Özellikleri Karşılaştırması</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Bulut'a hoş geldiniz</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>İhtiyaçlarınıza en uygun katmanı seçin.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Hesap Yok</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Verileriniz %100 yerel kalır. Yalnız oyuncular için en iyisi.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Bulut Senkronizasyonu veya Yedekleme Yok</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Cihaz Paylaşımı Yok</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Web Portalına Erişim Yok</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Ücretsiz Bulut Hesabı</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Paylaşıma başlamanızı sağlayacak temel bulut özellikleri.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Temel Discord Webhook Uyarıları</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>10 Cihaza kadar paylaşın</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Harita Paylaşımı (300 KB, 2 Taban, 1 ekran görüntüsü)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Destekçi Yardımcısı olarak hareket edin</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Bulut Web Portalına Erişim</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Destekçi Bulutu</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Klanlar ve ileri düzey kullanıcılar için üstün Rust+ deneyimi.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Profesyonel Harita Paylaşımı (3 MB, 10 Taban, 5 ekran görüntüsü)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Sohbet Ana Sistemi</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Gelişmiş Çift Yönlü Discord Botu</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Discord Üzerinden Erken Beta ve Test Sürümleri</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Destekçi Olun</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Bizi destekleyin</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Otomatik Destekçi rolü ve Uygulama tespiti için Patreon'u Discord'a bağlayın.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>İpucu yoluyla</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Manuel Destekçi rolü için Discord'da Jawad veya Pronwan'ı dürtün (Tutar / 2,50 ABD Doları = Ay).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Bulut Web Portalını Aç</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Bağlantı başarısız oldu: Rust+'a ulaşılamıyor.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Ya güvenlik duvarınız bağlantıyı engelliyor ya da sunucudaki Rust+ API düzgün çalışmıyor.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Çevrimdışı Ölüm</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>{1}üzerinde{0}tarafından öldürüldünüz.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Sesi Durdur</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Çevrimdışı Ölüm Bildirimleri</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Çevrimdışı Ölüm uyarılarını etkinleştir</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Uyarı Sesi</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Varsayılan: death.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Seçme...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Döngü Uyarı Sesi</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Discord Raid Uyarılarına Gönder (Destekçi)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Çevrimdışı Ölüm Günlüğünü Aç</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Bildirimler</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Bildirim Merkezi</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Tost Bildirimlerini Göster</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Sesli Uyarıları Çal</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Saklama Süresi</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Sessiz Sunucular</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Hiçbir sunucunun sesi kapatılmadı</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Sesini açmak</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtre:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Tüm</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarmlar</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Ölümler</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Mesajı ara...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Okundu olarak işaretle</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Temizlemek</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Burada bildirim yok</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Hepiniz yakalandınız!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Tüm bildirim geçmişini temizlemek istediğinizden emin misiniz?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Geçmişi Temizle</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>{0}için eşleştirilmiş bir sunucu profili bulunamadı:{1}.
+Lütfen önce bu sunucuyu eşleştirin.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Sunucu Bulunamadı</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Çevrimdışı Ölüm Günlüğü</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Günlüğü Temizle</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Çevrimdışı ölüm kaydedilmedi.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Tarafından öldürüldü</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Sohbet Uyarılarını Özelleştirin</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Sohbet Uyarı Şablonlarını Özelleştirin</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Burada otomatik sohbet uyarılarına ilişkin şablonları düzenleyebilirsiniz. Değişkenler ({0},{1}gibi) otomatik olarak değiştirilecektir.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Değişkenler:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>'{0}' şablonu başarıyla kaydedildi.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>'{0}' şablonu varsayılana sıfırlandı.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Başarıyı Kaydet</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Sıfırla</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Petrol Sondajı Tetiklendi</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Oil Rig etkinliği başladığında gönderilir.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Donanım Adı,{1}: Açılma zamanı</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Sandık Kilidini Açar (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Uyarı, sandık kilidi açılmadan 10 dakika önce gönderildi.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Teçhizat Adı</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Sandık Kilidini Açar (5 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Uyarı sandık kilidi açılmadan 5 dakika önce gönderildi.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Teçhizat Adı</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Akıllı Alarm Tetiklendi</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Akıllı Alarm tetiklendiğinde gönderilir.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Alarm Adı</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Derin Deniz Etkinliği Aktif</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Derin Deniz etkinliği aktif olduğunda gönderilir.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Hiçbiri</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Yeni Otomat Makinesi</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Yeni bir satış makinesi algılandığında gönderilir.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Mağaza Adı,{1}: Izgara,{2}: Teklifler</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Şüpheli Dükkan</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Bir satış makinesi çok kısa bir süreliğine çevrimiçi olduğunda gönderildi.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Mağaza Adı,{1}: Izgara,{2}: Çevrimiçi süre (ler),{3}: Teklifler</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Otomat Makinesi Öğe Eşleştirmesi</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Bir satış makinesi izleme listenizdeki bir ürünü sattığında gönderilir.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Mağaza Adı,{1}: Izgara,{2}: Ürün,{3}: Maliyet Adeti,{4}: Maliyet Kalemi,{5}: Hisse Senedi,{6}: Satış Adeti,{7}: Satış Adeti</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Kargo Gemisi Doğdu</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Kargo Gemisi ortaya çıktığında gönderilir.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Konum / Açıklama</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Kargo Gemisi Demirledi</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Kargo Gemisi bir limana yanaştığında gönderilir.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Liman Adı,{1}: Izgara</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Kargo Gemisi Yaklaşıyor</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Kargo Gemisinin 5 dakika içinde yanaşması beklendiğinde gönderilir.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Liman Adı,{1}: Izgara</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Kargo Gemisi Çıkış Yapıyor</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Kargo Gemisi ayrılmadan 5 dakika önce gönderilir.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Liman Adı,{1}: Izgara</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Etkinlik Başladı</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Genel etkinlikler (Heli gibi) ortaya çıktığında gönderilir.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Etkinlik Adı,{1}: Izgara</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Helikopter Kazası Yanlış Alarmı</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Tespit edilen Heli kazasının aslında sunucu gecikmesi olduğu durumlarda gönderildi.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Izgara</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Devriye helikopteri vuruldu</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Devriye Heli'si vurulduğunda gönderilir.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Izgara</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Çevrimiçi Oyuncu</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Takip edilen bir ekip üyesi çevrimiçi olduğunda gönderilir.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı,{1}: Izgara/Konum</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Oyuncu Çevrimdışı</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Takip edilen bir ekip üyesi çevrimdışı olduğunda gönderilir.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Oyuncu Öldü</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Takip edilen bir ekip üyesi öldüğünde gönderilir.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı,{1}: Izgara/Konum</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Oyuncu Yeniden Doğdu</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Takip edilen bir ekip üyesi yeniden doğduğunda gönderilir.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı,{1}: Izgara/Konum</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Çevrimiçi Takip</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Takip edilen bir oynatıcı çevrimiçi olduğunda gönderilir.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı,{1}: Grup Bilgisi</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Çevrimdışı Takip</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Takip edilen bir oyuncu çevrimdışı olduğunda gönderilir.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı,{1}: Grup Bilgisi</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>İzleme Yeniden Adlandırıldı</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Takip edilen bir oyuncunun adı değiştiğinde gönderilir.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Eski Ad,{1}: Grup Bilgisi,{2}: Yeni Ad</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Sohbet Uyarılarını Özelleştirin</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>AFK Oyuncuları</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Kimse AFK değil.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Oyuncu AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Bir ekip üyesi çok uzun süre AFK'de kaldığında gönderilir.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Oyuncu Adı,{1}: Zaman</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Tüm 3D Harita Verilerini Sil</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Bileşenleriniz ve daha fazlası için Geri Dönüşüm Hesaplayıcısı. Güvenli bölge ile normal geri dönüşüm arasındaki farkı hemen görün.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Sürüm 7.0 - Büyük Değişiklikler</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• Canlı Oyuncu Pozisyonları ve Ölüm İşaretleri içeren 3D Harita
+• Harita yerel Harita Dosyasından oluşturulur, Yapı Engellenmiş Bölgeler, Buzdağları, Mağaralar gibi ek bilgileri alır ve bunları 2D Haritada görüntüler
+• 3D Base Footprint-Oluşturucu entegre
+• Geliştirilmiş Mantık Motoru
+• Oyun İçi Takım İşaretleri artık 2D Haritada gösteriliyor
+• Akıllı Cihazlar için Özel Simgeler</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D Harita Ayarları</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Disk alanını boşaltmak için indirilen tüm 3B harita sınırlarını ve önbelleğe alınmış verileri siler</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0 Güncellemesi</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>2D Harita Geliştirmeleri</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>2B haritalarınıza Mağara ve Orman Harabeleri işaretçileri için destek eklendi.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D Harita Entegrasyonu</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Yerleşik temel ayak izleri ve özel anıtlarla etkileşimli 3 boyutlu harita modellerini otomatik olarak oluşturun ve görüntüleyin.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Geri Dönüşüm Hesaplayıcı</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Bileşenleriniz ve daha fazlası için Geri Dönüşüm Hesaplayıcısı. Güvenli bölge ile normal geri dönüşüm arasındaki farkı hemen görün.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Ayarlar ve Temizleme</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Depolama alanında yer açmak için eski 3B harita sınırlarını ve önbelleğe alınmış verileri ayarlardan kolayca silin.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Bunu bir daha gösterme</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Kapalı</value>
   </data>
 </root>
 

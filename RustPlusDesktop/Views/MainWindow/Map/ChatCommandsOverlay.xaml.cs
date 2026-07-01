@@ -10,7 +10,7 @@ public partial class ChatCommandsOverlay : UserControl
         InitializeComponent();
     }
 
-    public event RoutedEventHandler CloseRequested;
+    public event RoutedEventHandler? CloseRequested;
     public event RoutedEventHandler? CommandsEnabledChanged;
 
     public void SetMasterBlocked(bool blocked, string message)

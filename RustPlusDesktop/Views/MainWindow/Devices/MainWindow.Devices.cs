@@ -19,7 +19,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using RustPlusDesk.Services;
 using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
 
 namespace RustPlusDesk.Views;
@@ -737,7 +736,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             try
             {
                 // (1) Cache → UI
-                if (real.TryGetCachedStorage(dev.EntityId, out var cached))
+                if (real.TryGetCachedStorage(dev.EntityId, out var cached) && cached != null)
                 {
                     Dispatcher.Invoke(() =>
                     {
@@ -1368,7 +1367,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private void AddDeviceToImportItems(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
     {
-        bool already = FindDeviceById(_vm.Selected.Devices, d.EntityId) != null;
+        bool already = _vm.Selected?.Devices != null && FindDeviceById(_vm.Selected.Devices, d.EntityId) != null;
 
         var item = new DeviceImportItem
         {
@@ -1381,7 +1380,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             AlreadyPresent = already,
             IsSelected = !already,
             ExistsState = already ? "local" : "?",
-            ServerName = _vm.Selected.Name,
+            ServerName = _vm.Selected?.Name ?? string.Empty,
             OriginalDto = d // <- Hier speichern wir das volle DTO inklusive Children!
         };
         items.Add(item);

@@ -1,11 +1,17 @@
 using Microsoft.Win32;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Windows.Threading;
 using RustPlusDesk.Views;
 using RustPlusDesk.Services;
 using System.Drawing;
@@ -13,6 +19,7 @@ using System.Linq;
 using System.Windows.Forms;
 using RustPlusDesk.Services.Auth;
 using Application = System.Windows.Application;
+using Velopack;
 
 namespace RustPlusDesk;
 
@@ -24,16 +31,41 @@ public partial class App : Application
 
     private MainWindow? _main;
     private System.Windows.Forms.NotifyIcon? _trayIcon;
+    private static readonly ConcurrentDictionary<string, IReadOnlyDictionary<string, string>> _resourceCache = new();
+    private int _languageApplyVersion;
 
     [System.Runtime.InteropServices.DllImport("user32.dll")]
     private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+    [STAThread]
+    private static void Main(string[] args)
+    {
+        VelopackApp.Build().Run();
+
+        var app = new App();
+        app.InitializeComponent();
+        app.Run();
+    }
+
     protected override void OnStartup(StartupEventArgs e)
     {
-        SetLanguage();
+        AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
+        SetLanguage(applySynchronously: true);
         base.OnStartup(e);
 
-        EnsureUrlProtocolRegistered();
+        // Run legacy Inno Setup cleanup in the background after a 5-second delay to ensure smooth startup
+        Task.Run(async () =>
+        {
+            await Task.Delay(5000);
+            CleanupLegacyInnoSetupInstallation();
+        });
+
+        // Run URL protocol registration in the background after a 1-second delay
+        Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            EnsureUrlProtocolRegistered();
+        });
 
         bool isBackgroundArg = e.Args.Contains("--background");
         bool createdNew;
@@ -79,6 +111,26 @@ public partial class App : Application
 
         if (e.Args.Length > 0 && e.Args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
             _main?.HandleRustPlusLink(e.Args[0]);
+    }
+
+    private static Assembly? ResolveSatelliteAssemblyFromLangFolder(AssemblyLoadContext context, AssemblyName assemblyName)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyName.Name) ||
+            !assemblyName.Name.EndsWith(".resources", StringComparison.OrdinalIgnoreCase) ||
+            string.IsNullOrWhiteSpace(assemblyName.CultureName))
+        {
+            return null;
+        }
+
+        string satellitePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "lang",
+            assemblyName.CultureName,
+            $"{assemblyName.Name}.dll");
+
+        return File.Exists(satellitePath)
+            ? context.LoadFromAssemblyPath(satellitePath)
+            : null;
     }
 
     private void ShowMainWindow()
@@ -211,77 +263,107 @@ public partial class App : Application
 
     private static async Task SendLinkToRunningInstanceAsync(string link) => await SendCommandToRunningInstanceAsync(link);
 
-    public void SetLanguage()
+    public void SetLanguage(bool applySynchronously = false)
     {
         try
         {
             string lang = TrackingService.SelectedLanguage;
-            System.Globalization.CultureInfo culture;
+            CultureInfo culture;
 
             if (string.IsNullOrEmpty(lang))
             {
-                culture = System.Globalization.CultureInfo.InstalledUICulture;
+                culture = CultureInfo.InstalledUICulture;
             }
             else
             {
-                culture = new System.Globalization.CultureInfo(lang);
+                culture = new CultureInfo(lang);
             }
 
-            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
-            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = culture;
 
             // Also set it for the generated Resources class
             RustPlusDesk.Properties.Resources.Culture = culture;
 
-            UpdateDynamicResources();
-            CultureChanged?.Invoke();
+            int version = Interlocked.Increment(ref _languageApplyVersion);
+
+            if (applySynchronously)
+            {
+                ApplyDynamicResources(GetDynamicResourceMap(culture));
+                CultureChanged?.Invoke();
+            }
+            else
+            {
+                _ = ApplyLanguageResourcesAsync(culture, version);
+            }
         }
         catch { }
     }
 
     public static event Action? CultureChanged;
 
-    private void UpdateDynamicResources()
+    private async Task ApplyLanguageResourcesAsync(CultureInfo culture, int version)
+    {
+        try
+        {
+            var resourceMap = await Task.Run(() => GetDynamicResourceMap(culture));
+            if (version != Volatile.Read(ref _languageApplyVersion))
+                return;
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                if (version != Volatile.Read(ref _languageApplyVersion))
+                    return;
+
+                ApplyDynamicResources(resourceMap);
+                CultureChanged?.Invoke();
+            }, DispatcherPriority.Background);
+        }
+        catch { }
+    }
+
+    private static IReadOnlyDictionary<string, string> GetDynamicResourceMap(CultureInfo culture)
+    {
+        string cacheKey = string.IsNullOrEmpty(culture.Name) ? "invariant" : culture.Name;
+        return _resourceCache.GetOrAdd(cacheKey, _ => BuildDynamicResourceMap(culture));
+    }
+
+    private static IReadOnlyDictionary<string, string> BuildDynamicResourceMap(CultureInfo culture)
     {
         var rm = RustPlusDesk.Properties.Resources.ResourceManager;
-        var culture = RustPlusDesk.Properties.Resources.Culture;
+        var values = new Dictionary<string, string>(StringComparer.Ordinal);
 
-        // Step 1: load the base/neutral (invariant) resource set first so that keys
-        // which exist only in Resources.resx (and haven't been added to satellite files yet)
-        // are still registered as DynamicResources.
-        var neutralSet = rm.GetResourceSet(System.Globalization.CultureInfo.InvariantCulture, true, false);
+        var neutralSet = rm.GetResourceSet(CultureInfo.InvariantCulture, true, false);
         if (neutralSet != null)
         {
             foreach (System.Collections.DictionaryEntry entry in neutralSet)
             {
-                if (entry.Value is string s && !string.IsNullOrWhiteSpace(s))
-                    Resources[entry.Key] = s;
+                if (entry.Key is string key && entry.Value is string value && !string.IsNullOrWhiteSpace(value))
+                    values[key] = value;
             }
         }
 
-        // Step 2: overlay culture-specific translations, falling back to neutral for blank values.
         var resourceSet = rm.GetResourceSet(culture, true, true);
         if (resourceSet != null)
         {
             foreach (System.Collections.DictionaryEntry entry in resourceSet)
             {
-                if (entry.Value is string s)
-                {
-                    if (string.IsNullOrWhiteSpace(s))
-                    {
-                        var fallback = rm.GetString(entry.Key.ToString() ?? "", System.Globalization.CultureInfo.InvariantCulture);
-                        if (!string.IsNullOrWhiteSpace(fallback))
-                        {
-                            Resources[entry.Key] = fallback;
-                            continue;
-                        }
-                    }
-
-                    Resources[entry.Key] = s;
-                }
+                if (entry.Key is string key && entry.Value is string value && !string.IsNullOrWhiteSpace(value))
+                    values[key] = value;
             }
+        }
+
+        return values;
+    }
+
+    private void ApplyDynamicResources(IReadOnlyDictionary<string, string> resourceMap)
+    {
+        foreach (var entry in resourceMap)
+        {
+            if (!Resources.Contains(entry.Key) || !Equals(Resources[entry.Key], entry.Value))
+                Resources[entry.Key] = entry.Value;
         }
     }
 
@@ -320,6 +402,80 @@ public partial class App : Application
             {
                 // Pipe neu starten, wenn irgendwas schief ging
             }
+        }
+    }
+
+    private static void CleanupLegacyInnoSetupInstallation()
+    {
+        try
+        {
+            string baseDir = AppContext.BaseDirectory;
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            if (!baseDir.StartsWith(localAppData, StringComparison.OrdinalIgnoreCase))
+            {
+                // Not running from AppData (e.g. running from C:\Program Files or development folder)
+                return;
+            }
+
+            // Find the Inno Setup uninstaller path from the registry.
+            // AppID could have one or two closing braces due to Inno Setup escaping: {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1 or {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}_is1
+            string[] possibleKeys = new[]
+            {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}_is1",
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1"
+            };
+
+            string? uninstallString = null;
+            foreach (var keyPath in possibleKeys)
+            {
+                // Try 64-bit Registry View
+                using (var baseKey64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var subKey64 = baseKey64.OpenSubKey(keyPath))
+                {
+                    uninstallString = subKey64?.GetValue("UninstallString")?.ToString();
+                }
+
+                // Try 32-bit Registry View if not found
+                if (string.IsNullOrEmpty(uninstallString))
+                {
+                    using (var baseKey32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                    using (var subKey32 = baseKey32.OpenSubKey(keyPath))
+                    {
+                        uninstallString = subKey32?.GetValue("UninstallString")?.ToString();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(uninstallString))
+                {
+                    break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(uninstallString))
+            {
+                return; // Inno Setup version is not installed.
+            }
+
+            string uninstallerExe = uninstallString.Replace("\"", "").Trim();
+            if (!File.Exists(uninstallerExe))
+            {
+                return;
+            }
+
+            // Run the uninstaller silently (will prompt for UAC)
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = uninstallerExe,
+                Arguments = "/SILENT /SUPPRESSMSGBOXES /NORESTART",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+
+            System.Diagnostics.Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to trigger legacy cleanup: {ex.Message}");
         }
     }
 }

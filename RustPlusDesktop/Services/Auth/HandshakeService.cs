@@ -338,8 +338,8 @@ namespace RustPlusDesk.Services.Auth
         /// </summary>
         public static void Clear()
         {
-            DataManager.SaveCache<HandshakeKeyStore>(CacheKeyPrivateKey, null);
-            DataManager.SaveCache<HandshakeJwtStore>(CacheKeyJwt, null);
+            DataManager.SaveCache<HandshakeKeyStore?>(CacheKeyPrivateKey, null);
+            DataManager.SaveCache<HandshakeJwtStore?>(CacheKeyJwt, null);
             GuestJwt = null;
         }
     }

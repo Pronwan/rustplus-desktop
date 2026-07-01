@@ -82,11 +82,10 @@ namespace RustPlusDesk.Views.Windows
             }
         }
 
-        private async void Vm_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void Vm_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(AdminUserViewModel.IsManualSupporter))
+            if (e.PropertyName == nameof(AdminUserViewModel.IsManualSupporter) && sender is AdminUserViewModel vm)
             {
-                var vm = (AdminUserViewModel)sender;
                 try
                 {
                     var payload = new
@@ -140,9 +139,9 @@ namespace RustPlusDesk.Views.Windows
 
     public class AdminUserViewModel : INotifyPropertyChanged
     {
-        public string SteamId { get; set; }
-        public string DiscordName { get; set; }
-        public string SubscriptionTier { get; set; }
+        public string SteamId { get; set; } = string.Empty;
+        public string DiscordName { get; set; } = string.Empty;
+        public string SubscriptionTier { get; set; } = string.Empty;
         public bool SyncAccepted { get; set; }
         public DateTime LastActiveAt { get; set; }
         public string LastActiveDisplay => LastActiveAt == default
@@ -152,10 +151,10 @@ namespace RustPlusDesk.Views.Windows
         public bool DatabaseIsOnline { get; set; }
         public bool IsOnline => DatabaseIsOnline && (DateTime.UtcNow - LastActiveAt.ToUniversalTime()).TotalMinutes <= 5;
 
-        public string CurrentServerName { get; set; }
-        public string CurrentServerKey { get; set; }
+        public string CurrentServerName { get; set; } = string.Empty;
+        public string CurrentServerKey { get; set; } = string.Empty;
         public int TeamMemberCount { get; set; }
-        public string TeamMembersJson { get; set; }
+        public string TeamMembersJson { get; set; } = string.Empty;
         public DateTime? ManualPremiumAt { get; set; }
         public string ManualPremiumAtDisplay => ManualPremiumAt.HasValue
             ? ManualPremiumAt.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
@@ -192,8 +191,8 @@ namespace RustPlusDesk.Views.Windows
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

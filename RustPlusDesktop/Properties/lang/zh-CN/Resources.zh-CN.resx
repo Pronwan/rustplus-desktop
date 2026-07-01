@@ -397,9 +397,6 @@
     <value>更新检查失败。
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>没有设备。</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>查看个人资料</value>
   </data>
@@ -750,6 +747,17 @@
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM 凭据</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>什么是 FCM？</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>什么是 FCM？</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM 是 Firebase Cloud Messaging 的缩写。Rust+ 使用它为已配对的服务器、设备、警报、团队聊天和其他实时事件发送推送通知。
+
+Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相同的 Rust+ 通知。配对凭据会保存在这台电脑本地，并可通过重置配对配置删除。</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>点击右键配置</value>
@@ -1575,9 +1583,6 @@
   </data>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - 全新商店 UI</value>
-  </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>移除 BattleMetrics 跟踪</value>
   </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>你的基地受到攻击！</value>
@@ -2650,5 +2655,90 @@
   </data>
   <data name="GenericClose" xml:space="preserve">
     <value>关闭</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>团队标记</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>执行模式</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>顺序（有延迟）</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>并行（即时）</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>切换延迟</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>该热键已被另一个应用程序注册。</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>死亡时间</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>通知中心</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>显示 Toast 通知</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>播放声音警报</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>保留期限</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>静音服务器</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>没有服务器静音</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>取消静音</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>筛选：</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>警报</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>死亡人数</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>搜索消息...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>标记已读</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>这里没有通知</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>你们都被抓住了！</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>您确定要清除所有通知历史记录吗？</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>清除历史记录</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>找不到{0}的配对服务器配置文件：{1}。
+请先配对该服务器。</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>找不到服务器</value>
   </data>
 </root>

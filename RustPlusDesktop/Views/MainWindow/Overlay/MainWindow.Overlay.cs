@@ -833,13 +833,6 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private class UserIconTag
-    {
-        public double X;
-        public double Y;
-    }
-
-
     private void RefreshUserOverlayIcons()
     {
         if (Overlay == null) return;
@@ -2289,7 +2282,7 @@ private bool _overlayToolsVisible = false;
 
             return grid;
         }
-        catch (Exception ex)
+        catch
         {
             // Fail-safe fallback: Red ellipse to prevent crash
             var fallback = new Ellipse
@@ -3491,8 +3484,8 @@ private bool _overlayToolsVisible = false;
 
     // --- BASE HOVER, GALLERY, LOUPE, & CONTEXT MENU LOGIC ---
 
-    private DispatcherTimer _baseDetailHideTimer;
-    private DispatcherTimer _baseDetailShowTimer;
+    private DispatcherTimer? _baseDetailHideTimer;
+    private DispatcherTimer? _baseDetailShowTimer;
     private FrameworkElement? _activeBaseHoverAnchor;
     private OverlayTag? _activeBaseHoverMeta;
     private FrameworkElement? _activeGalleryAnchor;
@@ -3881,6 +3874,8 @@ private bool _overlayToolsVisible = false;
             string color = "blue";
             try
             {
+                if (string.IsNullOrEmpty(meta.CustomIconPath))
+                    throw new InvalidOperationException("Custom marker path is empty.");
                 var uri = new Uri(meta.CustomIconPath);
                 if (uri.Scheme == "rust-marker")
                 {

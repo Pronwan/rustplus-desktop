@@ -397,9 +397,6 @@ Pobrać i zainstalować teraz?</value>
     <value>Sprawdzanie aktualizacji nie powiodło się.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Brak urządzeń.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Zobacz profil</value>
   </data>
@@ -750,6 +747,17 @@ Pobrać i zainstalować teraz?</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Dane logowania FCM</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Czym jest FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Czym jest FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM oznacza Firebase Cloud Messaging. Rust+ uzywa go do wysylania powiadomien push dla sparowanych serwerow, urzadzen, alarmow, czatu zespolu i innych zdarzen na zywo.
+
+Rust+ Desktop rejestruje lokalna aplikacje w FCM, aby mogla odbierac te same powiadomienia Rust+ w tle. Dane parowania sa zapisywane lokalnie na tym komputerze i mozna je usunac, resetujac konfiguracje parowania.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Kliknij prawym przyciskiem myszy, aby skonfigurować</value>
@@ -1576,9 +1584,6 @@ Pobrać i zainstalować teraz?</value>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Czysty pasek boczny dla wszystkich ustawień</value>
   </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Usunięto śledzenie BattleMetrics</value>
-  </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Twoja baza jest atakowana!</value>
   </data>
@@ -1848,6 +1853,894 @@ Czy na pewno chcesz kontynuować?</value>
 
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dni</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Markery zespołu</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Tryb wykonania</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Sekwencyjny (z opóźnieniem)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Równoległy (natychmiastowy)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Przełącz opóźnienie</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Ten skrót jest już zarejestrowany przez inną aplikację.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Nie, bądź aktywny</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Czy chcesz wyłączyć pętlę alertów dźwiękowych?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Zapętlaj dźwięk aż do zamknięcia wyskakującego okienka</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Wymaga to wyłączenia pętli alertów dźwiękowych dla wszystkich inteligentnych alarmów.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Wyłącz teraz</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Sprawdź ustawienia alertów czatu pod kątem nowych niestandardowych liczników czasu. Ponadto znaczniki śmierci są teraz zawsze zapisywane lokalnie. Minimapa aktualizuje się teraz także po zminimalizowaniu.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Uwaga</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Znak Śmierci</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Niestandardowe znaczniki dla zespołu</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Czas Śmierci</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Niestandardowy timer</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Utworzono licznik czasu{0}dla{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Niestandardowy timer</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Aktywne timery</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Dodaj minutnik</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Nazwa timera</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Polecenie czatu:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Użyj poniższego polecenia czatu, aby sprawdzić status.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Dozwolone maksymalnie 5 timerów.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Wprowadź czas trwania timera (godziny, minuty lub sekundy).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Nazwa timera musi zaczynać się od litery.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Alerty licznika czasu</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m przed końcem</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Zgoda na tłumaczenie</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Kliknięcie przycisku Akceptuj spowoduje przesłanie informacji o łatce do Tłumacza Google (USA) w celu przetłumaczenia. Czy akceptujesz?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Warunki interfejsu API Tłumacza Google</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Tłumacz przez Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Prywatność i synchronizacja w chmurze</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Aby umożliwić synchronizację na żywo nakładek map i urządzeń inteligentnych, dane muszą zostać przesłane do naszej bezpiecznej chmury. Gromadzimy również anonimowe dane telemetryczne dotyczące użytkowania, aby ulepszać funkcje.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Zaakceptuj i włącz chmurę</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Odrzuć chmurę</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Korzyści dla kibiców</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Ponad 10 urządzeń jest dostępnych lokalnie lub z importu. Bezpłatna synchronizacja w chmurze utrzymuje pierwsze 10 urządzeń; Zwolennicy mogą synchronizować nieograniczoną liczbę urządzeń.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Ta nakładka jest większa niż limit bezpłatnej synchronizacji w chmurze. Zwolennicy otrzymają 10 razy większe rozmiary nakładek, więcej znaczników map i więcej zrzutów ekranu.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Połącz Discord, aby uzyskać korzyści dla kibiców</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Odłącz Discorda</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Złączony...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Synchronizacja z chmurą i przesyłanie na żywo</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Przesyłaj na żywo i bezpiecznie synchronizuj urządzenia inteligentne oraz nakładki map w chmurze.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Ustawienia wspierającego</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Te funkcje są dostępne wyłącznie dla naszych Wspierających i Programistów poprzez login Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Zaawansowana integracja z Discordem (webhooki, alerty dźwiękowe)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integracja alertów telegramowych</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Zatrzymaj synchronizację</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Pozostań wolny</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Wesprzyj teraz</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Nakładka zsynchronizowana{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Maksymalnie 10 urządzeń w warstwie bezpłatnej</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Urządzenia{0}zostały zsynchronizowane{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Rozmiar nakładki jest za duży do synchronizacji ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Aktywuj synchronizację z chmurą</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Aktywna synchronizacja z chmurą</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Konto w chmurze</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Logowanie do konta w chmurze</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Zalogować się</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Utwórz konto</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Adres e-mail</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Hasło (min. 6 znaków)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Potwierdź hasło</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Zalogować się</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Utwórz konto</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>E-mail z potwierdzeniem wysłany!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Kliknij link w e-mailu. Aplikacja sprawdza automatycznie co kilka sekund...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Czekam na potwierdzenie...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Oczekiwanie na potwierdzenie... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Problemy?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Otwórz w przeglądarce</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Proszę podać e-mail i hasło.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Proszę podać adres e-mail.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Hasło musi mieć co najmniej 6 znaków.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Hasła nie pasują.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Logowanie...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Zalogowano się pomyślnie!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Logowanie nie powiodło się.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Rejestracja trwa...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Rejestracja nie powiodła się.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Limit czasu: wiadomość e-mail nie została potwierdzona w ciągu 5 minut. Możesz zalogować się później.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Nieprawidłowe dane uwierzytelniające. Sprawdź swój adres e-mail i hasło.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Nieprawidłowe dane uwierzytelniające.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Adres e-mail nie został jeszcze potwierdzony. Kliknij link potwierdzający w swojej skrzynce odbiorczej.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Ten adres e-mail jest już zarejestrowany. Proszę się zalogować.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Odłącz Discorda</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Połączono z Discordem - Poziom:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>Połączony adres e-mail:{0}- Poziom:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Brak połączenia — zaloguj się, aby korzystać z Cloud Sync i kopii zapasowych</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Rozłączanie...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Złączony...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>Adres e-mail / konto</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Wylogować się z konta e-mail?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Synchronizacja w chmurze</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Konto wymagane do synchronizacji w chmurze</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Usługi w chmurze, takie jak synchronizacja i przechowywanie kopii zapasowych, wymagają bezpłatnego konta. Wybierz e-mail lub Discord, aby kontynuować synchronizację urządzeń, nakładek i kopii zapasowych.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Synchronizuj przez e-mail</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Synchronizuj przez Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Nie, dziękuję</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Osiągnięto limit synchronizacji</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Osiągnięto limit podstawowy (Bezpłatny: maks. 2 bazy, Premium: maks. 10 baz)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Dodaj zrzut ekranu</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Przeciągnij i upuść obraz tutaj</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>lub naciśnij CTRL+V, aby wkleić zrzut ekranu</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Nie znaleziono obrazu w schowku.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Błąd wklejania</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Nie udało się wkleić obrazu:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Nie udało się załadować pliku obrazu:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Błąd kompresji</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Błąd kompresji obrazu:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Rozdzielczość:{0}x{1}| Rozmiar:{2}KB (Jakość 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Edytuj nutę bazową</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Nuta podstawowa</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Dodaj notatkę</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Edytuj notatkę</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Usuń notatkę</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Usuń zrzut ekranu{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Dodaj zrzut ekranu{0}(wymagana wersja Premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Nie dodano jeszcze żadnych notatek.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Nie dodano jeszcze żadnych zrzutów ekranu</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Mistrz rozmów online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}kontroluje alerty czatu i polecenia czatu dla tego zespołu.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Mistrz czatu{0}online. Alerty czatu i polecenia czatu są wstrzymane na tym urządzeniu.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Jesteś Mistrzem Czatu</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>To urządzenie kontroluje teraz alerty czatu i polecenia czatu dla Twojego zespołu.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Przyjąć</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Zaprzeczyć</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>Aktualizacja v6.0.0</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Porównaj funkcje chmury</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Porównanie funkcji chmury</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Witamy w chmurze</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Wybierz poziom, który najlepiej odpowiada Twoim potrzebom.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Brak konta</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Twoje dane pozostają w 100% lokalne. Najlepsze dla graczy solo.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Brak synchronizacji w chmurze i tworzenia kopii zapasowych</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Brak udostępniania urządzenia</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Brak dostępu do portalu internetowego</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Darmowe konto w chmurze</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Podstawowe funkcje chmury ułatwiające rozpoczęcie udostępniania.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Podstawowe alerty webhooka Discord</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Udostępnij do 10 urządzeń</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Udostępnianie map (300 KB, 2 bazy, 1 zrzut ekranu)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Działaj jako wspierający pomocnik</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Dostęp do portalu internetowego w chmurze</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Chmura wspierająca</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Najlepsze doświadczenie w Rust+ dla klanów i zaawansowanych użytkowników.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Profesjonalne udostępnianie map (3 MB, 10 baz, 5 zrzutów ekranu)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>System mistrza rozmów</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Zaawansowany dwukierunkowy bot Discord</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Wczesne wersje beta i testowe na Discordzie</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Zostań zwolennikiem</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Wspieraj nas dalej</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Połącz Patreona z Discordem, aby automatycznie wykryć rolę wspierającego i aplikację.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Wskazówka przez</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad lub Pronwan w Discord, aby ręcznie pełnić rolę Supportera (Kwota / 2,50 $ = miesiące).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Otwórz portal internetowy w chmurze</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Połączenie nie powiodło się: Rust+ jest nieosiągalny.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Albo zapora sieciowa blokuje połączenie, albo interfejs API Rust+ na serwerze nie działa poprawnie.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Śmierć w trybie offline</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Zostałeś zabity przez{0}na{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Zatrzymaj dźwięk</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Powiadomienia o śmierci offline</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Włącz powiadomienia o śmierci offline</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Dźwięk alarmu</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Domyślnie: śmierć.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Wybierać...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Dźwięk ostrzeżenia o pętli</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Wyślij do Discorda Alerty Raid (Wspierający)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Otwórz dziennik zgonów offline</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Powiadomienia</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Centrum powiadomień</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Pokaż powiadomienia tostowe</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Odtwórz Alarmy dźwiękowe</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Okres przechowywania</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Wyciszone serwery</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Żaden serwer nie został wyciszony</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Wyłącz wyciszenie</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtr:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Wszystko</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarmy</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Zgony</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Wyszukaj wiadomość...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Zaznacz przeczytane</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Jasne</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Brak powiadomień</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Wszyscy jesteście zajęci!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Czy na pewno chcesz wyczyścić całą historię powiadomień?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Wyczyść historię</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Nie można znaleźć sparowanego profilu serwera dla{0}:{1}.
+Najpierw sparuj ten serwer.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Nie znaleziono serwera</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Dziennik zgonów offline</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Wyczyść dziennik</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Nie zarejestrowano żadnych zgonów offline.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Zabity przez</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Dostosuj powiadomienia czatu</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Dostosuj szablony alertów czatu</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Tutaj możesz edytować szablony automatycznych alertów czatu. Zmienne (takie jak{0},{1}) zostaną automatycznie zastąpione.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Zmienne:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Szablon dla 'PHLACEHOLDER0TOKEN' został pomyślnie zapisany.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Szablon dla 'PHLACEHOLDER0TOKEN' przywrócony do wartości domyślnych.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Zapisz sukces</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Nastawić</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Uruchomiono platformę wiertniczą</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Wysyłane po rozpoczęciu wydarzenia związanego z platformą wiertniczą.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Nazwa platformy,{1}: Czas otworzyć</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Odblokowanie skrzynek (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Ostrzeżenie wysłane 10 minut przed odblokowaniem skrzynki.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Nazwa platformy</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Odblokowanie skrzynek (5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Ostrzeżenie wysłane 5 minut przed odblokowaniem skrzynki.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Nazwa platformy</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Uruchomiono inteligentny alarm</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Wysyłane po uruchomieniu inteligentnego alarmu.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Nazwa alarmu</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Aktywne wydarzenie głębinowe</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Wysyłane, gdy aktywne jest wydarzenie Głębokie Morze.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Nic</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Nowy automat</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Wysyłane po wykryciu nowego automatu sprzedającego.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Nazwa sklepu,{1}: Siatka,{2}: Oferty</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Podejrzany sklep</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Wysyłane, gdy automat sprzedający był online przez bardzo krótki czas.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Nazwa sklepu,{1}: Siatka,{2}: Czas online,{3}: Oferty</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Dopasowanie pozycji automatu</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Wysyłane, gdy automat sprzedaje przedmiot z Twojej listy obserwowanych.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Nazwa sklepu,{1}: Siatka,{2}: Artykuł,{3}: Ilość kosztu,{4}: Pozycja kosztowa,{5}: Magazyn,{6}: Ilość sprzedaży,{7}: Sprzedaj przedmiot</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Powstał statek towarowy</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Wysyłane, gdy pojawia się statek towarowy.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Lokalizacja/opis</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Zadokowany statek towarowy</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Wysyłane, gdy statek towarowy dokuje w porcie.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Nazwa portu,{1}: Siatka</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Zbliża się statek towarowy</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Wysyłane, gdy statek towarowy ma dokować za 5 minut.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Nazwa portu,{1}: Siatka</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Odpływ statku towarowego</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Wysłano 5 minut przed odpłynięciem statku towarowego.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Nazwa portu,{1}: Siatka</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Wydarzenie rozpoczęte</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Wysyłane, gdy pojawiają się zdarzenia ogólne (takie jak Heli).</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Nazwa zdarzenia,{1}: Siatka</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Fałszywy alarm dotyczący katastrofy helikoptera</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Wysyłane, gdy wykryta awaria Heli była w rzeczywistości opóźnieniem serwera.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Siatka</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Zestrzelenie helikoptera patrolowego</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Wysyłane, gdy Patrol Heli zostaje zestrzelony.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Siatka</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Gracz w Internecie</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Wysyłane, gdy śledzony członek zespołu przejdzie do trybu online.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza,{1}: Siatka/Pozycja</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Gracz offline</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Wysyłane, gdy śledzony członek zespołu przejdzie w tryb offline.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Gracz zmarł</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Wysyłane, gdy umiera śledzony członek zespołu.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza,{1}: Siatka/Pozycja</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Gracz odrodził się</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Wysyłane, gdy odradza się śledzony członek drużyny.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza,{1}: Siatka/Pozycja</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Śledzenie w Internecie</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Wysyłane, gdy śledzony gracz przechodzi do trybu online.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza,{1}: Informacje o grupie</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Śledzenie w trybie offline</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Wysyłane, gdy śledzony gracz przejdzie w tryb offline.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza,{1}: Informacje o grupie</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Zmiana nazwy śledzenia</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Wysyłane, gdy śledzony gracz zmieni swoją nazwę.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Stara nazwa,{1}: Informacje o grupie,{2}: Nowa nazwa</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Dostosuj powiadomienia czatu</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>Gracze AFK</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Nikt nie jest AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Gracz AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Wysyłane, gdy członek zespołu jest AFK zbyt długo.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Nazwa gracza,{1}: Czas</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Usuń wszystkie dane mapy 3D</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Kalkulator recyklingu komponentów i nie tylko. Od razu zobacz różnicę pomiędzy bezpieczną strefą a zwykłym recyklingiem.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Wersja 7.0 - Duże zmiany</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• Mapa 3D z pozycjami graczy na żywo i znacznikami śmierci
+• Mapa jest zbudowana z lokalnego pliku mapy, pobiera dodatkowe informacje, takie jak strefy z blokadą zabudowy, góry lodowe, jaskinie i wyświetla je na mapie 2D
+• Zintegrowany moduł tworzenia śladów 3D
+• Udoskonalony silnik logiczny
+• Znaczniki drużyn w grze są teraz wyświetlane na mapie 2D
+• Niestandardowe ikony dla urządzeń inteligentnych</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Ustawienia mapy 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Usuwa wszystkie pobrane granice map 3D i dane z pamięci podręcznej, aby zwolnić miejsce na dysku</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Aktualizacja Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Udoskonalenia mapy 2D</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Dodano obsługę znaczników jaskiń i ruin dżungli do map 2D.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Integracja mapy 3D</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Automatycznie twórz i przeglądaj interaktywne modele map 3D z wbudowanymi śladami bazowymi i niestandardowymi pomnikami.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Kalkulator recyklingu</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Kalkulator recyklingu komponentów i nie tylko. Od razu zobacz różnicę pomiędzy bezpieczną strefą a zwykłym recyklingiem.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Ustawienia i czyszczenie</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Z łatwością usuń stare granice map 3D i dane z pamięci podręcznej z ustawień, aby zwolnić miejsce na dysku.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Nie pokazuj tego więcej</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Zamknąć</value>
   </data>
 </root>
 

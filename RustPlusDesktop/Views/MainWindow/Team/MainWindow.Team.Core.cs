@@ -745,7 +745,7 @@ public partial class MainWindow
         if (vm == null) return;
         if (!IAmLeaderNow()) { AppendLog("Only Leader can promote."); return; }
         if (vm.SteamId == _mySteamId) return;
-        try { await (_real as RustPlusClientReal)?.PromoteToLeaderAsync(vm.SteamId); }
+        try { if (_real is RustPlusClientReal real) await real.PromoteToLeaderAsync(vm.SteamId); }
         catch (Exception ex) { AppendLog("[team] promote error: " + ex.Message); }
     }
 
@@ -782,7 +782,7 @@ public partial class MainWindow
         if (vm == null) return;
         if (!IAmLeaderNow()) { AppendLog("Only Leader can kick."); return; }
         if (vm.SteamId == _mySteamId) return;
-        try { await (_real as RustPlusClientReal)?.KickTeamMemberAsync(vm.SteamId); }
+        try { if (_real is RustPlusClientReal real) await real.KickTeamMemberAsync(vm.SteamId); }
         catch (Exception ex) { AppendLog("[team] kick error: " + ex.Message); }
     }
 

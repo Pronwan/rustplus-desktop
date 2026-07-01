@@ -397,9 +397,6 @@ Download en installeer nu?</value>
     <value>Updatecontrole mislukt.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Geen apparaten.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Profiel bekijken</value>
   </data>
@@ -750,6 +747,17 @@ Download en installeer nu?</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>FCM aanmeldgegevens</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Wat is FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Wat is FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM staat voor Firebase Cloud Messaging. Rust+ gebruikt het om pushmeldingen te sturen voor gekoppelde servers, apparaten, alarmen, teamchat en andere livegebeurtenissen.
+
+Rust+ Desktop registreert je lokale app bij FCM zodat deze dezelfde Rust+-meldingen op de achtergrond kan ontvangen. De koppelingsgegevens worden lokaal op deze pc opgeslagen en kunnen worden verwijderd door de koppelingsconfiguratie te resetten.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Rechtsklik om te configureren</value>
@@ -1576,9 +1584,6 @@ Download en installeer nu?</value>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Schone zijbalk voor alle instellingen</value>
   </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>BattleMetrics-tracering verwijderd</value>
-  </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Je basis wordt aangevallen!</value>
   </data>
@@ -1848,6 +1853,894 @@ Weet je zeker dat je wilt doorgaan?</value>
 
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dagen</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Teammarkeringen</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Uitvoeringsmodus</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Sequentieel (met vertraging)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Parallel (direct)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Schakel vertraging in</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Deze sneltoets is al geregistreerd door een andere applicatie.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Nee, blijf actief</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Wilt u de audiowaarschuwingslus uitschakelen?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Loop Audio tot pop-up-close</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Hiervoor moet de audiowaarschuwingslus voor alle slimme alarmen worden uitgeschakeld.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Schakel nu uit</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Controleer uw Chat-Alert-instellingen voor de nieuwe aangepaste timers. Bovendien worden doodsmarkeringen nu altijd lokaal opgeslagen. Minimap wordt nu ook bijgewerkt terwijl het is geminimaliseerd.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Let op</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Doodsmarkering</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Aangepaste markeringen voor team</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Tijd van overlijden</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Aangepaste timer</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer{0}gemaakt voor{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Aangepaste timer</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Actieve timers</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Timer toevoegen</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Timernaam</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Chatopdracht:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Gebruik onderstaande chatopdracht om de status te controleren.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maximaal 5 timers toegestaan.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Voer een timerduur in (uren, minuten of seconden).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>De timernaam moet beginnen met een letter.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Timerwaarschuwingen</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m voor einde</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Toestemming voor vertaling</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Door op Accepteren te klikken, wordt de inhoud van de patchopmerkingen ter vertaling naar Google Translate (VS) verzonden. Accepteer je?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>API-voorwaarden van Google Translate</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Vertalen via Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Privacy en cloudsynchronisatie</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Om live synchronisatie voor kaartoverlays en slimme apparaten mogelijk te maken, moeten gegevens naar onze beveiligde cloud worden verzonden. We verzamelen ook geanonimiseerde gebruikstelemetrie om de functies te verbeteren.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Accepteer en schakel de cloud in</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Dalende wolk</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Voordelen voor supporters</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Er zijn meer dan 10 apparaten lokaal of geïmporteerd verkrijgbaar. Gratis cloudsynchronisatie behoudt de eerste 10 apparaten; Supporters kunnen een onbeperkt aantal apparaten synchroniseren.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Deze overlay is groter dan de limiet voor gratis cloudsynchronisatie. Supporters krijgen 10x grotere overlayformaten, meer kaartmarkeringen en meer screenshots.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Sluit Discord aan voor Supporter-voordelen</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Ontkoppel onenigheid</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Verbinden...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Cloudsynchronisatie en live-upload</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Live uploaden en synchroniseren van slimme apparaten en kaartoverlays veilig in de cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Supporter-instellingen</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Deze functies zijn exclusief beschikbaar voor onze Supporters en Ontwikkelaars via Discord login.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Geavanceerde Discord-integratie (webhooks, audiowaarschuwingen)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integratie van Telegram-waarschuwingen</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Synchronisatie stoppen</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Blijf vrij</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Ondersteuning nu</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Overlay gesynchroniseerd{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Maximaal 10 apparaten in Free Tier</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>{0}-apparaten gesynchroniseerd{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Overlaygrootte te groot voor synchronisatie ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activeer Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-synchronisatie actief</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Cloud-account</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Inloggen met cloudaccount</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Account aanmaken</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>E-mailadres</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Wachtwoord (min. 6 tekens)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Bevestig wachtwoord</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Account aanmaken</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>Bevestigingsmail verzonden!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Klik op de link in uw e-mail. De app controleert automatisch elke paar seconden...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Wachten op bevestiging...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Wachten op bevestiging... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Problemen?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Openen in browser</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Voer uw e-mailadres en wachtwoord in.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Voer een e-mailadres in.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Wachtwoord moet minimaal 6 tekens lang zijn.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>De wachtwoorden komen niet overeen.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Aanmelden...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Succesvol aangemeld!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Inloggen is mislukt.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Registratie loopt...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Registratie mislukt.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Time-out: de e-mail werd niet binnen 5 minuten bevestigd. U kunt zich later aanmelden.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Ongeldige inloggegevens. Controleer uw e-mailadres en wachtwoord.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Ongeldige inloggegevens.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>E-mailadres nog niet bevestigd. Klik op de bevestigingslink in uw inbox.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Dit e-mailadres is al geregistreerd. Meld u aan.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Ontkoppel onenigheid</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Onenigheid verbonden - niveau:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>E-mail verbonden:{0}- Niveau:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Niet verbonden: log in om Cloud Sync en back-ups te gebruiken</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Verbinding verbreken...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Verbinden...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>E-mail / account</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Uitloggen bij het e-mailaccount?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Cloudsynchronisatie</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Account vereist voor Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Voor clouddiensten zoals synchronisatie en back-upopslag is een gratis account vereist. Kies e-mail of Discord om door te gaan met het synchroniseren van uw apparaten, overlays en back-ups.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Synchroniseren via e-mail</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Synchroniseren via onenigheid</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Nee bedankt</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Synchronisatielimiet bereikt</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Basislimiet bereikt (Gratis: max 2 honken, Premium: max 10 honken)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Schermafbeelding toevoegen</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Sleep hier een afbeelding</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>of druk op CTRL+V om een ​​schermafbeelding te plakken</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Geen afbeelding gevonden op het klembord.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Plakfout</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Kan afbeelding niet plakken:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Kan afbeeldingsbestand niet laden:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Compressiefout</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Fout bij het comprimeren van afbeelding:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Resolutie:{0}x{1}| Grootte:{2}KB (kwaliteit 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Basisnoot bewerken</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Basisnoot</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Notitie toevoegen</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Notitie bewerken</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Notitie verwijderen</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Schermafbeelding{0}verwijderen</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Screenshot{0}toevoegen (Premium vereist)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Nog geen notities toegevoegd.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Er zijn nog geen screenshots toegevoegd</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chatmaster online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}beheert chatwaarschuwingen en chatopdrachten voor dit team.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chatmaster{0}online. Chatwaarschuwingen en chatopdrachten zijn gepauzeerd op dit apparaat.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Jij bent Chatmaster</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Dit apparaat beheert nu chatwaarschuwingen en chatopdrachten voor uw team.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Accepteren</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Ontkennen</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>v6.0.0-update</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Vergelijk cloudfuncties</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Vergelijking van cloudfuncties</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Welkom in de wolk</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Kies het niveau dat het beste bij uw behoeften past.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Geen rekening</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Uw gegevens blijven 100% lokaal. Beste voor solospelers.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Geen cloudsynchronisatie of back-ups</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Geen apparaat delen</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Geen toegang tot webportal</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Gratis cloudaccount</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Basiscloudfuncties waarmee u aan de slag kunt met delen.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Basis Discord Webhook-waarschuwingen</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Deel maximaal 10 apparaten</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Kaart delen (300 KB, 2 bases, 1 screenshot)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Fungeren als Ondersteuner Helper</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Toegang tot Cloud Web Portal</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Ondersteunerwolk</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>De ultieme Rust+-ervaring voor clans en gevorderde gebruikers.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Pro Map Sharing (3 MB, 10 bases, 5 screenshots)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Chat Master-systeem</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Geavanceerde bidirectionele Discord Bot</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Vroege bèta- en testversies via Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Word supporter</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Steun ons verder</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Koppel Patreon met Discord voor automatische Supporter-rol en app-detectie.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Tip via</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad of Pronwan in Discord voor handmatige Supporter-rol (Bedrag / $ 2,50 = Maanden).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Open Cloud-webportaal</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Verbinding mislukt: Rust+ is onbereikbaar.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Ofwel blokkeert uw firewall de verbinding, ofwel werkt de Rust+ API op de server niet goed.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Offline overlijden</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Je bent vermoord door{0}op{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Stop met geluid</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Offline overlijdensmeldingen</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Schakel offline overlijdenswaarschuwingen in</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Waarschuwingsgeluid</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Standaard: dood.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Selecteer...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Luswaarschuwingsgeluid</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Stuur naar Discord Raid-waarschuwingen (supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Open het offline sterfgevallenlogboek</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Meldingen</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Meldingscentrum</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Toastmeldingen tonen</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Speel geluidswaarschuwingen af</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Bewaartermijn</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Gedempte servers</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Geen servers gedempt</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Dempen opheffen</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarmen</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Sterfgevallen</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Bericht zoeken...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Markeer gelezen</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Duidelijk</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Geen meldingen hier</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Jullie zijn allemaal ingehaald!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Weet je zeker dat je de hele meldingsgeschiedenis wilt wissen?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Geschiedenis wissen</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Kan geen gekoppeld serverprofiel vinden voor{0}:{1}.
+Koppel deze server eerst.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Server niet gevonden</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Offline overlijdenslogboek</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Logboek wissen</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Er zijn geen offline sterfgevallen geregistreerd.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Gedood door</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Pas chatwaarschuwingen aan</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Pas chatwaarschuwingssjablonen aan</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Hier kunt u de sjablonen voor geautomatiseerde chatwaarschuwingen bewerken. Variabelen (zoals{0},{1}) worden automatisch vervangen.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Variabelen:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Sjabloon voor 'PHPHLACEHOLDER0TOKEN' succesvol opgeslagen.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Sjabloon voor 'PHPHLACEHOLDER0TOKEN' opnieuw ingesteld op standaard.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Succes opslaan</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Opnieuw instellen</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Booreiland geactiveerd</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer het olieplatformevenement begint.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Rignaam,{1}: Tijd om te openen</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Krat ontgrendelt (10m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Waarschuwing verzonden 10 minuten voordat de krat wordt ontgrendeld.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Rig-naam</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Krat ontgrendelt (5m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Waarschuwing verzonden 5 minuten voordat de krat wordt ontgrendeld.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Rig-naam</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Slim alarm geactiveerd</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een slim alarm wordt geactiveerd.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Alarmnaam</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Diepzee-evenement actief</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer de Deep Sea-gebeurtenis actief is.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Geen</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Nieuwe automaat</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Verzonden wanneer er een nieuwe automaat wordt gedetecteerd.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: winkelnaam,{1}: raster,{2}: aanbiedingen</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Verdachte winkel</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Verzonden wanneer een automaat heel kort online was.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: winkelnaam,{1}: raster,{2}: online tijd(en),{3}: aanbiedingen</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Verkoopautomaat-itemmatch</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een automaat een artikel op uw volglijst verkoopt.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Winkelnaam,{1}: Raster,{2}: Artikel,{3}: Kostenaantal,{4}: Kostenartikel,{5}: Voorraad,{6}: Verkoophoeveelheid,{7}: Verkoopartikel</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Vrachtschip voortgebracht</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer het vrachtschip verschijnt.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Locatie / Beschrijving</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Vrachtschip aangemeerd</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer het vrachtschip in een haven aanmeert.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: havennaam,{1}: raster</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Vrachtschip nadert</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer het vrachtschip naar verwachting binnen 5 minuten zal aanmeren.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: havennaam,{1}: raster</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Vrachtschip vertrekt</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Verzonden 5 minuten voordat het vrachtschip vertrekt.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: havennaam,{1}: raster</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Evenement voortgebracht</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer algemene gebeurtenissen (zoals Heli) verschijnen.</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: gebeurtenisnaam,{1}: raster</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Heli-crash vals alarm</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Verzonden wanneer een gedetecteerde Heli-crash feitelijk een serververtraging was.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Raster</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Patrouilleheli neergeschoten</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer de Patrol Heli wordt neergeschoten.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Raster</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Speler online</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgd teamlid online komt.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Spelersnaam,{1}: Raster/Positie</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Speler offline</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgd teamlid offline gaat.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Spelersnaam</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Speler overleden</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgd teamlid overlijdt.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Spelersnaam,{1}: Raster/Positie</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Speler is opnieuw gespawnd</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgd teamlid respawnt.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Spelersnaam,{1}: Raster/Positie</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Online volgen</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgde speler online gaat.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Spelersnaam,{1}: Groepsinfo</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Offline volgen</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgde speler offline gaat.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Spelersnaam,{1}: Groepsinfo</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Tracking hernoemd</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een gevolgde speler zijn naam verandert.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: oude naam,{1}: groepsinformatie,{2}: nieuwe naam</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Pas chatwaarschuwingen aan</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>AFK-spelers</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Niemand is AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Speler AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Wordt verzonden wanneer een teamlid te lang AFK is.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Spelersnaam,{1}: Tijd</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Verwijder alle 3D-kaartgegevens</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Recyclingcalculator voor uw componenten en meer. Zie meteen het verschil tussen veilige zone en reguliere recycling.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Versie 7.0 - Grote wijzigingen</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• 3D-kaart met live-spelerposities en doodsmarkeringen
+• De kaart is opgebouwd uit een lokaal kaartbestand, krijgt aanvullende informatie zoals geblokkeerde zones, ijsbergen en grotten en geeft deze weer op de 2D-kaart
+• 3D Base Footprint-Builder geïntegreerd
+• Verfijnde logica-engine
+• Ingame teammarkeringen worden nu weergegeven op de 2D-kaart
+• Aangepaste pictogrammen voor slimme apparaten</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>3D-kaartinstellingen</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Verwijdert alle gedownloade 3D-kaartgrenzen en gegevens in de cache om schijfruimte vrij te maken</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Rust+ Desktop v7.0.0-update</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Verbeteringen in 2D-kaarten</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>Ondersteuning toegevoegd voor markeringen van grot- en jungleruïnes aan uw 2D-kaarten.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>3D-kaartintegratie</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Creëer en bekijk automatisch interactieve 3D-kaartmodellen met ingebouwde basisvoetafdrukken en aangepaste monumenten.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Recyclingcalculator</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Recyclingcalculator voor uw componenten en meer. Zie meteen het verschil tussen veilige zone en reguliere recycling.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Instellingen en opschonen</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Verwijder eenvoudig oude 3D-kaartgrenzen en gegevens in de cache uit de instellingen om opslagruimte vrij te maken.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Laat dit niet meer zien</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Dichtbij</value>
   </data>
 </root>
 

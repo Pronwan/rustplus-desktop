@@ -11,7 +11,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    private void BtnOpenChatCommands_Click(object sender, System.Windows.RoutedEventArgs e)
+    private void BtnOpenChatCommands_Click(object? sender, System.Windows.RoutedEventArgs? e)
     {
         _vm.Selected?.SyncChatCommands();
         ChatCommandsOverlay.Visibility = System.Windows.Visibility.Visible;
@@ -329,7 +329,7 @@ public partial class MainWindow
             string msg;
             var heliMarker = _dynStates.Values.FirstOrDefault(s => s.Type == 8);
             bool isHeliActive = heliMarker != null;
-            if (isHeliActive)
+            if (heliMarker != null)
             {
                 string grid = GetGridLabel(heliMarker.LastRealX, heliMarker.LastRealY);
                 if (_heliSpawnTime.HasValue)

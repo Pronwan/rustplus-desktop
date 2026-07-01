@@ -397,9 +397,6 @@ Descărcați și instalați acum?</value>
     <value>Verificarea actualizării a eșuat.
 {0}</value>
   </data>
-  <data name="NoDevices" xml:space="preserve">
-    <value>Niciun dispozitiv.</value>
-  </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>Vezi profil</value>
   </data>
@@ -750,6 +747,17 @@ Descărcați și instalați acum?</value>
   </data>
   <data name="FcmCredentials" xml:space="preserve">
     <value>Acreditări CGPM</value>
+  </data>
+  <data name="FcmInfoToolTip" xml:space="preserve">
+    <value>Ce este FCM?</value>
+  </data>
+  <data name="FcmInfoTitle" xml:space="preserve">
+    <value>Ce este FCM?</value>
+  </data>
+  <data name="FcmInfoMessage" xml:space="preserve">
+    <value>FCM inseamna Firebase Cloud Messaging. Rust+ il foloseste pentru a trimite notificari push pentru servere asociate, dispozitive, alarme, chat de echipa si alte evenimente live.
+
+Rust+ Desktop inregistreaza aplicatia locala la FCM pentru a putea primi aceleasi notificari Rust+ in fundal. Credentialele de asociere sunt salvate local pe acest PC si pot fi sterse prin resetarea configuratiei de asociere.</value>
   </data>
   <data name="RightClickConfigure" xml:space="preserve">
     <value>Click dreapta pentru a configura</value>
@@ -1576,9 +1584,6 @@ Descărcați și instalați acum?</value>
   <data name="FeatureSettingsDesc" xml:space="preserve">
     <value> - Bară laterală curată pentru toate setările</value>
   </data>
-  <data name="BattleMetricsRemovalTitle" xml:space="preserve">
-    <value>Urmărirea BattleMetrics eliminată</value>
-  </data>
   <data name="YourBaseIsUnderAttack" xml:space="preserve">
     <value>Baza ta este atacată!</value>
   </data>
@@ -1848,6 +1853,894 @@ Sunteți sigur că doriți să continuați?</value>
 
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} zile</value>
+  </data>
+  <data name="TeamMarkersSettings" xml:space="preserve">
+    <value>Marcatori de echipă</value>
+  </data>
+  <data name="HotkeyExecutionMode" xml:space="preserve">
+    <value>Modul de execuție</value>
+  </data>
+  <data name="HotkeySequential" xml:space="preserve">
+    <value>Secvenţial (cu întârziere)</value>
+  </data>
+  <data name="HotkeyParallel" xml:space="preserve">
+    <value>Paralel (instantaneu)</value>
+  </data>
+  <data name="HotkeyToggleDelay" xml:space="preserve">
+    <value>Comutați Întârziere</value>
+  </data>
+  <data name="HotkeyWarningInUse" xml:space="preserve">
+    <value>Această tastă rapidă este deja înregistrată de o altă aplicație.</value>
+  </data>
+  <data name="KeepActive" xml:space="preserve">
+    <value>Nu, rămâne activ</value>
+  </data>
+  <data name="LoopAudioPrompt" xml:space="preserve">
+    <value>Doriți să dezactivați bucla de alertă audio?</value>
+  </data>
+  <data name="LoopAudioTillPopupClose" xml:space="preserve">
+    <value>Buclă audio până la închiderea pop-upului</value>
+  </data>
+  <data name="LoopAudioGlobalPrompt" xml:space="preserve">
+    <value>Acest lucru necesită dezactivarea buclei de alertă audio pentru toate alarmele inteligente.</value>
+  </data>
+  <data name="TurnOffNow" xml:space="preserve">
+    <value>Opriți acum</value>
+  </data>
+  <data name="MigrationAlertCheckDesc" xml:space="preserve">
+    <value>Verificați setările Chat-Alert pentru noile cronometre personalizate. De asemenea, marcatorii morții sunt acum întotdeauna salvați local. Minimap se actualizează acum și în timp ce este minimizată.</value>
+  </data>
+  <data name="MigrationAlertCheckTitle" xml:space="preserve">
+    <value>Vă rugăm să rețineți</value>
+  </data>
+  <data name="FeatureAudioLoopTitle" xml:space="preserve">
+    <value>Marcatorul morții</value>
+  </data>
+  <data name="FeatureAudioLoopDesc" xml:space="preserve">
+    <value>- Markere personalizate pentru echipă</value>
+  </data>
+  <data name="TimeOfDeath" xml:space="preserve">
+    <value>Timpul morții</value>
+  </data>
+  <data name="CustomTimerCategory" xml:space="preserve">
+    <value>Cronometru personalizat</value>
+  </data>
+  <data name="TimerCreated" xml:space="preserve">
+    <value>Timer{0}creat pentru{1}h{2}m{3}s</value>
+  </data>
+  <data name="HoverCustomTimer" xml:space="preserve">
+    <value>Cronometru personalizat</value>
+  </data>
+  <data name="ActiveTimersCategory" xml:space="preserve">
+    <value>Cronometre active</value>
+  </data>
+  <data name="AddTimer" xml:space="preserve">
+    <value>Adăugați temporizator</value>
+  </data>
+  <data name="TimerName" xml:space="preserve">
+    <value>Nume cronometru</value>
+  </data>
+  <data name="TimerCreateCmdLabel" xml:space="preserve">
+    <value>Comanda chat:</value>
+  </data>
+  <data name="CheckTimerStatusInfo" xml:space="preserve">
+    <value>Utilizați comanda de chat de mai jos pentru a verifica starea.</value>
+  </data>
+  <data name="ChatCmdTimerMaxReached" xml:space="preserve">
+    <value>Maximum 5 cronometre permise.</value>
+  </data>
+  <data name="TimerDurationRequired" xml:space="preserve">
+    <value>Vă rugăm să introduceți o durată de cronometru (ore, minute sau secunde).</value>
+  </data>
+  <data name="TimerNameMustStartWithLetter" xml:space="preserve">
+    <value>Numele temporizatorului trebuie să înceapă cu o literă.</value>
+  </data>
+  <data name="FeatureTimerAlerts" xml:space="preserve">
+    <value>Alerte cu temporizator</value>
+  </data>
+  <data name="FeatureTimerAlertsDesc" xml:space="preserve">
+    <value>- 60,30,10,3 m înainte de sfârșit</value>
+  </data>
+  <data name="TranslationConsentTitle" xml:space="preserve">
+    <value>Consimțământul traducerii</value>
+  </data>
+  <data name="TranslationConsentText" xml:space="preserve">
+    <value>Făcând clic pe Accept, conținutul notelor de corecție va fi trimis către Google Translate (SUA) pentru traducere. Acceptați?</value>
+  </data>
+  <data name="TranslationApiLinkText" xml:space="preserve">
+    <value>Termenii API Google Translate</value>
+  </data>
+  <data name="TranslateViaGoogle" xml:space="preserve">
+    <value>Traduceți prin Google</value>
+  </data>
+  <data name="PrivacyDisclaimerTitle" xml:space="preserve">
+    <value>Confidențialitate și sincronizare în cloud</value>
+  </data>
+  <data name="PrivacyDisclaimerDesc" xml:space="preserve">
+    <value>Pentru a activa sincronizarea live pentru suprapuneri de hărți și dispozitive inteligente, datele trebuie trimise către cloud-ul nostru securizat. De asemenea, colectăm telemetrie de utilizare anonimizată pentru a îmbunătăți funcțiile.</value>
+  </data>
+  <data name="AcceptCloud" xml:space="preserve">
+    <value>Acceptați și activați Cloud</value>
+  </data>
+  <data name="DeclineCloud" xml:space="preserve">
+    <value>Refuzați Cloud</value>
+  </data>
+  <data name="PremiumFeatures" xml:space="preserve">
+    <value>Beneficiile suporterilor</value>
+  </data>
+  <data name="PremiumInfoDevicesDesc" xml:space="preserve">
+    <value>Mai mult de 10 dispozitive sunt disponibile local sau din import. Sincronizarea cloud gratuită păstrează primele 10 dispozitive; Suporterii pot sincroniza dispozitive nelimitate.</value>
+  </data>
+  <data name="PremiumInfoMapDesc" xml:space="preserve">
+    <value>Această suprapunere este mai mare decât limita de sincronizare gratuită în cloud. Suporterii primesc dimensiuni de suprapunere de 10 ori mai mari, mai mulți marcatori de hărți și mai multe capturi de ecran.</value>
+  </data>
+  <data name="ConnectDiscord" xml:space="preserve">
+    <value>Conectați Discord pentru beneficii pentru suporteri</value>
+  </data>
+  <data name="DisconnectDiscord" xml:space="preserve">
+    <value>Deconectați Discord</value>
+  </data>
+  <data name="DiscordConnecting" xml:space="preserve">
+    <value>Se conectează...</value>
+  </data>
+  <data name="CloudSync" xml:space="preserve">
+    <value>Sincronizare în cloud și încărcare live</value>
+  </data>
+  <data name="CloudSyncDesc" xml:space="preserve">
+    <value>Încărcați live și sincronizați dispozitivele inteligente și suprapunerile de hărți în siguranță în cloud.</value>
+  </data>
+  <data name="SupporterSettingsHeader" xml:space="preserve">
+    <value>Setări pentru suporteri</value>
+  </data>
+  <data name="SupporterDescription" xml:space="preserve">
+    <value>Aceste funcții sunt disponibile exclusiv pentru susținătorii și dezvoltatorii noștri prin autentificarea Discord.</value>
+  </data>
+  <data name="AdvancedDiscordIntegration" xml:space="preserve">
+    <value>Integrare avansată Discord (Webhooks, alerte audio)</value>
+  </data>
+  <data name="TelegramIntegration" xml:space="preserve">
+    <value>Integrarea alertelor Telegram</value>
+  </data>
+  <data name="PremiumStopSync" xml:space="preserve">
+    <value>Opriți sincronizarea</value>
+  </data>
+  <data name="PremiumStayFree" xml:space="preserve">
+    <value>Rămâi liber</value>
+  </data>
+  <data name="PremiumSupportNow" xml:space="preserve">
+    <value>Suport acum</value>
+  </data>
+  <data name="CloudTooltipOverlaySyncedFormat" xml:space="preserve">
+    <value>Suprapunere sincronizată{0}KB{1}</value>
+  </data>
+  <data name="CloudTooltipDeviceFreeLimit" xml:space="preserve">
+    <value>Maxim 10 dispozitive în Nivelul gratuit</value>
+  </data>
+  <data name="CloudTooltipDeviceSyncedFormat" xml:space="preserve">
+    <value>Dispozitive{0}sincronizate{1}</value>
+  </data>
+  <data name="CloudTooltipOverlayTooBigFormat" xml:space="preserve">
+    <value>Dimensiunea suprapunerii este prea mare pentru sincronizare ({0}KB)</value>
+  </data>
+  <data name="CloudTooltipActivate" xml:space="preserve">
+    <value>Activați Cloud-Sync</value>
+  </data>
+  <data name="CloudTooltipActive" xml:space="preserve">
+    <value>Cloud-Sync activ</value>
+  </data>
+  <data name="CloudAccountTitle" xml:space="preserve">
+    <value>Cont Cloud</value>
+  </data>
+  <data name="EmailLoginWindowTitle" xml:space="preserve">
+    <value>Conectare cont Cloud</value>
+  </data>
+  <data name="EmailSignInTab" xml:space="preserve">
+    <value>Conectare</value>
+  </data>
+  <data name="EmailSignUpTab" xml:space="preserve">
+    <value>Creează cont</value>
+  </data>
+  <data name="EmailAddressLabel" xml:space="preserve">
+    <value>Adresa de e-mail</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Parolă</value>
+  </data>
+  <data name="PasswordMinCharsLabel" xml:space="preserve">
+    <value>Parola (min. 6 caractere)</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirmați parola</value>
+  </data>
+  <data name="EmailSignInButton" xml:space="preserve">
+    <value>Conectare</value>
+  </data>
+  <data name="EmailCreateAccountButton" xml:space="preserve">
+    <value>Creează cont</value>
+  </data>
+  <data name="EmailConfirmationSentTitle" xml:space="preserve">
+    <value>E-mail de confirmare trimis!</value>
+  </data>
+  <data name="EmailConfirmationSentMessage" xml:space="preserve">
+    <value>Faceți clic pe linkul din e-mailul dvs. Aplicația verifică automat la fiecare câteva secunde...</value>
+  </data>
+  <data name="EmailWaitingForConfirmation" xml:space="preserve">
+    <value>Astept confirmarea...</value>
+  </data>
+  <data name="EmailWaitingForConfirmationFormat" xml:space="preserve">
+    <value>Se așteaptă confirmarea... ({0}s)</value>
+  </data>
+  <data name="EmailProblemsPrefix" xml:space="preserve">
+    <value>Probleme?</value>
+  </data>
+  <data name="EmailOpenInBrowser" xml:space="preserve">
+    <value>Deschideți în browser</value>
+  </data>
+  <data name="EmailPasswordRequiredError" xml:space="preserve">
+    <value>Vă rugăm să introduceți adresa de e-mail și parola.</value>
+  </data>
+  <data name="EmailRequiredError" xml:space="preserve">
+    <value>Vă rugăm să introduceți o adresă de e-mail.</value>
+  </data>
+  <data name="EmailPasswordTooShortError" xml:space="preserve">
+    <value>Parola trebuie să aibă cel puțin 6 caractere.</value>
+  </data>
+  <data name="EmailPasswordsDoNotMatchError" xml:space="preserve">
+    <value>Parolele nu se potrivesc.</value>
+  </data>
+  <data name="EmailSigningInStatus" xml:space="preserve">
+    <value>Conectare...</value>
+  </data>
+  <data name="EmailSignedInSuccess" xml:space="preserve">
+    <value>Conectat cu succes!</value>
+  </data>
+  <data name="EmailSignInFailed" xml:space="preserve">
+    <value>Conectarea nu a reușit.</value>
+  </data>
+  <data name="EmailRegistrationRunningStatus" xml:space="preserve">
+    <value>Înregistrarea în curs de desfășurare...</value>
+  </data>
+  <data name="EmailRegistrationFailed" xml:space="preserve">
+    <value>Înregistrarea a eșuat.</value>
+  </data>
+  <data name="EmailConfirmationTimeout" xml:space="preserve">
+    <value>Timeout: e-mailul nu a fost confirmat în 5 minute. Vă puteți conecta mai târziu.</value>
+  </data>
+  <data name="EmailInvalidCredentialsError" xml:space="preserve">
+    <value>Acreditări nevalide. Vă rugăm să vă verificați adresa de e-mail și parola.</value>
+  </data>
+  <data name="EmailInvalidCredentialsShortError" xml:space="preserve">
+    <value>Acreditări nevalide.</value>
+  </data>
+  <data name="EmailNotConfirmedError" xml:space="preserve">
+    <value>Adresa de e-mail nu a fost confirmată încă. Vă rugăm să faceți clic pe linkul de confirmare din căsuța dvs. de e-mail.</value>
+  </data>
+  <data name="EmailAlreadyRegisteredError" xml:space="preserve">
+    <value>Această adresă de e-mail este deja înregistrată. Vă rugăm să vă conectați.</value>
+  </data>
+  <data name="AuthDiscordDisconnectButton" xml:space="preserve">
+    <value>Deconectați Discord</value>
+  </data>
+  <data name="AuthDiscordConnectedFormat" xml:space="preserve">
+    <value>Discord conectat - Nivelul:{0}</value>
+  </data>
+  <data name="AuthEmailConnectedFormat" xml:space="preserve">
+    <value>E-mail conectat:{0}- Nivel:{1}</value>
+  </data>
+  <data name="AuthNotConnectedStatus" xml:space="preserve">
+    <value>Neconectat - conectați-vă pentru a utiliza Cloud Sync și backup-uri</value>
+  </data>
+  <data name="AuthDisconnectingStatus" xml:space="preserve">
+    <value>Se deconectează...</value>
+  </data>
+  <data name="AuthConnectingStatus" xml:space="preserve">
+    <value>Se conectează...</value>
+  </data>
+  <data name="EmailAccountButton" xml:space="preserve">
+    <value>E-mail/Cont</value>
+  </data>
+  <data name="EmailLogoutConfirmMessage" xml:space="preserve">
+    <value>Deconectați-vă de la contul de e-mail?</value>
+  </data>
+  <data name="CloudLoginPromptTitle" xml:space="preserve">
+    <value>Sincronizare în cloud</value>
+  </data>
+  <data name="CloudLoginPromptHeading" xml:space="preserve">
+    <value>Este necesar un cont pentru Cloud Sync</value>
+  </data>
+  <data name="CloudLoginPromptDescription" xml:space="preserve">
+    <value>Serviciile cloud precum sincronizarea și stocarea de rezervă necesită un cont gratuit. Alegeți e-mail sau Discord pentru a continua sincronizarea dispozitivelor, a suprapunerilor și a copiilor de rezervă.</value>
+  </data>
+  <data name="CloudLoginPromptEmailButton" xml:space="preserve">
+    <value>Sincronizare prin e-mail</value>
+  </data>
+  <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
+    <value>Sincronizare prin Discord</value>
+  </data>
+  <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
+    <value>Nu, mulțumesc</value>
+  </data>
+  <data name="CloudTooltipSyncLimitReached" xml:space="preserve">
+    <value>Limita de sincronizare a fost atinsă</value>
+  </data>
+  <data name="CloudTooltipBaseLimit" xml:space="preserve">
+    <value>Limita de bază atinsă (gratuit: max 2 baze, Premium: max 10 baze)</value>
+  </data>
+  <data name="BaseAddScreenshot" xml:space="preserve">
+    <value>Adăugați captură de ecran</value>
+  </data>
+  <data name="BaseScreenshotDragDrop" xml:space="preserve">
+    <value>Trageți și plasați o imagine aici</value>
+  </data>
+  <data name="BaseScreenshotPasteHint" xml:space="preserve">
+    <value>sau apăsați CTRL+V pentru a lipi o captură de ecran</value>
+  </data>
+  <data name="BaseScreenshotNoClipboardImage" xml:space="preserve">
+    <value>Nu s-a găsit nicio imagine în clipboard.</value>
+  </data>
+  <data name="BaseScreenshotPasteErrorTitle" xml:space="preserve">
+    <value>Eroare de lipire</value>
+  </data>
+  <data name="BaseScreenshotPasteFailedFormat" xml:space="preserve">
+    <value>Nu s-a inserat imaginea:{0}</value>
+  </data>
+  <data name="BaseScreenshotLoadFailedFormat" xml:space="preserve">
+    <value>Nu s-a încărcat fișierul imagine:{0}</value>
+  </data>
+  <data name="BaseScreenshotCompressionErrorTitle" xml:space="preserve">
+    <value>Eroare de compresie</value>
+  </data>
+  <data name="BaseScreenshotCompressFailedFormat" xml:space="preserve">
+    <value>Eroare la comprimarea imaginii:{0}</value>
+  </data>
+  <data name="BaseScreenshotImageInfoFormat" xml:space="preserve">
+    <value>Rezoluție:{0}x{1}| Dimensiune:{2}KB (Calitate 25%)</value>
+  </data>
+  <data name="BaseNoteWindowTitle" xml:space="preserve">
+    <value>Editați nota de bază</value>
+  </data>
+  <data name="BaseNoteTitle" xml:space="preserve">
+    <value>Nota de baza</value>
+  </data>
+  <data name="BaseAddNote" xml:space="preserve">
+    <value>Adăugați o notă</value>
+  </data>
+  <data name="BaseEditNote" xml:space="preserve">
+    <value>Editați nota</value>
+  </data>
+  <data name="BaseDeleteNote" xml:space="preserve">
+    <value>Ștergeți nota</value>
+  </data>
+  <data name="BaseDeleteScreenshotFormat" xml:space="preserve">
+    <value>Ștergeți captura de ecran{0}</value>
+  </data>
+  <data name="BaseAddScreenshotLockedFormat" xml:space="preserve">
+    <value>Adăugați o captură de ecran{0}(se cere premium)</value>
+  </data>
+  <data name="BaseNoNotesYet" xml:space="preserve">
+    <value>Nicio notă adăugată încă.</value>
+  </data>
+  <data name="BaseNoScreenshotsYet" xml:space="preserve">
+    <value>Nu au adăugat capturi de ecran încă</value>
+  </data>
+  <data name="ChatFeatureMasterOnlineTitle" xml:space="preserve">
+    <value>Chat Master online</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedMessage" xml:space="preserve">
+    <value>{0}controlează alertele de chat și comenzile de chat pentru această echipă.</value>
+  </data>
+  <data name="ChatFeatureMasterBlockedShort" xml:space="preserve">
+    <value>Chat Master{0}online. Alertele de chat și comenzile de chat sunt întrerupte pe acest dispozitiv.</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedTitle" xml:space="preserve">
+    <value>Sunteți Chat Master</value>
+  </data>
+  <data name="ChatFeatureMasterAssignedMessage" xml:space="preserve">
+    <value>Acest dispozitiv controlează acum alertele de chat și comenzile de chat pentru echipa ta.</value>
+  </data>
+  <data name="ChatFeatureMasterAccept" xml:space="preserve">
+    <value>Accepta</value>
+  </data>
+  <data name="ChatFeatureMasterDeny" xml:space="preserve">
+    <value>Negați</value>
+  </data>
+  <data name="Update600Title" xml:space="preserve">
+    <value>Actualizare v6.0.0</value>
+  </data>
+  <data name="CompareCloudFeatures" xml:space="preserve">
+    <value>Comparați funcțiile Cloud</value>
+  </data>
+  <data name="CloudFeaturesTitle" xml:space="preserve">
+    <value>Comparația caracteristicilor cloud</value>
+  </data>
+  <data name="CloudFeaturesMainHeader" xml:space="preserve">
+    <value>Bun venit în Cloud</value>
+  </data>
+  <data name="CloudFeaturesSubHeader" xml:space="preserve">
+    <value>Alegeți nivelul care se potrivește cel mai bine nevoilor dvs.</value>
+  </data>
+  <data name="TierNoAccountTitle" xml:space="preserve">
+    <value>Fără cont</value>
+  </data>
+  <data name="TierNoAccountDesc" xml:space="preserve">
+    <value>Datele dvs. rămân 100% locale. Cel mai bun pentru jucătorii solo.</value>
+  </data>
+  <data name="FeatNoCloudSync" xml:space="preserve">
+    <value>Fără Cloud Sync sau Backups</value>
+  </data>
+  <data name="FeatNoDeviceSharing" xml:space="preserve">
+    <value>Fără partajare a dispozitivului</value>
+  </data>
+  <data name="FeatNoPortal" xml:space="preserve">
+    <value>Fără acces la portalul web</value>
+  </data>
+  <data name="TierFreeAccountTitle" xml:space="preserve">
+    <value>Cont cloud gratuit</value>
+  </data>
+  <data name="TierFreeAccountDesc" xml:space="preserve">
+    <value>Funcții cloud de bază pentru a începe să partajați.</value>
+  </data>
+  <data name="FeatBasicDiscord" xml:space="preserve">
+    <value>Alerte de bază Discord Webhook</value>
+  </data>
+  <data name="FeatDeviceSharingFree" xml:space="preserve">
+    <value>Partajați până la 10 dispozitive</value>
+  </data>
+  <data name="FeatMapSharingFree" xml:space="preserve">
+    <value>Partajare hartă (300 KB, 2 baze, 1 captură de ecran)</value>
+  </data>
+  <data name="FeatSupporterHelper" xml:space="preserve">
+    <value>Acționați ca Ajutor de susținători</value>
+  </data>
+  <data name="FeatPortalAccess" xml:space="preserve">
+    <value>Acces la Cloud Web Portal</value>
+  </data>
+  <data name="TierSupporterTitle" xml:space="preserve">
+    <value>Supporter Cloud</value>
+  </data>
+  <data name="TierSupporterDesc" xml:space="preserve">
+    <value>Cea mai bună experiență Rust+ pentru clanuri și utilizatori avansați.</value>
+  </data>
+  <data name="FeatMapSharingPro" xml:space="preserve">
+    <value>Partajare pro hartă (3 MB, 10 baze, 5 capturi de ecran)</value>
+  </data>
+  <data name="FeatChatMaster" xml:space="preserve">
+    <value>Sistemul principal de chat</value>
+  </data>
+  <data name="FeatAdvDiscord" xml:space="preserve">
+    <value>Bot Discord bidirecțional avansat</value>
+  </data>
+  <data name="FeatBetaAccess" xml:space="preserve">
+    <value>Versiuni beta și de testare timpurii prin Discord</value>
+  </data>
+  <data name="BecomeSupporterTitle" xml:space="preserve">
+    <value>Deveniți un susținător</value>
+  </data>
+  <data name="SupportViaPatreon" xml:space="preserve">
+    <value>Sprijină-ne mai departe</value>
+  </data>
+  <data name="SupportViaPatreonDesc" xml:space="preserve">
+    <value>- Conectați Patreon cu Discord pentru detectarea automată a rolului de susținător și a aplicației.</value>
+  </data>
+  <data name="SupportViaSE" xml:space="preserve">
+    <value>Sfat prin</value>
+  </data>
+  <data name="SupportViaSEDesc" xml:space="preserve">
+    <value>- Poke Jawad sau Pronwan în Discord pentru rolul de susținător manual (Sumă / 2,50 USD = luni).</value>
+  </data>
+  <data name="OpenCloudWebPortal" xml:space="preserve">
+    <value>Deschideți Cloud Web Portal</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachable" xml:space="preserve">
+    <value>Conexiunea a eșuat: Rust+ este inaccesibil.</value>
+  </data>
+  <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
+    <value>Fie firewall-ul blochează conexiunea, fie API-ul Rust+ de pe server nu rulează corect.</value>
+  </data>
+  <data name="OfflineDeathTitle" xml:space="preserve">
+    <value>Moartea offline</value>
+  </data>
+  <data name="OfflineDeathMessage" xml:space="preserve">
+    <value>Ai fost ucis de{0}pe{1}.</value>
+  </data>
+  <data name="StopSound" xml:space="preserve">
+    <value>Opriți sunetul</value>
+  </data>
+  <data name="OfflineDeathNotifications" xml:space="preserve">
+    <value>Notificări de deces offline</value>
+  </data>
+  <data name="EnableOfflineDeathAlerts" xml:space="preserve">
+    <value>Activați alertele de deces offline</value>
+  </data>
+  <data name="AlertSound" xml:space="preserve">
+    <value>Sunet de alertă</value>
+  </data>
+  <data name="DefaultSoundLabel" xml:space="preserve">
+    <value>Implicit: moarte.mp3</value>
+  </data>
+  <data name="SelectEllipsis" xml:space="preserve">
+    <value>Selecta...</value>
+  </data>
+  <data name="LoopAlertSound" xml:space="preserve">
+    <value>Sunet de alertă în buclă</value>
+  </data>
+  <data name="SendToDiscordRaidAlerts" xml:space="preserve">
+    <value>Trimiteți către Discord Alerte de raid (Supporter)</value>
+  </data>
+  <data name="OpenOfflineDeathsLog" xml:space="preserve">
+    <value>Deschideți jurnalul deceselor offline</value>
+  </data>
+  <data name="NotificationsTab" xml:space="preserve">
+    <value>Notificări</value>
+  </data>
+  <data name="NotificationCenterSettings" xml:space="preserve">
+    <value>Centru de notificare</value>
+  </data>
+  <data name="ShowToastNotifications" xml:space="preserve">
+    <value>Afișați notificări pentru toast</value>
+  </data>
+  <data name="PlaySoundAlerts" xml:space="preserve">
+    <value>Redați alerte sonore</value>
+  </data>
+  <data name="NotificationRetentionPeriod" xml:space="preserve">
+    <value>Perioada de păstrare</value>
+  </data>
+  <data name="MutedServers" xml:space="preserve">
+    <value>Servere dezactivate</value>
+  </data>
+  <data name="NoServersMuted" xml:space="preserve">
+    <value>Niciun server nu este suprimat</value>
+  </data>
+  <data name="UnmuteServer" xml:space="preserve">
+    <value>Activați sunetul</value>
+  </data>
+  <data name="NotificationsFilter" xml:space="preserve">
+    <value>Filtra:</value>
+  </data>
+  <data name="NotificationsAll" xml:space="preserve">
+    <value>Toate</value>
+  </data>
+  <data name="NotificationsAlarms" xml:space="preserve">
+    <value>Alarme</value>
+  </data>
+  <data name="NotificationsDeaths" xml:space="preserve">
+    <value>Decese</value>
+  </data>
+  <data name="SearchNotificationsPlaceholder" xml:space="preserve">
+    <value>Căutați mesajul...</value>
+  </data>
+  <data name="MarkAllAsRead" xml:space="preserve">
+    <value>Mark a citit</value>
+  </data>
+  <data name="ClearNotifications" xml:space="preserve">
+    <value>Clar</value>
+  </data>
+  <data name="NoNotificationsTitle" xml:space="preserve">
+    <value>Nicio notificare aici</value>
+  </data>
+  <data name="NoNotificationsSubtitle" xml:space="preserve">
+    <value>Sunteți cu toții prinși!</value>
+  </data>
+  <data name="ClearNotificationsConfirm" xml:space="preserve">
+    <value>Sigur doriți să ștergeți tot istoricul notificărilor?</value>
+  </data>
+  <data name="ClearNotificationsConfirmTitle" xml:space="preserve">
+    <value>Ștergeți istoricul</value>
+  </data>
+  <data name="ServerNotFoundMessage" xml:space="preserve">
+    <value>Nu s-a putut găsi un profil de server asociat pentru{0}:{1}.
+Vă rugăm mai întâi să asociați acest server.</value>
+  </data>
+  <data name="ServerNotFoundTitle" xml:space="preserve">
+    <value>Serverul nu a fost găsit</value>
+  </data>
+  <data name="OfflineDeathLogTitle" xml:space="preserve">
+    <value>Jurnalul deceselor offline</value>
+  </data>
+  <data name="ClearLog" xml:space="preserve">
+    <value>Ștergeți jurnalul</value>
+  </data>
+  <data name="NoOfflineDeathsRecorded" xml:space="preserve">
+    <value>Nu au fost înregistrate decese offline.</value>
+  </data>
+  <data name="KilledBy" xml:space="preserve">
+    <value>Ucis de</value>
+  </data>
+  <data name="CustomAlertsTitle" xml:space="preserve">
+    <value>Personalizați alertele de chat</value>
+  </data>
+  <data name="CustomAlertsHeader" xml:space="preserve">
+    <value>Personalizați șabloanele de alerte de chat</value>
+  </data>
+  <data name="CustomAlertsDesc" xml:space="preserve">
+    <value>Aici puteți edita șabloanele pentru alerte automate de chat. Variabilele (cum ar fi{0},{1}) vor fi înlocuite automat.</value>
+  </data>
+  <data name="VariablesLabel" xml:space="preserve">
+    <value>Variabile:{0}</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Șablonul pentru „{0}” a fost salvat cu succes.</value>
+  </data>
+  <data name="ResetSuccess" xml:space="preserve">
+    <value>Șablonul pentru „{0}” a fost resetat la implicit.</value>
+  </data>
+  <data name="SaveSuccessTitle" xml:space="preserve">
+    <value>Salvați succesul</value>
+  </data>
+  <data name="ResetSuccessTitle" xml:space="preserve">
+    <value>Resetați</value>
+  </data>
+  <data name="AlertOilRigTriggeredName" xml:space="preserve">
+    <value>Oil Rig Declanșat</value>
+  </data>
+  <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
+    <value>Trimis când începe evenimentul Oil Rig.</value>
+  </data>
+  <data name="AlertOilRigTriggeredVars" xml:space="preserve">
+    <value>{0}: Numele platformei,{1}: Timpul de deschidere</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
+    <value>Deblocare ladă (10 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinDesc" xml:space="preserve">
+    <value>Avertisment trimis cu 10 minute înainte de deblocarea cutiei.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
+    <value>{0}: Nume platformă</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
+    <value>Deblocare ladă (5 m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinDesc" xml:space="preserve">
+    <value>Avertisment trimis cu 5 minute înainte de deblocarea cutiei.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
+    <value>{0}: Nume platformă</value>
+  </data>
+  <data name="AlertAlarmTriggeredName" xml:space="preserve">
+    <value>Alarmă inteligentă declanșată</value>
+  </data>
+  <data name="AlertAlarmTriggeredDesc" xml:space="preserve">
+    <value>Trimis atunci când este declanșată o alarmă inteligentă.</value>
+  </data>
+  <data name="AlertAlarmTriggeredVars" xml:space="preserve">
+    <value>{0}: Numele alarmei</value>
+  </data>
+  <data name="AlertDeepSeaUpName" xml:space="preserve">
+    <value>Eveniment de mare adâncime activ</value>
+  </data>
+  <data name="AlertDeepSeaUpDesc" xml:space="preserve">
+    <value>Trimis când evenimentul Deep Sea este activ.</value>
+  </data>
+  <data name="AlertDeepSeaUpVars" xml:space="preserve">
+    <value>Nici unul</value>
+  </data>
+  <data name="AlertNewShopName" xml:space="preserve">
+    <value>Automat nou</value>
+  </data>
+  <data name="AlertNewShopDesc" xml:space="preserve">
+    <value>Trimis atunci când este detectat un automat automat nou.</value>
+  </data>
+  <data name="AlertNewShopVars" xml:space="preserve">
+    <value>{0}: Numele magazinului,{1}: Grilă,{2}: Oferte</value>
+  </data>
+  <data name="AlertSuspiciousShopName" xml:space="preserve">
+    <value>Magazin suspect</value>
+  </data>
+  <data name="AlertSuspiciousShopDesc" xml:space="preserve">
+    <value>Trimis când un automat a fost online pentru o perioadă foarte scurtă de timp.</value>
+  </data>
+  <data name="AlertSuspiciousShopVars" xml:space="preserve">
+    <value>{0}: Numele magazinului,{1}: Grilă,{2}: Timp(e) online,{3}: Oferte</value>
+  </data>
+  <data name="AlertShopMatchName" xml:space="preserve">
+    <value>Potrivire articol automat</value>
+  </data>
+  <data name="AlertShopMatchDesc" xml:space="preserve">
+    <value>Trimis atunci când un automat vinde un articol din lista ta de urmărire.</value>
+  </data>
+  <data name="AlertShopMatchVars" xml:space="preserve">
+    <value>{0}: Nume magazin,{1}: Grid,{2}: Articol,{3}: Cantitate cost,{4}: Articol cost,{5}: Stoc,{6}: Vânzare articol{4}: Sell Item</value>
+  </data>
+  <data name="AlertCargoSpawnedName" xml:space="preserve">
+    <value>Navă de marfă a apărut</value>
+  </data>
+  <data name="AlertCargoSpawnedDesc" xml:space="preserve">
+    <value>Trimis atunci când nava de marfă apare.</value>
+  </data>
+  <data name="AlertCargoSpawnedVars" xml:space="preserve">
+    <value>{0}: Locație / Descriere</value>
+  </data>
+  <data name="AlertCargoDockedName" xml:space="preserve">
+    <value>Nava de marfă andocata</value>
+  </data>
+  <data name="AlertCargoDockedDesc" xml:space="preserve">
+    <value>Trimis când nava de marfă acostează într-un port.</value>
+  </data>
+  <data name="AlertCargoDockedVars" xml:space="preserve">
+    <value>{0}: Numele portului,{1}: Grilă</value>
+  </data>
+  <data name="AlertCargoExpectedDockName" xml:space="preserve">
+    <value>Nava de marfă se apropie</value>
+  </data>
+  <data name="AlertCargoExpectedDockDesc" xml:space="preserve">
+    <value>Trimis atunci când nava de marfă este de așteptat să andoceze în 5 minute.</value>
+  </data>
+  <data name="AlertCargoExpectedDockVars" xml:space="preserve">
+    <value>{0}: Numele portului,{1}: Grilă</value>
+  </data>
+  <data name="AlertCargoDepartingName" xml:space="preserve">
+    <value>Navă de marfă care pleacă</value>
+  </data>
+  <data name="AlertCargoDepartingDesc" xml:space="preserve">
+    <value>Trimis cu 5 minute înainte de plecarea navei de marfă.</value>
+  </data>
+  <data name="AlertCargoDepartingVars" xml:space="preserve">
+    <value>{0}: Numele portului,{1}: Grilă</value>
+  </data>
+  <data name="AlertEventSpawnedName" xml:space="preserve">
+    <value>Evenimentul a apărut</value>
+  </data>
+  <data name="AlertEventSpawnedDesc" xml:space="preserve">
+    <value>Trimis atunci când apar evenimente generale (cum ar fi Heli).</value>
+  </data>
+  <data name="AlertEventSpawnedVars" xml:space="preserve">
+    <value>{0}: Nume eveniment,{1}: Grilă</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmName" xml:space="preserve">
+    <value>Heli Crash Fals Alarm</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmDesc" xml:space="preserve">
+    <value>Trimis atunci când o prăbușire Heli detectată a fost de fapt lag server.</value>
+  </data>
+  <data name="AlertHeliCrashFalseAlarmVars" xml:space="preserve">
+    <value>{0}: Grilă</value>
+  </data>
+  <data name="AlertHeliShotDownName" xml:space="preserve">
+    <value>Patrol Heli Doborât</value>
+  </data>
+  <data name="AlertHeliShotDownDesc" xml:space="preserve">
+    <value>Trimis când Patrol Heli este doborât.</value>
+  </data>
+  <data name="AlertHeliShotDownVars" xml:space="preserve">
+    <value>{0}: Grilă</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosName" xml:space="preserve">
+    <value>Jucător online</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosDesc" xml:space="preserve">
+    <value>Trimis atunci când un membru al echipei urmărit intră online.</value>
+  </data>
+  <data name="AlertPlayerOnlineWithPosVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului,{1}: Grilă/Poziție</value>
+  </data>
+  <data name="AlertPlayerOfflineName" xml:space="preserve">
+    <value>Jucător offline</value>
+  </data>
+  <data name="AlertPlayerOfflineDesc" xml:space="preserve">
+    <value>Trimis atunci când un membru al echipei urmărit este offline.</value>
+  </data>
+  <data name="AlertPlayerOfflineVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului</value>
+  </data>
+  <data name="AlertPlayerDiedName" xml:space="preserve">
+    <value>Jucătorul a murit</value>
+  </data>
+  <data name="AlertPlayerDiedDesc" xml:space="preserve">
+    <value>Trimis atunci când un membru al echipei urmărit moare.</value>
+  </data>
+  <data name="AlertPlayerDiedVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului,{1}: Grilă/Poziție</value>
+  </data>
+  <data name="AlertPlayerRespawnedName" xml:space="preserve">
+    <value>Jucătorul a reapărut</value>
+  </data>
+  <data name="AlertPlayerRespawnedDesc" xml:space="preserve">
+    <value>Trimis atunci când un membru al echipei urmărit reapare.</value>
+  </data>
+  <data name="AlertPlayerRespawnedVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului,{1}: Grilă/Poziție</value>
+  </data>
+  <data name="AlertTrackingOnlineName" xml:space="preserve">
+    <value>Urmărire online</value>
+  </data>
+  <data name="AlertTrackingOnlineDesc" xml:space="preserve">
+    <value>Trimis atunci când un jucător urmărit intră online.</value>
+  </data>
+  <data name="AlertTrackingOnlineVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului,{1}: Informații despre grup</value>
+  </data>
+  <data name="AlertTrackingOfflineName" xml:space="preserve">
+    <value>Urmărire offline</value>
+  </data>
+  <data name="AlertTrackingOfflineDesc" xml:space="preserve">
+    <value>Trimis atunci când un jucător urmărit este offline.</value>
+  </data>
+  <data name="AlertTrackingOfflineVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului,{1}: Informații despre grup</value>
+  </data>
+  <data name="AlertTrackingRenamedName" xml:space="preserve">
+    <value>Urmărire redenumită</value>
+  </data>
+  <data name="AlertTrackingRenamedDesc" xml:space="preserve">
+    <value>Trimis atunci când un jucător urmărit își schimbă numele.</value>
+  </data>
+  <data name="AlertTrackingRenamedVars" xml:space="preserve">
+    <value>{0}: Nume vechi,{1}: Informații despre grup,{2}: Nume nou</value>
+  </data>
+  <data name="CustomizeChatAlertsToolTip" xml:space="preserve">
+    <value>Personalizați alertele de chat</value>
+  </data>
+  <data name="AfkCommand" xml:space="preserve">
+    <value>Jucători AFK</value>
+  </data>
+  <data name="ChatCmdNoOneAfk" xml:space="preserve">
+    <value>Nimeni nu este AFK.</value>
+  </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Jucătorul AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Trimis atunci când un membru al echipei este AFK pentru prea mult timp.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Numele jucătorului,{1}: Ora</value>
+  </data>
+  <data name="Settings3dMapDeleteData" xml:space="preserve">
+    <value>Ștergeți toate datele hărții 3D</value>
+  </data>
+  <data name="RecyclingCalculatorTitle" xml:space="preserve">
+    <value>Calculator de reciclare pentru componentele dvs. și multe altele. Vedeți imediat diferența dintre reciclarea în zonă sigură și reciclarea obișnuită.</value>
+  </data>
+  <data name="PatchNotesNewVersionTitle" xml:space="preserve">
+    <value>Versiunea 7.0 - Modificări majore</value>
+  </data>
+  <data name="PatchNotesNewVersionText" xml:space="preserve">
+    <value>• Hartă 3D cu poziții ale jucătorului în direct și markeri de deces
+• Harta este construită din fișierul de hartă local, primește informații suplimentare, cum ar fi zone blocate, aisberguri, peșteri și le afișează pe harta 2D
+• 3D Base Footprint-Builder integrat
+• Motor logic rafinat
+• Marcajele echipei din joc sunt acum afișate pe harta 2D
+• Pictograme personalizate pentru dispozitive inteligente</value>
+  </data>
+  <data name="ThreeDMapSectionTitle" xml:space="preserve">
+    <value>Setări hărți 3D</value>
+  </data>
+  <data name="Delete3DMapDataTooltip" xml:space="preserve">
+    <value>Șterge toate limitele hărții 3D descărcate și datele stocate în cache pentru a elibera spațiu pe disc</value>
+  </data>
+  <data name="Update700Title" xml:space="preserve">
+    <value>Actualizare Rust+ Desktop v7.0.0</value>
+  </data>
+  <data name="Update700Title1" xml:space="preserve">
+    <value>Îmbunătățiri ale hărții 2D</value>
+  </data>
+  <data name="Update700Desc1" xml:space="preserve">
+    <value>S-a adăugat suport pentru marcajele Cave și Jungle Ruins pe hărțile tale 2D.</value>
+  </data>
+  <data name="Update700Title2" xml:space="preserve">
+    <value>Integrarea hărților 3D</value>
+  </data>
+  <data name="Update700Desc2" xml:space="preserve">
+    <value>Construiți și vizualizați automat modele de hărți 3D interactive cu amprente de bază încorporate și monumente personalizate.</value>
+  </data>
+  <data name="Update700Title3" xml:space="preserve">
+    <value>Calculator de reciclare</value>
+  </data>
+  <data name="Update700Desc3" xml:space="preserve">
+    <value>Calculator de reciclare pentru componentele dvs. și multe altele. Vedeți imediat diferența dintre reciclarea în zonă sigură și reciclarea obișnuită.</value>
+  </data>
+  <data name="Update700Title4" xml:space="preserve">
+    <value>Setări și curățare</value>
+  </data>
+  <data name="Update700Desc4" xml:space="preserve">
+    <value>Ștergeți cu ușurință limitele vechi ale hărților 3D și datele stocate în cache din setări pentru a elibera spațiu de stocare.</value>
+  </data>
+  <data name="Update700DontShowAgain" xml:space="preserve">
+    <value>Nu mai arăta asta</value>
+  </data>
+  <data name="GenericClose" xml:space="preserve">
+    <value>Aproape</value>
   </data>
 </root>
 

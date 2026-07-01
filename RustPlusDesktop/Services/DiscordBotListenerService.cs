@@ -161,7 +161,7 @@ public class DiscordBotListenerService
                 .From<BotCommandsQueueModel>()
                 .Filter("id", Operator.Equals, id)
                 .Set(x => x.Status, reply.Success ? "completed" : "failed")
-                .Set(x => x.ResponsePayload, replyJson)
+                .Set(x => x.ResponsePayload!, replyJson)
                 .Update();
 
             Log($"[DiscordBotListener] Command {id} completed with status: {(reply.Success ? "completed" : "failed")}");

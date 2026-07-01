@@ -19,7 +19,6 @@ namespace RustPlusDesk.Views
         private readonly MainViewModel _vm;
         private readonly IRustPlusClient? _rustClient;
         private string? _websiteUrl;
-        private bool _isShowingMessageBox = false;
 
         public ServerInfoModal(ServerProfile profile, MainViewModel vm, IRustPlusClient? rustClient)
         {
@@ -173,14 +172,9 @@ namespace RustPlusDesk.Views
             try
             {
                 Clipboard.SetText($"{_profile.Host}:{_profile.Port}");
-                _isShowingMessageBox = true;
                 MessageBox.Show("Server address copied to clipboard!", "Copied", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch { }
-            finally
-            {
-                _isShowingMessageBox = false;
-            }
         }
 
         private void BtnWebsite_Click(object sender, RoutedEventArgs e)

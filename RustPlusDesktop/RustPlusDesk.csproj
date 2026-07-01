@@ -6,25 +6,30 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>Assets\rustplus-desktop-icon.ico</ApplicationIcon>
+		<StartupObject>RustPlusDesk.App</StartupObject>
 		
-		<!-- Fixes for Single-File Publish and Cleanup -->
+		<!-- Keep Velopack releases file-based so deltas can patch individual files. -->
+		<PublishSingleFile>false</PublishSingleFile>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 	</PropertyGroup>
 	<ItemGroup>
 	  
 	  <Compile Remove="RustPlusClientStub.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ApplicationDefinition Remove="App.xaml" />
+		<Page Include="App.xaml" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.1.0</Version>
+		<Version>7.1.1</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.1.0</AssemblyVersion>
-		<FileVersion>7.1.0</FileVersion>
-		<InformationalVersion>7.1.0</InformationalVersion>
+		<AssemblyVersion>7.1.1</AssemblyVersion>
+		<FileVersion>7.1.1</FileVersion>
+		<InformationalVersion>7.1.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -90,14 +95,19 @@
 	  <None Remove="Assets\icons\fishingvillagelarge.png" />
 	  <None Remove="Assets\icons\gasstation.png" />
 	  <None Remove="Assets\icons\godrock.png" />
+	  <None Remove="Assets\icons\godrock_large.png" />
+	  <None Remove="Assets\icons\godrock_medium.png" />
+	  <None Remove="Assets\icons\godrock_small.png" />
 	  <None Remove="Assets\icons\harbour.png" />
 	  <None Remove="Assets\icons\harbour2.png" />
 	  <None Remove="Assets\icons\hqmquarry.png" />
 	  <None Remove="Assets\icons\iceberg.png" />
 	  <None Remove="Assets\icons\ice_lake.png" />
 	  <None Remove="Assets\icons\jungle.png" />
+	  <None Remove="Assets\icons\jungle_ziggurat.png" />
 	  <None Remove="Assets\icons\junkyard.png" />
 	  <None Remove="Assets\icons\largeoilrig.png" />
+    <None Remove="Assets\icons\jungle_swamp.png" />
 	  <None Remove="Assets\icons\launchsite.png" />
 	  <None Remove="Assets\icons\lighthouse.png" />
 	  <None Remove="Assets\icons\map-icons\base1.png" />
@@ -252,6 +262,9 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
 	  <Resource Include="Assets\icons\godrock.png" />
+	  <Resource Include="Assets\icons\godrock_large.png" />
+	  <Resource Include="Assets\icons\godrock_medium.png" />
+	  <Resource Include="Assets\icons\godrock_small.png" />
 	  <Resource Include="Assets\icons\iceberg.png" />
 	  <Resource Include="Assets\icons\ice_lake.png" />
 	  <Resource Include="Assets\icons\pen.png">
@@ -304,50 +317,93 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
+	
+	<ItemGroup>
+		<Resource Include="Assets\heatmap icons\**\*" />
+	</ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
     <PackageReference Include="RustPlusApi" Version="1.3.0" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
+    <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('..\MapParser\index.html')">
-    <EmbeddedResource Include="..\MapParser\index.html">
-      <LogicalName>Map3DViewer/index.html</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\app.js">
-      <LogicalName>Map3DViewer/app.js</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\style.css">
-      <LogicalName>Map3DViewer/style.css</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
-      <LogicalName>Map3DViewer/draco_decoder.wasm</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
-      <LogicalName>Map3DViewer/Rust_Assets/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Assets\icons\**\*" Condition="Exists('Assets\icons')">
-      <LogicalName>Map3DViewer/Icons/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
+  <ItemGroup>
+    <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <Target Name="BuildMapParserRuntime" BeforeTargets="AssignTargetPaths" Condition="Exists('..\MapParser\MapParser.csproj') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
-    <MSBuild Projects="..\MapParser\MapParser.csproj" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true" />
+  <ItemGroup Condition="Exists('..\MapParser\MapParser.csproj')">
+    <Content Include="..\MapParser\style.css">
+      <Link>MapParser\style.css</Link>
+      <TargetPath>MapParser\style.css</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
+      <Link>MapParser\draco_decoder.wasm</Link>
+      <TargetPath>MapParser\draco_decoder.wasm</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
+      <Link>MapParser\Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <TargetPath>MapParser\Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+
+  </ItemGroup>
+
+
+  <PropertyGroup>
+    <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
+    <MapParserPublishDir>$(MSBuildProjectDirectory)\..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
+    <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
+  </PropertyGroup>
+
+  <Target Name="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
+    <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
   </Target>
 
-  <Target Name="EmbedMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="IncludeMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
-      <EmbeddedResource Include="..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\MapParser.exe">
-        <LogicalName>Map3DParser/MapParser.exe</LogicalName>
-      </EmbeddedResource>
-      <EmbeddedResource Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
-        <LogicalName>Map3DParser/prefabs_map.json</LogicalName>
-      </EmbeddedResource>
-      <EmbeddedResource Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
-        <LogicalName>Map3DParser/Rust_Assets/Metadata/carbon_prefabs.json</LogicalName>
-      </EmbeddedResource>
+      <MapParserPublishedAsset Include="$(MapParserPublishDir)assets\**\*" Condition="Exists('$(MapParserPublishDir)assets')" />
+
+      <Content Include="$(MapParserPublishedExe)">
+        <Link>MapParser\MapParser.exe</Link>
+        <TargetPath>MapParser\MapParser.exe</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="$(MapParserPublishDir)index.html" Condition="Exists('$(MapParserPublishDir)index.html')">
+        <Link>MapParser\index.html</Link>
+        <TargetPath>MapParser\index.html</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="@(MapParserPublishedAsset)">
+        <Link>MapParser\assets\%(MapParserPublishedAsset.RecursiveDir)%(MapParserPublishedAsset.Filename)%(MapParserPublishedAsset.Extension)</Link>
+        <TargetPath>MapParser\assets\%(MapParserPublishedAsset.RecursiveDir)%(MapParserPublishedAsset.Filename)%(MapParserPublishedAsset.Extension)</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
+        <Link>MapParser\prefabs_map.json</Link>
+        <TargetPath>MapParser\prefabs_map.json</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
+        <Link>MapParser\Rust_Assets\Metadata\carbon_prefabs.json</Link>
+        <TargetPath>MapParser\Rust_Assets\Metadata\carbon_prefabs.json</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
     </ItemGroup>
   </Target>
 
@@ -391,6 +447,8 @@
     <Resource Include="Assets\icons\harbour2.png" />
     <Resource Include="Assets\icons\hqmquarry.png" />
     <Resource Include="Assets\icons\jungle.png" />
+    <Resource Include="Assets\icons\jungle_swamp.png" />
+    <Resource Include="Assets\icons\jungle_ziggurat.png" />
     <Resource Include="Assets\icons\junkyard.png" />
     <Resource Include="Assets\icons\largeoilrig.png" />
     <Resource Include="Assets\icons\launchsite.png" />
@@ -618,6 +676,26 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <Target Name="MoveBuildSatelliteAssembliesUnderLang" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(TargetDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <BuildSatelliteAssemblies Include="$(TargetDir)*\*.resources.dll" Exclude="$(TargetDir)lang\**\*" />
+    </ItemGroup>
+    <MakeDir Directories="@(BuildSatelliteAssemblies->'$(TargetDir)lang\%(RecursiveDir)')" />
+    <Copy SourceFiles="@(BuildSatelliteAssemblies)" DestinationFiles="@(BuildSatelliteAssemblies->'$(TargetDir)lang\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Delete Files="@(BuildSatelliteAssemblies)" />
+    <RemoveDir Directories="@(BuildSatelliteAssemblies->'$(TargetDir)%(RecursiveDir)')" />
+  </Target>
+
+  <Target Name="MovePublishSatelliteAssembliesUnderLang" AfterTargets="Publish" Condition="'$(PublishDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <PublishSatelliteAssemblies Include="$(PublishDir)*\*.resources.dll" Exclude="$(PublishDir)lang\**\*" />
+    </ItemGroup>
+    <MakeDir Directories="@(PublishSatelliteAssemblies->'$(PublishDir)lang\%(RecursiveDir)')" />
+    <Copy SourceFiles="@(PublishSatelliteAssemblies)" DestinationFiles="@(PublishSatelliteAssemblies->'$(PublishDir)lang\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Delete Files="@(PublishSatelliteAssemblies)" />
+    <RemoveDir Directories="@(PublishSatelliteAssemblies->'$(PublishDir)%(RecursiveDir)')" />
+  </Target>
+
 
 	
 	<PropertyGroup>
@@ -627,10 +705,20 @@
 
 	<Target Name="ObfuscateSecretsTarget" BeforeTargets="BeforeBuild">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\obfuscate_secrets.ps1&quot; &quot;$(MSBuildProjectDirectory)&quot;" />
-		<ItemGroup>
-			<Compile Remove="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
-			<Compile Include="$(MSBuildProjectDirectory)\Services\Data\ObfuscatedSecrets.cs" />
-		</ItemGroup>
 	</Target>
+
+  <Target Name="CopyIconsToMapParserBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(TargetDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <IconFiles Include="$(MSBuildProjectDirectory)\Assets\icons\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(TargetDir)MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyIconsToMapParserPublish" AfterTargets="Publish" Condition="'$(PublishDir)' != '' And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <IconFiles Include="$(MSBuildProjectDirectory)\Assets\icons\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(PublishDir)MapParser\Icons\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
 	
 </Project>

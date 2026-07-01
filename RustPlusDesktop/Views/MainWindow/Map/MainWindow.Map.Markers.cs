@@ -258,6 +258,12 @@ public partial class MainWindow
             MergeCachedExtraMonumentsForCurrentMap();
             BuildMonumentOverlays();
             LoadCachedBuildingBlockedZonesForCurrentServer();
+
+            var activeProfile = _vm.Selected;
+            if (activeProfile != null)
+            {
+                CheckAndExecutePendingMapCopy(activeProfile);
+            }
             var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
             AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");
 
@@ -487,7 +493,7 @@ public partial class MainWindow
             if ((DateTime.UtcNow - state.DockTime.Value).TotalSeconds >= 5)
             {
                 string grid = GetGridLabel(m.X, m.Y);
-                var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDocked", state.HarborName, grid);
+                var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDocked", state.HarborName ?? string.Empty, grid);
                 _ = SendTeamChatSafeAsync(msg, false, true);
                 _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                 state.AnnouncedDock = true;
@@ -540,7 +546,7 @@ public partial class MainWindow
                 else
                 {
                     string grid = GetGridLabel(m.X, m.Y);
-                    var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDeparting", state.HarborName, grid);
+                    var msg = AlertTemplateService.GetFormattedAlert("AlertCargoDeparting", state.HarborName ?? string.Empty, grid);
                     _ = SendTeamChatSafeAsync(msg, false, true);
                     _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"\uD83D\uDEA2 **Event Update:** {msg}");
                     state.AnnouncedEgressWarning = true;
@@ -918,7 +924,7 @@ public partial class MainWindow
 
                 // Hover logic once
                 mainBorder.MouseEnter += (s, e) => {
-                    var items = stack.Children.OfType<Border>().Select(b => b.Child as Grid).Where(g => g != null).ToList();
+                    var items = stack.Children.OfType<Border>().Select(b => b.Child).OfType<Grid>().ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             lb.Visibility = Visibility.Visible;
@@ -927,7 +933,7 @@ public partial class MainWindow
                     }
                 };
                 mainBorder.MouseLeave += (s, e) => {
-                    var items = stack.Children.OfType<Border>().Select(b => b.Child as Grid).Where(g => g != null).ToList();
+                    var items = stack.Children.OfType<Border>().Select(b => b.Child).OfType<Grid>().ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
@@ -1164,6 +1170,32 @@ public partial class MainWindow
                 // Refresh Click Handler (clear first to avoid duplicates)
                 itemRow.MouseLeftButtonDown -= EventItem_Click;
                 if (isClickable) itemRow.MouseLeftButtonDown += EventItem_Click;
+            }
+
+            // Sync events to 3D map if it is active
+            if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
+            {
+                try
+                {
+                    var clientEvents = activeEvents.Select(ev => new
+                    {
+                        name = ev.Name,
+                        active = ev.Active,
+                        id = ev.Id,
+                        x = ev.X,
+                        y = ev.Y,
+                        trackable = ev.Trackable,
+                        type = ev.Type,
+                        timerText = ev.TimerText,
+                        toolTip = ev.ToolTip,
+                        icon = ev.Icon.Replace("pack://application:,,,/Assets/icons/", "/Icons/", StringComparison.OrdinalIgnoreCase)
+                    }).ToList();
+
+                    string json = System.Text.Json.JsonSerializer.Serialize(clientEvents);
+                    string script = $"if (window.update3DEventDock) window.update3DEventDock({json});";
+                    _ = _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
+                }
+                catch { }
             }
         });
     }
@@ -1483,17 +1515,28 @@ public partial class MainWindow
                 if (el.Tag is PlayerMarkerTag pmt)
                 {
                     double targetRot;
-                    if (isPlayer)
+                    if (isPlayer || m.Type == 6)
                     {
                         double distSq = state.LastVX * state.LastVX + state.LastVY * state.LastVY;
                         if (state.History.Count > 1 && distSq > 0.0025)
                         {
                             double angleRad = Math.Atan2(state.LastVX, state.LastVY);
                             targetRot = angleRad * (180.0 / Math.PI);
+                            if (m.Type == 6)
+                            {
+                                targetRot += 180; // Correction for vendor icon's default downward orientation
+                            }
                         }
                         else
                         {
-                            targetRot = isNew ? 0 : pmt.Rotation;
+                            if (isPlayer)
+                            {
+                                targetRot = isNew ? 0 : pmt.Rotation;
+                            }
+                            else
+                            {
+                                targetRot = isNew ? (m.Rotation + 180) : pmt.Rotation;
+                            }
                         }
                     }
                     else if (m.Type == 5 || m.Type == 8 || m.Type == 4)
@@ -1502,7 +1545,7 @@ public partial class MainWindow
                     }
                     else
                     {
-                        double correction = (m.Type == 6 || m.Type == 3) ? 180 : 0;
+                        double correction = (m.Type == 3) ? 180 : 0;
                         targetRot = m.Rotation + correction;
                     }
                     

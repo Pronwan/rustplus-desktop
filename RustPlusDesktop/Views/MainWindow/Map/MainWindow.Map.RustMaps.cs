@@ -34,10 +34,51 @@ namespace RustPlusDesk.Views
                 .Where(name => name.StartsWith("Map3DViewer/", StringComparison.OrdinalIgnoreCase))
                 .ToDictionary(NormalizeMap3DResourceName, name => name, StringComparer.OrdinalIgnoreCase));
 
+        private ServerProfile? _copyMapSourceProfile;
+
+        /// <summary>
+        /// For offline/placeholder map profiles, the API is not connected so _worldSizeS is never
+        /// set via GetMapAsync. This method restores it from a previously-parsed map_data.json so
+        /// that the heatmap overlay rect and 3D texture UV are computed correctly.
+        /// </summary>
+        private void TryRestoreWorldSizeFromCachedMapData(ServerProfile prof, System.Windows.Media.Imaging.BitmapSource bitmap)
+        {
+            try
+            {
+                string folder = Map3DLocalBuildService.GetPreparedFolderPath(prof, prof.RustMapsMapId);
+                string mapDataPath = System.IO.Path.Combine(folder, "map_data.json");
+                if (!System.IO.File.Exists(mapDataPath)) return;
+
+                using var doc = System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(mapDataPath));
+                if (!doc.RootElement.TryGetProperty("size", out var sizeEl)) return;
+                int parsedSize = sizeEl.GetInt32();
+                if (parsedSize <= 0) return;
+
+                double wDip = bitmap.PixelWidth * (96.0 / bitmap.DpiX);
+                double hDip = bitmap.PixelHeight * (96.0 / bitmap.DpiY);
+
+                _worldSizeS = parsedSize;
+                _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, 2000);
+
+                AppendLog($"[Offline Map] Restored worldSize={parsedSize} from cached map_data.json. worldRectPx=[{(int)_worldRectPx.X},{(int)_worldRectPx.Y},{(int)_worldRectPx.Width}x{(int)_worldRectPx.Height}]");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Could not restore worldSize from map_data.json: {ex.Message}");
+            }
+        }
+
         public void UpdateRustMapsUi()
         {
             var profile = _vm.Selected;
-            if (profile == null || (!profile.IsConnected && !profile.IsFullConnected))
+            if (profile == null)
+            {
+                RustMapsOverlay.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            bool isPlaceholder = !string.IsNullOrEmpty(profile.LocalMapFilePath);
+            if (!isPlaceholder && !profile.IsConnected && !profile.IsFullConnected)
             {
                 RustMapsOverlay.Visibility = Visibility.Collapsed;
                 return;
@@ -45,7 +86,12 @@ namespace RustPlusDesk.Views
 
             RustMapsOverlay.Visibility = Visibility.Visible;
 
-            if (_isRustMapsSearching)
+            if (isPlaceholder)
+            {
+                TxtRustMapsStatus.Text = "Offline Map";
+                BtnOpenRustMaps.IsEnabled = false;
+            }
+            else if (_isRustMapsSearching)
             {
                 TxtRustMapsStatus.Text = "Searching...";
                 BtnOpenRustMaps.IsEnabled = false;
@@ -62,8 +108,7 @@ namespace RustPlusDesk.Views
             }
 
             bool canUseLocal3DMap = (SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated)
-                && profile.IsFullConnected
-                && ImgMap.Source != null;
+                && (profile.IsFullConnected || isPlaceholder);
             BtnOpen3DMap.Visibility = canUseLocal3DMap ? Visibility.Visible : Visibility.Collapsed;
             BtnOpen3DMap.IsEnabled = canUseLocal3DMap && !_isMap3DPreparing;
             TxtOpen3DMap.Text = _isMap3DPreparing ? "Preparing..." : _isMap3DActive ? "2D Map" : "3D Map";
@@ -103,7 +148,8 @@ namespace RustPlusDesk.Views
             {
                 _isRustMapsSearching = false;
                 UpdateRustMapsUi();
-return;
+
+                return;
             }
 
             // 2. Perform a full fetch/refetch (show searching state)
@@ -261,7 +307,6 @@ return;
             }
         }
 
-
         private async void BtnOpen3DMap_Click(object sender, RoutedEventArgs e)
         {
             if (_isMap3DActive)
@@ -271,9 +316,10 @@ return;
             }
 
             var profile = _vm.Selected;
-            if (profile == null || !profile.IsFullConnected || ImgMap.Source == null)
+            bool isPlaceholder = profile != null && !string.IsNullOrEmpty(profile.LocalMapFilePath);
+            if (profile == null || (!profile.IsFullConnected && !isPlaceholder))
             {
-                AppendLog("[3D Map] Fully connect to a server and load its 2D map before building a local 3D map.");
+                AppendLog("[3D Map] Fully connect to a server or select an imported offline map before building a local 3D map.");
                 return;
             }
 
@@ -310,7 +356,7 @@ return;
                     .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
                     .ToList();
 
-                var result = await Map3DLocalBuildService.PrepareAsync(profile, texture, profile.RustMapsMapId, references, _worldSizeS);
+                var result = await Map3DLocalBuildService.PrepareAsync(profile, texture, profile.RustMapsMapId, references, _worldSizeS, isPlaceholder ? profile.LocalMapFilePath : null);
                 if (result.NeedsManualMapSelection)
                 {
                     AppendLog($"[3D Map] Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
@@ -354,7 +400,12 @@ return;
             LoadBuildingBlockedZonesForCurrentMap(result.FolderPath);
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             const string host = "rustplus3d.local";
-            string url = $"https://{host}/index.html?v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}&mapDataUrl=/maps/current/map_data_viewer.json&embedded=1&view=3d";
+            bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));
+
+            bool hasBlocked = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "building_blocked.json"));
+            string url = $"https://{host}/index.html?v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}&mapDataUrl=/maps/current/map_data_viewer.json&embedded=1&view=3d" +
+                         $"{(hasBuildings ? "&hasBuildings=1" : "")}" +
+                         $"{(hasBlocked ? "&hasBlocked=1" : "")}";
 
             CloseMap3DView();
             _map3DWebView = new WebView2
@@ -362,6 +413,7 @@ return;
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
+            _map3DWebView.NavigationCompleted += Map3DWebView_NavigationCompleted;
             Map3DHost.Children.Add(_map3DWebView);
             Map3DHost.Visibility = Visibility.Visible;
             ImgMap.Visibility = Visibility.Collapsed;
@@ -383,12 +435,90 @@ return;
             UpdateRustMapsUi();
         }
 
+        private Window? _fullscreenWindow = null;
+
+        private void ToggleWpfFullscreen()
+        {
+            bool isFullscreenNow = false;
+            if (_fullscreenWindow == null)
+            {
+                if (_map3DWebView == null) return;
+
+                // Remove WebView2 from current host
+                Map3DHost.Children.Remove(_map3DWebView);
+
+                // Create a borderless maximized window
+                _fullscreenWindow = new Window
+                {
+                    WindowStyle = WindowStyle.None,
+                    WindowState = WindowState.Maximized,
+                    ResizeMode = ResizeMode.NoResize,
+                    Background = new SolidColorBrush(Color.FromRgb(14, 17, 23)),
+                    Content = _map3DWebView
+                };
+
+                _fullscreenWindow.PreviewKeyDown += (s, ev) =>
+                {
+                    if (ev.Key == System.Windows.Input.Key.F11)
+                    {
+                        ev.Handled = true;
+                        ToggleWpfFullscreen();
+                    }
+                };
+
+                _fullscreenWindow.Closed += (s, args) =>
+                {
+                    if (_fullscreenWindow != null)
+                    {
+                        _fullscreenWindow = null;
+                        if (_map3DWebView.Parent == null)
+                        {
+                            Map3DHost.Children.Add(_map3DWebView);
+                        }
+                    }
+                    try { _map3DWebView?.CoreWebView2?.ExecuteScriptAsync("if (window.setFullscreenState) window.setFullscreenState(false);"); } catch { }
+                };
+
+                _fullscreenWindow.Show();
+                isFullscreenNow = true;
+            }
+            else
+            {
+                var win = _fullscreenWindow;
+                _fullscreenWindow = null;
+
+                win.Content = null;
+                win.Close();
+
+                if (_map3DWebView != null && _map3DWebView.Parent == null)
+                {
+                    Map3DHost.Children.Add(_map3DWebView);
+                }
+                isFullscreenNow = false;
+            }
+
+            try { _map3DWebView?.CoreWebView2?.ExecuteScriptAsync($"if (window.setFullscreenState) window.setFullscreenState({isFullscreenNow.ToString().ToLower()});"); } catch { }
+        }
+
         private void CloseMap3DView()
         {
+            if (_fullscreenWindow != null)
+            {
+                try
+                {
+                    var win = _fullscreenWindow;
+                    _fullscreenWindow = null;
+                    win.Content = null;
+                    win.Close();
+                }
+                catch { }
+            }
+            try { _map3DWebView?.CoreWebView2?.ExecuteScriptAsync("if (window.setFullscreenState) window.setFullscreenState(false);"); } catch { }
             if (_map3DWebView != null)
             {
                 try
                 {
+                    _map3DWebView.NavigationCompleted -= Map3DWebView_NavigationCompleted;
                     if (_map3DWebView.CoreWebView2 != null)
                     {
                         _map3DWebView.CoreWebView2.WebMessageReceived -= Map3DWebMessageReceived;
@@ -417,16 +547,29 @@ return;
         {
             string? message = null;
             try { message = e.TryGetWebMessageAsString(); } catch { }
-            
+
             if (message == null)
             {
                 try { message = e.WebMessageAsJson; } catch { }
             }
-            
-            if (string.Equals(message, "close3d", StringComparison.OrdinalIgnoreCase))
+
+            if (message != null)
             {
-                Dispatcher.Invoke(CloseMap3DView);
-                return;
+                string cleanMessage = message.Trim('"');
+                if (string.Equals(cleanMessage, "toggle_fullscreen", StringComparison.OrdinalIgnoreCase))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        ToggleWpfFullscreen();
+                    });
+                    return;
+                }
+
+                if (string.Equals(cleanMessage, "close3d", StringComparison.OrdinalIgnoreCase))
+                {
+                    Dispatcher.Invoke(CloseMap3DView);
+                    return;
+                }
             }
 
             if (!string.IsNullOrEmpty(message))
@@ -434,33 +577,100 @@ return;
                 try
                 {
                     using var doc = System.Text.Json.JsonDocument.Parse(message);
-                    if (doc.RootElement.TryGetProperty("type", out var typeProp) && typeProp.GetString() == "save_buildings")
+                    if (doc.RootElement.TryGetProperty("type", out var typeProp))
                     {
-                        if (!string.IsNullOrEmpty(_currentMapFolderPath))
+                        string? typeStr = typeProp.GetString();
+                        if (typeStr == "save_buildings")
                         {
-                            var dataNode = doc.RootElement.GetProperty("data");
-                            var dataString = dataNode.ValueKind == System.Text.Json.JsonValueKind.String ? dataNode.GetString() : dataNode.GetRawText();
-                            string path = Path.Combine(_currentMapFolderPath, "map_buildings.json");
-                            await File.WriteAllTextAsync(path, dataString ?? "[]");
+                            if (!string.IsNullOrEmpty(_currentMapFolderPath))
+                            {
+                                var dataNode = doc.RootElement.GetProperty("data");
+                                var dataString = dataNode.ValueKind == System.Text.Json.JsonValueKind.String ? dataNode.GetString() : dataNode.GetRawText();
+                                string path = Path.Combine(_currentMapFolderPath, "map_buildings.json");
+                                await File.WriteAllTextAsync(path, dataString ?? "[]");
+                            }
                         }
                     }
                 }
                 catch { }
             }
         }
+
+        private void Map3DWebView_NavigationCompleted(object? sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (e.IsSuccess)
+            {
+                SyncLiveMarkersTo3DMap();
+                RefreshEventDock();
+            }
+        }
+
+        private static void SafeDeleteDirectory(string path)
+        {
+            if (!Directory.Exists(path)) return;
+
+            try
+            {
+                foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        var attributes = File.GetAttributes(file);
+                        if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                        {
+                            File.SetAttributes(file, attributes & ~FileAttributes.ReadOnly);
+                        }
+                    }
+                    catch { }
+                }
+
+                Directory.Delete(path, recursive: true);
+            }
+            catch
+            {
+                // Best effort cleanup.
+            }
+        }
+
         private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
         {
             string runtimeRoot = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Map3DViewer");
             Directory.CreateDirectory(runtimeRoot);
             Directory.CreateDirectory(Path.Combine(runtimeRoot, "maps", "current"));
 
+            // Proactively clean up any legacy/unwanted directories in the viewer folder to avoid issues
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".git"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".agents"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".claude"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "node_modules"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "bin"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "obj"));
+
+            string? viewerRoot = ResolveMap3DViewerSourceRoot();
+            if (viewerRoot != null) CopyDirectoryIfExists(viewerRoot, runtimeRoot);
+
             string? iconsRoot = ResolveIconsSourceRoot();
             if (iconsRoot != null) CopyDirectoryIfExists(iconsRoot, Path.Combine(runtimeRoot, "Icons"));
 
             string currentDir = Path.Combine(runtimeRoot, "maps", "current");
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_resolved.json"), Path.Combine(currentDir, "map_resolved.json"));
-            CopyFileIfExists(Path.Combine(result.FolderPath, "map_texture.png"), Path.Combine(currentDir, "map_texture.png"));
+
+            string targetTexturePath = Path.Combine(currentDir, "map_texture.png");
+            string sourceTexturePath = Path.Combine(result.FolderPath, "map_texture.png");
+            if (File.Exists(sourceTexturePath))
+            {
+                File.Copy(sourceTexturePath, targetTexturePath, true);
+            }
+            else
+            {
+                if (File.Exists(targetTexturePath))
+                {
+                    try { File.Delete(targetTexturePath); } catch { }
+                }
+            }
+
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
+
             CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
             await WriteViewerMapDataAsync(Path.Combine(result.FolderPath, "map_data.json"), Path.Combine(currentDir, "map_data_viewer.json"), _worldRectPx, ImgMap.Width, ImgMap.Height);
             return runtimeRoot;
@@ -475,20 +685,24 @@ return;
                 if (string.IsNullOrWhiteSpace(relativePath)) relativePath = "index.html";
                 if (relativePath.Contains("..")) return;
 
+                string diskPath = Path.GetFullPath(Path.Combine(runtimeRoot, relativePath));
+                string root = Path.GetFullPath(runtimeRoot);
+                if (diskPath.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(diskPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(diskPath);
+                    args.Response = CreateMap3DResponse(bytes, GetMap3DContentType(diskPath));
+                    return;
+                }
+
                 bool isMapRuntimeFile = relativePath.StartsWith($"maps{Path.DirectorySeparatorChar}current{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
                 bool isIconFile = relativePath.StartsWith($"Icons{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
                 if (isMapRuntimeFile || isIconFile)
                 {
-                    string diskPath = Path.GetFullPath(Path.Combine(runtimeRoot, relativePath));
-                    string root = Path.GetFullPath(runtimeRoot);
-                    if (diskPath.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(diskPath))
+                    if (isMapRuntimeFile)
                     {
-                        byte[] bytes = File.ReadAllBytes(diskPath);
-                        args.Response = CreateMap3DResponse(bytes, GetMap3DContentType(diskPath));
+                        args.Response = CreateMap3D404Response();
                         return;
                     }
-
-                    if (isMapRuntimeFile) return;
                 }
 
                 string resourceName = "Map3DViewer/" + relativePath.Replace(Path.DirectorySeparatorChar, '/');
@@ -496,12 +710,25 @@ return;
                 if (resourceBytes != null)
                 {
                     args.Response = CreateMap3DResponse(resourceBytes, GetMap3DContentType(resourceName));
+                    return;
                 }
+
+                args.Response = CreateMap3D404Response();
             }
             catch
             {
                 // Let WebView2 surface a normal load failure for unexpected request errors.
             }
+        }
+
+        private CoreWebView2WebResourceResponse CreateMap3D404Response()
+        {
+            var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Not Found"));
+            return _map3DWebView!.CoreWebView2.Environment.CreateWebResourceResponse(
+                stream,
+                404,
+                "Not Found",
+                "Content-Type: text/plain; charset=utf-8\r\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0");
         }
 
         private CoreWebView2WebResourceResponse CreateMap3DResponse(byte[] bytes, string contentType)
@@ -511,7 +738,7 @@ return;
                 stream,
                 200,
                 "OK",
-                $"Content-Type: {contentType}\r\nCache-Control: no-cache");
+                $"Content-Type: {contentType}\r\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0");
         }
 
         private static byte[]? ReadEmbeddedResourceBytes(string logicalName)
@@ -564,6 +791,7 @@ return;
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Assets", "icons")),
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "RustPlusDesktop", "Assets", "icons")),
                 Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "RustPlusDesktop", "RustPlusDesktop", "Assets", "icons")),
+                Path.Combine(baseDir, "MapParser", "Icons"),
                 Path.Combine(baseDir, "Assets", "icons")
             };
 
@@ -571,7 +799,7 @@ return;
                 Directory.Exists(path) &&
                 (File.Exists(Path.Combine(path, "airfield.png")) || File.Exists(Path.Combine(path, "trainyard.png"))));
         }
-        private static string ResolveMap3DViewerSourceRoot()
+        private static string? ResolveMap3DViewerSourceRoot()
         {
             string baseDir = AppContext.BaseDirectory;
             string[] candidates =
@@ -582,7 +810,6 @@ return;
             };
 
             string? found = candidates.FirstOrDefault(p => File.Exists(Path.Combine(p, "index.html")) && File.Exists(Path.Combine(p, "app.js")));
-            if (found == null) throw new FileNotFoundException("3D map viewer files were not found.");
             return found;
         }
 
@@ -591,7 +818,25 @@ return;
             if (!File.Exists(sourcePath)) throw new FileNotFoundException("map_data.json was not found.", sourcePath);
             var node = JsonNode.Parse(await File.ReadAllTextAsync(sourcePath).ConfigureAwait(false)) as JsonObject;
             if (node == null) throw new InvalidDataException("map_data.json root must be an object.");
-            node["mapTextureSource"] = "/maps/current/map_texture.png";
+
+            string parentDir = Path.GetDirectoryName(targetPath) ?? "";
+            bool hasTexture = File.Exists(Path.Combine(parentDir, "map_texture.png"));
+            node["mapTextureSource"] = hasTexture ? "/maps/current/map_texture.png" : null;
+
+            // Read worldSize from the parsed map_data.json (written by MapParser as "size").
+            // This is critical for offline/placeholder maps where _worldSizeS is 0 because
+            // there is no API connection – without the correct size the texture UV is wrong.
+            int parsedWorldSize = 0;
+            if (node.TryGetPropertyValue("size", out var sizeNode) && sizeNode != null)
+                int.TryParse(sizeNode.ToJsonString(), out parsedWorldSize);
+
+            if (parsedWorldSize > 0 && imageWidth > 0 && imageHeight > 0)
+            {
+                // Recompute the world rect directly from the map's own size field so the UV
+                // is always correct, regardless of whether _worldSizeS was available.
+                worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize);
+            }
+
             node["mapTexturePaddingWorld"] = 2000;
             node["mapTextureAutoAlign"] = true;
             if (imageWidth > 0 && imageHeight > 0 && worldRectPx.Width > 0 && worldRectPx.Height > 0)
@@ -636,7 +881,7 @@ return;
                 string mySteamIdStr = TrackingService.SteamId64;
                 ulong mySteamId = 0;
                 ulong.TryParse(mySteamIdStr, out mySteamId);
-                
+
                 string myAvatarB64 = "";
 
                 // Add Team Members
@@ -649,7 +894,7 @@ return;
                         var vm = TeamMembers.FirstOrDefault(t => t.SteamId == sid);
                         var name = vm?.Name ?? "player";
                         var avatarUrl = vm?.Avatar != null ? ImageSourceToBase64(vm.Avatar) : "";
-                        
+
                         if (sid == mySteamId && !string.IsNullOrEmpty(avatarUrl))
                         {
                             myAvatarB64 = avatarUrl;
@@ -686,8 +931,9 @@ return;
                 }
 
                 var deathsList = new List<object>();
-                
+
                 // Add Death Markers
+
                 if (_vm?.Selected?.DeathMarkers != null)
                 {
                     foreach (var m in _vm.Selected.DeathMarkers)
@@ -703,14 +949,69 @@ return;
                     }
                 }
 
-                var data = new
+                // Cargo ship markers (Type 5) — forward id, world-coords and heading to the 3D viewer
+                var cargoList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 5))
                 {
-                    players = playersList,
-                    deaths = deathsList
-                };
+                    cargoList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y,
+                        rotation = m.Rotation   // degrees, Rust convention (0 = north, CW)
+                    });
+                }
 
-                string json = JsonSerializer.Serialize(data);
-                string script = $"if (window.updateLiveMarkers) window.updateLiveMarkers({json}.players, {json}.deaths);";
+                // Travelling vendor markers (Type 6) — direction is derived in 3D from movement between x/y updates
+                var vendorList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 6))
+                {
+                    vendorList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y
+                    });
+                }
+
+                // Patrol helicopter markers (Type 8) — direction is derived in 3D from movement between x/y updates
+                var patrolHeliList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 8))
+                {
+                    patrolHeliList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y
+                    });
+                }
+
+                // Chinook helicopter markers (Type 4) — direction is derived in 3D from movement between x/y updates
+                var chinookList = new List<object>();
+                foreach (var m in (_lastDynMarkers ?? []).Where(m => m.Type == 4))
+                {
+                    chinookList.Add(new
+                    {
+                        id = m.Id,
+                        x = m.X,
+                        y = m.Y
+                    });
+                }
+
+                var liveData = new { players = playersList, deaths = deathsList };
+                string liveJson = JsonSerializer.Serialize(liveData);
+                string cargoJson = JsonSerializer.Serialize(cargoList);
+                string vendorJson = JsonSerializer.Serialize(vendorList);
+                string patrolHeliJson = JsonSerializer.Serialize(patrolHeliList);
+                string chinookJson = JsonSerializer.Serialize(chinookList);
+
+                string script = $$"""
+                    if (window.updateLiveMarkers) window.updateLiveMarkers({{liveJson}}.players, {{liveJson}}.deaths);
+                    if (window.updateCargoMarkers) window.updateCargoMarkers({{cargoJson}});
+                    if (window.updateVendorMarkers) window.updateVendorMarkers({{vendorJson}});
+                    if (window.updatePatrolHeliMarkers) window.updatePatrolHeliMarkers({{patrolHeliJson}});
+                    if (window.updateChinookMarkers) window.updateChinookMarkers({{chinookJson}});
+                    """;
                 await _map3DWebView.CoreWebView2.ExecuteScriptAsync(script);
             }
             catch { }
@@ -729,12 +1030,31 @@ return;
             }
         }
 
+        private static bool IsIgnoredRuntimePath(string relativePath)
+        {
+            var segments = relativePath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var segment in segments)
+            {
+                if (segment.StartsWith('.') ||
+                    string.Equals(segment, "node_modules", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "bin", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "obj", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "maps", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static void CopyDirectoryIfExists(string sourceDir, string targetDir)
         {
             if (!Directory.Exists(sourceDir)) return;
             foreach (string sourceFile in Directory.EnumerateFiles(sourceDir, "*", SearchOption.AllDirectories))
             {
                 string relative = Path.GetRelativePath(sourceDir, sourceFile);
+                if (IsIgnoredRuntimePath(relative)) continue;
+
                 string target = Path.Combine(targetDir, relative);
                 Directory.CreateDirectory(Path.GetDirectoryName(target)!);
                 File.Copy(sourceFile, target, overwrite: true);
@@ -745,11 +1065,109 @@ return;
             await SearchRustMapsAsync(forceRefetch: true);
         }
 
+        private string? _currentActiveHeatmap = null;
+
+        private void BtnToggleHeatmap_Click(object sender, RoutedEventArgs e)
+        {
+            if (HeatmapPopup != null)
+            {
+                HeatmapPopup.IsOpen = !HeatmapPopup.IsOpen;
+                if (HeatmapPopup.IsOpen)
+                {
+                    UpdateBentoActiveStates();
+                }
+            }
+        }
+
+        private static readonly Dictionary<string, string> HeatmapLabels = new()
+        {
+            { "ores", "Ores" }, { "wood", "Wood Piles" }, { "logs", "Log Piles" },
+            { "mushroom", "Mushrooms" }, { "berries", "Berries" }, { "corn", "Corn" },
+            { "pumpkin", "Pumpkins" }, { "potato", "Potatoes" }, { "wheat", "Wheat" },
+            { "bear", "Bears" }, { "boar", "Boars" }, { "chicken", "Chickens" },
+            { "wolf", "Wolves" }, { "stag", "Deers" }, { "crocodile", "Crocodiles" },
+            { "tiger", "Tigers" }, { "snake", "Snakes" },
+            { "junkpiles", "Junkpiles" }, { "rowboat", "Rowboats" },
+            { "modularcar", "Modular Cars" }, { "horse", "Horses" },
+            { "pedalbike", "Bicycles" }, { "hab", "Hot Air Balloons" },
+            { "flowers", "Flowers" },
+        };
+
+        private void UpdateBentoActiveStates()
+        {
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers" };
+            foreach (var cat in allCategories)
+            {
+                var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
+                if (border != null)
+                {
+                    bool isActive = (cat == _currentActiveHeatmap);
+                    border.BorderBrush = isActive
+                        ? new SolidColorBrush(Color.FromRgb(74, 193, 255))
+                        : Brushes.Transparent;
+                    border.BorderThickness = isActive ? new Thickness(1.5) : new Thickness(1);
+                }
+            }
+
+            // Update active heatmap badge
+            var badge = FindName("ActiveHeatmapBadge") as Badge;
+            var label = FindName("ActiveHeatmapLabel") as System.Windows.Controls.TextBlock;
+            bool hasActive = _currentActiveHeatmap != null && HeatmapLabels.ContainsKey(_currentActiveHeatmap);
+            if (badge != null && label != null)
+            {
+                badge.Visibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                label.Text = hasActive
+                    ? $"Active: {HeatmapLabels[_currentActiveHeatmap!]}"
+                    : "No heatmap active";
+            }
+
+            var glow = FindName("HeatmapActiveGlow") as System.Windows.Controls.Border;
+            if (glow != null)
+                glow.Visibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        }
+
+        private void HeatmapSearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var searchBox = sender as System.Windows.Controls.TextBox;
+            if (searchBox == null) return;
+
+            string filter = searchBox.Text?.Trim().ToLowerInvariant() ?? "";
+
+            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower" };
+
+            foreach (var cat in allCategories)
+            {
+                var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
+                if (border == null) continue;
+
+                if (string.IsNullOrEmpty(filter))
+                {
+                    border.Visibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    var btn = border.Child as System.Windows.Controls.Button;
+                    string tagText = btn?.Tag?.ToString()?.ToLowerInvariant() ?? "";
+                    string toolTipText = btn?.ToolTip?.ToString()?.ToLowerInvariant() ?? "";
+                    border.Visibility = (tagText.Contains(filter) || toolTipText.Contains(filter))
+                        ? System.Windows.Visibility.Visible
+                        : System.Windows.Visibility.Collapsed;
+                }
+            }
+        }
+
         private async void BtnHeatmapIcon_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Wpf.Ui.Controls.Button btn && btn.Tag is string heatmapType)
+            if (sender is FrameworkElement btn && btn.Tag is string heatmapType)
             {
-                BtnToggleHeatmap.IsChecked = false;
+                // Toggle behavior: if they click the active one, clear it
+                if (_currentActiveHeatmap == heatmapType)
+                {
+                    heatmapType = "clear";
+                }
+
+                _currentActiveHeatmap = (heatmapType == "clear") ? null : heatmapType;
+                UpdateBentoActiveStates();
 
                 if (heatmapType == "clear")
                 {
@@ -758,7 +1176,7 @@ return;
                     {
                         var data = new { type = "CLEAR_HEATMAP" };
                         string json = JsonSerializer.Serialize(data);
-                        _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
+                        _ = _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
                     }
                     return;
                 }
@@ -805,7 +1223,7 @@ return;
             {
                 using var fs = new System.IO.FileStream(dataPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
                 using var doc = await System.Text.Json.JsonDocument.ParseAsync(fs);
-                
+
                 if (doc.RootElement.TryGetProperty("heatmaps", out var heatmapsEl) &&
                     heatmapsEl.TryGetProperty(category, out var b64El))
                 {
@@ -897,6 +1315,73 @@ return;
             catch (Exception ex)
             {
                 AppendLog($"[Heatmap] Failed to draw 2D heatmap: {ex.Message}");
+            }
+        }
+
+        public void CheckAndExecutePendingMapCopy(ServerProfile connectedProfile)
+        {
+            if (_copyMapSourceProfile == null) return;
+
+            var sourceProfile = _copyMapSourceProfile;
+            if (sourceProfile == connectedProfile) return;
+
+            try
+            {
+                AppendLog($"[Offline Map] Checking layout match between offline map '{sourceProfile.Name}' and connected server '{connectedProfile.Name}'...");
+
+                string sourceFolder = Map3DLocalBuildService.GetPreparedFolderPath(sourceProfile, sourceProfile.RustMapsMapId);
+                string resolvedPath = Path.Combine(sourceFolder, "map_resolved.json");
+
+                if (!File.Exists(resolvedPath))
+                {
+                    AppendLog($"[Offline Map] Source map '{sourceProfile.Name}' has not been parsed into 3D map data yet. Please open its 3D map once to parse it.");
+                    System.Windows.MessageBox.Show($"The offline map '{sourceProfile.Name}' has not been parsed yet. Please open its 3D Map once to parse it, then try copying again.", "Copy Map Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    _copyMapSourceProfile = null;
+                    return;
+                }
+
+                var references = (_monData ?? new List<(double X, double Y, string Name)>())
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                    .Take(12)
+                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                    .ToList();
+
+                var score = Map3DLocalBuildService.ScoreParsedMap(resolvedPath, references, _worldSizeS);
+                bool isGoodMatch = Map3DLocalBuildService.IsGoodMatch(score, references);
+
+                if (!isGoodMatch)
+                {
+                    AppendLog($"[Offline Map] Layout mismatch! Mapped count: {score.MatchedCount}, distance: {score.TotalDistance}. Aborting copy.");
+                    System.Windows.MessageBox.Show($"Map layouts do not match! The map '{sourceProfile.Name}' does not appear to be the same map as the connected server '{connectedProfile.Name}'.", "Map Mismatch", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    _copyMapSourceProfile = null;
+                    return;
+                }
+
+                string targetFolder = Map3DLocalBuildService.GetPreparedFolderPath(connectedProfile, connectedProfile.RustMapsMapId);
+                Directory.CreateDirectory(targetFolder);
+
+                foreach (var file in Directory.GetFiles(sourceFolder))
+                {
+                    string destFile = Path.Combine(targetFolder, Path.GetFileName(file));
+                    File.Copy(file, destFile, overwrite: true);
+                }
+
+                connectedProfile.LocalMapFilePath = sourceProfile.LocalMapFilePath;
+                connectedProfile.LocalMapImagePath = sourceProfile.LocalMapImagePath;
+                _vm.Save();
+
+                AppendLog($"[Offline Map] Map successfully copied from '{sourceProfile.Name}' to '{connectedProfile.Name}'!");
+                System.Windows.MessageBox.Show($"Successfully copied 3D map and local assets from '{sourceProfile.Name}' to '{connectedProfile.Name}'!", "Map Copied", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Error during map copy: {ex.Message}");
+                System.Windows.MessageBox.Show($"An error occurred while copying the map: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+            finally
+            {
+                _copyMapSourceProfile = null;
+                UpdateRustMapsUi();
             }
         }
 

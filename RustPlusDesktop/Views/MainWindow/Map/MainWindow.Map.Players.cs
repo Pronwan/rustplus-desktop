@@ -726,7 +726,7 @@ public partial class MainWindow
                 };
                 if (prompt.ShowDialog() == true)
                 {
-                    marker.CustomName = string.IsNullOrWhiteSpace(prompt.InputText) ? null : prompt.InputText;
+                    marker.CustomName = string.IsNullOrWhiteSpace(prompt.InputText) ? string.Empty : prompt.InputText;
                     _vm.Save();
                     RedrawDeathPins();
                 }

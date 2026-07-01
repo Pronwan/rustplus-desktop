@@ -150,8 +150,17 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get => _isBusy;
-        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); }
+        set { _isBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(ShowLoginOverlay)); OnPropertyChanged(nameof(IsGlobalBusyOverlayVisible)); }
     }
+
+    private bool _isConnectionLoading;
+    public bool IsConnectionLoading
+    {
+        get => _isConnectionLoading;
+        set { _isConnectionLoading = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsGlobalBusyOverlayVisible)); }
+    }
+
+    public bool IsGlobalBusyOverlayVisible => IsBusy && !IsConnectionLoading;
 
     private bool _isCloudConnected;
     public bool IsCloudConnected
@@ -222,6 +231,27 @@ public class MainViewModel : INotifyPropertyChanged
         set { _updateDownloadPercentage = value; OnPropertyChanged(); }
     }
 
+    private string _currentDownloadFile = "";
+    public string CurrentDownloadFile
+    {
+        get => _currentDownloadFile;
+        set { _currentDownloadFile = value; OnPropertyChanged(); }
+    }
+
+    private bool _isDownloadPaused;
+    public bool IsDownloadPaused
+    {
+        get => _isDownloadPaused;
+        set { _isDownloadPaused = value; OnPropertyChanged(); }
+    }
+
+    private string _pauseResumeButtonText = "Pause";
+    public string PauseResumeButtonText
+    {
+        get => _pauseResumeButtonText;
+        set { _pauseResumeButtonText = value; OnPropertyChanged(); }
+    }
+
     private string _busyText = "";
     public string BusyText
     {
@@ -256,8 +286,40 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    private bool _forceShowLoginOverlay;
+    public bool ForceShowLoginOverlay
+    {
+        get => _forceShowLoginOverlay;
+        set { _forceShowLoginOverlay = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowLoginOverlay)); }
+    }
+
+    private string _loginOverlayMessage = "";
+    public string LoginOverlayMessage
+    {
+        get => _loginOverlayMessage;
+        set 
+        { 
+            _loginOverlayMessage = value; 
+            OnPropertyChanged(); 
+            OnPropertyChanged(nameof(HasLoginOverlayMessage)); 
+        }
+    }
+
+    public bool HasLoginOverlayMessage => !string.IsNullOrEmpty(_loginOverlayMessage);
+
     public void NotifyFcmChanged()
     {
+        bool hasValidToken = TrackingService.IsFcmConfigured() &&
+                            (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+        if (hasValidToken)
+        {
+            _forceShowLoginOverlay = false;
+            _loginOverlayMessage = "";
+            OnPropertyChanged(nameof(ForceShowLoginOverlay));
+            OnPropertyChanged(nameof(LoginOverlayMessage));
+            OnPropertyChanged(nameof(HasLoginOverlayMessage));
+        }
+
         OnPropertyChanged(nameof(FcmExpiryText));
         OnPropertyChanged(nameof(FcmExpiryDays));
         OnPropertyChanged(nameof(ShowLoginOverlay));
@@ -267,6 +329,8 @@ public class MainViewModel : INotifyPropertyChanged
     {
         get
         {
+            if (ForceShowLoginOverlay) return true;
+
             // Show overlay if no token registered and not currently busy/initializing
             // Show overlay if no valid token exists
             bool hasToken = TrackingService.IsFcmConfigured() &&
@@ -327,7 +391,7 @@ public class MainViewModel : INotifyPropertyChanged
         public List<StorageItemVM> Items { get; init; } = new();
     }
 
-    public sealed class StorageItemVM : INotifyPropertyChanged
+    public sealed class StorageItemVM
     {
         public int ItemId { get; init; }
         public string? ShortName { get; init; }
@@ -336,7 +400,6 @@ public class MainViewModel : INotifyPropertyChanged
 
         public string Display => MainWindow.ResolveItemName(ItemId, ShortName);
         public ImageSource? Icon => MainWindow.ResolveItemIcon(ItemId, ShortName, 32);
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 
     private string _serverPlayers = "-/-";
