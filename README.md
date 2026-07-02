@@ -52,6 +52,15 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🧊 Update v7.1.7 | 3D Map Monuments & Build Surfaces
+
+- **Iceberg Monument Meshes:** Added five iceberg `.glb` monument mesh assets, loaded from `Rust_Assets/Monuments/Mesh` and faded like other monuments.
+- **Better Build Placement:** Build mode now raycasts against terrain plus buildable structure surfaces, including rock, cliff, coastal, and iceberg surfaces.
+- **Smarter Ghost Placement:** Added `lastBuildSurface` state so ghost placement remembers whether it is on terrain or a structure.
+- **Walkable Monument Surfaces:** Walking and camera ground snapping now support marked walkable rock and monument surfaces.
+- **Patrol Heli Animation:** Patrol heli now animates both the main rotor and rear rotor.
+- **Apartments Icon Matching:** Apartments complex icon matching now handles `apartments_complex`, and `apartments_complex_1` was added to `prefabs_map.json`.
+
 # 🛠️ Update v7.1.6 | 3D Map Hotfix
 
 - **3D Map Loading Fix:** Fixed an issue where the 3D map could open to a blank "Not Found" screen for some users.

@@ -33,6 +33,45 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v7.1.7 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v7.1.7 | 3D Map Monuments &amp; Build Surfaces" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold" Foreground="{DynamicResource Accent}">&#x2022; Iceberg Monument Meshes:</Run>
+                                Added five iceberg .glb monument mesh assets, loaded from Rust_Assets/Monuments/Mesh and faded like other monuments.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Better Build Placement:</Run>
+                                Build mode now raycasts against terrain plus buildable structure surfaces, including rock, cliff, coastal, and iceberg surfaces.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Smarter Ghost Placement:</Run>
+                                Added lastBuildSurface state so ghost placement remembers whether it is on terrain or a structure.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Walkable Monument Surfaces:</Run>
+                                Walking and camera ground snapping now support marked walkable rock and monument surfaces.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Patrol Heli Animation:</Run>
+                                Patrol heli now animates both the main rotor and rear rotor.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Apartments Icon Matching:</Run>
+                                Apartments complex icon matching now handles apartments_complex, and apartments_complex_1 was added to prefabs_map.json.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v7.1.6 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
