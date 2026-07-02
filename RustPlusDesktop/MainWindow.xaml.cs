@@ -1846,7 +1846,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         if (s.Contains("underwater") || s.Contains("under water") || s.Contains("underwaterlab") || s.Contains("moonpool"))
         {
-            return "underwater labs";
+            return "underwater lab";
         }
 
         // unerwÃ¼nschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
@@ -4702,12 +4702,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             return "Arctic Research Base";
         }
+        if (lower.Contains("launchsite"))
+        {
+            return "Launch Site";
+        }
+        if (lower.Contains("supermarket") || lower.Contains("supermarket_1")) return "Abandoned Supermarket";
         if (lower.Contains("harbor_2") || lower.Contains("harbor 2")) return "Harbor";
         if (lower.Contains("stables a") || lower.Contains("stables_a")) return "Ranch";
         if (lower.Contains("stables b") || lower.Contains("stables_b")) return "Large Barn";
         if (lower.Contains("excavator")) return "Large Excavator Pit";
         if (lower.Contains("gas station") || lower.Contains("gas_station")) return "Oxum's Gas Station";
         if (lower.Contains("sewer")) return "Sewer Branch";
+        if (lower.Contains("apartment complex") || lower.Contains("apartmentcomplex") || lower.Contains("apartment_complex")) return "Apartments Complex";
         s = s.Replace('\\', '/');
         var last = s.LastIndexOf('/');
         var token = last >= 0 ? s[(last + 1)..] : s;
