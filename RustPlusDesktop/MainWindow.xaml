@@ -435,9 +435,14 @@
                                     Grid.Column="2"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                                    <Grid>
+                                    <Grid
+                                        Width="40"
+                                        Height="32">
                                         <ui:Button
                                             x:Name="BtnCheckUpdates"
+                                            Width="40"
+                                            Height="32"
+                                            Padding="0"
                                             Appearance="Transparent"
                                             Click="BtnCheckUpdates_Click"
                                             MouseEnter="BtnCheckUpdates_MouseEnter"
@@ -617,7 +622,10 @@
                                     </Grid>
                                     <ui:Button
                                         x:Name="BtnDiscord"
+                                        Width="40"
+                                        Height="32"
                                         Margin="4,0,0,0"
+                                        Padding="0"
                                         Appearance="Transparent"
                                         Click="BtnDiscord_Click"
                                         ToolTip="{DynamicResource JoinDiscord}">
@@ -629,24 +637,30 @@
                                     </ui:Button>
                                     <ui:Button
                                         x:Name="BtnPatchNotes"
+                                        Width="40"
+                                        Height="32"
                                         Margin="2,0,0,0"
-                                        Padding="6,4"
+                                        Padding="0"
                                         Appearance="Transparent"
                                         Click="BtnPatchNotes_Click"
                                         Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
                                         ToolTip="{DynamicResource PatchNotes}" />
                                     <ui:Button
                                         x:Name="BtnSettings"
+                                        Width="40"
+                                        Height="32"
                                         Margin="2,0,0,0"
-                                        Padding="6,4"
+                                        Padding="0"
                                         Appearance="Transparent"
                                         Click="BtnSettings_Click"
                                         Icon="{ui:SymbolIcon Symbol=Settings24}"
                                         ToolTip="{DynamicResource Settings}" />
                                     <ui:Button
                                         x:Name="BtnPinSidebar"
+                                        Width="40"
+                                        Height="32"
                                         Margin="2,0,0,0"
-                                        Padding="6,4"
+                                        Padding="0"
                                         Appearance="Transparent"
                                         Click="BtnToggleSidebarPin_Click"
                                         Icon="{ui:SymbolIcon Symbol=Pin24}"

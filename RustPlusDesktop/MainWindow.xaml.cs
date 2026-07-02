@@ -6635,14 +6635,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         var tooltip = _isSidebarPinnedExpanded ? "Fold sidebar" : "Keep sidebar unfolded";
 
-        if (BtnPinSidebar != null)
+        UpdateSidebarPinButton(BtnPinSidebar, tooltip, WpfUi.ControlAppearance.Transparent);
+        UpdateSidebarPinButton(BtnCompactPinSidebar, tooltip, WpfUi.ControlAppearance.Secondary);
+    }
+
+    private void UpdateSidebarPinButton(WpfUi.Button? button, string tooltip, WpfUi.ControlAppearance inactiveAppearance)
+    {
+        if (button == null)
         {
-            BtnPinSidebar.ToolTip = tooltip;
+            return;
         }
 
-        if (BtnCompactPinSidebar != null)
+        button.ToolTip = tooltip;
+        button.Appearance = _isSidebarPinnedExpanded
+            ? WpfUi.ControlAppearance.Secondary
+            : inactiveAppearance;
+        button.SetResourceReference(ForegroundProperty, _isSidebarPinnedExpanded ? "Accent" : "TextPrimary");
+
+        if (button.Icon is WpfUi.SymbolIcon icon)
         {
-            BtnCompactPinSidebar.ToolTip = tooltip;
+            icon.Symbol = WpfUi.SymbolRegular.Pin24;
+            icon.Filled = _isSidebarPinnedExpanded;
+            icon.RenderTransformOrigin = new Point(0.5, 0.5);
+            icon.RenderTransform = _isSidebarPinnedExpanded
+                ? new RotateTransform(-45)
+                : Transform.Identity;
         }
     }
 
