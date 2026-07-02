@@ -1929,12 +1929,13 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 Text = tooltip,
                 FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Assets/Fonts/#Permanent Marker"),
-                Foreground = Brushes.Black,
-                FontSize = 13,
-                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0)),
+                FontSize = 9,
+                FontWeight = FontWeights.Normal,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                TextAlignment = TextAlignment.Center
+                TextAlignment = TextAlignment.Center,
+                LayoutTransform = new ScaleTransform(1.18, 1.0)
             };
 
             var textBorder = new Border
@@ -4672,10 +4673,41 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             return "Underwater Labs";
         }
-
+        if (lower.Contains("dome") || lower.Contains("dome monument"))
+        {
+            return "Dome";
+        }
+        if (lower.Contains("launch facility") || lower.Contains("launch_facility"))
+        {
+            return "Launch Site";
+        }
+        if (lower.Contains("missile silo monument") || lower.Contains("missile_silo_monument") ||
+            lower.Contains("missle silo monument") || lower.Contains("missle_silo_monument"))
+        {
+            return "Missile Silo";
+        }
+        if (lower.Contains("mining quarry sulfur") || lower.Contains("mining_quarry_sulfur"))
+        {
+            return "Sulfur Quarry";
+        }
+        if (lower.Contains("mining quarry stone") || lower.Contains("mining_quarry_stone"))
+        {
+            return "Stone Quarry";
+        }
+        if (lower.Contains("mining quarry hqm") || lower.Contains("mining_quarry_hqm"))
+        {
+            return "HQM Quarry";
+        }
+        if (lower.Contains("arctic base") || lower.Contains("arctic_base"))
+        {
+            return "Arctic Research Base";
+        }
         if (lower.Contains("harbor_2") || lower.Contains("harbor 2")) return "Harbor";
-        if (lower.Contains("harbor")) return "Harbor 2";
-
+        if (lower.Contains("stables a") || lower.Contains("stables_a")) return "Ranch";
+        if (lower.Contains("stables b") || lower.Contains("stables_b")) return "Large Barn";
+        if (lower.Contains("excavator")) return "Large Excavator Pit";
+        if (lower.Contains("gas station") || lower.Contains("gas_station")) return "Oxum's Gas Station";
+        if (lower.Contains("sewer")) return "Sewer Branch";
         s = s.Replace('\\', '/');
         var last = s.LastIndexOf('/');
         var token = last >= 0 ? s[(last + 1)..] : s;
