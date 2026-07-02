@@ -14,7 +14,6 @@ using System.Runtime.Loader;
 using System.Windows.Threading;
 using RustPlusDesk.Views;
 using RustPlusDesk.Services;
-using RustPlusDesk.Services.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -84,8 +83,6 @@ public partial class App : Application
             return;
         }
 
-        Task.Run(DeleteLegacyMap3DViewerFolder);
-
         // Initialize Supabase Client
         _ = SupabaseAuthManager.InitializeAsync();
 
@@ -147,29 +144,6 @@ public partial class App : Application
         _main.WindowState = WindowState.Normal;
         _main.Activate();
         _main.Topmost = true; _main.Topmost = false;
-    }
-
-    private static void DeleteLegacyMap3DViewerFolder()
-    {
-        try
-        {
-            string target = Path.GetFullPath(Path.Combine(DataManager.AppDir, "Map3DViewer"));
-            string expected = Path.GetFullPath(Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "RustPlusDesk",
-                "Map3DViewer"));
-
-            if (!string.Equals(target, expected, StringComparison.OrdinalIgnoreCase) || !Directory.Exists(target))
-            {
-                return;
-            }
-
-            Directory.Delete(target, recursive: true);
-        }
-        catch
-        {
-            // Best-effort cleanup; the 3D viewer runtime can be recreated when needed.
-        }
     }
 
     private void SetupTrayIcon()
