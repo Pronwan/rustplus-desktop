@@ -1846,7 +1846,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         if (s.Contains("underwater") || s.Contains("under water") || s.Contains("underwaterlab") || s.Contains("moonpool"))
         {
-            return "underwater labs";
+            return "underwater lab";
         }
 
         // unerwÃ¼nschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
@@ -1929,12 +1929,13 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 Text = tooltip,
                 FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Assets/Fonts/#Permanent Marker"),
-                Foreground = Brushes.Black,
-                FontSize = 13,
-                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0)),
+                FontSize = 9,
+                FontWeight = FontWeights.Normal,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                TextAlignment = TextAlignment.Center
+                TextAlignment = TextAlignment.Center,
+                LayoutTransform = new ScaleTransform(1.18, 1.0)
             };
 
             var textBorder = new Border
@@ -1943,10 +1944,10 @@ public partial class MainWindow : WpfUi.FluentWindow
                 Padding = new Thickness(2, 1, 2, 1),
                 Background = Brushes.Transparent,
                 BorderBrush = Brushes.Transparent,
-                BorderThickness = new Thickness(0)
+                BorderThickness = new Thickness(0),
+                IsHitTestVisible = false
             };
 
-            ToolTipService.SetToolTip(textBorder, tooltip);
             return textBorder;
         }
 
@@ -4047,6 +4048,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsPairingBusy = false;
         }
     }
+    private const int MaxLogLines = 2000;
+    private const double CollapsedLogHeight = 200;
+    private const double ExpandedLogHeight = 420;
+    private bool _isLogExpanded;
+    private readonly List<string> _logLines = new();
     private static readonly List<string> sPendingLogs = new();
     public static event Action? IconsUpdated;
 
@@ -4057,12 +4063,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (sPendingLogs.Count > 0)
             {
-                foreach (var pl in sPendingLogs)
-                {
-                    TxtLog.AppendText(pl + Environment.NewLine);
-                }
+                foreach (var pl in sPendingLogs) AddLogLine(pl);
                 sPendingLogs.Clear();
-                TxtLog.ScrollToEnd();
+                RefreshLogText();
             }
         }
     }
@@ -4083,10 +4086,58 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             else
             {
                 FlushPendingLogs();
-                TxtLog.AppendText(formatted + Environment.NewLine);
-                TxtLog.ScrollToEnd();
+                bool trimmed = AddLogLine(formatted);
+                if (trimmed || HasLogFilter())
+                {
+                    RefreshLogText();
+                }
+                else
+                {
+                    TxtLog.AppendText(formatted + Environment.NewLine);
+                    TxtLog.ScrollToEnd();
+                }
             }
         });
+    }
+
+    private bool AddLogLine(string line)
+    {
+        _logLines.Add(line);
+        int overflow = _logLines.Count - MaxLogLines;
+        if (overflow <= 0) return false;
+
+        _logLines.RemoveRange(0, overflow);
+        return true;
+    }
+
+    private bool HasLogFilter()
+        => !string.IsNullOrWhiteSpace(TxtLogFilter?.Text);
+
+    private void RefreshLogText()
+    {
+        if (TxtLog == null) return;
+
+        string filter = TxtLogFilter?.Text?.Trim() ?? "";
+        IEnumerable<string> lines = string.IsNullOrWhiteSpace(filter)
+            ? _logLines
+            : _logLines.Where(x => x.Contains(filter, StringComparison.OrdinalIgnoreCase));
+
+        TxtLog.Text = string.Join(Environment.NewLine, lines);
+        if (TxtLog.Text.Length > 0) TxtLog.AppendText(Environment.NewLine);
+        TxtLog.ScrollToEnd();
+    }
+
+    private void TxtLogFilter_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        RefreshLogText();
+    }
+
+    private void BtnToggleLogExpand_Click(object sender, RoutedEventArgs e)
+    {
+        _isLogExpanded = !_isLogExpanded;
+        if (LogPanel != null) LogPanel.Height = _isLogExpanded ? ExpandedLogHeight : CollapsedLogHeight;
+        if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? "Collapse" : "Expand";
+        TxtLog?.ScrollToEnd();
     }
 
     static readonly JsonSerializerOptions JsonOpt = new()
@@ -4622,10 +4673,47 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             return "Underwater Labs";
         }
-
+        if (lower.Contains("dome") || lower.Contains("dome monument"))
+        {
+            return "Dome";
+        }
+        if (lower.Contains("launch facility") || lower.Contains("launch_facility"))
+        {
+            return "Launch Site";
+        }
+        if (lower.Contains("missile silo monument") || lower.Contains("missile_silo_monument") ||
+            lower.Contains("missle silo monument") || lower.Contains("missle_silo_monument"))
+        {
+            return "Missile Silo";
+        }
+        if (lower.Contains("mining quarry sulfur") || lower.Contains("mining_quarry_sulfur"))
+        {
+            return "Sulfur Quarry";
+        }
+        if (lower.Contains("mining quarry stone") || lower.Contains("mining_quarry_stone"))
+        {
+            return "Stone Quarry";
+        }
+        if (lower.Contains("mining quarry hqm") || lower.Contains("mining_quarry_hqm"))
+        {
+            return "HQM Quarry";
+        }
+        if (lower.Contains("arctic base") || lower.Contains("arctic_base"))
+        {
+            return "Arctic Research Base";
+        }
+        if (lower.Contains("launchsite"))
+        {
+            return "Launch Site";
+        }
+        if (lower.Contains("supermarket") || lower.Contains("supermarket_1")) return "Abandoned Supermarket";
         if (lower.Contains("harbor_2") || lower.Contains("harbor 2")) return "Harbor";
-        if (lower.Contains("harbor")) return "Harbor 2";
-
+        if (lower.Contains("stables a") || lower.Contains("stables_a")) return "Ranch";
+        if (lower.Contains("stables b") || lower.Contains("stables_b")) return "Large Barn";
+        if (lower.Contains("excavator")) return "Large Excavator Pit";
+        if (lower.Contains("gas station") || lower.Contains("gas_station")) return "Oxum's Gas Station";
+        if (lower.Contains("sewer")) return "Sewer Branch";
+        if (lower.Contains("apartment complex") || lower.Contains("apartmentcomplex") || lower.Contains("apartment_complex")) return "Apartments Complex";
         s = s.Replace('\\', '/');
         var last = s.LastIndexOf('/');
         var token = last >= 0 ? s[(last + 1)..] : s;
@@ -6070,9 +6158,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     public void ApplySettings()
     {
-        if (TxtLog != null)
+        if (LogPanel != null)
         {
-            TxtLog.Visibility = TrackingService.HideConsole ? Visibility.Collapsed : Visibility.Visible;
+            LogPanel.Visibility = TrackingService.HideConsole ? Visibility.Collapsed : Visibility.Visible;
+        }
+        if (WebViewHost != null)
+        {
+            WebViewHost.Margin = new Thickness(-12, 0, -12, TrackingService.HideConsole ? -12 : 8);
         }
 
         if (ColSidebar != null)
@@ -6581,14 +6673,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         var tooltip = _isSidebarPinnedExpanded ? "Fold sidebar" : "Keep sidebar unfolded";
 
-        if (BtnPinSidebar != null)
+        UpdateSidebarPinButton(BtnPinSidebar, tooltip, WpfUi.ControlAppearance.Transparent);
+        UpdateSidebarPinButton(BtnCompactPinSidebar, tooltip, WpfUi.ControlAppearance.Secondary);
+    }
+
+    private void UpdateSidebarPinButton(WpfUi.Button? button, string tooltip, WpfUi.ControlAppearance inactiveAppearance)
+    {
+        if (button == null)
         {
-            BtnPinSidebar.ToolTip = tooltip;
+            return;
         }
 
-        if (BtnCompactPinSidebar != null)
+        button.ToolTip = tooltip;
+        button.Appearance = _isSidebarPinnedExpanded
+            ? WpfUi.ControlAppearance.Secondary
+            : inactiveAppearance;
+        button.SetResourceReference(ForegroundProperty, _isSidebarPinnedExpanded ? "Accent" : "TextPrimary");
+
+        if (button.Icon is WpfUi.SymbolIcon icon)
         {
-            BtnCompactPinSidebar.ToolTip = tooltip;
+            icon.Symbol = WpfUi.SymbolRegular.Pin24;
+            icon.Filled = _isSidebarPinnedExpanded;
+            icon.RenderTransformOrigin = new Point(0.5, 0.5);
+            icon.RenderTransform = _isSidebarPinnedExpanded
+                ? new RotateTransform(-45)
+                : Transform.Identity;
         }
     }
 

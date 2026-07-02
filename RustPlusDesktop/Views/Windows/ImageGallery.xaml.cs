@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -60,7 +61,7 @@ namespace RustPlusDesk.Views
             {
                 if (!string.IsNullOrEmpty(activeItem.ImagePath))
                 {
-                    ImgPreview.Source = new BitmapImage(new Uri(activeItem.ImagePath, UriKind.RelativeOrAbsolute));
+                    ImgPreview.Source = new BitmapImage(ResolveImageUri(activeItem.ImagePath));
                 }
             }
             catch
@@ -152,6 +153,20 @@ namespace RustPlusDesk.Views
                 }
                 catch { }
             }
+        }
+
+        private static Uri ResolveImageUri(string imagePath)
+        {
+            const string packPrefix = "pack://application:,,,/";
+            if (imagePath.StartsWith(packPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                var relativePath = imagePath[packPrefix.Length..].Replace('/', System.IO.Path.DirectorySeparatorChar);
+                var contentPath = System.IO.Path.Combine(AppContext.BaseDirectory, relativePath);
+                if (File.Exists(contentPath))
+                    return new Uri(contentPath, UriKind.Absolute);
+            }
+
+            return new Uri(imagePath, UriKind.RelativeOrAbsolute);
         }
     }
 }

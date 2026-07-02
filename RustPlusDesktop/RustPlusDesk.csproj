@@ -337,29 +337,6 @@
     <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <ItemGroup Condition="Exists('..\MapParser\MapParser.csproj')">
-    <Content Include="..\MapParser\style.css">
-      <Link>MapParser\style.css</Link>
-      <TargetPath>MapParser\style.css</TargetPath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-    <Content Include="..\MapParser\draco_decoder.wasm" Condition="Exists('..\MapParser\draco_decoder.wasm')">
-      <Link>MapParser\draco_decoder.wasm</Link>
-      <TargetPath>MapParser\draco_decoder.wasm</TargetPath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-    <Content Include="..\MapParser\Rust_Assets\**\*" Exclude="..\MapParser\Rust_Assets\**\*.blend;..\MapParser\Rust_Assets\**\*.psd">
-      <Link>MapParser\Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <TargetPath>MapParser\Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-
-  </ItemGroup>
-
-
   <PropertyGroup>
     <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
     <MapParserPublishDir>$(MSBuildProjectDirectory)\..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
@@ -370,11 +347,19 @@
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
+    <ItemGroup>
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" />
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)app.js" Condition="Exists('$(MapParserPublishDir)app.js')" />
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)build-client.mjs" Condition="Exists('$(MapParserPublishDir)build-client.mjs')" />
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)package.json" Condition="Exists('$(MapParserPublishDir)package.json')" />
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)package-lock.json" Condition="Exists('$(MapParserPublishDir)package-lock.json')" />
+    </ItemGroup>
+    <Error Condition="'@(MapParserForbiddenPublishedFile)' != ''" Text="MapParser publish contains source files: @(MapParserForbiddenPublishedFile)" />
   </Target>
 
   <Target Name="IncludeMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
-      <MapParserPublishedAsset Include="$(MapParserPublishDir)assets\**\*" Condition="Exists('$(MapParserPublishDir)assets')" />
+      <MapParserPublishedContent Include="$(MapParserPublishDir)**\*" Exclude="$(MapParserPublishedExe)" />
 
       <Content Include="$(MapParserPublishedExe)">
         <Link>MapParser\MapParser.exe</Link>
@@ -382,27 +367,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </Content>
-      <Content Include="$(MapParserPublishDir)index.html" Condition="Exists('$(MapParserPublishDir)index.html')">
-        <Link>MapParser\index.html</Link>
-        <TargetPath>MapParser\index.html</TargetPath>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Include="@(MapParserPublishedAsset)">
-        <Link>MapParser\assets\%(MapParserPublishedAsset.RecursiveDir)%(MapParserPublishedAsset.Filename)%(MapParserPublishedAsset.Extension)</Link>
-        <TargetPath>MapParser\assets\%(MapParserPublishedAsset.RecursiveDir)%(MapParserPublishedAsset.Filename)%(MapParserPublishedAsset.Extension)</TargetPath>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Include="..\MapParser\prefabs_map.json" Condition="Exists('..\MapParser\prefabs_map.json')">
-        <Link>MapParser\prefabs_map.json</Link>
-        <TargetPath>MapParser\prefabs_map.json</TargetPath>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Include="..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json" Condition="Exists('..\MapParser\Rust_Assets\Metadata\carbon_prefabs.json')">
-        <Link>MapParser\Rust_Assets\Metadata\carbon_prefabs.json</Link>
-        <TargetPath>MapParser\Rust_Assets\Metadata\carbon_prefabs.json</TargetPath>
+      <Content Include="@(MapParserPublishedContent)">
+        <Link>MapParser\%(MapParserPublishedContent.RecursiveDir)%(MapParserPublishedContent.Filename)%(MapParserPublishedContent.Extension)</Link>
+        <TargetPath>MapParser\%(MapParserPublishedContent.RecursiveDir)%(MapParserPublishedContent.Filename)%(MapParserPublishedContent.Extension)</TargetPath>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </Content>
@@ -664,6 +631,14 @@
     <Resource Include="Assets\Images\5.3.0\NewLanguageSelector.png" />
     <Resource Include="Assets\Images\5.3.0\NewSettingOverlayOnLeftPanel.png" />
     <Resource Include="Assets\Images\5.3.0\newTeamChatUI.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Remove="Assets\Images\**\*;Assets\Screenshots\**\*" />
+    <Content Include="Assets\Images\**\*;Assets\Screenshots\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

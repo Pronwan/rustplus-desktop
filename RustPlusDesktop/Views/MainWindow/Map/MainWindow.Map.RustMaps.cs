@@ -632,6 +632,26 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private static void SafeDeleteFile(string path)
+        {
+            if (!File.Exists(path)) return;
+
+            try
+            {
+                var attributes = File.GetAttributes(path);
+                if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
+                }
+
+                File.Delete(path);
+            }
+            catch
+            {
+                // Best effort cleanup.
+            }
+        }
+
         private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
         {
             string runtimeRoot = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Map3DViewer");
@@ -645,6 +665,13 @@ namespace RustPlusDesk.Views
             SafeDeleteDirectory(Path.Combine(runtimeRoot, "node_modules"));
             SafeDeleteDirectory(Path.Combine(runtimeRoot, "bin"));
             SafeDeleteDirectory(Path.Combine(runtimeRoot, "obj"));
+            SafeDeleteDirectory(Path.Combine(runtimeRoot, "modules"));
+            SafeDeleteFile(Path.Combine(runtimeRoot, "app.js"));
+            SafeDeleteFile(Path.Combine(runtimeRoot, "build-client.mjs"));
+            SafeDeleteFile(Path.Combine(runtimeRoot, "package.json"));
+            SafeDeleteFile(Path.Combine(runtimeRoot, "package-lock.json"));
+            SafeDeleteFile(Path.Combine(runtimeRoot, "Program.cs"));
+            SafeDeleteFile(Path.Combine(runtimeRoot, "MapParser.csproj"));
 
             string? viewerRoot = ResolveMap3DViewerSourceRoot();
             if (viewerRoot != null) CopyDirectoryIfExists(viewerRoot, runtimeRoot);
@@ -805,11 +832,13 @@ namespace RustPlusDesk.Views
             string[] candidates =
             {
                 Path.Combine(baseDir, "MapParser"),
-                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser")),
-                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser"))
+                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "win-x64", "publish")),
+                Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "MapParser", "bin", "Debug", "net8.0", "win-x64", "publish"))
             };
 
-            string? found = candidates.FirstOrDefault(p => File.Exists(Path.Combine(p, "index.html")) && File.Exists(Path.Combine(p, "app.js")));
+            string? found = candidates.FirstOrDefault(p =>
+                File.Exists(Path.Combine(p, "index.html")) &&
+                File.Exists(Path.Combine(p, "assets", "manifest.json")));
             return found;
         }
 
@@ -1037,6 +1066,7 @@ namespace RustPlusDesk.Views
             {
                 if (segment.StartsWith('.') ||
                     string.Equals(segment, "node_modules", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(segment, "modules", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(segment, "bin", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(segment, "obj", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(segment, "maps", StringComparison.OrdinalIgnoreCase))
@@ -1044,7 +1074,14 @@ namespace RustPlusDesk.Views
                     return true;
                 }
             }
-            return false;
+
+            string fileName = Path.GetFileName(relativePath);
+            return string.Equals(fileName, "app.js", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(fileName, "build-client.mjs", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(fileName, "package.json", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(fileName, "package-lock.json", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(fileName, "Program.cs", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(fileName, "MapParser.csproj", StringComparison.OrdinalIgnoreCase);
         }
 
         private static void CopyDirectoryIfExists(string sourceDir, string targetDir)
