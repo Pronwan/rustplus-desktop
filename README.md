@@ -52,6 +52,21 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🛠️ Update v7.1.6 | 3D Map Hotfix
+
+- **3D Map Loading Fix:** Fixed an issue where the 3D map could open to a blank "Not Found" screen for some users.
+- **Restored Missing 3D Assets:** Fixed missing water, grass, railroad, icon, rock, and nature assets in the 3D map.
+- **Better Terrain Visuals:** Improved 3D terrain texture blending so biome transitions look smoother and less blocky.
+- **Cleaner 3D Runtime:** Improved how the 3D map viewer is prepared and refreshed during updates.
+
+# 🚀 Update v7.1.5 | Velopack Update Flow & Item Lists Update
+
+- **Velopack Auto-Updates:** Integrated Velopack for modern, faster background auto-updates. Update package sizes are now much smaller thanks to delta patches.
+- **Compiled MapParser Runtime:** Replaced raw viewer source files with compiled client assets for better 3D map loading and runtime performance.
+- **New Item & Recycling Data:** Updated Rust items, stack sizes, and recycling yields in the item list and Recycler Calculator.
+- **3D Map & UI Enhancements:** Improved 3D terrain rendering, nature assets, live markers, camera/follow behavior, Steam avatar caching, and chat sanitization.
+- **Expanded Localization:** Added and improved translations across many supported languages.
+
 # Update v7.1.0 | Resource Heatmaps (2D & 3D)
 
 🗺️ Brand New Procedural Resource Heatmaps You can now visualize the exact spawn zones for all major resources directly on your map! Whether you're looking for the perfect spot to mine ores or want to know where to hunt animals.
