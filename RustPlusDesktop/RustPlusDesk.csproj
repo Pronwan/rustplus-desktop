@@ -25,12 +25,12 @@
 
 	<PropertyGroup>
 		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.1.5</Version>
+		<Version>7.1.8</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.1.5</AssemblyVersion>
-		<FileVersion>7.1.5</FileVersion>
-		<InformationalVersion>7.1.5</InformationalVersion>
+		<AssemblyVersion>7.1.8</AssemblyVersion>
+		<FileVersion>7.1.8</FileVersion>
+		<InformationalVersion>7.1.8</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->
@@ -73,6 +73,7 @@
 	  <None Remove="Assets\icons\animat-Icons\chinook_animate.png" />
 	  <None Remove="Assets\icons\animat-Icons\chinook_map_body.png" />
 	  <None Remove="Assets\icons\anvil-rock.png" />
+	  <None Remove="Assets\icons\apartments_complex_1.png" />
 	  <None Remove="Assets\icons\arcticresearch.png" />
 	  <None Remove="Assets\icons\banditcamp.png" />
 	  <None Remove="Assets\icons\barn.png" />
@@ -247,6 +248,7 @@
 	  <None Remove="Assets\Screenshots\Tracking4.jpg" />
 	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
 	  <None Remove="Assets\Screenshots\v7.1.5\*.png" />
+	  <None Remove="Assets\Screenshots\7.1.8\*.png" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -255,6 +257,10 @@
 	  <Resource Include="Assets\icons\animat-Icons\chinook_animate.png" />
 	  <Resource Include="Assets\icons\animat-Icons\chinook_map_body.png" />
 	  <Resource Include="Assets\icons\anvil-rock.png" />
+	  <Content Include="Assets\icons\apartments_complex_1.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
 	  <Resource Include="Assets\icons\cabins - Kopie.png" />
 	  <Resource Include="Assets\icons\cloud-download.png" />
 	  <Resource Include="Assets\icons\cloud-upload.png" />
@@ -534,6 +540,7 @@
     <Resource Include="Assets\Screenshots\Tracking4.jpg" />
     <Resource Include="Assets\Screenshots\Tracking5.jpg" />
     <Resource Include="Assets\Screenshots\v7.1.5\*.png" />
+    <Resource Include="Assets\Screenshots\7.1.8\*.png" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">

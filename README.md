@@ -52,6 +52,14 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🏢 Update v7.1.8 | Apartment Complex 3D Model
+
+- **Apartment Complex Model:** Added the Apartment Complex monument model to the 3D map view.
+- **Map Parser Monument Support:** The map parser now recognizes apartment complex prefab data so the 3D view can place the monument correctly.
+- **2D Map Icon:** Apartment Complex monuments now use the proper apartments icon in the map view, with the icon bundled in release builds.
+
+![Apartment Complex 3D model](./RustPlusDesktop/Assets/Screenshots/7.1.8/apartment_complex.png)
+
 # 🧊 Update v7.1.7 | 3D Map Monuments & Build Surfaces
 
 - **Iceberg Monument Meshes:** Added five iceberg `.glb` monument mesh assets, loaded from `Rust_Assets/Monuments/Mesh` and faded like other monuments.
