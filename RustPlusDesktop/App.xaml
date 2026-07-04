@@ -13,7 +13,7 @@
             
             <!-- Converters -->
             <converters:TimerRemainingConverter x:Key="TimerRemainingConverter" />
-        <!-- Test 7.1.5 Nupkg -->
+        <!-- Test 7.1.8 Nupkg -->
 
         <!-- WinUI 3 Aligned Palette -->
         <SolidColorBrush x:Key="AppBg"         Color="#1A1D21"/>

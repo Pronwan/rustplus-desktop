@@ -583,7 +583,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "7.1.5";
+        const string AppVersion = "7.1.8";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -1899,6 +1899,8 @@ public partial class MainWindow : WpfUi.FluentWindow
             .Replace("ice lake 3", "ice lake")
             .Replace("ice lake 4", "ice lake")
             .Replace("apartments complex 1", "apartments complex")
+            .Replace("apartment complex 1", "apartments complex")
+            .Replace("apartment complex", "apartments complex")
             .Replace("train tunnel entrance", "tunnel entrance");
 
         return s;
@@ -1907,6 +1909,8 @@ public partial class MainWindow : WpfUi.FluentWindow
     private FrameworkElement MakeMonIcon(string key, string tooltip, int size = 64)
     {
         key = Canon(key);
+        if (tooltip.Contains("Apartments Complex", StringComparison.OrdinalIgnoreCase))
+            key = "apartments complex";
 
         // Apply per-monument size scale if defined
         if (sMonIconSizeScale.TryGetValue(key, out double sizeScale))
@@ -4647,11 +4651,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private static Image MakeIcon(string packUri, double size = 32)
     {
         var bi = new BitmapImage();
-        bi.BeginInit();
-        bi.UriSource = new Uri(packUri, UriKind.Absolute);
-        bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-        bi.CacheOption = BitmapCacheOption.OnLoad;
-        bi.EndInit();
+        try
+        {
+            bi.BeginInit();
+            bi.UriSource = new Uri(packUri, UriKind.Absolute);
+            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.EndInit();
+        }
+        catch when (packUri.StartsWith("pack://application:,,,/Assets/", StringComparison.OrdinalIgnoreCase))
+        {
+            bi = new BitmapImage();
+            string relativePath = packUri["pack://application:,,,/".Length..].Replace('/', System.IO.Path.DirectorySeparatorChar);
+            string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+
+            bi.BeginInit();
+            bi.UriSource = new Uri(filePath, UriKind.Absolute);
+            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.EndInit();
+        }
 
         var img = new Image
         {
