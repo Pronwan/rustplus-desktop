@@ -54,6 +54,21 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style x:Key="NotificationServerButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Setter Property="Padding" Value="6,2"/>
+                <Setter Property="Height" Value="22"/>
+                <Setter Property="MinWidth" Value="0"/>
+                <Setter Property="MaxWidth" Value="260"/>
+                <Setter Property="Appearance" Value="Secondary"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ServerIp, Converter={StaticResource NotNull}}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </Grid.Resources>
 
         <!-- Top Actions & Filter Bar -->
@@ -178,15 +193,19 @@
                                     <!-- Left type indicator strip -->
                                     <ColumnDefinition Width="6" />
                                     <!-- Icon -->
-                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="34" />
                                     <!-- Text Content -->
                                     <ColumnDefinition Width="*" />
-                                    <!-- Metadata & Actions -->
+                                    <!-- Timestamp & Actions -->
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
                                 <!-- Color Bar representing notification type -->
-                                <Border Grid.Column="0" CornerRadius="3" Margin="0,2,0,2">
+                                <Border Grid.RowSpan="2" Grid.Column="0" CornerRadius="3" Margin="0,2,0,2">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Style.Triggers>
@@ -208,7 +227,7 @@
                                 </Border>
 
                                 <!-- Notification Type Icon -->
-                                <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Grid Grid.RowSpan="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,6,0,0">
                                     <!-- Standard SymbolIcon depending on Type -->
                                     <ui:SymbolIcon FontSize="18">
                                         <ui:SymbolIcon.Style>
@@ -247,7 +266,7 @@
                                 </Grid>
 
                                 <!-- Text Message Content -->
-                                <StackPanel Grid.Column="2" Margin="10,0,10,0" VerticalAlignment="Center">
+                                <StackPanel Grid.Column="2" Margin="10,0,12,0" VerticalAlignment="Center">
                                     <!-- Title -->
                                     <TextBlock Text="{Binding Title}" 
                                                FontSize="13" 
@@ -265,57 +284,23 @@
                                                TextWrapping="Wrap"/>
                                 </StackPanel>
 
-                                <!-- Timestamp, Server Link and Actions -->
-                                <Grid Grid.Column="3" VerticalAlignment="Center">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
+                                <!-- Timestamp and row action -->
+                                <Grid Grid.Column="3" VerticalAlignment="Top" Margin="0,1,0,0">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Short Timestamp -->
-                                    <TextBlock Grid.Row="0" Grid.Column="0" 
-                                               Text="{Binding Timestamp, StringFormat='{}{0:MM/dd HH:mm}'}" 
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Timestamp, StringFormat='{}{0:MM/dd HH:mm}'}"
                                                FontSize="10" 
                                                Foreground="#5A6475" 
-                                               HorizontalAlignment="Right"
                                                VerticalAlignment="Center"
-                                               Margin="0,0,8,0"/>
+                                               Margin="0,0,6,0"/>
 
-                                     <!-- Server Tag (if available) -->
-                                     <ui:Button Grid.Row="1" Grid.Column="0" 
-                                                Click="BtnServerTag_Click"
-                                                Tag="{Binding}" 
-                                                Padding="6,2" 
-                                                Height="20" 
-                                                Margin="0,4,8,0"
-                                                Appearance="Secondary"
-                                                HorizontalAlignment="Right">
-                                         <ui:Button.Style>
-                                             <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
-                                                 <Setter Property="Visibility" Value="Collapsed"/>
-                                                 <Style.Triggers>
-                                                     <DataTrigger Binding="{Binding ServerIp, Converter={StaticResource NotNull}}" Value="True">
-                                                         <Setter Property="Visibility" Value="Visible"/>
-                                                     </DataTrigger>
-                                                 </Style.Triggers>
-                                             </Style>
-                                         </ui:Button.Style>
-                                         <TextBlock FontSize="9" Foreground="#60CDFF" FontWeight="SemiBold">
-                                             <TextBlock.Text>
-                                                 <PriorityBinding>
-                                                     <Binding Path="ServerName" />
-                                                     <Binding Path="ServerIp" />
-                                                 </PriorityBinding>
-                                             </TextBlock.Text>
-                                         </TextBlock>
-                                     </ui:Button>
- 
-                                     <!-- Action Button: Delete -->
-                                     <ui:Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" 
+                                    <!-- Action Button: Delete -->
+                                    <ui:Button Grid.Column="1"
                                                 Click="BtnDelete_Click" 
                                                 Tag="{Binding Id}"
                                                 Appearance="Transparent"
@@ -325,6 +310,25 @@
                                          <ui:SymbolIcon Symbol="Delete24" FontSize="14" Foreground="#8C96A8"/>
                                      </ui:Button>
                                 </Grid>
+
+                                <!-- Server Tag (if available) -->
+                                <ui:Button Grid.Row="1" Grid.Column="2"
+                                           Click="BtnServerTag_Click"
+                                           Tag="{Binding}"
+                                           Margin="10,8,12,0"
+                                           Style="{StaticResource NotificationServerButton}">
+                                    <TextBlock FontSize="9"
+                                               Foreground="#60CDFF"
+                                               FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Text>
+                                            <PriorityBinding>
+                                                <Binding Path="ServerName" />
+                                                <Binding Path="ServerIp" />
+                                            </PriorityBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </ui:Button>
                             </Grid>
                         </Border>
                     </DataTemplate>
