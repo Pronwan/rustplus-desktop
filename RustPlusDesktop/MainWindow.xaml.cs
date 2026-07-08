@@ -516,6 +516,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 SwitchCameraSourceTo(_vm.Selected);
                 LogicEnginePanel?.RefreshListBindings();
+                RefreshCurrentHotkeyBindings();
             }
             if (e.PropertyName == nameof(MainViewModel.IsDownloadingUpdate) && !_vm.IsDownloadingUpdate)
                 UpdateDownloadPopup.IsOpen = false;
@@ -7170,6 +7171,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return map;
     }
 
+    private void RefreshCurrentHotkeyBindings()
+    {
+        if (_vm == null) return;
+        _vm.CurrentHotkeys = MapForCurrentServer();
+    }
+
 
     protected override void OnSourceInitialized(EventArgs e)
     {
@@ -7187,6 +7194,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         LoadHotkeyOptions();
         LoadHotkeys();
+        RefreshCurrentHotkeyBindings();
         ActivateHotkeysForCurrentServer();   // statt RegisterAllHotkeys()
     }
 
@@ -7547,6 +7555,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         SaveHotkeys();
         SaveHotkeyOptions();
+        RefreshCurrentHotkeyBindings();
 
         if (activate == true) ActivateHotkeysForCurrentServer();
         else DeactivateHotkeys();
