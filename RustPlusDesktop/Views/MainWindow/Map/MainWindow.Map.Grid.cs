@@ -82,6 +82,24 @@ public partial class MainWindow
                 Canvas.SetTop(tb, y);
             }
         }
+        RefreshGridLineThickness();
+    }
+
+    public void RefreshGridLineThickness()
+    {
+        if (GridLayer == null || MapTransform == null) return;
+        double zoom = MapTransform.Matrix.M11;
+        if (zoom <= 0) zoom = 1.0;
+
+        double strokeThickness = 0.65 / zoom;
+
+        foreach (var child in GridLayer.Children)
+        {
+            if (child is System.Windows.Shapes.Line line)
+            {
+                line.StrokeThickness = strokeThickness;
+            }
+        }
     }
 
     private static string ColumnLabel(int index)
