@@ -38,6 +38,8 @@
             <Setter Property="BorderBrush" Value="#2BFFFFFF" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
 
@@ -60,8 +62,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="126" />
+                    <RowDefinition Height="216" />
+                    <RowDefinition Height="*" MinHeight="230" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -168,7 +170,7 @@
                             <ItemsControl x:Name="InputsControl">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
+                                        <UniformGrid Columns="5" />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
@@ -242,8 +244,8 @@
                         <Grid Grid.Row="0" Margin="0,0,0,6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="62" />
-                                <ColumnDefinition Width="62" />
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="96" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="YIELD BOARD"
                                        FontSize="10"
@@ -266,8 +268,8 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="26" />
                                                     <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="62" />
-                                                    <ColumnDefinition Width="62" />
+                                                    <ColumnDefinition Width="96" />
+                                                    <ColumnDefinition Width="96" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <Image Grid.Column="0" Width="20" Height="20" Source="{Binding Icon}" Margin="0,0,6,0" VerticalAlignment="Center" />
@@ -280,27 +282,41 @@
                                                            TextTrimming="CharacterEllipsis" />
 
                                                 <Border Grid.Column="2"
-                                                        Width="48"
-                                                        Height="22"
+                                                        Width="86"
+                                                        Height="34"
                                                         Background="#243FF29A"
                                                         BorderBrush="#5E41F29A"
                                                         BorderThickness="1"
                                                         CornerRadius="6"
                                                         HorizontalAlignment="Center"
                                                         ToolTip="{Binding WildToolTip}">
-                                                    <TextBlock Text="{Binding WildText}" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center">
+                                                            <Run Text="Guar. " /><Run Text="{Binding WildGuaranteedText, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                        <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="#B6FFE0" HorizontalAlignment="Center">
+                                                            <Run Text="Chance " /><Run Text="{Binding WildChanceText, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                    </StackPanel>
                                                 </Border>
 
                                                 <Border Grid.Column="3"
-                                                        Width="48"
-                                                        Height="22"
+                                                        Width="86"
+                                                        Height="34"
                                                         Background="#28FF9C6C"
                                                         BorderBrush="#62FF9C6C"
                                                         BorderThickness="1"
                                                         CornerRadius="6"
                                                         HorizontalAlignment="Center"
                                                         ToolTip="{Binding SafeToolTip}">
-                                                    <TextBlock Text="{Binding SafeText}" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center">
+                                                            <Run Text="Guar. " /><Run Text="{Binding SafeGuaranteedText, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                        <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="#FFD4BF" HorizontalAlignment="Center">
+                                                            <Run Text="Chance " /><Run Text="{Binding SafeChanceText, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                    </StackPanel>
                                                 </Border>
                                             </Grid>
                                         </Border>

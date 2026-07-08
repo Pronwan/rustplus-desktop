@@ -5966,7 +5966,7 @@
                         <views:RecyclerOverlay
                             x:Name="RecyclerOverlayPanel"
                             Width="450"
-                            Height="540"
+                            Height="660"
                             Margin="0,0,12,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
