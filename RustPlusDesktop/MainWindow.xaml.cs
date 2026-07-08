@@ -584,7 +584,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "7.1.8";
+        const string AppVersion = "7.2.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
