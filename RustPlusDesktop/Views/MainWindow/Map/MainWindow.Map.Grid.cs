@@ -26,7 +26,7 @@ public partial class MainWindow
         double ow = _worldRectPx.Width, oh = _worldRectPx.Height;
         double step = ow / cells;
 
-        var stroke = new SolidColorBrush(Color.FromArgb(75, 0, 0, 0));
+        var stroke = Brushes.Black;
         double thin = 1.0;
 
         for (int i = 0; i <= cells; i++)
@@ -67,7 +67,7 @@ public partial class MainWindow
                 var tb = new TextBlock
                 {
                     Text = $"{col}{j}",
-                    Foreground = new SolidColorBrush(Color.FromArgb(130, 0, 0, 0)),
+                    Foreground = Brushes.Black,
                     FontSize = 10,
                     Margin = new Thickness(6, 4, 0, 0),
                     Background = Brushes.Transparent,
