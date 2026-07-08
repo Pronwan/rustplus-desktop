@@ -1,4 +1,4 @@
-﻿using RustPlusDesk.Services;
+using RustPlusDesk.Services;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,8 +26,8 @@ public partial class MainWindow
         double ow = _worldRectPx.Width, oh = _worldRectPx.Height;
         double step = ow / cells;
 
-        var stroke = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-        double thin = 1.0, thick = 2.0;
+        var stroke = new SolidColorBrush(Color.FromArgb(75, 0, 0, 0));
+        double thin = 1.0;
 
         for (int i = 0; i <= cells; i++)
         {
@@ -39,7 +39,7 @@ public partial class MainWindow
                 X2 = x,
                 Y2 = oy + oh,
                 Stroke = stroke,
-                StrokeThickness = (i % 5 == 0) ? thick : thin
+                StrokeThickness = thin
             };
             GridLayer.Children.Add(line);
         }
@@ -54,7 +54,7 @@ public partial class MainWindow
                 X2 = ox + ow,
                 Y2 = y,
                 Stroke = stroke,
-                StrokeThickness = (j % 5 == 0) ? thick : thin
+                StrokeThickness = thin
             };
             GridLayer.Children.Add(line);
         }
@@ -67,11 +67,11 @@ public partial class MainWindow
                 var tb = new TextBlock
                 {
                     Text = $"{col}{j}",
-                    Foreground = Brushes.White,
+                    Foreground = new SolidColorBrush(Color.FromArgb(130, 0, 0, 0)),
                     FontSize = 10,
-                    Margin = new Thickness(2, 2, 0, 0),
-                    Background = new SolidColorBrush(Color.FromArgb(96, 0, 0, 0)),
-                    Padding = new Thickness(2, 0, 2, 0)
+                    Margin = new Thickness(6, 4, 0, 0),
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(0)
                 };
 
                 double x = ox + i * step + 1;
