@@ -104,6 +104,22 @@ namespace RustPlusDesk.Views
             SliderMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
             PopulateExtraMonumentFilters();
 
+            // Map performance settings
+            CmbMapScalingMode.SelectedIndex = Math.Clamp(TrackingService.MapBitmapScalingMode, 0, 2);
+            ChkMapUseCacheMode.IsChecked = TrackingService.MapUseCacheMode;
+            
+            double scale = TrackingService.MapRenderScale;
+            int renderScaleIdx = 2; // Default to 1.0 (Native)
+            if (Math.Abs(scale - 0.5) < 0.01) renderScaleIdx = 0;
+            else if (Math.Abs(scale - 0.75) < 0.01) renderScaleIdx = 1;
+            else if (Math.Abs(scale - 1.0) < 0.01) renderScaleIdx = 2;
+            else if (Math.Abs(scale - 1.25) < 0.01) renderScaleIdx = 3;
+            else if (Math.Abs(scale - 1.5) < 0.01) renderScaleIdx = 4;
+            else if (Math.Abs(scale - 2.0) < 0.01) renderScaleIdx = 5;
+            CmbMapRenderScale.SelectedIndex = renderScaleIdx;
+
+            ChkMapUseAliasedEdgeMode.IsChecked = TrackingService.MapUseAliasedEdgeMode;
+
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
 
@@ -231,6 +247,27 @@ namespace RustPlusDesk.Views
             TrackingService.MapMonumentScale = SliderMonumentScale.Value;
             TrackingService.MapMonumentOpacity = SliderMonumentOpacity.Value;
             
+            if (CmbMapScalingMode != null && CmbMapScalingMode.SelectedIndex >= 0)
+            {
+                TrackingService.MapBitmapScalingMode = CmbMapScalingMode.SelectedIndex;
+            }
+            TrackingService.MapUseCacheMode = ChkMapUseCacheMode.IsChecked == true;
+            if (CmbMapRenderScale != null && CmbMapRenderScale.SelectedIndex >= 0)
+            {
+                double val = 1.0;
+                switch (CmbMapRenderScale.SelectedIndex)
+                {
+                    case 0: val = 0.5; break;
+                    case 1: val = 0.75; break;
+                    case 2: val = 1.0; break;
+                    case 3: val = 1.25; break;
+                    case 4: val = 1.5; break;
+                    case 5: val = 2.0; break;
+                }
+                TrackingService.MapRenderScale = val;
+            }
+            TrackingService.MapUseAliasedEdgeMode = ChkMapUseAliasedEdgeMode.IsChecked == true;
+
             // Save Cloud Sync setting
             if (sender == ChkCloudSync)
             {

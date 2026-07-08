@@ -6222,6 +6222,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         BuildMonumentOverlays();
         UpdateCloudSyncUI();
+        ApplyMapPerformanceSettings();
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)

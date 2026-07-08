@@ -148,6 +148,11 @@ public class TrackingSettings
 
     /// <summary>Extra monument type names (e.g. "Cave", "God Rock") that the user has chosen to hide on the map.</summary>
     public List<string> HiddenExtraMonumentTypes { get; set; } = new();
+
+    public int MapBitmapScalingMode { get; set; } = 0;
+    public bool MapUseCacheMode { get; set; } = false;
+    public double MapRenderScale { get; set; } = 1.0;
+    public bool MapUseAliasedEdgeMode { get; set; } = false;
 }
 
 
@@ -824,6 +829,26 @@ public static class TrackingService
     {
         get => _settings.MapMonumentOpacity;
         set { _settings.MapMonumentOpacity = value; SaveDB(); }
+    }
+    public static int MapBitmapScalingMode
+    {
+        get => _settings.MapBitmapScalingMode;
+        set { _settings.MapBitmapScalingMode = value; SaveDB(); }
+    }
+    public static bool MapUseCacheMode
+    {
+        get => _settings.MapUseCacheMode;
+        set { _settings.MapUseCacheMode = value; SaveDB(); }
+    }
+    public static double MapRenderScale
+    {
+        get => _settings.MapRenderScale;
+        set { _settings.MapRenderScale = value; SaveDB(); }
+    }
+    public static bool MapUseAliasedEdgeMode
+    {
+        get => _settings.MapUseAliasedEdgeMode;
+        set { _settings.MapUseAliasedEdgeMode = value; SaveDB(); }
     }
 
     /// <summary>Returns a snapshot of the extra monument type names that are currently hidden by the user.</summary>
