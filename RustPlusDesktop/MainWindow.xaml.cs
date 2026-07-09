@@ -516,6 +516,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 SwitchCameraSourceTo(_vm.Selected);
                 LogicEnginePanel?.RefreshListBindings();
+                RefreshCurrentHotkeyBindings();
             }
             if (e.PropertyName == nameof(MainViewModel.IsDownloadingUpdate) && !_vm.IsDownloadingUpdate)
                 UpdateDownloadPopup.IsOpen = false;
@@ -583,7 +584,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "7.1.8";
+        const string AppVersion = "7.2.0";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -6221,6 +6222,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         BuildMonumentOverlays();
         UpdateCloudSyncUI();
+        ApplyMapPerformanceSettings();
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
@@ -7170,6 +7172,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return map;
     }
 
+    private void RefreshCurrentHotkeyBindings()
+    {
+        if (_vm == null) return;
+        _vm.CurrentHotkeys = MapForCurrentServer();
+    }
+
 
     protected override void OnSourceInitialized(EventArgs e)
     {
@@ -7187,6 +7195,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         LoadHotkeyOptions();
         LoadHotkeys();
+        RefreshCurrentHotkeyBindings();
         ActivateHotkeysForCurrentServer();   // statt RegisterAllHotkeys()
     }
 
@@ -7547,6 +7556,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         SaveHotkeys();
         SaveHotkeyOptions();
+        RefreshCurrentHotkeyBindings();
 
         if (activate == true) ActivateHotkeysForCurrentServer();
         else DeactivateHotkeys();

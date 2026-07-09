@@ -307,6 +307,60 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Map Performance Section -->
+                <TextBlock Text="Map Performance &amp; Quality" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <!-- Image Scaling Quality Dropdown -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Image Scaling Quality" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" ToolTip="Controls map image scaling filtering mode."/>
+                            <ComboBox Grid.Column="1" x:Name="CmbMapScalingMode" Width="200" 
+                                      SelectionChanged="OnSettingChanged">
+                                <ComboBoxItem Content="High Quality (Bicubic)" Tag="0"/>
+                                <ComboBoxItem Content="Balanced (Linear)" Tag="1"/>
+                                <ComboBoxItem Content="Performance (Nearest Neighbor)" Tag="2"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- GPU Caching Toggle -->
+                        <CheckBox x:Name="ChkMapUseCacheMode" 
+                                  Content="Enable GPU Bitmap Caching" 
+                                  Margin="0,0,0,10"
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                  ToolTip="Caches map rendering on the GPU. Extremely improves panning and zooming smoothness."/>
+
+                        <!-- GPU Rendering Scale Dropdown -->
+                        <Grid Margin="0,0,0,12" x:Name="GridMapRenderScale" IsEnabled="{Binding IsChecked, ElementName=ChkMapUseCacheMode}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="GPU Rendering Scale" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" ToolTip="Resolution scale of the cached GPU bitmap. Lower scales improve performance on slower GPUs."/>
+                            <ComboBox Grid.Column="1" x:Name="CmbMapRenderScale" Width="200" 
+                                      SelectionChanged="OnSettingChanged">
+                                <ComboBoxItem Content="50% (Fastest)" Tag="0.5"/>
+                                <ComboBoxItem Content="75% (Performance)" Tag="0.75"/>
+                                <ComboBoxItem Content="100% (Native)" Tag="1.0"/>
+                                <ComboBoxItem Content="125% (Sharp)" Tag="1.25"/>
+                                <ComboBoxItem Content="150% (High Resolution)" Tag="1.5"/>
+                                <ComboBoxItem Content="200% (Ultra High Resolution)" Tag="2.0"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- Aliased Edge Mode Toggle -->
+                        <CheckBox x:Name="ChkMapUseAliasedEdgeMode" 
+                                  Content="Disable Grid Anti-Aliasing (Aliased Edge Mode)" 
+                                  Style="{StaticResource DotCheckBox}"
+                                  Checked="OnSettingChanged" Unchecked="OnSettingChanged"
+                                  ToolTip="Disables anti-aliasing on grid lines and markers. Improves rendering speed on low-end systems."/>
+                    </StackPanel>
+                </Border>
+
 
                 <!-- Team Markers Section -->
                 <TextBlock Text="{DynamicResource TeamMarkersSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>

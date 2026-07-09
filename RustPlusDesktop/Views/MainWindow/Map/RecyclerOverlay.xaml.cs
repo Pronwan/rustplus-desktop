@@ -546,10 +546,22 @@ namespace RustPlusDesk.Views
                     return null;
                 }
 
+                double wildChanceQty = Math.Max(0, wild.Max - wild.Min);
+                double wildChancePercent = wildChanceQty > 0 ? ((wild.Expected - wild.Min) / wildChanceQty) * 100.0 : 0.0;
+
+                double safeChanceQty = Math.Max(0, safe.Max - safe.Min);
+                double safeChancePercent = safeChanceQty > 0 ? ((safe.Expected - safe.Min) / safeChanceQty) * 100.0 : 0.0;
+
                 if (existingByShort.TryGetValue(sn, out var vm))
                 {
                     vm.WildAmount = wild.Expected;
+                    vm.WildGuaranteed = wild.Min;
+                    vm.WildChance = wildChanceQty;
+                    vm.WildChancePercent = wildChancePercent;
                     vm.SafeAmount = safe.Expected;
+                    vm.SafeGuaranteed = safe.Min;
+                    vm.SafeChance = safeChanceQty;
+                    vm.SafeChancePercent = safeChancePercent;
                     vm.WildToolTip = BuildTooltip(wild);
                     vm.SafeToolTip = BuildTooltip(safe);
                 }
@@ -566,7 +578,13 @@ namespace RustPlusDesk.Views
                         DisplayName = display,
                         Icon        = MainWindow.ResolveItemIcon(0, sn, 24),
                         WildAmount  = wild.Expected,
+                        WildGuaranteed = wild.Min,
+                        WildChance = wildChanceQty,
+                        WildChancePercent = wildChancePercent,
                         SafeAmount  = safe.Expected,
+                        SafeGuaranteed = safe.Min,
+                        SafeChance = safeChanceQty,
+                        SafeChancePercent = safeChancePercent,
                         WildToolTip = BuildTooltip(wild),
                         SafeToolTip = BuildTooltip(safe)
                     };
@@ -751,6 +769,42 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private double _wildGuaranteed;
+        public double WildGuaranteed
+        {
+            get => _wildGuaranteed;
+            set
+            {
+                _wildGuaranteed = value;
+                OnPropertyChanged(nameof(WildGuaranteed));
+                OnPropertyChanged(nameof(WildGuaranteedText));
+            }
+        }
+
+        private double _wildChance;
+        public double WildChance
+        {
+            get => _wildChance;
+            set
+            {
+                _wildChance = value;
+                OnPropertyChanged(nameof(WildChance));
+                OnPropertyChanged(nameof(WildChanceText));
+            }
+        }
+
+        private double _wildChancePercent;
+        public double WildChancePercent
+        {
+            get => _wildChancePercent;
+            set
+            {
+                _wildChancePercent = value;
+                OnPropertyChanged(nameof(WildChancePercent));
+                OnPropertyChanged(nameof(WildChanceText));
+            }
+        }
+
         private double _safeAmount;
         public double SafeAmount
         {
@@ -761,6 +815,42 @@ namespace RustPlusDesk.Views
                 OnPropertyChanged(nameof(SafeAmount));
                 OnPropertyChanged(nameof(SafeText));
                 OnPropertyChanged(nameof(IsActive));
+            }
+        }
+
+        private double _safeGuaranteed;
+        public double SafeGuaranteed
+        {
+            get => _safeGuaranteed;
+            set
+            {
+                _safeGuaranteed = value;
+                OnPropertyChanged(nameof(SafeGuaranteed));
+                OnPropertyChanged(nameof(SafeGuaranteedText));
+            }
+        }
+
+        private double _safeChance;
+        public double SafeChance
+        {
+            get => _safeChance;
+            set
+            {
+                _safeChance = value;
+                OnPropertyChanged(nameof(SafeChance));
+                OnPropertyChanged(nameof(SafeChanceText));
+            }
+        }
+
+        private double _safeChancePercent;
+        public double SafeChancePercent
+        {
+            get => _safeChancePercent;
+            set
+            {
+                _safeChancePercent = value;
+                OnPropertyChanged(nameof(SafeChancePercent));
+                OnPropertyChanged(nameof(SafeChanceText));
             }
         }
 
@@ -806,6 +896,13 @@ namespace RustPlusDesk.Views
         public bool IsActive => WildAmount > 0 || SafeAmount > 0;
         public string WildText => WildAmount > 0 ? Math.Round(WildAmount).ToString("0") : "0";
         public string SafeText => SafeAmount > 0 ? Math.Round(SafeAmount).ToString("0") : "0";
+        public string WildGuaranteedText => FormatAmount(WildGuaranteed);
+        public string WildChanceText => WildChance > 0 ? $"{FormatAmount(WildChance)} ({Math.Round(WildChancePercent)}%)" : "0";
+        public string SafeGuaranteedText => FormatAmount(SafeGuaranteed);
+        public string SafeChanceText => SafeChance > 0 ? $"{FormatAmount(SafeChance)} ({Math.Round(SafeChancePercent)}%)" : "0";
+
+        private static string FormatAmount(double value)
+            => value > 0 ? Math.Round(value).ToString("0") : "0";
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>

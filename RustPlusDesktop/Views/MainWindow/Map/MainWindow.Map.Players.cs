@@ -571,6 +571,7 @@ public partial class MainWindow
             ApplyCurrentOverlayScale(fe);
 
         RefreshShopIconScales();
+        RefreshGridLineThickness();
     }
 
     private FrameworkElement BuildDeathPin(Guid id, ulong steamId, string label)

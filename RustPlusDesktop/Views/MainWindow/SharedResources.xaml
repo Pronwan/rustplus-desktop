@@ -11,6 +11,10 @@
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True" />
     <conv:LessThanConverter x:Key="LessThanConverter" />
+    <conv:DeviceTreeItemWidthConverter x:Key="DeviceTreeItemWidthConverter" />
+    <conv:SwitchCommandDisplayConverter x:Key="SwitchCommandDisplayConverter" />
+    <conv:DeviceHotkeyDisplayConverter x:Key="DeviceHotkeyDisplayConverter" />
+    <conv:DeviceFilterVisibilityConverter x:Key="DeviceFilterVisibilityConverter" />
     <BitmapImage x:Key="IconStorageMonitor" UriSource="pack://application:,,,/Assets/icons/storagemonitor.png" />
     <BitmapImage x:Key="IconSmartSwitch" UriSource="pack://application:,,,/Assets/icons/smartswitch.png" />
     <BitmapImage x:Key="IconSmartAlarm" UriSource="pack://application:,,,/Assets/icons/smartalarm.png" />

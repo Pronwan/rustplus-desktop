@@ -1328,12 +1328,45 @@
                         </StackPanel>
 
                                 <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" MinWidth="0" />
+                                            <ColumnDefinition Width="104" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ui:TextBox
+                                            x:Name="TxtDeviceFilter"
+                                            Grid.Column="0"
+                                            Height="30"
+                                            Margin="0,0,8,0"
+                                            Padding="8,3"
+                                            FontSize="11"
+                                            PlaceholderText="Search devices..." />
+
+                                        <ComboBox
+                                            x:Name="CmbDeviceTypeFilter"
+                                            Grid.Column="1"
+                                            Height="30"
+                                            FontSize="11"
+                                            SelectedIndex="0">
+                                            <ComboBoxItem Content="All" Tag="all" />
+                                            <ComboBoxItem Content="Switch" Tag="switch" />
+                                            <ComboBoxItem Content="Alarm" Tag="alarm" />
+                                            <ComboBoxItem Content="Storage" Tag="storage" />
+                                        </ComboBox>
+                                    </Grid>
+
                                     <TreeView
                                         x:Name="ListDevices"
+                                        Grid.Row="1"
                                         HorizontalContentAlignment="Stretch"
                                         Background="Transparent"
                                         BorderThickness="0"
-                                        Grid.IsSharedSizeScope="True"
                                         ItemsSource="{Binding CurrentDevices}"
                                         ScrollViewer.CanContentScroll="False"
                                         SelectedItemChanged="ListDevices_SelectedItemChanged"
@@ -1347,14 +1380,27 @@
                                                 <EventSetter Event="PreviewMouseMove" Handler="TreeViewItem_PreviewMouseMove" />
                                                 <EventSetter Event="DragEnter" Handler="TreeViewItem_DragEnter" />
                                                 <EventSetter Event="DragOver" Handler="TreeViewItem_DragOver" />
+                                                <EventSetter Event="DragLeave" Handler="TreeViewItem_DragLeave" />
                                                 <EventSetter Event="Drop" Handler="TreeViewItem_Drop" />
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                                 <Setter Property="Background" Value="Transparent" />
                                                 <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                                <Setter Property="Visibility">
+                                                    <Setter.Value>
+                                                        <MultiBinding Converter="{StaticResource DeviceFilterVisibilityConverter}">
+                                                            <Binding />
+                                                            <Binding ElementName="TxtDeviceFilter" Path="Text" />
+                                                            <Binding ElementName="CmbDeviceTypeFilter" Path="SelectedItem.Tag" />
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
                                                 <Style.Resources>
                                                     <!-- Nullify default highlight brushes so our card layout handles highlights -->
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#F2F2F2" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#F2F2F2" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                                                 </Style.Resources>
                                             </Style>
@@ -1414,9 +1460,17 @@
 
                                                     <!--  ===== Zeile =====  -->
                                                     <Border
-                                                        Margin="0,2,8,2"
-                                                        Padding="12,8"
-                                                        CornerRadius="8">
+                                                        x:Name="DeviceRowCard"
+                                                        Margin="0,3,0,3"
+                                                        Padding="10,9"
+                                                        CornerRadius="10"
+                                                        HorizontalAlignment="Left">
+                                                        <Border.Width>
+                                                            <MultiBinding Converter="{StaticResource DeviceTreeItemWidthConverter}" ConverterParameter="36,26,220">
+                                                                <Binding ElementName="ListDevices" Path="ActualWidth" />
+                                                                <Binding RelativeSource="{RelativeSource AncestorType=TreeViewItem}" />
+                                                            </MultiBinding>
+                                                        </Border.Width>
                                                         <Border.Style>
                                                             <Style TargetType="Border">
                                                                 <Setter Property="Background" Value="{DynamicResource Surface}" />
@@ -1436,6 +1490,10 @@
                                                                         <Setter Property="Background" Value="#14223C" />
                                                                         <Setter Property="BorderBrush" Value="#253A5A" />
                                                                     </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Tag}" Value="DropInto">
+                                                                        <Setter Property="Background" Value="#263B5B" />
+                                                                        <Setter Property="BorderBrush" Value="#FF60CDFF" />
+                                                                    </DataTrigger>
                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True">
                                                                         <Setter Property="Background" Value="#1F60CDFF" />
                                                                         <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
@@ -1453,9 +1511,9 @@
                                                         </Border.Style>
                                                         <Grid VerticalAlignment="Center">
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="ColTypeID" />
-                                                                <ColumnDefinition Width="*" SharedSizeGroup="ColAlias" />
-                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="ColToggle" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" MinWidth="0" />
+                                                                <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
                                                             <!-- Selection Indicator Line -->
                                                             <Border x:Name="SelectedLine" 
@@ -1477,15 +1535,84 @@
                                                                 </Border.Style>
                                                             </Border>
 
+                                                            <Border
+                                                                x:Name="DropIntoOverlay"
+                                                                Grid.ColumnSpan="3"
+                                                                Margin="-6,-5,-6,-5"
+                                                                Background="#1660CDFF"
+                                                                BorderBrush="#AA60CDFF"
+                                                                BorderThickness="1"
+                                                                CornerRadius="10"
+                                                                IsHitTestVisible="False">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Tag}" Value="DropInto">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                            </Border>
+
+                                                            <Border
+                                                                x:Name="DropBeforeRail"
+                                                                Grid.ColumnSpan="3"
+                                                                Height="3"
+                                                                Margin="-8,-11,-8,0"
+                                                                VerticalAlignment="Top"
+                                                                Background="{DynamicResource Accent}"
+                                                                CornerRadius="2"
+                                                                IsHitTestVisible="False">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="10" Color="#60CDFF" Opacity="0.8" ShadowDepth="0" />
+                                                                </Border.Effect>
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Tag}" Value="DropBefore">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                            </Border>
+
+                                                            <Border
+                                                                x:Name="DropAfterRail"
+                                                                Grid.ColumnSpan="3"
+                                                                Height="3"
+                                                                Margin="-8,0,-8,-11"
+                                                                VerticalAlignment="Bottom"
+                                                                Background="{DynamicResource Accent}"
+                                                                CornerRadius="2"
+                                                                IsHitTestVisible="False">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="10" Color="#60CDFF" Opacity="0.8" ShadowDepth="0" />
+                                                                </Border.Effect>
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Tag}" Value="DropAfter">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                            </Border>
+
                                                             <!--  Spalte 1: Icon  -->
                                                             <Border Grid.Column="0"
                                                                     x:Name="IconBorder"
                                                                     Width="44"
                                                                     Height="44"
                                                                     Background="#35FFFFFF"
-                                                                    CornerRadius="8"
+                                                                    CornerRadius="10"
                                                                     Padding="0"
-                                                                    Margin="0,0,6,0"
+                                                                    Margin="0,0,10,0"
                                                                     VerticalAlignment="Center"
                                                                     Cursor="Hand"
                                                                     ToolTip="Change Icon"
@@ -1571,13 +1698,23 @@
                                                             </Border>
 
                                                             <!--  Spalte 2: strukturierte Device-Infos  -->
-                                                            <StackPanel
+                                                            <Grid
                                                                 Grid.Column="1"
-                                                                Margin="12,0"
-                                                                VerticalAlignment="Center"
-                                                                Orientation="Horizontal">
-                                                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                                MinWidth="0"
+                                                                Margin="0,0,8,0"
+                                                                VerticalAlignment="Center">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+
+                                                                <Grid Grid.Row="0" MinWidth="0">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" MinWidth="0" />
+                                                                    </Grid.ColumnDefinitions>
                                                                     <ui:SymbolIcon
+                                                                        Grid.Column="0"
                                                                         Symbol="Warning20"
                                                                         Foreground="#F04747"
                                                                         Margin="0,0,6,0"
@@ -1593,13 +1730,14 @@
                                                                             </Style>
                                                                         </ui:SymbolIcon.Style>
                                                                     </ui:SymbolIcon>
-                                                                    <Grid VerticalAlignment="Center">
+                                                                    <Grid Grid.Column="1" MinWidth="0" VerticalAlignment="Center">
                                                                         <TextBlock
                                                                             x:Name="TxtDeviceNameView"
                                                                             VerticalAlignment="Center"
                                                                             FontSize="13"
                                                                             FontWeight="SemiBold"
                                                                             Foreground="{DynamicResource TextPrimary}"
+                                                                            TextTrimming="CharacterEllipsis"
                                                                             Text="{Binding PureName, TargetNullValue=Device}"
                                                                             ToolTip="{DynamicResource RightClickRename}"
                                                                             MouseLeftButtonDown="DeviceName_MouseLeftButtonDown">
@@ -1618,8 +1756,25 @@
                                                                                 </Style>
                                                                             </TextBlock.Style>
                                                                             <TextBlock.ContextMenu>
-                                                                                <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                                <ContextMenu
+                                                                                    DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                                                                    Style="{StaticResource DarkContextMenu}">
                                                                                     <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
+                                                                                    <MenuItem Click="SwitchCommand_Edit_Click" Header="Change command">
+                                                                                        <MenuItem.Style>
+                                                                                            <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
+                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                                    </DataTrigger>
+                                                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                                    </DataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </MenuItem.Style>
+                                                                                    </MenuItem>
                                                                                 </ContextMenu>
                                                                             </TextBlock.ContextMenu>
                                                                         </TextBlock>
@@ -1631,7 +1786,8 @@
                                                                             Height="24"
                                                                             Padding="4,2"
                                                                             VerticalAlignment="Center"
-                                                                            MinWidth="120"
+                                                                            MinWidth="80"
+                                                                            MaxWidth="260"
                                                                             LostFocus="TxtRename_LostFocus"
                                                                             KeyDown="TxtRename_KeyDown"
                                                                             IsVisibleChanged="TxtRename_IsVisibleChanged">
@@ -1647,20 +1803,23 @@
                                                                             </ui:TextBox.Style>
                                                                         </ui:TextBox>
                                                                     </Grid>
-                                                                </StackPanel>
+                                                                </Grid>
 
-                                                                <TextBlock
-                                                                    Margin="8,0,0,0"
-                                                                    VerticalAlignment="Center"
-                                                                    FontSize="10"
-                                                                    Foreground="{DynamicResource TextSubtle}"
-                                                                    Text="{Binding EntityId, StringFormat=#\{0\}}" />
+                                                                <WrapPanel Grid.Row="1"
+                                                                           Margin="0,5,0,0"
+                                                                           Orientation="Horizontal">
+                                                                    <TextBlock
+                                                                        Margin="0,2,8,0"
+                                                                        VerticalAlignment="Center"
+                                                                        FontSize="10"
+                                                                        Foreground="{DynamicResource TextSubtle}"
+                                                                        Text="{Binding EntityId, StringFormat=#\{0\}}" />
 
-                                                                <Border
-                                                                    Margin="12,0,0,0"
-                                                                    Padding="6,2"
+                                                                    <Border
+                                                                    Margin="0,0,6,0"
+                                                                    Padding="7,2"
                                                                     VerticalAlignment="Center"
-                                                                    CornerRadius="6"
+                                                                    CornerRadius="7"
                                                                     BorderThickness="1">
                                                                     <Border.Style>
                                                                         <Style TargetType="Border">
@@ -1777,8 +1936,281 @@
                                                                             </Style>
                                                                         </TextBlock.Style>
                                                                     </TextBlock>
-                                                                </Border>
-                                                            </StackPanel>
+                                                                    </Border>
+
+                                                                    <Border
+                                                                        Margin="0,0,6,0"
+                                                                        Padding="6,2"
+                                                                        MaxWidth="112"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="#142D6CDF"
+                                                                        BorderBrush="#403B82F6"
+                                                                        BorderThickness="1"
+                                                                        CornerRadius="7"
+                                                                        Cursor="Hand"
+                                                                        MouseLeftButtonDown="SwitchCommandPill_MouseLeftButtonDown"
+                                                                        ToolTip="Double-click to edit command">
+                                                                        <Border.Visibility>
+                                                                            <MultiBinding Converter="{StaticResource SwitchCommandDisplayConverter}">
+                                                                                <Binding />
+                                                                                <Binding ElementName="ListDevices" Path="DataContext.Selected" />
+                                                                            </MultiBinding>
+                                                                        </Border.Visibility>
+                                                                        <Border.ContextMenu>
+                                                                            <ContextMenu
+                                                                                DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                                                                Style="{StaticResource DarkContextMenu}">
+                                                                                <MenuItem Header="Edit command" Click="SwitchCommand_Edit_Click" />
+                                                                            </ContextMenu>
+                                                                        </Border.ContextMenu>
+                                                                        <Grid>
+                                                                            <StackPanel Orientation="Horizontal">
+                                                                                <StackPanel.Style>
+                                                                                    <Style TargetType="StackPanel">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsEditingSwitchCommand}" Value="True">
+                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </StackPanel.Style>
+                                                                                <TextBlock
+                                                                                    Margin="0,0,4,0"
+                                                                                    FontSize="8.5"
+                                                                                    FontWeight="Bold"
+                                                                                    Foreground="#B7C9FF"
+                                                                                    Text="CMD" />
+                                                                                <TextBlock
+                                                                                    FontSize="9"
+                                                                                    FontWeight="SemiBold"
+                                                                                    Foreground="#8AB4FF"
+                                                                                    TextTrimming="CharacterEllipsis">
+                                                                                    <TextBlock.Text>
+                                                                                        <MultiBinding Converter="{StaticResource SwitchCommandDisplayConverter}">
+                                                                                            <Binding />
+                                                                                            <Binding ElementName="ListDevices" Path="DataContext.Selected" />
+                                                                                        </MultiBinding>
+                                                                                    </TextBlock.Text>
+                                                                                </TextBlock>
+                                                                            </StackPanel>
+                                                                            <TextBox
+                                                                                x:Name="TxtSwitchCommandEdit"
+                                                                                Width="82"
+                                                                                Height="17"
+                                                                                Padding="0"
+                                                                                Margin="0,-1,0,-1"
+                                                                                VerticalContentAlignment="Center"
+                                                                                Background="Transparent"
+                                                                                BorderThickness="0"
+                                                                                CaretBrush="#F8FAFC"
+                                                                                Foreground="#E5EDFF"
+                                                                                FontSize="10"
+                                                                                FontWeight="SemiBold"
+                                                                                LostFocus="TxtSwitchCommand_LostFocus"
+                                                                                KeyDown="TxtSwitchCommand_KeyDown"
+                                                                                IsVisibleChanged="TxtSwitchCommand_IsVisibleChanged">
+                                                                                <TextBox.Text>
+                                                                                    <MultiBinding
+                                                                                        Converter="{StaticResource SwitchCommandDisplayConverter}"
+                                                                                        ConverterParameter="Raw"
+                                                                                        Mode="OneWay">
+                                                                                        <Binding />
+                                                                                        <Binding ElementName="ListDevices" Path="DataContext.Selected" />
+                                                                                    </MultiBinding>
+                                                                                </TextBox.Text>
+                                                                                <TextBox.Style>
+                                                                                    <Style TargetType="TextBox">
+                                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsEditingSwitchCommand}" Value="True">
+                                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </TextBox.Style>
+                                                                            </TextBox>
+                                                                        </Grid>
+                                                                    </Border>
+
+                                                                    <Border
+                                                                        Margin="0,0,6,0"
+                                                                        Padding="6,2"
+                                                                        MaxWidth="138"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="#22FACC15"
+                                                                        BorderBrush="#80FACC15"
+                                                                        BorderThickness="1"
+                                                                        CornerRadius="7">
+                                                                        <Border.Visibility>
+                                                                            <MultiBinding Converter="{StaticResource DeviceHotkeyDisplayConverter}">
+                                                                                <Binding />
+                                                                                <Binding ElementName="ListDevices" Path="DataContext.CurrentHotkeys" />
+                                                                                <Binding ElementName="ListDevices" Path="DataContext.Selected" />
+                                                                            </MultiBinding>
+                                                                        </Border.Visibility>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <TextBlock
+                                                                                FontSize="9"
+                                                                                FontWeight="SemiBold"
+                                                                                Foreground="#FDE68A"
+                                                                                TextTrimming="CharacterEllipsis">
+                                                                                <TextBlock.Text>
+                                                                                <MultiBinding Converter="{StaticResource DeviceHotkeyDisplayConverter}">
+                                                                                    <Binding />
+                                                                                    <Binding ElementName="ListDevices" Path="DataContext.CurrentHotkeys" />
+                                                                                    <Binding ElementName="ListDevices" Path="DataContext.Selected" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                            </TextBlock>
+                                                                        </StackPanel>
+                                                                    </Border>
+
+                                                                    <Border
+                                                                        Padding="7,2"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
+                                                                        BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}"
+                                                                        BorderThickness="1"
+                                                                        CornerRadius="7"
+                                                                        PreviewMouseWheel="StorPill_PreviewMouseWheel"
+                                                                        ToolTipOpening="StorPill_ToolTipOpening"
+                                                                        ToolTipService.InitialShowDelay="250"
+                                                                        ToolTipService.Placement="Mouse"
+                                                                        ToolTipService.ShowDuration="30000"
+                                                                        Visibility="{Binding Kind, Converter={StaticResource KindToStorageVisibility}}">
+
+                                                                        <TextBlock
+                                                                            MaxWidth="180"
+                                                                            FontSize="10.5"
+                                                                            FontWeight="SemiBold"
+                                                                            Foreground="White"
+                                                                            TextTrimming="CharacterEllipsis"
+                                                                            Text="{Binding StorageSummary, Mode=OneWay}" />
+
+                                                                        <Border.ToolTip>
+                                                                            <ToolTip MaxWidth="520">
+                                                                                <Border
+                                                                                    Background="{DynamicResource SurfaceAlt}"
+                                                                                    BorderBrush="{DynamicResource CardBorder}"
+                                                                                    BorderThickness="1"
+                                                                                    CornerRadius="8">
+                                                                                    <StackPanel Margin="8,8,8,6">
+
+                                                                                        <DockPanel Margin="0,0,0,2" LastChildFill="False">
+                                                                                            <Image
+                                                                                                Width="20"
+                                                                                                Height="20"
+                                                                                                Margin="0,0,6,0"
+                                                                                                Opacity="0.9"
+                                                                                                RenderOptions.BitmapScalingMode="HighQuality"
+                                                                                                Source="{StaticResource IconStorageMonitor}" />
+                                                                                            <StackPanel Orientation="Horizontal">
+                                                                                                <ui:SymbolIcon
+                                                                                                    Symbol="Warning20"
+                                                                                                    Foreground="#F04747"
+                                                                                                    Margin="0,0,6,0"
+                                                                                                    VerticalAlignment="Center">
+                                                                                                    <ui:SymbolIcon.Style>
+                                                                                                        <Style TargetType="ui:SymbolIcon">
+                                                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                            <Style.Triggers>
+                                                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                                                </DataTrigger>
+                                                                                                            </Style.Triggers>
+                                                                                                        </Style>
+                                                                                                    </ui:SymbolIcon.Style>
+                                                                                                </ui:SymbolIcon>
+                                                                                                <TextBlock
+                                                                                                    DockPanel.Dock="Left"
+                                                                                                    FontSize="13"
+                                                                                                    FontWeight="SemiBold"
+                                                                                                    Foreground="{DynamicResource TextPrimary}"
+                                                                                                    Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
+                                                                                            </StackPanel>
+                                                                                        </DockPanel>
+
+                                                                                        <TextBlock
+                                                                                            Margin="0,0,0,4"
+                                                                                            FontSize="10.5"
+                                                                                            Foreground="{DynamicResource TextSubtle}"
+                                                                                            Text="{Binding Storage, Converter={StaticResource StorageChipConverter}}" />
+
+                                                                                        <ScrollViewer MaxHeight="390" VerticalScrollBarVisibility="Auto">
+                                                                                            <ItemsControl ItemsSource="{Binding Storage.Items}">
+                                                                                                <ItemsControl.ItemsPanel>
+                                                                                                    <ItemsPanelTemplate>
+                                                                                                        <WrapPanel
+                                                                                                            ItemHeight="64"
+                                                                                                            ItemWidth="64"
+                                                                                                            Orientation="Horizontal"
+                                                                                                            SnapsToDevicePixels="True"
+                                                                                                            UseLayoutRounding="True" />
+                                                                                                    </ItemsPanelTemplate>
+                                                                                                </ItemsControl.ItemsPanel>
+
+                                                                                                <ItemsControl.ItemTemplate>
+                                                                                                    <DataTemplate>
+                                                                                                        <Border
+                                                                                                            Width="64"
+                                                                                                            Height="64"
+                                                                                                            Background="{DynamicResource Surface}"
+                                                                                                            BorderBrush="{DynamicResource CardBorder}"
+                                                                                                            BorderThickness="1"
+                                                                                                            CornerRadius="6"
+                                                                                                            SnapsToDevicePixels="True">
+                                                                                                            <Grid>
+                                                                                                                <Image
+                                                                                                                    Width="48"
+                                                                                                                    Height="48"
+                                                                                                                    HorizontalAlignment="Center"
+                                                                                                                    VerticalAlignment="Center"
+                                                                                                                    RenderOptions.BitmapScalingMode="Fant"
+                                                                                                                    Source="{Binding Icon}" />
+
+                                                                                                                <Border
+                                                                                                                    Margin="1,1,1,1"
+                                                                                                                    Padding="4,1.5"
+                                                                                                                    HorizontalAlignment="Right"
+                                                                                                                    VerticalAlignment="Bottom"
+                                                                                                                    Background="#CC0F1013"
+                                                                                                                    BorderBrush="#1EFFFFFF"
+                                                                                                                    BorderThickness="1"
+                                                                                                                    CornerRadius="4">
+                                                                                                                    <TextBlock
+                                                                                                                        FontSize="10"
+                                                                                                                        FontWeight="SemiBold"
+                                                                                                                        Foreground="{DynamicResource TextPrimary}">
+                                                                                                                        <Run Text="x" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
+                                                                                                                    </TextBlock>
+                                                                                                                </Border>
+                                                                                                            </Grid>
+                                                                                                        </Border>
+                                                                                                    </DataTemplate>
+                                                                                                </ItemsControl.ItemTemplate>
+
+                                                                                                <ItemsControl.ItemContainerStyle>
+                                                                                                    <Style TargetType="ContentPresenter">
+                                                                                                        <Setter Property="Margin" Value="1" />
+                                                                                                    </Style>
+                                                                                                </ItemsControl.ItemContainerStyle>
+                                                                                            </ItemsControl>
+                                                                                        </ScrollViewer>
+
+                                                                                        <TextBlock
+                                                                                            Margin="0,2,0,0"
+                                                                                            HorizontalAlignment="Right"
+                                                                                            FontSize="9.5"
+                                                                                            Foreground="{DynamicResource TextSubtle}"
+                                                                                            Text="{Binding Storage.ItemsCount, StringFormat={}{0} items}" />
+                                                                                    </StackPanel>
+                                                                                </Border>
+                                                                            </ToolTip>
+                                                                        </Border.ToolTip>
+                                                                    </Border>
+                                                                </WrapPanel>
+                                                            </Grid>
 
                                                             <!--  Spalte 3: Toggle NUR fÃ¼r SmartSwitch  -->
                                                             <ui:ToggleSwitch
@@ -1939,160 +2371,6 @@
                                                                     </CheckBox.ContextMenu>
                                                                 </CheckBox>
                                                             </StackPanel>
-                                                            <!--  Spalte 3: Pill NUR bei StorageMonitor  -->
-                                                            <Border
-                                                                Grid.Column="2"
-                                                                Margin="8,0,0,0"
-                                                                Padding="6,2"
-                                                                VerticalAlignment="Center"
-                                                                Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
-                                                                BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}"
-                                                                BorderThickness="1"
-                                                                CornerRadius="6"
-                                                                PreviewMouseWheel="StorPill_PreviewMouseWheel"
-                                                                ToolTipOpening="StorPill_ToolTipOpening"
-                                                                ToolTipService.InitialShowDelay="250"
-                                                                ToolTipService.Placement="Mouse"
-                                                                ToolTipService.ShowDuration="30000"
-                                                                Visibility="{Binding Kind, Converter={StaticResource KindToStorageVisibility}}">
-
-                                                                <!--  sichtbarer Text  -->
-                                                                <TextBlock
-                                                                    FontSize="10.5"
-                                                                    FontWeight="SemiBold"
-                                                                    Foreground="White"
-                                                                    Text="{Binding StorageSummary, Mode=OneWay}" />
-
-                                                                <!--  Hover-Tooltip (ohne StaysOpen)  -->
-                                                                <Border.ToolTip>
-                                                                    <ToolTip MaxWidth="520">
-                                                                        <Border
-                                                                            Background="{DynamicResource SurfaceAlt}"
-                                                                            BorderBrush="{DynamicResource CardBorder}"
-                                                                            BorderThickness="1"
-                                                                            CornerRadius="8">
-                                                                            <StackPanel Margin="8,8,8,6">
-
-                                                                                <!--  Header (no pencil / kebab)  -->
-                                                                                <DockPanel Margin="0,0,0,2" LastChildFill="False">
-                                                                                    <Image
-                                                                                        Width="20"
-                                                                                        Height="20"
-                                                                                        Margin="0,0,6,0"
-                                                                                        Opacity="0.9"
-                                                                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                                                                        Source="{StaticResource IconStorageMonitor}" />
-                                                                                    <StackPanel Orientation="Horizontal">
-                                                                                        <ui:SymbolIcon
-                                                                                            Symbol="Warning20"
-                                                                                            Foreground="#F04747"
-                                                                                            Margin="0,0,6,0"
-                                                                                            VerticalAlignment="Center">
-                                                                                            <ui:SymbolIcon.Style>
-                                                                                                <Style TargetType="ui:SymbolIcon">
-                                                                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                                                                    <Style.Triggers>
-                                                                                                        <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                                            <Setter Property="Visibility" Value="Visible" />
-                                                                                                        </DataTrigger>
-                                                                                                    </Style.Triggers>
-                                                                                                </Style>
-                                                                                            </ui:SymbolIcon.Style>
-                                                                                        </ui:SymbolIcon>
-                                                                                        <TextBlock
-                                                                                            DockPanel.Dock="Left"
-                                                                                            FontSize="13"
-                                                                                            FontWeight="SemiBold"
-                                                                                            Foreground="{DynamicResource TextPrimary}"
-                                                                                            Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
-                                                                                    </StackPanel>
-                                                                                </DockPanel>
-
-                                                                                <!--  Upkeep line (compact)  -->
-                                                                                <TextBlock
-                                                                                    Margin="0,0,0,4"
-                                                                                    FontSize="10.5"
-                                                                                    Foreground="{DynamicResource TextSubtle}"
-                                                                                    Text="{Binding Storage, Converter={StaticResource StorageChipConverter}}" />
-
-                                                                                <!--  Dense grid  -->
-                                                                                <ScrollViewer MaxHeight="390" VerticalScrollBarVisibility="Auto">
-                                                                                    <ItemsControl ItemsSource="{Binding Storage.Items}">
-                                                                                        <ItemsControl.ItemsPanel>
-                                                                                            <ItemsPanelTemplate>
-                                                                                                <WrapPanel
-                                                                                                    ItemHeight="64"
-                                                                                                    ItemWidth="64"
-                                                                                                    Orientation="Horizontal"
-                                                                                                    SnapsToDevicePixels="True"
-                                                                                                    UseLayoutRounding="True" />
-                                                                                            </ItemsPanelTemplate>
-                                                                                        </ItemsControl.ItemsPanel>
-
-                                                                                        <ItemsControl.ItemTemplate>
-                                                                                            <DataTemplate>
-                                                                                                <Border
-                                                                                                    Width="64"
-                                                                                                    Height="64"
-                                                                                                    Background="{DynamicResource Surface}"
-                                                                                                    BorderBrush="{DynamicResource CardBorder}"
-                                                                                                    BorderThickness="1"
-                                                                                                    CornerRadius="6"
-                                                                                                    SnapsToDevicePixels="True">
-                                                                                                    <Grid>
-                                                                                                        <!--  Icon groÃŸ & zentriert  -->
-                                                                                                        <Image
-                                                                                                            Width="48"
-                                                                                                            Height="48"
-                                                                                                            HorizontalAlignment="Center"
-                                                                                                            VerticalAlignment="Center"
-                                                                                                            RenderOptions.BitmapScalingMode="Fant"
-                                                                                                            Source="{Binding Icon}" />
-
-                                                                                                        <!--  Badge unten rechts  -->
-                                                                                                        <Border
-                                                                                                            Margin="1,1,1,1"
-                                                                                                            Padding="4,1.5"
-                                                                                                            HorizontalAlignment="Right"
-                                                                                                            VerticalAlignment="Bottom"
-                                                                                                            Background="#CC0F1013"
-                                                                                                            BorderBrush="#1EFFFFFF"
-                                                                                                            BorderThickness="1"
-                                                                                                            CornerRadius="4">
-                                                                                                            <TextBlock
-                                                                                                                FontSize="10"
-                                                                                                                FontWeight="SemiBold"
-                                                                                                                Foreground="{DynamicResource TextPrimary}">
-                                                                                                                <Run Text="x" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
-                                                                                                            </TextBlock>
-                                                                                                        </Border>
-                                                                                                    </Grid>
-                                                                                                </Border>
-                                                                                            </DataTemplate>
-                                                                                        </ItemsControl.ItemTemplate>
-
-                                                                                        <!--  Container ohne Margin, damit wirklich null Spalt  -->
-                                                                                        <ItemsControl.ItemContainerStyle>
-                                                                                            <Style TargetType="ContentPresenter">
-                                                                                                <Setter Property="Margin" Value="1" />
-                                                                                            </Style>
-                                                                                        </ItemsControl.ItemContainerStyle>
-                                                                                    </ItemsControl>
-                                                                                </ScrollViewer>
-
-                                                                                <!--  footer (compact)  -->
-                                                                                <TextBlock
-                                                                                    Margin="0,2,0,0"
-                                                                                    HorizontalAlignment="Right"
-                                                                                    FontSize="9.5"
-                                                                                    Foreground="{DynamicResource TextSubtle}"
-                                                                                    Text="{Binding Storage.ItemsCount, StringFormat={}{0} items}" />
-                                                                            </StackPanel>
-                                                                        </Border>
-                                                                    </ToolTip>
-                                                                </Border.ToolTip>
-                                                            </Border>
-
                                                         </Grid>
                                                     </Border>
                                                     <!--  ===== Ende Zeile =====  -->
@@ -5688,7 +5966,7 @@
                         <views:RecyclerOverlay
                             x:Name="RecyclerOverlayPanel"
                             Width="450"
-                            Height="540"
+                            Height="660"
                             Margin="0,0,12,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"

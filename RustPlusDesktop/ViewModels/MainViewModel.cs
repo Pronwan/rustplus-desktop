@@ -528,6 +528,13 @@ public class MainViewModel : INotifyPropertyChanged
     public ObservableCollection<SmartDevice>? CurrentDevices
         => Selected?.Devices;
 
+    private IReadOnlyDictionary<string, List<long>>? _currentHotkeys;
+    public IReadOnlyDictionary<string, List<long>>? CurrentHotkeys
+    {
+        get => _currentHotkeys;
+        set { _currentHotkeys = value; OnPropertyChanged(); }
+    }
+
     // Auswahl im UI
     private SmartDevice? _selectedDevice;
     public SmartDevice? SelectedDevice
@@ -565,4 +572,7 @@ public class MainViewModel : INotifyPropertyChanged
     // HILFSMETHODE: UI anstupsen, wenn Devices in-place aktualisiert wurden
     public void NotifyDevicesChanged()
         => OnPropertyChanged(nameof(CurrentDevices));
+
+    public void NotifyHotkeysChanged()
+        => OnPropertyChanged(nameof(CurrentHotkeys));
 }
