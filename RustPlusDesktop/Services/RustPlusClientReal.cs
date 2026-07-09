@@ -47,6 +47,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     private readonly SemaphoreSlim _rateLimitLock = new(1, 1);
     private int _tokens = 50;
     private DateTime _lastRefill = DateTime.UtcNow;
+    private int _consecutiveTimeouts = 0;
 
     private async Task AcquireTokenAsync(CancellationToken ct)
     {
@@ -95,6 +96,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     private void CheckConnectionLost(Exception ex)
     {
         var current = ex;
+        bool isTimeoutOrCancellation = false;
         while (current != null)
         {
             var msg = current.Message;
@@ -104,10 +106,32 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 msg.Contains("eof", StringComparison.OrdinalIgnoreCase) || 
                 msg.Contains("unable to read", StringComparison.OrdinalIgnoreCase))
             {
+                _consecutiveTimeouts = 0;
                 ConnectionLost?.Invoke();
                 return;
             }
+            if (current is TimeoutException ||
+                current is TaskCanceledException ||
+                current is OperationCanceledException ||
+                msg.Contains("canceled", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("timed out", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("timeout", StringComparison.OrdinalIgnoreCase))
+            {
+                isTimeoutOrCancellation = true;
+            }
             current = current.InnerException;
+        }
+
+        if (isTimeoutOrCancellation)
+        {
+            _consecutiveTimeouts++;
+            _log?.Invoke($"[connection] Consecutive timeout/cancellation count: {_consecutiveTimeouts}/5. (Ex: {ex.GetType().Name}: {ex.Message})");
+            if (_consecutiveTimeouts >= 5)
+            {
+                _consecutiveTimeouts = 0;
+                _log?.Invoke("[connection] Triggering ConnectionLost due to 5 consecutive timeouts/cancellations.");
+                ConnectionLost?.Invoke();
+            }
         }
     }
 
@@ -3780,6 +3804,7 @@ rp.connect();
         list.MapNotes.AddRange(ParseNotes(mapNotes));
         list.LeaderMapNotes.AddRange(ParseNotes(leaderMapNotes));
 
+        _consecutiveTimeouts = 0;
         SaveToCache("team", list);
         return list;
     }
@@ -4067,7 +4092,11 @@ rp.connect();
             return LoadFromCache<List<DynMarker>>("markers") ?? list;
         }
 
-        if (list.Count > 0) SaveToCache("markers", list);
+        if (list.Count > 0) 
+        {
+            _consecutiveTimeouts = 0;
+            SaveToCache("markers", list);
+        }
         return list;
     }
 
@@ -4365,6 +4394,7 @@ rp.connect();
             }
             catch (Exception ex)
             {
+                CheckConnectionLost(ex);
                 L("Error in GetVendingShopsAsync: " + ex.Message);
                 return shops;
             }
@@ -4372,6 +4402,7 @@ rp.connect();
 
         if (shops.Count > 0) 
         {
+            _consecutiveTimeouts = 0;
             SaveToCache("shops", shops);
         }
         return shops;
@@ -5134,6 +5165,7 @@ rp.connect();
         _port = profile.Port;
         _steamId = steamId;
         _playerToken = playerToken;
+        _consecutiveTimeouts = 0;
 
         // Reset subscription state for new connection
         lock (_subOnce) _subOnce.Clear();
@@ -6925,6 +6957,7 @@ rp.connect();
         if (responseStr == "Error: Timeout reached while waiting for response")
         {
             _log("[ERROR] Response timeout reached");
+            CheckConnectionLost(new TimeoutException("Timeout reached while waiting for response"));
             return false;
         }
 
@@ -6950,6 +6983,7 @@ rp.connect();
             return false;
         }
 
+        _consecutiveTimeouts = 0;
         return true;
     }
 
