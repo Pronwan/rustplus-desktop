@@ -3141,13 +3141,14 @@ rp.connect();
     }
 
     public sealed class MapWithMonuments
-{
-    public required BitmapSource Bitmap { get; init; }
-    public required int PixelWidth  { get; init; }
-    public required int PixelHeight { get; init; }
-    public required int WorldSize   { get; init; } // falls vorhanden, sonst 0
-    public required List<(double X, double Y, string Name)> Monuments { get; init; }
-}
+    {
+        public required BitmapSource Bitmap { get; init; }
+        public required int PixelWidth  { get; init; }
+        public required int PixelHeight { get; init; }
+        public required int WorldSize   { get; init; } // falls vorhanden, sonst 0
+        public DateTime? WipeTime { get; init; }
+        public required List<(double X, double Y, string Name)> Monuments { get; init; }
+    }
 
 
 
@@ -3223,6 +3224,7 @@ rp.connect();
                 data.GetType().GetProperty("WorldSize")?.GetValue(data)
              ?? data.GetType().GetProperty("MapSize")?.GetValue(data)
              ?? 0);
+            DateTime? wipeTime = null;
 
             // Monuments aus dieser Antwort
             var monsList = new List<(double X, double Y, string Name)>();
@@ -3268,15 +3270,18 @@ rp.connect();
                             await tInfo.WaitAsync(ct).ConfigureAwait(false);
                             var res = tInfo.GetType().GetProperty("Result")?.GetValue(tInfo);
                             var info = res?.GetType().GetProperty("Data")?.GetValue(res) ?? res;
-                            world = Convert.ToInt32(
+                            int infoWorld = Convert.ToInt32(
                                 info?.GetType().GetProperty("WorldSize")?.GetValue(info)
                              ?? info?.GetType().GetProperty("MapSize")?.GetValue(info)
                              ?? 0);
+                            if (infoWorld > 0) world = infoWorld;
                         }
                     }
                 }
                 catch { /* tolerant */ }
             }
+
+            wipeTime = (await GetServerInfoAsync(ct).ConfigureAwait(false))?.WipeTime;
 
             // -------- 3) Letzter Fallback: robust aus Monuments kalibrieren --------
             if (world <= 0 && monsList.Count > 0)
@@ -3307,6 +3312,7 @@ rp.connect();
                 PixelWidth = mapW,
                 PixelHeight = mapH,
                 WorldSize = world,
+                WipeTime = wipeTime,
                 Monuments = monsList
             };
         }

@@ -143,8 +143,12 @@ namespace RustPlusDesk.Views
                 return;
             }
 
-            // 1. If we already have a Map ID and are NOT forcing a refetch, show UI immediately. Local 3D wipe detection is handled by the saved map texture hash.
-            if (!forceRefetch && !string.IsNullOrEmpty(profile.RustMapsMapId))
+            var currentWipeTime = await RefreshProfileWipeTimeAsync(profile);
+
+            // 1. If we already have a Map ID for this wipe and are NOT forcing a refetch, show UI immediately.
+            if (!forceRefetch &&
+                !string.IsNullOrEmpty(profile.RustMapsMapId) &&
+                !IsNewerWipe(currentWipeTime, profile.RustMapsWipeTime))
             {
                 _isRustMapsSearching = false;
                 UpdateRustMapsUi();
@@ -193,6 +197,37 @@ namespace RustPlusDesk.Views
                 _isRustMapsSearching = false;
                 UpdateRustMapsUi();
             }
+        }
+
+        private async Task<DateTime?> RefreshProfileWipeTimeAsync(ServerProfile profile)
+        {
+            try
+            {
+                var info = _rust == null ? null : await _rust.GetServerInfoAsync();
+                if (info?.WipeTime is DateTime wipeTime)
+                {
+                    wipeTime = NormalizeWipeTime(wipeTime);
+                    if (profile.WipeTime != wipeTime)
+                    {
+                        profile.WipeTime = wipeTime;
+                        _vm.Save();
+                    }
+                    return wipeTime;
+                }
+            }
+            catch { }
+
+            return profile.WipeTime;
+        }
+
+        private static DateTime NormalizeWipeTime(DateTime value)
+            => value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
+
+        private static bool IsNewerWipe(DateTime? current, DateTime? cached)
+        {
+            if (!current.HasValue) return false;
+            if (!cached.HasValue) return true;
+            return NormalizeWipeTime(current.Value) > NormalizeWipeTime(cached.Value).AddMinutes(1);
         }
 
         private async Task<RustMapsMatch?> FetchRustMapsServerMatchAsync(string host, int companionPort)

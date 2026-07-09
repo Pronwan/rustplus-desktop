@@ -760,7 +760,8 @@ public static class Map3DLocalBuildService
 
     private static string BuildServerKey(ServerProfile profile, string? rustMapsMapId)
     {
-        string raw = $"{profile.Host}:{profile.Port}:{rustMapsMapId ?? "unknown"}".ToLowerInvariant();
+        string wipeKey = profile.WipeTime?.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture) ?? "unknown";
+        string raw = $"{profile.Host}:{profile.Port}:{rustMapsMapId ?? "unknown"}:{wipeKey}".ToLowerInvariant();
         using var sha = SHA256.Create();
         string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(raw))).ToLowerInvariant()[..12];
         string name = string.IsNullOrWhiteSpace(profile.Name) ? profile.Host : profile.Name;

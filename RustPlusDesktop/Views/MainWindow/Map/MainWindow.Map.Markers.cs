@@ -207,6 +207,7 @@ public partial class MainWindow
 
     private sealed record MapCacheMeta(
         int WorldSize, int PixelWidth, int PixelHeight,
+        DateTime? WipeTime,
         List<MapMonumentEntry> Monuments);
 
     private sealed record MapMonumentEntry(double X, double Y, string Name);
@@ -235,6 +236,7 @@ public partial class MainWindow
                 PixelWidth  = meta.PixelWidth,
                 PixelHeight = meta.PixelHeight,
                 WorldSize   = meta.WorldSize,
+                WipeTime    = meta.WipeTime,
                 Monuments   = meta.Monuments.Select(m => (m.X, m.Y, m.Name)).ToList()
             };
         }
@@ -258,7 +260,7 @@ public partial class MainWindow
 
             // Save metadata
             var meta = new MapCacheMeta(
-                map.WorldSize, map.PixelWidth, map.PixelHeight,
+                map.WorldSize, map.PixelWidth, map.PixelHeight, map.WipeTime,
                 map.Monuments.Select(m => new MapMonumentEntry(m.X, m.Y, m.Name)).ToList());
             System.IO.File.WriteAllText(metaPath, JsonSerializer.Serialize(meta, new JsonSerializerOptions { WriteIndented = false }));
         }
@@ -311,6 +313,7 @@ public partial class MainWindow
         string host     = real.Host ?? "unknown";
         int    port     = _vm?.Selected?.Port ?? 0;
         string cacheKey = MapCacheKey(host, port);
+        DateTime? currentWipeTime = _vm?.Selected == null ? null : await RefreshProfileWipeTimeAsync(_vm.Selected);
 
         RustPlusClientReal.MapWithMonuments? map = null;
 
@@ -318,9 +321,14 @@ public partial class MainWindow
         var cached = TryLoadMapCache(cacheKey);
         if (cached != null)
         {
-            if (IsWipeDetected(host, cached.Monuments))
+            if (IsNewerWipe(currentWipeTime, cached.WipeTime))
             {
-                AppendLog("[map-cache] Wipe detected — invalidating map cache and re-fetching from server.");
+                AppendLog("[map-cache] New wipe detected from server WipeTime; invalidating map cache.");
+                DeleteMapCache(cacheKey);
+            }
+            else if (currentWipeTime == null && IsWipeDetected(host, cached.Monuments))
+            {
+                AppendLog("[map-cache] Wipe detected from monument layout; invalidating map cache.");
                 DeleteMapCache(cacheKey);
             }
             else
@@ -335,6 +343,11 @@ public partial class MainWindow
         {
             map = await real.GetMapWithMonumentsAsync();
             if (map == null) { AppendLog("Map: no data received."); return; }
+            if (_vm?.Selected != null && map.WipeTime.HasValue && _vm.Selected.WipeTime != map.WipeTime.Value)
+            {
+                _vm.Selected.WipeTime = map.WipeTime.Value;
+                _vm.Save();
+            }
             AppendLog($"[map-cache] Saving map to disk cache ({cacheKey}).");
             await Task.Run(() => SaveMapCache(cacheKey, map));
         }
@@ -399,7 +412,7 @@ public partial class MainWindow
             BuildMonumentOverlays();
             LoadCachedBuildingBlockedZonesForCurrentServer();
 
-            var activeProfile = _vm.Selected;
+            var activeProfile = _vm?.Selected;
             if (activeProfile != null)
             {
                 CheckAndExecutePendingMapCopy(activeProfile);
