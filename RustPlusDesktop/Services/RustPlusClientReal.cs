@@ -149,7 +149,6 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
          return StorageService.LoadCache<T>(key);
     }
 
-    
     // ---------- TEAM-CHAT ----------
 
     public void EnsureEventsHooked() => HookEventsIfNeeded();
@@ -5134,7 +5133,7 @@ rp.connect();
         return null;
     }
 
-    public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, CancellationToken ct = default)
+    public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, Action<int, int, uint>? progress = null, CancellationToken ct = default)
     {
         HookEventsIfNeeded();
 
@@ -5142,14 +5141,18 @@ rp.connect();
         if (ids.Count == 0) return;
 
         _log?.Invoke($"[prime] Priming {ids.Count} subscriptions sequentially with a safe delay...");
+        int done = 0;
         foreach (var id in ids)
         {
             if (ct.IsCancellationRequested) break;
             try
             {
+                progress?.Invoke(done, ids.Count, id);
                 await EnsureSubOnceAsync(id);
-                // A safe 300ms delay between each subscription/poke to prevent flooding the Rust+ server
-                await Task.Delay(300, ct);
+                done++;
+                progress?.Invoke(done, ids.Count, id);
+                // A small gap avoids flooding Rust+ while keeping startup responsive.
+                await Task.Delay(100, ct);
             }
             catch { }
         }

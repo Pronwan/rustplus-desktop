@@ -21,6 +21,22 @@ public partial class MainWindow
 {
     private bool _isSoftConnecting = false;
 
+    private void UpdateFullConnectButtonsEnabled()
+    {
+        void Apply()
+        {
+            bool canFullConnect = !_isSoftConnecting
+                                  && !_vm.IsDeviceStatusChecking
+                                  && _vm.Selected?.IsConnected == true
+                                  && _vm.Selected?.IsFullConnected != true;
+            UiBtnFullConnect.IsEnabled = canFullConnect;
+            MapUiBtnFullConnect.IsEnabled = canFullConnect;
+        }
+
+        if (Dispatcher.CheckAccess()) Apply();
+        else Dispatcher.Invoke(Apply);
+    }
+
     private async Task EnsureWebView2Async()
     {
         var dataFolder = Path.Combine(
@@ -163,6 +179,10 @@ public partial class MainWindow
     {
         if (profile == null) return;
         _isSoftConnecting = true;
+        _vm.IsDeviceSubscribePriming = true;
+        _vm.DeviceSubscribeMax = Math.Max(1, profile.Devices.Count);
+        _vm.DeviceSubscribeProgress = 0;
+        _vm.DeviceSubscribeText = "Preparing device subscriptions...";
         Dispatcher.Invoke(() => {
             UiBtnFullConnect.IsEnabled = false;
             UiBtnConnect.IsEnabled = false;
@@ -183,15 +203,29 @@ public partial class MainWindow
                 // Hook local handlers
                 real.ConnectionLost -= OnConnectionLost;
                 real.ConnectionLost += OnConnectionLost;
+                real.TeamChatReceived -= Real_TeamChatReceived;
+                real.TeamChatReceived += Real_TeamChatReceived;
+                try { await real.PrimeTeamChatAsync(); }
+                catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
 
                 var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
                 if (allIds.Any())
                 {
-                    await real.PrimeSubscriptionsAsync(allIds);
+                    _vm.DeviceSubscribeMax = allIds.Count;
+                    _vm.DeviceSubscribeProgress = 0;
+                    await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            _vm.DeviceSubscribeMax = total;
+                            _vm.DeviceSubscribeProgress = done;
+                            _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
+                        });
+                    });
                 }
                 
-                // Refresh device status and await it to prevent overlapping connections/requests
-                await RefreshAllDevicesStatusAsync(maxRetries: 1);
+                // Refresh device status in the background so Full Connect can be used once subscriptions are ready.
+                _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
             }
             
             // Start the server status loop (players/time) even for soft connect
@@ -215,12 +249,12 @@ public partial class MainWindow
         finally
         {
             _isSoftConnecting = false;
+            _vm.IsDeviceSubscribePriming = false;
             Dispatcher.Invoke(() => {
-                UiBtnFullConnect.IsEnabled = true;
                 UiBtnConnect.IsEnabled = true;
-                MapUiBtnFullConnect.IsEnabled = true;
                 MapUiBtnConnect.IsEnabled = true;
             });
+            UpdateFullConnectButtonsEnabled();
         }
     }
 
@@ -445,12 +479,13 @@ public partial class MainWindow
                 _vm.IsInitializing = true;
             }
 
-            // Start atomic parallel loading block to prevent UI "stuttering" during sequential awaits
-            var initTasks = new List<Task>();
-            
-            initTasks.Add(LoadMapAsync());
-            initTasks.Add(UpdateServerStatusAsync());
-            initTasks.Add(LoadTeamAsync());
+            var mapTask = LoadMapAsync();
+            var initTasks = new List<Task>
+            {
+                mapTask,
+                UpdateServerStatusAsync(),
+                LoadTeamAsync()
+            };
             
             // Rehydrate local cache immediately (sync)
             RehydrateDevicesFromStorageInto(_vm.Selected);
@@ -486,7 +521,10 @@ public partial class MainWindow
             _ = InitOwnOverlayAsync();
 
 
-            // Wait for core initialization to complete
+            await mapTask;
+            if (showBusy)
+                _vm!.IsConnectionLoading = false;
+
             await Task.WhenAll(initTasks);
             
             // Rebuild team bar and subscription dock with loaded team data, and fetch restored teammate overlays
@@ -502,16 +540,12 @@ public partial class MainWindow
                 }
             });
             
-            // Core data is now loaded (_worldSizeS is available)
             if (TrackingService.AutoLoadShops)
-            {
                 Dispatcher.Invoke(() => ChkShops.IsChecked = true);
-            }
-            
+
             if (showBusy)
             {
                 _vm!.IsInitializing = false;
-                _vm.IsConnectionLoading = false;
             }
             var connectedProfile = _vm!.Selected;
             if (connectedProfile == null)
@@ -524,24 +558,36 @@ public partial class MainWindow
             _ = SearchRustMapsAsync(false);
             AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
 
-            // Finally, refresh all device statuses to ensure the UI reflects the current server state
-            _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
-
-            // Finally, prime subscriptions for all devices to receive real-time updates
+            // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
             {
                 try
                 {
-                    // Batching all entity subscriptions into one call
+                    _vm.IsDeviceSubscribePriming = true;
                     var allIds = connectedProfile.Devices.Select(d => d.EntityId).Distinct().ToList();
-                    await real.PrimeSubscriptionsAsync(allIds);
+                    _vm.DeviceSubscribeMax = allIds.Count;
+                    _vm.DeviceSubscribeProgress = 0;
+                    await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            _vm.DeviceSubscribeMax = total;
+                            _vm.DeviceSubscribeProgress = done;
+                            _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
+                        });
+                    });
+                    _vm.IsDeviceSubscribePriming = false;
                     AppendLog($"Subscribed to {allIds.Count} entities.");
                 }
                 catch (Exception ex)
                 {
+                    _vm.IsDeviceSubscribePriming = false;
                     AppendLog("PrimeSubscriptions Error: " + ex.Message);
                 }
             }
+
+            // Finally, refresh all device statuses to ensure the UI reflects the current server state
+            _ = RefreshAllDevicesStatusAsync(maxRetries: 1, skipIfRecentlyChecked: true);
 
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();

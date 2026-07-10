@@ -4323,6 +4323,104 @@
                                             </ui:Button.Style>
                                         </ui:Button>
                                     </StackPanel>
+
+                                    <Border
+                                        Margin="0,16,0,0"
+                                        Padding="12"
+                                        Background="{DynamicResource SurfaceAlt}"
+                                        BorderBrush="{DynamicResource CardBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Visibility="{Binding IsDeviceSubscribePriming, Converter={StaticResource BoolToVisibility}}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextPrimary}"
+                                                Text="{Binding DeviceSubscribeText}"
+                                                TextTrimming="CharacterEllipsis" />
+
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="{DynamicResource TextSubtle}"
+                                                Text="{Binding DeviceSubscribeProgressText}" />
+
+                                            <ProgressBar
+                                                Grid.Row="1"
+                                                Grid.ColumnSpan="2"
+                                                Height="6"
+                                                Margin="0,8,0,0"
+                                                Minimum="0"
+                                                Maximum="{Binding DeviceSubscribeMax}"
+                                                Value="{Binding DeviceSubscribeProgress}"
+                                                Foreground="{DynamicResource Accent}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border
+                                        Margin="0,8,0,0"
+                                        Padding="12"
+                                        Background="{DynamicResource SurfaceAlt}"
+                                        BorderBrush="{DynamicResource CardBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Visibility="{Binding IsDeviceStatusChecking, Converter={StaticResource BoolToVisibility}}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextPrimary}"
+                                                Text="{Binding DeviceStatusText}"
+                                                TextTrimming="CharacterEllipsis" />
+
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="{DynamicResource TextSubtle}"
+                                                Text="{Binding DeviceStatusProgressText}" />
+
+                                            <ProgressBar
+                                                Grid.Row="1"
+                                                Grid.ColumnSpan="2"
+                                                Height="6"
+                                                Margin="0,8,0,0"
+                                                Minimum="0"
+                                                Maximum="{Binding DeviceStatusMax}"
+                                                Value="{Binding DeviceStatusProgress}"
+                                                Foreground="{DynamicResource Accent}" />
+                                        </Grid>
+                                    </Border>
                                 </StackPanel>
                             </Border>
                         </Border>
@@ -4547,6 +4645,39 @@
                                                 FontWeight="SemiBold"
                                                 Foreground="White"
                                                 Text="{Binding ServerQueue}" />
+                                        </StackPanel>
+
+                                        <StackPanel
+                                            Margin="0,2,0,0"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ServerWipe}" Value="-">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                FontSize="14"
+                                                Foreground="#8D98A8"
+                                                Symbol="Calendar20" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                Foreground="#8D98A8"
+                                                Text="Wiped" />
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{Binding ServerWipe}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </ui:Card>

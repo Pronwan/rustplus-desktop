@@ -450,6 +450,8 @@ public partial class MainWindow
         _dynTimer.Tick += async (_, __) => await PollDynMarkersOnceAsync();
         _firstPollDyn = true; // Suppress announcements on the very first poll of a new connection
         _dynTimer.Start();
+
+        _ = PollDynMarkersOnceAsync();
     }
 
     private void StopDynPolling(bool clearKnown = true)
@@ -1622,7 +1624,7 @@ public partial class MainWindow
                         }
                         else
                         {
-                            double correction = (m.Type == 6 || m.Type == 3) ? 180 : 0;
+                            double correction = (m.Type == 3) ? 180 : 0;
                             pmtNew.Rotation = m.Rotation + correction;
                         }
                     }
@@ -1675,10 +1677,6 @@ public partial class MainWindow
                         {
                             double angleRad = Math.Atan2(state.LastVX, state.LastVY);
                             targetRot = angleRad * (180.0 / Math.PI);
-                            if (m.Type == 6)
-                            {
-                                targetRot += 180; // Correction for vendor icon's default downward orientation
-                            }
                         }
                         else
                         {
@@ -1688,7 +1686,7 @@ public partial class MainWindow
                             }
                             else
                             {
-                                targetRot = isNew ? (m.Rotation + 180) : pmt.Rotation;
+                                targetRot = isNew ? m.Rotation : pmt.Rotation;
                             }
                         }
                     }

@@ -1635,11 +1635,22 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
     }
 
     private int _refreshAllBusy = 0;
-    private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3)
+    private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3, bool skipIfRecentlyChecked = false)
     {
         if (Interlocked.Exchange(ref _refreshAllBusy, 1) == 1) return;
         try
         {
+        void StartProgress(int max)
+        {
+            _vm.IsDeviceStatusChecking = true;
+            _vm.DeviceStatusMax = Math.Max(1, max);
+            _vm.DeviceStatusProgress = 0;
+            _vm.DeviceStatusText = "Checking devices...";
+            UpdateFullConnectButtonsEnabled();
+        }
+
+        if (!skipIfRecentlyChecked) StartProgress(1);
+
         if (_logicEngineRunningAction)
         {
             AppendLog("[LogicEngine] Manual refresh blocked: Logic Engine is executing an action.");
@@ -1662,17 +1673,30 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             return;
         }
 
+        var leaves = LeafDevices(list).ToList();
+        if (skipIfRecentlyChecked
+            && leaves.Count > 0
+            && leaves.All(d => (DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15))
+        {
+            AppendLog("Device status refresh skipped; recent check is still fresh.");
+            return;
+        }
+
         AppendLog("Updating Device Status (sequential).");
-        
+        StartProgress(list.Count);
+
         foreach (var d in list)
         {
             try
             {
+                _vm.DeviceStatusText = $"Checking device #{d.EntityId} ({d.DisplayName})...";
                 await RefreshDeviceRecursiveAsync(d, maxRetries);
+                _vm.DeviceStatusProgress++;
                 await Task.Delay(250); // Increased gap to prevent API spam
             }
             catch (Exception ex)
             {
+                _vm.DeviceStatusProgress++;
                 AppendLog($"Error refreshing {d.DisplayName}: {ex.Message}");
             }
         }
@@ -1682,7 +1706,24 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         }
         finally
         {
+            _vm.IsDeviceStatusChecking = false;
+            UpdateFullConnectButtonsEnabled();
             Interlocked.Exchange(ref _refreshAllBusy, 0);
+        }
+
+        static IEnumerable<SmartDevice> LeafDevices(IEnumerable<SmartDevice> devices)
+        {
+            foreach (var d in devices)
+            {
+                if (!d.IsGroup)
+                {
+                    yield return d;
+                    continue;
+                }
+
+                foreach (var child in LeafDevices(d.Children))
+                    yield return child;
+            }
         }
     }
 
