@@ -369,6 +369,15 @@ public partial class MainWindow
                 RefreshMonumentOverlayPositions();
                 RedrawDeathPins();
             }, DispatcherPriority.Loaded);
+            if (!_monumentWatcher.HasAnyMonument)
+            {
+                var oilRigs = map.Monuments
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name) && m.Name.Contains("oil", StringComparison.OrdinalIgnoreCase))
+                    .Select(m => new RustPlusClientReal.DynMarker(0, 0, "Monument", m.X, m.Y, m.Name, m.Name, 0))
+                    .ToList();
+                if (oilRigs.Count > 0)
+                    _monumentWatcher.SetMonuments(oilRigs);
+            }
             StartDynPolling();
             SyncAlertMenuItems(); // Refresh arrival warning enabled state now that host is known
 

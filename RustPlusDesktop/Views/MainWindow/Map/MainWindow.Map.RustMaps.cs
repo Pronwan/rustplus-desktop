@@ -128,7 +128,7 @@ namespace RustPlusDesk.Views
             }
         }
 
-        public async Task SearchRustMapsAsync(bool forceRefetch = false)
+        public async Task SearchRustMapsAsync(bool forceRefetch = false, DateTime? knownWipeTime = null)
         {
             var profile = _vm.Selected;
             if (profile == null)
@@ -143,7 +143,7 @@ namespace RustPlusDesk.Views
                 return;
             }
 
-            var currentWipeTime = await RefreshProfileWipeTimeAsync(profile);
+            var currentWipeTime = knownWipeTime ?? await RefreshProfileWipeTimeAsync(profile);
 
             // 1. If we already have a Map ID for this wipe and are NOT forcing a refetch, show UI immediately.
             if (!forceRefetch &&

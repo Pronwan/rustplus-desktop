@@ -555,7 +555,7 @@ public partial class MainWindow
             connectedProfile.IsFullConnected = true;
 
             _vm.NotifyDevicesChanged();
-            _ = SearchRustMapsAsync(false);
+            _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
             AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
 
             // Prime subscriptions for all devices to receive real-time updates.
