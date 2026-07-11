@@ -265,6 +265,12 @@ public partial class MainWindow
 
     private async void OnConnectionLost()
     {
+        if (!Dispatcher.CheckAccess())
+        {
+            _ = Dispatcher.BeginInvoke(new Action(OnConnectionLost));
+            return;
+        }
+
         if (_isReconnecting) return;
         _isReconnecting = true;
 
