@@ -37,7 +37,7 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v7.3.0 | Soft Connect, Map Cache &amp; Startup Improvements" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v7.3.0 | Connection, Map Cache &amp; 3D View" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold" Foreground="{DynamicResource Accent}">&#x2022; Soft Connect Chat Commands:</Run>
@@ -97,6 +97,58 @@
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Vendor Direction:</Run>
                                 Fixed travelling vendor marker direction.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Reliable Discord Commands:</Run>
+                                Slash commands now acknowledge immediately and wait in the background for slower desktop and device responses.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                                <Run FontWeight="Bold">&#x2022; Devices Empty State:</Run>
+                                The empty state is now centered in the device list instead of overlapping the search and type filters.
+                            </TextBlock>
+
+                            <TextBlock Text="3D View &amp; MapParser" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Resource Heatmaps:</Run>
+                                Added 2D and 3D resource heatmaps with searchable, compact controls and premium map icons.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Live 3D Tracking:</Run>
+                                Players, patrol helicopters, travelling vendors, and cargo ships now appear as tracked 3D models with follow controls and visibility options.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Expanded Monument Models:</Run>
+                                Added and refined Apartment Complex, Missile Silo, tunnel entrances, water wells, radtowns, icebergs, ice lakes, and rock formation models.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Terrain &amp; Water:</Run>
+                                Improved terrain textures, snow detail, rivers, oceans, inland water, biome rendering, rock placement, and walkable rock surfaces.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; 3D Performance:</Run>
+                                Reduced duplicate monument rendering, batched natural assets, optimized texture loading, and improved startup asset handling.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Viewer Controls:</Run>
+                                Added persistent graphics settings, improved camera movement, F11 fullscreen, a compass, collapsible toolbars, and clearer follow indicators.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Rust-Style 3D Grid:</Run>
+                                Added an in-world map grid and refined monument placement offsets for better alignment with the 2D map.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Rendering Polish:</Run>
+                                Improved lighting, water brightness, marker visibility, vehicle animation pivots, asset resolution, and loading feedback.
                             </TextBlock>
                         </StackPanel>
                     </Border>

@@ -2430,6 +2430,7 @@
                                     </TreeView>
 
                                     <StackPanel
+                                        Grid.Row="1"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         IsHitTestVisible="False">
