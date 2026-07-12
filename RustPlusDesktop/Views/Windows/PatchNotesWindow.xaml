@@ -120,6 +120,12 @@
                                 <Run FontWeight="Bold">&#x2022; Smoother 3D Navigation:</Run>
                                 Added an FPS display and adaptive resolution, improved camera defaults and orbit targeting, and clarified the active control mode.
                             </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.3.0/3dview-grids.png" Description="Rust-style labeled 3D map grid with persistent visibility controls and live FPS feedback"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.3.0/wipe-date-info.png" Description="Server wipe date and elapsed time displayed alongside the live population"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v7.3.0/devices-subscribe-check-progress.png" Description="Live device subscription progress while Full Connect prepares the map"/>
+                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
 
