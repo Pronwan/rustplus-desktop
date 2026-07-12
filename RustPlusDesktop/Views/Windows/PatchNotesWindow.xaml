@@ -112,43 +112,13 @@
                             <TextBlock Text="3D View &amp; MapParser" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Resource Heatmaps:</Run>
-                                Added 2D and 3D resource heatmaps with searchable, compact controls and premium map icons.
-                            </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Live 3D Tracking:</Run>
-                                Players, patrol helicopters, travelling vendors, and cargo ships now appear as tracked 3D models with follow controls and visibility options.
-                            </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Expanded Monument Models:</Run>
-                                Added and refined Apartment Complex, Missile Silo, tunnel entrances, water wells, radtowns, icebergs, ice lakes, and rock formation models.
-                            </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Terrain &amp; Water:</Run>
-                                Improved terrain textures, snow detail, rivers, oceans, inland water, biome rendering, rock placement, and walkable rock surfaces.
-                            </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; 3D Performance:</Run>
-                                Reduced duplicate monument rendering, batched natural assets, optimized texture loading, and improved startup asset handling.
-                            </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Viewer Controls:</Run>
-                                Added persistent graphics settings, improved camera movement, F11 fullscreen, a compass, collapsible toolbars, and clearer follow indicators.
-                            </TextBlock>
-
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Rust-Style 3D Grid:</Run>
-                                Added an in-world map grid and refined monument placement offsets for better alignment with the 2D map.
+                                Added a labeled floating map grid with altitude fading and a persistent visibility setting.
                             </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Rendering Polish:</Run>
-                                Improved lighting, water brightness, marker visibility, vehicle animation pivots, asset resolution, and loading feedback.
+                                <Run FontWeight="Bold">&#x2022; Smoother 3D Navigation:</Run>
+                                Added an FPS display and adaptive resolution, improved camera defaults and orbit targeting, and clarified the active control mode.
                             </TextBlock>
                         </StackPanel>
                     </Border>
