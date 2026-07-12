@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace RustPlusDesk.Views;
@@ -192,12 +193,164 @@ public partial class MainWindow
         el.Opacity = TrackingService.MapMonumentOpacity;
     }
 
+    // ── Map disk-cache helpers ─────────────────────────────────────────────────────────────────
+    private static readonly string s_mapCacheDir = System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "RustPlusDesk", "map_cache");
+
+    private static string MapCacheKey(string host, int port)
+    {
+        // Sanitize so it's safe as a file name
+        foreach (var c in System.IO.Path.GetInvalidFileNameChars()) host = host.Replace(c, '_');
+        return $"{host}_{port}";
+    }
+
+    private sealed record MapCacheMeta(
+        int WorldSize, int PixelWidth, int PixelHeight,
+        DateTime? WipeTime,
+        List<MapMonumentEntry> Monuments);
+
+    private sealed record MapMonumentEntry(double X, double Y, string Name);
+
+    private static RustPlusClientReal.MapWithMonuments? TryLoadMapCache(string key)
+    {
+        try
+        {
+            string imgPath  = System.IO.Path.Combine(s_mapCacheDir, key + ".png");
+            string metaPath = System.IO.Path.Combine(s_mapCacheDir, key + ".json");
+            if (!System.IO.File.Exists(imgPath) || !System.IO.File.Exists(metaPath)) return null;
+
+            var meta = JsonSerializer.Deserialize<MapCacheMeta>(System.IO.File.ReadAllText(metaPath));
+            if (meta == null) return null;
+
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(imgPath));
+            bi.EndInit();
+            bi.Freeze();
+
+            return new RustPlusClientReal.MapWithMonuments
+            {
+                Bitmap     = bi,
+                PixelWidth  = meta.PixelWidth,
+                PixelHeight = meta.PixelHeight,
+                WorldSize   = meta.WorldSize,
+                WipeTime    = meta.WipeTime,
+                Monuments   = meta.Monuments.Select(m => (m.X, m.Y, m.Name)).ToList()
+            };
+        }
+        catch { return null; }
+    }
+
+    private static void SaveMapCache(string key, RustPlusClientReal.MapWithMonuments map)
+    {
+        try
+        {
+            System.IO.Directory.CreateDirectory(s_mapCacheDir);
+            string imgPath  = System.IO.Path.Combine(s_mapCacheDir, key + ".png");
+            string metaPath = System.IO.Path.Combine(s_mapCacheDir, key + ".json");
+
+            // Encode BitmapSource → PNG bytes
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(map.Bitmap));
+            using var ms = new System.IO.MemoryStream();
+            encoder.Save(ms);
+            System.IO.File.WriteAllBytes(imgPath, ms.ToArray());
+
+            // Save metadata
+            var meta = new MapCacheMeta(
+                map.WorldSize, map.PixelWidth, map.PixelHeight, map.WipeTime,
+                map.Monuments.Select(m => new MapMonumentEntry(m.X, m.Y, m.Name)).ToList());
+            System.IO.File.WriteAllText(metaPath, JsonSerializer.Serialize(meta, new JsonSerializerOptions { WriteIndented = false }));
+        }
+        catch { /* non-critical */ }
+    }
+
+    private static void DeleteMapCache(string key)
+    {
+        try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + ".png")); } catch { }
+        try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + ".json")); } catch { }
+    }
+
+    /// <summary>
+    /// Returns true if current monument harbors indicate a server wipe vs what was previously saved.
+    /// </summary>
+    private static bool IsWipeDetected(
+        string host,
+        List<(double X, double Y, string Name)> currentMonuments)
+    {
+        var currentHarbors = currentMonuments
+            .Where(m => m.Name?.Contains("Harbor", StringComparison.OrdinalIgnoreCase) == true)
+            .Select(m => new HarborInfo { Name = m.Name!, X = m.X, Y = m.Y })
+            .OrderBy(h => h.Name).ToList();
+
+        // No harbors on the map (unlikely) → can't judge
+        if (currentHarbors.Count == 0) return false;
+
+        var savedHarbors = TrackingService.GetServerHarbors(host).OrderBy(h => h.Name).ToList();
+
+        // No saved harbors yet (first-ever connection for this server) → not a wipe
+        if (savedHarbors.Count == 0) return false;
+
+        if (currentHarbors.Count != savedHarbors.Count) return true;
+
+        for (int i = 0; i < currentHarbors.Count; i++)
+        {
+            if (currentHarbors[i].Name != savedHarbors[i].Name ||
+                Math.Abs(currentHarbors[i].X - savedHarbors[i].X) > 50 ||
+                Math.Abs(currentHarbors[i].Y - savedHarbors[i].Y) > 50)
+                return true;
+        }
+        return false;
+    }
+    // ──────────────────────────────────────────────────────────────────────────────────────────
+
     private async Task LoadMapAsync()
     {
         if (_rust is not RustPlusClientReal real) return;
 
-        var map = await real.GetMapWithMonumentsAsync();
-        if (map == null) { AppendLog("Map: no data received."); return; }
+        string host     = real.Host ?? "unknown";
+        int    port     = _vm?.Selected?.Port ?? 0;
+        string cacheKey = MapCacheKey(host, port);
+        DateTime? currentWipeTime = _vm?.Selected == null ? null : await RefreshProfileWipeTimeAsync(_vm.Selected);
+
+        RustPlusClientReal.MapWithMonuments? map = null;
+
+        // ── Try disk cache first ──────────────────────────────────────────────────────────────
+        var cached = TryLoadMapCache(cacheKey);
+        if (cached != null)
+        {
+            if (IsNewerWipe(currentWipeTime, cached.WipeTime))
+            {
+                AppendLog("[map-cache] New wipe detected from server WipeTime; invalidating map cache.");
+                DeleteMapCache(cacheKey);
+            }
+            else if (currentWipeTime == null && IsWipeDetected(host, cached.Monuments))
+            {
+                AppendLog("[map-cache] Wipe detected from monument layout; invalidating map cache.");
+                DeleteMapCache(cacheKey);
+            }
+            else
+            {
+                AppendLog($"[map-cache] Loaded map from disk cache ({cacheKey}).");
+                map = cached;
+            }
+        }
+
+        // ── Fetch from server if no valid cache ───────────────────────────────────────────────
+        if (map == null)
+        {
+            map = await real.GetMapWithMonumentsAsync();
+            if (map == null) { AppendLog("Map: no data received."); return; }
+            if (_vm?.Selected != null && map.WipeTime.HasValue && _vm.Selected.WipeTime != map.WipeTime.Value)
+            {
+                _vm.Selected.WipeTime = map.WipeTime.Value;
+                _vm.Save();
+            }
+            AppendLog($"[map-cache] Saving map to disk cache ({cacheKey}).");
+            await Task.Run(() => SaveMapCache(cacheKey, map));
+        }
 
         await Dispatcher.InvokeAsync(() =>
         {
@@ -216,6 +369,15 @@ public partial class MainWindow
                 RefreshMonumentOverlayPositions();
                 RedrawDeathPins();
             }, DispatcherPriority.Loaded);
+            if (!_monumentWatcher.HasAnyMonument)
+            {
+                var oilRigs = map.Monuments
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name) && m.Name.Contains("oil", StringComparison.OrdinalIgnoreCase))
+                    .Select(m => new RustPlusClientReal.DynMarker(0, 0, "Monument", m.X, m.Y, m.Name, m.Name, 0))
+                    .ToList();
+                if (oilRigs.Count > 0)
+                    _monumentWatcher.SetMonuments(oilRigs);
+            }
             StartDynPolling();
             SyncAlertMenuItems(); // Refresh arrival warning enabled state now that host is known
 
@@ -259,7 +421,7 @@ public partial class MainWindow
             BuildMonumentOverlays();
             LoadCachedBuildingBlockedZonesForCurrentServer();
 
-            var activeProfile = _vm.Selected;
+            var activeProfile = _vm?.Selected;
             if (activeProfile != null)
             {
                 CheckAndExecutePendingMapCopy(activeProfile);
@@ -297,6 +459,8 @@ public partial class MainWindow
         _dynTimer.Tick += async (_, __) => await PollDynMarkersOnceAsync();
         _firstPollDyn = true; // Suppress announcements on the very first poll of a new connection
         _dynTimer.Start();
+
+        _ = PollDynMarkersOnceAsync();
     }
 
     private void StopDynPolling(bool clearKnown = true)
@@ -1469,7 +1633,7 @@ public partial class MainWindow
                         }
                         else
                         {
-                            double correction = (m.Type == 6 || m.Type == 3) ? 180 : 0;
+                            double correction = (m.Type == 3) ? 180 : 0;
                             pmtNew.Rotation = m.Rotation + correction;
                         }
                     }
@@ -1522,10 +1686,6 @@ public partial class MainWindow
                         {
                             double angleRad = Math.Atan2(state.LastVX, state.LastVY);
                             targetRot = angleRad * (180.0 / Math.PI);
-                            if (m.Type == 6)
-                            {
-                                targetRot += 180; // Correction for vendor icon's default downward orientation
-                            }
                         }
                         else
                         {
@@ -1535,7 +1695,7 @@ public partial class MainWindow
                             }
                             else
                             {
-                                targetRot = isNew ? (m.Rotation + 180) : pmt.Rotation;
+                                targetRot = isNew ? m.Rotation : pmt.Rotation;
                             }
                         }
                     }

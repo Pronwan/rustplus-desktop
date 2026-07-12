@@ -47,6 +47,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     private readonly SemaphoreSlim _rateLimitLock = new(1, 1);
     private int _tokens = 50;
     private DateTime _lastRefill = DateTime.UtcNow;
+    private int _consecutiveTimeouts = 0;
 
     private async Task AcquireTokenAsync(CancellationToken ct)
     {
@@ -95,6 +96,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     private void CheckConnectionLost(Exception ex)
     {
         var current = ex;
+        bool isTimeoutOrCancellation = false;
         while (current != null)
         {
             var msg = current.Message;
@@ -104,10 +106,32 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 msg.Contains("eof", StringComparison.OrdinalIgnoreCase) || 
                 msg.Contains("unable to read", StringComparison.OrdinalIgnoreCase))
             {
+                _consecutiveTimeouts = 0;
                 ConnectionLost?.Invoke();
                 return;
             }
+            if (current is TimeoutException ||
+                current is TaskCanceledException ||
+                current is OperationCanceledException ||
+                msg.Contains("canceled", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("timed out", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("timeout", StringComparison.OrdinalIgnoreCase))
+            {
+                isTimeoutOrCancellation = true;
+            }
             current = current.InnerException;
+        }
+
+        if (isTimeoutOrCancellation)
+        {
+            _consecutiveTimeouts++;
+            _log?.Invoke($"[connection] Consecutive timeout/cancellation count: {_consecutiveTimeouts}/5. (Ex: {ex.GetType().Name}: {ex.Message})");
+            if (_consecutiveTimeouts >= 5)
+            {
+                _consecutiveTimeouts = 0;
+                _log?.Invoke("[connection] Triggering ConnectionLost due to 5 consecutive timeouts/cancellations.");
+                ConnectionLost?.Invoke();
+            }
         }
     }
 
@@ -125,7 +149,6 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
          return StorageService.LoadCache<T>(key);
     }
 
-    
     // ---------- TEAM-CHAT ----------
 
     public void EnsureEventsHooked() => HookEventsIfNeeded();
@@ -3117,13 +3140,14 @@ rp.connect();
     }
 
     public sealed class MapWithMonuments
-{
-    public required BitmapSource Bitmap { get; init; }
-    public required int PixelWidth  { get; init; }
-    public required int PixelHeight { get; init; }
-    public required int WorldSize   { get; init; } // falls vorhanden, sonst 0
-    public required List<(double X, double Y, string Name)> Monuments { get; init; }
-}
+    {
+        public required BitmapSource Bitmap { get; init; }
+        public required int PixelWidth  { get; init; }
+        public required int PixelHeight { get; init; }
+        public required int WorldSize   { get; init; } // falls vorhanden, sonst 0
+        public DateTime? WipeTime { get; init; }
+        public required List<(double X, double Y, string Name)> Monuments { get; init; }
+    }
 
 
 
@@ -3199,6 +3223,7 @@ rp.connect();
                 data.GetType().GetProperty("WorldSize")?.GetValue(data)
              ?? data.GetType().GetProperty("MapSize")?.GetValue(data)
              ?? 0);
+            DateTime? wipeTime = null;
 
             // Monuments aus dieser Antwort
             var monsList = new List<(double X, double Y, string Name)>();
@@ -3244,15 +3269,18 @@ rp.connect();
                             await tInfo.WaitAsync(ct).ConfigureAwait(false);
                             var res = tInfo.GetType().GetProperty("Result")?.GetValue(tInfo);
                             var info = res?.GetType().GetProperty("Data")?.GetValue(res) ?? res;
-                            world = Convert.ToInt32(
+                            int infoWorld = Convert.ToInt32(
                                 info?.GetType().GetProperty("WorldSize")?.GetValue(info)
                              ?? info?.GetType().GetProperty("MapSize")?.GetValue(info)
                              ?? 0);
+                            if (infoWorld > 0) world = infoWorld;
                         }
                     }
                 }
                 catch { /* tolerant */ }
             }
+
+            wipeTime = (await GetServerInfoAsync(ct).ConfigureAwait(false))?.WipeTime;
 
             // -------- 3) Letzter Fallback: robust aus Monuments kalibrieren --------
             if (world <= 0 && monsList.Count > 0)
@@ -3283,6 +3311,7 @@ rp.connect();
                 PixelWidth = mapW,
                 PixelHeight = mapH,
                 WorldSize = world,
+                WipeTime = wipeTime,
                 Monuments = monsList
             };
         }
@@ -3780,6 +3809,7 @@ rp.connect();
         list.MapNotes.AddRange(ParseNotes(mapNotes));
         list.LeaderMapNotes.AddRange(ParseNotes(leaderMapNotes));
 
+        _consecutiveTimeouts = 0;
         SaveToCache("team", list);
         return list;
     }
@@ -4067,7 +4097,11 @@ rp.connect();
             return LoadFromCache<List<DynMarker>>("markers") ?? list;
         }
 
-        if (list.Count > 0) SaveToCache("markers", list);
+        if (list.Count > 0) 
+        {
+            _consecutiveTimeouts = 0;
+            SaveToCache("markers", list);
+        }
         return list;
     }
 
@@ -4365,6 +4399,7 @@ rp.connect();
             }
             catch (Exception ex)
             {
+                CheckConnectionLost(ex);
                 L("Error in GetVendingShopsAsync: " + ex.Message);
                 return shops;
             }
@@ -4372,6 +4407,7 @@ rp.connect();
 
         if (shops.Count > 0) 
         {
+            _consecutiveTimeouts = 0;
             SaveToCache("shops", shops);
         }
         return shops;
@@ -5097,7 +5133,7 @@ rp.connect();
         return null;
     }
 
-    public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, CancellationToken ct = default)
+    public async Task PrimeSubscriptionsAsync(IEnumerable<uint> entityIds, Action<int, int, uint>? progress = null, CancellationToken ct = default)
     {
         HookEventsIfNeeded();
 
@@ -5105,14 +5141,18 @@ rp.connect();
         if (ids.Count == 0) return;
 
         _log?.Invoke($"[prime] Priming {ids.Count} subscriptions sequentially with a safe delay...");
+        int done = 0;
         foreach (var id in ids)
         {
             if (ct.IsCancellationRequested) break;
             try
             {
+                progress?.Invoke(done, ids.Count, id);
                 await EnsureSubOnceAsync(id);
-                // A safe 300ms delay between each subscription/poke to prevent flooding the Rust+ server
-                await Task.Delay(300, ct);
+                done++;
+                progress?.Invoke(done, ids.Count, id);
+                // A small gap avoids flooding Rust+ while keeping startup responsive.
+                await Task.Delay(100, ct);
             }
             catch { }
         }
@@ -5134,6 +5174,7 @@ rp.connect();
         _port = profile.Port;
         _steamId = steamId;
         _playerToken = playerToken;
+        _consecutiveTimeouts = 0;
 
         // Reset subscription state for new connection
         lock (_subOnce) _subOnce.Clear();
@@ -6925,6 +6966,7 @@ rp.connect();
         if (responseStr == "Error: Timeout reached while waiting for response")
         {
             _log("[ERROR] Response timeout reached");
+            CheckConnectionLost(new TimeoutException("Timeout reached while waiting for response"));
             return false;
         }
 
@@ -6950,6 +6992,7 @@ rp.connect();
             return false;
         }
 
+        _consecutiveTimeouts = 0;
         return true;
     }
 

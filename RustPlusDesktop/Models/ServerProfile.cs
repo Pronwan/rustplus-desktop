@@ -495,6 +495,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _rustMapsWipeTime = value; OnProp(); }
     }
 
+    private DateTime? _wipeTime;
+    public DateTime? WipeTime
+    {
+        get => _wipeTime;
+        set { _wipeTime = value; OnProp(); }
+    }
+
     private List<LogicRule> _logicRules = new();
     public List<LogicRule> LogicRules
     {
