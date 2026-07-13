@@ -107,16 +107,46 @@ namespace RustPlusDesk.Views
                 BtnOpenRustMaps.IsEnabled = false;
             }
 
-            bool canUseLocal3DMap = (SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated)
-                && (profile.IsFullConnected || isPlaceholder);
-            BtnOpen3DMap.Visibility = canUseLocal3DMap ? Visibility.Visible : Visibility.Collapsed;
-            BtnOpen3DMap.IsEnabled = canUseLocal3DMap && !_isMap3DPreparing;
+            bool isAuthenticated = SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated;
+            bool hasLocal3DMapContext = profile.IsFullConnected || isPlaceholder;
+            if (!hasLocal3DMapContext)
+            {
+                Map3DAuthPopup.IsOpen = false;
+                HeatmapAvailabilityPopup.IsOpen = false;
+            }
+            BtnOpen3DMap.Visibility = hasLocal3DMapContext ? Visibility.Visible : Visibility.Collapsed;
+            BtnOpen3DMap.IsEnabled = isAuthenticated && hasLocal3DMapContext && !_isMap3DPreparing;
+            BtnOpen3DMapAuthGate.Visibility = hasLocal3DMapContext && !isAuthenticated
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            if (isAuthenticated)
+                Map3DAuthPopup.IsOpen = false;
             TxtOpen3DMap.Text = _isMap3DPreparing ? "Preparing..." : _isMap3DActive ? "2D Map" : "3D Map";
             IconOpen3DMap.Symbol = _isMap3DActive ? Wpf.Ui.Controls.SymbolRegular.Map20 : Wpf.Ui.Controls.SymbolRegular.Cube20;
 
             string folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
             bool mapDataExists = System.IO.File.Exists(System.IO.Path.Combine(folderPath, "map_data.json"));
-            BtnToggleHeatmap.Visibility = mapDataExists ? Visibility.Visible : Visibility.Collapsed;
+            BtnToggleHeatmap.Visibility = hasLocal3DMapContext ? Visibility.Visible : Visibility.Collapsed;
+            BtnToggleHeatmap.IsEnabled = hasLocal3DMapContext && mapDataExists && isAuthenticated;
+
+            string? heatmapUnavailableReason = !mapDataExists
+                ? "Generate the 3D map before using heatmaps."
+                : !isAuthenticated
+                    ? "Log in to your Rust+ Desk account to use generated heatmaps."
+                    : null;
+            BtnToggleHeatmapGate.Visibility = hasLocal3DMapContext && heatmapUnavailableReason != null
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            if (heatmapUnavailableReason != null)
+            {
+                HeatmapPopup.IsOpen = false;
+                TxtHeatmapAvailabilityMessage.Text = heatmapUnavailableReason;
+                System.Windows.Automation.AutomationProperties.SetName(BtnToggleHeatmapGate, $"Heatmaps unavailable. {heatmapUnavailableReason}");
+            }
+            else
+            {
+                HeatmapAvailabilityPopup.IsOpen = false;
+            }
 
             if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium)
             {
@@ -427,6 +457,37 @@ namespace RustPlusDesk.Views
                 UpdateRustMapsUi();
             }
         }
+
+        private void BtnOpen3DMapAuthGate_Click(object sender, RoutedEventArgs e)
+        {
+            Map3DAuthPopup.IsOpen = true;
+        }
+
+        private void BtnOpen3DMapAuthGate_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Map3DAuthPopup.IsOpen = true;
+        }
+
+        private void BtnOpen3DMapAuthGate_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Map3DAuthPopup.IsOpen = false;
+        }
+
+        private void BtnToggleHeatmapGate_Click(object sender, RoutedEventArgs e)
+        {
+            HeatmapAvailabilityPopup.IsOpen = true;
+        }
+
+        private void BtnToggleHeatmapGate_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            HeatmapAvailabilityPopup.IsOpen = true;
+        }
+
+        private void BtnToggleHeatmapGate_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            HeatmapAvailabilityPopup.IsOpen = false;
+        }
+
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
         {
             _currentMapFolderPath = result.FolderPath;

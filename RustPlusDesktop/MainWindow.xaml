@@ -4763,22 +4763,63 @@
                                                 <TextBlock Text="Send to Discord" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </ui:Button>
-<ui:Button
-                                            x:Name="BtnOpen3DMap"
-                                            Margin="0,2,0,0"
-                                            Padding="6,4"
-                                            Appearance="Transparent"
-                                            BorderThickness="0"
-                                            Click="BtnOpen3DMap_Click"
-                                            ToolTip="Build and open local 3D map"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Center"
-                                            Visibility="Collapsed">
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <ui:SymbolIcon x:Name="IconOpen3DMap" Symbol="Cube20" FontSize="14" Foreground="#FF8C00" Margin="0,0,6,0" />
-                                                <TextBlock x:Name="TxtOpen3DMap" Text="3D Map" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </ui:Button>
+                                        <Grid Margin="0,2,0,0">
+                                            <ui:Button
+                                                x:Name="BtnOpen3DMap"
+                                                Padding="6,4"
+                                                Appearance="Transparent"
+                                                BorderThickness="0"
+                                                Click="BtnOpen3DMap_Click"
+                                                AutomationProperties.Name="Build and open local 3D map"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center"
+                                                Visibility="Collapsed">
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <ui:SymbolIcon x:Name="IconOpen3DMap" Symbol="Cube20" FontSize="14" Foreground="#FF8C00" Margin="0,0,6,0" />
+                                                    <TextBlock x:Name="TxtOpen3DMap" Text="3D Map" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </ui:Button>
+
+                                            <!-- Disabled controls cannot receive hover/click, so this transparent button explains the auth requirement. -->
+                                            <Button
+                                                x:Name="BtnOpen3DMapAuthGate"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                BorderThickness="0"
+                                                Click="BtnOpen3DMapAuthGate_Click"
+                                                MouseEnter="BtnOpen3DMapAuthGate_MouseEnter"
+                                                MouseLeave="BtnOpen3DMapAuthGate_MouseLeave"
+                                                AutomationProperties.Name="3D maps unavailable. Log in to generate 3D maps and heatmaps"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                Visibility="Collapsed">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="Transparent" />
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </Grid>
+
+                                        <Popup
+                                            x:Name="Map3DAuthPopup"
+                                            AllowsTransparency="True"
+                                            PopupAnimation="Fade"
+                                            IsOpen="False"
+                                            Placement="Right"
+                                            PlacementTarget="{Binding ElementName=BtnOpen3DMapAuthGate}"
+                                            StaysOpen="True"
+                                            IsHitTestVisible="False">
+                                            <ui:Card Margin="8,0,0,0" Padding="12,10" Background="#F20E1117" BorderBrush="#55FF8C00" BorderThickness="1" MaxWidth="280" IsHitTestVisible="False">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                        <ui:SymbolIcon Symbol="PersonLock20" Foreground="#FF8C00" Margin="0,0,7,0" />
+                                                        <TextBlock Text="Login required" FontSize="13" FontWeight="SemiBold" Foreground="White" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="Log in to your Rust+ Desk account to generate 3D maps and heatmaps." TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
+                                                </StackPanel>
+                                            </ui:Card>
+                                        </Popup>
 
                                         <!-- Heatmap Button -->
                                         <Grid Margin="0,2,0,0">
@@ -4789,8 +4830,6 @@
                                                 Appearance="Transparent"
                                                 BorderThickness="0"
                                                 Click="BtnToggleHeatmap_Click"
-                                                IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
-                                                ToolTip="Show Spawn Heatmaps"
                                                 Visibility="Collapsed"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Center">
@@ -4799,7 +4838,44 @@
                                                     <TextBlock Text="Heatmaps" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                                 </StackPanel>
                                             </ui:Button>
+                                            <Button
+                                                x:Name="BtnToggleHeatmapGate"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                BorderThickness="0"
+                                                Click="BtnToggleHeatmapGate_Click"
+                                                MouseEnter="BtnToggleHeatmapGate_MouseEnter"
+                                                MouseLeave="BtnToggleHeatmapGate_MouseLeave"
+                                                AutomationProperties.Name="Heatmaps unavailable"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                Visibility="Collapsed">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="Transparent" />
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
                                         </Grid>
+                                        <Popup
+                                            x:Name="HeatmapAvailabilityPopup"
+                                            AllowsTransparency="True"
+                                            PopupAnimation="Fade"
+                                            IsOpen="False"
+                                            Placement="Right"
+                                            PlacementTarget="{Binding ElementName=BtnToggleHeatmapGate}"
+                                            StaysOpen="True"
+                                            IsHitTestVisible="False">
+                                            <ui:Card Margin="8,0,0,0" Padding="12,10" Background="#F20E1117" BorderBrush="#55FF8C00" BorderThickness="1" MaxWidth="280" IsHitTestVisible="False">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                        <ui:SymbolIcon Symbol="Info20" Foreground="#FF8C00" Margin="0,0,7,0" />
+                                                        <TextBlock Text="Heatmaps unavailable" FontSize="13" FontWeight="SemiBold" Foreground="White" />
+                                                    </StackPanel>
+                                                    <TextBlock x:Name="TxtHeatmapAvailabilityMessage" Text="Generate the 3D map before using heatmaps." TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
+                                                </StackPanel>
+                                            </ui:Card>
+                                        </Popup>
                                         <Popup
                                             x:Name="HeatmapPopup"
                                             AllowsTransparency="True"
