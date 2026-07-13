@@ -796,6 +796,7 @@ public partial class MainWindow
         if (_isDynPollBusy) return;
         if (_rust is not RustPlusClientReal real) return;
         if (_worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
+        var connectionToken = _connectionPollingCts.Token;
 
         _isDynPollBusy = true;
         try
@@ -809,7 +810,8 @@ public partial class MainWindow
                 }
             }
 
-            using var ctsMarkers = new CancellationTokenSource(8000);
+            using var ctsMarkers = CancellationTokenSource.CreateLinkedTokenSource(connectionToken);
+            ctsMarkers.CancelAfter(TimeSpan.FromSeconds(8));
             var list = await real.GetDynamicMapMarkersAsync(ctsMarkers.Token);
             var virtualMarkers = _monumentWatcher.UpdateAndGetVirtualMarkers(list, _dynKnown);
 
@@ -835,6 +837,10 @@ public partial class MainWindow
             OnApiPollSuccess();
 
             _ = Dispatcher.InvokeAsync(() => RefreshAllOverlayScales(), DispatcherPriority.Loaded);
+        }
+        catch (OperationCanceledException) when (connectionToken.IsCancellationRequested)
+        {
+            // Expected while replacing the connection.
         }
         catch
         {

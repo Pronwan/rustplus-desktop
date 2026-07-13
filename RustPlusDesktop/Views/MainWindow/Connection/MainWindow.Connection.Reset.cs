@@ -1,6 +1,7 @@
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -12,11 +13,22 @@ public partial class MainWindow
     private ServerProfile? _connectedProfile;
     private DispatcherTimer? _storageTimer;
     private bool _isReconnecting = false;
+    private CancellationTokenSource _connectionPollingCts = new();
+
+    private void CancelConnectionPolling() => _connectionPollingCts.Cancel();
+
+    private void RenewConnectionPolling()
+    {
+        _connectionPollingCts.Cancel();
+        _connectionPollingCts.Dispose();
+        _connectionPollingCts = new CancellationTokenSource();
+    }
 
     private async Task HardResetAsync(bool reconnect = false)
     {
         _connectedProfile = null;
         // 1) Laufende Polls/Tokens abbrechen
+        CancelConnectionPolling();
         try { StopDynPolling(clearKnown: !reconnect); } catch { }
         try { StopTeamPolling(); } catch { }
 
@@ -274,28 +286,30 @@ public partial class MainWindow
         if (_isReconnecting) return;
         _isReconnecting = true;
 
-        if (_vm?.Selected != null)
-        {
-            _vm.Selected.IsConnected = false;
-            _vm.Selected.IsFullConnected = false;
-            _vm.NotifyDevicesChanged();
-        }
-
         try
         {
-            // Suppress errors if the socket is already completely dead
-            await _rust.DisconnectAsync();
-        }
-        catch { /* Ignore */ }
+            CancelConnectionPolling();
+            StopDynPolling(clearKnown: false);
 
-        Dispatcher.Invoke(() => ChkShops.IsChecked = false);
-        AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
+            if (_vm?.Selected != null)
+            {
+                _vm.Selected.IsConnected = false;
+                _vm.Selected.IsFullConnected = false;
+                _vm.NotifyDevicesChanged();
+            }
 
-        int delay = 2000;
-        int maxDelay = 60000;
+            try
+            {
+                // Suppress errors if the socket is already completely dead
+                await _rust.DisconnectAsync();
+            }
+            catch { /* Ignore */ }
 
-        try
-        {
+            Dispatcher.Invoke(() => ChkShops.IsChecked = false);
+            AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
+
+            int delay = 2000;
+            int maxDelay = 60000;
             while (_isReconnecting)
             {
                 AppendLog($"[auto-reconnect] Retrying in {delay / 1000}s...");
@@ -305,7 +319,6 @@ public partial class MainWindow
                 if (success)
                 {
                     AppendLog("[auto-reconnect] Reconnected successfully!");
-                    _isReconnecting = false;
                     return;
                 }
 
@@ -315,6 +328,9 @@ public partial class MainWindow
         catch (Exception ex)
         {
             AppendLog("[auto-reconnect] Loop error: " + ex.Message);
+        }
+        finally
+        {
             _isReconnecting = false;
         }
     }
