@@ -130,6 +130,10 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        public static event Action? AuthenticationChanged;
+
+        private static void NotifyAuthenticationChanged() => AuthenticationChanged?.Invoke();
+
         public static async Task InitializeAsync()
         {
             try
@@ -214,6 +218,7 @@ namespace RustPlusDesk.Services.Auth
                 await FetchTierLimitsAsync();
                 TeamSyncWebSocketService.Initialize();
                 AppendLog($"[Supabase] Init complete. IsDiscordAuthenticated={IsDiscordAuthenticated}, IsGuestAuthenticated={IsGuestAuthenticated}, IsPremium={IsPremium}");
+                NotifyAuthenticationChanged();
 
                 // Sync Discord roles on every launch when a Discord session is active,
                 // not just after a fresh OAuth login.
@@ -453,6 +458,7 @@ namespace RustPlusDesk.Services.Auth
             {
                 new DesktopSessionHandler().DestroySession();
             }
+            NotifyAuthenticationChanged();
         }
 
         public static async Task<bool> LoginWithDiscordAsync()
@@ -483,6 +489,7 @@ namespace RustPlusDesk.Services.Auth
                     GuestRegistrationFailedPermanently = false;
                     HandshakeService.Clear();
                     await SyncDiscordRolesAsync();
+                    NotifyAuthenticationChanged();
                 }
                 return success;
             }
@@ -513,6 +520,7 @@ namespace RustPlusDesk.Services.Auth
 
                 await RefreshUserProfileAsync();
                 AppendLog($"[Cloud] Email login successful. User: {session.User.Email}");
+                NotifyAuthenticationChanged();
                 return (true, null);
             }
             catch (Exception ex)
@@ -601,6 +609,7 @@ namespace RustPlusDesk.Services.Auth
                         HandshakeService.Clear();
                         await RefreshUserProfileAsync();
                         AppendLog("[Cloud/Email] Email confirmed and session active!");
+                        NotifyAuthenticationChanged();
                         return true;
                     }
                 }
@@ -902,6 +911,7 @@ namespace RustPlusDesk.Services.Auth
                 IsGuestAuthenticated = false;
                 HandshakeService.Clear();
                 await Client.Auth.SignOut();
+                NotifyAuthenticationChanged();
             }
         }
 

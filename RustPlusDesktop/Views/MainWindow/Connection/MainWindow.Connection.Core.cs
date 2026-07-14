@@ -421,6 +421,7 @@ public partial class MainWindow
             return false;
         }
 
+        RenewConnectionPolling();
         ResetBuildingBlockedZonesForServerChange();
 
         try
@@ -567,6 +568,8 @@ public partial class MainWindow
                     var allIds = connectedProfile.Devices.Select(d => d.EntityId).Distinct().ToList();
                     _vm.DeviceSubscribeMax = allIds.Count;
                     _vm.DeviceSubscribeProgress = 0;
+                    using var primeCts = CancellationTokenSource.CreateLinkedTokenSource(_connectionPollingCts.Token);
+                    primeCts.CancelAfter(TimeSpan.FromSeconds(10));
                     await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
                     {
                         Dispatcher.Invoke(() =>
@@ -575,9 +578,9 @@ public partial class MainWindow
                             _vm.DeviceSubscribeProgress = done;
                             _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
                         });
-                    });
+                    }, primeCts.Token);
                     _vm.IsDeviceSubscribePriming = false;
-                    AppendLog($"Subscribed to {allIds.Count} entities.");
+                    AppendLog("Device subscription priming finished.");
                 }
                 catch (Exception ex)
                 {

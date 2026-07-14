@@ -154,23 +154,9 @@ public partial class MainWindow
         }
     }
 
-    private async Task RefreshTeamFeatureMasterStateAsync()
-    {
-        if (_vm?.Selected == null || TeamMembers.Count == 0) return;
-
-        var serverKey = GetServerKey();
-        if (string.IsNullOrWhiteSpace(serverKey)) return;
-
-        var teamKey = BuildTeamFeatureKey();
-        if (string.IsNullOrWhiteSpace(teamKey)) return;
-
-        var state = await SupabaseAuthManager.GetTeamFeatureMasterStateAsync(serverKey, teamKey);
-        await Dispatcher.InvokeAsync(() => ApplyTeamFeatureMasterState(state, teamKey));
-    }
-
     private void UpdateTeamFeatureMasterWatch()
     {
-        if (TeamMembers.Count <= 1 || _isChatFeatureMaster || TeamSyncWebSocketService.IsActive)
+        if (TeamMembers.Count <= 1)
         {
             StopTeamFeatureMasterWatch();
             return;
@@ -237,7 +223,7 @@ public partial class MainWindow
         _teamFeatureMasterWatchBusy = true;
         try
         {
-            await RefreshTeamFeatureMasterStateAsync();
+            await SyncTeamFeatureMasterAsync();
         }
         finally
         {

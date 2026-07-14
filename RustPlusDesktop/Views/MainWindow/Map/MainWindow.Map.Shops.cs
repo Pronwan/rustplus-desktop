@@ -178,6 +178,7 @@ public partial class MainWindow
     {
         if (_rust is not RustPlusClientReal real) return;
         if (Interlocked.CompareExchange(ref _shopPollLock, 1, 0) != 0) return;
+        var ct = _connectionPollingCts.Token;
 
         try
         {
@@ -191,7 +192,7 @@ public partial class MainWindow
             int retries = 0;
             while (retries < 3)
             {
-                shops = await real.GetVendingShopsAsync();
+                shops = await real.GetVendingShopsAsync(ct);
                 
                 // If we got null, it's a technical error -> retry
                 if (shops == null)
@@ -210,7 +211,7 @@ public partial class MainWindow
                 }
 
                 retries++;
-                await Task.Delay(2000);
+                await Task.Delay(2000, ct);
             }
             
             if (shops == null) 

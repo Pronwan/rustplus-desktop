@@ -4090,6 +4090,10 @@ rp.connect();
                 list.Add(new DynMarker(id, norm, kind, x, y, label, pname ?? label, steamId, rotation));
             }
         }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             CheckConnectionLost(ex);
@@ -4342,6 +4346,7 @@ rp.connect();
                 }
             }
         }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
         catch (Exception ex) { CheckConnectionLost(ex); /* ignore, fallback next */ }
 
         // PATH B – raw AppRequest (enum-agnostic)
@@ -4396,6 +4401,10 @@ rp.connect();
                         }
                     }
                 }
+            }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -5148,13 +5157,16 @@ rp.connect();
             try
             {
                 progress?.Invoke(done, ids.Count, id);
-                await EnsureSubOnceAsync(id);
+                using var itemCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                itemCts.CancelAfter(TimeSpan.FromSeconds(5));
+                await EnsureSubOnceAsync(id, itemCts.Token);
                 done++;
                 progress?.Invoke(done, ids.Count, id);
                 // A small gap avoids flooding Rust+ while keeping startup responsive.
                 await Task.Delay(100, ct);
             }
-            catch { }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested) { break; }
+            catch (Exception ex) { _log?.Invoke($"[prime] Subscription #{id} failed: {ex.Message}"); }
         }
     }
 
@@ -6598,20 +6610,20 @@ rp.connect();
     private readonly HashSet<uint> _subscribed = new();
     private readonly HashSet<uint> _subOnce = new();
 
-    public async Task EnsureSubOnceAsync(uint entityId)
+    public async Task EnsureSubOnceAsync(uint entityId, CancellationToken ct = default)
     {
         bool doWire;
         lock (_subOnce) doWire = _subOnce.Add(entityId); // nur einmal pro Entity
         if (!doWire) return;
 
-        await SubscribeEntityAsync(entityId);
+        await SubscribeEntityAsync(entityId, ct);
 
         // Der Rust-Server scheint den Poke zu brauchen, um die aktive Event-Benachrichtigung für diese Session zu starten.
-        await PokeEntityAsync(entityId);
+        await PokeEntityAsync(entityId, ct);
         _log?.Invoke($"[stor/sub+poke] #{entityId} queued");
     }
 
-    public async Task SubscribeEntityAsync(uint entityId)
+    public async Task SubscribeEntityAsync(uint entityId, CancellationToken ct = default)
     {
         HookEventsIfNeeded();
         if (_api is null) return;
@@ -6622,7 +6634,7 @@ rp.connect();
         if (m != null)
         {
             var call = m.Invoke(_api, new object[] { entityId });
-            if (call is Task t) await t;
+            if (call is Task t) await t.WaitAsync(TimeSpan.FromSeconds(5), ct);
             _subscribed.Add(entityId);
             _log?.Invoke($"[storage/sub] native subscribed {entityId}");
             return;
@@ -6645,7 +6657,7 @@ rp.connect();
                 if (send != null)
                 {
                     var call = send.Invoke(_api, new object[] { req });
-                    if (call is Task t) await t;
+                    if (call is Task t) await t.WaitAsync(TimeSpan.FromSeconds(5), ct);
                     _subscribed.Add(entityId);
                     _log?.Invoke($"[storage/sub] contract subscribed {entityId}");
                 }
@@ -6703,7 +6715,7 @@ rp.connect();
                     if (send != null)
                     {
                         var call = send.Invoke(_api, new object[] { req });
-                        if (call is Task t) await t;
+                        if (call is Task t) await t.WaitAsync(TimeSpan.FromSeconds(5), ct);
                         return;
                     }
                 }
@@ -6713,6 +6725,7 @@ rp.connect();
                 }
             }
         }
+        catch (OperationCanceledException) { throw; }
         catch { /* tolerant */ }
     }
 

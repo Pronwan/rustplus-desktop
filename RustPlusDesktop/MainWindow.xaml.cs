@@ -584,7 +584,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "7.3.0";
+        const string AppVersion = "7.3.1";
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -798,6 +798,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? Properties.Resources.NotLoggedIn : _vm.SteamId64;
 
         this.Closing += MainWindow_Closing;
+        Services.Auth.SupabaseAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
         _ = EnsureWebView2Async();
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
@@ -1321,6 +1322,8 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void MainWindow_Closed(object? sender, EventArgs e)
     {
+        Services.Auth.SupabaseAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
+
         // Holen Sie alle laufenden "node"-Prozesse
         var nodes = System.Diagnostics.Process.GetProcessesByName("node");
 
@@ -1373,6 +1376,14 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
         catch
         { }
+    }
+
+    private void SupabaseAuthManager_AuthenticationChanged()
+    {
+        if (Dispatcher.CheckAccess())
+            UpdateRustMapsUi();
+        else
+            _ = Dispatcher.BeginInvoke(UpdateRustMapsUi);
     }
 
     // --- Chat Persistence & Switching ---
