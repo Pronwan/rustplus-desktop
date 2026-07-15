@@ -285,12 +285,144 @@
             BorderThickness="0,0,0,1">
             <ui:TitleBar
                 x:Name="AppTitleBar"
+                Height="48"
                 Title="{DynamicResource AppTitle}"
                 Background="Transparent"
                 Foreground="White">
+                <ui:TitleBar.Resources>
+                    <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="ui:TitleBarButton">
+                        <Setter Property="Height" Value="48" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                    </Style>
+                </ui:TitleBar.Resources>
                 <ui:TitleBar.Icon>
                     <ui:ImageIcon Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" />
                 </ui:TitleBar.Icon>
+                <ui:TitleBar.Header>
+                    <Border
+                        Height="36"
+                        Margin="8,0"
+                        HorizontalAlignment="Right"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsUpdateStatusExpanded}" Value="True">
+                                        <Setter Property="Background" Value="#181D22" />
+                                        <Setter Property="BorderBrush" Value="#2AFFFFFF" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsUpdateAvailable}" Value="True">
+                                        <Setter Property="Background" Value="#162F37" />
+                                        <Setter Property="BorderBrush" Value="#6600CCFF" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="True">
+                                        <Setter Property="Background" Value="#122A31" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:Button
+                                x:Name="BtnCheckUpdates"
+                                MinWidth="34"
+                                Height="34"
+                                Padding="7,3"
+                                Appearance="Transparent"
+                                Click="BtnCheckUpdates_Click"
+                                ToolTip="{Binding UpdateStatusText}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0" VerticalAlignment="Center">
+                                        <ui:SymbolIcon
+                                            Foreground="{DynamicResource Accent}"
+                                            Symbol="ArrowDownload24" />
+                                        <Ellipse
+                                            Width="5"
+                                            Height="5"
+                                            Margin="0,-3,-4,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Fill="#62D38B"
+                                            Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVisibility}}" />
+                                    </Grid>
+                                    <Grid
+                                        Grid.Column="1"
+                                        MinWidth="210"
+                                        Margin="9,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding IsUpdateStatusExpanded, Converter={StaticResource BoolToVisibility}}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <DockPanel LastChildFill="True">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="11"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{Binding UpdateStatusText}" />
+                                            <TextBlock
+                                                Margin="8,0,0,0"
+                                                HorizontalAlignment="Right"
+                                                FontSize="10"
+                                                Foreground="#CCFFFFFF"
+                                                Text="{Binding UpdateDownloadPercentage}"
+                                                Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
+                                        </DockPanel>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            HorizontalAlignment="Right"
+                                            FontSize="8"
+                                            Foreground="#99FFFFFF"
+                                            Text="{Binding UpdateDownloadSpeed}"
+                                            Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
+                                        <ProgressBar
+                                            Grid.Row="2"
+                                            Height="3"
+                                            Margin="0,1,0,0"
+                                            IsIndeterminate="{Binding IsUpdateProcessing}"
+                                            Value="{Binding UpdateDownloadProgress}"
+                                            Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
+                                    </Grid>
+                                </Grid>
+                            </ui:Button>
+                            <ui:Button
+                                Grid.Column="1"
+                                Width="46"
+                                Height="30"
+                                Padding="0"
+                                Appearance="Transparent"
+                                Click="PauseResumeDownload_Click"
+                                Content="{Binding PauseResumeButtonText}"
+                                FontSize="9"
+                                Visibility="{Binding CanControlUpdateDownload, Converter={StaticResource BoolToVisibility}}" />
+                            <ui:Button
+                                Grid.Column="2"
+                                Width="30"
+                                Height="30"
+                                Padding="0"
+                                Appearance="Transparent"
+                                Click="CancelDownload_Click"
+                                Icon="{ui:SymbolIcon Symbol=Dismiss24}"
+                                ToolTip="Cancel download"
+                                Visibility="{Binding CanControlUpdateDownload, Converter={StaticResource BoolToVisibility}}" />
+                        </Grid>
+                    </Border>
+                </ui:TitleBar.Header>
             </ui:TitleBar>
         </Border>
 
@@ -435,191 +567,6 @@
                                     Grid.Column="2"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                                    <Grid
-                                        Width="40"
-                                        Height="32">
-                                        <ui:Button
-                                            x:Name="BtnCheckUpdates"
-                                            Width="40"
-                                            Height="32"
-                                            Padding="0"
-                                            Appearance="Transparent"
-                                            Click="BtnCheckUpdates_Click"
-                                            MouseEnter="BtnCheckUpdates_MouseEnter"
-                                            MouseLeave="BtnCheckUpdates_MouseLeave"
-                                            ToolTip="{DynamicResource CheckForUpdates}">
-                                            <ui:Button.Icon>
-                                                <ui:SymbolIcon Symbol="ArrowDownload24">
-                                                    <ui:SymbolIcon.Style>
-                                                        <Style TargetType="ui:SymbolIcon">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </ui:SymbolIcon.Style>
-                                                </ui:SymbolIcon>
-                                            </ui:Button.Icon>
-                                            <ui:Button.Style>
-                                                <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsUpdateAvailable}" Value="True">
-                                                            <DataTrigger.EnterActions>
-                                                                <BeginStoryboard x:Name="GlowStoryboard">
-                                                                    <Storyboard RepeatBehavior="Forever">
-                                                                        <ColorAnimation
-                                                                            AutoReverse="True"
-                                                                            Storyboard.TargetProperty="(ui:Button.Foreground).(SolidColorBrush.Color)"
-                                                                            From="White"
-                                                                            To="#FF00CCFF"
-                                                                            Duration="0:0:1" />
-                                                                        <DoubleAnimation
-                                                                            AutoReverse="True"
-                                                                            Storyboard.TargetProperty="(ui:Button.Effect).(DropShadowEffect.Opacity)"
-                                                                            From="0"
-                                                                            To="1"
-                                                                            Duration="0:0:1" />
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                            <DataTrigger.ExitActions>
-                                                                <StopStoryboard BeginStoryboardName="GlowStoryboard" />
-                                                            </DataTrigger.ExitActions>
-                                                            <Setter Property="Effect">
-                                                                <Setter.Value>
-                                                                    <DropShadowEffect
-                                                                        BlurRadius="15"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#FF00CCFF" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ui:Button.Style>
-                                        </ui:Button>
-
-                                        <!--  Circular Progress Indicator  -->
-                                        <ui:ProgressRing
-                                            Width="24"
-                                            Height="24"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Foreground="{DynamicResource Accent}"
-                                            IsHitTestVisible="False"
-                                            IsIndeterminate="False"
-                                            Progress="{Binding UpdateDownloadProgress}"
-                                            Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
-
-                                        <!--  Percentage Text  -->
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            FontSize="8"
-                                            FontWeight="Bold"
-                                            Foreground="White"
-                                            IsHitTestVisible="False"
-                                            Text="{Binding UpdateDownloadPercentage}"
-                                            Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}">
-                                            <TextBlock.RenderTransform>
-                                                <TranslateTransform Y="1" />
-                                            </TextBlock.RenderTransform>
-                                        </TextBlock>
-
-                                        <!--  Download Progress Popup (Keep for details on hover)  -->
-                                        <Popup
-                                            x:Name="UpdateDownloadPopup"
-                                            AllowsTransparency="True"
-                                            IsOpen="False"
-                                            Placement="Bottom"
-                                            PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
-                                            VerticalOffset="5"
-                                            MouseEnter="UpdateDownloadPopup_MouseEnter"
-                                            MouseLeave="UpdateDownloadPopup_MouseLeave">
-                                            <Border
-                                                Width="220"
-                                                Padding="12"
-                                                Background="#EE1E1E1E"
-                                                BorderBrush="#44FFFFFF"
-                                                BorderThickness="1"
-                                                CornerRadius="8">
-                                                <StackPanel>
-                                                    <TextBlock
-                                                        Margin="0,0,0,8"
-                                                        FontWeight="Bold"
-                                                        Foreground="White"
-                                                        Text="{Binding UpdateTag, StringFormat='Update: {0}'}" />
-
-                                                    <Grid Margin="0,0,0,4">
-                                                        <TextBlock
-                                                            x:Name="DownloadingStatusText"
-                                                            FontSize="11"
-                                                            Foreground="#BBFFFFFF">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Text" Value="Downloading..." />
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsDownloadPaused}" Value="True">
-                                                                            <Setter Property="Text" Value="Paused" />
-                                                                            <Setter Property="Foreground" Value="#FFAAAAAA" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <TextBlock
-                                                            HorizontalAlignment="Right"
-                                                            FontSize="11"
-                                                            FontWeight="Bold"
-                                                            Foreground="White"
-                                                            Text="{Binding UpdateDownloadPercentage}" />
-                                                    </Grid>
-
-                                                    <ProgressBar
-                                                        Height="4"
-                                                        Margin="0,0,0,10"
-                                                        Value="{Binding UpdateDownloadProgress}" />
-
-                                                    <Grid>
-                                                        <StackPanel>
-                                                            <TextBlock
-                                                                FontSize="10"
-                                                                FontWeight="SemiBold"
-                                                                Foreground="#FF00CCFF"
-                                                                Text="{Binding UpdateDownloadSpeed}" />
-                                                            <TextBlock
-                                                                FontSize="10"
-                                                                Foreground="#88FFFFFF"
-                                                                Text="{Binding UpdateDownloadSize}" />
-                                                            <TextBlock
-                                                                Margin="0,4,0,4"
-                                                                FontSize="10"
-                                                                Foreground="#88FFFFFF"
-                                                                Text="{Binding CurrentDownloadFile, StringFormat='File: {0}'}" />
-                                                        </StackPanel>
-                                                    </Grid>
-
-                                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" HorizontalAlignment="Right">
-                                                        <ui:Button
-                                                            Content="{Binding PauseResumeButtonText}"
-                                                            Appearance="Secondary"
-                                                            FontSize="10"
-                                                            Padding="8,4"
-                                                            Margin="0,0,8,0"
-                                                            Click="PauseResumeDownload_Click" />
-                                                        <ui:Button
-                                                            Content="Cancel"
-                                                            Appearance="Danger"
-                                                            FontSize="10"
-                                                            Padding="8,4"
-                                                            Click="CancelDownload_Click" />
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Border>
-                                        </Popup>
-                                    </Grid>
                                     <ui:Button
                                         x:Name="BtnDiscord"
                                         Width="40"
