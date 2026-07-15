@@ -150,9 +150,6 @@ jobs:
           --self-contained true
           --output "${{ env.PUBLISH_DIR }}"
           -p:Version="${{ env.VERSION }}"
-          -p:AssemblyVersion="${{ env.VERSION }}"
-          -p:FileVersion="${{ env.VERSION }}"
-          -p:InformationalVersion="${{ env.VERSION }}"
           -p:PublishSingleFile=false
           -p:PublishReadyToRun=false
           -p:IncludeNativeLibrariesForSelfExtract=true

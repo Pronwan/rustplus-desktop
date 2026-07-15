@@ -4,12 +4,12 @@
 ; =============================================
 
 #define MyAppName      "RustPlusDesk"
+#define MyAppExeName   "RustPlusDesk.exe"
 #ifndef MyAppVersion
-#define MyAppVersion   "7.2.0"
+#define MyAppVersion   GetFileVersion("..\bin\Installer\publish\" + MyAppExeName)
 #endif
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
-#define MyAppExeName   "RustPlusDesk.exe"
 ; 🔴 ORIGINAL-ID 
 #define MyAppId        "{{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}"
 

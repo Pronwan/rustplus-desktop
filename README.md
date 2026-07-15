@@ -52,6 +52,39 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🛠️ Update v7.3.3 | Discord Soft Connect Hotfix
+
+- **Discord Interactions During Soft Connect:** Fixed Discord interactions only receiving a response after Full Connect. Configured Discord commands now work while the app is Soft Connected.
+
+# 🛠️ Update v7.3.1 | Connection Recovery & 3D View Hotfix
+
+- **Reliable Automatic Reconnect:** Fixed an issue where Rust+ could reconnect once but then remain stuck after another connection loss. Reconnect attempts now cancel stale map and shop requests, time out stalled device subscriptions, and recover cleanly.
+- **Clearer 3D Map & Heatmap Access:** The 3D Map and Heatmap buttons now stay visible for connected and imported maps, explain when login or 3D map generation is required, and become available immediately after login.
+- **Smoother 3D Footprint Building:** The placement preview now stays centered while moving the camera, rotates foundations correctly, and uses faster terrain detection for smoother building.
+
+# 🚀 Update v7.3.0 | Connection, Map Cache & 3D View
+
+- **Soft Connect Chat Commands:** Soft Connect now listens to team chat commands.
+- **Connection Recovery:** Improved Rust+ reconnect and recovery when the socket silently times out.
+- **Faster, Wipe-Safe Map Loading:** Local map and monument caching speeds up later loads while refreshing correctly after a server wipe.
+- **Safer Full Connect:** Full Connect waits for device checks to finish and skips duplicate checks performed during Soft Connect.
+- **Device Progress:** Added progress for faster device subscription and status checks.
+- **Map Improvements:** The loading overlay clears sooner, wipe information is shown on the map, dynamic markers load sooner, and travelling vendor direction is fixed.
+- **Reliable Discord Commands:** Slash commands acknowledge immediately and wait in the background for slower desktop and device responses.
+- **Devices Empty State:** The empty state is centered in the device list without overlapping search and type filters.
+- **3D View & MapParser:** Added a labeled Rust-style 3D grid, FPS display, adaptive resolution, improved camera defaults, orbit targeting, and clearer control-mode feedback.
+
+# 🎛️ Update v7.2.0 | Devices UI & Recycler Calculator
+
+- **Modern Device List:** Redesigned device rows for consistent sizing, compact groups, cleaner status pills, and responsive layouts.
+- **Visual Drag Sorting:** Added a live drag preview, modern drop states, right-click cancellation, and safer item drops.
+- **Commands & Hotkeys:** Smart switches now show their chat command and assigned hotkeys directly in the device list, with inline command editing.
+- **Device Filters:** Added search and type filters for switches, alarms, storage monitors, and other devices.
+- **Map Grid Polish:** Updated 2D grid styling and added zoom-aware line thickness.
+- **Map Performance Settings:** Added controls for image scaling, GPU bitmap caching, render scale, and aliased edge mode.
+- **Recycler Calculator Refresh:** Expanded the calculator layout and ensured plus-chance values appear for both Wild and Outpost yields.
+- **Notification Layout:** Improved notification rows on narrow layouts.
+
 # 🏢 Update v7.1.8 | Apartment Complex 3D Model
 
 - **Apartment Complex Model:** Added the Apartment Complex monument model to the 3D map view.
