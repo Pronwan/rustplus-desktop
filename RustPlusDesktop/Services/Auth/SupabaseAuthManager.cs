@@ -28,6 +28,12 @@ namespace RustPlusDesk.Services.Auth
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
         private static bool CloudAccountPromptShownThisSession;
         private static bool GuestRegistrationFailedPermanently;
+        // ponytail: Supabase hides password presence during OAuth sessions; use a server profile flag if cross-device detection becomes necessary.
+        private const string EmailPasswordAccountsCacheKey = "cloud_email_password_accounts";
+        private static readonly object EmailPasswordAccountsLock = new();
+        private static readonly System.Collections.Generic.HashSet<string> EmailPasswordAccounts = new(
+            DataManager.LoadCache<System.Collections.Generic.List<string>>(EmailPasswordAccountsCacheKey) ?? [],
+            StringComparer.OrdinalIgnoreCase);
 
         public static System.Collections.Generic.Dictionary<string, RustPlusDesk.Models.TierLimitModel> TierLimits { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
 
@@ -116,19 +122,44 @@ namespace RustPlusDesk.Services.Auth
             return 1;
         }
 
-        /// <summary>True when the user is signed in via email+password (not Discord OAuth).</summary>
-        public static bool IsEmailAuthenticated
+        /// <summary>True when the current account has the requested sign-in provider linked.</summary>
+        public static bool HasAuthProvider(string provider)
         {
-            get
+            var user = Client?.Auth?.CurrentUser;
+            if (user == null || Client?.Auth?.CurrentSession == null) return false;
+            if (string.Equals(provider, "email", StringComparison.OrdinalIgnoreCase))
             {
-                var user = Client?.Auth?.CurrentUser;
-                if (user == null || Client?.Auth?.CurrentSession == null) return false;
-                // Email provider: identities contain 'email' provider, not 'discord'
-                var identities = user.Identities;
-                if (identities == null || identities.Count == 0) return false;
-                return identities.Any(i => string.Equals(i.Provider, "email", StringComparison.OrdinalIgnoreCase));
+                if (SessionUsesPassword()) RememberEmailPasswordAccount(user.Id);
+                if (IsRememberedEmailPasswordAccount(user.Id)) return true;
+            }
+            return user.Identities?.Any(i => string.Equals(i.Provider, provider, StringComparison.OrdinalIgnoreCase)) == true ||
+                   MetadataListsProvider(user.AppMetadata, provider);
+        }
+
+        private static bool IsRememberedEmailPasswordAccount(string? userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId)) return false;
+            lock (EmailPasswordAccountsLock) return EmailPasswordAccounts.Contains(userId);
+        }
+
+        private static void RememberEmailPasswordAccount(string? userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId)) return;
+            lock (EmailPasswordAccountsLock)
+            {
+                if (!EmailPasswordAccounts.Add(userId)) return;
+                DataManager.SaveCache(EmailPasswordAccountsCacheKey, EmailPasswordAccounts.ToList());
             }
         }
+
+        private static bool MetadataListsProvider(System.Collections.Generic.Dictionary<string, object>? metadata, string provider) =>
+            metadata != null &&
+            ((metadata.TryGetValue("provider", out var primary) && string.Equals(primary?.ToString(), provider, StringComparison.OrdinalIgnoreCase)) ||
+             (metadata.TryGetValue("providers", out var providers) && providers?.ToString()?.Split('[', ']', ',', '"', ' ', '\r', '\n')
+                 .Any(value => string.Equals(value, provider, StringComparison.OrdinalIgnoreCase)) == true));
+
+        /// <summary>True when email/password is linked to the current cloud account.</summary>
+        public static bool IsEmailAuthenticated => HasAuthProvider("email");
 
         public static event Action? AuthenticationChanged;
 
@@ -241,17 +272,26 @@ namespace RustPlusDesk.Services.Auth
         public static bool IsAuthenticated => IsDiscordAuthenticated || IsEmailAuthenticated || IsGuestAuthenticated;
 
         /// <summary>True only when Discord OAuth is connected.</summary>
-        public static bool IsDiscordAuthenticated
+        public static bool IsDiscordAuthenticated => HasAuthProvider("discord");
+
+        private static bool SessionUsesPassword()
         {
-            get
+            try
             {
-                var user = Client?.Auth?.CurrentUser;
-                if (user == null || Client?.Auth?.CurrentSession == null) return false;
-                var identities = user.Identities;
-                if (identities == null || identities.Count == 0) return false;
-                return identities.Any(i => string.Equals(i.Provider, "discord", StringComparison.OrdinalIgnoreCase));
+                string? token = Client?.Auth?.CurrentSession?.AccessToken;
+                if (string.IsNullOrWhiteSpace(token)) return false;
+                string payload = token.Split('.')[1].Replace('-', '+').Replace('_', '/');
+                payload = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
+                using var document = JsonDocument.Parse(Convert.FromBase64String(payload));
+                return document.RootElement.TryGetProperty("amr", out var methods) &&
+                       methods.EnumerateArray().Any(entry =>
+                           entry.TryGetProperty("method", out var method) && method.GetString() == "password");
             }
-}
+            catch
+            {
+                return false;
+            }
+        }
 
         private static string T(string key, string fallback)
         {
@@ -565,8 +605,17 @@ namespace RustPlusDesk.Services.Auth
                 if (!string.Equals(Client.Auth.CurrentUser.Email, email.Trim(), StringComparison.OrdinalIgnoreCase))
                     attributes.Email = email.Trim();
                 await Client.Auth.Update(attributes);
+                RememberEmailPasswordAccount(Client.Auth.CurrentUser.Id);
                 NotifyAuthenticationChanged();
                 return (true, null);
+            }
+            catch (Exception ex) when (ex.Message.Contains("same_password", StringComparison.OrdinalIgnoreCase))
+            {
+                // Supabase does not expose password presence in OAuth user data; this response proves one already exists.
+                RememberEmailPasswordAccount(Client.Auth.CurrentUser.Id);
+                NotifyAuthenticationChanged();
+                AppendLog("[Cloud/Email] Existing email/password login confirmed.");
+                return (true, "Email login was already enabled.");
             }
             catch (Exception ex)
             {
@@ -592,6 +641,7 @@ namespace RustPlusDesk.Services.Auth
                 CloudAccountPromptShownThisSession = false;
                 GuestRegistrationFailedPermanently = false;
                 HandshakeService.Clear();
+                RememberEmailPasswordAccount(session.User.Id);
 
                 await RefreshUserProfileAsync();
                 AppendLog($"[Cloud] Email login successful. User: {session.User.Email}");
@@ -682,6 +732,7 @@ namespace RustPlusDesk.Services.Auth
                         CloudAccountPromptShownThisSession = false;
                         GuestRegistrationFailedPermanently = false;
                         HandshakeService.Clear();
+                        RememberEmailPasswordAccount(session.User.Id);
                         await RefreshUserProfileAsync();
                         AppendLog("[Cloud/Email] Email confirmed and session active!");
                         NotifyAuthenticationChanged();
