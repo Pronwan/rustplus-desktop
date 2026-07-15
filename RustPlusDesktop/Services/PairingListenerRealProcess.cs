@@ -33,6 +33,7 @@ namespace RustPlusDesk.Services
         private static readonly Regex TopLevelId = new(@"^\s*(?<type>id|persistentId):\s*[""'](?<id>[^""']+)[""']", RegexOptions.Compiled);
         public event EventHandler<AlarmNotification>? AlarmReceived;
         public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
+        public event EventHandler<PairingPayload>? ServerInfoReceived;
         
         private string? _pendingDeathAttacker;
         private string? _pendingDeathServer;
@@ -73,7 +74,11 @@ namespace RustPlusDesk.Services
         private string? _pendingChatMsg;
         private string? _pendingChatTitle;
         private DateTime? _pendingChatTs;
-        public PairingListenerRealProcess(Action<string> log) => _log = log;
+        public PairingListenerRealProcess(Action<string> log)
+        {
+            _log = log;
+            VerifyServerDescriptionParser();
+        }
         public event EventHandler? Listening;                 // wenn "Listening for FCM Notifications" erscheint
         public event EventHandler? Stopped;
         public event EventHandler<string>? Failed;            // bei erkennbaren Fehlerzeilen
@@ -631,6 +636,7 @@ namespace RustPlusDesk.Services
                 var portStr = GetJsonString(root, "port");
                 int? port = null;
                 if (int.TryParse(portStr, out var p)) port = p;
+                PublishServerDescription(root, ip, port);
 
                 if (string.Equals(type, "chat", StringComparison.OrdinalIgnoreCase))
                 {
@@ -660,6 +666,43 @@ namespace RustPlusDesk.Services
             {
                 _log("[FCM/debug] process JSON error: " + ex.Message);
             }
+        }
+
+        private void PublishServerDescription(JsonElement root, string? ip, int? port)
+        {
+            JsonElement server = default;
+            bool hasServer = (root.TryGetProperty("server", out server) || root.TryGetProperty("serverInfo", out server)) &&
+                             server.ValueKind == JsonValueKind.Object;
+            string? description = GetServerDescription(root);
+            if (string.IsNullOrWhiteSpace(description)) return;
+
+            ServerInfoReceived?.Invoke(this, new PairingPayload
+            {
+                Host = ip ?? (hasServer ? GetJsonString(server, "ip") : null) ?? _lastParsedIp ?? string.Empty,
+                Port = port ?? (hasServer && int.TryParse(GetJsonString(server, "port"), out var nestedPort) ? nestedPort : _lastParsedPort ?? 0),
+                ServerName = GetJsonString(root, "serverName") ?? GetJsonString(root, "name") ??
+                             (hasServer ? GetJsonString(server, "name") : null),
+                ServerDescription = description.Trim()
+            });
+        }
+
+        private static string? GetServerDescription(JsonElement root)
+        {
+            string? description = GetJsonString(root, "serverDescription") ??
+                                  GetJsonString(root, "server_description") ??
+                                  GetJsonString(root, "description");
+            if (!string.IsNullOrWhiteSpace(description)) return description;
+            foreach (string container in new[] { "server", "serverInfo" })
+                if (root.TryGetProperty(container, out var server) && server.ValueKind == JsonValueKind.Object)
+                    return GetJsonString(server, "description");
+            return null;
+        }
+
+        [Conditional("DEBUG")]
+        private static void VerifyServerDescriptionParser()
+        {
+            using var document = JsonDocument.Parse("{\"server\":{\"description\":\"Recovered from FCM\"}}");
+            Debug.Assert(GetServerDescription(document.RootElement) == "Recovered from FCM");
         }
 
         private void HandleListenOutputRest(string s)
@@ -703,6 +746,7 @@ namespace RustPlusDesk.Services
                     string? host = GetJsonString(root, "ip");
                     string? portStr = GetJsonString(root, "port");
                     string? name = GetJsonString(root, "name");
+                    string? description = GetServerDescription(root);
                     string? playerId = GetJsonString(root, "playerId");
                     string? playerToken = GetJsonString(root, "playerToken");
                     string? entityIdStr = GetJsonString(root, "entityId") ?? GetJsonString(root, "entityID");
@@ -740,6 +784,7 @@ namespace RustPlusDesk.Services
                             Host = host!,
                             Port = port,
                             ServerName = string.IsNullOrWhiteSpace(name) ? null : name,
+                            ServerDescription = string.IsNullOrWhiteSpace(description) ? null : description,
                             SteamId64 = playerId!,
                             PlayerToken = playerToken!,
                             EntityId = entityId,

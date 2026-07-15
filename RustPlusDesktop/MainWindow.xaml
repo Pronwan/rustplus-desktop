@@ -3362,15 +3362,6 @@
 
                             <!--  Left Group: Map Filters  -->
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    FontWeight="Bold"
-                                    Foreground="{DynamicResource TextSubtle}"
-                                    Opacity="0.8"
-                                    Text="{DynamicResource MapFilters}" />
-
                                 <CheckBox
                                     x:Name="ChkGrid"
                                     Margin="0,0,8,0"
@@ -3409,15 +3400,6 @@
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkNoBuildZones_Checked"
                                     Visibility="Collapsed" />
-
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    FontWeight="Bold"
-                                    Foreground="{DynamicResource TextSubtle}"
-                                    Opacity="0.8"
-                                    Text="{DynamicResource ChatAlerts}" />
 
                                  <Border
                                      Background="#AA16181C"
@@ -4003,7 +3985,14 @@
                                 Padding="6"
                                 Width="32"
                                 Height="32">
-                                <ui:SymbolIcon Symbol="Target20" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Path
+                                    Width="16"
+                                    Height="16"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M320,48 C337.7,48 352,62.3 352,80 L352,98.3 C450.1,112.3 527.7,189.9 541.7,288 L560,288 C577.7,288 592,302.3 592,320 C592,337.7 577.7,352 560,352 L541.7,352 C527.7,450.1 450.1,527.7 352,541.7 L352,560 C352,577.7 337.7,592 320,592 C302.3,592 288,577.7 288,560 L288,541.7 C189.9,527.7 112.3,450.1 98.3,352 L80,352 C62.3,352 48,337.7 48,320 C48,302.3 62.3,288 80,288 L98.3,288 C112.3,189.9 189.9,112.3 288,98.3 L288,80 C288,62.3 302.3,48 320,48 Z M163.2,352 C175.9,414.7 225.3,464.1 288,476.8 L288,464 C288,446.3 302.3,432 320,432 C337.7,432 352,446.3 352,464 L352,476.8 C414.7,464.1 464.1,414.7 476.8,352 L464,352 C446.3,352 432,337.7 432,320 C432,302.3 446.3,288 464,288 L476.8,288 C464.1,225.3 414.7,175.9 352,163.2 L352,176 C352,193.7 337.7,208 320,208 C302.3,208 288,193.7 288,176 L288,163.2 C225.3,175.9 175.9,225.3 163.2,288 L176,288 C193.7,288 208,302.3 208,320 C208,337.7 193.7,352 176,352 Z M320,272 C346.5,272 368,293.5 368,320 C368,346.5 346.5,368 320,368 C293.5,368 272,346.5 272,320 C272,293.5 293.5,272 320,272 Z"
+                                    Fill="White"
+                                    Stretch="Uniform" />
                                 <ui:Button.ContextMenu>
                                     <ContextMenu
                                         x:Name="CrosshairContextMenu"
@@ -4224,10 +4213,17 @@
                                 Width="32"
                                 Height="32"
                                 Margin="4,0,0,0"
-                                Padding="6"
+                                Padding="2"
                                 Click="BtnOpenRecycler_Click"
                                 ToolTip="Recycling Calculator">
-                                <ui:SymbolIcon Symbol="Calculator24" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Path
+                                    Width="18"
+                                    Height="18"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M216.3,124 C262.5,44 378,44 424.2,124 L461.5,188.6 L489.2,172.6 C497.6,167.7 508.1,168.4 515.8,174.3 C523.5,180.2 526.9,190.2 524.4,199.6 L500.9,287 C497.5,299.8 484.3,307.4 471.5,304 L384.1,280.6 C374.7,278.1 367.8,270.2 366.5,260.6 C365.2,251 369.9,241.5 378.3,236.7 L406,220.7 L368.7,156.1 C347.1,118.8 293.3,118.8 271.7,156.1 L266.4,165.2 C257.6,180.5 238,185.7 222.7,176.9 C207.4,168.1 202.2,148.5 211,133.1 Z M513.7,343.1 C529,334.3 548.6,339.5 557.4,354.8 L562.7,363.9 C608.9,443.9 551.2,543.9 458.8,543.9 L384.2,543.9 L384.2,575.9 C384.2,585.6 378.4,594.4 369.4,598.1 C360.4,601.8 350.1,599.8 343.2,592.9 L279.2,528.9 C269.8,519.5 269.8,504.3 279.2,495 L343.2,431 C350.1,424.1 360.4,422.1 369.4,425.8 C378.4,429.5 384.2,438.3 384.2,448 L384.2,480 L458.8,480 C501.9,480 528.9,433.3 507.3,396 L502,386.9 C493.2,371.6 498.4,352 513.7,343.2 Z M115,299.4 L87.3,283.4 C78.9,278.5 74.2,269.1 75.5,259.5 C76.8,249.9 83.7,242 93.1,239.5 L180.5,216 C193.3,212.6 206.5,220.2 209.9,233 L233.3,320.4 C235.8,329.8 232.4,339.7 224.7,345.7 C217,351.7 206.5,352.3 198.1,347.4 L170.4,331.4 L133.1,396 C111.5,433.3 138.5,480 181.6,480 L192.2,480 C209.9,480 224.2,494.3 224.2,512 C224.2,529.7 209.9,544 192.2,544 L181.6,544 C89.3,544 31.6,444 77.8,364 L115,299.4 Z"
+                                    Fill="White"
+                                    Stretch="Uniform" />
                             </ui:Button>
 
                             <!--  StackPanel with Heli Demo removed  -->

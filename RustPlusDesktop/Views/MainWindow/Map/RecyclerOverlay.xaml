@@ -74,18 +74,10 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Width="36"
-                                Height="36"
-                                CornerRadius="9"
-                                Background="#203FD7FF"
-                                BorderBrush="#4B60CDFF"
-                                BorderThickness="1">
-                            <ui:SymbolIcon Symbol="Calculator24"
-                                           FontSize="17"
-                                           Foreground="{DynamicResource Accent}"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                        </Border>
+                        <Image Width="48"
+                               Height="48"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               Source="pack://application:,,,/Assets/icons/recycler.png" />
 
                         <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="Recycling Calculator"
