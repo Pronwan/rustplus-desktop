@@ -1,0 +1,205 @@
+<Window x:Class="RustPlusDesk.Views.Windows.CloudAccountWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Cloud account"
+        Width="620"
+        Height="700"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="#0F1215"
+        Foreground="White"
+        FontFamily="Segoe UI Variable Display, Segoe UI">
+    <Window.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="#171B20" />
+            <Setter Property="BorderBrush" Value="#24FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Foreground" Value="#91FFFFFF" />
+        </Style>
+        <Style x:Key="Value" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style x:Key="AuthField" TargetType="TextBox">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="9,6" />
+            <Setter Property="Background" Value="#101317" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#36FFFFFF" />
+        </Style>
+        <Style x:Key="AuthPassword" TargetType="PasswordBox">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="9,6" />
+            <Setter Property="Background" Value="#101317" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#36FFFFFF" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Padding="22,18" Background="#15191E" BorderBrush="#20FFFFFF" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border Width="42" Height="42" Background="#1E00CCFF" CornerRadius="10">
+                    <ui:SymbolIcon Symbol="Cloud24" FontSize="22" Foreground="#37C6FF" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+                    <TextBlock Text="Cloud account" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock x:Name="TxtAccountSummary" Margin="0,2,0,0" FontSize="11" Foreground="#A8FFFFFF" />
+                </StackPanel>
+                <Border Grid.Column="2" Padding="10,5" VerticalAlignment="Center" Background="#2639A96B" CornerRadius="12">
+                    <TextBlock x:Name="TxtPlanBadge" FontSize="11" FontWeight="SemiBold" Foreground="#71E39A" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="22,18" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="ACCOUNT" FontSize="10" FontWeight="Bold" Foreground="#37C6FF" />
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,12,0">
+                                <TextBlock Text="Display name" Style="{StaticResource Label}" />
+                                <TextBlock x:Name="TxtDisplayName" Style="{StaticResource Value}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Email" Style="{StaticResource Label}" />
+                                <TextBlock x:Name="TxtEmail" Style="{StaticResource Value}" />
+                            </StackPanel>
+                        </Grid>
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,12,0">
+                                <TextBlock Text="Cloud user ID" Style="{StaticResource Label}" />
+                                <TextBlock x:Name="TxtUserId" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Style="{StaticResource Value}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Rust+ Steam account" Style="{StaticResource Label}" />
+                                <TextBlock x:Name="TxtSteamAccount" Style="{StaticResource Value}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="PLAN USAGE" FontSize="10" FontWeight="Bold" Foreground="#37C6FF" />
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Synced devices" FontSize="11" />
+                            <TextBlock x:Name="TxtDevicesUsage" Grid.Column="1" FontSize="11" Foreground="#BFFFFFFF" />
+                            <ProgressBar x:Name="ProgressDevices" Grid.ColumnSpan="2" Height="4" Margin="0,20,0,0" Maximum="100" />
+                        </Grid>
+                        <Grid Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Saved bases" FontSize="11" />
+                            <TextBlock x:Name="TxtBasesUsage" Grid.Column="1" FontSize="11" Foreground="#BFFFFFFF" />
+                            <ProgressBar x:Name="ProgressBases" Grid.ColumnSpan="2" Height="4" Margin="0,20,0,0" Maximum="100" />
+                        </Grid>
+                        <Grid Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Overlay storage" FontSize="11" />
+                            <TextBlock x:Name="TxtOverlayUsage" Grid.Column="1" FontSize="11" Foreground="#BFFFFFFF" />
+                            <ProgressBar x:Name="ProgressOverlay" Grid.ColumnSpan="2" Height="4" Margin="0,20,0,0" Maximum="100" />
+                        </Grid>
+                        <TextBlock x:Name="TxtScreenshotLimit" Margin="0,12,0,0" FontSize="10" Foreground="#91FFFFFF" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="SIGN-IN METHODS" FontSize="10" FontWeight="Bold" Foreground="#37C6FF" />
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image Width="18" Height="18" Source="pack://application:,,,/Assets/icons/discord.png" />
+                            <StackPanel Grid.Column="1" Margin="10,0">
+                                <TextBlock Text="Discord" FontSize="12" FontWeight="SemiBold" />
+                                <TextBlock x:Name="TxtDiscordState" FontSize="10" Foreground="#91FFFFFF" />
+                            </StackPanel>
+                            <ui:Button x:Name="BtnLinkDiscord" Grid.Column="2" MinWidth="92" Height="30" Click="BtnLinkDiscord_Click" />
+                        </Grid>
+
+                        <Border Margin="0,12,0,12" Background="#18FFFFFF" Height="1" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Symbol="Mail24" FontSize="18" Foreground="#37C6FF" />
+                            <StackPanel Grid.Column="1" Margin="10,0">
+                                <TextBlock Text="Email and password" FontSize="12" FontWeight="SemiBold" />
+                                <TextBlock x:Name="TxtEmailState" FontSize="10" Foreground="#91FFFFFF" />
+                            </StackPanel>
+                            <ui:Button x:Name="BtnShowEmailLink" Grid.Column="2" MinWidth="92" Height="30" Content="Add login" Click="BtnShowEmailLink_Click" />
+                        </Grid>
+
+                        <Grid x:Name="PanelEmailLink" Margin="28,12,0,0" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtLinkEmail" Margin="0,0,8,0" Style="{StaticResource AuthField}" ToolTip="Email address" />
+                            <PasswordBox x:Name="PwdLinkEmail" Grid.Column="1" Margin="0,0,8,0" Style="{StaticResource AuthPassword}" ToolTip="New password (6+ characters)" />
+                            <ui:Button x:Name="BtnAddEmailLogin" Grid.Column="2" Height="34" Content="Save" Appearance="Primary" Click="BtnAddEmailLogin_Click" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="PanelStatus" Padding="12,9" Background="#151F25" BorderBrush="#2C37C6FF" BorderThickness="1" CornerRadius="7" Visibility="Collapsed">
+                    <TextBlock x:Name="TxtStatus" FontSize="11" TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Padding="22,14" Background="#15191E" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0">
+            <Grid>
+                <ui:Button x:Name="BtnLogout" HorizontalAlignment="Left" MinWidth="92" Height="32" Content="Log out" Appearance="Secondary" Click="BtnLogout_Click" />
+                <ui:Button HorizontalAlignment="Right" MinWidth="92" Height="32" Content="Close" Appearance="Primary" Click="BtnClose_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

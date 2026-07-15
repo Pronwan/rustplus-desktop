@@ -1182,7 +1182,14 @@ private bool _overlayToolsVisible = false;
 
     public void UpdateCloudSyncUI()
     {
-        _vm.IsCloudConnected = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated || Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
+        bool isEmail = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        _vm.IsCloudConnected = isDiscord || isEmail;
+        _vm.CloudAccountActionText = _vm.IsCloudConnected ? "Manage" : "Sign in";
+        _vm.CloudAccountStatusText = _vm.IsCloudConnected
+            ? $"{(isDiscord ? "Discord" : "Email")} · {Services.Auth.SupabaseAuthManager.CurrentTier.Replace('_', ' ')} plan"
+            : "Not signed in · sync and backups unavailable";
+        UpdateAppTitle();
 
         bool deviceLimitExceeded = IsFreeDeviceSyncLimitExceeded();
         int overlaySizeBytes = GetCurrentOverlaySizeBytes();

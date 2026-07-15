@@ -231,6 +231,20 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isCloudConnected = value; OnPropertyChanged(); }
     }
 
+    private string _cloudAccountStatusText = "Not signed in · sync and backups unavailable";
+    public string CloudAccountStatusText
+    {
+        get => _cloudAccountStatusText;
+        set { _cloudAccountStatusText = value; OnPropertyChanged(); }
+    }
+
+    private string _cloudAccountActionText = "Sign in";
+    public string CloudAccountActionText
+    {
+        get => _cloudAccountActionText;
+        set { _cloudAccountActionText = value; OnPropertyChanged(); }
+    }
+
     private bool _isInitializing;
     public bool IsInitializing
     {
@@ -348,6 +362,10 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsRustCompanionConnected =>
+        TrackingService.IsFcmConfigured() &&
+        (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+
     private bool _forceShowLoginOverlay;
     public bool ForceShowLoginOverlay
     {
@@ -384,6 +402,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         OnPropertyChanged(nameof(FcmExpiryText));
         OnPropertyChanged(nameof(FcmExpiryDays));
+        OnPropertyChanged(nameof(IsRustCompanionConnected));
         OnPropertyChanged(nameof(ShowLoginOverlay));
     }
 

@@ -1947,19 +1947,19 @@ Are you sure you want to continue?</value>
     <value>Sign out of the email account?</value>
   </data>
   <data name="CloudLoginPromptTitle" xml:space="preserve">
-    <value>Cloud Sync</value>
+    <value>Cloud Account</value>
   </data>
   <data name="CloudLoginPromptHeading" xml:space="preserve">
-    <value>Account required for Cloud Sync</value>
+    <value>Sign in to your Cloud Account</value>
   </data>
   <data name="CloudLoginPromptDescription" xml:space="preserve">
     <value>Cloud services like synchronization and backup storage require a free account. Choose email or Discord to continue syncing your devices, overlays and backups.</value>
   </data>
   <data name="CloudLoginPromptEmailButton" xml:space="preserve">
-    <value>Sync via email</value>
+    <value>Sign in with email</value>
   </data>
   <data name="CloudLoginPromptDiscordButton" xml:space="preserve">
-    <value>Sync via Discord</value>
+    <value>Sign in with Discord</value>
   </data>
   <data name="CloudLoginPromptNoThanksButton" xml:space="preserve">
     <value>No thanks</value>
