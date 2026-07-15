@@ -174,7 +174,7 @@ namespace RustPlusDesk.Views
             else if (isEmail)
             {
                 var email = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser?.Email ?? "";
-                TxtDiscordBtnLabel.Text = "Discord";
+                TxtDiscordBtnLabel.Text = "Sign in with Discord";
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
 
                 int maxBytes = Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
@@ -195,7 +195,7 @@ namespace RustPlusDesk.Views
             }
             else
             {
-                TxtDiscordBtnLabel.Text = "Discord";
+                TxtDiscordBtnLabel.Text = "Sign in with Discord";
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
                 TxtAuthStatus.Text = T("AuthNotConnectedStatus", "Not connected - sign in to use Cloud Sync and backups");
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
@@ -204,7 +204,7 @@ namespace RustPlusDesk.Views
 
             BrdSupporterSettings.IsEnabled = connected && isPremium;
             BrdSupporterSettings.Opacity = (connected && isPremium) ? 1.0 : 0.5;
-            BtnEmailConnect.Content = T("EmailAccountButton", "Email / Account");
+            BtnEmailConnect.Content = isEmail ? "Manage email account" : "Sign in with email";
 
             if (connected && isPremium)
             {
@@ -517,6 +517,8 @@ namespace RustPlusDesk.Views
             cloudWindow.Owner = ParentWindow ?? Window.GetWindow(this);
             cloudWindow.ShowDialog();
         }
+
+        public void BringCloudAccountIntoView() => CloudSettingsAnchor.BringIntoView();
 
         private async void BtnDiscordConnect_Click(object sender, RoutedEventArgs e)
         {

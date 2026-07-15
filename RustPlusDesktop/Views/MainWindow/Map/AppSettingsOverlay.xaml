@@ -439,7 +439,13 @@
                 </Border>
 
                 <!-- Cloud Section -->
-                <TextBlock Text="Cloud Settings" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <TextBlock x:Name="CloudSettingsAnchor" Text="Cloud Account &amp; Sync" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}"/>
+                <TextBlock
+                    Margin="0,-4,0,10"
+                    FontSize="11"
+                    Foreground="{DynamicResource TextSubtle}"
+                    Text="Sync, backups, team features, and supporter access. This account is separate from Rust+ Companion pairing and FCM."
+                    TextWrapping="Wrap" />
                 
                 <ui:Button Content="{DynamicResource CompareCloudFeatures}" 
                            Appearance="Secondary" 
@@ -465,14 +471,14 @@
                         <ui:Button.Icon>
                             <ui:ImageIcon Source="pack://application:,,,/Assets/icons/discord.png"/>
                         </ui:Button.Icon>
-                        <TextBlock x:Name="TxtDiscordBtnLabel" Text="Discord"/>
+                        <TextBlock x:Name="TxtDiscordBtnLabel" Text="Sign in with Discord"/>
                     </ui:Button>
 
                     <!-- Email Button -->
                     <ui:Button x:Name="BtnEmailConnect"
                                Grid.Column="2"
                                Icon="{ui:SymbolIcon Symbol=Mail24}"
-                               Content="Email / Account"
+                               Content="Sign in with email"
                                HorizontalAlignment="Stretch"
                                Height="36"
                                Click="BtnEmailConnect_Click"/>

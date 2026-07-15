@@ -500,6 +500,81 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
+        public static async Task<(bool Success, string? Error)> LinkDiscordIdentityAsync()
+        {
+            if (Client?.Auth?.CurrentSession == null)
+                return (false, "Sign in to your cloud account first.");
+
+            try
+            {
+                const string callbackUrl = "http://localhost:3000/callback/";
+                string endpoint = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/auth/v1/user/identities/authorize";
+                string query = $"provider=discord&redirect_to={Uri.EscapeDataString(callbackUrl)}" +
+                               $"&scopes={Uri.EscapeDataString("identify guilds guilds.members.read email")}" +
+                               "&skip_http_redirect=true";
+
+                using var httpClient = new HttpClient();
+                using var request = new HttpRequestMessage(HttpMethod.Get, $"{endpoint}?{query}");
+                request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
+
+                using var response = await httpClient.SendAsync(request);
+                string body = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    return (false, $"Discord linking failed: {body}");
+
+                using var document = JsonDocument.Parse(body);
+                if (!document.RootElement.TryGetProperty("url", out var urlElement) ||
+                    string.IsNullOrWhiteSpace(urlElement.GetString()))
+                    return (false, "Supabase did not return a Discord linking URL.");
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = urlElement.GetString(),
+                    UseShellExecute = true
+                });
+
+                if (!await AwaitOAuthCallback(callbackUrl))
+                    return (false, "Discord linking was not completed.");
+
+                await RefreshUserProfileAsync();
+                await SyncDiscordRolesAsync();
+                NotifyAuthenticationChanged();
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Discord] Identity link failed: {ex.Message}");
+                return (false, ex.Message);
+            }
+        }
+
+        public static async Task<(bool Success, string? Error)> AddEmailLoginAsync(string email, string password)
+        {
+            if (Client?.Auth?.CurrentUser == null)
+                return (false, "Sign in to your cloud account first.");
+            if (string.IsNullOrWhiteSpace(email) || password.Length < 6)
+                return (false, "Enter a valid email and a password of at least 6 characters.");
+
+            try
+            {
+                var attributes = new UserAttributes
+                {
+                    Password = password
+                };
+                if (!string.Equals(Client.Auth.CurrentUser.Email, email.Trim(), StringComparison.OrdinalIgnoreCase))
+                    attributes.Email = email.Trim();
+                await Client.Auth.Update(attributes);
+                NotifyAuthenticationChanged();
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud/Email] Adding email login failed: {ex.Message}");
+                return (false, ex.Message);
+            }
+        }
+
         /// <summary>
         /// Sign in with email + password. On success the session is persisted via DesktopSessionHandler.
         /// Steam ID linkage is handled by RefreshUserProfileAsync (same as Discord flow).

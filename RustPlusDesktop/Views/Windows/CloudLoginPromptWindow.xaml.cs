@@ -36,14 +36,14 @@ namespace RustPlusDesk.Views.Windows
             }
             else
             {
-                Title = T("CloudLoginPromptTitle", "Cloud Sync");
-                TxtTitle.Text = T("CloudLoginPromptHeading", "Account required for Cloud Sync");
+                Title = T("CloudLoginPromptTitle", "Cloud Account");
+                TxtTitle.Text = T("CloudLoginPromptHeading", "Sign in to your Cloud Account");
                 TxtDescription.Text = T(
                     "CloudLoginPromptDescription",
                     "Cloud services like synchronization and backup storage require a free account. Choose email or Discord to continue syncing your devices, overlays and backups.");
             }
-            TxtEmailLogin.Text = T("CloudLoginPromptEmailButton", "Sync via email");
-            TxtDiscordLogin.Text = T("CloudLoginPromptDiscordButton", "Sync via Discord");
+            TxtEmailLogin.Text = T("CloudLoginPromptEmailButton", "Sign in with email");
+            TxtDiscordLogin.Text = T("CloudLoginPromptDiscordButton", "Sign in with Discord");
             BtnSkip.Content = T("CloudLoginPromptNoThanksButton", "No thanks");
         }
 

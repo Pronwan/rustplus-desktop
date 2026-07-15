@@ -59,9 +59,13 @@ public partial class MainWindow : WpfUi.FluentWindow
 {
     private readonly MainViewModel _vm = new();
     internal MainViewModel ViewModel => _vm;
+    internal string SteamDisplayName => !string.IsNullOrWhiteSpace(_steamDisplayName)
+        ? _steamDisplayName
+        : TxtSteamName?.Text ?? Properties.Resources.SteamAccount;
     private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
     private string? _fetchedSteamId64;
+    private string? _steamDisplayName;
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
@@ -434,8 +438,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Ã¢â€â‚¬Ã¢â€â‚¬ Wpf.Ui: Apply Fluent dark theme to all controls Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
-        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
-        this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        UpdateAppTitle();
         this.LocationChanged += MainWindow_LocationChangedOrResized;
         this.SizeChanged += MainWindow_LocationChangedOrResized;
         if (FindName("TxtAppVersion") is TextBlock txt)
@@ -1376,12 +1379,32 @@ public partial class MainWindow : WpfUi.FluentWindow
         { }
     }
 
+    private void UpdateAppTitle()
+    {
+        bool signedIn = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
+                        Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        string plan = signedIn
+            ? Services.Auth.SupabaseAuthManager.IsPremium ? " - Premium" : " - Free"
+            : string.Empty;
+        string title = $"RUST+ DESKTOP{plan} v{_updateService.VersionRaw}";
+
+        if (AppTitleBar != null)
+            AppTitleBar.Title = title;
+        Title = title;
+    }
+
     private void SupabaseAuthManager_AuthenticationChanged()
     {
-        if (Dispatcher.CheckAccess())
+        void RefreshAccountUi()
+        {
             UpdateRustMapsUi();
+            UpdateCloudSyncUI();
+        }
+
+        if (Dispatcher.CheckAccess())
+            RefreshAccountUi();
         else
-            _ = Dispatcher.BeginInvoke(UpdateRustMapsUi);
+            _ = Dispatcher.BeginInvoke((Action)RefreshAccountUi);
     }
 
     // --- Chat Persistence & Switching ---
@@ -4223,17 +4246,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
+        if (!string.IsNullOrWhiteSpace(_vm.SteamId64) && string.IsNullOrWhiteSpace(_steamDisplayName))
+        {
+            try
+            {
+                var nameCachePath = GetOwnNameCachePath(_vm.SteamId64);
+                if (File.Exists(nameCachePath))
+                    _steamDisplayName = File.ReadAllText(nameCachePath).Trim();
+            }
+            catch { }
+        }
+
         // Update UI Elements
         var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
-        
-        string statusText = "Logged In";
-        var tier = Services.Auth.SupabaseAuthManager.CurrentTier;
-        if (tier != "free")
-        {
-            statusText = $"Logged In ({char.ToUpper(tier[0]) + tier[1..].Replace("_", " ")})";
-        }
-        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : statusText;
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not connected" : _steamDisplayName ?? "Connected";
         ImgSteam.ToolTip = TxtSteamName.Text;
         RefreshStreamerModeUI();
         UpdateAdminUi();
@@ -4249,16 +4276,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
                     Dispatcher.Invoke(() =>
                     {
-                        var updatedTier = Services.Auth.SupabaseAuthManager.CurrentTier;
-                        if (updatedTier != "free")
-                        {
-                            TxtSteamName.Text = $"Logged In ({char.ToUpper(updatedTier[0]) + updatedTier[1..].Replace("_", " ")})";
-                        }
-                        else
-                        {
-                            TxtSteamName.Text = "Logged In";
-                        }
-                        ImgSteam.ToolTip = TxtSteamName.Text;
                         UpdateAdminUi();
                     });
                 }
@@ -4286,14 +4303,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var sid = _vm.SteamId64;
         if (string.IsNullOrWhiteSpace(sid))
         {
-            TxtSteamId.Text = "(nicht angemeldet)";
-            TxtSteamName.Text = "Steam Account";
+            TxtSteamId.Text = "No companion session";
+            TxtSteamName.Text = "Not connected";
             return;
         }
 
         TxtSteamId.Text = _abbreviateNames && sid.Length > 3 ? sid.Substring(0, 3) + "..." : sid;
         
-        var originalName = (ImgSteam.ToolTip as string) ?? "Logged In";
+        var originalName = (ImgSteam.ToolTip as string) ?? "Connected";
         TxtSteamName.Text = _abbreviateNames ? "STREAMER MODE" : originalName;
 
         if (_vm.IsFollowing && _vm.FollowingSteamId != _mySteamId)
@@ -4332,6 +4349,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return System.IO.Path.Combine(dir, $"{steamId64}.png");
     }
 
+    private string GetOwnNameCachePath(string steamId64) =>
+        System.IO.Path.ChangeExtension(GetOwnAvatarCachePath(steamId64), ".name");
+
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
     {
         if (string.IsNullOrWhiteSpace(steamId64))
@@ -4340,8 +4360,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        ImgSteam.ToolTip = "Logged In";
-        TxtSteamName.Text = "Logged In";
+        ImgSteam.ToolTip = _steamDisplayName ?? "Connected";
+        TxtSteamName.Text = _steamDisplayName ?? "Connected";
 
         var cachePath = GetOwnAvatarCachePath(steamId64);
 
@@ -4397,8 +4417,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
             if (nameMatch.Success)
             {
-                var originalName = nameMatch.Groups[1].Value;
-                ImgSteam.ToolTip = originalName;
+                _steamDisplayName = nameMatch.Groups[1].Value;
+                await File.WriteAllTextAsync(GetOwnNameCachePath(steamId64), _steamDisplayName);
+                ImgSteam.ToolTip = _steamDisplayName;
                 Dispatcher.Invoke(() => RefreshStreamerModeUI());
             }
         }
@@ -6775,6 +6796,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private void BtnCloudAccount_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_vm.IsCloudConnected)
+        {
+            new Views.Windows.CloudLoginPromptWindow(this).ShowDialog();
+            return;
+        }
+
+        new Views.Windows.CloudAccountWindow(this).ShowDialog();
+    }
+
     private void BtnLogicEngine_Click(object sender, RoutedEventArgs e)
     {
         if (LogicEnginePanel.Visibility == Visibility.Visible)
@@ -7187,8 +7219,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         base.OnSourceInitialized(e);
 
         // SpÃƒÂ¤testens hier sollte Windows den Titel im Rahmen akzeptieren
-        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
-        this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        UpdateAppTitle();
 
         var hwnd = new WindowInteropHelper(this).Handle;
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);
