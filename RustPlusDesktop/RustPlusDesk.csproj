@@ -147,6 +147,7 @@
 	  <None Remove="Assets\icons\pen.png" />
 	  <None Remove="Assets\icons\pencil.png" />
 	  <None Remove="Assets\icons\pin.png" />
+	  <None Remove="Assets\icons\recycler.png" />
 	  <None Remove="Assets\icons\PiP.png" />
 	  <None Remove="Assets\icons\Popup.png" />
 	  <None Remove="Assets\icons\powerplant.png" />
@@ -300,6 +301,7 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
+	  <Resource Include="Assets\icons\recycler.png" />
 	  <Resource Include="Assets\icons\smartalarm.png" />
 	  <Resource Include="Assets\icons\smartswitch.png" />
 	  <Resource Include="Assets\icons\storagemonitor.png" />

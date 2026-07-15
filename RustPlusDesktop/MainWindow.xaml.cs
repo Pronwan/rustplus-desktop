@@ -686,6 +686,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
             pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
             pr.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
+            pr.ServerInfoReceived += (_, info) => Dispatcher.BeginInvoke(new Action(() => CaptureFcmServerDescription(info)));
         }
 
         NotificationCenterService.NotificationAdded -= OnNotificationAdded;
@@ -3501,6 +3502,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var name = q["name"];
         return (host, port, playerId, token, name);
     }
+    private void CaptureFcmServerDescription(PairingPayload info)
+    {
+        if (string.IsNullOrWhiteSpace(info.ServerDescription)) return;
+
+        var profile = !string.IsNullOrWhiteSpace(info.Host)
+            ? _vm.Servers.FirstOrDefault(server =>
+                server.Host.Equals(info.Host, StringComparison.OrdinalIgnoreCase) &&
+                (info.Port <= 0 || server.Port == info.Port))
+            : null;
+        profile ??= !string.IsNullOrWhiteSpace(info.ServerName)
+            ? _vm.Servers.FirstOrDefault(server => server.Name.Equals(info.ServerName, StringComparison.OrdinalIgnoreCase))
+            : null;
+
+        if (profile == null || !string.IsNullOrWhiteSpace(profile.Description)) return;
+        profile.Description = info.ServerDescription.Trim();
+        _vm.Save();
+        AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+    }
+
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
         // Key OHNE EntityId: dient nur fÃƒÂ¼r Ã¢â‚¬Å¾Server-keepaliveÃ¢â‚¬Å“-Erkennung
@@ -3626,6 +3646,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 prof.SteamId64 = keySteam;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
                 AppendLog($"Pairing updated Ã¢â€ â€™ {prof.Name}");
+            }
+
+            if (string.IsNullOrWhiteSpace(prof.Description) && !string.IsNullOrWhiteSpace(e.ServerDescription))
+            {
+                prof.Description = e.ServerDescription.Trim();
+                _vm.Save();
             }
 
             // >>> GerÃƒÂ¤te zuverlÃƒÂ¤ssig hinzufÃƒÂ¼gen/aktualisieren (Switch + Alarm + StorageMonitor)
