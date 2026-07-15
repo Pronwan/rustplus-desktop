@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -20,6 +21,53 @@ namespace RustPlusDesk.Services.Auth
 {
     public static class SupabaseAuthManager
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint SendInput(uint inputCount, NativeInput[] inputs, int inputSize);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NativeInput
+        {
+            public uint Type;
+            public NativeInputUnion Data;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        private struct NativeInputUnion
+        {
+            [FieldOffset(0)] public NativeKeyboardInput Keyboard;
+            [FieldOffset(0)] public NativeMouseInput Mouse;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NativeMouseInput
+        {
+            public int X;
+            public int Y;
+            public uint MouseData;
+            public uint Flags;
+            public uint Time;
+            public UIntPtr ExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NativeKeyboardInput
+        {
+            public ushort VirtualKey;
+            public ushort ScanCode;
+            public uint Flags;
+            public uint Time;
+            public UIntPtr ExtraInfo;
+        }
+
         public static Supabase.Client Client { get; private set; } = null!;
         public static bool IsPremium { get; private set; }
         public static string CurrentTier { get; private set; } = "free";
@@ -1018,16 +1066,89 @@ namespace RustPlusDesk.Services.Auth
             }
 
             var responseHtml = success 
-                ? "<html><body><h1>Authentication Successful!</h1><p>You can close this window and return to Rust+ Desktop.</p></body></html>"
+                ? "<!doctype html><html><head><meta charset='utf-8'><title>Rust+ Desktop</title></head><body><h1>Authentication successful</h1><p id='status'>Returning to Rust+ Desktop...</p><script>history.replaceState(null,'','/callback/');fetch('/callback/close',{method:'POST'}).finally(function(){window.close();setTimeout(function(){document.getElementById('status').textContent='Login complete. You can close this tab and return to Rust+ Desktop.';},500);});</script></body></html>"
                 : "<html><body><h1>Authentication Failed</h1><p>Something went wrong.</p></body></html>";
 
             var responseBytes = Encoding.UTF8.GetBytes(responseHtml);
+            res.Headers[HttpResponseHeader.CacheControl] = "no-store";
             res.ContentLength64 = responseBytes.Length;
             await res.OutputStream.WriteAsync(responseBytes, 0, responseBytes.Length);
             res.Close();
+
+            IntPtr callbackBrowserWindow = IntPtr.Zero;
+            if (success)
+            {
+                try
+                {
+                    var closeContext = await listener.GetContextAsync().WaitAsync(TimeSpan.FromSeconds(2));
+                    bool closeCallbackTab = closeContext.Request.HttpMethod == "POST" &&
+                                            closeContext.Request.Url?.AbsolutePath == "/callback/close";
+                    if (closeCallbackTab) callbackBrowserWindow = GetForegroundWindow();
+                    closeContext.Response.StatusCode = closeCallbackTab ? 204 : 404;
+                    closeContext.Response.Close();
+                }
+                catch (TimeoutException)
+                {
+                    // JavaScript may be disabled; the app can still regain focus.
+                }
+            }
+
             listener.Stop();
 
+            if (success)
+            {
+                if (callbackBrowserWindow != IntPtr.Zero)
+                {
+                    await Task.Delay(100);
+                    AppendLog($"[Cloud/Auth] Browser tab close input: {SendCloseTabInput(callbackBrowserWindow)}/4 events sent.");
+                    await Task.Delay(100);
+                }
+
+                Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (Application.Current.MainWindow is Window mainWindow)
+                    {
+                        if (!mainWindow.IsVisible) mainWindow.Show();
+                        if (mainWindow.WindowState == WindowState.Minimized) mainWindow.WindowState = WindowState.Normal;
+                        mainWindow.Activate();
+                        mainWindow.Topmost = true;
+                        mainWindow.Topmost = false;
+                        mainWindow.Focus();
+                    }
+                }));
+            }
+
             return success;
+        }
+
+        private static uint SendCloseTabInput(IntPtr callbackBrowserWindow)
+        {
+            var title = new StringBuilder(256);
+            if (GetForegroundWindow() != callbackBrowserWindow ||
+                GetWindowText(callbackBrowserWindow, title, title.Capacity) <= 0 ||
+                !title.ToString().Contains("Rust+ Desktop", StringComparison.OrdinalIgnoreCase))
+            {
+                AppendLog($"[Cloud/Auth] Browser tab close skipped; foreground title was '{title}'.");
+                return 0;
+            }
+
+            SetForegroundWindow(callbackBrowserWindow);
+            const uint keyboardInput = 1;
+            const uint keyUp = 2;
+            const ushort controlKey = 0x11;
+            const ushort wKey = 0x57;
+            var inputs = new[]
+            {
+                new NativeInput { Type = keyboardInput, Data = new NativeInputUnion { Keyboard = new NativeKeyboardInput { VirtualKey = controlKey } } },
+                new NativeInput { Type = keyboardInput, Data = new NativeInputUnion { Keyboard = new NativeKeyboardInput { VirtualKey = wKey } } },
+                new NativeInput { Type = keyboardInput, Data = new NativeInputUnion { Keyboard = new NativeKeyboardInput { VirtualKey = wKey, Flags = keyUp } } },
+                new NativeInput { Type = keyboardInput, Data = new NativeInputUnion { Keyboard = new NativeKeyboardInput { VirtualKey = controlKey, Flags = keyUp } } }
+            };
+            int inputSize = Marshal.SizeOf<NativeInput>();
+            uint sent = SendInput((uint)inputs.Length, inputs, inputSize);
+            if (sent != inputs.Length)
+                AppendLog($"[Cloud/Auth] SendInput failed with Windows error {Marshal.GetLastWin32Error()} (INPUT size {inputSize}).");
+            return sent;
         }
 
         public static async Task LogoutAsync()
