@@ -208,6 +208,10 @@ public partial class MainWindow
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
 
+                // Discord interactions depend on team-master state, even during soft connect.
+                await LoadTeamAsync();
+                StartTeamPolling();
+
                 var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
                 if (allIds.Any())
                 {
