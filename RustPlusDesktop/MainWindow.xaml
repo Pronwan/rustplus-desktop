@@ -3392,6 +3392,130 @@
                                     Content="{DynamicResource Shops}"
                                     Style="{StaticResource PillToggleButton}"
                                     Unchecked="ChkShops_Checked" />
+                                <ui:Button
+                                    x:Name="BtnLayers"
+                                    Margin="0,0,8,0"
+                                    Padding="10,6"
+                                    Click="BtnLayers_Click"
+                                    ToolTip="Detailed map layer options">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Filter20" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="Layers" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </ui:Button>
+                                <Popup
+                                    x:Name="PopupLayers"
+                                    AllowsTransparency="True"
+                                    Placement="Bottom"
+                                    PlacementTarget="{Binding ElementName=BtnLayers}"
+                                    PopupAnimation="Fade"
+                                    StaysOpen="False"
+                                    VerticalOffset="8">
+                                    <Border
+                                        Width="390"
+                                        MaxHeight="520"
+                                        Padding="16,14"
+                                        Background="#FC16181C"
+                                        BorderBrush="#4AFFFFFF"
+                                        BorderThickness="1"
+                                        CornerRadius="12">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="18" Color="Black" Opacity="0.65" ShadowDepth="4" />
+                                        </Border.Effect>
+                                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                            <StackPanel>
+                                                <Grid Margin="0,0,0,12">
+                                                    <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="White" Text="Map layers" />
+                                                    <ui:SymbolIcon HorizontalAlignment="Right" Symbol="Filter20" Foreground="{DynamicResource TextSubtle}" />
+                                                </Grid>
+
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="MONUMENTS" />
+                                                <Grid Margin="0,0,0,10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="160" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Display" />
+                                                    <ComboBox
+                                                        x:Name="CmbLayerMonumentStyle"
+                                                        Grid.Column="1"
+                                                        Height="30"
+                                                        SelectionChanged="CmbLayerMonumentStyle_SelectionChanged">
+                                                        <ComboBoxItem Content="Icons" />
+                                                        <ComboBoxItem Content="Names" />
+                                                    </ComboBox>
+                                                </Grid>
+                                                <Grid Margin="0,0,0,10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="70" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="48" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Scale" />
+                                                    <Slider
+                                                        x:Name="SliderLayerMonumentScale"
+                                                        Grid.Column="1"
+                                                        Minimum="0.5"
+                                                        Maximum="3"
+                                                        ValueChanged="LayerMonumentVisual_ValueChanged" />
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{DynamicResource TextSubtle}"
+                                                        Text="{Binding Value, ElementName=SliderLayerMonumentScale, StringFormat={}{0:0.0}x}" />
+                                                </Grid>
+                                                <Grid Margin="0,0,0,10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="70" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="48" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Opacity" />
+                                                    <Slider
+                                                        x:Name="SliderLayerMonumentOpacity"
+                                                        Grid.Column="1"
+                                                        Minimum="0.1"
+                                                        Maximum="1"
+                                                        ValueChanged="LayerMonumentVisual_ValueChanged" />
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{DynamicResource TextSubtle}"
+                                                        Text="{Binding Value, ElementName=SliderLayerMonumentOpacity, StringFormat={}{0:0%}}" />
+                                                </Grid>
+
+                                                <TextBlock Margin="0,2,0,5" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="EXTRA MONUMENT TYPES" />
+                                                <Border Margin="0,0,0,10" Padding="10,6" Background="#0D1520" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8">
+                                                    <WrapPanel x:Name="PnlLayerExtraMonumentFilters" Orientation="Horizontal" />
+                                                </Border>
+                                                <ui:Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="BtnOpenMonumentList_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ui:SymbolIcon Symbol="Map20" Margin="0,0,7,0" />
+                                                        <TextBlock Text="Browse monuments" />
+                                                    </StackPanel>
+                                                </ui:Button>
+
+                                                <Border Margin="0,14,0,12" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0" />
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="SHOPS" />
+                                                <CheckBox
+                                                    x:Name="ChkLayerAutoLoadShops"
+                                                    Margin="0,0,0,8"
+                                                    Checked="ChkLayerAutoLoadShops_Changed"
+                                                    Content="Load shops automatically on connect"
+                                                    Style="{StaticResource DotCheckBox}"
+                                                    Unchecked="ChkLayerAutoLoadShops_Changed" />
+                                                <ui:Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="BtnOpenShopFilters_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ui:SymbolIcon Symbol="Map20" Margin="0,0,7,0" />
+                                                        <TextBlock Text="Open shop filters" />
+                                                    </StackPanel>
+                                                </ui:Button>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
                                 <CheckBox
                                     x:Name="ChkNoBuildZones"
                                     Margin="0,0,24,0"

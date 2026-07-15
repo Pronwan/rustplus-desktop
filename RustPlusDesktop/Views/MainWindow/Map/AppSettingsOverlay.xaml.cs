@@ -96,13 +96,8 @@ namespace RustPlusDesk.Views
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
             ChkBackgroundTracking.IsChecked = TrackingService.IsBackgroundTrackingEnabled;
-            ChkAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
-            CmbMonumentDisplayMode.SelectedIndex = Math.Clamp(TrackingService.MapMonumentDisplayMode, 0, 1);
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
-            SliderMonumentScale.Value = TrackingService.MapMonumentScale;
-            SliderMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
-            PopulateExtraMonumentFilters();
 
             // Map performance settings
             CmbMapScalingMode.SelectedIndex = Math.Clamp(TrackingService.MapBitmapScalingMode, 0, 2);
@@ -237,15 +232,8 @@ namespace RustPlusDesk.Views
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
             TrackingService.IsBackgroundTrackingEnabled = ChkBackgroundTracking.IsChecked == true;
-            TrackingService.AutoLoadShops = ChkAutoLoadShops.IsChecked == true;
-            if (CmbMonumentDisplayMode != null && CmbMonumentDisplayMode.SelectedIndex >= 0)
-            {
-                TrackingService.MapMonumentDisplayMode = CmbMonumentDisplayMode.SelectedIndex;
-            }
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
             TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
-            TrackingService.MapMonumentScale = SliderMonumentScale.Value;
-            TrackingService.MapMonumentOpacity = SliderMonumentOpacity.Value;
             
             if (CmbMapScalingMode != null && CmbMapScalingMode.SelectedIndex >= 0)
             {
@@ -331,43 +319,6 @@ namespace RustPlusDesk.Views
         {
             Visibility = Visibility.Collapsed;
             ParentWindow?.ApplySettings();
-        }
-
-        private void PopulateExtraMonumentFilters()
-        {
-            PnlExtraMonumentFilters.Children.Clear();
-
-            var types = ParentWindow?.GetKnownExtraMonumentTypes();
-            if (types == null || types.Count == 0)
-            {
-                PnlExtraMonumentFilters.Children.Add(TxtExtraMonFiltersEmpty);
-                return;
-            }
-
-            var dotStyle = TryFindResource("DotCheckBox") as System.Windows.Style;
-            foreach (var name in types)
-            {
-                var chk = new System.Windows.Controls.CheckBox
-                {
-                    Content = name,
-                    IsChecked = !TrackingService.IsExtraMonumentTypeHidden(name),
-                    Margin = new System.Windows.Thickness(0, 3, 0, 3),
-                    Tag = name,
-                    FontSize = 12,
-                    Style = dotStyle,
-                };
-                chk.Checked += OnExtraMonumentFilterChanged;
-                chk.Unchecked += OnExtraMonumentFilterChanged;
-                PnlExtraMonumentFilters.Children.Add(chk);
-            }
-        }
-
-        private void OnExtraMonumentFilterChanged(object? sender, RoutedEventArgs e)
-        {
-            if (!_isSettingsInitialized) return;
-            if (sender is not System.Windows.Controls.CheckBox chk || chk.Tag is not string name) return;
-            TrackingService.SetExtraMonumentTypeHidden(name, chk.IsChecked != true);
-            ParentWindow?.RebuildExtraMonumentOverlay();
         }
 
         private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)

@@ -14,6 +14,106 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private bool _loadingLayerControls;
+
+    private void BtnLayers_Click(object sender, RoutedEventArgs e)
+    {
+        LoadLayerControls();
+        PopupLayers.IsOpen = true;
+    }
+
+    private void LoadLayerControls()
+    {
+        _loadingLayerControls = true;
+        CmbLayerMonumentStyle.SelectedIndex = Math.Clamp(TrackingService.MapMonumentDisplayMode, 0, 1);
+        SliderLayerMonumentScale.Value = TrackingService.MapMonumentScale;
+        SliderLayerMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
+        ChkLayerAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
+
+        PnlLayerExtraMonumentFilters.Children.Clear();
+        var types = GetKnownExtraMonumentTypes();
+        if (types.Count == 0)
+        {
+            PnlLayerExtraMonumentFilters.Children.Add(new TextBlock
+            {
+                Text = "No extra monument types detected.",
+                FontSize = 11,
+                FontStyle = FontStyles.Italic,
+                Foreground = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray,
+                Margin = new Thickness(2),
+                Width = 330
+            });
+        }
+        else
+        {
+            var dotStyle = TryFindResource("DotCheckBox") as Style;
+            foreach (string name in types)
+            {
+                var checkBox = new CheckBox
+                {
+                    Content = name,
+                    IsChecked = !TrackingService.IsExtraMonumentTypeHidden(name),
+                    Margin = new Thickness(0, 2, 0, 2),
+                    Tag = name,
+                    ToolTip = name,
+                    Width = 172,
+                    FontSize = 11.5,
+                    Style = dotStyle,
+                    HorizontalContentAlignment = HorizontalAlignment.Left
+                };
+                checkBox.Checked += LayerExtraMonumentFilter_Changed;
+                checkBox.Unchecked += LayerExtraMonumentFilter_Changed;
+                PnlLayerExtraMonumentFilters.Children.Add(checkBox);
+            }
+        }
+
+        _loadingLayerControls = false;
+    }
+
+    private void CmbLayerMonumentStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!IsLoaded || _loadingLayerControls || CmbLayerMonumentStyle.SelectedIndex < 0) return;
+        TrackingService.MapMonumentDisplayMode = CmbLayerMonumentStyle.SelectedIndex;
+        BuildMonumentOverlays();
+    }
+
+    private void LayerMonumentVisual_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsLoaded || _loadingLayerControls || SliderLayerMonumentScale == null || SliderLayerMonumentOpacity == null) return;
+        TrackingService.MapMonumentScale = SliderLayerMonumentScale.Value;
+        TrackingService.MapMonumentOpacity = SliderLayerMonumentOpacity.Value;
+        RefreshMonumentOverlayPositions();
+    }
+
+    private void LayerExtraMonumentFilter_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_loadingLayerControls || sender is not CheckBox { Tag: string name } checkBox) return;
+        TrackingService.SetExtraMonumentTypeHidden(name, checkBox.IsChecked != true);
+        RebuildExtraMonumentOverlay();
+    }
+
+    private void ChkLayerAutoLoadShops_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _loadingLayerControls) return;
+        TrackingService.AutoLoadShops = ChkLayerAutoLoadShops.IsChecked == true;
+    }
+
+    private void BtnOpenMonumentList_Click(object sender, RoutedEventArgs e)
+    {
+        PopupLayers.IsOpen = false;
+        if (MonumentNavPanel.Visibility != Visibility.Visible)
+            BtnToggleMonumentsPanel_Click(sender, e);
+        else
+            TxtMonumentSearch.Focus();
+    }
+
+    private void BtnOpenShopFilters_Click(object sender, RoutedEventArgs e)
+    {
+        PopupLayers.IsOpen = false;
+        if (ShopSearchContent.Visibility != Visibility.Visible)
+            ToggleShopSearch();
+    }
+
     private void BtnToggleMonumentsPanel_Click(object sender, RoutedEventArgs e)
     {
         if (MonumentNavPanel == null) return;
