@@ -24,13 +24,10 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<!-- Produkt-/Paketversion (für Vergleich & Anzeige) -->
-		<Version>7.3.1</Version>
+		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
+		<Version>7.3.3</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
-		<AssemblyVersion>7.3.1</AssemblyVersion>
-		<FileVersion>7.3.1</FileVersion>
-		<InformationalVersion>7.3.1</InformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		
 		<!-- (optional, hübsch im Datei-Eigenschaften-Dialog) -->

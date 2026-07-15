@@ -22,7 +22,8 @@ namespace RustPlusDesk.Helpers
             }
             catch { }
 
-            _cachedVersion = "7.3.1"; // Default fallback matching RustPlusDesk.csproj version
+            _cachedVersion = NormalizeVer(
+                Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "0.0.0");
             return _cachedVersion;
         }
 

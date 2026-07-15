@@ -584,7 +584,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }));
 
         // One-time migration notice for v5.2.0
-        const string AppVersion = "7.3.1";
+        var appVersion = VersionHelper.GetClientVersion();
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -600,7 +600,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
         {
             // Erst-Installation: Version setzen, aber kein Popup zeigen
-            TrackingService.LastSeenVersion = AppVersion;
+            TrackingService.LastSeenVersion = appVersion;
 
             if (TrackingService.SelectedLanguage == "en")
             {
@@ -611,7 +611,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 }
             }
         }
-        else if (TrackingService.LastSeenVersion != AppVersion)
+        else if (TrackingService.LastSeenVersion != appVersion)
         {
             if (TrackingService.SelectedLanguage == "en")
             {
@@ -636,18 +636,18 @@ public partial class MainWindow : WpfUi.FluentWindow
                         TrackingService.UploadConsentGiven = dlg.CloudSyncAccepted;
                         _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(dlg.CloudSyncAccepted);
                     }
-                    TrackingService.LastSeenVersion = AppVersion;
+                    TrackingService.LastSeenVersion = appVersion;
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
             else
             {
                 // Upgrade from a previous version: show success notification
                 string oldVersion = TrackingService.LastSeenVersion;
-                TrackingService.LastSeenVersion = AppVersion;
+                TrackingService.LastSeenVersion = appVersion;
                 
                 Dispatcher.InvokeAsync(() =>
                 {
-                    ShowInfoSnackbar("Update Successful", $"Rust+ Desktop has been successfully updated to v{AppVersion}!", WpfUi.ControlAppearance.Success);
+                    ShowInfoSnackbar("Update Successful", $"Rust+ Desktop has been successfully updated to v{appVersion}!", WpfUi.ControlAppearance.Success);
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
         }
