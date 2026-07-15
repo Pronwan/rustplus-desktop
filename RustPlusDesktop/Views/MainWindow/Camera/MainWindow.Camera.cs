@@ -138,6 +138,9 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
     private void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
     {
+        if (_isMap3DActive)
+            CloseMap3DView();
+
         if (_miniMap == null || !_miniMap.IsVisible)
 
         {
@@ -180,15 +183,12 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             _miniMap.Closed += (s, ev) =>
             {
                 _miniMap = null;
-                BtnMiniMap.ClearValue(Control.BackgroundProperty);
-                BtnMiniMap.ClearValue(Control.BorderBrushProperty);
+                UpdateMapViewSelector();
             };
 
             _miniMap.Show();
             CenterMiniMapOnPlayer();
-
-            BtnMiniMap.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
-            BtnMiniMap.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+            UpdateMapViewSelector();
         }
         else
         {
