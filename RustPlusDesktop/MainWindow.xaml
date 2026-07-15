@@ -3529,7 +3529,7 @@
                                      Background="#AA16181C"
                                      BorderBrush="#30FFFFFF"
                                      BorderThickness="1"
-                                     CornerRadius="12"
+                                     CornerRadius="8"
                                      Padding="2"
                                      Margin="0,0,8,0"
                                      VerticalAlignment="Center">
@@ -3545,10 +3545,12 @@
                                              x:Name="ChatAnnounce"
                                              Grid.Column="0"
                                              Click="ChatAnnounce_Toggle"
+                                             Height="30"
                                              IsChecked="False"
                                              Margin="0"
-                                             Padding="10,6"
-                                             ToolTip="{DynamicResource RightClickConfigure}">
+                                             Padding="0"
+                                             ToolTip="{DynamicResource Alerts}"
+                                             Width="36">
                                              <CheckBox.Style>
                                                  <Style TargetType="CheckBox">
                                                      <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
@@ -3562,7 +3564,7 @@
                                                                  <Border
                                                                      x:Name="Bd"
                                                                      Background="{TemplateBinding Background}"
-                                                                     CornerRadius="10,0,0,10"
+                                                                     CornerRadius="6,0,0,6"
                                                                      Padding="{TemplateBinding Padding}"
                                                                      SnapsToDevicePixels="True">
                                                                      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -3586,34 +3588,43 @@
                                                      </Setter>
                                                  </Style>
                                              </CheckBox.Style>
-                                     <CheckBox.ContextMenu>
-                                         <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                             <MenuItem
-                                                 Click="SelectAllAlerts_Click"
-                                                 Header="{DynamicResource SelectAll}"
-                                                 Style="{StaticResource DarkMenuItem}">
-                                                 <MenuItem.Icon>
-                                                     <ui:SymbolIcon Symbol="CheckmarkSquare24" />
-                                                 </MenuItem.Icon>
-                                             </MenuItem>
-                                             <MenuItem
-                                                 Click="DeselectAllAlerts_Click"
-                                                 Header="{DynamicResource DeselectAll}"
-                                                 Style="{StaticResource DarkMenuItem}">
-                                                 <MenuItem.Icon>
-                                                     <ui:SymbolIcon Symbol="DismissSquare24" />
-                                                 </MenuItem.Icon>
-                                             </MenuItem>
-                                         </ContextMenu>
-                                     </CheckBox.ContextMenu>
                                              <CheckBox.Content>
-                                                 <StackPanel Orientation="Horizontal">
-                                                     <ui:SymbolIcon Symbol="Alert20" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                                     <TextBlock
-                                                         x:Name="ChatAnnounceLabel"
+                                                 <Grid Width="32" Height="26">
+                                                     <ui:SymbolIcon
+                                                         HorizontalAlignment="Center"
                                                          VerticalAlignment="Center"
-                                                         Text="{DynamicResource Alerts}" />
-                                                 </StackPanel>
+                                                         FontSize="16"
+                                                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+                                                         Symbol="Alert24" />
+                                                     <Ellipse
+                                                         x:Name="AlertEnabledDot"
+                                                         Width="7"
+                                                         Height="7"
+                                                         Margin="0,1,2,0"
+                                                         HorizontalAlignment="Right"
+                                                         VerticalAlignment="Top"
+                                                         Fill="#45E39A"
+                                                         Visibility="Collapsed" />
+                                                     <Border
+                                                         x:Name="AlertEnabledBadge"
+                                                         MinWidth="14"
+                                                         Height="14"
+                                                         Margin="0,-1,-3,0"
+                                                         Padding="3,0"
+                                                         HorizontalAlignment="Right"
+                                                         VerticalAlignment="Top"
+                                                         Background="#45E39A"
+                                                         CornerRadius="7"
+                                                         Visibility="Collapsed">
+                                                         <TextBlock
+                                                             x:Name="AlertEnabledCountText"
+                                                             VerticalAlignment="Center"
+                                                             FontSize="8"
+                                                             FontWeight="Bold"
+                                                             Foreground="#071711"
+                                                             TextAlignment="Center" />
+                                                     </Border>
+                                                 </Grid>
                                              </CheckBox.Content>
                                          </CheckBox>
 
@@ -3630,7 +3641,7 @@
                                              x:Name="ChatAlertsConfigureButton"
                                              Grid.Column="2"
                                              Margin="0"
-                                             Padding="8,6,10,6"
+                                             Padding="7,6,9,6"
                                              Height="30"
                                              VerticalAlignment="Center"
                                              ToolTip="{DynamicResource Configure}"
@@ -3640,7 +3651,7 @@
                                                      <Setter Property="Background" Value="Transparent" />
                                                      <Setter Property="BorderBrush" Value="Transparent" />
                                                      <Setter Property="BorderThickness" Value="0" />
-                                                     <Setter Property="CornerRadius" Value="0,10,10,0" />
+                                                     <Setter Property="CornerRadius" Value="0,6,6,0" />
                                                      <Style.Triggers>
                                                          <Trigger Property="IsMouseOver" Value="True">
                                                              <Setter Property="Background" Value="#1AFFFFFF" />
@@ -4047,9 +4058,45 @@
 
                                                          <MenuItem
                                                              x:Name="HotkeyTriggersMenuItem"
-                                                             Header="Hotkey Triggers"
                                                              StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}" />
+                                                             Style="{StaticResource DarkMenuItem}">
+                                                             <MenuItem.Header>
+                                                                 <Grid Width="136">
+                                                                     <Grid.ColumnDefinitions>
+                                                                         <ColumnDefinition Width="*" />
+                                                                         <ColumnDefinition Width="Auto" />
+                                                                     </Grid.ColumnDefinitions>
+                                                                     <StackPanel Orientation="Horizontal">
+                                                                         <TextBlock VerticalAlignment="Center" Text="Hotkey Triggers" />
+                                                                         <Ellipse
+                                                                             x:Name="HotkeyTriggersEnabledDot"
+                                                                             Width="6"
+                                                                             Height="6"
+                                                                             Margin="6,0,0,0"
+                                                                             VerticalAlignment="Center"
+                                                                             Fill="#45E39A"
+                                                                             Visibility="Collapsed" />
+                                                                     </StackPanel>
+                                                                     <Border
+                                                                         x:Name="HotkeyTriggersCountBadge"
+                                                                         Grid.Column="1"
+                                                                         MinWidth="16"
+                                                                         Height="16"
+                                                                         Padding="4,0"
+                                                                         Background="#45E39A"
+                                                                         CornerRadius="8"
+                                                                         Visibility="Collapsed">
+                                                                         <TextBlock
+                                                                             x:Name="HotkeyTriggersCountText"
+                                                                             VerticalAlignment="Center"
+                                                                             FontSize="9"
+                                                                             FontWeight="Bold"
+                                                                             Foreground="#071711"
+                                                                             TextAlignment="Center" />
+                                                                     </Border>
+                                                                 </Grid>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
                                                      </MenuItem>
                                                  </ContextMenu>
                                              </ui:DropDownButton.Flyout>

@@ -132,6 +132,7 @@ public class TrackingSettings
     public bool CloudSyncEnabled { get; set; } = false;
     // Key = "host:port|entityId", value = true if that device should send a chat alert when toggled via hotkey
     public Dictionary<string, bool> HotkeyTriggerChatAlertEnabled { get; set; } = new();
+    public bool HotkeyTriggerChatAlertsEnabled { get; set; } = true;
     public string LastCrosshairStyle { get; set; } = "GreenDot";
     public string LastCustomCrosshairId { get; set; } = string.Empty;
     public bool OfflineDeathAlertsEnabled { get; set; } = true;
@@ -737,6 +738,12 @@ public static class TrackingService
 
     public static IReadOnlyDictionary<string, bool> GetAllHotkeyTriggerChatAlerts()
         => _settings.HotkeyTriggerChatAlertEnabled;
+
+    public static bool HotkeyTriggerChatAlertsEnabled
+    {
+        get => _settings.HotkeyTriggerChatAlertsEnabled;
+        set { _settings.HotkeyTriggerChatAlertsEnabled = value; SaveDB(); }
+    }
 
     public static bool AnnounceCargoDocking
     {
