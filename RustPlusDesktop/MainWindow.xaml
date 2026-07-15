@@ -4745,235 +4745,107 @@
                             Panel.ZIndex="1000"
                             Orientation="Horizontal">
                             <StackPanel Orientation="Vertical">
-                                <!--  TIME OVERLAY  -->
+                                <!--  COMPACT SERVER HUD  -->
                                 <ui:Card
-                                    x:Name="TimeOverlay"
-                                    Padding="8,4"
-                                    Background="#AA16181C"
-                                    BorderBrush="#40FFFFFF"
-                                    BorderThickness="1"
-                                    VerticalAlignment="Top">
-                                    <StackPanel Orientation="Horizontal">
-                                        <!--  Unknown Time Icon (Clock)  -->
-                                        <TextBlock
-                                            Margin="0,0,6,0"
-                                            VerticalAlignment="Center"
-                                            FontFamily="Segoe MDL2 Assets"
-                                            FontSize="14"
-                                            Foreground="#8D98A8"
-                                            Text="&#xE916;">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="{x:Null}">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-
-                                        <!--  Day Icon  -->
-                                        <TextBlock
-                                            Margin="0,0,6,0"
-                                            VerticalAlignment="Center"
-                                            FontFamily="Segoe MDL2 Assets"
-                                            FontSize="14"
-                                            Foreground="#FFD166"
-                                            Text="&#xE706;">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsDay}" Value="True">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <!--  Hide if unknown  -->
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-
-                                        <!--  Night Icon  -->
-                                        <TextBlock
-                                            Margin="0,0,6,0"
-                                            VerticalAlignment="Center"
-                                            FontFamily="Segoe MDL2 Assets"
-                                            FontSize="14"
-                                            Foreground="#A5B4FC"
-                                            Text="&#xE708;">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsDay}" Value="False">
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </DataTrigger>
-                                                        <!--  Hide if unknown  -->
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="-">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ServerTime}" Value="â€“">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Foreground="White"
-                                                Text="{Binding ServerTime}" />
-                                            <TextBlock
-                                                Margin="0,-1,0,0"
-                                                FontSize="9"
-                                                Foreground="#8D98A8"
-                                                Text="{Binding TimeUntilNextPhase}">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding TimeUntilNextPhase}" Value="">
-                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </ui:Card>
-
-                                <!--  SERVER STATUS OVERLAY  -->
-                                <ui:Card
-                                    x:Name="ServerStatusOverlay"
-                                    Margin="0,6,0,0"
-                                    Padding="8,4"
-                                    Background="#AA16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    x:Name="ServerHudCard"
+                                    Padding="0"
+                                    Background="#B312171D"
+                                    BorderBrush="#42FFFFFF"
                                     BorderThickness="1"
                                     HorizontalAlignment="Left"
+                                    Width="292"
                                     VerticalAlignment="Top">
-                                    <StackPanel Orientation="Vertical">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <ui:SymbolIcon
-                                                Margin="0,0,6,0"
-                                                FontSize="14"
-                                                Foreground="#8D98A8"
-                                                Symbol="People20" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="11"
-                                                Foreground="#8D98A8"
-                                                Text="{DynamicResource Players}" />
-                                            <TextBlock
-                                                Margin="6,0,4,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="SemiBold"
-                                                Foreground="White"
-                                                Text="{Binding ServerPlayers}" />
-                                            <Button
-                                                x:Name="BtnShowOnline"
-                                                Width="18"
-                                                Height="18"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Click="BtnShowOnline_Click"
-                                                Content="&#x25BC;"
-                                                FontSize="10"
-                                                Foreground="White"
-                                                ToolTip="{DynamicResource ShowOnlinePlayers}" />
-                                        </StackPanel>
+                                    <StackPanel>
+                                        <CheckBox
+                                            x:Name="ServerHudToggle"
+                                            Height="36"
+                                            Padding="10,0"
+                                            Cursor="Hand"
+                                            IsChecked="False"
+                                            AutomationProperties.Name="Expand server details">
+                                            <CheckBox.Template>
+                                                <ControlTemplate TargetType="CheckBox">
+                                                    <Border x:Name="HudHeader" Padding="{TemplateBinding Padding}" Background="Transparent" CornerRadius="7">
+                                                        <ContentPresenter VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="HudHeader" Property="Background" Value="#18FFFFFF" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter TargetName="HudHeader" Property="Background" Value="#0FFFFFFF" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </CheckBox.Template>
+                                            <Grid Width="270">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#FFD166" Text="&#xE706;" />
+                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" Text="{Binding ServerTime}" />
+                                                <StackPanel Grid.Column="2" Margin="16,0,0,0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="#8D98A8" Symbol="People20" />
+                                                    <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerPlayers}" />
+                                                </StackPanel>
+                                                <Grid Grid.Column="3" Width="18" Margin="8,0,0,0">
+                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="#8D98A8" Symbol="ChevronRight20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="#8D98A8" Symbol="ChevronDown20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}" />
+                                                </Grid>
+                                            </Grid>
+                                        </CheckBox>
 
-                                        <StackPanel
-                                            Margin="0,2,0,0"
-                                            Orientation="Horizontal"
-                                            VerticalAlignment="Center">
-                                            <ui:SymbolIcon
-                                                Margin="0,0,6,0"
-                                                FontSize="14"
-                                                Foreground="#8D98A8"
-                                                Symbol="Hourglass20" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="11"
-                                                Foreground="#8D98A8"
-                                                Text="{DynamicResource Queue}" />
-                                            <TextBlock
-                                                Margin="6,0,0,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="SemiBold"
-                                                Foreground="White"
-                                                Text="{Binding ServerQueue}" />
-                                        </StackPanel>
-
-                                        <StackPanel
-                                            Margin="0,2,0,0"
-                                            Orientation="Horizontal"
-                                            VerticalAlignment="Center">
-                                            <StackPanel.Style>
-                                                <Style TargetType="StackPanel">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ServerWipe}" Value="-">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </StackPanel.Style>
-                                            <ui:SymbolIcon
-                                                Margin="0,0,6,0"
-                                                FontSize="14"
-                                                Foreground="#8D98A8"
-                                                Symbol="Calendar20" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="11"
-                                                Foreground="#8D98A8"
-                                                Text="Wiped" />
-                                            <TextBlock
-                                                Margin="6,0,0,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="SemiBold"
-                                                Foreground="White"
-                                                Text="{Binding ServerWipe}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </ui:Card>
+                                        <StackPanel Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}">
+                                            <Border BorderBrush="#24FFFFFF" BorderThickness="0,1,0,0">
+                                                <StackPanel Margin="10,7">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="#8D98A8" Symbol="Clock20" />
+                                                            <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="#AAB4C2" Text="{Binding TimeUntilNextPhase}" />
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="1" Margin="14,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="#8D98A8" Symbol="Hourglass20" />
+                                                            <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="#8D98A8" Text="{DynamicResource Queue}" />
+                                                            <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" FontSize="11" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerQueue}" />
+                                                        </StackPanel>
+                                                        <ui:Button
+                                                            x:Name="BtnShowOnline"
+                                                            Grid.Column="2"
+                                                            Padding="5,2"
+                                                            Appearance="Transparent"
+                                                            Click="BtnShowOnline_Click"
+                                                            Content="View players"
+                                                            FontSize="10"
+                                                            ToolTip="{DynamicResource ShowOnlinePlayers}" />
+                                                    </Grid>
+                                                    <StackPanel Margin="0,6,0,0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <ui:SymbolIcon Margin="0,0,5,0" FontSize="12" Foreground="#6F7B8B" Symbol="Calendar20" />
+                                                        <TextBlock Margin="0,0,5,0" VerticalAlignment="Center" FontSize="9" FontWeight="SemiBold" Foreground="#6F7B8B" Text="WIPE" />
+                                                        <TextBlock MaxWidth="218" VerticalAlignment="Center" FontSize="10" Foreground="#BFC7D2" Text="{Binding ServerWipe}" TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
 
                                 <!--  RUSTMAPS OVERLAY  -->
-                                <ui:Card
+                                <Border
                                     x:Name="RustMapsOverlay"
-                                    Margin="0,6,0,0"
-                                    Padding="2"
-                                    Background="#AA16181C"
-                                    BorderBrush="#40FFFFFF"
-                                    BorderThickness="1"
-                                    HorizontalAlignment="Left"
+                                    Margin="0"
+                                    Padding="6,5"
+                                    Background="Transparent"
+                                    BorderBrush="#24FFFFFF"
+                                    BorderThickness="0,1,0,0"
+                                    CornerRadius="0"
+                                    HorizontalAlignment="Stretch"
                                     Visibility="Collapsed">
-                                    <StackPanel>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
@@ -5549,6 +5421,9 @@
                                             </ui:Card>
                                         </Popup>
 
+                                    </WrapPanel>
+                                </Border>
+                                        </StackPanel>
                                     </StackPanel>
                                 </ui:Card>
 
@@ -5595,6 +5470,7 @@
                                 x:Name="FollowOverlay"
                                 Margin="8,0,0,0"
                                 Padding="0"
+                                Height="38"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
                                 BorderThickness="1"
@@ -5624,7 +5500,8 @@
 
                                     <ui:Button
                                         x:Name="BtnFollowPlayer"
-                                        Padding="4"
+                                        Height="36"
+                                        Padding="4,0"
                                         Appearance="Transparent"
                                         Click="BtnFollowPlayer_Click"
                                         IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
@@ -5711,6 +5588,7 @@
                                 x:Name="MonumentsToggleOverlay"
                                 Margin="8,0,0,0"
                                 Padding="0"
+                                Height="38"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
                                 BorderThickness="1"
@@ -5718,12 +5596,13 @@
                                 <Grid>
                                     <ui:Button
                                         x:Name="BtnToggleMonumentsPanel"
-                                        Padding="4"
+                                        Height="36"
+                                        Padding="4,0"
                                         Appearance="Transparent"
                                         Click="BtnToggleMonumentsPanel_Click"
                                         IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
                                         ToolTip="Toggle Monument List">
-                                        <StackPanel Orientation="Horizontal" Margin="4,2">
+                                        <StackPanel Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center">
                                             <TextBlock
                                                 FontFamily="Segoe MDL2 Assets"
                                                 FontSize="14"
@@ -5746,6 +5625,7 @@
                                 x:Name="WipeDeathMarkersOverlay"
                                 Margin="8,0,0,0"
                                 Padding="0"
+                                Height="38"
                                 Background="#AA16181C"
                                 BorderBrush="#40FFFFFF"
                                 BorderThickness="1"
@@ -5754,11 +5634,12 @@
                                 <Grid>
                                     <ui:Button
                                         x:Name="BtnWipeDeathMarkers"
-                                        Padding="4"
+                                        Height="36"
+                                        Padding="4,0"
                                         Appearance="Transparent"
                                         Click="BtnWipeDeathMarkers_Click"
                                         ToolTip="{DynamicResource WipeDeathMarkers}">
-                                        <StackPanel Orientation="Horizontal" Margin="4,2">
+                                        <StackPanel Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center">
                                             <Grid Width="14" Height="16" Margin="0,0,4,0">
                                                 <Path Width="14" Height="16" Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stretch="Uniform" Stroke="Black" StrokeThickness="1" />
                                             </Grid>
