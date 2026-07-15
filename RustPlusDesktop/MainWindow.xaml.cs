@@ -230,12 +230,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     private const double MinExpandedSidebarWidth = 400;
     private const double MaxExpandedSidebarWidth = 600;
     private const int SidebarAnimationDurationMs = 180;
+    private const int SidebarHoverExpandDelayMs = 200;
     private double _expandedSidebarWidth = 600;
     private bool _isSidebarExpanded;
     private bool _isSidebarPinnedExpanded;
     private bool _isSidebarTemporarilyExpandedForOverlay;
     private bool _sidebarOverlayVisibilityUpdateQueued;
     private System.Windows.Threading.DispatcherTimer? _sidebarAnimationTimer;
+    private System.Windows.Threading.DispatcherTimer? _sidebarHoverExpandTimer;
     private DateTime _sidebarAnimationStartedAt;
     private double _sidebarAnimationStartWidth;
     private double _sidebarAnimationTargetWidth;
@@ -6501,7 +6503,24 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void LeftPanelBorder_MouseEnter(object sender, MouseEventArgs e)
     {
-        SetSidebarExpanded(true);
+        if (_isSidebarExpanded || _isSidebarPinnedExpanded)
+        {
+            return;
+        }
+
+        if (_sidebarHoverExpandTimer == null)
+        {
+            _sidebarHoverExpandTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(SidebarHoverExpandDelayMs)
+            };
+            _sidebarHoverExpandTimer.Tick += SidebarHoverExpandTimer_Tick;
+        }
+
+        if (!_sidebarHoverExpandTimer.IsEnabled)
+        {
+            _sidebarHoverExpandTimer.Start();
+        }
     }
 
     private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
@@ -6523,8 +6542,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
+            _sidebarHoverExpandTimer?.Stop();
             SetSidebarExpanded(false);
         }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void SidebarHoverExpandTimer_Tick(object? sender, EventArgs e)
+    {
+        _sidebarHoverExpandTimer?.Stop();
+        if (!_isSidebarExpanded &&
+            (LeftPanelBorder?.IsMouseOver == true || SidebarSplitter?.IsMouseOver == true))
+        {
+            SetSidebarExpanded(true);
+        }
     }
 
     private void CompactSidebarTab_Click(object sender, RoutedEventArgs e)
@@ -6559,6 +6589,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void SetSidebarExpanded(bool isExpanded)
     {
+        _sidebarHoverExpandTimer?.Stop();
         // If FCM needs attention, force the sidebar to stay unfolded/expanded
         bool isFcmConfigured = TrackingService.IsFcmConfigured();
         bool needsFcmLogin = !isFcmConfigured ||
