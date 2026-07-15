@@ -262,7 +262,7 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsDownloadingUpdate
     {
         get => _isDownloadingUpdate;
-        set { _isDownloadingUpdate = value; OnPropertyChanged(); }
+        set { _isDownloadingUpdate = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanControlUpdateDownload)); }
     }
 
     private double _updateDownloadProgress;
@@ -447,6 +447,29 @@ public class MainViewModel : INotifyPropertyChanged
             UpdateServerWipe();
         }
     }
+
+    private string _updateStatusText = "Check for updates";
+    public string UpdateStatusText
+    {
+        get => _updateStatusText;
+        set { _updateStatusText = value; OnPropertyChanged(); }
+    }
+
+    private bool _isUpdateStatusExpanded;
+    public bool IsUpdateStatusExpanded
+    {
+        get => _isUpdateStatusExpanded;
+        set { _isUpdateStatusExpanded = value; OnPropertyChanged(); }
+    }
+
+    private bool _isUpdateProcessing;
+    public bool IsUpdateProcessing
+    {
+        get => _isUpdateProcessing;
+        set { _isUpdateProcessing = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanControlUpdateDownload)); }
+    }
+
+    public bool CanControlUpdateDownload => IsDownloadingUpdate && !IsUpdateProcessing;
 
     private void SelectedProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

@@ -518,8 +518,6 @@ public partial class MainWindow : WpfUi.FluentWindow
                 LogicEnginePanel?.RefreshListBindings();
                 RefreshCurrentHotkeyBindings();
             }
-            if (e.PropertyName == nameof(MainViewModel.IsDownloadingUpdate) && !_vm.IsDownloadingUpdate)
-                UpdateDownloadPopup.IsOpen = false;
         };
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
@@ -6138,6 +6136,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     _vm.IsUpdateAvailable = true;
                     _vm.UpdateTag = tag;
+                    _vm.UpdateStatusText = $"Update {tag} available";
+                    _vm.IsUpdateStatusExpanded = true;
                     AppendLog($"Ã¢Å“Â¨ Update found: {tag}");
                     ShowUpdateSnackbar(tag, dlUrl);
                 });
@@ -6883,17 +6883,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             _vm.IsDownloadingUpdate = true;
             _vm.IsDownloadPaused = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.IsUpdateStatusExpanded = true;
+            _vm.UpdateStatusText = $"Downloading {tag}";
             _vm.PauseResumeButtonText = "Pause";
             _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
 
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading update ... {r.Percentage}";
-                _vm.UpdateDownloadProgress = r.Progress * 100;
-                _vm.UpdateDownloadSpeed = r.Speed;
-                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
-                _vm.UpdateDownloadPercentage = r.Percentage;
-                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+                ApplyUpdateDownloadReport(r);
             });
 
             var path = await _updateService.DownloadInstallerAsync(dlUrl, prog);
@@ -6902,11 +6900,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsDownloadingUpdate = true;
                 _vm.IsDownloadPaused = true;
+                _vm.UpdateStatusText = "Update download paused";
                 _vm.PauseResumeButtonText = "Resume";
                 return;
             }
 
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
 
             if (path == null)
             {
@@ -6915,11 +6915,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             _updateService.PendingInstallerPath = path;
+            _vm.IsUpdateAvailable = false;
+            _vm.UpdateStatusText = $"Update {tag} ready — installs on close";
+            _vm.IsUpdateStatusExpanded = true;
             ShowInfoSnackbar("Update Downloaded", "The update will be installed automatically when you close the app.", WpfUi.ControlAppearance.Success);
         }
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.UpdateStatusText = "Update download failed";
+            _vm.IsUpdateStatusExpanded = true;
             AppendLog("❌ Update download failed: " + ex.Message);
             ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
         }
@@ -6928,16 +6934,22 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_listenerStarting || _vm.IsDownloadingUpdate) return;
         if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
         {
+            _vm.UpdateStatusText = "Update ready — installs on close";
+            _vm.IsUpdateStatusExpanded = true;
             ShowInfoSnackbar("Update", "Update already downloaded. It will be installed when you close the app.", WpfUi.ControlAppearance.Info);
             return;
         }
 
         try
         {
+            _vm.UpdateStatusText = "Checking for updates...";
+            _vm.IsUpdateStatusExpanded = true;
             var curr = _updateService.VersionForCompare;
             var latestInfo = await _updateService.GetLatestReleaseAsync();
             if (latestInfo is null)
             {
+                _vm.UpdateStatusText = "Could not check for updates";
+                _vm.IsUpdateStatusExpanded = true;
                 System.Windows.MessageBox.Show(
                     "Could not query latest release. Please try again or open Releases page.",
                     "Update", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -6959,12 +6971,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!updateAvailable)
             {
                 _vm.IsUpdateAvailable = false;
+                _vm.UpdateStatusText = "You are up to date";
+                _vm.IsUpdateStatusExpanded = false;
                 System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _vm.IsUpdateAvailable = true;
             _vm.UpdateTag = tag;
+            _vm.UpdateStatusText = $"Update {tag} available";
+            _vm.IsUpdateStatusExpanded = true;
 
             var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
 
@@ -6989,17 +7005,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             _vm.IsDownloadingUpdate = true;
             _vm.IsDownloadPaused = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.IsUpdateStatusExpanded = true;
+            _vm.UpdateStatusText = $"Downloading {tag}";
             _vm.PauseResumeButtonText = "Pause";
             _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
 
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading update ... {r.Percentage}";
-                _vm.UpdateDownloadProgress = r.Progress * 100;
-                _vm.UpdateDownloadSpeed = r.Speed;
-                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
-                _vm.UpdateDownloadPercentage = r.Percentage;
-                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+                ApplyUpdateDownloadReport(r);
             });
             var path = await _updateService.DownloadInstallerAsync(dlUrl!, prog);
 
@@ -7007,11 +7021,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsDownloadingUpdate = true;
                 _vm.IsDownloadPaused = true;
+                _vm.UpdateStatusText = "Update download paused";
                 _vm.PauseResumeButtonText = "Resume";
                 return;
             }
 
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
 
             if (path == null)
             {
@@ -7020,6 +7036,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             AppendLog("Applying update...");
+            _vm.UpdateStatusText = "Applying update...";
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
@@ -7029,56 +7046,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.UpdateStatusText = "Update check failed";
+            _vm.IsUpdateStatusExpanded = true;
             AppendLog("❌ Update check failed: " + ex.Message);
             System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-    }    private System.Windows.Threading.DispatcherTimer? _popupCloseTimer;
+    }
     private string? _lastDownloadUrl;
     private string? _lastDownloadTag;
 
-    private void BtnCheckUpdates_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    private void ApplyUpdateDownloadReport(DownloadReport report)
     {
-        if (_vm.IsDownloadingUpdate)
-        {
-            _popupCloseTimer?.Stop();
-            UpdateDownloadPopup.IsOpen = true;
-        }
-    }
-
-    private void BtnCheckUpdates_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        StartPopupCloseTimer();
-    }
-
-    private void UpdateDownloadPopup_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        _popupCloseTimer?.Stop();
-    }
-
-    private void UpdateDownloadPopup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        StartPopupCloseTimer();
-    }
-
-    private void StartPopupCloseTimer()
-    {
-        if (_popupCloseTimer == null)
-        {
-            _popupCloseTimer = new System.Windows.Threading.DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(500)
-            };
-            _popupCloseTimer.Tick += (s, ev) =>
-            {
-                _popupCloseTimer.Stop();
-                if (!BtnCheckUpdates.IsMouseOver && !UpdateDownloadPopup.IsMouseOver)
-                {
-                    UpdateDownloadPopup.IsOpen = false;
-                }
-            };
-        }
-        _popupCloseTimer.Stop();
-        _popupCloseTimer.Start();
+        _vm.BusyText = report.IsIndeterminate ? report.Status : $"{report.Status} {report.Percentage}";
+        _vm.UpdateStatusText = report.Status;
+        _vm.IsUpdateProcessing = report.IsIndeterminate;
+        _vm.UpdateDownloadProgress = report.Progress * 100;
+        _vm.UpdateDownloadSpeed = report.Speed;
+        _vm.UpdateDownloadSize = $"{report.BytesReceived} / {report.TotalBytes}";
+        _vm.UpdateDownloadPercentage = report.Percentage;
+        _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
     }
 
     public void PauseResumeDownload_Click(object sender, RoutedEventArgs e)
@@ -7087,6 +7074,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _updateService.ResumeDownload();
             _vm.IsDownloadPaused = false;
+            _vm.UpdateStatusText = "Resuming update download...";
             _vm.PauseResumeButtonText = "Pause";
             if (!string.IsNullOrEmpty(_lastDownloadUrl))
             {
@@ -7097,6 +7085,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _updateService.PauseDownload();
             _vm.IsDownloadPaused = true;
+            _vm.UpdateStatusText = "Update download paused";
             _vm.PauseResumeButtonText = "Resume";
         }
     }
@@ -7106,6 +7095,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _updateService.CancelDownload();
         _vm.IsDownloadingUpdate = false;
         _vm.IsDownloadPaused = false;
+        _vm.IsUpdateProcessing = false;
+        _vm.UpdateStatusText = "Update download cancelled";
+        _vm.IsUpdateStatusExpanded = false;
         _vm.UpdateDownloadProgress = 0;
         _vm.UpdateDownloadPercentage = "0%";
         _vm.UpdateDownloadSpeed = "";
