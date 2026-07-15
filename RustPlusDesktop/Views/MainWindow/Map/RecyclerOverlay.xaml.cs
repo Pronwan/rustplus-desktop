@@ -29,40 +29,14 @@ namespace RustPlusDesk.Views
 
         public RecyclerOverlay()
         {
-            try
-            {
-                InitializeComponent();
-                InputsControl.ItemsSource = Items;
-                OutputsControl.ItemsSource = Outputs;
+            InitializeComponent();
+            InputsControl.ItemsSource = Items;
+            OutputsControl.ItemsSource = Outputs;
 
-                LoadItems();
+            LoadItems();
 
-                Loaded += RecyclerOverlay_Loaded;
-                MainWindow.IconsUpdated += OnIconsUpdated;
-
-                Unloaded += (s, e) => {
-                    MainWindow.IconsUpdated -= OnIconsUpdated;
-                };
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    string diagDir = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Diagnostics");
-                    Directory.CreateDirectory(diagDir);
-                    File.WriteAllText(Path.Combine(diagDir, "recycler-crash.txt"), ex.ToString());
-                }
-                catch { }
-                throw;
-            }
-        }
-
-        private void RecyclerOverlay_Loaded(object sender, RoutedEventArgs e)
-        {
-            LogDiag($"[RecyclerOverlay] Loaded Event Fired.");
-            LogDiag($"[RecyclerOverlay] InputsControl Items Count = {InputsControl.Items.Count}, OutputsControl Items Count = {OutputsControl.Items.Count}");
-            LogDiag($"[RecyclerOverlay] InputsControl Visibility = {InputsControl.Visibility}, Width = {InputsControl.ActualWidth}, Height = {InputsControl.ActualHeight}");
-            LogDiag($"[RecyclerOverlay] Items collection Count = {Items.Count}, Outputs collection Count = {Outputs.Count}");
+            MainWindow.IconsUpdated += OnIconsUpdated;
+            Unloaded += (s, e) => MainWindow.IconsUpdated -= OnIconsUpdated;
         }
 
         // Pretty display names for output resources
@@ -100,21 +74,6 @@ namespace RustPlusDesk.Views
             ["targeting.computer"]= "Targeting Computer",
             ["fuse"]              = "Fuse",
         };
-
-        private void LogDiag(string message)
-        {
-            try
-            {
-                var mainWin = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
-                mainWin?.AppendLog(message);
-                
-                string diagDir = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Diagnostics");
-                string logPath = Path.Combine(diagDir, "recycler-log.txt");
-                Directory.CreateDirectory(diagDir);
-                File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {message}{Environment.NewLine}");
-            }
-            catch { }
-        }
 
         private void OnIconsUpdated()
         {
@@ -210,11 +169,8 @@ namespace RustPlusDesk.Views
 
         private void LoadItems()
         {
-            LogDiag("[RecyclerOverlay] Loading recycling calculator database...");
-
             string jsonContent = "";
             bool loaded = false;
-            string sourcePath = "";
 
             var baseDir = AppContext.BaseDirectory;
             var currDir = Directory.GetCurrentDirectory();
@@ -235,21 +191,15 @@ namespace RustPlusDesk.Views
             {
                 if (path != null)
                 {
-                    LogDiag($"[RecyclerOverlay] Checking file path: {path}");
                     if (File.Exists(path))
                     {
                         try
                         {
                             jsonContent = File.ReadAllText(path, System.Text.Encoding.UTF8);
                             loaded = true;
-                            sourcePath = path;
-                            LogDiag($"[RecyclerOverlay] Loaded database from disk: {path}");
                             break;
                         }
-                        catch (Exception ex)
-                        {
-                            LogDiag($"[RecyclerOverlay] Error reading file: {ex.Message}");
-                        }
+                        catch { }
                     }
                 }
             }
@@ -271,7 +221,6 @@ namespace RustPlusDesk.Views
 
                 foreach (var uri in packUris)
                 {
-                    LogDiag($"[RecyclerOverlay] Checking Pack URI: {uri}");
                     try
                     {
                         var sri = Application.GetResourceStream(new Uri(uri));
@@ -280,8 +229,6 @@ namespace RustPlusDesk.Views
                             using var r = new StreamReader(sri.Stream);
                             jsonContent = r.ReadToEnd();
                             loaded = true;
-                            sourcePath = uri;
-                            LogDiag($"[RecyclerOverlay] Loaded database from resource: {uri}");
                             break;
                         }
                     }
@@ -297,7 +244,6 @@ namespace RustPlusDesk.Views
                 string entryName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? "RustPlusDesk";
                 var asm = System.Reflection.Assembly.GetExecutingAssembly();
                 var resName = $"{entryName}.Assets.Data.recycler-items.json";
-                LogDiag($"[RecyclerOverlay] Checking embedded resource: {resName}");
                 try
                 {
                     using var stream = asm.GetManifestResourceStream(resName);
@@ -306,14 +252,9 @@ namespace RustPlusDesk.Views
                         using var r = new StreamReader(stream);
                         jsonContent = r.ReadToEnd();
                         loaded = true;
-                        sourcePath = resName;
-                        LogDiag($"[RecyclerOverlay] Loaded database from embedded resource: {resName}");
                     }
                 }
-                catch (Exception ex)
-                {
-                    LogDiag($"[RecyclerOverlay] Embedded resource failed: {ex.Message}");
-                }
+                catch { }
             }
 
             if (loaded && !string.IsNullOrEmpty(jsonContent))
@@ -324,7 +265,6 @@ namespace RustPlusDesk.Views
                     var parsedItems = JsonSerializer.Deserialize<List<RecyclerItemData>>(jsonContent, options);
                     if (parsedItems != null)
                     {
-                        LogDiag($"[RecyclerOverlay] Successfully deserialized {parsedItems.Count} total items.");
                         var list = new List<RecyclerItemViewModel>();
                         foreach (var item in parsedItems)
                         {
@@ -347,7 +287,6 @@ namespace RustPlusDesk.Views
                         }
 
                         list = list.OrderBy(x => x.DisplayName).ToList();
-                        LogDiag($"[RecyclerOverlay] Filtered to {list.Count} recyclable components.");
 
                         _allRecyclerItems = list;
                         LoadStackSizes(list);
@@ -367,20 +306,8 @@ namespace RustPlusDesk.Views
                         }
                         CategoryComboBox.SelectedIndex = 0; // Triggers FilterItems()
                     }
-                    else
-                    {
-                        LogDiag("[RecyclerOverlay] Deserialized item list is null.");
-                    }
                 }
-                catch (Exception ex)
-                {
-                    LogDiag($"[RecyclerOverlay] JSON Deserialization failed: {ex.Message}");
-                    System.Diagnostics.Debug.WriteLine($"Failed to load recycler items: {ex.Message}");
-                }
-            }
-            else
-            {
-                LogDiag("[RecyclerOverlay] Failed to load json content from any source.");
+                catch { }
             }
         }
 
@@ -435,13 +362,9 @@ namespace RustPlusDesk.Views
                             }
                         }
                     }
-                    LogDiag($"[RecyclerOverlay] Successfully loaded stack sizes from Recycling-Data.json.");
                 }
             }
-            catch (Exception ex)
-            {
-                LogDiag($"[RecyclerOverlay] Failed to load stack sizes: {ex.Message}");
-            }
+            catch { }
         }
 
         private void CalculateYields()
