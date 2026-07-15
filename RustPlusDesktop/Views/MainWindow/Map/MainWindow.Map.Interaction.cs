@@ -8,7 +8,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    private const double MAP_DEFAULT_ZOOM = 1.0;
+    private const double MAP_DEFAULT_ZOOM = 1.18;
     private const double MAP_FOCUS_ZOOM   = 6.0;
  
     private Point _panLastHost;
