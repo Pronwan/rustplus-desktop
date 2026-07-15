@@ -4955,6 +4955,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
         if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; _vm.Selected.DiscordWebhookChatAlertsEnabled = val; }
+        TrackingService.HotkeyTriggerChatAlertsEnabled = val;
+        if (HotkeyTriggersMenuItem != null)
+        {
+            string serverKey = CurrentServerKey();
+            foreach (var item in HotkeyTriggersMenuItem.Items.OfType<MenuItem>())
+            {
+                if (item.Tag is not long entityId) continue;
+                item.IsChecked = val;
+                TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, val);
+            }
+        }
     }
 
     private bool CheckIfAllOff()
@@ -5050,12 +5061,49 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
         PopulateHotkeyTriggersSubMenu();
+        UpdateAlertEnabledBadge(masterOn);
 
-        SyncContextMenu(ChatAnnounce.ContextMenu, masterOn);
         if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
         {
             SyncContextMenu(cm, masterOn);
         }
+    }
+
+    private void UpdateAlertEnabledBadge(bool? masterEnabled = null)
+    {
+        bool masterOn = masterEnabled ?? TrackingService.AnnounceSpawnsMaster;
+        int enabledCount = new[]
+        {
+            TrackingService.AnnounceCargo,
+            TrackingService.AnnounceCargoDocking,
+            TrackingService.AnnounceCargoEgress,
+            TrackingService.AnnounceCargoArrival,
+            TrackingService.AnnounceHeli,
+            TrackingService.AnnounceChinook,
+            TrackingService.AnnounceVendor,
+            TrackingService.AnnounceOilRig,
+            TrackingService.AnnounceDeepSea,
+            TrackingService.AnnouncePlayerOnline,
+            TrackingService.AnnouncePlayerOffline,
+            TrackingService.AnnouncePlayerAfk,
+            TrackingService.AnnouncePlayerDeathSelf,
+            TrackingService.AnnouncePlayerDeathTeam,
+            TrackingService.AnnouncePlayerRespawnSelf,
+            TrackingService.AnnouncePlayerRespawnTeam,
+            TrackingService.AnnounceTracking,
+            TrackingService.AnnounceNewShops,
+            TrackingService.AnnounceSuspiciousShops,
+            TrackingService.AnnounceSmartAlerts,
+            TrackingService.AnnounceTradeAlerts,
+            _vm.Selected?.AlertCustomTimer == true,
+            _vm.Selected?.DiscordWebhookChatAlertsEnabled == true
+        }.Count(enabled => enabled);
+        if (TrackingService.HotkeyTriggerChatAlertsEnabled)
+            enabledCount += HotkeyTriggersMenuItem.Items.OfType<MenuItem>().Count(item => item.Tag is long && item.IsChecked);
+
+        AlertEnabledBadge.Visibility = masterOn && enabledCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        AlertEnabledDot.Visibility = masterOn && enabledCount == 0 ? Visibility.Visible : Visibility.Collapsed;
+        AlertEnabledCountText.Text = enabledCount > 99 ? "99+" : enabledCount.ToString(CultureInfo.InvariantCulture);
     }
 
     private void SyncContextMenu(ContextMenu menu, bool masterOn)
@@ -5234,11 +5282,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (uniqueDevices.Count == 0)
         {
-            HotkeyTriggersMenuItem.Header = "Hotkey Triggers (0)";
+            UpdateHotkeyTriggersMenuIndicator();
             return;
         }
 
-        HotkeyTriggersMenuItem.Header = "Hotkey Triggers";
+        var masterToggle = new MenuItem
+        {
+            Header = "Hotkey alerts enabled",
+            IsCheckable = true,
+            IsChecked = TrackingService.HotkeyTriggerChatAlertsEnabled,
+            StaysOpenOnClick = true,
+            Style = (Style)FindResource("DarkMenuItem")
+        };
+        masterToggle.Click += HotkeyTriggersMaster_Click;
+        HotkeyTriggersMenuItem.Items.Add(masterToggle);
+        HotkeyTriggersMenuItem.Items.Add(new Separator { Margin = new Thickness(8, 4, 8, 4) });
 
         foreach (var (gesture, entityId, dev) in uniqueDevices)
         {
@@ -5258,6 +5316,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             mi.Click += HotkeyTriggerSubItem_Click;
             HotkeyTriggersMenuItem.Items.Add(mi);
         }
+        UpdateHotkeyTriggersMenuIndicator();
+    }
+
+    private void HotkeyTriggersMaster_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem masterToggle) return;
+        TrackingService.HotkeyTriggerChatAlertsEnabled = masterToggle.IsChecked;
+        UpdateHotkeyTriggersMenuIndicator();
+        UpdateAlertEnabledBadge();
+    }
+
+    private void UpdateHotkeyTriggersMenuIndicator()
+    {
+        int selectedCount = HotkeyTriggersMenuItem.Items.OfType<MenuItem>().Count(item => item.Tag is long && item.IsChecked);
+        bool enabled = TrackingService.HotkeyTriggerChatAlertsEnabled && HotkeyTriggersMenuItem.IsEnabled;
+        HotkeyTriggersEnabledDot.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        HotkeyTriggersCountBadge.Visibility = selectedCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        HotkeyTriggersCountBadge.Background = enabled ? new SolidColorBrush(Color.FromRgb(0x45, 0xE3, 0x9A)) : new SolidColorBrush(Color.FromRgb(0x43, 0x49, 0x52));
+        HotkeyTriggersCountText.Foreground = enabled ? new SolidColorBrush(Color.FromRgb(0x07, 0x17, 0x11)) : new SolidColorBrush(Color.FromRgb(0xC0, 0xC6, 0xCF));
+        HotkeyTriggersCountText.Text = selectedCount > 99 ? "99+" : selectedCount.ToString(CultureInfo.InvariantCulture);
     }
 
     private void HotkeyTriggerSubItem_Click(object sender, RoutedEventArgs e)
@@ -5266,6 +5344,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             string serverKey = CurrentServerKey();
             TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, mi.IsChecked);
+            UpdateHotkeyTriggersMenuIndicator();
+            UpdateAlertEnabledBadge();
         }
     }
 
@@ -7502,7 +7582,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // Send chat alerts for devices that had it enabled
             foreach (var (dev, desired, _) in toggleWork)
             {
-                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                if (TrackingService.HotkeyTriggerChatAlertsEnabled && TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
@@ -7520,7 +7600,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 await HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
 
                 // Send chat alert if enabled for this device
-                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                if (TrackingService.HotkeyTriggerChatAlertsEnabled && TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());

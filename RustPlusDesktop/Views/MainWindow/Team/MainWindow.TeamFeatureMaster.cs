@@ -402,7 +402,7 @@ public partial class MainWindow
         if (ChatAnnounce != null)
         {
             ChatAnnounce.IsEnabled = !blocked;
-            ChatAnnounce.ToolTip = blocked ? message : FindResource("RightClickConfigure");
+            ChatAnnounce.ToolTip = blocked ? message : FindResource("Alerts");
         }
 
         if (ChatAlertsConfigureButton != null)
