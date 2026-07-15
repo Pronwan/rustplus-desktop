@@ -21,9 +21,8 @@ public partial class CloudAccountWindow : Window
     private void RefreshAccountData()
     {
         var user = SupabaseAuthManager.Client?.Auth?.CurrentUser;
-        var identities = user?.Identities;
-        bool hasDiscord = identities?.Any(identity => string.Equals(identity.Provider, "discord", StringComparison.OrdinalIgnoreCase)) == true;
-        bool hasEmail = identities?.Any(identity => string.Equals(identity.Provider, "email", StringComparison.OrdinalIgnoreCase)) == true;
+        bool hasDiscord = SupabaseAuthManager.HasAuthProvider("discord");
+        bool hasEmail = SupabaseAuthManager.HasAuthProvider("email");
         string tier = FriendlyTier(SupabaseAuthManager.CurrentTier);
 
         TxtPlanBadge.Text = SupabaseAuthManager.IsPremium ? $"{tier} · Premium" : $"{tier} · Free";
@@ -99,7 +98,7 @@ public partial class CloudAccountWindow : Window
         var (success, error) = await SupabaseAuthManager.AddEmailLoginAsync(TxtLinkEmail.Text.Trim(), PwdLinkEmail.Password);
         PwdLinkEmail.Clear();
         SetBusy(false, success
-            ? "Email login added. Check your inbox if Supabase asks you to confirm the address."
+            ? error ?? "Email login added. Check your inbox if Supabase asks you to confirm the address."
             : error ?? "Could not add email login.");
         if (success) RefreshAccountData();
     }
