@@ -71,6 +71,7 @@ namespace RustPlusDesk.Views
         public void UpdateRustMapsUi()
         {
             var profile = _vm.Selected;
+            UpdateMapViewSelector();
             if (profile == null)
             {
                 RustMapsOverlay.Visibility = Visibility.Collapsed;
@@ -111,18 +112,11 @@ namespace RustPlusDesk.Views
             bool hasLocal3DMapContext = profile.IsFullConnected || isPlaceholder;
             if (!hasLocal3DMapContext)
             {
-                Map3DAuthPopup.IsOpen = false;
+                HideMap3DAuthPopup();
                 HeatmapAvailabilityPopup.IsOpen = false;
             }
-            BtnOpen3DMap.Visibility = hasLocal3DMapContext ? Visibility.Visible : Visibility.Collapsed;
-            BtnOpen3DMap.IsEnabled = isAuthenticated && hasLocal3DMapContext && !_isMap3DPreparing;
-            BtnOpen3DMapAuthGate.Visibility = hasLocal3DMapContext && !isAuthenticated
-                ? Visibility.Visible
-                : Visibility.Collapsed;
             if (isAuthenticated)
-                Map3DAuthPopup.IsOpen = false;
-            TxtOpen3DMap.Text = _isMap3DPreparing ? "Preparing..." : _isMap3DActive ? "2D Map" : "3D Map";
-            IconOpen3DMap.Symbol = _isMap3DActive ? Wpf.Ui.Controls.SymbolRegular.Map20 : Wpf.Ui.Controls.SymbolRegular.Cube20;
+                HideMap3DAuthPopup();
 
             string folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
             bool mapDataExists = System.IO.File.Exists(System.IO.Path.Combine(folderPath, "map_data.json"));
@@ -375,10 +369,7 @@ namespace RustPlusDesk.Views
         private async void BtnOpen3DMap_Click(object sender, RoutedEventArgs e)
         {
             if (_isMap3DActive)
-            {
-                CloseMap3DView();
                 return;
-            }
 
             var profile = _vm.Selected;
             bool isPlaceholder = profile != null && !string.IsNullOrEmpty(profile.LocalMapFilePath);
@@ -391,6 +382,7 @@ namespace RustPlusDesk.Views
             if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated)
             {
                 AppendLog("[3D Map] Account or Discord login required before local 3D map import.");
+                ShowMap3DAuthPopup();
                 return;
             }
 
@@ -408,6 +400,9 @@ namespace RustPlusDesk.Views
                     Map3DConsentService.RememberConsent();
                 }
             }
+
+            if (_miniMap?.IsVisible == true)
+                _miniMap.Close();
 
             _isMap3DPreparing = true;
             UpdateRustMapsUi();
@@ -458,19 +453,64 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void BtnOpen3DMapAuthGate_Click(object sender, RoutedEventArgs e)
+        private void BtnView2D_Click(object sender, RoutedEventArgs e)
+        {
+            if (_miniMap?.IsVisible == true)
+                _miniMap.Close();
+
+            if (_isMap3DActive)
+                CloseMap3DView();
+            else
+                UpdateMapViewSelector();
+        }
+
+        private void BtnOpen3DMap_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            bool isAuthenticated = SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated;
+            if (!isAuthenticated && BtnOpen3DMap.IsEnabled)
+                ShowMap3DAuthPopup();
+        }
+
+        private void BtnOpen3DMap_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            HideMap3DAuthPopup();
+        }
+
+        private void ShowMap3DAuthPopup()
         {
             Map3DAuthPopup.IsOpen = true;
         }
 
-        private void BtnOpen3DMapAuthGate_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            Map3DAuthPopup.IsOpen = true;
-        }
-
-        private void BtnOpen3DMapAuthGate_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void HideMap3DAuthPopup()
         {
             Map3DAuthPopup.IsOpen = false;
+        }
+
+        private void UpdateMapViewSelector()
+        {
+            if (BtnView2D == null || BtnOpen3DMap == null || BtnMiniMap == null || BtnFitMap == null) return;
+
+            bool miniActive = _miniMap?.IsVisible == true;
+            SetMapViewButtonState(BtnView2D, !_isMap3DActive && !miniActive);
+            SetMapViewButtonState(BtnOpen3DMap, _isMap3DActive);
+            SetMapViewButtonState(BtnMiniMap, miniActive);
+            var profile = _vm.Selected;
+            BtnOpen3DMap.IsEnabled = profile != null
+                && (profile.IsFullConnected || !string.IsNullOrEmpty(profile.LocalMapFilePath))
+                && !_isMap3DPreparing;
+            BtnFitMap.IsEnabled = !_isMap3DActive;
+            BtnOpen3DMap.Content = _isMap3DPreparing ? "..." : "3D";
+        }
+
+        private static void SetMapViewButtonState(System.Windows.Controls.Control button, bool active)
+        {
+            button.Background = active
+                ? new SolidColorBrush(Color.FromRgb(0x2B, 0x62, 0x78))
+                : Brushes.Transparent;
+            button.BorderBrush = active
+                ? new SolidColorBrush(Color.FromArgb(0x55, 0x7F, 0xA5, 0xB5))
+                : Brushes.Transparent;
+            button.Foreground = active ? Brushes.White : new SolidColorBrush(Color.FromRgb(0xB8, 0xC0, 0xCC));
         }
 
         private void BtnToggleHeatmapGate_Click(object sender, RoutedEventArgs e)

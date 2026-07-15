@@ -4081,23 +4081,110 @@
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                            <ui:Button
+                            <Border
+                                Height="32"
                                 Margin="8,0,0,0"
-                                Click="BtnResetMap_Click"
-                                ToolTip="{DynamicResource ResetMapToolTip}">
+                                Padding="2"
+                                VerticalAlignment="Center"
+                                Background="#16191E"
+                                BorderBrush="#3AFFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="8">
                                 <StackPanel Orientation="Horizontal">
-                                    <ui:SymbolIcon Symbol="ArrowCounterclockwise20" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ResetMap}" />
+                                    <StackPanel.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Height" Value="26" />
+                                            <Setter Property="Padding" Value="6,3" />
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <Setter Property="Foreground" Value="#B8C0CC" />
+                                            <Setter Property="FontSize" Value="11" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                            <Setter Property="Cursor" Value="Hand" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border
+                                                            x:Name="Segment"
+                                                            Padding="{TemplateBinding Padding}"
+                                                            Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="5"
+                                                            SnapsToDevicePixels="True">
+                                                            <ContentPresenter
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                RecognizesAccessKey="True" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="Segment" Property="Opacity" Value="0.88" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="Segment" Property="Opacity" Value="0.68" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter Property="Foreground" Value="#68717D" />
+                                                                <Setter TargetName="Segment" Property="Opacity" Value="0.6" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <Button
+                                        x:Name="BtnView2D"
+                                        Width="38"
+                                        Click="BtnView2D_Click"
+                                        ToolTip="Show the 2D map"
+                                        AutomationProperties.Name="Show 2D map"
+                                        Background="#2B6278"
+                                        BorderBrush="#557FA5B5"
+                                        Foreground="White"
+                                        Content="2D" />
+                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
+                                    <Button
+                                        x:Name="BtnOpen3DMap"
+                                        Width="38"
+                                        Click="BtnOpen3DMap_Click"
+                                        MouseEnter="BtnOpen3DMap_MouseEnter"
+                                        MouseLeave="BtnOpen3DMap_MouseLeave"
+                                        AutomationProperties.Name="Show local 3D map"
+                                        Content="3D" />
+                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
+                                    <Button
+                                        x:Name="BtnMiniMap"
+                                        Width="46"
+                                        Click="BtnToggleMiniMap_Click"
+                                        ToolTip="Toggle mini map"
+                                        AutomationProperties.Name="Toggle mini map"
+                                        Content="Mini" />
                                 </StackPanel>
-                            </ui:Button>
+                            </Border>
                             <ui:Button
-                                x:Name="BtnMiniMap"
+                                x:Name="BtnFitMap"
+                                Width="32"
+                                Height="32"
                                 Margin="4,0,0,0"
-                                Click="BtnToggleMiniMap_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <ui:SymbolIcon Symbol="Map20" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource MiniMap}" />
-                                </StackPanel>
+                                Padding="6"
+                                CornerRadius="6"
+                                Click="BtnResetMap_Click"
+                                ToolTip="Fit map to view"
+                                AutomationProperties.Name="Fit map to view">
+                                <Path
+                                    Width="16"
+                                    Height="16"
+                                    Data="M9,3 L3,3 L3,9 M15,3 L21,3 L21,9 M21,15 L21,21 L15,21 M9,21 L3,21 L3,15"
+                                    Fill="Transparent"
+                                    Stroke="White"
+                                    StrokeEndLineCap="Round"
+                                    StrokeLineJoin="Round"
+                                    StrokeStartLineCap="Round"
+                                    StrokeThickness="1.8"
+                                    Stretch="Uniform" />
                             </ui:Button>
 
                             <ui:Button
@@ -4108,7 +4195,8 @@
                                 ToolTip="{DynamicResource CrosshairToolTip}"
                                 Padding="6"
                                 Width="32"
-                                Height="32">
+                                Height="32"
+                                CornerRadius="6">
                                 <Path
                                     Width="16"
                                     Height="16"
@@ -4327,6 +4415,7 @@
                                 Height="32"
                                 Margin="4,0,0,0"
                                 Padding="6"
+                                CornerRadius="6"
                                 Click="BtnToggleOverlayTools_Click"
                                 ToolTip="{DynamicResource DrawOverlay}">
                                 <ui:SymbolIcon Symbol="Edit24" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -4338,6 +4427,7 @@
                                 Height="32"
                                 Margin="4,0,0,0"
                                 Padding="2"
+                                CornerRadius="6"
                                 Click="BtnOpenRecycler_Click"
                                 ToolTip="Recycling Calculator">
                                 <Path
@@ -4906,51 +4996,13 @@
                                                 <TextBlock Text="Send to Discord" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </ui:Button>
-                                        <Grid Margin="0,2,0,0">
-                                            <ui:Button
-                                                x:Name="BtnOpen3DMap"
-                                                Padding="6,4"
-                                                Appearance="Transparent"
-                                                BorderThickness="0"
-                                                Click="BtnOpen3DMap_Click"
-                                                AutomationProperties.Name="Build and open local 3D map"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                Visibility="Collapsed">
-                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <ui:SymbolIcon x:Name="IconOpen3DMap" Symbol="Cube20" FontSize="14" Foreground="#FF8C00" Margin="0,0,6,0" />
-                                                    <TextBlock x:Name="TxtOpen3DMap" Text="3D Map" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
-                                                </StackPanel>
-                                            </ui:Button>
-
-                                            <!-- Disabled controls cannot receive hover/click, so this transparent button explains the auth requirement. -->
-                                            <Button
-                                                x:Name="BtnOpen3DMapAuthGate"
-                                                Background="Transparent"
-                                                BorderBrush="Transparent"
-                                                BorderThickness="0"
-                                                Click="BtnOpen3DMapAuthGate_Click"
-                                                MouseEnter="BtnOpen3DMapAuthGate_MouseEnter"
-                                                MouseLeave="BtnOpen3DMapAuthGate_MouseLeave"
-                                                AutomationProperties.Name="3D maps unavailable. Log in to generate 3D maps and heatmaps"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
-                                                Visibility="Collapsed">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border Background="Transparent" />
-                                                    </ControlTemplate>
-                                                </Button.Template>
-                                            </Button>
-                                        </Grid>
-
                                         <Popup
                                             x:Name="Map3DAuthPopup"
                                             AllowsTransparency="True"
                                             PopupAnimation="Fade"
                                             IsOpen="False"
-                                            Placement="Right"
-                                            PlacementTarget="{Binding ElementName=BtnOpen3DMapAuthGate}"
+                                            Placement="Bottom"
+                                            PlacementTarget="{Binding ElementName=BtnOpen3DMap}"
                                             StaysOpen="True"
                                             IsHitTestVisible="False">
                                             <ui:Card Margin="8,0,0,0" Padding="12,10" Background="#F20E1117" BorderBrush="#55FF8C00" BorderThickness="1" MaxWidth="280" IsHitTestVisible="False">
