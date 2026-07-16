@@ -67,37 +67,28 @@ namespace RustPlusDesk.Services.Data
                         && (data.Icons?.Count   ?? 0) == 0
                         && (data.Texts?.Count   ?? 0) == 0;
 
-            // Wipe protection: never upload empty overlay unless it was intentional (trash button)
-            if (isEmpty && !explicitWipe)
-            {
-                return false;
-            }
-
             var icons = data.Icons ?? new List<SavedIcon>();
-            var baseIcons = icons.Where(icon =>
-                icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png")
-            ).ToList();
+            var baseIcons = icons.Where(icon => IsBaseIconPath(icon.IconPath)).ToList();
 
-            var nonBaseIcons = icons.Where(icon =>
-                !(icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
-            ).ToList();
+            var nonBaseIcons = icons.Where(icon => !IsBaseIconPath(icon.IconPath)).ToList();
 
             // Client-side validations before uploading
             int baseCount = baseIcons.Count;
             int maxBases = Auth.SupabaseAuthManager.GetMaxBases();
             int maxScreenshots = Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
             bool baseLimitHit = baseCount > maxBases;
-            if (!baseLimitHit)
+            bool screenshotLimitHit = baseIcons.Any(icon => (icon.Screenshots?.Count ?? 0) > maxScreenshots);
+            var baseIconsForSync = baseIcons.Take(maxBases).Select(icon => new SavedIcon
             {
-                foreach (var icon in baseIcons)
-                {
-                    if (icon.Screenshots != null && icon.Screenshots.Count > maxScreenshots)
-                    {
-                        baseLimitHit = true;
-                        break;
-                    }
-                }
-            }
+                IconPath = icon.IconPath,
+                X = icon.X,
+                Y = icon.Y,
+                Width = icon.Width,
+                Height = icon.Height,
+                Label = icon.Label,
+                Note = icon.Note,
+                Screenshots = icon.Screenshots?.Take(maxScreenshots).ToList()
+            }).ToList();
 
             var overlayOnlyData = new OverlaySaveData
             {
@@ -126,9 +117,9 @@ namespace RustPlusDesk.Services.Data
             {
                 AppendLog($"[overlay/cloud] Map overlay size ({uncompressedSize / 1024} KB) exceeds limit ({maxBytes / 1024} KB) for {Auth.SupabaseAuthManager.CurrentTier} tier. Omitting from upload.");
             }
-            if (baseLimitHit)
+            if (baseLimitHit || screenshotLimitHit)
             {
-                AppendLog($"[overlay/cloud] Base markers count ({baseCount}/{maxBases}) or screenshot limit exceeded for {Auth.SupabaseAuthManager.CurrentTier} tier. Omitting from upload.");
+                AppendLog($"[overlay/cloud] Base data exceeds the {Auth.SupabaseAuthManager.CurrentTier} tier limit; syncing {baseIconsForSync.Count}/{baseCount} bases with up to {maxScreenshots} screenshots each.");
             }
             if (deviceLimitHit)
             {
@@ -145,7 +136,8 @@ namespace RustPlusDesk.Services.Data
 
                 bool hasUpdates = false;
 
-                if (!overlayLimitHit)
+                // Wipe protection applies only to drawings; an empty base list must still sync deletions.
+                if (!overlayLimitHit && (!isEmpty || explicitWipe))
                 {
                     payload["map_overlay"] = new
                     {
@@ -155,15 +147,12 @@ namespace RustPlusDesk.Services.Data
                     hasUpdates = true;
                 }
 
-                if (!baseLimitHit)
+                var baseJson = JsonSerializer.Serialize(baseIconsForSync, new JsonSerializerOptions { WriteIndented = false });
+                payload["base_markers"] = new
                 {
-                    var baseJson = JsonSerializer.Serialize(baseIcons, new JsonSerializerOptions { WriteIndented = false });
-                    payload["base_markers"] = new
-                    {
-                        marker_data = baseJson
-                    };
-                    hasUpdates = true;
-                }
+                    marker_data = baseJson
+                };
+                hasUpdates = true;
 
                 if (!deviceLimitHit && dtoList.Count > 0)
                 {
@@ -203,9 +192,7 @@ namespace RustPlusDesk.Services.Data
                 Points = s.Points.Select(p => new { X = p.X, Y = p.Y }).ToList()
             }).ToList();
 
-            var nonBaseIcons = data.Icons.Where(icon =>
-                !(icon.IconPath.Contains("base1.png") || icon.IconPath.Contains("base2.png"))
-            ).ToList();
+            var nonBaseIcons = data.Icons.Where(icon => !IsBaseIconPath(icon.IconPath)).ToList();
 
             var tempObj = new
             {
@@ -219,6 +206,10 @@ namespace RustPlusDesk.Services.Data
             var json = JsonSerializer.Serialize(tempObj, new JsonSerializerOptions { WriteIndented = false });
             return Encoding.UTF8.GetByteCount(json);
         }
+
+        public static bool IsBaseIconPath(string? path) =>
+            path?.Contains("base1.png", StringComparison.OrdinalIgnoreCase) == true ||
+            path?.Contains("base2.png", StringComparison.OrdinalIgnoreCase) == true;
 
         /// <summary>
         /// Fetches overlay + devices from Supabase. Works with anon key (no Discord login required).

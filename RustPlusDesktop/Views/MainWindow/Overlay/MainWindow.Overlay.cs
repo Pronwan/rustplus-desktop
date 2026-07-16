@@ -1266,22 +1266,10 @@ private bool _overlayToolsVisible = false;
 
     public int GetCurrentBaseCount()
     {
-        int baseCount = 0;
-        foreach (var child in Overlay.Children)
-        {
-            if (child is Image img && img.Source is BitmapImage bi)
-            {
-                string path = bi.UriSource?.ToString() ?? "";
-                if (path.Contains("base1.png") || path.Contains("base2.png"))
-                {
-                    if (img.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
-                    {
-                        baseCount++;
-                    }
-                }
-            }
-        }
-        return baseCount;
+        return Overlay.Children.OfType<FrameworkElement>().Count(child =>
+            child.Tag is OverlayTag meta &&
+            meta.OwnerSteamId == _mySteamId &&
+            OverlayDataModule.IsBaseIconPath(meta.CustomIconPath));
     }
 
     private bool IsBaseLimitExceeded()
@@ -1292,20 +1280,15 @@ private bool _overlayToolsVisible = false;
     private bool IsScreenshotLimitExceeded()
     {
         int maxScreenshots = Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
-        foreach (var child in Overlay.Children)
+        foreach (var child in Overlay.Children.OfType<FrameworkElement>())
         {
-            if (child is Image img && img.Source is BitmapImage bi)
+            if (child.Tag is OverlayTag meta &&
+                meta.OwnerSteamId == _mySteamId &&
+                OverlayDataModule.IsBaseIconPath(meta.CustomIconPath))
             {
-                string path = bi.UriSource?.ToString() ?? "";
-                if (path.Contains("base1.png") || path.Contains("base2.png"))
+                if (meta.Screenshots != null && meta.Screenshots.Count > maxScreenshots)
                 {
-                    if (img.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
-                    {
-                        if (meta.Screenshots != null && meta.Screenshots.Count > maxScreenshots)
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
         }
@@ -1649,20 +1632,6 @@ private bool _overlayToolsVisible = false;
             if (!_ownCloudRestoreReady)
             {
                 AppendLog("[overlay/cloud] Upload skipped until cloud restore is complete.");
-                return;
-            }
-
-            if (IsBaseLimitExceeded())
-            {
-                AppendLog("[overlay/cloud] Upload skipped: base count limit reached.");
-                UpdateCloudSyncUI();
-                return;
-            }
-
-            if (IsScreenshotLimitExceeded())
-            {
-                AppendLog("[overlay/cloud] Upload skipped: screenshot limit per base exceeded.");
-                UpdateCloudSyncUI();
                 return;
             }
 
