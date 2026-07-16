@@ -170,6 +170,17 @@ namespace RustPlusDesk.Services.Auth
             return 1;
         }
 
+        private static void ApplyProfileTier(string? tier, bool isManualSupporter, DateTime? premiumUntil)
+        {
+            var profileTier = tier ?? "free";
+            IsPremium = premiumUntil.HasValue
+                ? premiumUntil.Value.ToUniversalTime() > DateTime.UtcNow
+                : isManualSupporter || (profileTier != "free" && !string.Equals(profileTier, "guest", StringComparison.OrdinalIgnoreCase));
+            CurrentTier = IsPremium && string.Equals(profileTier, "free", StringComparison.OrdinalIgnoreCase)
+                ? "supporter"
+                : profileTier;
+        }
+
         /// <summary>True when the current account has the requested sign-in provider linked.</summary>
         public static bool HasAuthProvider(string provider)
         {
@@ -415,6 +426,8 @@ namespace RustPlusDesk.Services.Auth
                             }
                             await TouchProfileAsync(steamId, discordId);
                         }
+
+                        await FetchTierLimitsAsync(forceRefresh: true);
                     }
                 }
                 catch (Exception ex)
@@ -874,8 +887,7 @@ namespace RustPlusDesk.Services.Auth
 
             if (existingProfile != null)
             {
-                CurrentTier = existingProfile.SubscriptionTier ?? "free";
-                IsPremium = existingProfile.IsManualSupporter || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
+                ApplyProfileTier(existingProfile.SubscriptionTier, existingProfile.IsManualSupporter, existingProfile.PremiumUntil);
                 AppendLog($"[Cloud/Debug] Found existing profile. Tier: {CurrentTier} (IsPremium: {IsPremium})");
                 await FetchTierLimitsAsync(forceRefresh: true);
                 await TouchProfileAsync(steamId, discordId);
@@ -911,9 +923,12 @@ namespace RustPlusDesk.Services.Auth
 
                     if (hasRow)
                     {
-                        CurrentTier = row.TryGetProperty("subscription_tier", out var tierEl) ? tierEl.GetString() ?? "free" : "free";
+                        var profileTier = row.TryGetProperty("subscription_tier", out var tierEl) ? tierEl.GetString() : "free";
                         var isManual = row.TryGetProperty("is_manual_supporter", out var manualEl) && manualEl.GetBoolean();
-                        IsPremium = isManual || (CurrentTier != "free" && !string.Equals(CurrentTier, "guest", StringComparison.OrdinalIgnoreCase));
+                        DateTime? premiumUntil = row.TryGetProperty("premium_until", out var premiumEl) && premiumEl.ValueKind == JsonValueKind.String && DateTime.TryParse(premiumEl.GetString(), out var parsedPremiumUntil)
+                            ? parsedPremiumUntil
+                            : null;
+                        ApplyProfileTier(profileTier, isManual, premiumUntil);
                         AppendLog($"[Cloud] Claimed guest profile — linked to Discord/Email. Tier: {CurrentTier} (IsPremium: {IsPremium})");
                         await FetchTierLimitsAsync(forceRefresh: true);
                         await TouchProfileAsync(steamId, discordId);
