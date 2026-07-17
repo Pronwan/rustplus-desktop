@@ -1327,6 +1327,27 @@
                                 </ui:Button.Style>
                             </ui:Button>
                             <ui:Button
+                                x:Name="BtnDeviceAutomation"
+                                Width="36"
+                                Height="36"
+                                Margin="0,0,8,0"
+                                Padding="4"
+                                Appearance="Secondary"
+                                Click="BtnDeviceAutomation_Click"
+                                Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                ToolTip="Device Automation">
+                                <ui:Button.Style>
+                                    <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.IsDeviceAutomationActive}" Value="True">
+                                                <Setter Property="BorderBrush" Value="#22c55e"/>
+                                                <Setter Property="Background" Value="#1922c55e"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:Button.Style>
+                            </ui:Button>
+                            <ui:Button
                                 x:Name="BtnDeviceRefresh"
                                 Width="36"
                                 Height="36"
@@ -3326,6 +3347,11 @@
                     <!--  Logic Engine Overlay  -->
                     <views:LogicEngineOverlay
                         x:Name="LogicEnginePanel"
+                        Visibility="Collapsed" />
+
+                    <!--  Device Automation Overlay  -->
+                    <views:DeviceAutomationOverlay
+                        x:Name="DeviceAutomationPanel"
                         Visibility="Collapsed" />
                 </Grid>
             </Border>

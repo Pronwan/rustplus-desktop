@@ -281,7 +281,11 @@ public partial class MainWindow
     private async void TeamTimer_Tick(object? sender, EventArgs e)
     {
         if (System.Threading.Interlocked.Exchange(ref _teamPollBusy, 1) == 1) return;
-        try { await LoadTeamAsync(); }
+        try
+        {
+            await LoadTeamAsync();
+            await EvaluateDeviceAutomationAsync();
+        }
         finally { System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0); }
         CenterMiniMapOnPlayer();
     }

@@ -25,6 +25,28 @@ public class SmartDevice : INotifyPropertyChanged
 
     public DateTime LastPolledAt { get; set; } = DateTime.MinValue;
 
+    private double? _pairedX;
+    public double? PairedX
+    {
+        get => _pairedX;
+        set { if (_pairedX != value) { _pairedX = value; OnProp(); OnProp(nameof(AutomationDisplayName)); } }
+    }
+
+    private double? _pairedY;
+    public double? PairedY
+    {
+        get => _pairedY;
+        set { if (_pairedY != value) { _pairedY = value; OnProp(); OnProp(nameof(AutomationDisplayName)); } }
+    }
+
+    public ulong? PairedBySteamId { get; set; }
+    public DateTime? PairedLocationCapturedAt { get; set; }
+
+    [JsonIgnore]
+    public string AutomationDisplayName => PairedX.HasValue && PairedY.HasValue
+        ? $"{DisplayName}  ({PairedX:0}, {PairedY:0})"
+        : $"{DisplayName}  (location unavailable)";
+
     private System.Collections.ObjectModel.ObservableCollection<SmartDevice> _children = new();
     public System.Collections.ObjectModel.ObservableCollection<SmartDevice> Children
     {
@@ -109,14 +131,14 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Name
     {
         get => _name;
-        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private string? _kind;
     public string? Kind
     {
         get => _kind;
-        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private bool? _isOn;
@@ -189,7 +211,7 @@ public class SmartDevice : INotifyPropertyChanged
     public bool IsMissing
     {
         get => _isMissing;
-        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private bool _isToggleBusy;
@@ -204,7 +226,7 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Alias
     {
         get => _alias;
-        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private bool _popupEnabled = true;
