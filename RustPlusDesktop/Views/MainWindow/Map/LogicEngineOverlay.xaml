@@ -186,6 +186,8 @@
                                             <ComboBoxItem Content="Smart Alarm" Tag="SmartAlarm"/>
                                             <ComboBoxItem Content="Smart Switch" Tag="SmartSwitch"/>
                                             <ComboBoxItem Content="Chat Command" Tag="ChatCommand"/>
+                                            <ComboBoxItem Content="Rule Triggered" Tag="RuleTriggered"/>
+                                            <ComboBoxItem Content="Rule Completed" Tag="RuleCompleted"/>
                                          </ComboBox>
 
                                          <!-- Trigger Details -->
@@ -236,6 +238,26 @@
                                                  </Style>
                                              </ui:TextBox.Style>
                                          </ui:TextBox>
+
+                                         <ComboBox Width="200" Margin="0,0,8,4"
+                                                   ItemsSource="{Binding DataContext.Selected.LogicRules, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   SelectedValue="{Binding TriggerRuleId, Mode=TwoWay}"
+                                                   SelectedValuePath="Id" DisplayMemberPath="Name"
+                                                   ToolTip="Select the source rule for this trigger.">
+                                             <ComboBox.Style>
+                                                 <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                                     <Setter Property="Visibility" Value="Collapsed" />
+                                                     <Style.Triggers>
+                                                         <DataTrigger Binding="{Binding TriggerType}" Value="RuleTriggered">
+                                                             <Setter Property="Visibility" Value="Visible" />
+                                                         </DataTrigger>
+                                                         <DataTrigger Binding="{Binding TriggerType}" Value="RuleCompleted">
+                                                             <Setter Property="Visibility" Value="Visible" />
+                                                         </DataTrigger>
+                                                     </Style.Triggers>
+                                                 </Style>
+                                             </ComboBox.Style>
+                                         </ComboBox>
  
                                          <!-- State / Value for Switch -->
                                          <ComboBox SelectedValue="{Binding TriggerState, Mode=TwoWay}" SelectedValuePath="Tag" Width="110" Margin="0,0,8,4" x:Name="CmbTriggerStateSwitch">
@@ -279,6 +301,28 @@
                                                  </ComboBoxItem.Tag>
                                              </ComboBoxItem>
                                          </ComboBox>
+                                     </WrapPanel>
+
+                                     <WrapPanel Margin="0,0,0,8" VerticalAlignment="Center">
+                                         <CheckBox Content="Loop after completion"
+                                                   IsChecked="{Binding IsLoopEnabled, Mode=TwoWay}"
+                                                   Margin="0,0,10,0"
+                                                   VerticalAlignment="Center"
+                                                   ToolTip="Run this rule again after it completes. A positive Wait step is required."/>
+                                         <StackPanel Orientation="Horizontal">
+                                             <StackPanel.Style>
+                                                 <Style TargetType="StackPanel">
+                                                     <Setter Property="Visibility" Value="Collapsed"/>
+                                                     <Style.Triggers>
+                                                         <DataTrigger Binding="{Binding IsLoopEnabled}" Value="True">
+                                                             <Setter Property="Visibility" Value="Visible"/>
+                                                         </DataTrigger>
+                                                     </Style.Triggers>
+                                                 </Style>
+                                             </StackPanel.Style>
+                                             <ui:TextBox Text="{Binding LoopCount, Mode=TwoWay}" Width="60" PlaceholderText="Count"/>
+                                             <TextBlock Text=" repeats (0 = indefinitely)" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}"/>
+                                         </StackPanel>
                                      </WrapPanel>
  
                                      <!-- Gating Condition -->
