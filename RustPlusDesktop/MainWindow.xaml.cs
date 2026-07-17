@@ -521,6 +521,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 SwitchCameraSourceTo(_vm.Selected);
                 LogicEnginePanel?.RefreshListBindings();
+                DeviceAutomationPanel?.RefreshListBindings();
                 RefreshCurrentHotkeyBindings();
             }
         };
@@ -3786,6 +3787,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     _vm.Selected = prof;
 
                 _vm.Save();
+                _ = CapturePairedDeviceLocationAsync(prof, dev, keySteam);
             }
 
 
@@ -6929,6 +6931,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         else
         {
             LogicEnginePanel.Visibility = Visibility.Collapsed;
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             AppSettingsPanel.LoadSettings();
@@ -6958,8 +6961,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppSettingsPanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
             LogicEnginePanel.Visibility = Visibility.Visible;
         }
+    }
+
+    private void BtnDeviceAutomation_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeviceAutomationPanel.Visibility == Visibility.Visible)
+        {
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            _vm.Save();
+            return;
+        }
+
+        AppSettingsPanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        DeviceAutomationPanel.RefreshListBindings();
+        DeviceAutomationPanel.Visibility = Visibility.Visible;
     }
 
     private void BtnLanguageSettings_Click(object sender, RoutedEventArgs e)
@@ -7009,6 +7030,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (LogicEnginePanel != null)
         {
             LogicEnginePanel.ParentWindow = this;
+        }
+        if (DeviceAutomationPanel != null)
+        {
+            DeviceAutomationPanel.ParentWindow = this;
         }
     }
 

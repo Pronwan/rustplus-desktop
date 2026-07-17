@@ -876,6 +876,12 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             return;
         }
 
+        if (_deviceAutomationRunningAction)
+        {
+            AppendLog("[DeviceAutomation] Manual toggle blocked while an automation action is running.");
+            return;
+        }
+
         if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
         if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) return;
 

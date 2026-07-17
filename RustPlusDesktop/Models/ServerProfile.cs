@@ -516,6 +516,20 @@ public class ServerProfile : INotifyPropertyChanged
         set { if (_isLogicEngineActive != value) { _isLogicEngineActive = value; OnProp(); } }
     }
 
+    private List<DeviceAutomationRule> _deviceAutomationRules = new();
+    public List<DeviceAutomationRule> DeviceAutomationRules
+    {
+        get => _deviceAutomationRules;
+        set { _deviceAutomationRules = value ?? new(); OnProp(); }
+    }
+
+    private bool _isDeviceAutomationActive;
+    public bool IsDeviceAutomationActive
+    {
+        get => _isDeviceAutomationActive;
+        set { if (_isDeviceAutomationActive != value) { _isDeviceAutomationActive = value; OnProp(); } }
+    }
+
     private List<ulong> _subscribedTeammateSteamIds = new();
     public List<ulong> SubscribedTeammateSteamIds
     {
