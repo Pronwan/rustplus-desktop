@@ -2525,6 +2525,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
             ? _vm.SteamId64
             : alarmProfile?.SteamId64 ?? "";
+        string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
+        string alarmAlert = AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName);
+
+        _ = SendDiscordWebhookAsync(alarmProfile, alarmAlert);
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             raidServerKey,
             raidOwnerSteamId,
@@ -2535,8 +2539,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             && TrackingService.AnnounceSmartAlerts
             && _announceSpawns)
         {
-            string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
-            _ = SendTeamChatSafeAsync(AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName), false, true);
+            _ = SendTeamChatSafeAsync(alarmAlert, false, true, skipBasicWebhook: true);
         }
 
         if (dev != null)

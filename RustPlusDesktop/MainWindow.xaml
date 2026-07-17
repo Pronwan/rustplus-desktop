@@ -3439,7 +3439,7 @@
                                                     <ComboBox
                                                         x:Name="CmbLayerMonumentStyle"
                                                         Grid.Column="1"
-                                                        Height="30"
+                                                        Height="34"
                                                         SelectionChanged="CmbLayerMonumentStyle_SelectionChanged">
                                                         <ComboBoxItem Content="Icons" />
                                                         <ComboBoxItem Content="Names" />
