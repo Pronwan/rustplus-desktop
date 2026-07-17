@@ -98,6 +98,44 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void TriggerLogicEngineOnRuleCompleted(string completedRuleId)
+        {
+            if (!IsLogicEngineActiveAndWaiting) return;
+
+            var rules = _vm?.Selected?.LogicRules;
+            if (rules == null) return;
+
+            foreach (var rule in rules.Where(r => r.IsEnabled
+                && r.TriggerType == "RuleCompleted"
+                && r.TriggerRuleId == completedRuleId).ToList())
+            {
+                if (EvaluateTriggerCondition(rule))
+                    _ = EnqueueRuleExecutionAsync(rule);
+            }
+        }
+
+        private void TriggerLogicEngineOnRuleTriggered(LogicRule triggeredRule)
+        {
+            if (!IsLogicEngineActiveAndWaiting) return;
+
+            var rules = _vm?.Selected?.LogicRules;
+            if (rules == null) return;
+
+            foreach (var rule in rules.Where(r => r.IsEnabled
+                && r.TriggerType == "RuleTriggered"
+                && r.TriggerRuleId == triggeredRule.Id).ToList())
+            {
+                if (rule.Id == triggeredRule.Id)
+                {
+                    AppendLog($"[LogicEngine] Rule '{rule.Name}' cannot trigger itself on start; use Loop after completion.");
+                    continue;
+                }
+
+                if (EvaluateTriggerCondition(rule))
+                    _ = EnqueueRuleExecutionAsync(rule);
+            }
+        }
+
         private bool EvaluateTriggerCondition(LogicRule rule)
         {
             if (rule.ConditionOperator == "NONE" || rule.ConditionOperator == null)
@@ -132,19 +170,23 @@ namespace RustPlusDesk.Views
             return true;
         }
 
-        private async Task EnqueueRuleExecutionAsync(LogicRule rule)
+        private async Task EnqueueRuleExecutionAsync(LogicRule rule, int? remainingLoopCount = null)
         {
             var runtime = LogicEngineRuntimeService.Instance;
             AppendLog($"[LogicEngine] Rule '{rule.Name}' triggered. Enqueuing...");
-
-            // Track the rule in the pending queue so the UI can show what is waiting
-            runtime.PendingRules.Add(rule.Name);
-
-            // Wait to execute sequentially
-            await _logicEngineSemaphore.WaitAsync();
+            bool lockTaken = false;
+            bool pending = false;
             try
             {
-                runtime.PendingRules.Remove(rule.Name);
+                await Dispatcher.InvokeAsync(() => runtime.PendingRules.Add(rule.Name));
+                pending = true;
+
+                // Wait to execute sequentially
+                await _logicEngineSemaphore.WaitAsync();
+                lockTaken = true;
+
+                await Dispatcher.InvokeAsync(() => runtime.PendingRules.Remove(rule.Name));
+                pending = false;
 
                 if (_chatFeaturesBlockedByMaster && rule.TriggerType == "ChatCommand")
                 {
@@ -158,10 +200,23 @@ namespace RustPlusDesk.Views
                 runtime.CurrentRuleName = rule.Name;
                 runtime.CurrentStepNumber = 0;
                 runtime.CurrentStepType = null;
+                TriggerLogicEngineOnRuleTriggered(rule);
 
                 try
                 {
                     await RunRuleStepsAsync(rule, cts.Token);
+                    if (rule.IsLoopEnabled)
+                    {
+                        if (rule.Steps.Any(step => step.StepType == "Wait" && step.WaitSeconds > 0))
+                        {
+                            int remaining = remainingLoopCount ?? (rule.LoopCount == 0 ? -1 : rule.LoopCount);
+                            if (remaining != 0)
+                                _ = EnqueueRuleExecutionAsync(rule, remaining < 0 ? -1 : remaining - 1);
+                        }
+                        else
+                            AppendLog($"[LogicEngine] Rule '{rule.Name}' loop skipped: add a Wait step greater than 0 seconds.");
+                    }
+                    TriggerLogicEngineOnRuleCompleted(rule.Id);
                 }
                 finally
                 {
@@ -183,7 +238,10 @@ namespace RustPlusDesk.Views
             }
             finally
             {
-                _logicEngineSemaphore.Release();
+                if (pending)
+                    await Dispatcher.InvokeAsync(() => runtime.PendingRules.Remove(rule.Name));
+                if (lockTaken)
+                    _logicEngineSemaphore.Release();
             }
         }
 

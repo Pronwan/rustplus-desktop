@@ -56,6 +56,20 @@ namespace RustPlusDesk.Models
             set { _isEnabled = value; OnProp(); }
         }
 
+        private bool _isLoopEnabled;
+        public bool IsLoopEnabled
+        {
+            get => _isLoopEnabled;
+            set { _isLoopEnabled = value; OnProp(); }
+        }
+
+        private int _loopCount = 1;
+        public int LoopCount
+        {
+            get => _loopCount;
+            set { _loopCount = Math.Max(0, value); OnProp(); }
+        }
+
         private bool _isExpanded = false;
         public bool IsExpanded
         {
@@ -70,7 +84,7 @@ namespace RustPlusDesk.Models
             set { _isConfirmingDelete = value; OnProp(); }
         }
 
-        private string _triggerType = "SmartAlarm"; // SmartAlarm, SmartSwitch, ChatCommand
+        private string _triggerType = "SmartAlarm"; // SmartAlarm, SmartSwitch, ChatCommand, RuleTriggered, RuleCompleted
         public string TriggerType
         {
             get => _triggerType;
@@ -89,6 +103,13 @@ namespace RustPlusDesk.Models
         {
             get => _triggerCommand;
             set { _triggerCommand = value; OnProp(); }
+        }
+
+        private string _triggerRuleId = "";
+        public string TriggerRuleId
+        {
+            get => _triggerRuleId;
+            set { _triggerRuleId = value; OnProp(); }
         }
 
         private bool _triggerState = true;
