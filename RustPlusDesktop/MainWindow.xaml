@@ -2959,6 +2959,16 @@
                             </TabItem.Header>
                             <views:NotificationsTabContent x:Name="NotificationsTabControl" />
                         </TabItem>
+
+                        <TabItem x:Name="RaidCalculatorTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Calculator24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Raid Calculator" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid />
+                        </TabItem>
                     </TabControl>
 
                     </DockPanel>
@@ -3046,12 +3056,22 @@
                             <ui:Button
                                 Width="44"
                                 Height="40"
+                                Margin="0,0,0,8"
                                 Padding="0"
                                 Appearance="Secondary"
                                 Click="CompactSidebarTab_Click"
                                 Icon="{ui:SymbolIcon Symbol=Alert24}"
                                 Tag="4"
                                 ToolTip="{DynamicResource NotificationsTab}" />
+                            <ui:Button
+                                Width="44"
+                                Height="40"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="CompactSidebarTab_Click"
+                                Icon="{ui:SymbolIcon Symbol=Calculator24}"
+                                Tag="5"
+                                ToolTip="Raid Calculator" />
                         </StackPanel>
                     </Grid>
 
@@ -7124,6 +7144,17 @@
                     </StackPanel>
                 </Border>
             </Grid>
+
+            <!--  Delete Confirmation Overlay  -->
+            <Border
+                x:Name="RaidCalculatorPanel"
+                Grid.ColumnSpan="3"
+                Padding="12"
+                Background="{DynamicResource AppBg}"
+                Panel.ZIndex="9000"
+                Visibility="Collapsed">
+                <views:RaidCalculatorView CloseRequested="RaidCalculator_CloseRequested" />
+            </Border>
 
             <!--  Delete Confirmation Overlay  -->
             <Grid

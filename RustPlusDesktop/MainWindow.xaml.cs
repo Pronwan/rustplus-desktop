@@ -2667,13 +2667,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private int _lastNonRaidTabIndex;
+
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.Source == MainTabs && MainTabs.SelectedItem == NotificationsTab)
+        if (e.Source != MainTabs) return;
+
+        bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
+        RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
+        if (!raidSelected)
+            _lastNonRaidTabIndex = MainTabs.SelectedIndex;
+
+        if (MainTabs.SelectedItem == NotificationsTab)
         {
             NotificationCenterService.MarkAllAsRead();
         }
     }
+
+    private void RaidCalculator_CloseRequested(object sender, RoutedEventArgs e) =>
+        MainTabs.SelectedIndex = Math.Clamp(_lastNonRaidTabIndex, 0, MainTabs.Items.Count - 2);
 
     private void HandleOfflineDeath(OfflineDeathNotification d)
     {
@@ -4481,6 +4493,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
             rusthelpUrl = ii2.IconUrl;
 
+        return ResolveRustHelpIcon(rusthelpUrl, decodePx);
+    }
+
+    public static System.Windows.Media.ImageSource? ResolveRustHelpIcon(string? rusthelpUrl, int decodePx = 32)
+    {
         // Primär-URL (rusthelp optimized to 40px)
         string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
             ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=40&q=90"
