@@ -97,7 +97,7 @@ public partial class MainWindow
     
     private readonly HashSet<string> _recentAutomatedMessages = new();
 
-    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null)
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null, bool skipBasicWebhook = false)
     {
         if (skipDiscordChatForwarding)
         {
@@ -109,25 +109,9 @@ public partial class MainWindow
         if (!bypassChatAlertMasterBlock && !CanSendAutomatedTeamChat()) return;
 
         // Discord Webhook Integration (Free Tier)
-        if (!bypassChatAlertMasterBlock && _vm?.Selected?.DiscordWebhookChatAlertsEnabled == true && _vm.IsCloudConnected && !string.IsNullOrWhiteSpace(_vm.Selected.DiscordWebhookChatAlertsUrl))
+        if (!bypassChatAlertMasterBlock && !skipBasicWebhook)
         {
-            _ = Task.Run(async () => 
-            {
-                try
-                {
-                    string serverName = _vm.Selected.Name ?? "Rust Server";
-                    string msg = discordText ?? text;
-                    var payload = new { content = $"**[{serverName}]** {msg}", tts = _vm.Selected.DiscordWebhookChatAlertsTts };
-                    var json = System.Text.Json.JsonSerializer.Serialize(payload);
-                    using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    using var client = new System.Net.Http.HttpClient();
-                    await client.PostAsync(_vm.Selected.DiscordWebhookChatAlertsUrl, content);
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"[Discord] Webhook send failed: {ex.Message}");
-                }
-            });
+            _ = SendDiscordWebhookAsync(_vm?.Selected, discordText ?? text);
         }
 
         // Thread-safe wrapper für Hintergrund-Alerts
@@ -136,6 +120,31 @@ public partial class MainWindow
             await SendTeamChatReliableAsync(text);
         }
         catch { /* ignore background errors */ }
+    }
+
+    private async Task SendDiscordWebhookAsync(ServerProfile? profile, string message)
+    {
+        if (profile?.DiscordWebhookChatAlertsEnabled != true
+            || !_vm.IsCloudConnected
+            || string.IsNullOrWhiteSpace(profile.DiscordWebhookChatAlertsUrl)) return;
+
+        try
+        {
+            var payload = new
+            {
+                content = $"**[{profile.Name ?? "Rust Server"}]** {message}",
+                tts = profile.DiscordWebhookChatAlertsTts
+            };
+            var json = JsonSerializer.Serialize(payload);
+            using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            using var client = new System.Net.Http.HttpClient();
+            using var response = await client.PostAsync(profile.DiscordWebhookChatAlertsUrl, content);
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Discord] Webhook send failed: {ex.Message}");
+        }
     }
 
     private async Task<bool> SendTeamChatReliableAsync(string text)
