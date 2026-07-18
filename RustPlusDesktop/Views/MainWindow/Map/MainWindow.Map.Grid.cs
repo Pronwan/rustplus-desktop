@@ -88,10 +88,8 @@ public partial class MainWindow
     public void RefreshGridLineThickness()
     {
         if (GridLayer == null || MapTransform == null) return;
-        double zoom = MapTransform.Matrix.M11;
-        if (zoom <= 0) zoom = 1.0;
-
-        double strokeThickness = 0.65 / zoom;
+        double physicalThickness = TrackingService.MapUseAliasedEdgeMode ? 1.0 : 0.65;
+        double strokeThickness = physicalThickness / GetEffectiveZoom();
 
         foreach (var child in GridLayer.Children)
         {
