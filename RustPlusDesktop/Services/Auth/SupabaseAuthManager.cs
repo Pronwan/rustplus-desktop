@@ -75,6 +75,12 @@ namespace RustPlusDesk.Services.Auth
         public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
         private static readonly SemaphoreSlim CloudSyncConsentLock = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim ProfileRefreshLock = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim ProfileTouchLock = new SemaphoreSlim(1, 1);
+        private static DateTime LastProfileRefreshUtc = DateTime.MinValue;
+        private static string? LastProfileRefreshIdentity;
+        private static DateTime LastProfileTouchUtc = DateTime.MinValue;
+        private static string? LastProfileTouchIdentity;
         private static string? ConfirmedCloudSyncConsentIdentity;
         private static bool CloudAccountPromptShownThisSession;
         private static bool GuestRegistrationFailedPermanently;
@@ -428,8 +434,6 @@ namespace RustPlusDesk.Services.Auth
                             }
                             await TouchProfileAsync(steamId, discordId);
                         }
-
-                        await FetchTierLimitsAsync(forceRefresh: true);
                     }
                 }
                 catch (Exception ex)
@@ -440,7 +444,7 @@ namespace RustPlusDesk.Services.Auth
                 {
                     System.Threading.Interlocked.Exchange(ref _profileUpdateBusy, 0);
                 }
-            }, null, TimeSpan.FromSeconds(290), TimeSpan.FromSeconds(290));
+            }, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         }
 
         public static async Task<bool> EnsureFreshSessionAsync()
@@ -815,11 +819,36 @@ namespace RustPlusDesk.Services.Auth
             return false;
         }
 
-        public static async Task RefreshUserProfileAsync()
+        public static async Task RefreshUserProfileAsync(bool forceRefresh = false)
+        {
+            if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return;
+
+            var identity = $"{Client?.Auth?.CurrentUser?.Id}:{TrackingService.SteamId64}";
+            await ProfileRefreshLock.WaitAsync();
+            try
+            {
+                if (!forceRefresh &&
+                    identity == LastProfileRefreshIdentity &&
+                    DateTime.UtcNow - LastProfileRefreshUtc < TimeSpan.FromMinutes(15))
+                    return;
+
+                if (await RefreshUserProfileCoreAsync())
+                {
+                    LastProfileRefreshIdentity = identity;
+                    LastProfileRefreshUtc = DateTime.UtcNow;
+                }
+            }
+            finally
+            {
+                ProfileRefreshLock.Release();
+            }
+        }
+
+        private static async Task<bool> RefreshUserProfileCoreAsync()
         {
             // Run for Discord OR Email auth (not anon/guest — they use handshake)
-            if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return;
-            if (!await EnsureFreshSessionAsync()) return;
+            if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return false;
+            if (!await EnsureFreshSessionAsync()) return false;
             string? discordId = null;
             if (Client.Auth.CurrentUser?.UserMetadata != null)
             {
@@ -834,7 +863,7 @@ namespace RustPlusDesk.Services.Auth
                     ? Client.Auth.CurrentUser.Identities[0].Id
                     : Client.Auth.CurrentUser?.Id;
             }
-            if (discordId == null) return;
+            if (discordId == null) return false;
 
             string? steamId = null;
             if (Application.Current != null)
@@ -862,7 +891,7 @@ namespace RustPlusDesk.Services.Auth
             if (string.IsNullOrEmpty(steamId) || steamId == "0")
             {
                 AppendLog("[Cloud/Debug] No valid SteamID64 available yet to sync user profile.");
-                return;
+                return false;
             }
 
             // ── Step 1: GET /user-profile ──
@@ -889,11 +918,12 @@ namespace RustPlusDesk.Services.Auth
 
             if (existingProfile != null)
             {
+                var previousTier = CurrentTier;
                 ApplyProfileTier(existingProfile.SubscriptionTier, existingProfile.IsManualSupporter, existingProfile.PremiumUntil);
                 AppendLog($"[Cloud/Debug] Found existing profile. Tier: {CurrentTier} (IsPremium: {IsPremium})");
-                await FetchTierLimitsAsync(forceRefresh: true);
+                await FetchTierLimitsAsync(forceRefresh: TierLimits.Count == 0 || !string.Equals(previousTier, CurrentTier, StringComparison.OrdinalIgnoreCase));
                 await TouchProfileAsync(steamId, discordId);
-                return;
+                return true;
             }
 
             // ── Step 2: Claim via secure Edge Function (user-profile/claim) ──
@@ -932,9 +962,9 @@ namespace RustPlusDesk.Services.Auth
                             : null;
                         ApplyProfileTier(profileTier, isManual, premiumUntil);
                         AppendLog($"[Cloud] Claimed guest profile — linked to Discord/Email. Tier: {CurrentTier} (IsPremium: {IsPremium})");
-                        await FetchTierLimitsAsync(forceRefresh: true);
+                        await FetchTierLimitsAsync(forceRefresh: TierLimits.Count == 0);
                         await TouchProfileAsync(steamId, discordId);
-                        return;
+                        return true;
                     }
                 }
                 AppendLog("[Cloud/Debug] claim returned empty — profile does not exist. Will create.");
@@ -963,10 +993,12 @@ namespace RustPlusDesk.Services.Auth
                 CurrentTier = "free";
                 IsPremium = false;
                 AppendLog("[Cloud] Created new user profile row in database successfully.");
+                return true;
             }
             catch (Exception insertEx)
             {
                 AppendLog($"[Cloud/Error] Failed to create new user profile: {insertEx.Message}");
+                return false;
             }
         }
 
@@ -1023,12 +1055,12 @@ namespace RustPlusDesk.Services.Auth
                     }
                     AppendLog($"[Cloud] Edge Function completed. Response: {response}");
                 }
-                await RefreshUserProfileAsync();
+                await RefreshUserProfileAsync(forceRefresh: true);
             }
             catch (Exception ex)
             {
                 AppendLog($"[Cloud/Error] Failed to sync roles via Edge Function: {ex.Message}");
-                await RefreshUserProfileAsync();
+                await RefreshUserProfileAsync(forceRefresh: true);
             }
         }
 
@@ -1474,17 +1506,30 @@ namespace RustPlusDesk.Services.Auth
         private static async Task TouchProfileAsync(string steamId, string? discordId = null)
         {
             if (Client?.Auth?.CurrentUser == null && !IsGuestAuthenticated) return;
+            await ProfileTouchLock.WaitAsync();
             try
             {
+                var identity = $"{Client?.Auth?.CurrentUser?.Id}:{steamId}";
+                var minimized = CloudTrafficPolicy.IsMinimized;
+                if (identity == LastProfileTouchIdentity &&
+                    DateTime.UtcNow - LastProfileTouchUtc < CloudTrafficPolicy.ProfileTouchInterval(minimized))
+                    return;
+
                 var payload = new
                 {
                     steam_id = steamId
                 };
                 await CallEdgeFunctionAsync("user-profile/touch", HttpMethod.Post, payload);
+                LastProfileTouchIdentity = identity;
+                LastProfileTouchUtc = DateTime.UtcNow;
             }
             catch (Exception ex)
             {
                 AppendLog($"[Cloud/Debug] Touch profile failed: {ex.Message}");
+            }
+            finally
+            {
+                ProfileTouchLock.Release();
             }
         }
 
