@@ -94,7 +94,8 @@ public class DiscordBotListenerService
             var options = new Supabase.Realtime.PostgresChanges.PostgresChangesOptions(
                 "public", 
                 "bot_commands_queue", 
-                Supabase.Realtime.PostgresChanges.PostgresChangesOptions.ListenType.Inserts);
+                Supabase.Realtime.PostgresChanges.PostgresChangesOptions.ListenType.Inserts,
+                $"guild_id=eq.{guildId}");
             channel.Register(options);
 
             // Listen to inserts in the command queue for this guild
@@ -109,7 +110,7 @@ public class DiscordBotListenerService
                         Log($"[DiscordBotListener] Record is null - make sure REPLICA IDENTITY FULL is set: ALTER TABLE public.bot_commands_queue REPLICA IDENTITY FULL;");
                         return;
                     }
-                    Log($"[DiscordBotListener] Received command: id={record.Id}, type={record.CommandType}, status={record.Status}");
+                    Log($"[DiscordBotListener] Received command: id={record.Id}, guild={record.GuildId}, type={record.CommandType}, status={record.Status}");
                     _ = ProcessIncomingCommandAsync(record);
                 }
                 catch (Exception ex)
@@ -122,6 +123,7 @@ public class DiscordBotListenerService
             _activeChannels.Add(channel);
             lock (_subscribedGuildIds) { _subscribedGuildIds.Add(guildId); }
             Log($"[DiscordBotListener] Subscribed to command queue for Guild: {guildId}");
+            await ProcessRecentPendingCommandsAsync(guildId);
         }
         catch (Exception ex)
         {
@@ -131,7 +133,11 @@ public class DiscordBotListenerService
 
     private async Task ProcessIncomingCommandAsync(BotCommandsQueueModel record)
     {
-        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+        {
+            Log($"[DiscordBotListener] Ignoring command {record.Id}: application update is required.");
+            return;
+        }
 
         try
         {
@@ -140,12 +146,20 @@ public class DiscordBotListenerService
             var commandType = record.CommandType;
             var status = record.Status;
 
-            if (status != "pending" || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(guildId)) return;
+            if (status != "pending" || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(guildId))
+            {
+                Log($"[DiscordBotListener] Ignoring invalid command: id={id}, guild={guildId}, status={status}");
+                return;
+            }
 
             // Filter locally to ensure we only process commands for guilds we are subscribed to
             lock (_subscribedGuildIds)
             {
-                if (!_subscribedGuildIds.Contains(guildId)) return;
+                if (!_subscribedGuildIds.Contains(guildId))
+                {
+                    Log($"[DiscordBotListener] Ignoring command {id}: Guild {guildId} is not active on this client.");
+                    return;
+                }
             }
 
             // Try to acquire the command lock by changing status to 'processing'
@@ -159,6 +173,7 @@ public class DiscordBotListenerService
             if (updateResponse.Models == null || updateResponse.Models.Count == 0)
             {
                 // Lock acquisition failed (another client picked it up)
+                Log($"[DiscordBotListener] Command {id} was not claimed (already handled or rejected by RLS).");
                 return;
             }
 
@@ -529,6 +544,29 @@ public class DiscordBotListenerService
         catch (Exception ex)
         {
             Log($"[DiscordBotListener] Failed to send notification: {ex.Message}");
+        }
+    }
+
+    private async Task ProcessRecentPendingCommandsAsync(string guildId)
+    {
+        try
+        {
+            var cutoff = DateTime.UtcNow.AddSeconds(-15);
+            var response = await SupabaseAuthManager.Client
+                .From<BotCommandsQueueModel>()
+                .Filter("guild_id", Operator.Equals, guildId)
+                .Filter("status", Operator.Equals, "pending")
+                .Get();
+
+            foreach (var command in response.Models.Where(x => x.CreatedAt >= cutoff))
+            {
+                Log($"[DiscordBotListener] Recovering pending command {command.Id} ({command.CommandType}).");
+                await ProcessIncomingCommandAsync(command);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"[DiscordBotListener] Failed to recover pending commands for Guild {guildId}: {ex.Message}");
         }
     }
 
