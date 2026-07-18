@@ -140,4 +140,12 @@ public sealed class RaidCalculatorTests
         Assert.AreEqual("Doors & gates", door.Category);
         Assert.IsTrue(matches.Any(item => item.TargetId == door.TargetId));
     }
+
+    [TestMethod]
+    public void LoadAsync_UnsupportedBoatTargets_RemovesTargetsAndMatrixEntries()
+    {
+        Assert.IsFalse(_data.Targets.Any(target =>
+            target.PrefabName.Contains("/building boat/", StringComparison.OrdinalIgnoreCase)));
+        RaidDataService.Validate(_data);
+    }
 }

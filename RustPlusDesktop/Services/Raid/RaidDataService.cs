@@ -19,8 +19,24 @@ public sealed class RaidDataService
         await using Stream stream = OpenDataStream();
         var data = await JsonSerializer.DeserializeAsync<RaidDataSet>(stream, JsonOptions, cancellationToken)
                    ?? throw new InvalidDataException("Raid data is empty.");
+        RemoveUnsupportedTargets(data);
         Validate(data);
         return data;
+    }
+
+    private static void RemoveUnsupportedTargets(RaidDataSet data)
+    {
+        HashSet<long> targetIds = data.Targets
+            .Where(target => target.PrefabName.Contains("/building boat/", StringComparison.OrdinalIgnoreCase))
+            .Select(target => target.TargetId)
+            .ToHashSet();
+        if (targetIds.Count == 0) return;
+
+        data.Targets.RemoveAll(target => targetIds.Contains(target.TargetId));
+        foreach (Dictionary<long, double> values in data.DamagePerHit.Values)
+            foreach (long targetId in targetIds) values.Remove(targetId);
+        foreach (Dictionary<long, int> values in data.Hits.Values)
+            foreach (long targetId in targetIds) values.Remove(targetId);
     }
 
     private static Stream OpenDataStream()
