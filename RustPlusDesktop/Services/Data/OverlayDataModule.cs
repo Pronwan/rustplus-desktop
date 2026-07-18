@@ -59,7 +59,9 @@ namespace RustPlusDesk.Services.Data
         public static async Task<bool> UploadOverlayAsync(string serverKey, ulong steamId, OverlaySaveData data, bool explicitWipe = false)
         {
             if (Auth.SupabaseAuthManager.Client == null) return false;
+            if (!TrackingService.CloudSyncEnabled || !TrackingService.UploadConsentGiven) return false;
             if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return false;
+            if (!await Auth.SupabaseAuthManager.EnsureCloudSyncConsentAsync()) return false;
 
             data.LastUpdatedUnix = DataManager.UnixNow();
 

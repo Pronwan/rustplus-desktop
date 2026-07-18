@@ -74,6 +74,8 @@ namespace RustPlusDesk.Services.Auth
         public static string DiscordProviderToken { get; private set; } = string.Empty;
         public static bool IsGuestAuthenticated { get; private set; }
         private static readonly SemaphoreSlim SessionRefreshLock = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim CloudSyncConsentLock = new SemaphoreSlim(1, 1);
+        private static string? ConfirmedCloudSyncConsentIdentity;
         private static bool CloudAccountPromptShownThisSession;
         private static bool GuestRegistrationFailedPermanently;
         // ponytail: Supabase hides password presence during OAuth sessions; use a server profile flag if cross-device detection becomes necessary.
@@ -1170,6 +1172,7 @@ namespace RustPlusDesk.Services.Auth
         {
             if (Client != null && IsAuthenticated)
             {
+                ConfirmedCloudSyncConsentIdentity = null;
                 IsGuestAuthenticated = false;
                 HandshakeService.Clear();
                 await Client.Auth.SignOut();
@@ -1177,12 +1180,27 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
-        public static async Task UpdateCloudSyncConsentAsync(bool accepted)
+        private static string? GetCloudSyncConsentIdentity()
         {
-            if (!IsAuthenticated) return;
-            if (!await EnsureFreshSessionAsync()) return;
             string steamId = TrackingService.SteamId64;
-            if (string.IsNullOrEmpty(steamId) || steamId == "0") return;
+            string? userId = Client?.Auth?.CurrentUser?.Id;
+            if (string.IsNullOrEmpty(steamId) || steamId == "0" || string.IsNullOrEmpty(userId))
+                return null;
+
+            return $"{userId}:{steamId}";
+        }
+
+        private static async Task<bool> UpdateCloudSyncConsentCoreAsync(bool accepted)
+        {
+            if (!accepted)
+                ConfirmedCloudSyncConsentIdentity = null;
+
+            if (!IsAuthenticated) return false;
+            if (!await EnsureFreshSessionAsync()) return false;
+
+            string steamId = TrackingService.SteamId64;
+            string? consentIdentity = GetCloudSyncConsentIdentity();
+            if (consentIdentity == null) return false;
 
             try
             {
@@ -1192,11 +1210,77 @@ namespace RustPlusDesk.Services.Auth
                     sync_accepted = accepted
                 };
                 await CallEdgeFunctionAsync("user-profile/consent", HttpMethod.Post, payload);
+                ConfirmedCloudSyncConsentIdentity = accepted ? consentIdentity : null;
                 AppendLog($"[Cloud] Updated database consent status to: {accepted}");
+                return true;
             }
             catch (Exception ex)
             {
+                if (accepted)
+                    ConfirmedCloudSyncConsentIdentity = null;
                 AppendLog($"[Cloud/Error] Failed to update consent status in database: {ex.Message}");
+                return false;
+            }
+        }
+
+        private static void PauseCloudSyncAfterConsentFailure()
+        {
+            // Keep UploadConsentGiven so a temporary network/auth failure does
+            // not force the user to accept the disclaimer again. Only pause
+            // uploading until they explicitly retry enabling cloud sync.
+            ConfirmedCloudSyncConsentIdentity = null;
+            TrackingService.CloudSyncEnabled = false;
+            AppendLog("[Cloud/Error] Cloud sync paused because consent could not be confirmed. Retry enabling it when the connection is available.");
+        }
+
+        public static async Task<bool> UpdateCloudSyncConsentAsync(bool accepted)
+        {
+            await CloudSyncConsentLock.WaitAsync();
+            try
+            {
+                bool updated = await UpdateCloudSyncConsentCoreAsync(accepted);
+                if (accepted && !updated)
+                    PauseCloudSyncAfterConsentFailure();
+                return updated;
+            }
+            finally
+            {
+                CloudSyncConsentLock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Confirms that cloud-sync consent has been persisted for the current
+        /// authenticated user and Steam ID before any user-owned data is uploaded.
+        /// This prevents autosync from racing the consent update and repeatedly
+        /// failing the database ownership/consent RLS policies.
+        /// </summary>
+        public static async Task<bool> EnsureCloudSyncConsentAsync()
+        {
+            if (!TrackingService.CloudSyncEnabled || !TrackingService.UploadConsentGiven)
+                return false;
+
+            await CloudSyncConsentLock.WaitAsync();
+            try
+            {
+                if (!TrackingService.CloudSyncEnabled || !TrackingService.UploadConsentGiven)
+                    return false;
+
+                string? consentIdentity = GetCloudSyncConsentIdentity();
+                if (consentIdentity != null &&
+                    string.Equals(ConfirmedCloudSyncConsentIdentity, consentIdentity, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                bool updated = await UpdateCloudSyncConsentCoreAsync(true);
+                if (!updated)
+                    PauseCloudSyncAfterConsentFailure();
+                return updated;
+            }
+            finally
+            {
+                CloudSyncConsentLock.Release();
             }
         }
 
@@ -1713,10 +1797,5 @@ namespace RustPlusDesk.Services.Auth
         public void DestroySession() => DataManager.SaveCache<Session?>(CacheKey, null);
     }
 }
-
-
-
-
-
 
 
