@@ -160,6 +160,7 @@
 	  <None Remove="Assets\icons\sewerbranch.png" />
 	  <None Remove="Assets\icons\smartalarm.png" />
 	  <None Remove="Assets\icons\smartswitch.png" />
+	  <None Remove="Assets\icons\automation.png" />
 	  <None Remove="Assets\icons\stable.png" />
 	  <None Remove="Assets\icons\stonequarry.png" />
 	  <None Remove="Assets\icons\storagemonitor.png" />
@@ -306,6 +307,7 @@
 	  <Resource Include="Assets\icons\recycler.png" />
 	  <Resource Include="Assets\icons\smartalarm.png" />
 	  <Resource Include="Assets\icons\smartswitch.png" />
+	  <Resource Include="Assets\icons\automation.png" />
 	  <Resource Include="Assets\icons\storagemonitor.png" />
 	  <Resource Include="Assets\icons\text.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

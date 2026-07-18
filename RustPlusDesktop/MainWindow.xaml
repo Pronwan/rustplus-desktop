@@ -1334,8 +1334,16 @@
                                 Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDeviceAutomation_Click"
-                                Icon="{ui:SymbolIcon Symbol=Settings24}"
                                 ToolTip="Device Automation">
+                                <ui:Button.Icon>
+                                    <ui:ImageIcon
+                                        Width="24"
+                                        Height="24"
+                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                        SnapsToDevicePixels="True"
+                                        Source="pack://application:,,,/Assets/icons/automation.png"
+                                        UseLayoutRounding="True" />
+                                </ui:Button.Icon>
                                 <ui:Button.Style>
                                     <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                         <Style.Triggers>
