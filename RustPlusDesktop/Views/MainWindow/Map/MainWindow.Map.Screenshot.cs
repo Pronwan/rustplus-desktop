@@ -147,6 +147,7 @@ public partial class MainWindow
             if (!response.IsSuccessStatusCode)
             {
                 string err = await response.Content.ReadAsStringAsync();
+                RustPlusDesk.Services.Auth.SupabaseAuthManager.HandleUpgradeRequiredResponse(err);
                 AppendLog($"[DiscordBot] Map upload failed: {err}");
                 return false;
             }
@@ -162,6 +163,7 @@ public partial class MainWindow
     private async void BtnSendMapToDiscord_Click(object sender, RoutedEventArgs e)
     {
         if (_vm?.Selected == null) return;
+        if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
         
         BtnSendMapToDiscord.IsEnabled = false;
         var oldContent = BtnSendMapToDiscord.Content;

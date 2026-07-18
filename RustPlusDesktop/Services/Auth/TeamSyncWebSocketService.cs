@@ -30,6 +30,7 @@ namespace RustPlusDesk.Services.Auth
 
         public static void Initialize()
         {
+            if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
             if (_initialized) return;
             _initialized = true;
 
@@ -46,6 +47,8 @@ namespace RustPlusDesk.Services.Auth
 
         private static async Task SubscribeToPresenceAsync()
         {
+            if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
             try
             {
                 var steamId = TrackingService.SteamId64;
@@ -144,6 +147,7 @@ namespace RustPlusDesk.Services.Auth
 
         private static async Task SubscribeToBroadcastAsync(string serverKey, string teamKey)
         {
+            if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
             if (string.IsNullOrEmpty(serverKey) || string.IsNullOrEmpty(teamKey)) return;
 
             var channelName = $"team_sync:{serverKey}:{teamKey}";
