@@ -340,9 +340,9 @@
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" Private="false" />
+    </ItemGroup>
 
   <PropertyGroup>
     <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
