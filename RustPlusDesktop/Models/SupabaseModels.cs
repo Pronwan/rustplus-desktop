@@ -431,4 +431,65 @@ namespace RustPlusDesk.Models
         [JsonPropertyName("team_key")]
         public string? TeamKey { get; set; }
     }
+
+    [Table("user_fcm_credentials")]
+    public class UserFcmCredentialsModel : BaseModel
+    {
+        [PrimaryKey("user_id")]
+        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
+        public string? UserId { get; set; }
+
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string? SteamId { get; set; }
+
+        [Column("fcm_config")]
+        [JsonProperty("fcm_config")]
+        [JsonPropertyName("fcm_config")]
+        public Newtonsoft.Json.Linq.JObject? FcmConfig { get; set; }
+
+        [Column("updated_at")]
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime? UpdatedAt { get; set; }
+    }
+
+    [Table("user_servers")]
+    public class UserServerModel : BaseModel
+    {
+        [PrimaryKey("steam_id", false)]
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string SteamId { get; set; } = string.Empty;
+
+        [Column("user_id")]
+        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
+        public string? UserId { get; set; }
+
+        [PrimaryKey("server_ip", false)]
+        [Column("server_ip")]
+        [JsonProperty("server_ip")]
+        [JsonPropertyName("server_ip")]
+        public string ServerIp { get; set; } = string.Empty;
+
+        [PrimaryKey("server_port", false)]
+        [Column("server_port")]
+        [JsonProperty("server_port")]
+        [JsonPropertyName("server_port")]
+        public int ServerPort { get; set; }
+
+        [Column("player_token")]
+        [JsonProperty("player_token")]
+        [JsonPropertyName("player_token")]
+        public string PlayerToken { get; set; } = string.Empty;
+
+        [Column("updated_at")]
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
 }

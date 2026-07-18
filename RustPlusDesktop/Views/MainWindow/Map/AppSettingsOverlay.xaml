@@ -442,6 +442,24 @@
                                    Margin="0,0,0,12" 
                                    TextWrapping="Wrap"/>
 
+                        <!-- Offline Alarms Sync -->
+                        <Expander Header="Offline Cloud Alerts (FCM)" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
+                            <StackPanel Margin="0,8,0,0">
+                                <TextBlock Text="Sync your Rust+ Connection to the cloud to receive smart Raid/Event alerts on Discord, Alexa, and Google Home even when your Desktop App is closed." TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,8" />
+                                
+                                <TextBlock Text="Discord Webhook URL (Offline Alerts)" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,2" />
+                                <TextBox x:Name="TxtDiscordWebhookUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Margin="0,0,0,8" VerticalAlignment="Center" TextChanged="TxtDiscordWebhookUrl_TextChanged"/>
+
+                                <TextBlock Text="Smart Home Webhook URL (e.g. IFTTT, Alexa, Google)" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,2" />
+                                <TextBox x:Name="TxtSmartHomeWebhookUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Margin="0,0,0,12" VerticalAlignment="Center" TextChanged="TxtSmartHomeWebhookUrl_TextChanged"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <ui:Button x:Name="BtnSyncFcm" Content="Sync Cloud Connection" Icon="{ui:SymbolIcon Symbol=CloudArrowUp24}" Click="BtnSyncFcm_Click" Margin="0,0,8,0" />
+                                    <ui:Button x:Name="BtnRevokeFcm" Content="Revoke Access" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnRevokeFcm_Click" Appearance="Secondary" Foreground="#FF5555" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
                         <Expander Header="Advanced Discord Bot Integration" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
                             <StackPanel Margin="0,8,0,0">
                                 <ui:Button x:Name="BtnInviteDiscordBot" Content="Invite Discord Bot to server" Icon="{ui:SymbolIcon Symbol=Add24}" Margin="0,0,0,8" PreviewMouseDown="PremiumFeature_PreviewMouseDown" Click="BtnInviteDiscordBot_Click" />

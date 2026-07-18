@@ -1903,7 +1903,7 @@ namespace RustPlusDesk.Services.Auth
             return "";
         }
 
-        private static void AppendLog(string msg)
+        public static void AppendLog(string msg)
         {
             if (Application.Current != null)
             {

@@ -5,10 +5,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Net.Http;
 using System.Text.Json;
 using RustPlusDesk.Services;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views
 {
@@ -98,6 +101,9 @@ namespace RustPlusDesk.Views
             ChkBackgroundTracking.IsChecked = TrackingService.IsBackgroundTrackingEnabled;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+            
+            TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
+            TxtSmartHomeWebhookUrl.Text = TrackingService.SmartHomeWebhookUrl;
 
             // Map performance settings
             CmbMapScalingMode.SelectedIndex = Math.Clamp(TrackingService.MapBitmapScalingMode, 0, 2);
@@ -612,6 +618,63 @@ namespace RustPlusDesk.Views
             e.Handled = true;
         }
 
+        private async void BtnSyncFcm_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as WpfUi.Button;
+            if (btn != null) btn.IsEnabled = false;
+
+            try
+            {
+                var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
+                if (consentDialog.ShowDialog() != true) return;
+
+                bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+                if (success)
+                {
+                    if (btn != null)
+                    {
+                        btn.Content = "Synced!";
+                        btn.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Checkmark24 };
+                        btn.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Failed to sync FCM connection. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.", "Cloud Sync Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            finally
+            {
+                if (btn != null) btn.IsEnabled = true;
+            }
+        }
+
+        private async void BtnRevokeFcm_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as WpfUi.Button;
+            if (btn != null) btn.IsEnabled = false;
+
+            try
+            {
+                bool success = await RustPlusDesk.Services.FcmSyncService.RevokeFcmCredentialsAsync();
+                if (success)
+                {
+                    BtnSyncFcm.Content = "Sync Cloud Connection";
+                    BtnSyncFcm.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.CloudArrowUp24 };
+                    BtnSyncFcm.ClearValue(WpfUi.Button.ForegroundProperty);
+                    MessageBox.Show("Cloud access has been revoked and your credentials have been deleted from the cloud.", "Access Revoked", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to revoke FCM connection.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            finally
+            {
+                if (btn != null) btn.IsEnabled = true;
+            }
+        }
+
         private void BtnInviteDiscordBot_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -977,5 +1040,16 @@ namespace RustPlusDesk.Views
         }
 
       
+        private void TxtDiscordWebhookUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            TrackingService.DiscordWebhookUrl = TxtDiscordWebhookUrl.Text;
+        }
+
+        private void TxtSmartHomeWebhookUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            TrackingService.SmartHomeWebhookUrl = TxtSmartHomeWebhookUrl.Text;
+        }
     }
 }
