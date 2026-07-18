@@ -4003,6 +4003,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.Servers.Remove(prof);
             _vm.Save();
             AppendLog($"Server deleted: {prof.Name}");
+
+            // Automatically unlink from Alexa if this server was the linked one
+            try
+            {
+                if (Services.Auth.SupabaseAuthManager.Client != null && Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser != null)
+                {
+                    var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
+                    var serverKey = $"{prof.Host}-{prof.Port}";
+                    _ = Services.Auth.SupabaseAuthManager.Client.From<Models.UserAlexaSettingsModel>()
+                        .Where(x => x.UserId == user.Id && x.ActiveServerKey == serverKey)
+                        .Delete();
+                }
+            }
+            catch { /* Ignored */ }
         }
 
         DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;

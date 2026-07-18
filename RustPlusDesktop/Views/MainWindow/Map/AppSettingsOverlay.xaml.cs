@@ -211,6 +211,12 @@ namespace RustPlusDesk.Views
             {
                 _ = LoadDiscordBotSettingsAsync();
             }
+
+            if (connected)
+            {
+                PopulateAlexaServers();
+                _ = LoadAlexaSettingsAsync();
+            }
         }
 
         private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -790,7 +796,7 @@ namespace RustPlusDesk.Views
                     existingList = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(configEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
                 }
 
-                async Task SaveChannelAsync(string type, string channelId, bool tts, bool audio)
+                async Task SaveChannelAsync(string type, string channelId, bool tts)
                 {
                     if (string.IsNullOrWhiteSpace(channelId))
                     {
@@ -813,16 +819,16 @@ namespace RustPlusDesk.Views
                         notification_type = type,
                         channel_id = channelId.Trim(),
                         tts_enabled = tts,
-                        audio_alert_enabled = audio
+                        audio_alert_enabled = false
                     };
 
                     await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/channels", HttpMethod.Post, payload);
                 }
 
-                await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, ChkRaidAudio.IsChecked == true);
-                await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, ChkEventsAudio.IsChecked == true);
-                await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, ChkChatAudio.IsChecked == true);
-                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, ChkShopAudio.IsChecked == true);
+                await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true);
+                await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true);
+                await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true);
+                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true);
 
                 MessageBox.Show("Channels configuration saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -875,13 +881,13 @@ namespace RustPlusDesk.Views
                     Dispatcher.Invoke(() =>
                     {
                         TxtChannelRaid.Text = string.Empty;
-                        ChkRaidTTS.IsChecked = ChkRaidAudio.IsChecked = false;
+                        ChkRaidTTS.IsChecked = false;
                         TxtChannelEvents.Text = string.Empty;
-                        ChkEventsTTS.IsChecked = ChkEventsAudio.IsChecked = false;
+                        ChkEventsTTS.IsChecked = false;
                         TxtChannelChat.Text = string.Empty;
-                        ChkChatTTS.IsChecked = ChkChatAudio.IsChecked = false;
+                        ChkChatTTS.IsChecked = false;
                         TxtChannelShop.Text = string.Empty;
-                        ChkShopTTS.IsChecked = ChkShopAudio.IsChecked = false;
+                        ChkShopTTS.IsChecked = false;
 
                         foreach (var ch in channelsList)
                         {
@@ -890,22 +896,18 @@ namespace RustPlusDesk.Views
                                 case "raid":
                                     TxtChannelRaid.Text = ch.ChannelId;
                                     ChkRaidTTS.IsChecked = ch.TtsEnabled;
-                                    ChkRaidAudio.IsChecked = ch.AudioAlertEnabled;
                                     break;
                                 case "events":
                                     TxtChannelEvents.Text = ch.ChannelId;
                                     ChkEventsTTS.IsChecked = ch.TtsEnabled;
-                                    ChkEventsAudio.IsChecked = ch.AudioAlertEnabled;
                                     break;
                                 case "chat":
                                     TxtChannelChat.Text = ch.ChannelId;
                                     ChkChatTTS.IsChecked = ch.TtsEnabled;
-                                    ChkChatAudio.IsChecked = ch.AudioAlertEnabled;
                                     break;
                                 case "shop":
                                     TxtChannelShop.Text = ch.ChannelId;
                                     ChkShopTTS.IsChecked = ch.TtsEnabled;
-                                    ChkShopAudio.IsChecked = ch.AudioAlertEnabled;
                                     break;
                             }
                         }
@@ -1050,6 +1052,209 @@ namespace RustPlusDesk.Views
         {
             if (!_isSettingsInitialized) return;
             TrackingService.SmartHomeWebhookUrl = TxtSmartHomeWebhookUrl.Text;
+        }
+
+        private void PopulateAlexaServers()
+        {
+            CmbAlexaServer.Items.Clear();
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Servers != null)
+            {
+                foreach (var s in vm.Servers)
+                {
+                    if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
+                    {
+                        CmbAlexaServer.Items.Add(new ComboBoxItem
+                        {
+                            Content = string.IsNullOrEmpty(s.Name) ? $"{s.Host}:{s.Port}" : $"{s.Name} ({s.Host}:{s.Port})",
+                            Tag = $"{s.Host}-{s.Port}"
+                        });
+                    }
+                }
+            }
+        }
+
+        private async Task LoadAlexaSettingsAsync()
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null) return;
+            var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
+            if (user == null) return;
+
+            try
+            {
+                var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
+                    .Where(x => x.UserId == user.Id)
+                    .Single();
+
+                if (response != null && !string.IsNullOrEmpty(response.ActiveServerKey))
+                {
+                    foreach (ComboBoxItem item in CmbAlexaServer.Items)
+                    {
+                        if (item.Tag?.ToString() == response.ActiveServerKey)
+                        {
+                            CmbAlexaServer.SelectedItem = item;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Ignored, might not exist yet
+            }
+        }
+
+        private async void BtnGenerateAlexaPIN_Click(object sender, RoutedEventArgs e)
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null)
+            {
+                MessageBox.Show("Please connect your Cloud Account first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var vm = RustPlusDesk.App.Current.MainWindow.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show("Steam ID not found. Please connect to a server first.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnGenerateAlexaPIN.IsEnabled = false;
+            try
+            {
+                var random = new Random();
+                string pin = random.Next(100000, 999999).ToString();
+
+                var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
+                if (response == null)
+                {
+                    MessageBox.Show("Please enable Cloud Sync first before generating an Alexa PIN.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    BtnGenerateAlexaPIN.IsEnabled = true;
+                    return;
+                }
+
+                var fcmConfig = response.FcmConfig ?? new Newtonsoft.Json.Linq.JObject();
+                fcmConfig["alexa_pin"] = pin;
+                fcmConfig["alexa_pin_expires"] = DateTime.UtcNow.AddMinutes(15).ToString("O");
+                response.FcmConfig = fcmConfig;
+                
+                await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Upsert(response);
+
+                TxtAlexaPIN.Text = pin;
+                TxtAlexaPIN.Visibility = Visibility.Visible;
+                BtnGenerateAlexaPIN.Content = "PIN Generated (valid for 15m)";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to generate PIN: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateAlexaPIN.IsEnabled = true;
+            }
+        }
+
+        private async void BtnLinkAlexa_Click(object sender, RoutedEventArgs e)
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null)
+            {
+                MessageBox.Show("Please connect your Cloud Account first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var selected = CmbAlexaServer.SelectedItem as ComboBoxItem;
+            var serverKey = selected?.Tag?.ToString();
+            if (string.IsNullOrEmpty(serverKey))
+            {
+                MessageBox.Show("Please select a server first.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show("Steam ID not found. Please connect to a server first.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
+            if (user == null) return;
+
+            BtnLinkAlexa.IsEnabled = false;
+            try
+            {
+                var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
+                if (serverProfile != null)
+                {
+                    // 1. Link Alexa active server
+                    var alexaModel = new RustPlusDesk.Models.UserAlexaSettingsModel
+                    {
+                        UserId = user.Id,
+                        ActiveServerKey = serverKey,
+                        SteamId = steamId,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>().Upsert(alexaModel);
+
+                    // 2. Upload Server Credentials for Cloud Worker
+                    var serverCredsModel = new RustPlusDesk.Models.UserServerModel
+                    {
+                        UserId = user.Id,
+                        SteamId = steamId,
+                        ServerIp = serverProfile.Host,
+                        ServerPort = serverProfile.Port,
+                        PlayerToken = serverProfile.PlayerToken,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserServerModel>().Upsert(serverCredsModel);
+
+                    // 3. Force Sync Devices for Alexa Discovery
+                    if (ulong.TryParse(steamId, out var steamIdUlong))
+                    {
+                        // We use the same generic local overlay to append the devices
+                        var currentOverlay = Services.Data.OverlayDataModule.LoadLocalOverlay(serverKey, steamIdUlong);
+                        _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
+                    }
+
+                    MessageBox.Show("Alexa Server linked successfully! Alexa will now control devices from this server.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to link Alexa Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnLinkAlexa.IsEnabled = true;
+            }
+        }
+
+        private async void BtnRevokeAlexa_Click(object sender, RoutedEventArgs e)
+        {
+            if (Services.Auth.SupabaseAuthManager.Client == null) return;
+            var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
+            if (user == null) return;
+
+            BtnRevokeAlexa.IsEnabled = false;
+            try
+            {
+                await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
+                    .Where(x => x.UserId == user.Id)
+                    .Delete();
+
+                CmbAlexaServer.SelectedItem = null;
+                MessageBox.Show("Alexa access revoked successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to revoke Alexa access: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeAlexa.IsEnabled = true;
+            }
         }
     }
 }

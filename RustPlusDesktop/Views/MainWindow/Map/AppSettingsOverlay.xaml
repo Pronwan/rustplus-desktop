@@ -497,11 +497,9 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelRaid" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
                                     <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
-                                    <CheckBox x:Name="ChkRaidAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Events Channel -->
@@ -510,11 +508,9 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelEvents" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
                                     <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
-                                    <CheckBox x:Name="ChkEventsAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Chat Alerts Channel -->
@@ -523,11 +519,9 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelChat" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
                                     <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
-                                    <CheckBox x:Name="ChkChatAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Shop Alerts Channel -->
@@ -536,17 +530,63 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="TxtChannelShop" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
                                     <CheckBox x:Name="ChkShopTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
-                                    <CheckBox x:Name="ChkShopAudio" Grid.Column="2" Content="Sound" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <ui:Button x:Name="BtnSaveChannels" Content="Save Channels Config" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />
                             </StackPanel>
                         </Expander>
-                                  
+                        <Expander Header="Alexa Smart Home" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
+                            <StackPanel Margin="0,8,0,0">
+                                <TextBlock Text="Control your Rust Smart Switches with Amazon Alexa voice commands and trigger Alexa routines when your Smart Alarms go off." 
+                                           Foreground="{DynamicResource TextSubtle}" 
+                                           FontSize="11" 
+                                           Margin="0,0,0,12" 
+                                           TextWrapping="Wrap"/>
+                                
+                                <TextBlock Text="Amazon Alexa Login" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnGenerateAlexaPIN" Content="Generate Login PIN" Icon="{ui:SymbolIcon Symbol=Key24}" HorizontalAlignment="Stretch" Height="36" Click="BtnGenerateAlexaPIN_Click"/>
+                                    <TextBlock x:Name="TxtAlexaPIN" Grid.Column="1" Text="123456" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="12,0,0,0" Foreground="{DynamicResource Accent}"/>
+                                </Grid>
+
+                                <TextBlock Text="Select Server to Sync with Alexa" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                <ComboBox x:Name="CmbAlexaServer" Height="30" Margin="0,0,0,12"/>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnLinkAlexa"
+                                               Grid.Column="0"
+                                               Content="Link Selected Server" 
+                                               Icon="{ui:SymbolIcon Symbol=Link24}"
+                                               Appearance="Primary"
+                                               HorizontalAlignment="Stretch"
+                                               Height="36"
+                                               Margin="0,0,4,0"
+                                               Click="BtnLinkAlexa_Click"/>
+                                    <ui:Button x:Name="BtnRevokeAlexa"
+                                               Grid.Column="1"
+                                               Content="Revoke Access" 
+                                               Icon="{ui:SymbolIcon Symbol=Delete24}"
+                                               Appearance="Secondary"
+                                               Foreground="#FF5555"
+                                               HorizontalAlignment="Stretch"
+                                               Height="36"
+                                               Margin="4,0,0,0"
+                                               Click="BtnRevokeAlexa_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Expander>
+
                         <CheckBox x:Name="ChkTelegramIntegration" 
                                   Content="Team Paths Tracking" 
                                   Margin="0,0,0,10" 

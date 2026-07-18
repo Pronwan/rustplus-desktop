@@ -492,4 +492,29 @@ namespace RustPlusDesk.Models
         [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
+
+    [Table("user_alexa_settings")]
+    public class UserAlexaSettingsModel : BaseModel
+    {
+        [PrimaryKey("user_id", false)]
+        [Column("user_id")]
+        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
+        public string UserId { get; set; } = string.Empty;
+
+        [Column("active_server_key")]
+        [JsonProperty("active_server_key")]
+        [JsonPropertyName("active_server_key")]
+        public string ActiveServerKey { get; set; } = string.Empty;
+
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string SteamId { get; set; } = string.Empty;
+
+        [Column("updated_at")]
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
 }
