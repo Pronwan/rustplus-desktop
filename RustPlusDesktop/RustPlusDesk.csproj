@@ -459,7 +459,10 @@
     <Resource Include="Assets\icons\powerplant.png" />
     <Resource Include="Assets\icons\powerstation.png" />
     <Resource Include="Assets\icons\radtown.png" />
-    <Resource Include="Assets\icons\raid-targets\**\*" />
+    <Content Include="Assets\icons\raid-targets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Resource Include="Assets\icons\satellitedish.png" />
     <Resource Include="Assets\icons\sewerbranch.png" />
     <Resource Include="Assets\icons\stable.png" />

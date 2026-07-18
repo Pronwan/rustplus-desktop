@@ -372,7 +372,7 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
     public RaidTarget Target { get; }
     public string Category => Target.Category;
     public string HealthText => $"{Target.StartHealth:0.#} HP";
-    public ImageSource? Icon => GetPackIcon(RaidTargetVisuals.GetLocalIconUri(Target));
+    public ImageSource? Icon => GetFileIcon(RaidTargetVisuals.GetLocalIconPath(Target));
     public ObservableCollection<RaidMethodViewModel> Methods { get; } = [];
     public bool UserSelectedMethod { get; set; }
 
@@ -535,20 +535,20 @@ public sealed class RaidTargetCardViewModel : RaidIconViewModelBase
         _ => HealthText
     };
     public string SearchText => $"{Target.DisplayName} {Target.ComponentType} {Target.BuildingTier} {Target.ItemCategorySlug}";
-    public ImageSource? Icon => GetPackIcon(RaidTargetVisuals.GetLocalIconUri(Target));
+    public ImageSource? Icon => GetFileIcon(RaidTargetVisuals.GetLocalIconPath(Target));
 }
 
 internal static class RaidTargetVisuals
 {
-    public static string? GetLocalIconUri(RaidTarget target)
+    public static string? GetLocalIconPath(RaidTarget target)
     {
         if (!string.IsNullOrWhiteSpace(target.ItemShortname))
-            return $"pack://application:,,,/Assets/icons/raid-targets/{target.ItemShortname}.png";
+            return Path.Combine(AppContext.BaseDirectory, "Assets", "icons", "raid-targets", $"{target.ItemShortname}.png");
 
         string? tier = GetTierSlug(target.BuildingTier);
         return tier is null || string.IsNullOrWhiteSpace(target.BuildingSlug)
             ? null
-            : $"pack://application:,,,/Assets/icons/raid-targets/{tier}-{target.BuildingSlug}.webp";
+            : Path.Combine(AppContext.BaseDirectory, "Assets", "icons", "raid-targets", $"{tier}-{target.BuildingSlug}.webp");
     }
 
     private static string? GetTierSlug(string? buildingTier) => buildingTier switch
@@ -586,8 +586,17 @@ public abstract class RaidIconViewModelBase : INotifyPropertyChanged
     protected ImageSource? GetIcon(int itemId, string? shortname, int size)
         => GetIcon(() => MainWindow.ResolveItemIcon(itemId, shortname, size));
 
-    protected ImageSource? GetPackIcon(string? uri)
-        => GetIcon(() => string.IsNullOrWhiteSpace(uri) ? null : new BitmapImage(new Uri(uri)));
+    protected ImageSource? GetFileIcon(string? path) => GetIcon(() =>
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return null;
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.UriSource = new Uri(path, UriKind.Absolute);
+        bitmap.EndInit();
+        bitmap.Freeze();
+        return bitmap;
+    });
 
     private ImageSource? GetIcon(Func<ImageSource?> resolve)
     {

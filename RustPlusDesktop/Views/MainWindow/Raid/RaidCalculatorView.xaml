@@ -5,6 +5,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:RustPlusDesk.ViewModels"
     Loaded="RaidCalculatorView_Loaded"
+    UseLayoutRounding="True"
     KeyboardNavigation.TabNavigation="Continue">
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="RaidBoolToVisibility" />
@@ -146,12 +147,11 @@
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" ItemWidth="142" />
+                                <UniformGrid Columns="2" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
-                                <Setter Property="Width" Value="142" />
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                 <Setter Property="Padding" Value="0" />
                                 <Setter Property="Margin" Value="0,0,6,8" />
@@ -164,17 +164,17 @@
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:RaidTargetCardViewModel}">
-                                <Button Height="136" Padding="8" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                <Button Height="148" Padding="8" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                         Style="{StaticResource RaidTargetCardButton}"
                                         Click="AddTarget_Click" AutomationProperties.Name="{Binding Target.DisplayName, StringFormat=Add {0} to raid plan}">
                                     <Grid>
                                         <Grid.RowDefinitions><RowDefinition Height="78" /><RowDefinition Height="*" /><RowDefinition Height="18" /></Grid.RowDefinitions>
-                                        <Border Width="78" Height="74" HorizontalAlignment="Center" Background="#CC111419" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="8">
-                                            <Image Source="{Binding Icon}" Width="70" Height="70" Stretch="Uniform" />
+                                        <Border Width="78" Height="74" HorizontalAlignment="Center" Background="Transparent">
+                                            <Image Source="{Binding Icon}" Width="74" Height="74" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" />
                                         </Border>
                                         <TextBlock Grid.Row="1" Margin="1,4,1,1" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    Text="{Binding CardTitle}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
-                                                   TextAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="32" />
+                                                   TextAlignment="Center" TextWrapping="Wrap" MaxHeight="34" ToolTip="{Binding CardTitle}" />
                                         <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CardMeta}"
                                                    FontSize="10" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
                                     </Grid>
@@ -239,8 +239,8 @@
                                             <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
                                             <Grid>
                                                 <Grid.ColumnDefinitions><ColumnDefinition Width="44" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                                                <Border Width="38" Height="38" Background="#1AFFFFFF" CornerRadius="7">
-                                                    <Image Source="{Binding Icon}" Width="34" Height="34" Stretch="Uniform" />
+                                                <Border Width="38" Height="38" Background="Transparent">
+                                                    <Image Source="{Binding Icon}" Width="34" Height="34" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" />
                                                 </Border>
                                                 <StackPanel Grid.Column="1" Margin="7,0" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding Target.DisplayName}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
