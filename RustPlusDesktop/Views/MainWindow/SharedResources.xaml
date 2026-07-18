@@ -176,35 +176,36 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="#2AFFFFFF"
                         BorderThickness="1"
-                        CornerRadius="16"
+                        CornerRadius="0"
                         Padding="{TemplateBinding Padding}"
                         SnapsToDevicePixels="True">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="Tag" Value="First">
+                            <Setter TargetName="Bd" Property="CornerRadius" Value="6,0,0,6" />
+                        </Trigger>
+                        <Trigger Property="Tag" Value="Middle">
+                            <Setter Property="Margin" Value="-1,0,0,0" />
+                        </Trigger>
+                        <Trigger Property="Tag" Value="Last">
+                            <Setter Property="Margin" Value="-1,0,0,0" />
+                            <Setter TargetName="Bd" Property="CornerRadius" Value="0,6,6,0" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#2AFFFFFF" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="#40FFFFFF" />
+                        </Trigger>
                         <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
                             <Setter Property="Foreground" Value="White" />
                             <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}" />
-                            <Setter TargetName="Bd" Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect BlurRadius="12" Color="#60CDFF" Opacity="0.5" ShadowDepth="0" />
-                                </Setter.Value>
-                            </Setter>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="{x:Null}">
                             <Setter TargetName="Bd" Property="Background" Value="#4B3D2B" />
                             <Setter Property="Foreground" Value="#FFCA00" />
                             <Setter TargetName="Bd" Property="BorderBrush" Value="#FFB900" />
-                            <Setter TargetName="Bd" Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect BlurRadius="12" Color="#FFB900" Opacity="0.5" ShadowDepth="0" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="#2AFFFFFF" />
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="#40FFFFFF" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5" />

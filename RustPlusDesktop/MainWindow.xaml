@@ -3408,36 +3408,56 @@
 
                             <!--  Left Group: Map Filters  -->
                             <StackPanel Orientation="Horizontal">
-                                <CheckBox
-                                    x:Name="ChkGrid"
+                                <Border
                                     Margin="0,0,8,0"
-                                    Checked="ChkGrid_Checked"
-                                    Content="{DynamicResource Grid}"
-                                    Style="{StaticResource PillToggleButton}"
-                                    Unchecked="ChkGrid_Checked" />
-                                <CheckBox
-                                    x:Name="ChkPlayers"
-                                    Margin="0,0,8,0"
-                                    Checked="ChkPlayers_Checked"
-                                    Content="{DynamicResource PlayersOnly}"
-                                    IsChecked="True"
-                                    Style="{StaticResource PillToggleButton}"
-                                    Unchecked="ChkPlayers_Checked" />
-                                <CheckBox
-                                    x:Name="Monuments"
-                                    Margin="0,0,8,0"
-                                    Checked="Monuments_Checked"
-                                    Content="{DynamicResource Monuments}"
-                                    IsChecked="True"
-                                    Style="{StaticResource PillToggleButton}"
-                                    Unchecked="Monuments_Unchecked" />
-                                <CheckBox
-                                    x:Name="ChkShops"
-                                    Margin="0,0,8,0"
-                                    Checked="ChkShops_Checked"
-                                    Content="{DynamicResource Shops}"
-                                    Style="{StaticResource PillToggleButton}"
-                                    Unchecked="ChkShops_Checked" />
+                                    VerticalAlignment="Center"
+                                    Background="#AA16181C"
+                                    BorderBrush="#30FFFFFF"
+                                    BorderThickness="1"
+                                    CornerRadius="7">
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox
+                                            x:Name="ChkGrid"
+                                            Checked="ChkGrid_Checked"
+                                            Content="{DynamicResource Grid}"
+                                            Style="{StaticResource PillToggleButton}"
+                                            Tag="First"
+                                            Unchecked="ChkGrid_Checked" />
+                                        <CheckBox
+                                            x:Name="ChkPlayers"
+                                            Checked="ChkPlayers_Checked"
+                                            Content="{DynamicResource PlayersOnly}"
+                                            IsChecked="True"
+                                            Style="{StaticResource PillToggleButton}"
+                                            Tag="Middle"
+                                            Unchecked="ChkPlayers_Checked" />
+                                        <CheckBox
+                                            x:Name="Monuments"
+                                            Checked="Monuments_Checked"
+                                            Content="{DynamicResource Monuments}"
+                                            IsChecked="True"
+                                            Style="{StaticResource PillToggleButton}"
+                                            Tag="Middle"
+                                            Unchecked="Monuments_Unchecked" />
+                                        <CheckBox
+                                            x:Name="ChkShops"
+                                            Checked="ChkShops_Checked"
+                                            Content="{DynamicResource Shops}"
+                                            Style="{StaticResource PillToggleButton}"
+                                            Tag="Middle"
+                                            Unchecked="ChkShops_Checked" />
+                                        <CheckBox
+                                            x:Name="ChkNoBuildZones"
+                                            IsEnabled="False"
+                                            Checked="ChkNoBuildZones_Checked"
+                                            Content="No Build"
+                                            Style="{StaticResource PillToggleButton}"
+                                            Tag="Last"
+                                            ToolTip="Generate the 3D map to enable no-build zones."
+                                            ToolTipService.ShowOnDisabled="True"
+                                            Unchecked="ChkNoBuildZones_Checked" />
+                                    </StackPanel>
+                                </Border>
                                 <ui:Button
                                     x:Name="BtnLayers"
                                     Margin="0,0,8,0"
@@ -3585,15 +3605,6 @@
                                         </ScrollViewer>
                                     </Border>
                                 </Popup>
-                                <CheckBox
-                                    x:Name="ChkNoBuildZones"
-                                    Margin="0,0,24,0"
-                                    Checked="ChkNoBuildZones_Checked"
-                                    Content="No Build"
-                                    Style="{StaticResource PillToggleButton}"
-                                    Unchecked="ChkNoBuildZones_Checked"
-                                    Visibility="Collapsed" />
-
                                  <Border
                                      Background="#AA16181C"
                                      BorderBrush="#30FFFFFF"
