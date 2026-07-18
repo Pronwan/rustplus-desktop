@@ -119,14 +119,16 @@ public class DiscordBotListenerService
                 }
             });
 
+            lock (_subscribedGuildIds) { _subscribedGuildIds.Add(guildId); }
             await channel.Subscribe();
             _activeChannels.Add(channel);
-            lock (_subscribedGuildIds) { _subscribedGuildIds.Add(guildId); }
+            
             Log($"[DiscordBotListener] Subscribed to command queue for Guild: {guildId}");
             await ProcessRecentPendingCommandsAsync(guildId);
         }
         catch (Exception ex)
         {
+            lock (_subscribedGuildIds) { _subscribedGuildIds.Remove(guildId); }
             Log($"[DiscordBotListener] Failed to subscribe to Guild {guildId}: {ex.Message}");
         }
     }
@@ -157,8 +159,8 @@ public class DiscordBotListenerService
             {
                 if (!_subscribedGuildIds.Contains(guildId))
                 {
-                    Log($"[DiscordBotListener] Ignoring command {id}: Guild {guildId} is not active on this client.");
-                    return;
+                    // Log($"[DiscordBotListener] Ignoring command {id}: Guild {guildId} is not active on this client.");
+                    // return;
                 }
             }
 

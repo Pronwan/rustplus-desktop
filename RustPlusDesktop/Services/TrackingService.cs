@@ -108,6 +108,8 @@ public class TrackingSettings
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
     public string SelectedLanguage { get; set; } = "";
+    public string DiscordWebhookUrl { get; set; } = "";
+    public string SmartHomeWebhookUrl { get; set; } = "";
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
@@ -690,6 +692,18 @@ public static class TrackingService
     {
         get => _settings.SelectedLanguage;
         set { _settings.SelectedLanguage = value; SaveDB(); }
+    }
+
+    public static string DiscordWebhookUrl
+    {
+        get => _settings.DiscordWebhookUrl;
+        set { _settings.DiscordWebhookUrl = value; SaveDB(); }
+    }
+
+    public static string SmartHomeWebhookUrl
+    {
+        get => _settings.SmartHomeWebhookUrl;
+        set { _settings.SmartHomeWebhookUrl = value; SaveDB(); }
     }
 
     public static bool AnnounceSpawnsMaster

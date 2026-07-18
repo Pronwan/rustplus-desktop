@@ -1183,6 +1183,9 @@ namespace RustPlusDesk.Services
 
                 File.WriteAllBytes(ConfigPath, ms.ToArray());
                 _log($"[fcm] Config enriched – expires {expiresAt:yyyy-MM-dd}");
+                
+                // Automatically upload to Supabase if user is a premium member
+                _ = RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
             }
             catch (Exception ex)
             {
