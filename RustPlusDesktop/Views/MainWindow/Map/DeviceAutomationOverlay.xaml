@@ -59,7 +59,18 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Grid Width="26" Height="26" Margin="0,0,8,0">
-                                        <Image Source="pack://application:,,,/Assets/icons/smartswitch.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        <Image Source="pack://application:,,,/Assets/icons/smartswitch.png" RenderOptions.BitmapScalingMode="HighQuality">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectedItem.CustomIcon, ElementName=TargetDeviceComboBox}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
                                         <Image Source="{Binding SelectedItem.CustomIcon, ElementName=TargetDeviceComboBox}"
                                                RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </Grid>
