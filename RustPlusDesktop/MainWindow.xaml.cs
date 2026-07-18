@@ -387,6 +387,12 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
+        StateChanged += (_, _) =>
+        {
+            CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
+            UpdateTeamFeatureMasterWatch();
+        };
         
         // Restore window dimensions and position
         double savedWidth = TrackingService.WindowWidth;

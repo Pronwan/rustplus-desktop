@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -19,6 +20,7 @@ public class DiscordBotListenerService
     private readonly HashSet<string> _subscribedGuildIds = new();
     private bool _isListening;
     private List<string> _teamSteamIds = new();
+    private static readonly ConcurrentDictionary<string, DateTime> InvalidChannelUntilUtc = new();
 
     private DiscordBotListenerService() { }
 
@@ -457,6 +459,8 @@ public class DiscordBotListenerService
             foreach (var config in configs)
             {
                 if (string.IsNullOrEmpty(config.ChannelId)) continue;
+                if (InvalidChannelUntilUtc.TryGetValue(config.ChannelId, out var invalidUntil) && invalidUntil > DateTime.UtcNow)
+                    continue;
 
                 var payload = new
                 {
@@ -491,6 +495,13 @@ public class DiscordBotListenerService
                     if (!responseMsg.IsSuccessStatusCode)
                     {
                         var responseContent = await responseMsg.Content.ReadAsStringAsync();
+                        if (responseContent.Contains("50013", StringComparison.OrdinalIgnoreCase) ||
+                            responseContent.Contains("Missing Permissions", StringComparison.OrdinalIgnoreCase))
+                        {
+                            InvalidChannelUntilUtc[config.ChannelId] = DateTime.UtcNow.AddHours(1);
+                            WarnMissingChannelPermission(config.ChannelId);
+                            continue;
+                        }
                         throw new Exception($"HTTP {responseMsg.StatusCode}: {responseContent}");
                     }
                 }
@@ -504,6 +515,21 @@ public class DiscordBotListenerService
         {
             Log($"[DiscordBotListener] Failed to send notification: {ex.Message}");
         }
+    }
+
+    private static void WarnMissingChannelPermission(string channelId)
+    {
+        Log($"[DiscordBotListener] Channel {channelId} disabled for one hour: Discord bot is missing permissions.");
+        System.Windows.Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (System.Windows.Application.Current.MainWindow is Views.MainWindow mainWindow)
+            {
+                mainWindow.ShowInfoSnackbar(
+                    "Discord permissions missing",
+                    "A configured Discord channel was disabled for one hour. Check the bot's channel permissions.",
+                    Wpf.Ui.Controls.ControlAppearance.Caution);
+            }
+        }));
     }
 
     private static bool IsPremiumBotOwner(UserProfileModel profile)

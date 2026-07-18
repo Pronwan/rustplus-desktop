@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Security.Cryptography;
 using RustPlusDesk.Models;
 
 namespace RustPlusDesk.Services.Data
@@ -13,6 +14,9 @@ namespace RustPlusDesk.Services.Data
     public static class OverlayDataModule
     {
         public static bool LastFetchHadError { get; private set; }
+        private static readonly object UploadHashLock = new();
+        private static readonly Dictionary<string, string> LastUploadedHashes = new();
+        private static readonly HashSet<string> UploadsInFlight = new();
 
         // Freemium size limits
         private const int FREE_MAX_BYTES      = 300_000;   // 300 KB
@@ -62,6 +66,23 @@ namespace RustPlusDesk.Services.Data
             if (!TrackingService.CloudSyncEnabled || !TrackingService.UploadConsentGiven) return false;
             if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return false;
             if (!await Auth.SupabaseAuthManager.EnsureCloudSyncConsentAsync()) return false;
+
+            var uploadKey = $"{serverKey}:{steamId}";
+            var contentHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new
+            {
+                data.Strokes,
+                data.Icons,
+                data.Texts,
+                data.Devices,
+                explicitWipe
+            }))));
+            var inFlightKey = $"{uploadKey}:{contentHash}";
+            lock (UploadHashLock)
+            {
+                if ((LastUploadedHashes.TryGetValue(uploadKey, out var previousHash) && previousHash == contentHash) ||
+                    !UploadsInFlight.Add(inFlightKey))
+                    return false;
+            }
 
             data.LastUpdatedUnix = DataManager.UnixNow();
 
@@ -174,6 +195,9 @@ namespace RustPlusDesk.Services.Data
 
                 await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Post, payload);
 
+                lock (UploadHashLock)
+                    LastUploadedHashes[uploadKey] = contentHash;
+
                 // Always keep local cache updated
                 SaveLocalOverlay(serverKey, steamId, data);
                 return true;
@@ -182,6 +206,11 @@ namespace RustPlusDesk.Services.Data
             {
                 AppendLog($"[overlay/cloud/err] UploadOverlay failed for {steamId}: {ex.Message}");
                 return false;
+            }
+            finally
+            {
+                lock (UploadHashLock)
+                    UploadsInFlight.Remove(inFlightKey);
             }
         }
 

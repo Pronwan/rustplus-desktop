@@ -34,6 +34,9 @@ public partial class MainWindow
     private bool? _lastWantsAlerts;
     private bool? _lastWantsCommands;
 
+    private TimeSpan TeamFeatureHeartbeatInterval =>
+        CloudTrafficPolicy.TeamHeartbeatInterval(WindowState == WindowState.Minimized);
+
     private static string TeamFeatureText(string key, string fallback)
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
 
@@ -114,10 +117,10 @@ public partial class MainWindow
             TeamFeatureMasterState? state;
             if (SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated)
             {
-                var isCriticalChange = wantsAlerts != _lastWantsAlerts || wantsCommands != _lastWantsCommands || (!wantsAlerts && !wantsCommands);
+                var isCriticalChange = wantsAlerts != _lastWantsAlerts || wantsCommands != _lastWantsCommands;
                 var timeSinceLast = DateTime.UtcNow - _lastHeartbeatTime;
 
-                if (!isCriticalChange && timeSinceLast.TotalSeconds < 15)
+                if (!isCriticalChange && timeSinceLast < TeamFeatureHeartbeatInterval)
                 {
                     return; // Skip heartbeat to save server bandwidth
                 }
@@ -164,32 +167,20 @@ public partial class MainWindow
 
         if (_chatFeaturesBlockedByMaster || HasLocalChatFeatureIntent())
         {
-            int intervalSeconds;
-            if (SupabaseAuthManager.IsPremium)
-            {
-                intervalSeconds = 15;
-            }
-            else if (!string.IsNullOrEmpty(_lastKnownPremiumSponsorId))
-            {
-                intervalSeconds = 60;
-            }
-            else
-            {
-                intervalSeconds = 300;
-            }
+            var interval = TeamFeatureHeartbeatInterval;
 
             if (_teamFeatureMasterWatchTimer != null)
             {
-                if (_teamFeatureMasterWatchTimer.Interval.TotalSeconds != intervalSeconds)
+                if (_teamFeatureMasterWatchTimer.Interval != interval)
                 {
-                    _teamFeatureMasterWatchTimer.Interval = TimeSpan.FromSeconds(intervalSeconds);
+                    _teamFeatureMasterWatchTimer.Interval = interval;
                 }
                 return;
             }
 
             _teamFeatureMasterWatchTimer = new System.Windows.Threading.DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(intervalSeconds)
+                Interval = interval
             };
             _teamFeatureMasterWatchTimer.Tick += TeamFeatureMasterWatchTimer_Tick;
             _teamFeatureMasterWatchTimer.Start();

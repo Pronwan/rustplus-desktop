@@ -450,7 +450,7 @@ public partial class MainWindow
             var serverName = _vm.Selected?.Name;
             var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
             var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
-            bool forcePeriodicUpload = timeSinceLast.TotalSeconds >= 290;
+            bool forcePeriodicUpload = timeSinceLast >= CloudTrafficPolicy.PresenceInterval(WindowState == WindowState.Minimized);
             if (cloudPresenceSignature != _lastCloudPresenceSignature || forcePeriodicUpload)
             {
                 if (_hasCriticalPresenceChange || forcePeriodicUpload || timeSinceLast.TotalSeconds >= 15)

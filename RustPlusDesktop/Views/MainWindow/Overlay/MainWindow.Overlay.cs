@@ -63,7 +63,7 @@ private bool _overlayToolsVisible = false;
     private string? _lastDevicesCloudTooltip;
     private string? _lastOverlayCloudTooltip;
     private CancellationTokenSource? _overlaySyncCts;
-    private const int OverlaySyncDebounceMs = 800;
+    private const int OverlaySyncDebounceMs = 3000;
 
     private class TeammatePollState
     {

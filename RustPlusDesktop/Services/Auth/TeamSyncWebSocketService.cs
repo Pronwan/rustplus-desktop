@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,10 @@ namespace RustPlusDesk.Services.Auth
         private static string _currentServerKey = "";
         private static string _currentTeamKey = "";
         private static bool _broadcastSubscribed;
+        private static string? _subscribedBroadcastChannel;
+        private static bool _hasBroadcastMasterState;
+        private static string? _lastBroadcastMasterSteamId;
+        private static readonly SemaphoreSlim BroadcastSubscriptionLock = new(1, 1);
         private static bool _initialized;
 
         public static bool IsActive => _broadcastSubscribed;
@@ -141,14 +146,18 @@ namespace RustPlusDesk.Services.Auth
         {
             if (string.IsNullOrEmpty(serverKey) || string.IsNullOrEmpty(teamKey)) return;
 
-            UnsubscribeBroadcast();
-
+            var channelName = $"team_sync:{serverKey}:{teamKey}";
+            await BroadcastSubscriptionLock.WaitAsync();
             try
             {
+                if (_broadcastSubscribed && _subscribedBroadcastChannel == channelName)
+                    return;
+
+                UnsubscribeBroadcast();
+
                 var client = SupabaseAuthManager.Client;
                 if (client?.Realtime == null) return;
 
-                var channelName = $"team_sync:{serverKey}:{teamKey}";
                 _broadcastChannel = client.Realtime.Channel(channelName);
 
                 _broadcast = _broadcastChannel.Register<BaseBroadcast<JObject>>();
@@ -169,6 +178,7 @@ namespace RustPlusDesk.Services.Auth
 
                 await _broadcastChannel.Subscribe();
                 _broadcastSubscribed = true;
+                _subscribedBroadcastChannel = channelName;
                 AppendLog($"[TeamSyncWS] Subscribed to broadcast channel: {channelName}");
             }
             catch (Exception ex)
@@ -178,11 +188,18 @@ namespace RustPlusDesk.Services.Auth
                 _broadcast = null;
                 _broadcastSubscribed = false;
             }
+            finally
+            {
+                BroadcastSubscriptionLock.Release();
+            }
         }
 
         private static void UnsubscribeBroadcast()
         {
             _broadcastSubscribed = false;
+            _subscribedBroadcastChannel = null;
+            _hasBroadcastMasterState = false;
+            _lastBroadcastMasterSteamId = null;
             if (_broadcastChannel != null)
             {
                 try { _broadcastChannel.Unsubscribe(); } catch { }
@@ -263,6 +280,12 @@ namespace RustPlusDesk.Services.Auth
                             }
                         }
                         catch { }
+
+                        if (_hasBroadcastMasterState && state?.MasterSteamId == _lastBroadcastMasterSteamId)
+                            break;
+
+                        _hasBroadcastMasterState = true;
+                        _lastBroadcastMasterSteamId = state?.MasterSteamId;
 
                         AppendLog($"[TeamSyncWS] Master changed event. Active Master: {state?.MasterSteamId}");
                         _ = ApplyMasterStateAsync(state);
