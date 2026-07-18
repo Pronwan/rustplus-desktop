@@ -28,7 +28,8 @@ public partial class MainWindow
         if (ChkNoBuildZones != null)
         {
             ChkNoBuildZones.IsChecked = false;
-            ChkNoBuildZones.Visibility = Visibility.Collapsed;
+            ChkNoBuildZones.IsEnabled = false;
+            ChkNoBuildZones.ToolTip = "Generate the 3D map to enable no-build zones.";
         }
 
         foreach (var shape in _buildingBlockedZoneEls)
@@ -67,8 +68,9 @@ public partial class MainWindow
         _buildingBlockedData = null;
         if (ChkNoBuildZones != null)
         {
-            ChkNoBuildZones.Visibility = Visibility.Collapsed;
+            ChkNoBuildZones.IsEnabled = false;
             ChkNoBuildZones.IsChecked = false;
+            ChkNoBuildZones.ToolTip = "Generate the 3D map to enable no-build zones.";
         }
 
         if (string.IsNullOrWhiteSpace(folderPath))
@@ -103,7 +105,8 @@ public partial class MainWindow
         bool hasData = (_buildingBlockedData?.Spheres?.Count ?? 0) > 0 || (_buildingBlockedData?.Boxes?.Count ?? 0) > 0;
         if (ChkNoBuildZones != null)
         {
-            ChkNoBuildZones.Visibility = hasData ? Visibility.Visible : Visibility.Collapsed;
+            ChkNoBuildZones.IsEnabled = hasData;
+            ChkNoBuildZones.ToolTip = hasData ? "Show no-build zones" : "Generate the 3D map to enable no-build zones.";
             ChkNoBuildZones.IsChecked = false;
         }
         RedrawGrid();
