@@ -4498,32 +4498,34 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     public static System.Windows.Media.ImageSource? ResolveRustHelpIcon(string? rusthelpUrl, int decodePx = 32)
     {
-        // Primär-URL (rusthelp optimized to 40px)
+        // Keep one high-resolution download on disk; decode-size variants stay in memory.
         string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
-            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=40&q=90"
+            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=256&q=90"
             : null;
 
         // 1) Versuche Optimierte URL
         if (optimizedUrl != null)
         {
-            if (sIconCache.TryGetValue(optimizedUrl, out var ready)) return ready;
+            string cacheKey = $"{optimizedUrl}|{decodePx}";
+            if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
             var path = GetIconCachePath(optimizedUrl);
             if (System.IO.File.Exists(path))
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
-                if (img != null) { sIconCache[optimizedUrl] = img; return img; }
+                if (img != null) { sIconCache[cacheKey] = img; return img; }
             }
         }
 
         // 2) Versuche Original URL (Fallback/DB)
         if (rusthelpUrl != null)
         {
-            if (sIconCache.TryGetValue(rusthelpUrl, out var ready)) return ready;
+            string cacheKey = $"{rusthelpUrl}|{decodePx}";
+            if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
             var path = GetIconCachePath(rusthelpUrl);
             if (System.IO.File.Exists(path))
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
-                if (img != null) { sIconCache[rusthelpUrl] = img; return img; }
+                if (img != null) { sIconCache[cacheKey] = img; return img; }
             }
         }
 

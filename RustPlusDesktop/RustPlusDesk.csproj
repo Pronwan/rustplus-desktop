@@ -108,6 +108,7 @@
 	  <None Remove="Assets\icons\largeoilrig.png" />
     <None Remove="Assets\icons\jungle_swamp.png" />
 	  <None Remove="Assets\icons\launchsite.png" />
+	  <None Remove="Assets\icons\raid-targets\**\*" />
 	  <None Remove="Assets\icons\lighthouse.png" />
 	  <None Remove="Assets\icons\map-icons\base1.png" />
 	  <None Remove="Assets\icons\map-icons\base2.png" />
@@ -458,6 +459,7 @@
     <Resource Include="Assets\icons\powerplant.png" />
     <Resource Include="Assets\icons\powerstation.png" />
     <Resource Include="Assets\icons\radtown.png" />
+    <Resource Include="Assets\icons\raid-targets\**\*" />
     <Resource Include="Assets\icons\satellitedish.png" />
     <Resource Include="Assets\icons\sewerbranch.png" />
     <Resource Include="Assets\icons\stable.png" />

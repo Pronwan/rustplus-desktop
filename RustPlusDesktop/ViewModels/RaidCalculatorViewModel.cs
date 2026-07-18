@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using RustPlusDesk.Models.Raid;
 using RustPlusDesk.Services.Raid;
 using RustPlusDesk.Views;
@@ -371,9 +372,7 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
     public RaidTarget Target { get; }
     public string Category => Target.Category;
     public string HealthText => $"{Target.StartHealth:0.#} HP";
-    public ImageSource? Icon => Target.ItemId is not null || !string.IsNullOrWhiteSpace(Target.ItemShortname)
-        ? GetIcon(Target.ItemId ?? 0, Target.ItemShortname, 40)
-        : GetRemoteIcon(RaidTargetVisuals.GetRustHelpIconUrl(Target), 40);
+    public ImageSource? Icon => GetPackIcon(RaidTargetVisuals.GetLocalIconUri(Target));
     public ObservableCollection<RaidMethodViewModel> Methods { get; } = [];
     public bool UserSelectedMethod { get; set; }
 
@@ -536,28 +535,31 @@ public sealed class RaidTargetCardViewModel : RaidIconViewModelBase
         _ => HealthText
     };
     public string SearchText => $"{Target.DisplayName} {Target.ComponentType} {Target.BuildingTier} {Target.ItemCategorySlug}";
-    public ImageSource? Icon => Target.ItemId is not null || !string.IsNullOrWhiteSpace(Target.ItemShortname)
-        ? GetIcon(Target.ItemId ?? 0, Target.ItemShortname, 72)
-        : GetRemoteIcon(RaidTargetVisuals.GetRustHelpIconUrl(Target), 72);
+    public ImageSource? Icon => GetPackIcon(RaidTargetVisuals.GetLocalIconUri(Target));
 }
 
 internal static class RaidTargetVisuals
 {
-    public static string? GetRustHelpIconUrl(RaidTarget target)
+    public static string? GetLocalIconUri(RaidTarget target)
     {
-        string? tier = target.BuildingTier switch
-        {
-            "Twigs" => "twig",
-            "Wood" => "wood",
-            "Stone" => "stone",
-            "Metal" => "metal",
-            "TopTier" => "armored",
-            _ => null
-        };
+        if (!string.IsNullOrWhiteSpace(target.ItemShortname))
+            return $"pack://application:,,,/Assets/icons/raid-targets/{target.ItemShortname}.png";
+
+        string? tier = GetTierSlug(target.BuildingTier);
         return tier is null || string.IsNullOrWhiteSpace(target.BuildingSlug)
             ? null
-            : $"https://cdn.rusthelp.com/images/256/{tier}-{target.BuildingSlug}.webp";
+            : $"pack://application:,,,/Assets/icons/raid-targets/{tier}-{target.BuildingSlug}.webp";
     }
+
+    private static string? GetTierSlug(string? buildingTier) => buildingTier switch
+    {
+        "Twigs" => "twig",
+        "Wood" => "wood",
+        "Stone" => "stone",
+        "Metal" => "metal",
+        "TopTier" => "armored",
+        _ => null
+    };
 }
 
 public sealed class RaidResourceTotalViewModel(RaidResourceTotal resource) : RaidIconViewModelBase
@@ -584,8 +586,8 @@ public abstract class RaidIconViewModelBase : INotifyPropertyChanged
     protected ImageSource? GetIcon(int itemId, string? shortname, int size)
         => GetIcon(() => MainWindow.ResolveItemIcon(itemId, shortname, size));
 
-    protected ImageSource? GetRemoteIcon(string? url, int size)
-        => GetIcon(() => MainWindow.ResolveRustHelpIcon(url, size));
+    protected ImageSource? GetPackIcon(string? uri)
+        => GetIcon(() => string.IsNullOrWhiteSpace(uri) ? null : new BitmapImage(new Uri(uri)));
 
     private ImageSource? GetIcon(Func<ImageSource?> resolve)
     {
