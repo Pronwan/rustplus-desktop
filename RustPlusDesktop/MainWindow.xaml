@@ -3475,6 +3475,29 @@
                                                     <ui:SymbolIcon HorizontalAlignment="Right" Symbol="Filter20" Foreground="{DynamicResource TextSubtle}" />
                                                 </Grid>
 
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="GRID" />
+                                                <Grid Margin="0,0,0,10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="70" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="48" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Opacity" />
+                                                    <Slider
+                                                        x:Name="SliderLayerGridOpacity"
+                                                        Grid.Column="1"
+                                                        Minimum="0.1"
+                                                        Maximum="1"
+                                                        ValueChanged="LayerGridOpacity_ValueChanged" />
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{DynamicResource TextSubtle}"
+                                                        Text="{Binding Value, ElementName=SliderLayerGridOpacity, StringFormat={}{0:0%}}" />
+                                                </Grid>
+
+                                                <Border Margin="0,4,0,12" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0" />
                                                 <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="MONUMENTS" />
                                                 <Grid Margin="0,0,0,10">
                                                     <Grid.ColumnDefinitions>

@@ -43,6 +43,7 @@ public partial class MainWindow
 
         GridLayer.Width = wDip;
         GridLayer.Height = hDip;
+        GridLayer.Opacity = TrackingService.MapGridOpacity;
         GridLayer.IsHitTestVisible = false;
 
         // WICHTIG: Overlay groesser machen, aber Map nicht anfassen
@@ -146,6 +147,7 @@ public partial class MainWindow
         {
             RenderOptions.SetEdgeMode(Overlay, edgeMode);
         }
+        RefreshGridLineThickness();
 
         // 3. CacheMode / RenderScale
         if (_scene != null)

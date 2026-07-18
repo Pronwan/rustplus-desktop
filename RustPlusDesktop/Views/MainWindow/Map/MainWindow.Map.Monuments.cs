@@ -28,6 +28,7 @@ public partial class MainWindow
         CmbLayerMonumentStyle.SelectedIndex = Math.Clamp(TrackingService.MapMonumentDisplayMode, 0, 1);
         SliderLayerMonumentScale.Value = TrackingService.MapMonumentScale;
         SliderLayerMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
+        SliderLayerGridOpacity.Value = TrackingService.MapGridOpacity;
         ChkLayerAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
 
         PnlLayerExtraMonumentFilters.Children.Clear();
@@ -83,6 +84,13 @@ public partial class MainWindow
         TrackingService.MapMonumentScale = SliderLayerMonumentScale.Value;
         TrackingService.MapMonumentOpacity = SliderLayerMonumentOpacity.Value;
         RefreshMonumentOverlayPositions();
+    }
+
+    private void LayerGridOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsLoaded || _loadingLayerControls || GridLayer == null) return;
+        TrackingService.MapGridOpacity = e.NewValue;
+        GridLayer.Opacity = e.NewValue;
     }
 
     private void LayerExtraMonumentFilter_Changed(object sender, RoutedEventArgs e)

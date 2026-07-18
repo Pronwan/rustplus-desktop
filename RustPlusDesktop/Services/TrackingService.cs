@@ -75,6 +75,7 @@ public class TrackingSettings
     public int MapMonumentDisplayMode { get; set; } = 0;
     public double MapMonumentScale { get; set; } = 1.0;
     public double MapMonumentOpacity { get; set; } = 1.0;
+    public double MapGridOpacity { get; set; } = 0.7;
     public bool BackgroundTrackingEnabled { get; set; } = true;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
@@ -836,6 +837,11 @@ public static class TrackingService
     {
         get => _settings.MapMonumentOpacity;
         set { _settings.MapMonumentOpacity = value; SaveDB(); }
+    }
+    public static double MapGridOpacity
+    {
+        get => _settings.MapGridOpacity;
+        set { _settings.MapGridOpacity = value; SaveDB(); }
     }
     public static int MapBitmapScalingMode
     {
