@@ -45,8 +45,8 @@ public partial class DeviceAutomationOverlay : UserControl
         {
             Name = $"Automation {_vm.Selected.DeviceAutomationRules.Count + 1}"
         });
-        RefreshListBindings();
         _vm.Save();
+        RefreshListBindings();
     }
 
     private void BtnDeleteRule_Click(object sender, RoutedEventArgs e)
@@ -55,5 +55,11 @@ public partial class DeviceAutomationOverlay : UserControl
         _vm.Selected.DeviceAutomationRules.Remove(rule);
         RefreshListBindings();
         _vm.Save();
+    }
+
+    private void BtnToggleRuleExpand_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: DeviceAutomationRule rule })
+            rule.IsExpanded = !rule.IsExpanded;
     }
 }

@@ -29,17 +29,22 @@
         </Border>
 
         <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,12,12,8" BorderBrush="#22c55e" BorderThickness="1,0,0,0">
-            <Grid>
+            <DockPanel LastChildFill="False">
                 <ui:ToggleSwitch Content="Automation Active"
+                                 DockPanel.Dock="Left"
+                                 Margin="0,0,8,0"
                                  IsChecked="{Binding Selected.IsDeviceAutomationActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Checked="AutomationActive_Changed" Unchecked="AutomationActive_Changed"/>
                 <ui:Button Content="Add Automation" Icon="{ui:SymbolIcon Symbol=Add24}" Appearance="Primary"
-                           HorizontalAlignment="Right" Click="BtnAddRule_Click"/>
-            </Grid>
+                           DockPanel.Dock="Right" Click="BtnAddRule_Click"/>
+            </DockPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="12,0,12,12">
-            <ItemsControl x:Name="RulesItemsControl">
+        <ScrollViewer Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="12,0,12,12">
+            <ItemsControl x:Name="RulesItemsControl" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource Card}" Margin="0,0,0,10" Padding="12">
@@ -47,21 +52,46 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                    <ui:TextBox Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" FontWeight="SemiBold"/>
-                                    <ui:Button Grid.Column="2" Appearance="Transparent" Foreground="IndianRed" Margin="8,0,0,0"
+
+                                    <Grid Width="26" Height="26" Margin="0,0,8,0">
+                                        <Image Source="pack://application:,,,/Assets/icons/smartswitch.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        <Image Source="{Binding SelectedItem.CustomIcon, ElementName=TargetDeviceComboBox}"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Grid>
+                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" ToolTip="Enable automation"/>
+                                    <ui:TextBox Grid.Column="2" Text="{Binding Name, Mode=TwoWay}" FontWeight="SemiBold"/>
+                                    <ui:Button Grid.Column="3" Appearance="Transparent" Width="30" Height="30" Padding="0"
+                                               ToolTip="Expand or collapse automation" Tag="{Binding}" Click="BtnToggleRuleExpand_Click">
+                                        <Grid>
+                                            <ui:SymbolIcon Symbol="ChevronRight24">
+                                                <ui:SymbolIcon.Style>
+                                                    <Style TargetType="ui:SymbolIcon">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsExpanded}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ui:SymbolIcon.Style>
+                                            </ui:SymbolIcon>
+                                            <ui:SymbolIcon Symbol="ChevronDown24" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        </Grid>
+                                    </ui:Button>
+                                    <ui:Button Grid.Column="4" Appearance="Transparent" Foreground="IndianRed" Margin="4,0,0,0"
                                                Icon="{ui:SymbolIcon Symbol=Delete20}" Tag="{Binding}" Click="BtnDeleteRule_Click"/>
                                 </Grid>
 
-                                <Separator Margin="0,10" Background="{DynamicResource CardBorder}"/>
-                                <TextBlock Text="WHEN" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,0,0,5"/>
-                                <ComboBox SelectedValue="{Binding ConditionType, Mode=TwoWay}" SelectedValuePath="Tag" Width="190" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Separator Margin="0,10" Background="{DynamicResource CardBorder}"/>
+                                    <TextBlock Text="WHEN" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,0,0,5"/>
+                                    <ComboBox SelectedValue="{Binding ConditionType, Mode=TwoWay}" SelectedValuePath="Tag" Width="190" HorizontalAlignment="Left" Margin="0,0,0,8">
                                     <ComboBoxItem Content="Player proximity" Tag="PlayerProximity"/>
                                     <ComboBoxItem Content="In-game time" Tag="GameTime"/>
-                                </ComboBox>
+                                    </ComboBox>
 
                                 <StackPanel>
                                     <StackPanel.Style>
@@ -72,12 +102,12 @@
                                             </Style.Triggers>
                                         </Style>
                                     </StackPanel.Style>
-                                    <WrapPanel>
-                                        <ComboBox Width="230" Margin="0,0,8,6"
+                                    <StackPanel>
+                                        <ComboBox Margin="0,0,0,6"
                                                   ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                   SelectedValue="{Binding LocationEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="AutomationDisplayName"
-                                                  ToolTip="Device location captured from the player who paired it"/>
-                                        <ComboBox Width="140" Margin="0,0,8,6" SelectedValue="{Binding PlayerMatchMode, Mode=TwoWay}" SelectedValuePath="Tag">
+                                                  ToolTip="{Binding SelectedItem.AutomationDisplayName, RelativeSource={RelativeSource Self}}"/>
+                                        <ComboBox Margin="0,0,0,6" SelectedValue="{Binding PlayerMatchMode, Mode=TwoWay}" SelectedValuePath="Tag">
                                             <ComboBoxItem Content="Any online in range" Tag="AnyOnline"/>
                                             <ComboBoxItem Content="All players in range" Tag="AllOnline"/>
                                             <ComboBoxItem Content="Specific player in range" Tag="Specific"/>
@@ -85,9 +115,10 @@
                                             <ComboBoxItem Content="All players offline" Tag="AllOffline"/>
                                             <ComboBoxItem Content="Specific player offline" Tag="SpecificOffline"/>
                                         </ComboBox>
-                                        <ComboBox Width="170" Margin="0,0,8,6"
+                                        <ComboBox Margin="0,0,0,6"
                                                   ItemsSource="{Binding ParentWindow.TeamMembers, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  SelectedValue="{Binding SpecificPlayerSteamId, Mode=TwoWay}" SelectedValuePath="SteamId" DisplayMemberPath="DisplayName">
+                                                  SelectedValue="{Binding SpecificPlayerSteamId, Mode=TwoWay}" SelectedValuePath="SteamId" DisplayMemberPath="DisplayName"
+                                                  ToolTip="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource Self}}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -98,10 +129,13 @@
                                                 </Style>
                                             </ComboBox.Style>
                                         </ComboBox>
-                                        <ui:TextBox Width="75" Text="{Binding DistanceMeters, Mode=TwoWay}" PlaceholderText="Meters" Margin="0,0,5,6"/>
-                                        <TextBlock Text="meters" VerticalAlignment="Center" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}"/>
-                                    </WrapPanel>
-                                    <TextBlock Text="Dead players count as offline. Offline conditions ignore the radius." FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8"/>
+                                        <WrapPanel>
+                                            <ui:TextBox Width="75" Text="{Binding DistanceMeters, Mode=TwoWay}" PlaceholderText="Meters" Margin="0,0,5,6"/>
+                                            <TextBlock Text="meters" VerticalAlignment="Center" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                    <TextBlock Text="Dead players count as offline. Offline conditions ignore the radius."
+                                               TextWrapping="Wrap" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8"/>
                                 </StackPanel>
 
                                 <WrapPanel Margin="0,0,0,8">
@@ -118,21 +152,25 @@
                                 </WrapPanel>
 
                                 <TextBlock Text="THEN" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,2,0,5"/>
-                                <WrapPanel>
-                                    <ComboBox Width="230" Margin="0,0,8,6"
+                                <StackPanel>
+                                    <ComboBox x:Name="TargetDeviceComboBox" Margin="0,0,0,6"
                                               ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
-                                              SelectedValue="{Binding TargetEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="DisplayName"/>
-                                    <TextBlock Text="Matched:" VerticalAlignment="Center" Margin="0,0,5,6"/>
-                                    <ComboBox Width="80" Margin="0,0,12,6" SelectedValue="{Binding MatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
-                                        <ComboBoxItem Content="ON"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                        <ComboBoxItem Content="OFF"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                    </ComboBox>
-                                    <TextBlock Text="Otherwise:" VerticalAlignment="Center" Margin="0,0,5,6"/>
-                                    <ComboBox Width="80" Margin="0,0,0,6" SelectedValue="{Binding UnmatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
-                                        <ComboBoxItem Content="ON"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                        <ComboBoxItem Content="OFF"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                    </ComboBox>
-                                </WrapPanel>
+                                              SelectedValue="{Binding TargetEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="DisplayName"
+                                              ToolTip="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource Self}}"/>
+                                    <WrapPanel>
+                                        <TextBlock Text="Matched:" VerticalAlignment="Center" Margin="0,0,5,6"/>
+                                        <ComboBox Width="80" Margin="0,0,12,6" SelectedValue="{Binding MatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="ON"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="OFF"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        </ComboBox>
+                                        <TextBlock Text="Otherwise:" VerticalAlignment="Center" Margin="0,0,5,6"/>
+                                        <ComboBox Width="80" Margin="0,0,0,6" SelectedValue="{Binding UnmatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="ON"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="OFF"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        </ComboBox>
+                                    </WrapPanel>
+                                </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
