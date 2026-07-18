@@ -26,6 +26,12 @@ public class DiscordBotListenerService
 
     public async Task UpdateSubscriptionStateAsync(bool isMaster, List<string> teamSteamIds)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+        {
+            StopListening();
+            return;
+        }
+
         if (!isMaster || teamSteamIds == null || teamSteamIds.Count == 0 || !SupabaseAuthManager.IsPremium)
         {
             if (_isListening)
@@ -78,6 +84,8 @@ public class DiscordBotListenerService
 
     private async Task SubscribeToGuildQueueAsync(string guildId)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
         try
         {
             var channel = SupabaseAuthManager.Client.Realtime
@@ -123,6 +131,8 @@ public class DiscordBotListenerService
 
     private async Task ProcessIncomingCommandAsync(BotCommandsQueueModel record)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
         try
         {
             var id = record.Id;
@@ -391,6 +401,8 @@ public class DiscordBotListenerService
         string message,
         List<string> ownerSteamIds)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
         if (ownerSteamIds.Count == 0)
         {
             Log($"[DiscordBotListener] {notificationType} notification skipped: no owner Steam IDs.");
@@ -495,6 +507,9 @@ public class DiscordBotListenerService
                     if (!responseMsg.IsSuccessStatusCode)
                     {
                         var responseContent = await responseMsg.Content.ReadAsStringAsync();
+                        if (SupabaseAuthManager.HandleUpgradeRequiredResponse(responseContent))
+                            return;
+
                         if (responseContent.Contains("50013", StringComparison.OrdinalIgnoreCase) ||
                             responseContent.Contains("Missing Permissions", StringComparison.OrdinalIgnoreCase))
                         {

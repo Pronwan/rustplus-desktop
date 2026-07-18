@@ -273,6 +273,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     private System.Windows.Threading.DispatcherTimer? _cloudSyncTimer;
     private volatile bool _ownCloudRestoreReady = false;
     private bool _premiumProfileRefreshBusy = false;
+    private bool _upgradeRequiredSnackbarShown;
+
+    internal void StopCloudTrafficForUpgrade()
+    {
+        _cloudSyncTimer?.Stop();
+        StopOverlayPollTimer();
+        StopTeamFeatureMasterWatch();
+    }
 
     private void StartCloudSyncTimer()
     {
@@ -387,6 +395,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
         CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
         StateChanged += (_, _) =>
         {
@@ -6422,6 +6431,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (RootSnackbar == null) return;
         if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+        if (_upgradeRequiredSnackbarShown) return;
+        _upgradeRequiredSnackbarShown = true;
 
         var stack = new StackPanel { Orientation = Orientation.Vertical };
 

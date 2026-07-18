@@ -24,4 +24,13 @@ public class CloudTrafficPolicyTests
         Assert.IsTrue(await Task.Run(() => CloudTrafficPolicy.IsMinimized));
         CloudTrafficPolicy.IsMinimized = false;
     }
+
+    [TestMethod]
+    public void UpgradeBlock_AppliesOnlyToCachedClientVersion()
+    {
+        Assert.IsTrue(CloudTrafficPolicy.IsUpgradeBlockedVersion(null, "7.1.0", "7.1.0"));
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedVersion(null, "7.1.0", "7.1.1"));
+        Assert.IsTrue(CloudTrafficPolicy.IsUpgradeBlockedVersion("7.2.0", "7.1.0", "7.1.5"));
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedVersion("7.2.0", "7.1.0", "7.2.0"));
+    }
 }

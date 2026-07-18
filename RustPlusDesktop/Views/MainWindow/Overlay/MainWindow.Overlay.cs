@@ -3122,6 +3122,7 @@ private bool _overlayToolsVisible = false;
 
     private async Task FetchSteamIdsWithOverlaysAsync()
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
         if (SupabaseAuthManager.Client == null) return;
         try
         {

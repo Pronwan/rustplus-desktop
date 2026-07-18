@@ -234,6 +234,12 @@ namespace RustPlusDesk.Services.Auth
 
         public static async Task InitializeAsync()
         {
+            if (IsUpgradeRequiredSnackbarShown)
+            {
+                ShowUpgradeRequiredWarning();
+                return;
+            }
+
             try
             {
                 var url = DataManager.SUPABASE_URL;
@@ -449,6 +455,8 @@ namespace RustPlusDesk.Services.Auth
 
         public static async Task<bool> EnsureFreshSessionAsync()
         {
+            if (IsUpgradeRequiredSnackbarShown) return false;
+
             // Guest JWT refresh — no refresh token, so call the handshake refresh flow
             if (IsGuestAuthenticated)
             {
@@ -1051,6 +1059,7 @@ namespace RustPlusDesk.Services.Auth
                     var response = await responseMsg.Content.ReadAsStringAsync();
                     if (!responseMsg.IsSuccessStatusCode)
                     {
+                        HandleUpgradeRequiredResponse(response);
                         throw new Exception($"HTTP {responseMsg.StatusCode}: {response}");
                     }
                     AppendLog($"[Cloud] Edge Function completed. Response: {response}");
@@ -1727,7 +1736,25 @@ namespace RustPlusDesk.Services.Auth
             }
         }
 
-        public static bool IsUpgradeRequiredSnackbarShown { get; set; } = false;
+        private const string UpgradeRequiredCacheKey = "upgrade_required";
+
+        private sealed class UpgradeRequiredCache
+        {
+            public string MinimumVersion { get; set; } = "";
+            public string ClientVersion { get; set; } = "";
+            public string Message { get; set; } = "";
+            public string UpgradeUrl { get; set; } = "";
+        }
+
+        private static UpgradeRequiredCache? CachedUpgradeRequirement =
+            DataManager.LoadCache<UpgradeRequiredCache>(UpgradeRequiredCacheKey);
+        private static readonly object UpgradeRequirementLock = new();
+
+        public static bool IsUpgradeRequiredSnackbarShown { get; private set; } =
+            CloudTrafficPolicy.IsUpgradeBlockedVersion(
+                CachedUpgradeRequirement?.MinimumVersion,
+                CachedUpgradeRequirement?.ClientVersion,
+                Helpers.VersionHelper.GetClientVersion());
 
         private static readonly HttpClient Http = new();
 
@@ -1751,6 +1778,9 @@ namespace RustPlusDesk.Services.Auth
             {
                 AppendLog($"[Cloud/Warning] Failed to ensure fresh session: {ex.Message}");
             }
+
+            if (IsUpgradeRequiredSnackbarShown)
+                throw new InvalidOperationException("Cloud features are unavailable because an application update is required.");
 
             var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/{functionName}";
             if (queryParams != null && queryParams.Count > 0)
@@ -1788,35 +1818,89 @@ namespace RustPlusDesk.Services.Auth
                     using var doc = JsonDocument.Parse(body);
                     var root = doc.RootElement;
                     if (root.TryGetProperty("error", out var errEl) && errEl.GetString() == "upgrade_required")
-                    {
-                        if (!IsUpgradeRequiredSnackbarShown)
-                        {
-                            IsUpgradeRequiredSnackbarShown = true;
-                            string message = root.TryGetProperty("message", out var msgEl)
-                                ? msgEl.GetString() ?? "An update is required to use cloud features."
-                                : "An update is required to use cloud features.";
-                            string upgradeUrl = root.TryGetProperty("upgrade_url", out var urlEl)
-                                ? urlEl.GetString() ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
-                                : "https://github.com/JawadYzbk/rustplus-desktop/releases/latest";
-
-                            if (Application.Current != null)
-                            {
-                                Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
-                                    {
-                                        mainWin.ShowUpgradeRequiredSnackbar(message, upgradeUrl);
-                                    }
-                                });
-                            }
-                        }
-                    }
+                        CacheUpgradeRequirement(root);
                 }
                 catch { /* Ignore JSON parse errors */ }
 
                 throw new Exception($"Edge Function {functionName} returned {resp.StatusCode}: {body}");
             }
             return body;
+        }
+
+        internal static bool HandleUpgradeRequiredResponse(string body)
+        {
+            try
+            {
+                using var document = JsonDocument.Parse(body);
+                var root = document.RootElement;
+                if (!root.TryGetProperty("error", out var error) || error.GetString() != "upgrade_required")
+                    return false;
+
+                CacheUpgradeRequirement(root);
+                return true;
+            }
+            catch (JsonException)
+            {
+                return false;
+            }
+        }
+
+        internal static void ShowUpgradeRequiredWarning()
+        {
+            if (!IsUpgradeRequiredSnackbarShown) return;
+
+            var message = CachedUpgradeRequirement?.Message ?? "An update is required to use cloud features.";
+            var upgradeUrl = CachedUpgradeRequirement?.UpgradeUrl ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest";
+            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWindow)
+                {
+                    mainWindow.StopCloudTrafficForUpgrade();
+                    mainWindow.ShowUpgradeRequiredSnackbar(message, upgradeUrl);
+                }
+            }));
+        }
+
+        private static void CacheUpgradeRequirement(JsonElement root)
+        {
+            lock (UpgradeRequirementLock)
+            {
+                if (IsUpgradeRequiredSnackbarShown) return;
+
+                CachedUpgradeRequirement = new UpgradeRequiredCache
+                {
+                    MinimumVersion = GetMinimumVersion(root),
+                    ClientVersion = Helpers.VersionHelper.GetClientVersion(),
+                    Message = root.TryGetProperty("message", out var message)
+                        ? message.GetString() ?? "An update is required to use cloud features."
+                        : "An update is required to use cloud features.",
+                    UpgradeUrl = root.TryGetProperty("upgrade_url", out var url)
+                        ? url.GetString() ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
+                        : "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
+                };
+
+                DataManager.SaveCache(UpgradeRequiredCacheKey, CachedUpgradeRequirement);
+                IsUpgradeRequiredSnackbarShown = true;
+            }
+
+            _keepAliveTimer?.Dispose();
+            _keepAliveTimer = null;
+            _profileUpdateTimer?.Dispose();
+            _profileUpdateTimer = null;
+            TeamSyncWebSocketService.Shutdown();
+            DiscordBotListenerService.Instance.StopListening();
+            ShowUpgradeRequiredWarning();
+        }
+
+        private static string GetMinimumVersion(JsonElement root)
+        {
+            foreach (var propertyName in new[] { "minimum_version", "min_version", "required_version" })
+            {
+                if (root.TryGetProperty(propertyName, out var value) && value.ValueKind == JsonValueKind.String)
+                    return value.GetString() ?? "";
+            }
+
+            return "";
         }
 
         private static void AppendLog(string msg)
