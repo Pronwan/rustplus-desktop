@@ -19,6 +19,7 @@ public class DiscordBotListenerService
     private readonly List<RealtimeChannel> _activeChannels = new();
     private readonly HashSet<string> _subscribedGuildIds = new();
     private bool _isListening;
+    private bool _isNotificationMaster;
     private List<string> _teamSteamIds = new();
     private static readonly ConcurrentDictionary<string, DateTime> InvalidChannelUntilUtc = new();
 
@@ -26,13 +27,16 @@ public class DiscordBotListenerService
 
     public async Task UpdateSubscriptionStateAsync(bool isMaster, List<string> teamSteamIds)
     {
+        _isNotificationMaster = isMaster;
+
         if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
         {
             StopListening();
             return;
         }
 
-        if (!isMaster || teamSteamIds == null || teamSteamIds.Count == 0 || !SupabaseAuthManager.IsPremium)
+        // Command rows are claimed atomically; master status only gates outgoing notifications.
+        if (teamSteamIds == null || teamSteamIds.Count == 0 || !SupabaseAuthManager.IsPremium)
         {
             if (_isListening)
             {
@@ -373,7 +377,7 @@ public class DiscordBotListenerService
 
     public async Task SendNotificationAsync(string notificationType, string message)
     {
-        if (!_isListening || _teamSteamIds.Count == 0) return;
+        if (!_isNotificationMaster || !_isListening || _teamSteamIds.Count == 0) return;
 
         await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
     }
@@ -382,10 +386,10 @@ public class DiscordBotListenerService
     {
         Log(
             $"[DiscordBotListener] Raid notification requested: serverKey='{serverKey}', "
-            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, "
+            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, isNotificationMaster={_isNotificationMaster}, "
             + $"teamCount={_teamSteamIds.Count}, IsPremium={SupabaseAuthManager.IsPremium}.");
 
-        if (_isListening && _teamSteamIds.Count > 0)
+        if (_isNotificationMaster && _isListening && _teamSteamIds.Count > 0)
         {
             await SendNotificationToOwnersAsync("raid", message, _teamSteamIds);
             return;
