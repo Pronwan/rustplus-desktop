@@ -346,6 +346,51 @@ public class ServerProfile : INotifyPropertyChanged
         }
     }
 
+    private string _discordWebhookChatAlertsMention = "";
+    public string DiscordWebhookChatAlertsMention
+    {
+        get => _discordWebhookChatAlertsMention;
+        set 
+        { 
+            _discordWebhookChatAlertsMention = value; 
+            OnProp(); 
+            OnProp(nameof(DiscordWebhookChatAlertsMentionEveryone));
+            OnProp(nameof(DiscordWebhookChatAlertsMentionHere));
+        }
+    }
+
+    public bool DiscordWebhookChatAlertsMentionEveryone
+    {
+        get => _discordWebhookChatAlertsMention.Contains("@everyone");
+        set
+        {
+            if (value && !_discordWebhookChatAlertsMention.Contains("@everyone"))
+            {
+                DiscordWebhookChatAlertsMention = string.Join(" ", new[] { _discordWebhookChatAlertsMention, "@everyone" }.Where(s => !string.IsNullOrWhiteSpace(s))).Trim();
+            }
+            else if (!value && _discordWebhookChatAlertsMention.Contains("@everyone"))
+            {
+                DiscordWebhookChatAlertsMention = _discordWebhookChatAlertsMention.Replace("@everyone", "").Replace("  ", " ").Trim();
+            }
+        }
+    }
+
+    public bool DiscordWebhookChatAlertsMentionHere
+    {
+        get => _discordWebhookChatAlertsMention.Contains("@here");
+        set
+        {
+            if (value && !_discordWebhookChatAlertsMention.Contains("@here"))
+            {
+                DiscordWebhookChatAlertsMention = string.Join(" ", new[] { _discordWebhookChatAlertsMention, "@here" }.Where(s => !string.IsNullOrWhiteSpace(s))).Trim();
+            }
+            else if (!value && _discordWebhookChatAlertsMention.Contains("@here"))
+            {
+                DiscordWebhookChatAlertsMention = _discordWebhookChatAlertsMention.Replace("@here", "").Replace("  ", " ").Trim();
+            }
+        }
+    }
+
     private bool _discordWebhookChatAlertsEnabled = false;
     public bool DiscordWebhookChatAlertsEnabled
     {

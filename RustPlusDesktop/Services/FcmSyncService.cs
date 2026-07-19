@@ -48,6 +48,7 @@ namespace RustPlusDesk.Services
                 if (!string.IsNullOrEmpty(TrackingService.DiscordWebhookUrl))
                 {
                     fcmConfigObj["discord_webhook_url"] = TrackingService.DiscordWebhookUrl;
+                    fcmConfigObj["discord_webhook_mention"] = TrackingService.DiscordWebhookMention;
                 }
 
                 if (!string.IsNullOrEmpty(TrackingService.SmartHomeWebhookUrl))

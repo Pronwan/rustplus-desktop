@@ -159,6 +159,16 @@ namespace RustPlusDesk.Models
         [JsonProperty("team_members_json")]
         [JsonPropertyName("team_members_json")]
         public string TeamMembersJson { get; set; } = string.Empty;
+
+        [Column("fcm_discord_webhook_url")]
+        [JsonProperty("fcm_discord_webhook_url")]
+        [JsonPropertyName("fcm_discord_webhook_url")]
+        public string FcmDiscordWebhookUrl { get; set; } = string.Empty;
+
+        [Column("fcm_discord_webhook_mention")]
+        [JsonProperty("fcm_discord_webhook_mention")]
+        [JsonPropertyName("fcm_discord_webhook_mention")]
+        public string FcmDiscordWebhookMention { get; set; } = string.Empty;
     }
 
     public class TeamFeatureMasterState
@@ -285,6 +295,11 @@ namespace RustPlusDesk.Models
         [JsonProperty("channel_id")]
         [JsonPropertyName("channel_id")]
         public string ChannelId { get; set; } = string.Empty;
+
+        [Column("mention_text")]
+        [JsonProperty("mention_text")]
+        [JsonPropertyName("mention_text")]
+        public string MentionText { get; set; } = string.Empty;
 
         [Column("tts_enabled")]
         [JsonProperty("tts_enabled")]

@@ -109,6 +109,7 @@ public class TrackingSettings
     public bool AnnounceTradeAlerts { get; set; } = false;
     public string SelectedLanguage { get; set; } = "";
     public string DiscordWebhookUrl { get; set; } = "";
+    public string DiscordWebhookMention { get; set; } = "";
     public string SmartHomeWebhookUrl { get; set; } = "";
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
@@ -698,6 +699,12 @@ public static class TrackingService
     {
         get => _settings.DiscordWebhookUrl;
         set { _settings.DiscordWebhookUrl = value; SaveDB(); }
+    }
+
+    public static string DiscordWebhookMention
+    {
+        get => _settings.DiscordWebhookMention;
+        set { _settings.DiscordWebhookMention = value; SaveDB(); }
     }
 
     public static string SmartHomeWebhookUrl
