@@ -26,7 +26,7 @@
             <!-- Header -->
             <Grid Grid.Row="0" Margin="0,0,0,15">
                 <TextBlock Text="{DynamicResource ChatCommandsSettings}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" />
-                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Click="BtnClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
+                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Click="BtnClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" ToolTip="Save and close chat command settings" AutomationProperties.Name="Save and close chat command settings" />
             </Grid>
 
             <!-- Content -->

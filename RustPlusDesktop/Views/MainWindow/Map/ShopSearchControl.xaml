@@ -271,7 +271,9 @@
                 <Button
                     x:Name="BtnShopProfit"
                     Style="{StaticResource ActionToolbarButton}"
-                    Click="BtnShopProfit_Click">
+                    Click="BtnShopProfit_Click"
+                    ToolTip="Find profitable shop trades"
+                    AutomationProperties.Name="Find profitable shop trades">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F4B0;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text=" Profit" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
@@ -281,7 +283,9 @@
                 <Button
                     x:Name="BtnShopBuyX"
                     Style="{StaticResource ActionToolbarButton}"
-                    Click="BtnShopBuyX_Click">
+                    Click="BtnShopBuyX_Click"
+                    ToolTip="Find where to buy an item"
+                    AutomationProperties.Name="Find where to buy an item">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F50D;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text=" Buy X" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
@@ -292,7 +296,9 @@
                     x:Name="BtnShopAddAlert"
                     Style="{StaticResource ActionToolbarButton}"
                     Margin="0"
-                    Click="BtnShopAddAlert_Click">
+                    Click="BtnShopAddAlert_Click"
+                    ToolTip="Create a shop alert"
+                    AutomationProperties.Name="Create a shop alert">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F514;" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text=" Alert" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
