@@ -1334,8 +1334,16 @@
                                 Padding="4"
                                 Appearance="Secondary"
                                 Click="BtnDeviceAutomation_Click"
-                                Icon="{ui:SymbolIcon Symbol=Settings24}"
                                 ToolTip="Device Automation">
+                                <ui:Button.Icon>
+                                    <ui:ImageIcon
+                                        Width="24"
+                                        Height="24"
+                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                        SnapsToDevicePixels="True"
+                                        Source="pack://application:,,,/Assets/icons/automation.png"
+                                        UseLayoutRounding="True" />
+                                </ui:Button.Icon>
                                 <ui:Button.Style>
                                     <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                         <Style.Triggers>
@@ -3801,9 +3809,145 @@
                                                                                  
                                                                                  <!-- Horizontal Separator -->
                                                                                  <Border BorderBrush="#15FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10" />
-                                                                                 
+
+                                                                                 <TextBlock
+                                                                                     Margin="8,0,8,10"
+                                                                                     FontSize="12"
+                                                                                     FontWeight="SemiBold"
+                                                                                     Foreground="{DynamicResource TextPrimary}"
+                                                                                     Text="Chat Message Alerts" />
+
                                                                                  <!-- Categorized Items Host -->
                                                                                  <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+
+                                                                                 <Border BorderBrush="#15FFFFFF" BorderThickness="0,1,0,0" Margin="0,10,0,10" />
+
+                                                                                 <!-- Full-width generic alarm fallback settings -->
+                                                                                 <Grid Margin="8,0,8,2">
+                                                                                     <Grid.ColumnDefinitions>
+                                                                                         <ColumnDefinition Width="180" />
+                                                                                         <ColumnDefinition Width="*" />
+                                                                                         <ColumnDefinition Width="*" />
+                                                                                         <ColumnDefinition Width="*" />
+                                                                                     </Grid.ColumnDefinitions>
+                                                                                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                                                         <TextBlock
+                                                                                             VerticalAlignment="Center"
+                                                                                             FontSize="11"
+                                                                                             FontWeight="Bold"
+                                                                                             Foreground="{DynamicResource TextSubtle}"
+                                                                                             Text="GENERIC ALARMS" />
+                                                                                         <ui:Button
+                                                                                             x:Name="GenericAlarmInfoButton"
+                                                                                             Width="22"
+                                                                                             Height="22"
+                                                                                             Margin="5,0,0,0"
+                                                                                             Padding="2"
+                                                                                             Appearance="Transparent"
+                                                                                             AutomationProperties.Name="What is a generic alarm?">
+                                                                                             <ui:SymbolIcon FontSize="14" Symbol="Info20" />
+                                                                                         </ui:Button>
+                                                                                         <Popup
+                                                                                             AllowsTransparency="True"
+                                                                                             IsHitTestVisible="False"
+                                                                                             IsOpen="{Binding IsMouseOver, ElementName=GenericAlarmInfoButton, Mode=OneWay}"
+                                                                                             Placement="Top"
+                                                                                             PlacementTarget="{Binding ElementName=GenericAlarmInfoButton}"
+                                                                                             PopupAnimation="Fade"
+                                                                                             StaysOpen="True"
+                                                                                             VerticalOffset="-8">
+                                                                                             <Grid Width="380">
+                                                                                                 <Border
+                                                                                                     Width="12"
+                                                                                                     Height="12"
+                                                                                                     Margin="0,0,0,2"
+                                                                                                     HorizontalAlignment="Center"
+                                                                                                     VerticalAlignment="Bottom"
+                                                                                                     Background="#FC16181C"
+                                                                                                     BorderBrush="#5560CDFF"
+                                                                                                     BorderThickness="0,0,1,1"
+                                                                                                     RenderTransformOrigin="0.5,0.5">
+                                                                                                     <Border.RenderTransform>
+                                                                                                         <RotateTransform Angle="45" />
+                                                                                                     </Border.RenderTransform>
+                                                                                                 </Border>
+                                                                                                 <Border
+                                                                                                     Margin="0,0,0,8"
+                                                                                                     Padding="14,12"
+                                                                                                     Background="#FC16181C"
+                                                                                                     BorderBrush="#5560CDFF"
+                                                                                                     BorderThickness="1"
+                                                                                                     CornerRadius="9">
+                                                                                                     <Border.Effect>
+                                                                                                         <DropShadowEffect BlurRadius="16" Color="Black" Opacity="0.6" ShadowDepth="3" />
+                                                                                                     </Border.Effect>
+                                                                                                     <StackPanel>
+                                                                                                         <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                                                                                             <ui:SymbolIcon Margin="0,0,7,0" Foreground="{DynamicResource Accent}" Symbol="Info20" />
+                                                                                                             <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="White" Text="What is a generic alarm?" />
+                                                                                                         </StackPanel>
+                                                                                                         <TextBlock
+                                                                                                             Margin="0,0,0,10"
+                                                                                                             FontSize="12"
+                                                                                                             Foreground="#D8FFFFFF"
+                                                                                                             LineHeight="18"
+                                                                                                             Text="Rust sometimes sends a raid notification without the Smart Alarm's device ID. RustPlusDesk cannot tell which alarm triggered it, so the shared settings below are used instead of a device's own settings."
+                                                                                                             TextWrapping="Wrap" />
+                                                                                                         <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Popup Window" /><Run Text=" — opens the Incoming Alarms window." /></TextBlock>
+                                                                                                         <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="In-App Alert" /><Run Text=" — shows the red alarm card inside the app." /></TextBlock>
+                                                                                                         <TextBlock FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Audio Alert" /><Run Text=" — plays the alarm sound. Use the … button to choose a custom sound." /></TextBlock>
+                                                                                                     </StackPanel>
+                                                                                                 </Border>
+                                                                                             </Grid>
+                                                                                         </Popup>
+                                                                                     </StackPanel>
+                                                                                     <ui:ToggleSwitch
+                                                                                         Grid.Column="1"
+                                                                                         Margin="8,0"
+                                                                                         VerticalAlignment="Center"
+                                                                                         Click="GenericAlarmSetting_Click"
+                                                                                         Content="{DynamicResource PopupWindow}"
+                                                                                         Loaded="GenericAlarmSetting_Loaded"
+                                                                                         Tag="Popup" />
+                                                                                     <ui:ToggleSwitch
+                                                                                         Grid.Column="2"
+                                                                                         Margin="8,0"
+                                                                                         VerticalAlignment="Center"
+                                                                                         Click="GenericAlarmSetting_Click"
+                                                                                         Content="{DynamicResource InAppAlert}"
+                                                                                         Loaded="GenericAlarmSetting_Loaded"
+                                                                                         Tag="Overlay" />
+                                                                                     <StackPanel Grid.Column="3" Margin="8,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                                                                         <ui:ToggleSwitch
+                                                                                             VerticalAlignment="Center"
+                                                                                             Click="GenericAlarmSetting_Click"
+                                                                                             Content="{DynamicResource AudioAlert}"
+                                                                                             Loaded="GenericAlarmSetting_Loaded"
+                                                                                             Tag="Audio" />
+                                                                                         <ui:Button
+                                                                                             Width="28"
+                                                                                             Height="28"
+                                                                                             Margin="4,0,0,0"
+                                                                                             Padding="4"
+                                                                                             Appearance="Transparent"
+                                                                                             AutomationProperties.Name="Generic alarm audio options"
+                                                                                             Click="GenericAlarmAudioMenu_Click"
+                                                                                             Icon="{ui:SymbolIcon Symbol=MoreHorizontal24}">
+                                                                                             <ui:Button.ContextMenu>
+                                                                                                 <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                                                     <MenuItem
+                                                                                                         Click="OnSelectAlarmAudioFileClick"
+                                                                                                         Header="{DynamicResource CustomAudioFile}"
+                                                                                                         Tag="GenericAlarm" />
+                                                                                                     <MenuItem
+                                                                                                         Click="OnResetAlarmAudioFileClick"
+                                                                                                         Header="{DynamicResource ResetToDefault}"
+                                                                                                         Tag="GenericAlarm" />
+                                                                                                 </ContextMenu>
+                                                                                             </ui:Button.ContextMenu>
+                                                                                         </ui:Button>
+                                                                                     </StackPanel>
+                                                                                 </Grid>
                                                                              </StackPanel>
                                                                          </Border>
                                                                      </ControlTemplate>
