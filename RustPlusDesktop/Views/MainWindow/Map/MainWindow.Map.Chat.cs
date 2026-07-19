@@ -130,9 +130,10 @@ public partial class MainWindow
 
         try
         {
+            var mention = string.IsNullOrWhiteSpace(profile.DiscordWebhookChatAlertsMention) ? "" : $"{profile.DiscordWebhookChatAlertsMention}\n";
             var payload = new
             {
-                content = $"**[{profile.Name ?? "Rust Server"}]** {message}",
+                content = $"{mention}**[{profile.Name ?? "Rust Server"}]** {message}",
                 tts = profile.DiscordWebhookChatAlertsTts
             };
             var json = JsonSerializer.Serialize(payload);

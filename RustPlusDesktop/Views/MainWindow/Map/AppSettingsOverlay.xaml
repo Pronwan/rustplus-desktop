@@ -445,10 +445,23 @@
                         <!-- Offline Alarms Sync -->
                         <Expander Header="Offline Cloud Alerts (FCM)" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
                             <StackPanel Margin="0,8,0,0">
-                                <TextBlock Text="Sync your Rust+ Connection to the cloud to receive smart Raid/Event alerts on Discord, Alexa, and Google Home even when your Desktop App is closed." TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,8" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Sync your Rust+ Connection to the cloud to receive smart Raid/Event alerts on Discord, Alexa, and Google Home even when your Desktop App is closed." TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="12" />
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnFcmHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Webhook Info" VerticalAlignment="Top" />
+                                </Grid>
                                 
                                 <TextBlock Text="Discord Webhook URL (Offline Alerts)" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,2" />
-                                <TextBox x:Name="TxtDiscordWebhookUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Margin="0,0,0,8" VerticalAlignment="Center" TextChanged="TxtDiscordWebhookUrl_TextChanged"/>
+                                <TextBox x:Name="TxtDiscordWebhookUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Margin="0,0,0,4" VerticalAlignment="Center" TextChanged="TxtDiscordWebhookUrl_TextChanged"/>
+                                
+                                <TextBlock Text="Optional Pings" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,0,2" />
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <CheckBox x:Name="ChkFcmMentionEveryone" Content="@everyone" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkFcmMentionHere" Content="@here" Foreground="{DynamicResource TextSubtle}" FontSize="11" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" Style="{StaticResource DotCheckBox}" />
+                                </StackPanel>
 
                                 <TextBlock Text="Smart Home Webhook URL (e.g. IFTTT, Alexa, Google)" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,2" />
                                 <TextBox x:Name="TxtSmartHomeWebhookUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Margin="0,0,0,12" VerticalAlignment="Center" TextChanged="TxtSmartHomeWebhookUrl_TextChanged"/>
@@ -496,10 +509,15 @@
                                 <Grid Margin="0,0,0,6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtChannelRaid" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <TextBox x:Name="TxtChannelRaid" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" Margin="0,0,4,0" ToolTip="Channel ID" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                                        <CheckBox x:Name="ChkChannelRaidEveryone" Content="@everyone" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                        <CheckBox x:Name="ChkChannelRaidHere" Content="@here" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="ChkRaidTTS" Grid.Column="2" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Events Channel -->
@@ -507,10 +525,15 @@
                                 <Grid Margin="0,0,0,6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtChannelEvents" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <TextBox x:Name="TxtChannelEvents" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" Margin="0,0,4,0" ToolTip="Channel ID" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                                        <CheckBox x:Name="ChkChannelEventsEveryone" Content="@everyone" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                        <CheckBox x:Name="ChkChannelEventsHere" Content="@here" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="ChkEventsTTS" Grid.Column="2" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Chat Alerts Channel -->
@@ -518,10 +541,15 @@
                                 <Grid Margin="0,0,0,6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtChannelChat" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <TextBox x:Name="TxtChannelChat" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" Margin="0,0,4,0" ToolTip="Channel ID" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                                        <CheckBox x:Name="ChkChannelChatEveryone" Content="@everyone" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                        <CheckBox x:Name="ChkChannelChatHere" Content="@here" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="ChkChatTTS" Grid.Column="2" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <!-- Shop Alerts Channel -->
@@ -529,10 +557,15 @@
                                 <Grid Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtChannelShop" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" />
-                                    <CheckBox x:Name="ChkShopTTS" Grid.Column="1" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
+                                    <TextBox x:Name="TxtChannelShop" Height="26" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,3" Margin="0,0,4,0" ToolTip="Channel ID" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                                        <CheckBox x:Name="ChkChannelShopEveryone" Content="@everyone" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                        <CheckBox x:Name="ChkChannelShopHere" Content="@here" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" Style="{StaticResource DotCheckBox}" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="ChkShopTTS" Grid.Column="2" Content="TTS" Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource DotCheckBox}" />
                                 </Grid>
 
                                 <ui:Button x:Name="BtnSaveChannels" Content="Save Channels Config" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />
@@ -540,11 +573,17 @@
                         </Expander>
                         <Expander Header="Alexa Smart Home" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
                             <StackPanel Margin="0,8,0,0">
-                                <TextBlock Text="Control your Rust Smart Switches with Amazon Alexa voice commands and trigger Alexa routines when your Smart Alarms go off." 
-                                           Foreground="{DynamicResource TextSubtle}" 
-                                           FontSize="11" 
-                                           Margin="0,0,0,12" 
-                                           TextWrapping="Wrap"/>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Control your Rust Smart Switches with Amazon Alexa voice commands and trigger Alexa routines when your Smart Alarms go off." 
+                                               Foreground="{DynamicResource TextSubtle}" 
+                                               FontSize="11" 
+                                               TextWrapping="Wrap"/>
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnAlexaHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Alexa Setup Info" VerticalAlignment="Top" />
+                                </Grid>
                                 
                                 <TextBlock Text="Amazon Alexa Login" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4"/>
                                 <Grid Margin="0,0,0,16">
@@ -557,7 +596,7 @@
                                 </Grid>
 
                                 <TextBlock Text="Select Server to Sync with Alexa" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4"/>
-                                <ComboBox x:Name="CmbAlexaServer" Height="30" Margin="0,0,0,12"/>
+                                <ComboBox x:Name="CmbAlexaServer" MinHeight="32" Padding="8,4" Margin="0,0,0,12"/>
                                 
                                 <Grid>
                                     <Grid.ColumnDefinitions>

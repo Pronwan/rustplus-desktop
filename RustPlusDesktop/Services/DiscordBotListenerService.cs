@@ -498,7 +498,7 @@ public class DiscordBotListenerService
                 var payload = new
                 {
                     channel_id = config.ChannelId,
-                    content = message,
+                    content = string.IsNullOrWhiteSpace(config.MentionText) ? message : $"{config.MentionText}\n{message}",
                     tts = config.TtsEnabled,
                     audio_alert = config.AudioAlertEnabled
                 };

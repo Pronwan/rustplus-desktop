@@ -103,6 +103,9 @@ namespace RustPlusDesk.Views
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
             
             TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
+            var fcmMention = TrackingService.DiscordWebhookMention ?? "";
+            ChkFcmMentionEveryone.IsChecked = fcmMention.Contains("@everyone");
+            ChkFcmMentionHere.IsChecked = fcmMention.Contains("@here");
             TxtSmartHomeWebhookUrl.Text = TrackingService.SmartHomeWebhookUrl;
 
             // Map performance settings
@@ -610,6 +613,38 @@ namespace RustPlusDesk.Views
             catch { }
         }
 
+        private async void BtnFcmHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "With Webhooks, we can automatically send FCM notifications (Offline Death and Raid Alerts) to Discord or other Smart Home solutions like IFTTT to e.g. trigger smart lights or be called when a raid happens.";
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = "Offline Cloud Alerts",
+                Content = msg,
+                PrimaryButtonText = "OK"
+            };
+            await msgBox.ShowDialogAsync();
+        }
+
+        private async void BtnAlexaHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use Alexa Integration:\n\n" +
+                      "1. Enable the 'RustPlusDesktop' Skill in your Amazon Alexa App.\n" +
+                      "2. Select the server whose devices you want to control with Alexa or from which you want to receive Raid Alerts.\n" +
+                      "3. Click 'Generate Login PIN'.\n" +
+                      "4. Link accounts in the Alexa App by entering the PIN.\n" +
+                      "5. Search for new devices in the Alexa App.\n\n" +
+                      "Smart Switches and Smart Alerts will then appear in Alexa as Smart Devices. Smart Alerts are created as motion sensors in the device list of the linked server with their name. Routines can then be created for these. e.g. If triggered, announce on all Alexa devices and send a push notification and turn on my lights.\n\n" +
+                      "Switches can be turned on and off via Alexa as usual, renamed and activated by their name. e.g. \"Alexa, turn on Turrets\".\n\n" +
+                      "If new devices are added later, they can easily be found in Alexa via the device search. After a wipe, simply delete the old devices from the Alexa App.";
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = "Alexa Smart Home",
+                Content = msg,
+                PrimaryButtonText = "OK"
+            };
+            await msgBox.ShowDialogAsync();
+        }
+
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             try
@@ -796,7 +831,7 @@ namespace RustPlusDesk.Views
                     existingList = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(configEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
                 }
 
-                async Task SaveChannelAsync(string type, string channelId, bool tts)
+                async Task SaveChannelAsync(string type, string channelId, bool tts, string mentionText)
                 {
                     if (string.IsNullOrWhiteSpace(channelId))
                     {
@@ -818,6 +853,7 @@ namespace RustPlusDesk.Views
                         guild_id = guildId,
                         notification_type = type,
                         channel_id = channelId.Trim(),
+                        mention_text = (mentionText ?? "").Trim(),
                         tts_enabled = tts,
                         audio_alert_enabled = false
                     };
@@ -825,10 +861,10 @@ namespace RustPlusDesk.Views
                     await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/channels", HttpMethod.Post, payload);
                 }
 
-                await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true);
-                await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true);
-                await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true);
-                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true);
+                await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelRaidEveryone, ChkChannelRaidHere));
+                await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelEventsEveryone, ChkChannelEventsHere));
+                await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
+                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
 
                 MessageBox.Show("Channels configuration saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -840,6 +876,14 @@ namespace RustPlusDesk.Views
             {
                 BtnSaveChannels.IsEnabled = true;
             }
+        }
+
+        private string GetMentionFromCheckboxes(System.Windows.Controls.CheckBox everyone, System.Windows.Controls.CheckBox here)
+        {
+            var list = new List<string>();
+            if (everyone?.IsChecked == true) list.Add("@everyone");
+            if (here?.IsChecked == true) list.Add("@here");
+            return string.Join(" ", list);
         }
 
         private async Task LoadDiscordBotSettingsAsync()
@@ -881,12 +925,23 @@ namespace RustPlusDesk.Views
                     Dispatcher.Invoke(() =>
                     {
                         TxtChannelRaid.Text = string.Empty;
+                        ChkChannelRaidEveryone.IsChecked = false;
+                        ChkChannelRaidHere.IsChecked = false;
                         ChkRaidTTS.IsChecked = false;
+                        
                         TxtChannelEvents.Text = string.Empty;
+                        ChkChannelEventsEveryone.IsChecked = false;
+                        ChkChannelEventsHere.IsChecked = false;
                         ChkEventsTTS.IsChecked = false;
+                        
                         TxtChannelChat.Text = string.Empty;
+                        ChkChannelChatEveryone.IsChecked = false;
+                        ChkChannelChatHere.IsChecked = false;
                         ChkChatTTS.IsChecked = false;
+                        
                         TxtChannelShop.Text = string.Empty;
+                        ChkChannelShopEveryone.IsChecked = false;
+                        ChkChannelShopHere.IsChecked = false;
                         ChkShopTTS.IsChecked = false;
 
                         foreach (var ch in channelsList)
@@ -895,18 +950,26 @@ namespace RustPlusDesk.Views
                             {
                                 case "raid":
                                     TxtChannelRaid.Text = ch.ChannelId;
+                                    ChkChannelRaidEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelRaidHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
                                     ChkRaidTTS.IsChecked = ch.TtsEnabled;
                                     break;
                                 case "events":
                                     TxtChannelEvents.Text = ch.ChannelId;
+                                    ChkChannelEventsEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelEventsHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
                                     ChkEventsTTS.IsChecked = ch.TtsEnabled;
                                     break;
                                 case "chat":
                                     TxtChannelChat.Text = ch.ChannelId;
+                                    ChkChannelChatEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelChatHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
                                     ChkChatTTS.IsChecked = ch.TtsEnabled;
                                     break;
                                 case "shop":
                                     TxtChannelShop.Text = ch.ChannelId;
+                                    ChkChannelShopEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelShopHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
                                     ChkShopTTS.IsChecked = ch.TtsEnabled;
                                     break;
                             }
@@ -1048,6 +1111,12 @@ namespace RustPlusDesk.Views
             TrackingService.DiscordWebhookUrl = TxtDiscordWebhookUrl.Text;
         }
 
+        private void ChkFcmMention_Changed(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            TrackingService.DiscordWebhookMention = GetMentionFromCheckboxes(ChkFcmMentionEveryone, ChkFcmMentionHere);
+        }
+
         private void TxtSmartHomeWebhookUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_isSettingsInitialized) return;
@@ -1182,9 +1251,25 @@ namespace RustPlusDesk.Views
             var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
             if (user == null) return;
 
+            var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
+            if (consentDialog.ShowDialog() != true) return;
+
             BtnLinkAlexa.IsEnabled = false;
             try
             {
+                bool syncSuccess = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+                if (!syncSuccess)
+                {
+                    var msgBox = new Wpf.Ui.Controls.MessageBox
+                    {
+                        Title = "Cloud Sync Failed",
+                        Content = "Failed to sync FCM connection. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.",
+                        PrimaryButtonText = "OK"
+                    };
+                    await msgBox.ShowDialogAsync();
+                    return;
+                }
+
                 var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
                 if (serverProfile != null)
                 {
@@ -1218,12 +1303,24 @@ namespace RustPlusDesk.Views
                         _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
                     }
 
-                    MessageBox.Show("Alexa Server linked successfully! Alexa will now control devices from this server.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var msgBox = new Wpf.Ui.Controls.MessageBox
+                    {
+                        Title = "Success",
+                        Content = "Alexa Server linked successfully! Alexa will now control devices from this server and receive Smart Alarms.",
+                        PrimaryButtonText = "OK"
+                    };
+                    await msgBox.ShowDialogAsync();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to link Alexa Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = "Error",
+                    Content = $"Failed to link Alexa Server: {ex.Message}",
+                    PrimaryButtonText = "OK"
+                };
+                await msgBox.ShowDialogAsync();
             }
             finally
             {
