@@ -5150,6 +5150,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
     }
 
+    private void GenericAlarmAudioMenu_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is not FrameworkElement button || button.ContextMenu is not ContextMenu menu) return;
+
+        menu.PlacementTarget = button;
+        menu.Placement = PlacementMode.Bottom;
+        menu.IsOpen = true;
+    }
+
     internal void SyncAlertMenuItems()
     {
         bool masterOn = TrackingService.AnnounceSpawnsMaster;

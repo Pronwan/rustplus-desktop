@@ -120,6 +120,7 @@ public class TrackingSettings
     public bool GenericAlarmPopupEnabled { get; set; } = true;
     public bool GenericAlarmOverlayEnabled { get; set; } = true;
     public bool GenericAlarmAudioEnabled { get; set; } = true;
+    public string GenericAlarmAudioFilePath { get; set; } = string.Empty;
     public Dictionary<string, int> LearnedDockingDurations { get; set; } = new();
     public Dictionary<string, int> LearnedCargoFullLifeMinutes { get; set; } = new();
     public Dictionary<string, int> LearnedCargoTravelMinutes { get; set; } = new();
@@ -815,6 +816,11 @@ public static class TrackingService
     {
         get => _settings.GenericAlarmAudioEnabled;
         set { _settings.GenericAlarmAudioEnabled = value; SaveDB(); }
+    }
+    public static string GenericAlarmAudioFilePath
+    {
+        get => _settings.GenericAlarmAudioFilePath ?? string.Empty;
+        set { _settings.GenericAlarmAudioFilePath = value; SaveDB(); }
     }
     public static string LastServerName
     {
