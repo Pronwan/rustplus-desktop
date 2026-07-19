@@ -3895,7 +3895,7 @@
                                                                                                              TextWrapping="Wrap" />
                                                                                                          <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Popup Window" /><Run Text=" — opens the Incoming Alarms window." /></TextBlock>
                                                                                                          <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="In-App Alert" /><Run Text=" — shows the red alarm card inside the app." /></TextBlock>
-                                                                                                         <TextBlock FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Audio Alert" /><Run Text=" — plays the alarm sound." /></TextBlock>
+                                                                                                         <TextBlock FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Audio Alert" /><Run Text=" — plays the alarm sound. Use the … button to choose a custom sound." /></TextBlock>
                                                                                                      </StackPanel>
                                                                                                  </Border>
                                                                                              </Grid>
@@ -3917,14 +3917,36 @@
                                                                                          Content="{DynamicResource InAppAlert}"
                                                                                          Loaded="GenericAlarmSetting_Loaded"
                                                                                          Tag="Overlay" />
-                                                                                     <ui:ToggleSwitch
-                                                                                         Grid.Column="3"
-                                                                                         Margin="8,0"
-                                                                                         VerticalAlignment="Center"
-                                                                                         Click="GenericAlarmSetting_Click"
-                                                                                         Content="{DynamicResource AudioAlert}"
-                                                                                         Loaded="GenericAlarmSetting_Loaded"
-                                                                                         Tag="Audio" />
+                                                                                     <StackPanel Grid.Column="3" Margin="8,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                                                                         <ui:ToggleSwitch
+                                                                                             VerticalAlignment="Center"
+                                                                                             Click="GenericAlarmSetting_Click"
+                                                                                             Content="{DynamicResource AudioAlert}"
+                                                                                             Loaded="GenericAlarmSetting_Loaded"
+                                                                                             Tag="Audio" />
+                                                                                         <ui:Button
+                                                                                             Width="28"
+                                                                                             Height="28"
+                                                                                             Margin="4,0,0,0"
+                                                                                             Padding="4"
+                                                                                             Appearance="Transparent"
+                                                                                             AutomationProperties.Name="Generic alarm audio options"
+                                                                                             Click="GenericAlarmAudioMenu_Click"
+                                                                                             Icon="{ui:SymbolIcon Symbol=MoreHorizontal24}">
+                                                                                             <ui:Button.ContextMenu>
+                                                                                                 <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                                                     <MenuItem
+                                                                                                         Click="OnSelectAlarmAudioFileClick"
+                                                                                                         Header="{DynamicResource CustomAudioFile}"
+                                                                                                         Tag="GenericAlarm" />
+                                                                                                     <MenuItem
+                                                                                                         Click="OnResetAlarmAudioFileClick"
+                                                                                                         Header="{DynamicResource ResetToDefault}"
+                                                                                                         Tag="GenericAlarm" />
+                                                                                                 </ContextMenu>
+                                                                                             </ui:Button.ContextMenu>
+                                                                                         </ui:Button>
+                                                                                     </StackPanel>
                                                                                  </Grid>
                                                                              </StackPanel>
                                                                          </Border>

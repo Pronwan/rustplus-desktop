@@ -682,19 +682,25 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void OnSelectAlarmAudioFileClick(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is SmartDevice dev)
-        {
-            var dlg = new Microsoft.Win32.OpenFileDialog
-            {
-                Filter = "Audio Files|*.mp3;*.wav|All Files|*.*"
-            };
+        if (sender is not MenuItem mi) return;
 
-            if (dlg.ShowDialog() == true)
-            {
-                dev.AudioFilePath = dlg.FileName;
-                _vm.Save();
-                AppendLog($"Selected audio for #{dev.EntityId}: {dlg.SafeFileName}");
-            }
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Audio Files|*.mp3;*.wav|All Files|*.*"
+        };
+
+        if (dlg.ShowDialog() != true) return;
+
+        if (mi.Tag is SmartDevice dev)
+        {
+            dev.AudioFilePath = dlg.FileName;
+            _vm.Save();
+            AppendLog($"Selected audio for #{dev.EntityId}: {dlg.SafeFileName}");
+        }
+        else if (Equals(mi.Tag, "GenericAlarm"))
+        {
+            TrackingService.GenericAlarmAudioFilePath = dlg.FileName;
+            AppendLog($"Selected generic alarm audio: {dlg.SafeFileName}");
         }
     }
 
@@ -705,6 +711,11 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
             dev.AudioFilePath = null;
             _vm.Save();
             AppendLog($"Reset audio to default for #{dev.EntityId}");
+        }
+        else if (sender is MenuItem generic && Equals(generic.Tag, "GenericAlarm"))
+        {
+            TrackingService.GenericAlarmAudioFilePath = string.Empty;
+            AppendLog("Reset generic alarm audio to default");
         }
     }
 
@@ -740,7 +751,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
     private void PlayAlarmAudio(SmartDevice? dev)
     {
         // Wenn ein Gerät erkannt wurde, prüfen wir seine individuellen Audio-Einstellungen.
-        // Wenn kein Gerät erkannt wurde (generischer Alarm), spielen wir den Standard-Sound ab.
+        // Wenn kein Gerät erkannt wurde, verwenden wir den generischen benutzerdefinierten oder Standard-Sound.
         if (dev != null && !dev.AudioEnabled) return;
 
         try
@@ -751,6 +762,10 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
             if (dev != null && !string.IsNullOrWhiteSpace(dev.AudioFilePath))
             {
                 audioFile = dev.AudioFilePath!;
+            }
+            else if (dev == null && !string.IsNullOrWhiteSpace(TrackingService.GenericAlarmAudioFilePath))
+            {
+                audioFile = TrackingService.GenericAlarmAudioFilePath;
             }
             else
             {
