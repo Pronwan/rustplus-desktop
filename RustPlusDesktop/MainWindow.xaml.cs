@@ -2530,8 +2530,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _lastGenericAlarmPerServer[cleanSrv] = now;
         }
 
-        // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
-        PlayAlarmAudio(dev);
+        // 4) Play Audio (per-device setting when identified, generic fallback otherwise)
+        if (dev != null || TrackingService.GenericAlarmAudioEnabled)
+        {
+            PlayAlarmAudio(dev);
+        }
+        else
+        {
+            AppendLog($"[alarm/debug] ({source}) Skipping audio because generic alarm audio is disabled.");
+        }
 
         // Send smart alert to Discord Bot
         alarmProfile ??= _vm.Servers.FirstOrDefault(p =>
@@ -2589,12 +2596,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         else
         {
             if (n.EntityId.HasValue)
-                AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Showing generic popup.");
+                AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Using generic alarm settings.");
             else
-                AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Showing generic popup.");
+                AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Using generic alarm settings.");
 
-            // Generic overlay fallback
-            AddAlarmToOverlay(null, n);
+            if (TrackingService.GenericAlarmOverlayEnabled)
+            {
+                AddAlarmToOverlay(null, n);
+            }
+
+            if (!TrackingService.GenericAlarmPopupEnabled)
+            {
+                AppendLog($"[alarm/debug] ({source}) Skipping popup window because generic alarm popups are disabled.");
+                return;
+            }
         }
 
         AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");
@@ -5093,6 +5108,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 RequestTeamFeatureMasterSync();
             }
         }
+    }
+
+    private void GenericAlarmSetting_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
+
+        bool enabled = toggle.IsChecked == true;
+        switch (setting)
+        {
+            case "Popup": TrackingService.GenericAlarmPopupEnabled = enabled; break;
+            case "Overlay": TrackingService.GenericAlarmOverlayEnabled = enabled; break;
+            case "Audio": TrackingService.GenericAlarmAudioEnabled = enabled; break;
+        }
+    }
+
+    private void GenericAlarmSetting_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
+
+        toggle.IsChecked = setting switch
+        {
+            "Popup" => TrackingService.GenericAlarmPopupEnabled,
+            "Overlay" => TrackingService.GenericAlarmOverlayEnabled,
+            "Audio" => TrackingService.GenericAlarmAudioEnabled,
+            _ => false
+        };
     }
 
     internal void SyncAlertMenuItems()
