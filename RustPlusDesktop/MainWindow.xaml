@@ -6443,7 +6443,8 @@
                                                     FontSize="12"
                                                     Foreground="#99FFFFFF"
                                                     Style="{StaticResource GhostButton}"
-                                                    ToolTip="{DynamicResource CloseSearch}">
+                                                    ToolTip="Close Shops panel"
+                                                    AutomationProperties.Name="Close Shops panel">
                                                     <Button.Resources>
                                                         <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
                                                             <Setter Property="Background" Value="Transparent" />
@@ -6507,7 +6508,9 @@
                                         VerticalContentAlignment="Center"
                                         Background="Transparent"
                                         BorderThickness="0"
-                                        Click="BtnShopSearch_Click">
+                                        Click="BtnShopSearch_Click"
+                                        ToolTip="Open or close Shops panel (Ctrl+Shift+S)"
+                                        AutomationProperties.Name="Open or close Shops panel">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border
@@ -6614,7 +6617,8 @@
                                                 Appearance="Transparent"
                                                 Icon="{ui:SymbolIcon Symbol=Dismiss24}"
                                                 Foreground="{DynamicResource TextSubtle}"
-                                                ToolTip="{DynamicResource CloseChat}"
+                                                ToolTip="Close Team panel"
+                                                AutomationProperties.Name="Close Team panel"
                                                 Padding="0" />
                                         </Grid>
 
@@ -6828,7 +6832,9 @@
                                         VerticalContentAlignment="Center"
                                         Background="Transparent"
                                         BorderThickness="0"
-                                        Click="BtnToggleChat_Click">
+                                        Click="BtnToggleChat_Click"
+                                        ToolTip="Open or close Team panel (Ctrl+Shift+T)"
+                                        AutomationProperties.Name="Open or close Team panel">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border

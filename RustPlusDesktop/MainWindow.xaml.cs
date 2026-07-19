@@ -875,6 +875,23 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        if (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
+        {
+            if (e.Key == Key.T)
+            {
+                e.Handled = true;
+                BtnToggleChat_Click(BtnChatToggle, new RoutedEventArgs());
+                return;
+            }
+
+            if (e.Key == Key.S)
+            {
+                e.Handled = true;
+                BtnShopSearch_Click(BtnShopToggle, new RoutedEventArgs());
+                return;
+            }
+        }
+
         if (e.Key == Key.F11)
         {
             if (_isMap3DActive)
