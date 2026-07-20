@@ -238,7 +238,7 @@ public class MainViewModel : INotifyPropertyChanged
         set { if (_isPremium != value) { _isPremium = value; OnPropertyChanged(); } }
     }
 
-    private string _cloudAccountStatusText = "Not signed in · sync and backups unavailable";
+    private string _cloudAccountStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiNotSignedInSyncAndBackupsUnavailable");
     public string CloudAccountStatusText
     {
         get => _cloudAccountStatusText;
@@ -474,7 +474,7 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
-    private string _updateStatusText = "Check for updates";
+    private string _updateStatusText = RustPlusDesk.Properties.Resources.GetString("CheckForUpdates");
     public string UpdateStatusText
     {
         get => _updateStatusText;

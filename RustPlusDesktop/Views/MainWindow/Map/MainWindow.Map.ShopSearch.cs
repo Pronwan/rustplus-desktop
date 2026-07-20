@@ -74,7 +74,7 @@ public partial class MainWindow
         var head = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6) };
         
         // Shop Name
-        var shopTitle = CleanLabel(s.Label) ?? "Shop";
+        var shopTitle = CleanLabel(s.Label) ?? Properties.Resources.ShopWord;
         
         head.Children.Add(new TextBlock
         {

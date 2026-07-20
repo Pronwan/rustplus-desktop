@@ -701,7 +701,7 @@ namespace RustPlusDesk.Views
                     rule.IsSaved = !rule.IsSaved;
                     _mainWindow.SavePersistentAlerts();
                     ApplyAlertBtnStyle(btnSave, rule.IsSaved, true);
-                    btnSave.ToolTip = rule.IsSaved ? "Saved (click to unsave)" : "Save alert";
+                    btnSave.ToolTip = rule.IsSaved ? RustPlusDesk.Properties.Resources.GetString("CodeUiSavedClickToUnsave") : RustPlusDesk.Properties.Resources.GetString("CodeUiSaveAlert");
                 };
                 Grid.SetColumn(btnSave, 3);
                 grid.Children.Add(btnSave);

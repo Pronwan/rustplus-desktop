@@ -130,7 +130,7 @@ public static class Map3DLocalBuildService
                 CandidateCount = 0,
                 AttemptCount = 0,
                 NeedsManualMapSelection = false,
-                StatusMessage = "Existing 3D map data reused; no wipe detected."
+                StatusMessage = Properties.Resources.GetString("Existing3DMapReused")
             };
         }
 

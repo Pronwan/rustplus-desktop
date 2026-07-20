@@ -116,7 +116,7 @@
                                                        Padding="0" 
                                                        VerticalAlignment="Top" 
                                                        Margin="8,-4,-4,0" 
-                                                       ToolTip="Dismiss">
+                                                       ToolTip="{DynamicResource UiDismiss}">
                                                 <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" Foreground="{DynamicResource TextSubtle}" />
                                             </ui:Button>
                                         </Grid>
@@ -454,7 +454,7 @@
                                 Appearance="Transparent"
                                 Click="CancelDownload_Click"
                                 Icon="{ui:SymbolIcon Symbol=Dismiss24}"
-                                ToolTip="Cancel download"
+                                ToolTip="{DynamicResource UiCancelDownload}"
                                 Visibility="{Binding CanControlUpdateDownload, Converter={StaticResource BoolToVisibility}}" />
                         </Grid>
                     </Border>
@@ -584,7 +584,7 @@
                                             Height="7"
                                             Margin="0,0,6,0"
                                             VerticalAlignment="Center"
-                                            ToolTip="Rust+ Companion connection">
+                                            ToolTip="{DynamicResource UiRustCompanionConnection}">
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">
                                                     <Setter Property="Fill" Value="#68717D" />
@@ -600,7 +600,7 @@
                                             FontSize="8"
                                             FontWeight="Bold"
                                             Foreground="#E8612C"
-                                            Text="RUST+ COMPANION" />
+                                            Text="{DynamicResource UiRUSTCOMPANION}" />
                                     </StackPanel>
                                     <TextBlock
                                         x:Name="TxtSteamName"
@@ -631,7 +631,7 @@
                                         Appearance="Transparent"
                                         Click="BtnToggleSidebarPin_Click"
                                         Icon="{ui:SymbolIcon Symbol=Pin24}"
-                                        ToolTip="Keep sidebar unfolded" />
+                                        ToolTip="{DynamicResource UiKeepSidebarUnfolded}" />
                                 </StackPanel>
                             </Grid>
                             <Border Margin="0,6,0,0" Padding="0,5,0,0" BorderBrush="#18FFFFFF" BorderThickness="0,1,0,0">
@@ -671,7 +671,7 @@
                                             FontSize="8"
                                             FontWeight="Bold"
                                             Foreground="{DynamicResource Accent}"
-                                            Text="CLOUD ACCOUNT" />
+                                            Text="{DynamicResource CloudAccountTitle}" />
                                         <TextBlock
                                             FontSize="8"
                                             Foreground="#CCFFFFFF"
@@ -686,7 +686,7 @@
                                         Padding="8,2"
                                         VerticalAlignment="Center"
                                         Appearance="Secondary"
-                                        AutomationProperties.Name="Open cloud account"
+                                        AutomationProperties.Name="{DynamicResource UiOpenCloudAccount}"
                                         Click="BtnCloudAccount_Click"
                                         Content="{Binding CloudAccountActionText}" />
                                 </Grid>
@@ -697,7 +697,7 @@
                         <!--  FCM Token Expiry Badge  -->
                         <ui:InfoBar
                             x:Name="FcmExpiryInfoBar"
-                            Title="Rust+ Companion session"
+                            Title="{DynamicResource UiRustCompanionSession}"
                             Margin="0,0,0,10"
                             IsClosable="False"
                             IsOpen="True"
@@ -730,7 +730,7 @@
                                 FontSize="10"
                                 FontWeight="Bold"
                                 Foreground="{DynamicResource TextSubtle}"
-                                Text="SERVERS" />
+                                Text="{DynamicResource UiSERVERS}" />
                             <ui:Button
                                 x:Name="BtnToggleServerArea"
                                 HorizontalAlignment="Right"
@@ -739,7 +739,7 @@
                                 Click="BtnToggleServerArea_Click"
                                 ToolTip="{DynamicResource ToggleServerArea}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,4,0" FontSize="11" Text="Change" />
+                                    <TextBlock Margin="0,0,4,0" FontSize="11" Text="{DynamicResource UiChange}" />
                                     <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronDown20" />
                                 </StackPanel>
                             </ui:Button>
@@ -790,7 +790,7 @@
                                             </MenuItem.Style>
                                             <MenuItem.Header>
                                                 <TextBlock>
-                                                    <Run Text="🗺️ " /><Run Text="Copy map to server..." />
+                                                    <Run Text="🗺️ " /><Run Text="{DynamicResource UiCopyMapToServer}" />
                                                 </TextBlock>
                                             </MenuItem.Header>
                                         </MenuItem>
@@ -903,7 +903,7 @@
                                         FontSize="12"
                                         FontWeight="SemiBold"
                                         Foreground="{DynamicResource TextSubtle}"
-                                        Text="SERVER HIDDEN"
+                                        Text="{DynamicResource UiSERVERHIDDEN}"
                                         Visibility="{Binding IsChecked, ElementName=BtnAbbreviateNames, Converter={StaticResource BoolToVisibility}}" />
                                 </Grid>
 
@@ -1019,7 +1019,7 @@
                                 FontWeight="Bold"
                                 Foreground="White"
                                 Opacity="0.6"
-                                Text="CONNECTION SERVICES" />
+                                Text="{DynamicResource UiCONNECTIONSERVICES}" />
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -1033,7 +1033,7 @@
                                         x:Name="BtnListenPairing"
                                         Padding="8,2"
                                         Appearance="Secondary"
-                                        AutomationProperties.HelpText="Listen for Rust+ pairing requests. Right-click for recovery options."
+                                        AutomationProperties.HelpText="{DynamicResource UiListenForRustPairingRequestsRightClickForRecoveryOptions}"
                                         Click="BtnListenPairing_Click"
                                         Content="{DynamicResource Listen}"
                                         Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
@@ -1122,7 +1122,7 @@
                                                 </Style>
                                             </Ellipse.Style>
                                         </Ellipse>
-                                        <TextBlock Text="Listening" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                        <TextBlock Text="{DynamicResource UiListening}" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
                                         <TextBlock Text="FCM" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
                                     </StackPanel>
                                 </StackPanel>
@@ -1221,7 +1221,7 @@
                             Click="BtnSupport_Click"
                             Foreground="#FFD166"
                             Icon="{ui:SymbolIcon Symbol=Heart24}"
-                            AutomationProperties.Name="Support RustPlusDesk">
+                            AutomationProperties.Name="{DynamicResource UiSupportRustPlusDesk}">
                             <ui:Button.Style>
                                 <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                     <Setter Property="Content" Value="Upgrade to Supporter" />
@@ -1261,7 +1261,7 @@
                                 <StackPanel Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center" Visibility="{Binding IsDownloadingIcons, Converter={StaticResource BoolToVisibility}}">
                                     <ui:SymbolIcon Symbol="ArrowDownload24" Margin="0,0,4,0" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource SystemAccentBrush}"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                                        <Run Text="Icons: "/>
+                                        <Run Text="{DynamicResource UiIcons2}"/>
                                         <Run Text="{Binding IconsDownloaded, Mode=OneWay}"/>
                                         <Run Text="/"/>
                                         <Run Text="{Binding IconsTotal, Mode=OneWay}"/>
@@ -1327,7 +1327,7 @@
                                 Height="34"
                                 Margin="0,0,8,0"
                                 HorizontalContentAlignment="Left"
-                                AutomationProperties.Name="Hotkeys"
+                                AutomationProperties.Name="{DynamicResource Hotkeys}"
                                 Click="BtnHotkeys_Click"
                                 MouseEnter="BtnHotkeys_MouseEnter"
                                 MouseLeave="BtnHotkeys_MouseLeave">
@@ -1364,7 +1364,7 @@
                                 Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="Import devices"
+                                AutomationProperties.Name="{DynamicResource ImportDevices}"
                                 Click="BtnDevicesImport_Click"
                                 Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
                                 ToolTip="{DynamicResource ImportDevices}" />
@@ -1376,7 +1376,7 @@
                                 Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="Cloud sync"
+                                AutomationProperties.Name="{DynamicResource CloudSync}"
                                 Click="BtnDevicesExport_Click"
                                 Icon="{ui:SymbolIcon Symbol=Cloud24}"
                                 ToolTip="{DynamicResource ExportDevices}" />
@@ -1388,9 +1388,9 @@
                                 Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="Logic engine"
+                                AutomationProperties.Name="{DynamicResource UiLogicEngine}"
                                 Click="BtnLogicEngine_Click"
-                                ToolTip="Logic Engine">
+                                ToolTip="{DynamicResource UiLogicEngine}">
                                 <ui:Button.Icon>
                                     <ui:SymbolIcon Symbol="DeveloperBoard24" />
                                 </ui:Button.Icon>
@@ -1418,9 +1418,9 @@
                                 Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="Device automation"
+                                AutomationProperties.Name="{DynamicResource UiDeviceAutomation}"
                                 Click="BtnDeviceAutomation_Click"
-                                ToolTip="Device Automation">
+                                ToolTip="{DynamicResource UiDeviceAutomation}">
                                 <ui:Button.Icon>
                                     <ui:ImageIcon
                                         Width="24"
@@ -1449,7 +1449,7 @@
                                 Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="Refresh device states"
+                                AutomationProperties.Name="{DynamicResource UiRefreshDeviceStates}"
                                 Click="BtnDeviceRefresh_Click"
                                 Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}"
                                 ToolTip="{DynamicResource Refresh}" />
@@ -1461,7 +1461,7 @@
                                 Margin="0,0,0,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="Delete missing device"
+                                AutomationProperties.Name="{DynamicResource UiDeleteMissingDevice}"
                                 Click="BtnDeleteDevice_Click"
                                 Icon="{ui:SymbolIcon Symbol=Delete24}"
                                 Foreground="IndianRed"
@@ -1489,7 +1489,7 @@
                                             Margin="0,0,8,0"
                                             Padding="8,3"
                                             FontSize="11"
-                                            PlaceholderText="Search devices..." />
+                                            PlaceholderText="{DynamicResource UiSearchDevices}" />
 
                                         <ComboBox
                                             x:Name="CmbDeviceTypeFilter"
@@ -1497,10 +1497,10 @@
                                             Height="30"
                                             FontSize="11"
                                             SelectedIndex="0">
-                                            <ComboBoxItem Content="All" Tag="all" />
-                                            <ComboBoxItem Content="Switch" Tag="switch" />
-                                            <ComboBoxItem Content="Alarm" Tag="alarm" />
-                                            <ComboBoxItem Content="Storage" Tag="storage" />
+                                            <ComboBoxItem Content="{DynamicResource NotificationsAll}" Tag="all" />
+                                            <ComboBoxItem Content="{DynamicResource UiSwitch}" Tag="switch" />
+                                            <ComboBoxItem Content="{DynamicResource UiAlarm}" Tag="alarm" />
+                                            <ComboBoxItem Content="{DynamicResource UiStorage}" Tag="storage" />
                                         </ComboBox>
                                     </Grid>
 
@@ -1759,7 +1759,7 @@
                                                                     Margin="0,0,8,0"
                                                                     VerticalAlignment="Center"
                                                                     Cursor="Hand"
-                                                                    ToolTip="Change Icon"
+                                                                    ToolTip="{DynamicResource UiChangeIcon}"
                                                                     PreviewMouseLeftButtonDown="DeviceIcon_PreviewMouseLeftButtonDown">
                                                                 <Grid>
                                                                         <Image
@@ -1904,7 +1904,7 @@
                                                                                     DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
                                                                                     Style="{StaticResource DarkContextMenu}">
                                                                                     <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
-                                                                                    <MenuItem Click="SwitchCommand_Edit_Click" Header="Change command">
+                                                                                    <MenuItem Click="SwitchCommand_Edit_Click" Header="{DynamicResource UiChangeCommand}">
                                                                                         <MenuItem.Style>
                                                                                             <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
                                                                                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -2093,7 +2093,7 @@
                                                                         CornerRadius="7"
                                                                         Cursor="Hand"
                                                                         MouseLeftButtonDown="SwitchCommandPill_MouseLeftButtonDown"
-                                                                        ToolTip="Double-click to edit command">
+                                                                        ToolTip="{DynamicResource UiDoubleClickToEditCommand}">
                                                                         <Border.Visibility>
                                                                             <MultiBinding Converter="{StaticResource SwitchCommandDisplayConverter}">
                                                                                 <Binding />
@@ -2104,7 +2104,7 @@
                                                                             <ContextMenu
                                                                                 DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
                                                                                 Style="{StaticResource DarkContextMenu}">
-                                                                                <MenuItem Header="Edit command" Click="SwitchCommand_Edit_Click" />
+                                                                                <MenuItem Header="{DynamicResource UiEditCommand}" Click="SwitchCommand_Edit_Click" />
                                                                             </ContextMenu>
                                                                         </Border.ContextMenu>
                                                                         <Grid>
@@ -2124,7 +2124,7 @@
                                                                                     FontSize="8.5"
                                                                                     FontWeight="Bold"
                                                                                     Foreground="#B7C9FF"
-                                                                                    Text="CMD" />
+                                                                                    Text="{DynamicResource UiCMD}" />
                                                                                 <TextBlock
                                                                                     FontSize="9"
                                                                                     FontWeight="SemiBold"
@@ -2326,7 +2326,7 @@
                                                                                                                         FontSize="10"
                                                                                                                         FontWeight="SemiBold"
                                                                                                                         Foreground="{DynamicResource TextPrimary}">
-                                                                                                                        <Run Text="x" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
+                                                                                                                        <Run Text="{DynamicResource UiX}" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
                                                                                                                     </TextBlock>
                                                                                                                 </Border>
                                                                                                             </Grid>
@@ -2435,7 +2435,7 @@
                                                                 Height="28"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Center"
-                                                                AutomationProperties.Name="Expand or collapse group"
+                                                                AutomationProperties.Name="{DynamicResource UiExpandOrCollapseGroup}"
                                                                 IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Mode=TwoWay}">
                                                                 <ToggleButton.Style>
                                                                     <Style TargetType="ToggleButton">
@@ -2615,7 +2615,7 @@
                                                                         <Image Width="24" Height="24" Source="{Binding Icon}" Stretch="Uniform"/>
                                                                         <TextBlock Margin="8,0,0,0" Foreground="White">
                             <Run Text="{Binding Display}"/>
-                            <Run Text=" Ãƒâ€” "/>
+                            <Run Text="{DynamicResource UiÃƒâ}"/>
                             <Run Text="{Binding Amount}"/>
                             <Run Text="{Binding MaxStack, StringFormat={} (Stack {0})}"/>
                                                                         </TextBlock>
@@ -2758,7 +2758,7 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <CheckBox Grid.Column="0" IsChecked="{Binding ShowMarkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewMouseLeftButtonDown="TeamCheckBox_PreviewMouseLeftButtonDown" VerticalAlignment="Center" Margin="4,0,8,0" Cursor="Hand" ToolTip="Show markers on map" />
+                                                        <CheckBox Grid.Column="0" IsChecked="{Binding ShowMarkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewMouseLeftButtonDown="TeamCheckBox_PreviewMouseLeftButtonDown" VerticalAlignment="Center" Margin="4,0,8,0" Cursor="Hand" ToolTip="{DynamicResource UiShowMarkersOnMap}" />
 
                                                         <!--  Avatar + Status  -->
                                                         <Grid Grid.Column="1" Width="44" Height="44">
@@ -2799,7 +2799,7 @@
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
                                                             <TextBlock
-                                                                Text="ðŸ’¤"
+                                                                Text="{DynamicResource UiÐŸ}"
                                                                 FontSize="16"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Top"
@@ -2986,7 +2986,7 @@
                                                         </Style.Triggers>
                                                     </Style>
                                                 </ToggleButton.Style>
-                                                <TextBlock Text="A..." FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                <TextBlock Text="{DynamicResource UiA}" FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
                                             </ToggleButton>
 
                                             <!-- Dynamic Slider -->
@@ -3023,7 +3023,7 @@
                                     Orientation="Horizontal">
                                     <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock VerticalAlignment="Center" Text="ðŸ“· " />
+                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource UiÐŸ2}" />
                                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
                                         </StackPanel>
                                     </Button>                                </StackPanel>
@@ -3086,7 +3086,7 @@
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Alert24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="Notifications" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource NotificationsTab}" />
                                     
                                     <!-- Red Badge for Unread Count -->
                                     <Border x:Name="NotificationsBadge"
@@ -3124,7 +3124,7 @@
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Calculator24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="Raid Calculator" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource UiRaidCalculator}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid />
@@ -3134,7 +3134,7 @@
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Recycle20" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="Recycling Calculator" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource Update700Title3}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <views:RecyclerOverlay
@@ -3267,7 +3267,7 @@
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Border.Style>
-                                                        <TextBlock FontSize="8" FontWeight="Bold" Foreground="#FF8DDFFF" Text="ACTIVE" />
+                                                        <TextBlock FontSize="8" FontWeight="Bold" Foreground="#FF8DDFFF" Text="{DynamicResource Active}" />
                                                     </Border>
                                                 </Grid>
                                                 <TextBlock
@@ -3303,10 +3303,10 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             Appearance="Transparent"
-                            AutomationProperties.Name="Account menu"
-                            AutomationProperties.HelpText="Open sign-in and account management"
+                            AutomationProperties.Name="{DynamicResource UiAccountMenu}"
+                            AutomationProperties.HelpText="{DynamicResource UiOpenSignInAndAccountManagement}"
                             Click="BtnCloudAccount_Click"
-                            ToolTip="Account menu">
+                            ToolTip="{DynamicResource UiAccountMenu}">
                             <Grid Width="44" Height="44">
                                 <Ellipse
                                     Width="42"
@@ -3400,43 +3400,43 @@
 
                         <StackPanel Grid.Row="1" HorizontalAlignment="Center">
                             <Grid>
-                                <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Devices" AutomationProperties.HelpText="Monitor and control paired smart devices." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
+                                <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource DevicesTab}" AutomationProperties.HelpText="{DynamicResource UiMonitorAndControlPairedSmartDevices}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDevicesButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDevicesButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailDevicesButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailTeamButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Team" AutomationProperties.HelpText="Track teammates and shared activity." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=People24}" Tag="{Binding ElementName=TabTeam}" />
+                                <ui:Button x:Name="RailTeamButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource TeamTab}" AutomationProperties.HelpText="{DynamicResource UiTrackTeammatesAndSharedActivity}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=People24}" Tag="{Binding ElementName=TabTeam}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailTeamButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailTeamButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailTeamButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailCamerasButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Cameras" AutomationProperties.HelpText="View and control paired CCTV cameras." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Video24}" Tag="{Binding ElementName=CamerasTabItem}" />
+                                <ui:Button x:Name="RailCamerasButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource CamerasTab}" AutomationProperties.HelpText="{DynamicResource UiViewAndControlPairedCCTVCameras}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Video24}" Tag="{Binding ElementName=CamerasTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailCamerasButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailCamerasButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailCamerasButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Players" AutomationProperties.HelpText="Browse online players and tracked targets." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
+                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Players}" AutomationProperties.HelpText="{DynamicResource UiBrowseOnlinePlayersAndTrackedTargets}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailNotificationsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Notifications" AutomationProperties.HelpText="Review alerts and recent server events." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Alert24}" Tag="{Binding ElementName=NotificationsTab}" />
+                                <ui:Button x:Name="RailNotificationsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource NotificationsTab}" AutomationProperties.HelpText="{DynamicResource UiReviewAlertsAndRecentServerEvents}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Alert24}" Tag="{Binding ElementName=NotificationsTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailNotificationsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailNotificationsButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailNotificationsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Raid calculator" AutomationProperties.HelpText="Calculate raid costs and required materials." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Rocket24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
+                                <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource UiRaidCalculator}" AutomationProperties.HelpText="{DynamicResource UiCalculateRaidCostsAndRequiredMaterials}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Rocket24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRaidCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRaidCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRaidCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailRecyclerCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Recycling calculator" AutomationProperties.HelpText="Calculate component yields for wild and safe-zone recyclers." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Recycle32}" Tag="{Binding ElementName=RecyclerCalculatorTab}" />
+                                <ui:Button x:Name="RailRecyclerCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Update700Title3}" AutomationProperties.HelpText="{DynamicResource UiCalculateComponentYieldsForWildAndSafeZoneRecyclers}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Recycle32}" Tag="{Binding ElementName=RecyclerCalculatorTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRecyclerCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRecyclerCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRecyclerCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
@@ -3447,17 +3447,17 @@
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"
                                 Style="{StaticResource SidebarRailButton}"
-                                AutomationProperties.Name="Pin sidebar"
+                                AutomationProperties.Name="{DynamicResource UiPinSidebar}"
                                 Click="BtnToggleSidebarPin_Click"
                                 Icon="{ui:SymbolIcon Symbol=Pin24}"
-                                ToolTip="Keep sidebar unfolded" />
+                                ToolTip="{DynamicResource UiKeepSidebarUnfolded}" />
                             <ui:Button
                                 Style="{StaticResource SidebarRailButton}"
                                 Margin="0"
-                                AutomationProperties.Name="Settings"
+                                AutomationProperties.Name="{DynamicResource Settings}"
                                 Click="BtnSettings_Click"
                                 Icon="{ui:SymbolIcon Symbol=Settings24}"
-                                ToolTip="Settings" />
+                                ToolTip="{DynamicResource Settings}" />
                         </StackPanel>
                     </Grid>
 
@@ -3524,7 +3524,7 @@
                                             VerticalAlignment="Center">
                                         <ui:TextBox
                                             x:Name="TxtProfitSearch"
-                                            PlaceholderText="Search items (e.g. sulfur)..."
+                                            PlaceholderText="{DynamicResource UiSearchItemsEGSulfur}"
                                             TextChanged="TxtProfitSearch_TextChanged"
                                             Icon="Search24"
                                             Background="Transparent"
@@ -3538,9 +3538,9 @@
 
                                     <!-- Min Profit ComboBox -->
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <TextBlock Text="Min profit:" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{DynamicResource UiMinProfit}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
                                         <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="11.5">
-                                            <ComboBoxItem Content="Show All" Tag="0" IsSelected="True"/>
+                                            <ComboBoxItem Content="{DynamicResource UiShowAll}" Tag="0" IsSelected="True"/>
                                             <ComboBoxItem Content="&#x2265; 10" Tag="10"/>
                                             <ComboBoxItem Content="&#x2265; 50" Tag="50"/>
                                             <ComboBoxItem Content="&#x2265; 100" Tag="100"/>
@@ -3590,7 +3590,7 @@
                                         <TextBlock Text="&#x1F501;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock Text="Optimal multi-hop trade pathfinder" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
+                                            <TextBlock Text="{DynamicResource UiOptimalMultiHopTradePathfinder}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" Margin="0,1,0,0" />
                                         </StackPanel>
                                     </StackPanel>
                                     <ui:Button x:Name="BtnCloseBuyXForY" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
@@ -3611,7 +3611,7 @@
                                         x:Name="BuyXForY_WantTb"
                                         Height="34"
                                         FontSize="12"
-                                        PlaceholderText="Want item (e.g. blue)..."
+                                        PlaceholderText="{DynamicResource UiWantItemEGBlue}"
                                         Icon="Target24"
                                         VerticalAlignment="Stretch"
                                         VerticalContentAlignment="Center"
@@ -3659,7 +3659,7 @@
                                         x:Name="BuyXForY_PayTb"
                                         Height="34"
                                         FontSize="12"
-                                        PlaceholderText="Pay item (e.g. cloth)..."
+                                        PlaceholderText="{DynamicResource UiPayItemEGCloth}"
                                         Icon="Money24"
                                         VerticalAlignment="Stretch"
                                         VerticalContentAlignment="Center"
@@ -3836,10 +3836,10 @@
                                             x:Name="ChkNoBuildZones"
                                             IsEnabled="False"
                                             Checked="ChkNoBuildZones_Checked"
-                                            Content="No Build"
+                                            Content="{DynamicResource UiNoBuild}"
                                             Style="{StaticResource PillToggleButton}"
                                             Tag="Last"
-                                            ToolTip="Generate the 3D map to enable no-build zones."
+                                            ToolTip="{DynamicResource UiGenerateThe3DMapToEnableNoBuildZones}"
                                             ToolTipService.ShowOnDisabled="True"
                                             Unchecked="ChkNoBuildZones_Checked" />
                                     </StackPanel>
@@ -3849,10 +3849,10 @@
                                     Margin="0,0,8,0"
                                     Padding="10,6"
                                     Click="BtnLayers_Click"
-                                    ToolTip="Detailed map layer options">
+                                    ToolTip="{DynamicResource UiDetailedMapLayerOptions}">
                                     <StackPanel Orientation="Horizontal">
                                         <ui:SymbolIcon Symbol="Filter20" Margin="0,0,5,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="Layers" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        <TextBlock Text="{DynamicResource UiLayers}" FontWeight="SemiBold" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </ui:Button>
                                 <Popup
@@ -3877,18 +3877,18 @@
                                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                                             <StackPanel>
                                                 <Grid Margin="0,0,0,12">
-                                                    <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="White" Text="Map layers" />
+                                                    <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="White" Text="{DynamicResource UiMapLayers}" />
                                                     <ui:SymbolIcon HorizontalAlignment="Right" Symbol="Filter20" Foreground="{DynamicResource TextSubtle}" />
                                                 </Grid>
 
-                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="GRID" />
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource Grid}" />
                                                 <Grid Margin="0,0,0,10">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="70" />
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="48" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Opacity" />
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource Opacity}" />
                                                     <Slider
                                                         x:Name="SliderLayerGridOpacity"
                                                         Grid.Column="1"
@@ -3904,20 +3904,20 @@
                                                 </Grid>
 
                                                 <Border Margin="0,4,0,12" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0" />
-                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="MONUMENTS" />
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource Monuments}" />
                                                 <Grid Margin="0,0,0,10">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="160" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Display" />
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource UiDisplay}" />
                                                     <ComboBox
                                                         x:Name="CmbLayerMonumentStyle"
                                                         Grid.Column="1"
                                                         Height="34"
                                                         SelectionChanged="CmbLayerMonumentStyle_SelectionChanged">
-                                                        <ComboBoxItem Content="Icons" />
-                                                        <ComboBoxItem Content="Names" />
+                                                        <ComboBoxItem Content="{DynamicResource UiIcons}" />
+                                                        <ComboBoxItem Content="{DynamicResource UiNames}" />
                                                     </ComboBox>
                                                 </Grid>
                                                 <Grid Margin="0,0,0,10">
@@ -3926,7 +3926,7 @@
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="48" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Scale" />
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource ScaleLabel}" />
                                                     <Slider
                                                         x:Name="SliderLayerMonumentScale"
                                                         Grid.Column="1"
@@ -3946,7 +3946,7 @@
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="48" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="Opacity" />
+                                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource Opacity}" />
                                                     <Slider
                                                         x:Name="SliderLayerMonumentOpacity"
                                                         Grid.Column="1"
@@ -3961,30 +3961,30 @@
                                                         Text="{Binding Value, ElementName=SliderLayerMonumentOpacity, StringFormat={}{0:0%}}" />
                                                 </Grid>
 
-                                                <TextBlock Margin="0,2,0,5" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="EXTRA MONUMENT TYPES" />
+                                                <TextBlock Margin="0,2,0,5" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiEXTRAMONUMENTTYPES}" />
                                                 <Border Margin="0,0,0,10" Padding="10,6" Background="#0D1520" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8">
                                                     <WrapPanel x:Name="PnlLayerExtraMonumentFilters" Orientation="Horizontal" />
                                                 </Border>
                                                 <ui:Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="BtnOpenMonumentList_Click">
                                                     <StackPanel Orientation="Horizontal">
                                                         <ui:SymbolIcon Symbol="Map20" Margin="0,0,7,0" />
-                                                        <TextBlock Text="Browse monuments" />
+                                                        <TextBlock Text="{DynamicResource UiBrowseMonuments}" />
                                                     </StackPanel>
                                                 </ui:Button>
 
                                                 <Border Margin="0,14,0,12" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0" />
-                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="SHOPS" />
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource Shops}" />
                                                 <CheckBox
                                                     x:Name="ChkLayerAutoLoadShops"
                                                     Margin="0,0,0,8"
                                                     Checked="ChkLayerAutoLoadShops_Changed"
-                                                    Content="Load shops automatically on connect"
+                                                    Content="{DynamicResource UiLoadShopsAutomaticallyOnConnect}"
                                                     Style="{StaticResource DotCheckBox}"
                                                     Unchecked="ChkLayerAutoLoadShops_Changed" />
                                                 <ui:Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="BtnOpenShopFilters_Click">
                                                     <StackPanel Orientation="Horizontal">
                                                         <ui:SymbolIcon Symbol="Map20" Margin="0,0,7,0" />
-                                                        <TextBlock Text="Open shop filters" />
+                                                        <TextBlock Text="{DynamicResource UiOpenShopFilters}" />
                                                     </StackPanel>
                                                 </ui:Button>
                                             </StackPanel>
@@ -4193,7 +4193,7 @@
                                                                                      FontSize="12"
                                                                                      FontWeight="SemiBold"
                                                                                      Foreground="{DynamicResource TextPrimary}"
-                                                                                     Text="Chat Message Alerts" />
+                                                                                     Text="{DynamicResource UiChatMessageAlerts}" />
 
                                                                                  <!-- Categorized Items Host -->
                                                                                  <StackPanel IsItemsHost="True" Orientation="Horizontal" />
@@ -4214,7 +4214,7 @@
                                                                                              FontSize="11"
                                                                                              FontWeight="Bold"
                                                                                              Foreground="{DynamicResource TextSubtle}"
-                                                                                             Text="GENERIC ALARMS" />
+                                                                                             Text="{DynamicResource UiGENERICALARMS}" />
                                                                                          <ui:Button
                                                                                              x:Name="GenericAlarmInfoButton"
                                                                                              Width="22"
@@ -4222,7 +4222,7 @@
                                                                                              Margin="5,0,0,0"
                                                                                              Padding="2"
                                                                                              Appearance="Transparent"
-                                                                                             AutomationProperties.Name="What is a generic alarm?">
+                                                                                             AutomationProperties.Name="{DynamicResource UiWhatIsAGenericAlarm}">
                                                                                              <ui:SymbolIcon FontSize="14" Symbol="Info20" />
                                                                                          </ui:Button>
                                                                                          <Popup
@@ -4262,18 +4262,18 @@
                                                                                                      <StackPanel>
                                                                                                          <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
                                                                                                              <ui:SymbolIcon Margin="0,0,7,0" Foreground="{DynamicResource Accent}" Symbol="Info20" />
-                                                                                                             <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="White" Text="What is a generic alarm?" />
+                                                                                                             <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="White" Text="{DynamicResource UiWhatIsAGenericAlarm}" />
                                                                                                          </StackPanel>
                                                                                                          <TextBlock
                                                                                                              Margin="0,0,0,10"
                                                                                                              FontSize="12"
                                                                                                              Foreground="#D8FFFFFF"
                                                                                                              LineHeight="18"
-                                                                                                             Text="Rust sometimes sends a raid notification without the Smart Alarm's device ID. RustPlusDesk cannot tell which alarm triggered it, so the shared settings below are used instead of a device's own settings."
+                                                                                                             Text="{DynamicResource UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2}"
                                                                                                              TextWrapping="Wrap" />
-                                                                                                         <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Popup Window" /><Run Text=" — opens the Incoming Alarms window." /></TextBlock>
-                                                                                                         <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="In-App Alert" /><Run Text=" — shows the red alarm card inside the app." /></TextBlock>
-                                                                                                         <TextBlock FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="Audio Alert" /><Run Text=" — plays the alarm sound. Use the … button to choose a custom sound." /></TextBlock>
+                                                                                                         <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource PopupWindow}" /><Run Text="{DynamicResource UiOpensTheIncomingAlarmsWindow}" /></TextBlock>
+                                                                                                         <TextBlock Margin="0,0,0,3" FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource InAppAlert}" /><Run Text="{DynamicResource UiShowsTheRedAlarmCardInsideTheApp}" /></TextBlock>
+                                                                                                         <TextBlock FontSize="11" Foreground="#D8FFFFFF"><Run FontWeight="SemiBold" Foreground="White" Text="{DynamicResource AudioAlert}" /><Run Text="{DynamicResource UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound}" /></TextBlock>
                                                                                                      </StackPanel>
                                                                                                  </Border>
                                                                                              </Grid>
@@ -4308,7 +4308,7 @@
                                                                                              Margin="4,0,0,0"
                                                                                              Padding="4"
                                                                                              Appearance="Transparent"
-                                                                                             AutomationProperties.Name="Generic alarm audio options"
+                                                                                             AutomationProperties.Name="{DynamicResource UiGenericAlarmAudioOptions}"
                                                                                              Click="GenericAlarmAudioMenu_Click"
                                                                                              Icon="{ui:SymbolIcon Symbol=MoreHorizontal24}">
                                                                                              <ui:Button.ContextMenu>
@@ -4493,7 +4493,7 @@
                                                              Tag="PlayerOffline" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
-                                                             Header="5 min AFK"
+                                                             Header="{DynamicResource UiText5MinAFK}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
@@ -4536,7 +4536,7 @@
                                                      </MenuItem>
 
                                                       <!-- Column 3: Shops & Actions -->
-                                                      <MenuItem Header="Shops" BorderThickness="0,0,1,0">
+                                                      <MenuItem Header="{DynamicResource Shops}" BorderThickness="0,0,1,0">
                                                           <MenuItem.Style>
                                                               <Style TargetType="MenuItem">
                                                                   <Setter Property="Template">
@@ -4587,7 +4587,7 @@
                                                      </MenuItem>
 
                                                      <!-- Column 4: Devices -->
-                                                     <MenuItem Header="Devices" BorderThickness="0">
+                                                     <MenuItem Header="{DynamicResource DevicesTab}" BorderThickness="0">
                                                          <MenuItem.Style>
                                                              <Style TargetType="MenuItem">
                                                                  <Setter Property="Template">
@@ -4626,7 +4626,7 @@
                                                                          <ColumnDefinition Width="Auto" />
                                                                      </Grid.ColumnDefinitions>
                                                                      <StackPanel Orientation="Horizontal">
-                                                                         <TextBlock VerticalAlignment="Center" Text="Hotkey Triggers" />
+                                                                         <TextBlock VerticalAlignment="Center" Text="{DynamicResource UiHotkeyTriggers}" />
                                                                          <Ellipse
                                                                              x:Name="HotkeyTriggersEnabledDot"
                                                                              Width="6"
@@ -4668,8 +4668,8 @@
                                                              IsEnabled="{Binding IsCloudConnected}">
                                                              <MenuItem.Header>
                                                                  <StackPanel VerticalAlignment="Center">
-                                                                     <TextBlock Text="Discord Webhook" />
-                                                                     <TextBlock Text="Chat Alerts -&gt; Discord" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
+                                                                     <TextBlock Text="{DynamicResource UiDiscordWebhook}" />
+                                                                     <TextBlock Text="{DynamicResource UiChatAlertsDiscord}" FontSize="10" FontStyle="Italic" Foreground="{DynamicResource TextSubtle}" Opacity="0.8" />
                                                                  </StackPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>
@@ -4692,17 +4692,17 @@
                                                                              Background="#1AFFFFFF"
                                                                              BorderBrush="#33FFFFFF"
                                                                              Foreground="White"
-                                                                             ToolTip="Discord Webhook URL"
+                                                                             ToolTip="{DynamicResource UiDiscordWebhookURL}"
                                                                              IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                              Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="Clear Webhook URL" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                                                                      </Grid>
                                                                      
-                                                                     <TextBlock Text="Optional Pings" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,4,0,2" />
+                                                                     <TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,4,0,2" />
                                                                      <StackPanel Orientation="Vertical">
                                                                          <CheckBox
                                                                              x:Name="ChkChatAlertWebhookMentionEveryone"
-                                                                             Content="@everyone"
+                                                                             Content="{DynamicResource UiEveryone}"
                                                                              Foreground="{DynamicResource TextSubtle}"
                                                                              FontSize="11"
                                                                              Margin="0,0,0,4"
@@ -4711,7 +4711,7 @@
                                                                              IsChecked="{Binding Selected.DiscordWebhookChatAlertsMentionEveryone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                          <CheckBox
                                                                              x:Name="ChkChatAlertWebhookMentionHere"
-                                                                             Content="@here"
+                                                                             Content="{DynamicResource UiHere}"
                                                                              Foreground="{DynamicResource TextSubtle}"
                                                                              FontSize="11"
                                                                              Style="{StaticResource DotCheckBox}"
@@ -4719,7 +4719,7 @@
                                                                              IsChecked="{Binding Selected.DiscordWebhookChatAlertsMentionHere, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                                      </StackPanel>
                                                                          
-                                                                     <ui:ToggleSwitch Content="TTS" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,8,0,0" Foreground="{DynamicResource TextSubtle}" ToolTip="Read alerts aloud via Discord TTS" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                     <ui:ToggleSwitch Content="{DynamicResource UiTTS}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,8,0,0" Foreground="{DynamicResource TextSubtle}" ToolTip="{DynamicResource UiReadAlertsAloudViaDiscordTTS}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                                                                  </StackPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>
@@ -4812,12 +4812,12 @@
                                         x:Name="BtnView2D"
                                         Width="38"
                                         Click="BtnView2D_Click"
-                                        ToolTip="Show the 2D map"
-                                        AutomationProperties.Name="Show 2D map"
+                                        ToolTip="{DynamicResource UiShowThe2DMap}"
+                                        AutomationProperties.Name="{DynamicResource UiShow2DMap}"
                                         Background="#2B6278"
                                         BorderBrush="#557FA5B5"
                                         Foreground="White"
-                                        Content="2D" />
+                                        Content="{DynamicResource UiText2D}" />
                                     <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
                                     <Button
                                         x:Name="BtnOpen3DMap"
@@ -4825,16 +4825,16 @@
                                         Click="BtnOpen3DMap_Click"
                                         MouseEnter="BtnOpen3DMap_MouseEnter"
                                         MouseLeave="BtnOpen3DMap_MouseLeave"
-                                        AutomationProperties.Name="Show local 3D map"
+                                        AutomationProperties.Name="{DynamicResource UiShowLocal3DMap}"
                                         Content="3D" />
                                     <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
                                     <Button
                                         x:Name="BtnMiniMap"
                                         Width="46"
                                         Click="BtnToggleMiniMap_Click"
-                                        ToolTip="Toggle mini map"
-                                        AutomationProperties.Name="Toggle mini map"
-                                        Content="Mini" />
+                                        ToolTip="{DynamicResource UiToggleMiniMap}"
+                                        AutomationProperties.Name="{DynamicResource UiToggleMiniMap}"
+                                        Content="{DynamicResource MiniMap}" />
                                 </StackPanel>
                             </Border>
                             <ui:Button
@@ -4845,8 +4845,8 @@
                                 Padding="6"
                                 CornerRadius="6"
                                 Click="BtnResetMap_Click"
-                                ToolTip="Fit map to view"
-                                AutomationProperties.Name="Fit map to view">
+                                ToolTip="{DynamicResource UiFitMapToView}"
+                                AutomationProperties.Name="{DynamicResource UiFitMapToView}">
                                 <Path
                                     Width="16"
                                     Height="16"
@@ -5371,7 +5371,7 @@
                                             Padding="10,0"
                                             Cursor="Hand"
                                             IsChecked="False"
-                                            AutomationProperties.Name="Expand server details">
+                                            AutomationProperties.Name="{DynamicResource UiExpandServerDetails}">
                                             <CheckBox.Template>
                                                 <ControlTemplate TargetType="CheckBox">
                                                     <Border x:Name="HudHeader" Padding="{TemplateBinding Padding}" Background="Transparent" CornerRadius="7">
@@ -5431,13 +5431,13 @@
                                                             Padding="5,2"
                                                             Appearance="Transparent"
                                                             Click="BtnShowOnline_Click"
-                                                            Content="View players"
+                                                            Content="{DynamicResource UiViewPlayers}"
                                                             FontSize="10"
                                                             ToolTip="{DynamicResource ShowOnlinePlayers}" />
                                                     </Grid>
                                                     <StackPanel Margin="0,6,0,0" Orientation="Horizontal" VerticalAlignment="Center">
                                                         <ui:SymbolIcon Margin="0,0,5,0" FontSize="12" Foreground="#6F7B8B" Symbol="Calendar20" />
-                                                        <TextBlock Margin="0,0,5,0" VerticalAlignment="Center" FontSize="9" FontWeight="SemiBold" Foreground="#6F7B8B" Text="WIPE" />
+                                                        <TextBlock Margin="0,0,5,0" VerticalAlignment="Center" FontSize="9" FontWeight="SemiBold" Foreground="#6F7B8B" Text="{DynamicResource Wipe}" />
                                                         <TextBlock MaxWidth="218" VerticalAlignment="Center" FontSize="10" Foreground="#BFC7D2" Text="{Binding ServerWipe}" TextTrimming="CharacterEllipsis" />
                                                     </StackPanel>
                                                 </StackPanel>
@@ -5469,7 +5469,7 @@
                                             Appearance="Transparent"
                                             BorderThickness="0"
                                             Click="BtnOpenRustMaps_Click"
-                                            ToolTip="Open Interactive 3D Map on RustMaps"
+                                            ToolTip="{DynamicResource UiOpenInteractive3DMapOnRustMaps}"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -5484,7 +5484,7 @@
                                                     Margin="0,0,6,0" />
                                                 <TextBlock
                                                     x:Name="TxtRustMapsStatus"
-                                                    Text="Searching..."
+                                                    Text="{DynamicResource UiSearching}"
                                                     FontSize="11"
                                                     FontWeight="SemiBold"
                                                     Foreground="White"
@@ -5503,7 +5503,7 @@
                                             Appearance="Transparent"
                                             BorderThickness="0"
                                             Click="BtnRefetchRustMaps_Click"
-                                            ToolTip="Force Refetch Map"
+                                            ToolTip="{DynamicResource UiForceRefetchMap}"
                                             VerticalAlignment="Center">
                                             <ui:SymbolIcon Symbol="ArrowCounterclockwise20" FontSize="11" Foreground="#8D98A8" />
                                         </ui:Button>
@@ -5516,12 +5516,12 @@
                                             BorderThickness="0"
                                             Click="BtnSendMapToDiscord_Click"
                                             IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
-                                            ToolTip="Send current map view to Discord channel"
+                                            ToolTip="{DynamicResource UiSendCurrentMapViewToDiscordChannel}"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <Path Data="M23.0212 1.67671C21.3107 0.879656 19.5079 0.318797 17.6584 0C17.4062 0.461742 17.1749 0.934541 16.9708 1.4184C15.003 1.12145 12.9974 1.12145 11.0283 1.4184C10.819 0.934541 10.589 0.461744 10.3368 0C8.4859 0.318796 6.68307 0.879656 4.97255 1.67671C1.56727 6.77853 0.649666 11.7538 1.11108 16.652C3.10102 18.1418 5.3262 19.0453 7.5222 19.6631C8.04626 18.9431 8.52285 18.1873 8.94639 17.4005C8.1639 17.1064 7.41014 16.7381 6.69467 16.3013C6.88344 16.1554 7.06733 16.0022 7.24584 15.8427C11.1963 17.6749 16.822 17.6749 20.7303 15.8427C20.9124 16.0057 21.0998 16.1626 21.2921 16.3013C20.5752 16.7397 19.8201 17.1077 19.0363 17.4005C19.4609 18.1872 19.9375 18.9431 20.4615 19.6631C22.6639 19.0453 24.889 18.1418 26.879 16.652C27.4243 10.963 26.0121 6.00683 23.0212 1.67671ZM9.21556 13.5606C8.01639 13.5606 7.02672 12.4411 7.02672 11.0664C7.02672 9.69168 7.9954 8.57219 9.21556 8.57219C10.4357 8.57219 11.4254 9.69168 11.4044 11.0664C11.4044 12.4411 10.4357 13.5606 9.21556 13.5606ZM18.7844 13.5606C17.5852 13.5606 16.5956 12.4411 16.5956 11.0664C16.5956 9.69168 17.5643 8.57219 18.7844 8.57219C20.0046 8.57219 20.9942 9.69168 20.9733 11.0664C20.9733 12.4411 20.0046 13.5606 18.7844 13.5606Z" Fill="#5865F2" Width="14" Height="11" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                                <TextBlock Text="Send to Discord" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                                <TextBlock Text="{DynamicResource UiSendToDiscord}" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </ui:Button>
                                         <Popup
@@ -5537,9 +5537,9 @@
                                                 <StackPanel>
                                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                                         <ui:SymbolIcon Symbol="PersonLock20" Foreground="#FF8C00" Margin="0,0,7,0" />
-                                                        <TextBlock Text="Login required" FontSize="13" FontWeight="SemiBold" Foreground="White" />
+                                                        <TextBlock Text="{DynamicResource UiLoginRequired}" FontSize="13" FontWeight="SemiBold" Foreground="White" />
                                                     </StackPanel>
-                                                    <TextBlock Text="Log in to your Rust+ Desk account to generate 3D maps and heatmaps." TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
+                                                    <TextBlock Text="{DynamicResource UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps}" TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
                                                 </StackPanel>
                                             </ui:Card>
                                         </Popup>
@@ -5558,7 +5558,7 @@
                                                 VerticalAlignment="Center">
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                     <Image Source="pack://application:,,,/Assets/icons/map-markers/Heatmap.png" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                                    <TextBlock Text="Heatmaps" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{DynamicResource UiHeatmaps}" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
                                                 </StackPanel>
                                             </ui:Button>
                                             <Button
@@ -5569,7 +5569,7 @@
                                                 Click="BtnToggleHeatmapGate_Click"
                                                 MouseEnter="BtnToggleHeatmapGate_MouseEnter"
                                                 MouseLeave="BtnToggleHeatmapGate_MouseLeave"
-                                                AutomationProperties.Name="Heatmaps unavailable"
+                                                AutomationProperties.Name="{DynamicResource UiHeatmapsUnavailable}"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 Visibility="Collapsed">
@@ -5593,9 +5593,9 @@
                                                 <StackPanel>
                                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                                         <ui:SymbolIcon Symbol="Info20" Foreground="#FF8C00" Margin="0,0,7,0" />
-                                                        <TextBlock Text="Heatmaps unavailable" FontSize="13" FontWeight="SemiBold" Foreground="White" />
+                                                        <TextBlock Text="{DynamicResource UiHeatmapsUnavailable}" FontSize="13" FontWeight="SemiBold" Foreground="White" />
                                                     </StackPanel>
-                                                    <TextBlock x:Name="TxtHeatmapAvailabilityMessage" Text="Generate the 3D map before using heatmaps." TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
+                                                    <TextBlock x:Name="TxtHeatmapAvailabilityMessage" Text="{DynamicResource UiGenerateThe3DMapBeforeUsingHeatmaps}" TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
                                                 </StackPanel>
                                             </ui:Card>
                                         </Popup>
@@ -5766,14 +5766,14 @@
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Grid.Column="0" Text="◉" FontSize="14" Foreground="#FF8A00" VerticalAlignment="Center" Margin="0,0,6,0" />
                                                             <StackPanel Grid.Column="1">
-                                                                <TextBlock Text="Procedural Heatmaps" FontSize="14" FontWeight="Bold" Foreground="#F2F2F2" />
-                                                                <TextBlock Text="Select a layer to view spawn density" FontSize="10" Foreground="#9AA4B6" Margin="0,1,0,0" />
+                                                                <TextBlock Text="{DynamicResource UiProceduralHeatmaps}" FontSize="14" FontWeight="Bold" Foreground="#F2F2F2" />
+                                                                <TextBlock Text="{DynamicResource UiSelectALayerToViewSpawnDensity}" FontSize="10" Foreground="#9AA4B6" Margin="0,1,0,0" />
                                                             </StackPanel>
                                                             <!-- Active heatmap indicator -->
                                                             <ui:Badge x:Name="ActiveHeatmapBadge" Grid.Column="2" Style="{StaticResource ActiveBadge}" Margin="8,0,0,0" VerticalAlignment="Center">
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <Ellipse Width="6" Height="6" Fill="#22C55E" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                                                    <TextBlock x:Name="ActiveHeatmapLabel" Text="No heatmap active" FontSize="10" Foreground="#9CA3AF" />
+                                                                    <TextBlock x:Name="ActiveHeatmapLabel" Text="{DynamicResource UiNoHeatmapActive}" FontSize="10" Foreground="#9CA3AF" />
                                                                 </StackPanel>
                                                             </ui:Badge>
                                                         </Grid>
@@ -5783,7 +5783,7 @@
                                                                    Click="BtnHeatmapIcon_Click" Height="30" VerticalAlignment="Top">
                                                             <StackPanel Orientation="Horizontal">
                                                                 <ui:SymbolIcon Symbol="Dismiss20" FontSize="12" Foreground="#FF8A00" Margin="0,0,4,0" />
-                                                                <TextBlock Text="Clear" FontSize="11" FontWeight="SemiBold" Foreground="#FF8A00" />
+                                                                <TextBlock Text="{DynamicResource Clear}" FontSize="11" FontWeight="SemiBold" Foreground="#FF8A00" />
                                                             </StackPanel>
                                                         </ui:Button>
                                                     </Grid>
@@ -5807,7 +5807,7 @@
                                                             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CategoryCard}" Margin="0,0,6,8">
                                                                 <StackPanel>
                                                                     <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
-    <Run Text="⛏" /><Run Text="  Resources &amp; Forestry" FontSize="11" />
+    <Run Text="⛏" /><Run Text="{DynamicResource UiResourcesForestry}" FontSize="11" />
 </TextBlock>
                                                                     <Grid>
                                                                         <Grid.ColumnDefinitions>
@@ -5816,21 +5816,21 @@
                                                                             <ColumnDefinition Width="*" />
                                                                         </Grid.ColumnDefinitions>
                                                                         <Border x:Name="Bento_ores" Grid.Column="0" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="ores" ToolTip="Ores" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="ores" ToolTip="{DynamicResource UiOres}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/nodes.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_wood" Grid.Column="1" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="wood" ToolTip="Wood Piles" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="wood" ToolTip="{DynamicResource UiWoodPiles}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/wood-pile.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_logs" Grid.Column="2" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="logs" ToolTip="Log Piles" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="logs" ToolTip="{DynamicResource UiLogPiles}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/logs.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
@@ -5839,7 +5839,7 @@
                                                                     </Grid>
                                                                     <Grid Margin="0,6,0,0">
                                                                         <Border x:Name="Bento_flowers" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="flowers" ToolTip="Flowers" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="flowers" ToolTip="{DynamicResource UiFlowers}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Flowers/flowers.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
@@ -5853,46 +5853,46 @@
                                                             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CategoryCard}" Margin="0,0,6,0">
                                                                 <StackPanel>
                                                                     <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
-    <Run Text="🌾" /><Run Text="  Agriculture &amp; Food" FontSize="11" />
+    <Run Text="🌾" /><Run Text="{DynamicResource UiAgricultureFood}" FontSize="11" />
 </TextBlock>
                                                                     <UniformGrid Columns="3">
                                                                         <Border x:Name="Bento_mushroom" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="mushroom" ToolTip="Mushrooms" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="mushroom" ToolTip="{DynamicResource UiMushrooms}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Food/mushroom.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_berries" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="berries" ToolTip="Berries" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="berries" ToolTip="{DynamicResource UiBerries}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Food/red-berry.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_corn" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="corn" ToolTip="Corn" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="corn" ToolTip="{DynamicResource UiCorn}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Food/corn.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_pumpkin" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="pumpkin" ToolTip="Pumpkins" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="pumpkin" ToolTip="{DynamicResource UiPumpkins}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Food/pumpkin.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_potato" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="potato" ToolTip="Potatoes" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="potato" ToolTip="{DynamicResource UiPotatoes}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Food/potato.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_wheat" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="wheat" ToolTip="Wheat" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="wheat" ToolTip="{DynamicResource UiWheat}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Food/wheat.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
@@ -5908,46 +5908,46 @@
                                                             <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CategoryCard}" Margin="6,0,0,8">
                                                                 <StackPanel>
                                                                     <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
-    <Run Text="📦" /><Run Text="  Loot &amp; Transport" FontSize="11" />
+    <Run Text="📦" /><Run Text="{DynamicResource UiLootTransport}" FontSize="11" />
 </TextBlock>
                                                                     <UniformGrid Columns="3">
                                                                         <Border x:Name="Bento_junkpiles" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="junkpiles" ToolTip="Junkpiles" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="junkpiles" ToolTip="{DynamicResource UiJunkpiles}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/loot-barrel-1.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_rowboat" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="rowboat" ToolTip="Rowboats" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="rowboat" ToolTip="{DynamicResource UiRowboats}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/rowboat.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_modularcar" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="modularcar" ToolTip="Modular Cars" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="modularcar" ToolTip="{DynamicResource UiModularCars}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/modular-car.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_horse" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="horse" ToolTip="Horses" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="horse" ToolTip="{DynamicResource UiHorses}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/horse.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_pedalbike" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="pedalbike" ToolTip="Bicycles" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="pedalbike" ToolTip="{DynamicResource UiBicycles}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/bicycle.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_hab" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="hab" ToolTip="Hot Air Balloons" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="hab" ToolTip="{DynamicResource UiHotAirBalloons}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/hab.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
@@ -5961,60 +5961,60 @@
                                                             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CategoryCard}" Margin="6,0,0,0">
                                                                 <StackPanel>
                                                                     <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
-    <Run Text="🐾" /><Run Text="  Fauna &amp; Wildlife" FontSize="11" />
+    <Run Text="🐾" /><Run Text="{DynamicResource UiFaunaWildlife}" FontSize="11" />
 </TextBlock>
                                                                     <UniformGrid Columns="4">
                                                                         <Border x:Name="Bento_bear" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="bear" ToolTip="Bears" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="bear" ToolTip="{DynamicResource UiBears}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/bear.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_boar" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="boar" ToolTip="Boars" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="boar" ToolTip="{DynamicResource UiBoars}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/boar.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_chicken" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="chicken" ToolTip="Chickens" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="chicken" ToolTip="{DynamicResource UiChickens}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/chicken.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_wolf" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="wolf" ToolTip="Wolves" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="wolf" ToolTip="{DynamicResource UiWolves}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/wolf.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_stag" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="stag" ToolTip="Deers" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="stag" ToolTip="{DynamicResource UiDeers}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/stag.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_crocodile" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="crocodile" ToolTip="Crocodiles" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="crocodile" ToolTip="{DynamicResource UiCrocodiles}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/crocodile.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_tiger" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="tiger" ToolTip="Tigers" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="tiger" ToolTip="{DynamicResource UiTigers}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/tiger.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>
                                                                         <Border x:Name="Bento_snake" Style="{StaticResource HeatmapTileContainer}">
-                                                                            <Button Tag="snake" ToolTip="Snakes" Style="{StaticResource HeatmapTileButton}"
+                                                                            <Button Tag="snake" ToolTip="{DynamicResource UiSnakes}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/animals icons/snake.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
@@ -6058,7 +6058,7 @@
                                             Height="36"
                                             HorizontalAlignment="Center"
                                             Click="DockEditSubscriptionsButton_Click"
-                                            ToolTip="Edit Subscriptions (Drawing Overlay)">
+                                            ToolTip="{DynamicResource UiEditSubscriptionsDrawingOverlay}">
                                             <ui:Button.Style>
                                                 <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -6210,7 +6210,7 @@
                                         Appearance="Transparent"
                                         Click="BtnToggleMonumentsPanel_Click"
                                         IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
-                                        ToolTip="Toggle Monument List">
+                                        ToolTip="{DynamicResource UiToggleMonumentList}">
                                         <StackPanel Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center">
                                             <TextBlock
                                                 FontFamily="Segoe MDL2 Assets"
@@ -6219,7 +6219,7 @@
                                                 Text="&#xE707;" 
                                                 VerticalAlignment="Center"/>
                                             <TextBlock
-                                                Text="Monuments"
+                                                Text="{DynamicResource Monuments}"
                                                 Margin="6,0,4,0"
                                                 FontSize="12"
                                                 FontWeight="Bold"
@@ -6360,13 +6360,13 @@
                                                         </TextBlock>
                                                         <TextBlock Grid.Column="1" Text="{Binding RemainingTimeText}" VerticalAlignment="Center" Margin="0,0,12,0" FontFamily="Consolas" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
                                                         <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play 1min countdown audio">
+                                                            <ToggleButton IsChecked="{Binding EnableCountdownAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="{DynamicResource UiPlay1minCountdownAudio}">
                                                                 <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                             </ToggleButton>
-                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play loud alarm at 00:00">
+                                                            <ToggleButton IsChecked="{Binding EnableAlarmAudio}" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="{DynamicResource UiPlayLoudAlarmAt0000}">
                                                                 <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                             </ToggleButton>
-                                                            <ui:Button Appearance="Transparent" Width="32" Height="32" Padding="0" Tag="{Binding Id}" Click="BtnDeleteTimer_Click" ToolTip="Delete Timer">
+                                                            <ui:Button Appearance="Transparent" Width="32" Height="32" Padding="0" Tag="{Binding Id}" Click="BtnDeleteTimer_Click" ToolTip="{DynamicResource UiDeleteTimer}">
                                                                 <ui:SymbolIcon Symbol="Dismiss24" Foreground="IndianRed" FontSize="14" />
                                                             </ui:Button>
                                                         </StackPanel>
@@ -6421,10 +6421,10 @@
                                                         <TextBlock x:Name="TxtTimerCommandPreview" Text="" Foreground="{DynamicResource TextSubtle}" />
                                                     </StackPanel>
                                                     
-                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play 1min countdown audio">
+                                                    <ToggleButton x:Name="TglAddTimerCountdown" Grid.Column="1" IsChecked="True" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="{DynamicResource UiPlay1minCountdownAudio}">
                                                         <ui:SymbolIcon Symbol="Hourglass24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                     </ToggleButton>
-                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="Play loud alarm at 00:00" Margin="0,0,10,0">
+                                                    <ToggleButton x:Name="TglAddTimerAlarm" Grid.Column="2" IsChecked="False" Style="{StaticResource WpfUiToggleButtonStyle}" ToolTip="{DynamicResource UiPlayLoudAlarmAt0000}" Margin="0,0,10,0">
                                                         <ui:SymbolIcon Symbol="Alert24" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}" />
                                                     </ToggleButton>
 
@@ -6445,31 +6445,31 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnStopTimerAlarm_Click" ToolTip="Stop alarm sound">
+                                                    <ui:Button x:Name="BtnStopTimerAlarm" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnStopTimerAlarm_Click" ToolTip="{DynamicResource UiStopAlarmSound}">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="SpeakerMute24" Foreground="IndianRed" FontSize="16" />
-                                                            <TextBlock Text="Stop" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{DynamicResource Stop}" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="IndianRed" FontWeight="SemiBold" />
                                                         </StackPanel>
                                                     </ui:Button>
-                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSnoozeTimerAlarm_Click" ToolTip="Snooze alarm">
+                                                    <ui:Button x:Name="BtnSnoozeTimerAlarm" Grid.Column="1" Visibility="Collapsed" Appearance="Secondary" Padding="12,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSnoozeTimerAlarm_Click" ToolTip="{DynamicResource UiSnoozeAlarm}">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ui:SymbolIcon Symbol="ClockAlarm24" Foreground="#FFA500" FontSize="16" />
-                                                            <TextBlock Text="Snooze" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{DynamicResource UiSnooze}" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="#FFA500" FontWeight="SemiBold" />
                                                         </StackPanel>
                                                     </ui:Button>
                                                     
                                                     <!-- Spacer Column (Column 2) -->
                                                     
-                                                    <ui:Button Grid.Column="3" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="Select custom 1-minute countdown sound">
+                                                    <ui:Button Grid.Column="3" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" CornerRadius="5" Click="BtnSelectTimerCountdownAudio_Click" ToolTip="{DynamicResource UiSelectCustom1MinuteCountdownSound}">
                                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                             <ui:SymbolIcon Symbol="Hourglass24" FontSize="16" />
                                                             <TextBlock Text="1min" FontSize="11" Margin="4,0,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
                                                     </ui:Button>
-                                                    <ui:Button Grid.Column="4" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" Width="32" CornerRadius="5" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="Select custom alarm sound (00:00)">
+                                                    <ui:Button Grid.Column="4" Appearance="Secondary" Padding="8,6" Margin="0,0,6,0" Height="32" Width="32" CornerRadius="5" Click="BtnSelectTimerAlarmAudio_Click" ToolTip="{DynamicResource UiSelectCustomAlarmSound0000}">
                                                         <ui:SymbolIcon Symbol="MusicNote224" FontSize="16" />
                                                     </ui:Button>
-                                                    <ui:Button Grid.Column="5" Appearance="Secondary" Padding="8,6" Height="32" Width="32" CornerRadius="5" Click="BtnResetTimerAlarmAudio_Click" ToolTip="Reset sounds to default">
+                                                    <ui:Button Grid.Column="5" Appearance="Secondary" Padding="8,6" Height="32" Width="32" CornerRadius="5" Click="BtnResetTimerAlarmAudio_Click" ToolTip="{DynamicResource UiResetSoundsToDefault}">
                                                         <ui:SymbolIcon Symbol="ArrowReset24" FontSize="16" />
                                                     </ui:Button>
                                                 </Grid>
@@ -6513,7 +6513,7 @@
                                 <!-- Header -->
                                 <Grid Grid.Row="0" Margin="0,0,0,8">
                                     <TextBlock
-                                        Text="Monuments"
+                                        Text="{DynamicResource Monuments}"
                                         FontSize="16"
                                         FontWeight="Bold"
                                         Foreground="White"
@@ -6537,7 +6537,7 @@
                                 <ui:TextBox
                                     x:Name="TxtMonumentSearch"
                                     Grid.Row="1"
-                                    PlaceholderText="Search monument..."
+                                    PlaceholderText="{DynamicResource UiSearchMonument}"
                                     Margin="0,0,0,10"
                                     TextChanged="TxtMonumentSearch_TextChanged" />
                                     
@@ -6674,7 +6674,7 @@
 
                                 <!-- Title / Close -->
                                 <DockPanel Grid.Row="0" Margin="0,0,0,10">
-                                    <TextBlock Text="Base Details" FontSize="16" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource UiBaseDetails}" FontSize="16" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                                     <Button
                                         Width="28"
                                         Height="28"
@@ -6804,8 +6804,8 @@
                                                     FontSize="12"
                                                     Foreground="#99FFFFFF"
                                                     Style="{StaticResource GhostButton}"
-                                                    ToolTip="Close Shops panel"
-                                                    AutomationProperties.Name="Close Shops panel">
+                                                    ToolTip="{DynamicResource UiCloseShopsPanel}"
+                                                    AutomationProperties.Name="{DynamicResource UiCloseShopsPanel}">
                                                     <Button.Resources>
                                                         <Style BasedOn="{StaticResource GhostButton}" TargetType="Button">
                                                             <Setter Property="Background" Value="Transparent" />
@@ -6870,8 +6870,8 @@
                                         Background="Transparent"
                                         BorderThickness="0"
                                         Click="BtnShopSearch_Click"
-                                        ToolTip="Open or close Shops panel (Ctrl+Shift+S)"
-                                        AutomationProperties.Name="Open or close Shops panel">
+                                        ToolTip="{DynamicResource UiOpenOrCloseShopsPanelCtrlShiftS}"
+                                        AutomationProperties.Name="{DynamicResource UiOpenOrCloseShopsPanel}">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border
@@ -6966,8 +6966,8 @@
                                                 Appearance="Transparent"
                                                 Icon="{ui:SymbolIcon Symbol=Dismiss24}"
                                                 Foreground="{DynamicResource TextSubtle}"
-                                                ToolTip="Close Team panel"
-                                                AutomationProperties.Name="Close Team panel"
+                                                ToolTip="{DynamicResource UiCloseTeamPanel}"
+                                                AutomationProperties.Name="{DynamicResource UiCloseTeamPanel}"
                                                 Padding="0" />
                                         </Grid>
 
@@ -7182,8 +7182,8 @@
                                         Background="Transparent"
                                         BorderThickness="0"
                                         Click="BtnToggleChat_Click"
-                                        ToolTip="Open or close Team panel (Ctrl+Shift+T)"
-                                        AutomationProperties.Name="Open or close Team panel">
+                                        ToolTip="{DynamicResource UiOpenOrCloseTeamPanelCtrlShiftT}"
+                                        AutomationProperties.Name="{DynamicResource UiOpenOrCloseTeamPanel}">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border
@@ -7304,7 +7304,7 @@
                                         Height="32"
                                         Margin="2,0"
                                         Click="ToolRefreshOverlayButton_Click"
-                                        ToolTip="Force Refresh All Subscriptions">
+                                        ToolTip="{DynamicResource UiForceRefreshAllSubscriptions}">
                                         <ui:SymbolIcon Symbol="ArrowCounterclockwise24" Foreground="White" FontSize="18" />
                                     </Button>
 
@@ -7329,7 +7329,7 @@
                                         Icon="{ui:SymbolIcon Symbol=Shield24, Filled=True}"
                                         Visibility="Collapsed"
                                         Click="BtnAdminPanel_Click"
-                                        ToolTip="Admin Panel" />
+                                        ToolTip="{DynamicResource UiAdminPanel}" />
                                 </StackPanel>
 
                                 <!-- Options Panel (Inline below) -->
@@ -7383,7 +7383,7 @@
 
                                     <!-- Draw Options -->
                                     <StackPanel x:Name="DrawOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
-                                        <TextBlock Text="Thickness:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{DynamicResource Thickness}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                         <Slider x:Name="SliderDrawThickness" Width="100" Minimum="1" Maximum="20" Value="3" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderDrawThickness_ValueChanged"/>
                                         <TextBlock Text="{Binding ElementName=SliderDrawThickness, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
                                         <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
@@ -7398,7 +7398,7 @@
 
                                     <!-- Text Options -->
                                     <StackPanel x:Name="TextOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
-                                        <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{DynamicResource UiSize}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                         <Slider x:Name="SliderTextSize" Width="100" Minimum="10" Maximum="60" Value="16" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderTextSize_ValueChanged"/>
                                         <TextBlock Text="{Binding ElementName=SliderTextSize, Path=Value, StringFormat={}{0:F0}pt}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
                                         <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
@@ -7414,57 +7414,57 @@
                                     <!-- Icon Options -->
                                     <StackPanel x:Name="IconOptionsPanel" Orientation="Vertical" VerticalAlignment="Center" Visibility="Collapsed">
                                          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                             <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                             <TextBlock Text="{DynamicResource UiSize}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                              <Slider x:Name="SliderIconSize" Width="100" Minimum="12" Maximum="64" Value="24" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderIconSize_ValueChanged"/>
                                              <TextBlock Text="{Binding ElementName=SliderIconSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
                                              <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                              
-                                             <Button x:Name="BtnIconBase1" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base1.png" ToolTip="Own Base (Black)">
+                                             <Button x:Name="BtnIconBase1" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base1.png" ToolTip="{DynamicResource UiOwnBaseBlack}">
                                                  <Image Source="pack://application:,,,/Assets/icons/map-icons/base1.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                              </Button>
-                                             <Button x:Name="BtnIconBase2" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base2.png" ToolTip="Enemy Base (Red)">
+                                             <Button x:Name="BtnIconBase2" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/base2.png" ToolTip="{DynamicResource UiEnemyBaseRed}">
                                                  <Image Source="pack://application:,,,/Assets/icons/map-icons/base2.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                              </Button>
-                                             <Button x:Name="BtnIconSam" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/sam-site.png" ToolTip="SAM Site">
+                                             <Button x:Name="BtnIconSam" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/sam-site.png" ToolTip="{DynamicResource UiSAMSite}">
                                                  <Image Source="pack://application:,,,/Assets/icons/map-icons/sam-site.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                              </Button>
-                                             <Button x:Name="BtnIconTurret" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/turret.png" ToolTip="Turret">
+                                             <Button x:Name="BtnIconTurret" Style="{StaticResource IconSelectorButton}" Click="IconSelection_Click" Tag="pack://application:,,,/Assets/icons/map-icons/turret.png" ToolTip="{DynamicResource UiTurret}">
                                                  <Image Source="pack://application:,,,/Assets/icons/map-icons/turret.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                                              </Button>
                                          </StackPanel>
 
                                          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
-                                             <TextBlock Text="Marker:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                             <TextBlock Text="{DynamicResource UiMarker}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                              <UniformGrid x:Name="RustMarkerSelectorPanel" Rows="2" Columns="6" Height="72" VerticalAlignment="Center">
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="pin" ToolTip="Pin"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="dollar" ToolTip="Dollar"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="gun" ToolTip="Gun"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="home" ToolTip="Home"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="loot" ToolTip="Loot"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="parachute" ToolTip="Parachute"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="rock" ToolTip="Rock"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="scope" ToolTip="Scope"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="shield" ToolTip="Shield"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="skull" ToolTip="Skull"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="sleep" ToolTip="Sleep"/>
-                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="zzz" ToolTip="ZZZ"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="pin" ToolTip="{DynamicResource UiPin}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="dollar" ToolTip="{DynamicResource UiDollar}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="gun" ToolTip="{DynamicResource UiGun}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="home" ToolTip="{DynamicResource UiHome}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="loot" ToolTip="{DynamicResource UiLoot}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="parachute" ToolTip="{DynamicResource UiParachute}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="rock" ToolTip="{DynamicResource UiRock}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="scope" ToolTip="{DynamicResource UiScope}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="shield" ToolTip="{DynamicResource UiShield}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="skull" ToolTip="{DynamicResource UiSkull}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="sleep" ToolTip="{DynamicResource UiSleep}"/>
+                                                 <Button Style="{StaticResource IconSelectorButton}" Click="RustMarkerSelection_Click" Tag="zzz" ToolTip="{DynamicResource UiZZZ}"/>
                                              </UniformGrid>
                                              <Rectangle Width="1" Height="56" Fill="#30FFFFFF" Margin="8,0,8,0" VerticalAlignment="Center"/>
-                                             <TextBlock Text="Color:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                             <TextBlock Text="{DynamicResource UiColor}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                              <StackPanel x:Name="RustColorSelectorPanel" Orientation="Horizontal" VerticalAlignment="Center">
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#CDD054" Click="RustColorSelection_Click" Tag="yellow" ToolTip="Yellow"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#2F71C4" Click="RustColorSelection_Click" Tag="blue" ToolTip="Blue"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#76A739" Click="RustColorSelection_Click" Tag="green" ToolTip="Green"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#BD3838" Click="RustColorSelection_Click" Tag="red" ToolTip="Red"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#B65CC4" Click="RustColorSelection_Click" Tag="purple" ToolTip="Purple"/>
-                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#06EDC2" Click="RustColorSelection_Click" Tag="cyan" ToolTip="Cyan"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#CDD054" Click="RustColorSelection_Click" Tag="yellow" ToolTip="{DynamicResource UiYellow}"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#2F71C4" Click="RustColorSelection_Click" Tag="blue" ToolTip="{DynamicResource UiBlue}"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#76A739" Click="RustColorSelection_Click" Tag="green" ToolTip="{DynamicResource UiGreen}"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#BD3838" Click="RustColorSelection_Click" Tag="red" ToolTip="{DynamicResource UiRed}"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#B65CC4" Click="RustColorSelection_Click" Tag="purple" ToolTip="{DynamicResource UiPurple}"/>
+                                                 <Button Style="{StaticResource MarkerColorCircleButton}" Background="#06EDC2" Click="RustColorSelection_Click" Tag="cyan" ToolTip="{DynamicResource UiCyan}"/>
                                              </StackPanel>
                                          </StackPanel>
                                      </StackPanel>
 
                                     <!-- Eraser Options -->
                                     <StackPanel x:Name="EraserOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
-                                        <TextBlock Text="Size:" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{DynamicResource UiSize}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                         <Slider x:Name="SliderEraserSize" Width="100" Minimum="5" Maximum="40" Value="20" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderEraserSize_ValueChanged"/>
                                         <TextBlock Text="{Binding ElementName=SliderEraserSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
                                     </StackPanel>
@@ -7520,7 +7520,7 @@
                                         x:Name="TxtLogFilter"
                                         Height="36"
                                         ClearButtonEnabled="True"
-                                        PlaceholderText="Filter logs..."
+                                        PlaceholderText="{DynamicResource UiFilterLogs}"
                                         TextChanged="TxtLogFilter_TextChanged" />
 
                                     <ui:Button
@@ -7530,7 +7530,7 @@
                                         Margin="6,0,0,0"
                                         Padding="12,0"
                                         Click="BtnToggleLogExpand_Click"
-                                        Content="Expand" />
+                                        Content="{DynamicResource UiExpand}" />
                                 </Grid>
 
                                 <TextBox
@@ -7626,7 +7626,7 @@
                             FontSize="28"
                             FontWeight="Bold"
                             Foreground="White"
-                            Text="Connect Rust+ Companion"
+                            Text="{DynamicResource UiConnectRustCompanion}"
                             TextAlignment="Center" />
 
                         <TextBlock
@@ -7634,7 +7634,7 @@
                             FontSize="14"
                             Foreground="{DynamicResource TextSubtle}"
                             LineHeight="20"
-                            Text="This connection is for the Rust companion API. It enables FCM pairing, in-game broadcasts, alarms, and team chat. Your Cloud account is separate."
+                            Text="{DynamicResource UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
@@ -7659,7 +7659,7 @@
                             FontWeight="SemiBold"
                             Icon="{ui:SymbolIcon Symbol=BluetoothConnected24}">
                             <ui:Button.Content>
-                                <TextBlock Margin="8,0,0,0" Text="Connect Rust+ Companion" />
+                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource UiConnectRustCompanion}" />
                             </ui:Button.Content>
                         </ui:Button>
 
@@ -7673,7 +7673,7 @@
                             FontSize="14"
                             Icon="{ui:SymbolIcon Symbol=ArrowDownload24}">
                             <ui:Button.Content>
-                                <TextBlock Margin="8,0,0,0" Text="Restore local backup" />
+                                <TextBlock Margin="8,0,0,0" Text="{DynamicResource UiRestoreLocalBackup}" />
                             </ui:Button.Content>
                         </ui:Button>
 
@@ -7696,7 +7696,7 @@
                             Margin="0,20,0,0"
                             FontSize="11"
                             Foreground="{DynamicResource TextCaption}"
-                            Text="Uses your Rust+ / Steam login in the browser. Cloud sign-in is not required."
+                            Text="{DynamicResource UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired}"
                             TextAlignment="Center" />
                     </StackPanel>
                 </Border>
@@ -7833,8 +7833,8 @@
                         <ui:Button Grid.Column="3" Padding="4" Appearance="Transparent" Click="AlarmOverlayClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
                     </Grid>
 
-                    <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Server Name - 14:30" />
-                    <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="Custom Alarm Name" TextWrapping="Wrap" />
+                    <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource UiServerName1430}" />
+                    <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="{DynamicResource UiCustomAlarmName}" TextWrapping="Wrap" />
                     <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource AlarmActivated}" TextWrapping="Wrap" />
 
                     <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="{DynamicResource AutoHideAfter3s}" FontSize="12" IsChecked="False" Checked="AlarmOverlayAutoHideChk_Changed" Unchecked="AlarmOverlayAutoHideChk_Changed" PreviewMouseLeftButtonDown="OnAutoHideCheckBoxClick"/>

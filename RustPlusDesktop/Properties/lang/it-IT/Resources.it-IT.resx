@@ -2742,7 +2742,1966 @@ Per favore associa prima questo server.</value>
   <data name="GenericClose" xml:space="preserve">
     <value>Vicino</value>
   </data>
+  <data name="UiOpensTheIncomingAlarmsWindow" xml:space="preserve">
+    <value>— apre la finestra Allarmi in arrivo.</value>
+  </data>
+  <data name="UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound" xml:space="preserve">
+    <value>— riproduce il suono della sveglia. Utilizzare il pulsante... per scegliere un suono personalizzato.</value>
+  </data>
+  <data name="UiShowsTheRedAlarmCardInsideTheApp" xml:space="preserve">
+    <value>— mostra la scheda rossa di allarme all&apos;interno dell&apos;app.</value>
+  </data>
+  <data name="UiText2FpsRecommendedForAPIStability" xml:space="preserve">
+    <value>(2 fps consigliati per la stabilità dell&apos;API)</value>
+  </data>
+  <data name="UiLogicRule" xml:space="preserve">
+    <value>[Regola logica]</value>
+  </data>
+  <data name="UiNameMinutes" xml:space="preserve">
+    <value>[nome],[minuti]</value>
+  </data>
+  <data name="UiEveryone" xml:space="preserve">
+    <value>@tutti</value>
+  </data>
+  <data name="UiHere" xml:space="preserve">
+    <value>@qui</value>
+  </data>
+  <data name="UiJump" xml:space="preserve">
+    <value>▲ Salta</value>
+  </data>
+  <data name="UiDuck" xml:space="preserve">
+    <value>▼ Anatra</value>
+  </data>
+  <data name="UiFire" xml:space="preserve">
+    <value>🎯 Fuoco</value>
+  </data>
+  <data name="UiReload" xml:space="preserve">
+    <value>🔄 Ricarica</value>
+  </data>
+  <data name="UiText100Native" xml:space="preserve">
+    <value>100% (nativo)</value>
+  </data>
+  <data name="UiText100YieldMonuments" xml:space="preserve">
+    <value>Rendimento 100% (Monumenti)</value>
+  </data>
+  <data name="UiText125Sharp" xml:space="preserve">
+    <value>125% (nitido)</value>
+  </data>
+  <data name="UiText150HighResolution" xml:space="preserve">
+    <value>150% (alta risoluzione)</value>
+  </data>
+  <data name="UiText200UltraHighResolution" xml:space="preserve">
+    <value>200% (risoluzione ultra alta)</value>
+  </data>
+  <data name="UiText2D" xml:space="preserve">
+    <value>2D</value>
+  </data>
+  <data name="UiText5MinAFK" xml:space="preserve">
+    <value>5 minuti AFK</value>
+  </data>
+  <data name="UiText50Fastest" xml:space="preserve">
+    <value>50% (più veloce)</value>
+  </data>
+  <data name="UiText75Performance" xml:space="preserve">
+    <value>75% (Prestazioni)</value>
+  </data>
+  <data name="UiA" xml:space="preserve">
+    <value>Un...</value>
+  </data>
+  <data name="UiAcceptSync" xml:space="preserve">
+    <value>Accetta e sincronizza</value>
+  </data>
+  <data name="UiAcceptAndRemember" xml:space="preserve">
+    <value>Accetta e ricorda</value>
+  </data>
+  <data name="UiACCOUNT" xml:space="preserve">
+    <value>CONTO</value>
+  </data>
+  <data name="UiAccountMenu" xml:space="preserve">
+    <value>Menù conto</value>
+  </data>
+  <data name="UiActiveItemAlerts" xml:space="preserve">
+    <value>Avvisi di articoli attivi</value>
+  </data>
+  <data name="UiActiveRule" xml:space="preserve">
+    <value>Regola attiva:</value>
+  </data>
+  <data name="UiActiveON" xml:space="preserve">
+    <value>Attivo/ON</value>
+  </data>
+  <data name="UiAddATargetToSeeRaidCosts" xml:space="preserve">
+    <value>Aggiungi un obiettivo per vedere i costi del raid.</value>
+  </data>
+  <data name="UiAddAutomation" xml:space="preserve">
+    <value>Aggiungi automazione</value>
+  </data>
+  <data name="UiAddExecutionStep" xml:space="preserve">
+    <value>Aggiungi fase di esecuzione</value>
+  </data>
+  <data name="UiAddLogin" xml:space="preserve">
+    <value>Aggiungi accesso</value>
+  </data>
+  <data name="UiAddNestedAction" xml:space="preserve">
+    <value>Aggiungi azione nidificata</value>
+  </data>
+  <data name="UiAddRule" xml:space="preserve">
+    <value>Aggiungi regola</value>
+  </data>
+  <data name="UiAdminPanel" xml:space="preserve">
+    <value>Pannello di amministrazione</value>
+  </data>
+  <data name="UiAdminPanelUserOverview" xml:space="preserve">
+    <value>Pannello di amministrazione - Panoramica utente</value>
+  </data>
+  <data name="UiAdvancedDiscordBotIntegration" xml:space="preserve">
+    <value>Integrazione bot avanzata Discord.</value>
+  </data>
+  <data name="UiAdvancedDiscordBotSettings" xml:space="preserve">
+    <value>Impostazioni avanzate del bot Discord.</value>
+  </data>
+  <data name="UiÃƒâ" xml:space="preserve">
+    <value>Ãƒâ€”</value>
+  </data>
+  <data name="UiAgricultureFood" xml:space="preserve">
+    <value>Agricoltura e alimentazione</value>
+  </data>
+  <data name="UiAlarm" xml:space="preserve">
+    <value>Allarme</value>
+  </data>
+  <data name="UiAlarmAusgeloest" xml:space="preserve">
+    <value>Allarme ausgeloest!</value>
+  </data>
+  <data name="UiAlert" xml:space="preserve">
+    <value>Avviso</value>
+  </data>
+  <data name="UiAlexaSetupInfo" xml:space="preserve">
+    <value>Alexa Informazioni di configurazione</value>
+  </data>
+  <data name="UiAlexaSmartHome" xml:space="preserve">
+    <value>Alexa Casa intelligente</value>
+  </data>
+  <data name="UiAllPlayersInRange" xml:space="preserve">
+    <value>Tutti i giocatori a portata di mano</value>
+  </data>
+  <data name="UiAllPlayersOffline" xml:space="preserve">
+    <value>Tutti i giocatori offline</value>
+  </data>
+  <data name="UiAllowDiscordCommands" xml:space="preserve">
+    <value>Consenti comandi Discord.</value>
+  </data>
+  <data name="UiAllowedCommandRoleIDs" xml:space="preserve">
+    <value>ID dei ruoli di comando consentiti</value>
+  </data>
+  <data name="UiAmazonAlexaLogin" xml:space="preserve">
+    <value>Amazon Alexa Accedi</value>
+  </data>
+  <data name="UiAND" xml:space="preserve">
+    <value>E</value>
+  </data>
+  <data name="UiAnyOnlineInRange" xml:space="preserve">
+    <value>Qualsiasi online nel raggio d&apos;azione</value>
+  </data>
+  <data name="UiAnyPlayerOffline" xml:space="preserve">
+    <value>Qualsiasi giocatore offline</value>
+  </data>
+  <data name="UiAutomationActive" xml:space="preserve">
+    <value>Automazione attiva</value>
+  </data>
+  <data name="UiBackToSettingsCategories" xml:space="preserve">
+    <value>Torna alle categorie delle impostazioni</value>
+  </data>
+  <data name="UiBalancedLinear" xml:space="preserve">
+    <value>Bilanciato (lineare)</value>
+  </data>
+  <data name="UiBaseDetails" xml:space="preserve">
+    <value>Dettagli della base</value>
+  </data>
+  <data name="UiBasicDiscordIntegration" xml:space="preserve">
+    <value>Integrazione di base Discord.</value>
+  </data>
+  <data name="UiBasicDiscordWebhooks" xml:space="preserve">
+    <value>Webhook di base Discord</value>
+  </data>
+  <data name="UiBears" xml:space="preserve">
+    <value>Orsi</value>
+  </data>
+  <data name="UiBerries" xml:space="preserve">
+    <value>Bacche</value>
+  </data>
+  <data name="UiBicycles" xml:space="preserve">
+    <value>Biciclette</value>
+  </data>
+  <data name="UiBlue" xml:space="preserve">
+    <value>Blu</value>
+  </data>
+  <data name="UiBoars" xml:space="preserve">
+    <value>Cinghiali</value>
+  </data>
+  <data name="UiBOOMREQUIRED" xml:space="preserve">
+    <value>BOOM RICHIESTO</value>
+  </data>
+  <data name="UiBrowseMonuments" xml:space="preserve">
+    <value>Sfoglia i monumenti</value>
+  </data>
+  <data name="UiBrowseOnlinePlayersAndTrackedTargets" xml:space="preserve">
+    <value>Sfoglia i giocatori online e gli obiettivi monitorati.</value>
+  </data>
+  <data name="UiBuild3DMap" xml:space="preserve">
+    <value>Costruisci mappa 3D</value>
+  </data>
+  <data name="UiBuildLocal3DMap" xml:space="preserve">
+    <value>Costruisci una mappa 3D locale</value>
+  </data>
+  <data name="UiBuyX" xml:space="preserve">
+    <value>Compra X</value>
+  </data>
+  <data name="UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness" xml:space="preserve">
+    <value>Memorizza nella cache il rendering della mappa sulla GPU. Migliora estremamente la fluidità di panoramica e zoom.</value>
+  </data>
+  <data name="UiCalculateComponentYieldsForWildAndSafeZoneRecyclers" xml:space="preserve">
+    <value>Calcolare le rese dei componenti per i riciclatori selvaggi e di zona sicura.</value>
+  </data>
+  <data name="UiCalculateRaidCostsAndRequiredMaterials" xml:space="preserve">
+    <value>Calcola i costi del raid e i materiali richiesti.</value>
+  </data>
+  <data name="UiCancelDownload" xml:space="preserve">
+    <value>Annulla il download</value>
+  </data>
+  <data name="UiChance" xml:space="preserve">
+    <value>Possibilità</value>
+  </data>
+  <data name="UiChange" xml:space="preserve">
+    <value>Cambiare</value>
+  </data>
+  <data name="UiChangeCommand" xml:space="preserve">
+    <value>Cambia comando</value>
+  </data>
+  <data name="UiChangeIcon" xml:space="preserve">
+    <value>Cambia icona</value>
+  </data>
+  <data name="UiChannelID" xml:space="preserve">
+    <value>ID del canale</value>
+  </data>
+  <data name="UiChannelNotificationsConfig" xml:space="preserve">
+    <value>Configurazione notifiche canale</value>
+  </data>
+  <data name="UiChatAlertsDiscord" xml:space="preserve">
+    <value>Avvisi chat -&gt; Discord</value>
+  </data>
+  <data name="UiChatAlertsChannelID" xml:space="preserve">
+    <value>ID canale avvisi chat</value>
+  </data>
+  <data name="UiChatMasterSlaves" xml:space="preserve">
+    <value>Master e schiavi della chat</value>
+  </data>
+  <data name="UiChatMessageAlerts" xml:space="preserve">
+    <value>Avvisi sui messaggi di chat</value>
+  </data>
+  <data name="UiCheckAvailability" xml:space="preserve">
+    <value>Controlla la disponibilità</value>
+  </data>
+  <data name="UiChickens" xml:space="preserve">
+    <value>Polli</value>
+  </data>
+  <data name="UiChooseACategory" xml:space="preserve">
+    <value>Scegli una categoria</value>
+  </data>
+  <data name="UiChooseATargetFromTheCatalogue" xml:space="preserve">
+    <value>Scegli un bersaglio dal catalogo.</value>
+  </data>
+  <data name="UiClearAll" xml:space="preserve">
+    <value>Cancella tutto</value>
+  </data>
+  <data name="UiClearRaidPlan" xml:space="preserve">
+    <value>Piano d&apos;incursione chiaro</value>
+  </data>
+  <data name="UiClearWebhookURL" xml:space="preserve">
+    <value>Cancella URL webhook</value>
+  </data>
+  <data name="UiCloseRaidCalculator" xml:space="preserve">
+    <value>Chiudi il calcolatore del raid</value>
+  </data>
+  <data name="UiCloseShopsPanel" xml:space="preserve">
+    <value>Chiudi il pannello Negozi</value>
+  </data>
+  <data name="UiCloseTeamPanel" xml:space="preserve">
+    <value>Chiudi il pannello Squadra</value>
+  </data>
+  <data name="UiCloudAccountSync" xml:space="preserve">
+    <value>Account cloud e sincronizzazione</value>
+  </data>
+  <data name="UiCloudBaseScreenshots" xml:space="preserve">
+    <value>Schermate di Cloud Base</value>
+  </data>
+  <data name="UiCloudUserID" xml:space="preserve">
+    <value>ID utente cloud</value>
+  </data>
+  <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
+    <value>Cloud, Discord, Alexa, chat e Steam</value>
+  </data>
+  <data name="UiCMD" xml:space="preserve">
+    <value>CMD</value>
+  </data>
+  <data name="UiColor" xml:space="preserve">
+    <value>Colore:</value>
+  </data>
+  <data name="UiCommaSeparatedRoleIDs" xml:space="preserve">
+    <value>ID di ruolo separati da virgole</value>
+  </data>
+  <data name="UiCommandPermissions" xml:space="preserve">
+    <value>Autorizzazioni di comando</value>
+  </data>
+  <data name="UiConfirmDelete" xml:space="preserve">
+    <value>Conferma eliminazione</value>
+  </data>
+  <data name="UiConnectRustCompanion" xml:space="preserve">
+    <value>Connetti Rust+ Compagno</value>
+  </data>
+  <data name="UiConnectedServices" xml:space="preserve">
+    <value>Servizi connessi</value>
+  </data>
+  <data name="UiCONNECTIONSERVICES" xml:space="preserve">
+    <value>SERVIZI DI CONNESSIONE</value>
+  </data>
+  <data name="UiControlYourRustSmartSwitchesWithAmazonAlexaVoiceCommandsAn5B51481980" xml:space="preserve">
+    <value>Controlla i tuoi interruttori intelligenti Rust con i comandi vocali di Amazon Alexa e attiva le routine Alexa quando gli allarmi intelligenti si attivano.</value>
+  </data>
+  <data name="UiControlsMapImageScalingFilteringMode" xml:space="preserve">
+    <value>Controlla la modalità di filtraggio del ridimensionamento delle immagini della mappa.</value>
+  </data>
+  <data name="UiCopyADiscordReadySummary" xml:space="preserve">
+    <value>Copia un riepilogo pronto per Discord.</value>
+  </data>
+  <data name="UiCopyIP" xml:space="preserve">
+    <value>Copia IP</value>
+  </data>
+  <data name="UiCopyMapToServer" xml:space="preserve">
+    <value>Copia la mappa sul server...</value>
+  </data>
+  <data name="UiCopyRaidSummary" xml:space="preserve">
+    <value>Copia il riepilogo del raid</value>
+  </data>
+  <data name="UiCorn" xml:space="preserve">
+    <value>Mais</value>
+  </data>
+  <data name="UiCount" xml:space="preserve">
+    <value>Conte</value>
+  </data>
+  <data name="UiCreateAShopAlert" xml:space="preserve">
+    <value>Crea un avviso del negozio</value>
+  </data>
+  <data name="UiCrocodiles" xml:space="preserve">
+    <value>Coccodrilli</value>
+  </data>
+  <data name="UiCurrency" xml:space="preserve">
+    <value>Valuta</value>
+  </data>
+  <data name="UiCurrentStep" xml:space="preserve">
+    <value>Passaggio corrente:</value>
+  </data>
+  <data name="UiCustomAlarmName" xml:space="preserve">
+    <value>Nome allarme personalizzato</value>
+  </data>
+  <data name="UiCyan" xml:space="preserve">
+    <value>Ciano</value>
+  </data>
+  <data name="UiDeDEStandardA" xml:space="preserve">
+    <value>de-DE-Standard-A</value>
+  </data>
+  <data name="UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius" xml:space="preserve">
+    <value>I giocatori morti contano come offline. Le condizioni offline ignorano il raggio.</value>
+  </data>
+  <data name="UiDeathMarkerSettings" xml:space="preserve">
+    <value>Impostazioni del marcatore di morte</value>
+  </data>
+  <data name="UiDecreaseQuantity" xml:space="preserve">
+    <value>Diminuire la quantità</value>
+  </data>
+  <data name="UiDecreaseTargetQuantity" xml:space="preserve">
+    <value>Diminuire la quantità target</value>
+  </data>
+  <data name="UiDeers" xml:space="preserve">
+    <value>Cervi</value>
+  </data>
+  <data name="UiDefault" xml:space="preserve">
+    <value>Predefinito</value>
+  </data>
+  <data name="UiDeleteMissingDevice" xml:space="preserve">
+    <value>Elimina il dispositivo mancante</value>
+  </data>
+  <data name="UiDeleteRule" xml:space="preserve">
+    <value>Elimina regola</value>
+  </data>
+  <data name="UiDeleteStep" xml:space="preserve">
+    <value>Elimina passaggio</value>
+  </data>
+  <data name="UiDeleteTimer" xml:space="preserve">
+    <value>Elimina timer</value>
+  </data>
+  <data name="UiDestructionMethod" xml:space="preserve">
+    <value>Metodo di distruzione</value>
+  </data>
+  <data name="UiDetailedMapLayerOptions" xml:space="preserve">
+    <value>Opzioni dettagliate del livello della mappa</value>
+  </data>
+  <data name="UiDetails" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="UiDeviceAutomation" xml:space="preserve">
+    <value>Automazione dei dispositivi</value>
+  </data>
+  <data name="UiDeviceCloudSync" xml:space="preserve">
+    <value>Sincronizzazione cloud del dispositivo</value>
+  </data>
+  <data name="UiDisableGridAntiAliasingAliasedEdgeMode" xml:space="preserve">
+    <value>Disabilita anti-aliasing della griglia (modalità Aliased Edge)</value>
+  </data>
+  <data name="UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1" xml:space="preserve">
+    <value>Disabilita l&apos;anti-aliasing sulle linee della griglia e sui marcatori. Migliora la velocità di rendering sui sistemi di fascia bassa.</value>
+  </data>
+  <data name="UiDiscordName" xml:space="preserve">
+    <value>Discord Nome</value>
+  </data>
+  <data name="UiDiscordServerIDGuildID" xml:space="preserve">
+    <value>Discord ID server (ID gilda)</value>
+  </data>
+  <data name="UiDiscordWebhook" xml:space="preserve">
+    <value>Discord Webhook</value>
+  </data>
+  <data name="UiDiscordWebhookChatAlerts" xml:space="preserve">
+    <value>Discord Webhook (avvisi chat)</value>
+  </data>
+  <data name="UiDiscordWebhookURL" xml:space="preserve">
+    <value>Discord URL del webhook</value>
+  </data>
+  <data name="UiDiscordWebhookURLOfflineAlerts" xml:space="preserve">
+    <value>Discord URL webhook (avvisi offline)</value>
+  </data>
+  <data name="UiDiscordWebhooksGuide" xml:space="preserve">
+    <value>Discord Guida ai webhook</value>
+  </data>
+  <data name="UiDismiss" xml:space="preserve">
+    <value>Ignora</value>
+  </data>
+  <data name="UiDisplay" xml:space="preserve">
+    <value>Visualizzazione</value>
+  </data>
+  <data name="UiDisplayName" xml:space="preserve">
+    <value>Nome visualizzato</value>
+  </data>
+  <data name="UiDollar" xml:space="preserve">
+    <value>Dollaro</value>
+  </data>
+  <data name="UiDonTShowOffersWithoutStock" xml:space="preserve">
+    <value>Non mostrare offerte senza stock</value>
+  </data>
+  <data name="UiDoubleClickToEditCommand" xml:space="preserve">
+    <value>Fare doppio clic per modificare il comando</value>
+  </data>
+  <data name="UiDuplicateTarget" xml:space="preserve">
+    <value>Obiettivo duplicato</value>
+  </data>
+  <data name="UiÐŸ" xml:space="preserve">
+    <value>ðŸ’¤</value>
+  </data>
+  <data name="UiÐŸ2" xml:space="preserve">
+    <value>ðŸ“·</value>
+  </data>
+  <data name="UiEGNAME2" xml:space="preserve">
+    <value>ad es. NOME2</value>
+  </data>
+  <data name="UiEditCommand" xml:space="preserve">
+    <value>Modifica comando</value>
+  </data>
+  <data name="UiEditSubscriptionsDrawingOverlay" xml:space="preserve">
+    <value>Modifica iscrizioni (sovrapposizione disegno)</value>
+  </data>
+  <data name="UiEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="UiEmailAndPassword" xml:space="preserve">
+    <value>E-mail e password</value>
+  </data>
+  <data name="UiEnGBStandardA" xml:space="preserve">
+    <value>it-GB-Standard-A</value>
+  </data>
+  <data name="UiEnUSStandardA" xml:space="preserve">
+    <value>en-Standard USA-A</value>
+  </data>
+  <data name="UiEnableAutomation" xml:space="preserve">
+    <value>Abilita l&apos;automazione</value>
+  </data>
+  <data name="UiEnableGPUBitmapCaching" xml:space="preserve">
+    <value>Abilita la memorizzazione nella cache bitmap della GPU</value>
+  </data>
+  <data name="UiEnableRule" xml:space="preserve">
+    <value>Abilita regola</value>
+  </data>
+  <data name="UiEnemyBaseRed" xml:space="preserve">
+    <value>Base nemica (rossa)</value>
+  </data>
+  <data name="UiEngineActivePlayStop" xml:space="preserve">
+    <value>Motore attivo (riproduzione/arresto)</value>
+  </data>
+  <data name="UiEsESStandardA" xml:space="preserve">
+    <value>es-ES-Standard-A</value>
+  </data>
+  <data name="UiEventsAlertsChannelID" xml:space="preserve">
+    <value>Eventi Avvisi ID canale</value>
+  </data>
+  <data name="UiExecutionSteps" xml:space="preserve">
+    <value>Passaggi di esecuzione</value>
+  </data>
+  <data name="UiExpand" xml:space="preserve">
+    <value>Espandi</value>
+  </data>
+  <data name="UiExpandOrCollapseAutomation" xml:space="preserve">
+    <value>Espandi o comprimi l&apos;automazione</value>
+  </data>
+  <data name="UiExpandOrCollapseGroup" xml:space="preserve">
+    <value>Espandi o comprimi il gruppo</value>
+  </data>
+  <data name="UiExpandServerDetails" xml:space="preserve">
+    <value>Espandi i dettagli del server</value>
+  </data>
+  <data name="UiExpandCollapse" xml:space="preserve">
+    <value>Espandi/Comprimi</value>
+  </data>
+  <data name="UiEXTRAMONUMENTTYPES" xml:space="preserve">
+    <value>TIPI DI MONUMENTI EXTRA</value>
+  </data>
+  <data name="UiFaunaWildlife" xml:space="preserve">
+    <value>Fauna e fauna selvatica</value>
+  </data>
+  <data name="UiFillStacks" xml:space="preserve">
+    <value>Riempi pile</value>
+  </data>
+  <data name="UiFilterLogs" xml:space="preserve">
+    <value>Filtra registri...</value>
+  </data>
+  <data name="UiFindProfitableShopTrades" xml:space="preserve">
+    <value>Trova compravendite redditizie</value>
+  </data>
+  <data name="UiFindWhereToBuyAnItem" xml:space="preserve">
+    <value>Scopri dove acquistare un articolo</value>
+  </data>
+  <data name="UiFitMapToView" xml:space="preserve">
+    <value>Adatta la mappa per visualizzarla</value>
+  </data>
+  <data name="UiFlowers" xml:space="preserve">
+    <value>Fiori</value>
+  </data>
+  <data name="UiForceOFF" xml:space="preserve">
+    <value>Forzare lo spegnimento</value>
+  </data>
+  <data name="UiForceON" xml:space="preserve">
+    <value>Forza ON</value>
+  </data>
+  <data name="UiForceRefetchMap" xml:space="preserve">
+    <value>Forza il recupero della mappa</value>
+  </data>
+  <data name="UiForceRefreshAllSubscriptions" xml:space="preserve">
+    <value>Forza l&apos;aggiornamento di tutte le sottoscrizioni</value>
+  </data>
+  <data name="UiForgotPassword" xml:space="preserve">
+    <value>Password dimenticata?</value>
+  </data>
+  <data name="UiFrFRStandardA" xml:space="preserve">
+    <value>fr-FR-Standard-A</value>
+  </data>
+  <data name="UiFrom" xml:space="preserve">
+    <value>Da</value>
+  </data>
+  <data name="UiGatingConditionOptional" xml:space="preserve">
+    <value>Condizione di gating (facoltativa)</value>
+  </data>
+  <data name="UiGenerateSave" xml:space="preserve">
+    <value>Genera e salva</value>
+  </data>
+  <data name="UiGenerateLoginPIN" xml:space="preserve">
+    <value>Genera PIN di accesso</value>
+  </data>
+  <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
+    <value>Genera la mappa 3D prima di utilizzare le mappe di calore.</value>
+  </data>
+  <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
+    <value>Genera la mappa 3D per abilitare le zone vietate alla costruzione.</value>
+  </data>
+  <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
+    <value>Opzioni audio generiche per gli allarmi</value>
+  </data>
+  <data name="UiGENERICALARMS" xml:space="preserve">
+    <value>ALLARMI GENERICI</value>
+  </data>
+  <data name="UiGPURenderingScale" xml:space="preserve">
+    <value>Scala di rendering GPU</value>
+  </data>
+  <data name="UiGreen" xml:space="preserve">
+    <value>Verde</value>
+  </data>
+  <data name="UiGuar" xml:space="preserve">
+    <value>Guar.</value>
+  </data>
+  <data name="UiGun" xml:space="preserve">
+    <value>Pistola</value>
+  </data>
+  <data name="UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D" xml:space="preserve">
+    <value>Le conversioni di polvere da sparo, esplosivi, tempistica e minerale cotto vengono mostrati solo se forniti dal set di dati. I dati attuali sono già estesi alle materie prime.</value>
+  </data>
+  <data name="UiHeatmaps" xml:space="preserve">
+    <value>Mappe di calore</value>
+  </data>
+  <data name="UiHeatmapsUnavailable" xml:space="preserve">
+    <value>Mappe termiche non disponibili</value>
+  </data>
+  <data name="UiHeight" xml:space="preserve">
+    <value>Altezza</value>
+  </data>
+  <data name="UiHide0Stock" xml:space="preserve">
+    <value>Nascondi 0 azioni</value>
+  </data>
+  <data name="UiHighQualityBicubic" xml:space="preserve">
+    <value>Alta qualità (bicubico)</value>
+  </data>
+  <data name="UiHome" xml:space="preserve">
+    <value>Casa</value>
+  </data>
+  <data name="UiHorses" xml:space="preserve">
+    <value>Cavalli</value>
+  </data>
+  <data name="UiHotAirBalloons" xml:space="preserve">
+    <value>Mongolfiere</value>
+  </data>
+  <data name="UiHotkeyTriggers" xml:space="preserve">
+    <value>Trigger di tasti di scelta rapida</value>
+  </data>
+  <data name="UiIcons" xml:space="preserve">
+    <value>Icone</value>
+  </data>
+  <data name="UiIcons2" xml:space="preserve">
+    <value>Icone:</value>
+  </data>
+  <data name="UiID" xml:space="preserve">
+    <value>ID:</value>
+  </data>
+  <data name="UiIDLE" xml:space="preserve">
+    <value>IN MINIMO</value>
+  </data>
+  <data name="UiImageScalingQuality" xml:space="preserve">
+    <value>Qualità del ridimensionamento delle immagini</value>
+  </data>
+  <data name="UiImageZoomView" xml:space="preserve">
+    <value>Visualizzazione zoom immagine</value>
+  </data>
+  <data name="UiInGameTime" xml:space="preserve">
+    <value>Tempo di gioco</value>
+  </data>
+  <data name="UiInactiveOFF" xml:space="preserve">
+    <value>Inattivo/OFF</value>
+  </data>
+  <data name="UiIncludeMessageMessage" xml:space="preserve">
+    <value>Includi messaggio ({{message}})</value>
+  </data>
+  <data name="UiIncludeNameTitle" xml:space="preserve">
+    <value>Includi nome ({{title}})</value>
+  </data>
+  <data name="UiIncludeTypeType" xml:space="preserve">
+    <value>Includi tipo ({{type}})</value>
+  </data>
+  <data name="UiIncreaseQuantity" xml:space="preserve">
+    <value>Aumenta la quantità</value>
+  </data>
+  <data name="UiIncreaseTargetQuantity" xml:space="preserve">
+    <value>Aumentare la quantità target</value>
+  </data>
+  <data name="UiInventoryInRecyclerYieldOut" xml:space="preserve">
+    <value>Inventario in entrata, resa del riciclatore in uscita</value>
+  </data>
+  <data name="UiInviteDiscordBotToServer" xml:space="preserve">
+    <value>Invita Discord Bot al server</value>
+  </data>
+  <data name="UiISOFFLINE" xml:space="preserve">
+    <value>È OFFLINE</value>
+  </data>
+  <data name="UiISONLINE" xml:space="preserve">
+    <value>È ONLINE</value>
+  </data>
+  <data name="UiITEMBAY" xml:space="preserve">
+    <value>BAIA ARTICOLO</value>
+  </data>
+  <data name="UiJunkpiles" xml:space="preserve">
+    <value>Cumuli di spazzatura</value>
+  </data>
+  <data name="UiKeepSidebarUnfolded" xml:space="preserve">
+    <value>Mantieni la barra laterale aperta</value>
+  </data>
+  <data name="UiLanguageStartupAndAppBehavior" xml:space="preserve">
+    <value>Lingua, avvio e comportamento dell&apos;app</value>
+  </data>
+  <data name="UiLastActive" xml:space="preserve">
+    <value>Ultimo attivo</value>
+  </data>
+  <data name="UiLayers" xml:space="preserve">
+    <value>Strati</value>
+  </data>
+  <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
+    <value>Lascia vuoto per consentire a tutti di accedere al server.</value>
+  </data>
+  <data name="UiLinkSelectedServer" xml:space="preserve">
+    <value>Collega il server selezionato</value>
+  </data>
+  <data name="UiListenForRustPairingRequestsRightClickForRecoveryOptions" xml:space="preserve">
+    <value>Ascolta le richieste di abbinamento Rust+. Fare clic con il tasto destro per le opzioni di ripristino.</value>
+  </data>
+  <data name="UiListening" xml:space="preserve">
+    <value>Ascolto</value>
+  </data>
+  <data name="UiLoadShopsAutomaticallyOnConnect" xml:space="preserve">
+    <value>Carica i negozi automaticamente alla connessione</value>
+  </data>
+  <data name="UiLoadingServerDetails" xml:space="preserve">
+    <value>Caricamento dei dettagli del server...</value>
+  </data>
+  <data name="UiLocalSetup" xml:space="preserve">
+    <value>Configurazione locale</value>
+  </data>
+  <data name="UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps" xml:space="preserve">
+    <value>Accedi al tuo account Desk Rust+ per generare mappe 3D e mappe di calore.</value>
+  </data>
+  <data name="UiLogOut" xml:space="preserve">
+    <value>Esci</value>
+  </data>
+  <data name="UiLogPiles" xml:space="preserve">
+    <value>Pile di tronchi</value>
+  </data>
+  <data name="UiLogicEngine" xml:space="preserve">
+    <value>Motore logico</value>
+  </data>
+  <data name="UiLogicEngineRuntime" xml:space="preserve">
+    <value>Runtime del motore logico</value>
+  </data>
+  <data name="UiLogicRules" xml:space="preserve">
+    <value>Regole logiche</value>
+  </data>
+  <data name="UiLoginRequired" xml:space="preserve">
+    <value>È richiesto l&apos;accesso</value>
+  </data>
+  <data name="UiLoopAfterCompletion" xml:space="preserve">
+    <value>Ciclo dopo il completamento</value>
+  </data>
+  <data name="UiLoot" xml:space="preserve">
+    <value>Bottino</value>
+  </data>
+  <data name="UiLootTransport" xml:space="preserve">
+    <value>Bottino e trasporto</value>
+  </data>
+  <data name="UiMaintenanceBackupResetAndCredits" xml:space="preserve">
+    <value>Manutenzione, backup, ripristino e crediti</value>
+  </data>
+  <data name="UiManualPremium" xml:space="preserve">
+    <value>Premio manuale</value>
+  </data>
+  <data name="UiManualSince" xml:space="preserve">
+    <value>Manuale da allora</value>
+  </data>
+  <data name="UiMap" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="UiMapLayers" xml:space="preserve">
+    <value>Livelli della mappa</value>
+  </data>
+  <data name="UiMapPerformanceQuality" xml:space="preserve">
+    <value>Prestazioni e qualità della mappa</value>
+  </data>
+  <data name="UiMarker" xml:space="preserve">
+    <value>Marcatore:</value>
+  </data>
+  <data name="UiMatched" xml:space="preserve">
+    <value>Abbinato:</value>
+  </data>
+  <data name="UiMeters" xml:space="preserve">
+    <value>metri</value>
+  </data>
+  <data name="UiMethodComparisonMode" xml:space="preserve">
+    <value>Modalità di confronto dei metodi</value>
+  </data>
+  <data name="UiMinProfit" xml:space="preserve">
+    <value>Profitto minimo:</value>
+  </data>
+  <data name="UiModularCars" xml:space="preserve">
+    <value>Auto modulari</value>
+  </data>
+  <data name="UiMonitorAndControlPairedSmartDevices" xml:space="preserve">
+    <value>Monitora e controlla i dispositivi intelligenti associati.</value>
+  </data>
+  <data name="UiMushrooms" xml:space="preserve">
+    <value>Funghi</value>
+  </data>
+  <data name="UiMuteNotificationsFromThisServer" xml:space="preserve">
+    <value>Disattiva le notifiche da questo server</value>
+  </data>
+  <data name="UiNames" xml:space="preserve">
+    <value>Nomi</value>
+  </data>
+  <data name="UiNestedStepsIfConditionMet" xml:space="preserve">
+    <value>Passaggi nidificati (se la condizione è soddisfatta)</value>
+  </data>
+  <data name="UiNewPassword6Characters" xml:space="preserve">
+    <value>Nuova password (6+ caratteri)</value>
+  </data>
+  <data name="UiNoBuild" xml:space="preserve">
+    <value>Nessuna costruzione</value>
+  </data>
+  <data name="UiNoDevicesMatchYourSearch" xml:space="preserve">
+    <value>Nessun dispositivo corrisponde alla tua ricerca.</value>
+  </data>
+  <data name="UiNoHeatmapActive" xml:space="preserve">
+    <value>Nessuna mappa termica attiva</value>
+  </data>
+  <data name="UiNoMatchingTargets" xml:space="preserve">
+    <value>Nessun obiettivo corrispondente</value>
+  </data>
+  <data name="UiNoPendingRules" xml:space="preserve">
+    <value>Nessuna regola in sospeso</value>
+  </data>
+  <data name="UiNoTargetsSelected" xml:space="preserve">
+    <value>Nessun target selezionato</value>
+  </data>
+  <data name="UiNotConnected" xml:space="preserve">
+    <value>Non connesso</value>
+  </data>
+  <data name="UiNothingToTotalYet" xml:space="preserve">
+    <value>Niente da completare ancora</value>
+  </data>
+  <data name="UiNotificationsSoundsAndOfflineDeath" xml:space="preserve">
+    <value>Notifiche, suoni e morte offline</value>
+  </data>
+  <data name="UiOfflineAlertsSetup" xml:space="preserve">
+    <value>Configurazione avvisi offline</value>
+  </data>
+  <data name="UiOfflineCloudAlertsDiscordWebhookTelegramCalls" xml:space="preserve">
+    <value>Avvisi cloud offline | Discord, Webhook e Telegram Chiamate</value>
+  </data>
+  <data name="UiOpacity100" xml:space="preserve">
+    <value>Opacità: 100%</value>
+  </data>
+  <data name="UiOpenCloudAccount" xml:space="preserve">
+    <value>Apri un conto cloud</value>
+  </data>
+  <data name="UiOpenInteractive3DMapOnRustMaps" xml:space="preserve">
+    <value>Apri la mappa 3D interattiva su RustMaps</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanel" xml:space="preserve">
+    <value>Apri o chiudi il pannello Negozi</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanelCtrlShiftS" xml:space="preserve">
+    <value>Apri o chiudi il pannello Negozi (Ctrl+Shift+S)</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanel" xml:space="preserve">
+    <value>Apri o chiudi il pannello Team</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
+    <value>Apri o chiudi il pannello Team (Ctrl+Shift+T)</value>
+  </data>
+  <data name="UiOpenShopFilters" xml:space="preserve">
+    <value>Apri i filtri del negozio</value>
+  </data>
+  <data name="UiOpenSignInAndAccountManagement" xml:space="preserve">
+    <value>Accesso aperto e gestione dell&apos;account</value>
+  </data>
+  <data name="UiOptimalMultiHopTradePathfinder" xml:space="preserve">
+    <value>Pathfinder ottimale per il commercio multi-hop</value>
+  </data>
+  <data name="UiOptionalPings" xml:space="preserve">
+    <value>Ping facoltativi</value>
+  </data>
+  <data name="UiOR" xml:space="preserve">
+    <value>O</value>
+  </data>
+  <data name="UiOrGroupName" xml:space="preserve">
+    <value>o Nome del gruppo</value>
+  </data>
+  <data name="UiOres" xml:space="preserve">
+    <value>Minerali</value>
+  </data>
+  <data name="UiOtherwise" xml:space="preserve">
+    <value>Altrimenti:</value>
+  </data>
+  <data name="UiOUTPOST" xml:space="preserve">
+    <value>AVAMPOSTO</value>
+  </data>
+  <data name="UiOutpostRecyclerTime" xml:space="preserve">
+    <value>Tempo del riciclatore dell&apos;avamposto</value>
+  </data>
+  <data name="UiOutpostSafezoneRecycler" xml:space="preserve">
+    <value>Avamposto/Riciclatore di Safezone</value>
+  </data>
+  <data name="UiOverlayStorage" xml:space="preserve">
+    <value>Archiviazione sovrapposta</value>
+  </data>
+  <data name="UiOwnBaseBlack" xml:space="preserve">
+    <value>Propria base (nera)</value>
+  </data>
+  <data name="UiParachute" xml:space="preserve">
+    <value>Paracadute</value>
+  </data>
+  <data name="UiParse3DMapManually" xml:space="preserve">
+    <value>Analizza manualmente la mappa 3D</value>
+  </data>
+  <data name="UiPayItemEGCloth" xml:space="preserve">
+    <value>Oggetto da pagare (ad esempio stoffa)...</value>
+  </data>
+  <data name="UiPaymentResource" xml:space="preserve">
+    <value>Risorsa di pagamento</value>
+  </data>
+  <data name="UiPendingQueue" xml:space="preserve">
+    <value>Coda in sospeso</value>
+  </data>
+  <data name="UiPerformanceNearestNeighbor" xml:space="preserve">
+    <value>Prestazioni (vicino più vicino)</value>
+  </data>
+  <data name="UiPerformanceMarkersAnd3DData" xml:space="preserve">
+    <value>Prestazioni, marcatori e dati 3D</value>
+  </data>
+  <data name="UiPin" xml:space="preserve">
+    <value>Perno</value>
+  </data>
+  <data name="UiPinSidebar" xml:space="preserve">
+    <value>Barra laterale bloccata</value>
+  </data>
+  <data name="UiPLANUSAGE" xml:space="preserve">
+    <value>PIANIFICARE L&apos;UTILIZZO</value>
+  </data>
+  <data name="UiPlay1minCountdownAudio" xml:space="preserve">
+    <value>Riproduci l&apos;audio del conto alla rovescia di 1 minuto</value>
+  </data>
+  <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
+    <value>Suona un allarme forte alle 00:00</value>
+  </data>
+  <data name="UiPlayerProximity" xml:space="preserve">
+    <value>Vicinanza del giocatore</value>
+  </data>
+  <data name="UiPotatoes" xml:space="preserve">
+    <value>Patate</value>
+  </data>
+  <data name="UiPressDesiredKeyCombination" xml:space="preserve">
+    <value>Premere la combinazione di tasti desiderata...</value>
+  </data>
+  <data name="UiPressESCToCancelEnterToSave" xml:space="preserve">
+    <value>Premere ESC per annullare, Invio per salvare</value>
+  </data>
+  <data name="UiPressHotkey" xml:space="preserve">
+    <value>Premere il tasto di scelta rapida</value>
+  </data>
+  <data name="UiPriceHighToLow" xml:space="preserve">
+    <value>Prezzo (da alto a basso)</value>
+  </data>
+  <data name="UiPriceLowToHigh" xml:space="preserve">
+    <value>Prezzo (da basso ad alto)</value>
+  </data>
+  <data name="UiProceduralHeatmaps" xml:space="preserve">
+    <value>Mappe di calore procedurali</value>
+  </data>
+  <data name="UiProfit" xml:space="preserve">
+    <value>Profitto</value>
+  </data>
+  <data name="UiPumpkins" xml:space="preserve">
+    <value>Zucche</value>
+  </data>
+  <data name="UiPurple" xml:space="preserve">
+    <value>Viola</value>
+  </data>
+  <data name="UiRaidAlertsChannelID" xml:space="preserve">
+    <value>ID canale avvisi raid</value>
+  </data>
+  <data name="UiRaidCalculator" xml:space="preserve">
+    <value>Calcolatore del raid</value>
+  </data>
+  <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
+    <value>Oggetti del raid e ingredienti grezzi per la lavorazione</value>
+  </data>
+  <data name="UiRaidPlan" xml:space="preserve">
+    <value>Piano del raid</value>
+  </data>
+  <data name="UiRaidSummary" xml:space="preserve">
+    <value>Riepilogo dell&apos;incursione</value>
+  </data>
+  <data name="UiRAWRESOURCES" xml:space="preserve">
+    <value>RISORSE GREZZE</value>
+  </data>
+  <data name="UiReadAlertsAloudViaDiscordTTS" xml:space="preserve">
+    <value>Leggi gli avvisi ad alta voce tramite Discord TTS</value>
+  </data>
+  <data name="UiRed" xml:space="preserve">
+    <value>Rosso</value>
+  </data>
+  <data name="UiRefreshDeviceStates" xml:space="preserve">
+    <value>Aggiorna gli stati del dispositivo</value>
+  </data>
+  <data name="UiRemoveTarget" xml:space="preserve">
+    <value>Rimuovi bersaglio</value>
+  </data>
+  <data name="UiRepeats0Indefinitely" xml:space="preserve">
+    <value>si ripete (0 = indefinitamente)</value>
+  </data>
+  <data name="UiResetSoundsToDefault" xml:space="preserve">
+    <value>Ripristina i suoni ai valori predefiniti</value>
+  </data>
+  <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
+    <value>Scala di risoluzione della bitmap della GPU memorizzata nella cache. Le scale inferiori migliorano le prestazioni sulle GPU più lente.</value>
+  </data>
+  <data name="UiResourcesForestry" xml:space="preserve">
+    <value>Risorse e silvicoltura</value>
+  </data>
+  <data name="UiRestoreLocalBackup" xml:space="preserve">
+    <value>Ripristina il backup locale</value>
+  </data>
+  <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
+    <value>Esamina gli avvisi e gli eventi recenti del server.</value>
+  </data>
+  <data name="UiRevoke" xml:space="preserve">
+    <value>Revoca</value>
+  </data>
+  <data name="UiRevokeAccess" xml:space="preserve">
+    <value>Revoca accesso</value>
+  </data>
+  <data name="UiRock" xml:space="preserve">
+    <value>Roccia</value>
+  </data>
+  <data name="UiRowboats" xml:space="preserve">
+    <value>Barche a remi</value>
+  </data>
+  <data name="UiRuleCompleted" xml:space="preserve">
+    <value>Regola completata</value>
+  </data>
+  <data name="UiRuleName" xml:space="preserve">
+    <value>Nome della regola</value>
+  </data>
+  <data name="UiRuleTriggered" xml:space="preserve">
+    <value>Regola attivata</value>
+  </data>
+  <data name="UiRunThisRuleAgainAfterItCompletesAPositiveWaitStepIsRequired" xml:space="preserve">
+    <value>Esegui di nuovo questa regola una volta completata. È necessaria una fase di attesa positiva.</value>
+  </data>
+  <data name="UiRUNNING" xml:space="preserve">
+    <value>CORRERE</value>
+  </data>
+  <data name="UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2" xml:space="preserve">
+    <value>Rust a volte invia una notifica di raid senza l&apos;ID del dispositivo dello Smart Alarm. RustPlusDesk non è in grado di stabilire quale allarme lo ha attivato, pertanto vengono utilizzate le impostazioni condivise riportate di seguito anziché le impostazioni proprie del dispositivo.</value>
+  </data>
+  <data name="UiRUSTCOMPANION" xml:space="preserve">
+    <value>COMPAGNO RUGGINE+</value>
+  </data>
+  <data name="UiRustCompanionConnection" xml:space="preserve">
+    <value>Rust+ Connessione complementare</value>
+  </data>
+  <data name="UiRustCompanionSession" xml:space="preserve">
+    <value>Rust+ Sessione complementare</value>
+  </data>
+  <data name="UiRustDesktopV600Update" xml:space="preserve">
+    <value>Rust+ Desktop 🛠️ Aggiornamento v6.0.0</value>
+  </data>
+  <data name="UiRustSteamAccount" xml:space="preserve">
+    <value>Rust+ Steam conto</value>
+  </data>
+  <data name="UiRustmapsCom" xml:space="preserve">
+    <value>rugginemaps.com</value>
+  </data>
+  <data name="UiSAMSite" xml:space="preserve">
+    <value>Sito SAM</value>
+  </data>
+  <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
+    <value>Salva e chiudi le impostazioni dei comandi della chat</value>
+  </data>
+  <data name="UiSaveChannelsConfig" xml:space="preserve">
+    <value>Salva configurazione canali</value>
+  </data>
+  <data name="UiSavedBases" xml:space="preserve">
+    <value>Basi salvate</value>
+  </data>
+  <data name="UiScope" xml:space="preserve">
+    <value>Ambito</value>
+  </data>
+  <data name="UiScrollOrShiftClickChangesBy10" xml:space="preserve">
+    <value>Scorri o fai clic con Maiusc+clic per modificare di 10</value>
+  </data>
+  <data name="UiScrollToZoomDragToPanClickOrESCToCloseDoubleClickToReset" xml:space="preserve">
+    <value>Scorrere per ingrandire • Trascinare per eseguire la panoramica • Fare clic o ESC per chiudere • Fare doppio clic per reimpostare</value>
+  </data>
+  <data name="UiSearchComponents" xml:space="preserve">
+    <value>Cerca componenti...</value>
+  </data>
+  <data name="UiSearchDevicesByNameTypeOwnerID" xml:space="preserve">
+    <value>Cerca dispositivi per nome, tipo, proprietario, ID...</value>
+  </data>
+  <data name="UiSearchDevices" xml:space="preserve">
+    <value>Cerca dispositivi...</value>
+  </data>
+  <data name="UiSearchItemsEGSulfur" xml:space="preserve">
+    <value>Cerca elementi (ad es. zolfo)...</value>
+  </data>
+  <data name="UiSearchItemsOrTypeFreely" xml:space="preserve">
+    <value>Cerca elementi o digita liberamente...</value>
+  </data>
+  <data name="UiSearchMonument" xml:space="preserve">
+    <value>Cerca monumento...</value>
+  </data>
+  <data name="UiSearchRaidTargets" xml:space="preserve">
+    <value>Cerca obiettivi del raid</value>
+  </data>
+  <data name="UiSearchSettings" xml:space="preserve">
+    <value>Impostazioni di ricerca</value>
+  </data>
+  <data name="UiSearchTargets" xml:space="preserve">
+    <value>Cerca obiettivi...</value>
+  </data>
+  <data name="UiSearching" xml:space="preserve">
+    <value>Ricerca...</value>
+  </data>
+  <data name="UiSeconds" xml:space="preserve">
+    <value>secondi</value>
+  </data>
+  <data name="UiSecs" xml:space="preserve">
+    <value>Sez</value>
+  </data>
+  <data name="UiSelectALayerToViewSpawnDensity" xml:space="preserve">
+    <value>Seleziona un livello per visualizzare la densità di spawn</value>
+  </data>
+  <data name="UiSelectCustom1MinuteCountdownSound" xml:space="preserve">
+    <value>Seleziona il suono personalizzato del conto alla rovescia di 1 minuto</value>
+  </data>
+  <data name="UiSelectCustomAlarmSound0000" xml:space="preserve">
+    <value>Seleziona il suono della sveglia personalizzato (00:00)</value>
+  </data>
+  <data name="UiSelectMultipleRaidItemsForTheSmartCombinationSearch" xml:space="preserve">
+    <value>Seleziona più elementi del raid per la ricerca intelligente della combinazione</value>
+  </data>
+  <data name="UiSelectServerToSyncWithAlexa" xml:space="preserve">
+    <value>Seleziona il server con cui sincronizzarsi Alexa</value>
+  </data>
+  <data name="UiSelectSmartMixRaidItems" xml:space="preserve">
+    <value>Seleziona elementi raid mix intelligenti</value>
+  </data>
+  <data name="UiSelectTheSourceRuleForThisTrigger" xml:space="preserve">
+    <value>Seleziona la regola di origine per questo trigger.</value>
+  </data>
+  <data name="UiSendCurrentMapViewToDiscordChannel" xml:space="preserve">
+    <value>Invia la visualizzazione della mappa corrente al canale Discord.</value>
+  </data>
+  <data name="UiSendToDiscord" xml:space="preserve">
+    <value>Invia a Discord</value>
+  </data>
+  <data name="UiSERVERHIDDEN" xml:space="preserve">
+    <value>SERVER NASCOSTO</value>
+  </data>
+  <data name="UiServerName1430" xml:space="preserve">
+    <value>Nome del server: 14:30</value>
+  </data>
+  <data name="UiSERVERS" xml:space="preserve">
+    <value>SERVER</value>
+  </data>
+  <data name="UiSetShortcut" xml:space="preserve">
+    <value>Imposta collegamento</value>
+  </data>
+  <data name="UiSettingsAreGroupedByWhatTheyControl" xml:space="preserve">
+    <value>Le impostazioni sono raggruppate in base a ciò che controllano.</value>
+  </data>
+  <data name="UiShield" xml:space="preserve">
+    <value>Scudo</value>
+  </data>
+  <data name="UiShopAlertsChannelID" xml:space="preserve">
+    <value>ID canale Avvisi negozio</value>
+  </data>
+  <data name="UiShow2DMap" xml:space="preserve">
+    <value>Mostra la mappa 2D</value>
+  </data>
+  <data name="UiShowAll" xml:space="preserve">
+    <value>Mostra tutto</value>
+  </data>
+  <data name="UiShowDamageOverkillAndIngredientBreakdowns" xml:space="preserve">
+    <value>Mostra danni, eccessi e guasti agli ingredienti</value>
+  </data>
+  <data name="UiShowLocal3DMap" xml:space="preserve">
+    <value>Mostra la mappa 3D locale</value>
+  </data>
+  <data name="UiShowMarkersOnMap" xml:space="preserve">
+    <value>Mostra gli indicatori sulla mappa</value>
+  </data>
+  <data name="UiShowShopsThatBuyItem" xml:space="preserve">
+    <value>Mostra i negozi che acquistano articoli</value>
+  </data>
+  <data name="UiShowShopsThatSellItem" xml:space="preserve">
+    <value>Mostra i negozi che vendono articoli</value>
+  </data>
+  <data name="UiShowThe2DMap" xml:space="preserve">
+    <value>Mostra la mappa 2D</value>
+  </data>
+  <data name="UiSIGNINMETHODS" xml:space="preserve">
+    <value>METODI DI ACCESSO</value>
+  </data>
+  <data name="UiSize" xml:space="preserve">
+    <value>Dimensioni:</value>
+  </data>
+  <data name="UiSize100SHIFTMousewheel" xml:space="preserve">
+    <value>Dimensioni: 100% (MAIUSC+rotellina del mouse)</value>
+  </data>
+  <data name="UiSkull" xml:space="preserve">
+    <value>Teschio</value>
+  </data>
+  <data name="UiSleep" xml:space="preserve">
+    <value>Dormi</value>
+  </data>
+  <data name="UiSmartHomeWebhookURLEGIFTTTAlexaGoogle" xml:space="preserve">
+    <value>URL del webhook Smart Home (ad esempio IFTTT, Alexa, Google)</value>
+  </data>
+  <data name="UiSmartSwitch" xml:space="preserve">
+    <value>Interruttore intelligente</value>
+  </data>
+  <data name="UiSnakes" xml:space="preserve">
+    <value>Serpenti</value>
+  </data>
+  <data name="UiSnooze" xml:space="preserve">
+    <value>Posticipa</value>
+  </data>
+  <data name="UiSnoozeAlarm" xml:space="preserve">
+    <value>Sveglia posticipata</value>
+  </data>
+  <data name="UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D" xml:space="preserve">
+    <value>Alcuni metodi selezionati non hanno costi di creazione nel set di dati; le loro risorse sono escluse.</value>
+  </data>
+  <data name="UiSortBy" xml:space="preserve">
+    <value>Ordina per</value>
+  </data>
+  <data name="UiSpecificPlayerInRange" xml:space="preserve">
+    <value>Giocatore specifico nel raggio d&apos;azione</value>
+  </data>
+  <data name="UiSpecificPlayerOffline" xml:space="preserve">
+    <value>Giocatore specifico offline</value>
+  </data>
+  <data name="UiSteamID" xml:space="preserve">
+    <value>Steam ID</value>
+  </data>
+  <data name="UiStopAlarmSound" xml:space="preserve">
+    <value>Arresta il suono dell&apos;allarme</value>
+  </data>
+  <data name="UiStorage" xml:space="preserve">
+    <value>Stoccaggio</value>
+  </data>
+  <data name="UiSupportRustPlusDesk" xml:space="preserve">
+    <value>Supporto RustPlusDesk</value>
+  </data>
+  <data name="UiSwitch" xml:space="preserve">
+    <value>Cambia</value>
+  </data>
+  <data name="UiSyncCloudConnection" xml:space="preserve">
+    <value>Sincronizza la connessione cloud</value>
+  </data>
+  <data name="UiSyncOK" xml:space="preserve">
+    <value>Sincronizzazione OK</value>
+  </data>
+  <data name="UiSyncYourRustConnection" xml:space="preserve">
+    <value>Sincronizza la tua connessione Rust+.</value>
+  </data>
+  <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
+    <value>Sincronizza la tua connessione Rust+ al cloud per ricevere avvisi intelligenti su raid/eventi su Discord, (Alexa e Google Home anche quando l&apos;app desktop è chiusa.</value>
+  </data>
+  <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
+    <value>Sincronizzazione, backup, funzionalità del team e accesso ai sostenitori. Questo account è separato dall&apos;associazione Rust+ Companion e FCM.</value>
+  </data>
+  <data name="UiSyncedDevices" xml:space="preserve">
+    <value>Dispositivi sincronizzati</value>
+  </data>
+  <data name="UiSystem" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="UiTargetCategory" xml:space="preserve">
+    <value>Categoria di destinazione</value>
+  </data>
+  <data name="UiTargetQuantity" xml:space="preserve">
+    <value>Quantità target</value>
+  </data>
+  <data name="UiTeamPathsTracking" xml:space="preserve">
+    <value>Monitoraggio dei percorsi del team</value>
+  </data>
+  <data name="UiTelegramCallViaCallMeBot" xml:space="preserve">
+    <value>Telegram Chiama tramite CallMeBot</value>
+  </data>
+  <data name="UiTestCall" xml:space="preserve">
+    <value>Chiamata di prova</value>
+  </data>
+  <data name="UiTextToSpeechForWebhook" xml:space="preserve">
+    <value>Sintesi vocale per Webhook</value>
+  </data>
+  <data name="UiTheCloudWorkerListensForIncomingAlarms" xml:space="preserve">
+    <value>L&apos;operatore cloud ascolta gli allarmi in arrivo.</value>
+  </data>
+  <data name="UiTHEN" xml:space="preserve">
+    <value>POI</value>
+  </data>
+  <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
+    <value>Questa connessione è per l&apos;API complementare Rust. Abilita l&apos;accoppiamento FCM, le trasmissioni in-game, gli allarmi e la chat di squadra. Il tuo account Cloud è separato.</value>
+  </data>
+  <data name="UiTier" xml:space="preserve">
+    <value>Livello</value>
+  </data>
+  <data name="UiTigers" xml:space="preserve">
+    <value>Tigri</value>
+  </data>
+  <data name="UiToggleDelay150ms" xml:space="preserve">
+    <value>Ritardo di commutazione: 150 ms</value>
+  </data>
+  <data name="UiToggleDevice" xml:space="preserve">
+    <value>Attiva/Disattiva dispositivo</value>
+  </data>
+  <data name="UiToggleMiniMap" xml:space="preserve">
+    <value>Attiva/disattiva la mini mappa</value>
+  </data>
+  <data name="UiToggleMonumentList" xml:space="preserve">
+    <value>Attiva/disattiva l&apos;elenco dei monumenti</value>
+  </data>
+  <data name="UiTrackTeammatesAndSharedActivity" xml:space="preserve">
+    <value>Tieni traccia dei compagni di squadra e delle attività condivise.</value>
+  </data>
+  <data name="UiTriggerEvent" xml:space="preserve">
+    <value>Evento trigger</value>
+  </data>
+  <data name="UiTriggered" xml:space="preserve">
+    <value>Innescato</value>
+  </data>
+  <data name="UiTryAnotherSearchOrCategory" xml:space="preserve">
+    <value>Prova un&apos;altra ricerca o categoria.</value>
+  </data>
+  <data name="UiTTS" xml:space="preserve">
+    <value>TTS</value>
+  </data>
+  <data name="UiTTSLanguage" xml:space="preserve">
+    <value>Linguaggio TTS</value>
+  </data>
+  <data name="UiTurret" xml:space="preserve">
+    <value>Torretta</value>
+  </data>
+  <data name="UiUntil" xml:space="preserve">
+    <value>fino a quando</value>
+  </data>
+  <data name="UiUpgradeToSupporter" xml:space="preserve">
+    <value>Passa a Sostenitore</value>
+  </data>
+  <data name="UiUsernameEGBrunhilde" xml:space="preserve">
+    <value>Nome utente (es. @Brunhilde)</value>
+  </data>
+  <data name="UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired" xml:space="preserve">
+    <value>Utilizza il tuo login Rust+ / Steam nel browser. Non è richiesto l&apos;accesso al cloud.</value>
+  </data>
+  <data name="UiViewAndControlPairedCCTVCameras" xml:space="preserve">
+    <value>Visualizza e controlla le telecamere CCTV accoppiate.</value>
+  </data>
+  <data name="UiViewPlayers" xml:space="preserve">
+    <value>Visualizza i giocatori</value>
+  </data>
+  <data name="UiVisitWebsite" xml:space="preserve">
+    <value>Visita il sito web</value>
+  </data>
+  <data name="UiWait" xml:space="preserve">
+    <value>Aspetta</value>
+  </data>
+  <data name="UiWantItemEGBlue" xml:space="preserve">
+    <value>Articolo desiderato (ad esempio blu)...</value>
+  </data>
+  <data name="UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E" xml:space="preserve">
+    <value>Possiamo individuare automaticamente la mappa nella cartella di installazione Steam, estrarla e creare una mappa 3D con mappe termiche e sovrapposizioni di monumenti più ricche. Nessun dato verrà modificato e non sarà possibile accedere ai dati della cartella non correlata Steam.</value>
+  </data>
+  <data name="UiWebhookInfo" xml:space="preserve">
+    <value>Informazioni sul webhook</value>
+  </data>
+  <data name="UiWhatHappensNext" xml:space="preserve">
+    <value>Cosa succede dopo:</value>
+  </data>
+  <data name="UiWhatIsAGenericAlarm" xml:space="preserve">
+    <value>Cos&apos;è un allarme generico?</value>
+  </data>
+  <data name="UiWheat" xml:space="preserve">
+    <value>Grano</value>
+  </data>
+  <data name="UiWHEN" xml:space="preserve">
+    <value>QUANDO</value>
+  </data>
+  <data name="UiWILD" xml:space="preserve">
+    <value>SELVAGGIO</value>
+  </data>
+  <data name="UiWildRecyclerTime" xml:space="preserve">
+    <value>Tempo di riciclatore selvaggio</value>
+  </data>
+  <data name="UiWipeCycle" xml:space="preserve">
+    <value>Ciclo di pulizia</value>
+  </data>
+  <data name="UiWolves" xml:space="preserve">
+    <value>Lupi</value>
+  </data>
+  <data name="UiWoodPiles" xml:space="preserve">
+    <value>Mucchi di legno</value>
+  </data>
+  <data name="UiX" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="UiYellow" xml:space="preserve">
+    <value>Giallo</value>
+  </data>
+  <data name="UiYIELDBOARD" xml:space="preserve">
+    <value>CONSIGLIO DI RENDIMENTO</value>
+  </data>
+  <data name="UiYouCanRevokeThisAccessAtAnyTime" xml:space="preserve">
+    <value>Puoi revocare questo accesso in qualsiasi momento.</value>
+  </data>
+  <data name="UiYourFCMConnectionTokenIsUploadedSecurely" xml:space="preserve">
+    <value>Il tuo token di connessione FCM è caricato in modo sicuro.</value>
+  </data>
+  <data name="UiZZZ" xml:space="preserve">
+    <value>ZZZ</value>
+  </data>
+  <data name="CodeUi3DMapData" xml:space="preserve">
+    <value>3D Map Data</value>
+  </data>
+  <data name="CodeUiÃÂÂ" xml:space="preserve">
+    <value>Ã¢â‚¬Â¦</value>
+  </data>
+  <data name="CodeUiAccessRevoked" xml:space="preserve">
+    <value>Access Revoked</value>
+  </data>
+  <data name="CodeUiAddAnEmailAndPasswordToThisAccount" xml:space="preserve">
+    <value>Aggiungi un&apos;e-mail e una password a questo account</value>
+  </data>
+  <data name="CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole" xml:space="preserve">
+    <value>L&apos;accesso amministrativo richiede l&apos;autenticazione Discord e il ruolo di sviluppatore/collaboratore principale.</value>
+  </data>
+  <data name="CodeUiAlexaAccessRevokedSuccessfully" xml:space="preserve">
+    <value>Alexa accesso revocato con successo.</value>
+  </data>
+  <data name="CodeUiApplyingUpdate" xml:space="preserve">
+    <value>Applicazione dell&apos;aggiornamento...</value>
+  </data>
+  <data name="CodeUiAreYouSureYouWantToClearTheOfflineDeathLog" xml:space="preserve">
+    <value>Sei sicuro di voler cancellare il registro dei decessi offline?</value>
+  </data>
+  <data name="CodeUiArrivalWarningUnlearned" xml:space="preserve">
+    <value>Avviso di arrivo (non appreso)</value>
+  </data>
+  <data name="CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain" xml:space="preserve">
+    <value>Dati della mappa 3D memorizzati nella cache eliminati. Verrà ricostruito quando apri nuovamente una mappa 3D.</value>
+  </data>
+  <data name="CodeUiChangeColor" xml:space="preserve">
+    <value>Cambia colore</value>
+  </data>
+  <data name="CodeUiChannelsConfigurationSavedSuccessfully" xml:space="preserve">
+    <value>Configurazione dei canali salvata con successo!</value>
+  </data>
+  <data name="CodeUiCheckingDevices" xml:space="preserve">
+    <value>Controllo dei dispositivi...</value>
+  </data>
+  <data name="CodeUiCheckingForUpdates" xml:space="preserve">
+    <value>Controllo aggiornamenti...</value>
+  </data>
+  <data name="CodeUiClearEveryTargetFromThisRaidPlan" xml:space="preserve">
+    <value>Eliminare tutti gli obiettivi da questo piano d&apos;incursione?</value>
+  </data>
+  <data name="CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612" xml:space="preserve">
+    <value>L&apos;accesso al cloud è stato revocato e le tue credenziali sono state eliminate dal cloud.</value>
+  </data>
+  <data name="CodeUiCloudSyncFailed" xml:space="preserve">
+    <value>Sincronizzazione cloud non riuscita</value>
+  </data>
+  <data name="CodeUiCloudUser" xml:space="preserve">
+    <value>Utente della nuvola</value>
+  </data>
+  <data name="CodeUiCollapse" xml:space="preserve">
+    <value>Crollo</value>
+  </data>
+  <data name="CodeUiConfirmClear" xml:space="preserve">
+    <value>Conferma Cancella</value>
+  </data>
+  <data name="CodeUiConnected" xml:space="preserve">
+    <value>Connesso</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncEnabled" xml:space="preserve">
+    <value>Connesso · Sincronizzazione cloud abilitata</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncPaused" xml:space="preserve">
+    <value>Connesso · Sincronizzazione cloud in pausa</value>
+  </data>
+  <data name="CodeUiCopied" xml:space="preserve">
+    <value>Copiato</value>
+  </data>
+  <data name="CodeUiCopyMap" xml:space="preserve">
+    <value>Copia mappa</value>
+  </data>
+  <data name="CodeUiCouldNotCheckForUpdates" xml:space="preserve">
+    <value>Impossibile verificare la presenza di aggiornamenti</value>
+  </data>
+  <data name="CodeUiCouldNotCopySummary" xml:space="preserve">
+    <value>Impossibile copiare il riepilogo</value>
+  </data>
+  <data name="CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811" xml:space="preserve">
+    <value>Could not retrieve details from the Rust+ connection. Assicurati di essere connesso al server.</value>
+  </data>
+  <data name="CodeUiDeviceImportFailed" xml:space="preserve">
+    <value>Importazione del dispositivo non riuscita:</value>
+  </data>
+  <data name="CodeUiDiscordServerLinkedSuccessfully" xml:space="preserve">
+    <value>Discord Server collegato correttamente!</value>
+  </data>
+  <data name="CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E" xml:space="preserve">
+    <value>Discord Server scollegato correttamente. Il bot non interagirà più con il tuo server.</value>
+  </data>
+  <data name="CodeUiEmailLoginEnabled" xml:space="preserve">
+    <value>Accesso e-mail abilitato</value>
+  </data>
+  <data name="CodeUiEnabled" xml:space="preserve">
+    <value>Abilitato</value>
+  </data>
+  <data name="CodeUiEraserBig20px" xml:space="preserve">
+    <value>Gomma grande (20px)</value>
+  </data>
+  <data name="CodeUiEraserSmall5px" xml:space="preserve">
+    <value>Gomma piccola (5px)</value>
+  </data>
+  <data name="CodeUiFailedToLinkDiscordServer" xml:space="preserve">
+    <value>Impossibile collegare il server Discord.</value>
+  </data>
+  <data name="CodeUiFailedToRevokeFCMConnection" xml:space="preserve">
+    <value>Impossibile revocare la connessione FCM.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
+    <value>Impossibile sincronizzare la connessione FCM. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
+    <value>Impossibile sincronizzare la connessione FCM. Assicurati di aver effettuato l&apos;accesso.</value>
+  </data>
+  <data name="CodeUiFehler" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="CodeUiHotkeysActive" xml:space="preserve">
+    <value>Tasti di scelta rapida attivi</value>
+  </data>
+  <data name="CodeUiInvalidUsername" xml:space="preserve">
+    <value>Nome utente non valido</value>
+  </data>
+  <data name="CodeUiJustNow" xml:space="preserve">
+    <value>proprio adesso</value>
+  </data>
+  <data name="CodeUiLinkDiscord" xml:space="preserve">
+    <value>Collegamento Discord</value>
+  </data>
+  <data name="CodeUiLinked" xml:space="preserve">
+    <value>Collegato</value>
+  </data>
+  <data name="CodeUiLinkedToThisCloudAccount" xml:space="preserve">
+    <value>Collegato a questo account cloud</value>
+  </data>
+  <data name="CodeUiLöschen" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="CodeUiManageEmailAccount" xml:space="preserve">
+    <value>Gestisci l&apos;account di posta elettronica</value>
+  </data>
+  <data name="CodeUiManagePlayerGroup" xml:space="preserve">
+    <value>Gestisci il gruppo di giocatori</value>
+  </data>
+  <data name="CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52" xml:space="preserve">
+    <value>È stato raggiunto un massimo di 5 abbonamenti attivi ai compagni di squadra. Per favore cancella prima l&apos;iscrizione a qualcun altro.</value>
+  </data>
+  <data name="CodeUiMaximumOf5CustomTimersAllowed" xml:space="preserve">
+    <value>Sono consentiti un massimo di 5 timer personalizzati.</value>
+  </data>
+  <data name="CodeUiMissingChannelConfig" xml:space="preserve">
+    <value>Configurazione canale mancante</value>
+  </data>
+  <data name="CodeUiNoActiveConnectionToRetrieveServerInfo" xml:space="preserve">
+    <value>Nessuna connessione attiva per recuperare le informazioni sul server.</value>
+  </data>
+  <data name="CodeUiNoCompanionSession" xml:space="preserve">
+    <value>Nessuna sessione complementare</value>
+  </data>
+  <data name="CodeUiNoDeviceExportsFoundForYourTeamServer" xml:space="preserve">
+    <value>Nessuna esportazione di dispositivi trovata per il tuo team/server.</value>
+  </data>
+  <data name="CodeUiNoFrame" xml:space="preserve">
+    <value>nessuna cornice</value>
+  </data>
+  <data name="CodeUiNoMapFound" xml:space="preserve">
+    <value>Nessuna mappa trovata</value>
+  </data>
+  <data name="CodeUiNoOffersAvailable" xml:space="preserve">
+    <value>Nessuna offerta disponibile</value>
+  </data>
+  <data name="CodeUiNoResultsFoundMatchingFilter" xml:space="preserve">
+    <value>Nessun risultato trovato corrispondente al filtro.</value>
+  </data>
+  <data name="CodeUiNoTextFound" xml:space="preserve">
+    <value>Nessun testo trovato</value>
+  </data>
+  <data name="CodeUiNoValidRouteBottlenecks" xml:space="preserve">
+    <value>Nessun percorso valido (colli di bottiglia).</value>
+  </data>
+  <data name="CodeUiNotLinked" xml:space="preserve">
+    <value>Non collegato</value>
+  </data>
+  <data name="CodeUiNotSignedInSyncAndBackupsUnavailable" xml:space="preserve">
+    <value>Accesso non effettuato · sincronizzazione e backup non disponibili</value>
+  </data>
+  <data name="CodeUiOfflineMap" xml:space="preserve">
+    <value>Mappa offline</value>
+  </data>
+  <data name="CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers" xml:space="preserve">
+    <value>Solo le mappe offline analizzate manualmente possono essere copiate su altri server.</value>
+  </data>
+  <data name="CodeUiPINGeneratedValidFor15m" xml:space="preserve">
+    <value>PIN generato (valido per 15 minuti)</value>
+  </data>
+  <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
+    <value>Configura prima un canale Discord &quot;Avvisi chat&quot; o &quot;Avvisi eventi&quot; nelle Impostazioni.</value>
+  </data>
+  <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
+    <value>Collega prima il tuo account cloud.</value>
+  </data>
+  <data name="CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN" xml:space="preserve">
+    <value>Abilita Cloud Sync prima di generare un PIN Alexa.</value>
+  </data>
+  <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
+    <value>Inserisci un nome utente valido Telegram.</value>
+  </data>
+  <data name="CodeUiPleaseSaveADiscordServerIDFirst" xml:space="preserve">
+    <value>Salvare prima un ID server Discord.</value>
+  </data>
+  <data name="CodeUiResumingUpdateDownload" xml:space="preserve">
+    <value>Ripresa del download dell&apos;aggiornamento in corso...</value>
+  </data>
+  <data name="CodeUiSaveAlert" xml:space="preserve">
+    <value>Salva avviso</value>
+  </data>
+  <data name="CodeUiSavedClickToUnsave" xml:space="preserve">
+    <value>Salvato (clicca per annullare il salvataggio)</value>
+  </data>
+  <data name="CodeUiSearchResults" xml:space="preserve">
+    <value>Risultati della ricerca</value>
+  </data>
+  <data name="CodeUiSending" xml:space="preserve">
+    <value>Invio...</value>
+  </data>
+  <data name="CodeUiServerAddressCopiedToClipboard" xml:space="preserve">
+    <value>Indirizzo del server copiato negli appunti!</value>
+  </data>
+  <data name="CodeUiShowNoBuildZones" xml:space="preserve">
+    <value>Mostra zone vietate alla costruzione</value>
+  </data>
+  <data name="CodeUiSize14" xml:space="preserve">
+    <value>Taglia: 14</value>
+  </data>
+  <data name="CodeUiSize40" xml:space="preserve">
+    <value>Taglia: 40</value>
+  </data>
+  <data name="CodeUiSteamIDNotFoundPleaseConnectToAServerFirst" xml:space="preserve">
+    <value>Steam ID non trovato. Connettiti prima a un server.</value>
+  </data>
+  <data name="CodeUiSubscriptionLimit" xml:space="preserve">
+    <value>Limite di abbonamento</value>
+  </data>
+  <data name="CodeUiSuccess" xml:space="preserve">
+    <value>Successo</value>
+  </data>
+  <data name="CodeUiSynced" xml:space="preserve">
+    <value>Sincronizzato!</value>
+  </data>
+  <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
+    <value>L&apos;API Rust+ non fornisce una descrizione dettagliata per questo server.</value>
+  </data>
+  <data name="CodeUiThickness10px" xml:space="preserve">
+    <value>Spessore: 10px</value>
+  </data>
+  <data name="CodeUiThickness3px" xml:space="preserve">
+    <value>Spessore: 3px</value>
+  </data>
+  <data name="CodeUiTimer" xml:space="preserve">
+    <value>Temporizzatore</value>
+  </data>
+  <data name="CodeUiTranslate" xml:space="preserve">
+    <value>Traduci</value>
+  </data>
+  <data name="CodeUiTranslated" xml:space="preserve">
+    <value>Tradotto</value>
+  </data>
+  <data name="CodeUiTranslating" xml:space="preserve">
+    <value>Traduzione...</value>
+  </data>
+  <data name="CodeUiTranslationFailed" xml:space="preserve">
+    <value>Traduzione fallita:</value>
+  </data>
+  <data name="CodeUiUmbenennen" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="CodeUiUnavailable" xml:space="preserve">
+    <value>Non disponibile</value>
+  </data>
+  <data name="CodeUiUngültigeEingaben" xml:space="preserve">
+    <value>Ungültige Eingaben.</value>
+  </data>
+  <data name="CodeUiUnlimited" xml:space="preserve">
+    <value>Illimitato</value>
+  </data>
+  <data name="CodeUiUpdate" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed" xml:space="preserve">
+    <value>Il controllo dell&apos;aggiornamento non è riuscito</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed2" xml:space="preserve">
+    <value>Il controllo dell&apos;aggiornamento non è riuscito.</value>
+  </data>
+  <data name="CodeUiUpdateDownloadCancelled" xml:space="preserve">
+    <value>Download dell&apos;aggiornamento annullato</value>
+  </data>
+  <data name="CodeUiUpdateDownloadFailed" xml:space="preserve">
+    <value>Download dell&apos;aggiornamento non riuscito</value>
+  </data>
+  <data name="CodeUiUpdateDownloadPaused" xml:space="preserve">
+    <value>Download dell&apos;aggiornamento sospeso</value>
+  </data>
+  <data name="CodeUiUpdateReadyInstallsOnClose" xml:space="preserve">
+    <value>Aggiornamento pronto: installazione alla chiusura</value>
+  </data>
+  <data name="CodeUiWhite" xml:space="preserve">
+    <value>Bianco</value>
+  </data>
+  <data name="FormatOfflineMapImported" xml:space="preserve">
+    <value>Mappa offline importata con successo come &apos;{0}&apos;!</value>
+  </data>
+  <data name="MapImportedTitle" xml:space="preserve">
+    <value>Mappa importata</value>
+  </data>
+  <data name="FormatFailedImportMap" xml:space="preserve">
+    <value>Impossibile importare la mappa: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="CopyMapStagedMessage" xml:space="preserve">
+    <value>Seleziona o connettiti a un server accoppiato nell&apos;elenco. Se il suo layout corrisponde, la mappa verrà copiata automaticamente.</value>
+  </data>
+  <data name="CopyMapStagedTitle" xml:space="preserve">
+    <value>Copia mappa in scena</value>
+  </data>
+  <data name="FormatUpdateAvailable" xml:space="preserve">
+    <value>Aggiornamento {0} disponibile</value>
+  </data>
+  <data name="FormatDownloadingUpdate" xml:space="preserve">
+    <value>Download in corso {0}</value>
+  </data>
+  <data name="FormatUpdateReady" xml:space="preserve">
+    <value>Aggiornamento {0} pronto: installazione alla chiusura</value>
+  </data>
+  <data name="FormatPlayerStatusError" xml:space="preserve">
+    <value>Errore: {0}</value>
+  </data>
+  <data name="FormatFailedOpenPlayers" xml:space="preserve">
+    <value>Impossibile aprire la finestra dei giocatori:
+
+{0}: {1}
+
+Pila:
+{2}</value>
+  </data>
+  <data name="FormatOfflineMapNotParsed" xml:space="preserve">
+    <value>La mappa offline &apos;{0}&apos; non è stata ancora analizzata. Apri la sua mappa 3D una volta per analizzarla, quindi prova a copiarla di nuovo.</value>
+  </data>
+  <data name="CopyMapErrorTitle" xml:space="preserve">
+    <value>Errore copia mappa</value>
+  </data>
+  <data name="FormatMapMismatch" xml:space="preserve">
+    <value>I layout della mappa non corrispondono. La mappa &apos;{0}&apos; non sembra essere la stessa mappa del server connesso &apos;{1}&apos;.</value>
+  </data>
+  <data name="MapMismatchTitle" xml:space="preserve">
+    <value>Mancata corrispondenza della mappa</value>
+  </data>
+  <data name="FormatMapCopied" xml:space="preserve">
+    <value>Copiata con successo la mappa 3D e le risorse locali da &quot;{0}&quot; a &quot;{1}&quot;!</value>
+  </data>
+  <data name="MapCopiedTitle" xml:space="preserve">
+    <value>Mappa copiata</value>
+  </data>
+  <data name="FormatMapCopyError" xml:space="preserve">
+    <value>Si è verificato un errore durante la copia della mappa: {0}</value>
+  </data>
+  <data name="FormatCloudLimits" xml:space="preserve">
+    <value>{0}
+Utilizzo del piano:
+• Dimensioni sovrapposizione: {1} KB / {2}
+• Dispositivi: {3} / {4}
+• Basi: {5} / {6}</value>
+  </data>
+  <data name="FormatFailedUnlinkDiscord" xml:space="preserve">
+    <value>Impossibile scollegare il server Discord: {0}</value>
+  </data>
+  <data name="FormatFailedLinkDiscord" xml:space="preserve">
+    <value>Impossibile collegare il server Discord: {0}</value>
+  </data>
+  <data name="FormatFailedSaveChannels" xml:space="preserve">
+    <value>Impossibile salvare i canali: {0}</value>
+  </data>
+  <data name="FormatFailedOpenBrowser" xml:space="preserve">
+    <value>Impossibile aprire il browser: {0}</value>
+  </data>
+  <data name="FormatFailedGeneratePin" xml:space="preserve">
+    <value>Impossibile generare PIN: {0}</value>
+  </data>
+  <data name="FormatFailedRevokeAlexa" xml:space="preserve">
+    <value>Impossibile revocare l&apos;accesso Alexa: {0}</value>
+  </data>
+  <data name="FormatPremiumPlan" xml:space="preserve">
+    <value>{0} · Premio</value>
+  </data>
+  <data name="FormatFreePlan" xml:space="preserve">
+    <value>{0} · Gratuito</value>
+  </data>
+  <data name="FormatCouldNotLoadImage" xml:space="preserve">
+    <value>Impossibile caricare l&apos;immagine: {0}</value>
+  </data>
+  <data name="FormatErrorSavingCrosshair" xml:space="preserve">
+    <value>Errore durante il salvataggio del mirino: {0}</value>
+  </data>
+  <data name="FormatCheckingDevice" xml:space="preserve">
+    <value>Controllo del dispositivo #{0} ({1})...</value>
+  </data>
+  <data name="FormatToggleDelay" xml:space="preserve">
+    <value>Ritardo di commutazione: {0} ms</value>
+  </data>
+  <data name="FormatErrorLoadingUsers" xml:space="preserve">
+    <value>Errore durante il caricamento degli utenti: {0}</value>
+  </data>
+  <data name="FormatErrorUpdatingOverride" xml:space="preserve">
+    <value>Errore durante l&apos;aggiornamento della sostituzione: {0}</value>
+  </data>
+  <data name="FormatServerDescriptionWebsite" xml:space="preserve">
+    <value>L&apos;API Rust+ non fornisce una descrizione dettagliata per questo server.
+
+Puoi trovare maggiori informazioni sul sito ufficiale del server:
+{0}</value>
+  </data>
+  <data name="FormatFailedLoadServerDetails" xml:space="preserve">
+    <value>Impossibile caricare i dettagli del server: {0}</value>
+  </data>
+  <data name="RaidLoadingData" xml:space="preserve">
+    <value>Caricamento dati raid…</value>
+  </data>
+  <data name="RaidNoTargetsAvailable" xml:space="preserve">
+    <value>Non sono disponibili obiettivi del raid.</value>
+  </data>
+  <data name="FormatRaidUnavailable" xml:space="preserve">
+    <value>Calcolatore raid non disponibile: {0}</value>
+  </data>
+  <data name="FormatRaidSaveFailed" xml:space="preserve">
+    <value>Impossibile salvare il piano raid: {0}</value>
+  </data>
+  <data name="UpdateSuccessfulTitle" xml:space="preserve">
+    <value>Aggiornamento riuscito</value>
+  </data>
+  <data name="FormatUpdateSuccessful" xml:space="preserve">
+    <value>Rust+ Desktop è stato aggiornato con successo a v{0}!</value>
+  </data>
+  <data name="UpdateDownloadedTitle" xml:space="preserve">
+    <value>Aggiornamento scaricato</value>
+  </data>
+  <data name="UpdateInstallsOnClose" xml:space="preserve">
+    <value>L&apos;aggiornamento verrà installato automaticamente quando chiudi l&apos;app.</value>
+  </data>
+  <data name="FormatDownloadFailed" xml:space="preserve">
+    <value>Download non riuscito: {0}</value>
+  </data>
+  <data name="UpdateAlreadyDownloaded" xml:space="preserve">
+    <value>L&apos;aggiornamento è già stato scaricato. Verrà installato quando chiudi l&apos;app.</value>
+  </data>
+  <data name="SelectRustMapFile" xml:space="preserve">
+    <value>Seleziona il file Rust .map</value>
+  </data>
+  <data name="CloudFeaturesUpdateRequired" xml:space="preserve">
+    <value>Per continuare a utilizzare le funzionalità cloud, è necessario aggiornare l&apos;applicazione.</value>
+  </data>
+  <data name="RenameCustomCrosshair" xml:space="preserve">
+    <value>Rinomina mirino personalizzato</value>
+  </data>
+  <data name="HowToTrackWindowTitle" xml:space="preserve">
+    <value>Come tenere traccia dei giocatori — Rust+ Desk</value>
+  </data>
+  <data name="DiscordClientInitializing" xml:space="preserve">
+    <value>Il client desktop è in fase di inizializzazione o non è completamente caricato.</value>
+  </data>
+  <data name="FormatCurrentServerTime" xml:space="preserve">
+    <value>🕒 Orario attuale del server: {0}</value>
+  </data>
+  <data name="FormatServerPopulation" xml:space="preserve">
+    <value>👥 Popolazione del server: {0}</value>
+  </data>
+  <data name="DiscordInvalidCommandPayload" xml:space="preserve">
+    <value>❌ Comando non valido: manca il nome o l&apos;ID del dispositivo.</value>
+  </data>
+  <data name="DiscordRenderingMap" xml:space="preserve">
+    <value>⌛ La mappa è in fase di rendering. Attendere prego.</value>
+  </data>
+  <data name="DiscordRenderingFullMap" xml:space="preserve">
+    <value>⌛ È in corso il rendering della mappa completa. Attendere prego.</value>
+  </data>
+  <data name="FormatUnknownCommand" xml:space="preserve">
+    <value>Comando sconosciuto o non supportato: {0}</value>
+  </data>
+  <data name="FormatCommandError" xml:space="preserve">
+    <value>Errore durante l&apos;esecuzione del comando: {0}</value>
+  </data>
+  <data name="Existing3DMapReused" xml:space="preserve">
+    <value>I dati cartografici esistenti 3D sono stati riutilizzati; non è stata rilevata alcuna cancellazione.</value>
+  </data>
+  <data name="ServerOfflineA2S" xml:space="preserve">
+    <value>Server offline (query A2S scaduta)</value>
+  </data>
+  <data name="AutoDiscoveringQueryPort" xml:space="preserve">
+    <value>Ricerca della porta della query tramite l&apos;API Steam...</value>
+  </data>
+  <data name="FetchingSteamPlayers" xml:space="preserve">
+    <value>Recupero giocatori tramite Steam Query...</value>
+  </data>
+  <data name="NoOnlinePlayersFound" xml:space="preserve">
+    <value>Nessun giocatore online trovato.</value>
+  </data>
+  <data name="AssignGroupTitle" xml:space="preserve">
+    <value>Assegna gruppo</value>
+  </data>
+  <data name="OfflineCloudAlertsTitle" xml:space="preserve">
+    <value>Avvisi cloud offline</value>
+  </data>
+  <data name="AlexaSmartHomeTitle" xml:space="preserve">
+    <value>Alexa Casa intelligente</value>
+  </data>
+  <data name="SelectCustomDeathSound" xml:space="preserve">
+    <value>Seleziona Suono mortale personalizzato</value>
+  </data>
+  <data name="CountdownOneMinute" xml:space="preserve">
+    <value>Conto alla rovescia di 1 minuto...</value>
+  </data>
+  <data name="TimerExpiredTitle" xml:space="preserve">
+    <value>Temporizzatore scaduto</value>
+  </data>
+  <data name="SelectTimerAlarmSound" xml:space="preserve">
+    <value>Selezionare Suono sveglia timer</value>
+  </data>
+  <data name="SelectTimerCountdownSound" xml:space="preserve">
+    <value>Seleziona Suono conto alla rovescia di 1 minuto del timer</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="UpdateRequiredTitle" xml:space="preserve">
+    <value>Aggiornamento richiesto</value>
+  </data>
+  <data name="PauseUpdate" xml:space="preserve">
+    <value>Pausa</value>
+  </data>
+  <data name="ResumeUpdate" xml:space="preserve">
+    <value>Riprendi</value>
+  </data>
 </root>
-
-
-

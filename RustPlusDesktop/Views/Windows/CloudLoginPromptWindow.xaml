@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="Cloud Account"
-        Width="460" SizeToContent="Height"
+        Title="{DynamicResource CloudAccountTitle}"
+        Width="460" SizeToContent="{DynamicResource UiHeight}"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#0F1215"
@@ -62,7 +62,7 @@
 
             <!-- Title & Description -->
             <TextBlock x:Name="TxtTitle"
-                       Text="Cloud Account"
+                       Text="{DynamicResource CloudAccountTitle}"
                        FontSize="18" FontWeight="Bold" Foreground="White"
                        HorizontalAlignment="Center" Margin="0,0,0,8"/>
 
@@ -85,7 +85,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/Assets/icons/discord.png"
                                Width="20" Height="20" Margin="0,0,10,0"/>
-                        <TextBlock x:Name="TxtDiscordLogin" Text="Sign in with Discord" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtDiscordLogin" Text="{DynamicResource CloudLoginPromptDiscordButton}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
@@ -96,7 +96,7 @@
                         Click="BtnEmail_Click">
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="Mail24" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="TxtEmailLogin" Text="Sign in with email" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtEmailLogin" Text="{DynamicResource CloudLoginPromptEmailButton}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
@@ -108,7 +108,7 @@
                     Background="Transparent" Foreground="#555"
                     BorderThickness="0" Cursor="Hand"
                     FontSize="12"
-                    Content="No thanks"
+                    Content="{DynamicResource CloudLoginPromptNoThanksButton}"
                     Click="BtnSkip_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">

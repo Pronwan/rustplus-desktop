@@ -1589,7 +1589,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
             if (items.Count == 0)
             {
-                MessageBox.Show("No device exports found for your team / server.\n\n" +
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiNoDeviceExportsFoundForYourTeamServer") +
                                 "Make sure Cloud Sync is enabled and at least one team member has synced their devices.",
                     "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -1650,7 +1650,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         catch (Exception ex)
         {
             AppendLog("[dev/import] Error: " + ex.Message);
-            MessageBox.Show("Device import failed:\n" + ex.Message,
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDeviceImportFailed") + ex.Message,
                 "Device Import", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -1666,7 +1666,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             _vm.IsDeviceStatusChecking = true;
             _vm.DeviceStatusMax = Math.Max(1, max);
             _vm.DeviceStatusProgress = 0;
-            _vm.DeviceStatusText = "Checking devices...";
+            _vm.DeviceStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCheckingDevices");
             UpdateFullConnectButtonsEnabled();
         }
 
@@ -1708,7 +1708,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         {
             try
             {
-                _vm.DeviceStatusText = $"Checking device #{device.EntityId} ({device.DisplayName})...";
+                _vm.DeviceStatusText = string.Format(Properties.Resources.GetString("FormatCheckingDevice"), device.EntityId, device.DisplayName);
                 await RefreshDeviceStateAsync(device, log: true, forcePull: true, maxRetries: maxRetries);
                 device.LastPolledAt = DateTime.UtcNow;
                 _vm.DeviceStatusProgress++;

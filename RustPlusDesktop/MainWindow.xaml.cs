@@ -667,7 +667,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 
                 Dispatcher.InvokeAsync(() =>
                 {
-                    ShowInfoSnackbar("Update Successful", $"Rust+ Desktop has been successfully updated to v{appVersion}!", WpfUi.ControlAppearance.Success);
+                    ShowInfoSnackbar(Properties.Resources.GetString("UpdateSuccessfulTitle"), string.Format(Properties.Resources.GetString("FormatUpdateSuccessful"), appVersion), WpfUi.ControlAppearance.Success);
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
         }
@@ -2486,7 +2486,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Prefer the original FCM title (e.g. "HV Rockets Raid wake up") over the generic device name.
         var notif = new RustPlusNotification(
             type: "Alarm",
-            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? "Alarm" : n.DeviceName),
+            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? Properties.Resources.GetString("UiAlarm") : n.DeviceName),
             message: n.Message,
             serverIp: n.Ip,
             serverPort: n.Port,
@@ -3041,7 +3041,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 e.Handled = true;
                 var msgBox = new Wpf.Ui.Controls.MessageBox
                 {
-                    Title = "Smart Alarm",
+                    Title = Properties.Resources.SmartAlarm,
                     Content = Properties.Resources.LoopAudioPrompt,
                     PrimaryButtonText = Properties.Resources.TurnOffNow,
                     CloseButtonText = Properties.Resources.KeepActive
@@ -3067,7 +3067,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             e.Handled = true;
             var msgBox = new Wpf.Ui.Controls.MessageBox
             {
-                Title = "Smart Alarm",
+                Title = Properties.Resources.SmartAlarm,
                 Content = Properties.Resources.LoopAudioGlobalPrompt,
                 PrimaryButtonText = Properties.Resources.TurnOffNow,
                 CloseButtonText = Properties.Resources.KeepActive
@@ -3217,7 +3217,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             var picker = new Microsoft.Win32.OpenFileDialog
             {
-                Title = "Select Rust .map file",
+                Title = Properties.Resources.GetString("SelectRustMapFile"),
                 Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
                 InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
                 CheckFileExists = true,
@@ -3273,13 +3273,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.Save();
                 
                 AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
-                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), Properties.Resources.GetString("MapImportedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
         catch (Exception ex)
         {
             AppendLog($"[Offline Map] Manual import failed: {ex.Message}");
-            MessageBox.Show($"Failed to import map: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedImportMap"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -3289,13 +3289,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (string.IsNullOrEmpty(sourceProfile.LocalMapFilePath))
             {
-                MessageBox.Show("Only manually parsed offline maps can be copied to other servers.", "Copy Map", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers"), RustPlusDesk.Properties.Resources.GetString("CodeUiCopyMap"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _copyMapSourceProfile = sourceProfile;
             AppendLog($"[Offline Map] Staged source map for copy: {sourceProfile.Name} ({sourceProfile.LocalMapFilePath})");
-            MessageBox.Show($"Please select/connect to a paired server in the list. If its layout matches, the map will be copied automatically.", "Copy Map Staged", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(Properties.Resources.GetString("CopyMapStagedMessage"), Properties.Resources.GetString("CopyMapStagedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -3486,7 +3486,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.Save();
 
                 AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
-                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), Properties.Resources.GetString("MapImportedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Activate();
                 return;
             }
@@ -3880,7 +3880,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _listenerStarting = true;
         _vm.IsPairingBusy = true; // Tell UI we are trying to start
-        TxtPairingState.Text = "Pairing: starting...";
+        TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingStarting");
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
@@ -3975,7 +3975,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             if (st == "starting") _vm.BusyText = Properties.Resources.StartingPairingListener;
-            else if (st == "listening") { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
+            else if (st == RustPlusDesk.Properties.Resources.GetString("UiListening")) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
             else if (st == "error") TxtPairingState.Text = Properties.Resources.PairingError;
         });
     }
@@ -4022,7 +4022,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
         
         _serverToDelete = prof;
-        TxtDeleteConfirmation.Text = $"Are you sure you want to delete Server \"{prof.Name}\"? This action cannot be undone.";
+        TxtDeleteConfirmation.Text = string.Format(Properties.Resources.DeleteServerConfirmFormatted, prof.Name);
         DeleteConfirmationOverlay.Visibility = Visibility.Visible;
     }
 
@@ -4284,7 +4284,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _isLogExpanded = !_isLogExpanded;
         if (LogPanel != null) LogPanel.Height = _isLogExpanded ? ExpandedLogHeight : CollapsedLogHeight;
-        if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? "Collapse" : "Expand";
+        if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? RustPlusDesk.Properties.Resources.GetString("CodeUiCollapse") : RustPlusDesk.Properties.Resources.GetString("UiExpand");
         TxtLog?.ScrollToEnd();
     }
 
@@ -4371,7 +4371,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Update UI Elements
         var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
-        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not connected" : _steamDisplayName ?? "Connected";
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? RustPlusDesk.Properties.Resources.GetString("UiNotConnected") : _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
         ImgSteam.ToolTip = TxtSteamName.Text;
         RefreshStreamerModeUI();
         UpdateAdminUi();
@@ -4415,15 +4415,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var sid = _vm.SteamId64;
         if (string.IsNullOrWhiteSpace(sid))
         {
-            TxtSteamId.Text = "No companion session";
-            TxtSteamName.Text = "Not connected";
+            TxtSteamId.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoCompanionSession");
+            TxtSteamName.Text = RustPlusDesk.Properties.Resources.GetString("UiNotConnected");
             return;
         }
 
         TxtSteamId.Text = _abbreviateNames && sid.Length > 3 ? sid.Substring(0, 3) + "..." : sid;
         
-        var originalName = (ImgSteam.ToolTip as string) ?? "Connected";
-        TxtSteamName.Text = _abbreviateNames ? "STREAMER MODE" : originalName;
+        var originalName = (ImgSteam.ToolTip as string) ?? Properties.Resources.GetString("CodeUiConnected");
+        TxtSteamName.Text = _abbreviateNames ? RustPlusDesk.Properties.Resources.GetString("StreamerMode") : originalName;
 
         if (_vm.IsFollowing && _vm.FollowingSteamId != _mySteamId)
         {
@@ -4472,8 +4472,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        ImgSteam.ToolTip = _steamDisplayName ?? "Connected";
-        TxtSteamName.Text = _steamDisplayName ?? "Connected";
+        ImgSteam.ToolTip = _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
+        TxtSteamName.Text = _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
 
         var cachePath = GetOwnAvatarCachePath(steamId64);
 
@@ -5273,7 +5273,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "CargoEgress": isSelected = TrackingService.AnnounceCargoEgress; break;
                 case "CargoArrival": 
                     isSelected = TrackingService.AnnounceCargoArrival; 
-                    mi.Header = hasTravelData ? "Arrival Warning (5m before Dock)" : "Arrival Warning (Unlearned)";
+                    mi.Header = hasTravelData ? RustPlusDesk.Properties.Resources.GetString("CargoArrival") : RustPlusDesk.Properties.Resources.GetString("CodeUiArrivalWarningUnlearned");
                     mi.IsEnabled = masterOn && hasTravelData; 
                     break;
                 case "Heli": isSelected = TrackingService.AnnounceHeli; break;
@@ -5540,7 +5540,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             content.Children.Add(BuildOfferRowUI(o));
             if (++shown >= 10)
             {
-                content.Children.Add(new TextBlock { Text = "Ã¢â‚¬Â¦", Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
+                content.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiÃÂÂ"), Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
                 break;
             }
         }
@@ -5760,14 +5760,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 // saved -> leicht grÃƒÂ¼n getÃƒÂ¶nt
                 btnSave.Background = new SolidColorBrush(Color.FromRgb(32, 48, 32));                // sehr dunkles GrÃƒÂ¼n
                 btnSave.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 160, 64));              // sattes GrÃƒÂ¼n
-                btnSave.ToolTip = "Saved (click to unsave)";
+                btnSave.ToolTip = RustPlusDesk.Properties.Resources.GetString("CodeUiSavedClickToUnsave");
             }
             else
             {
                 // nicht saved -> neutral dunkel
                 btnSave.Background = new SolidColorBrush(Color.FromRgb(40, 44, 48));                // dein Dark-UI
                 btnSave.BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));        // dezente helle Kontur
-                btnSave.ToolTip = "Save alert";
+                btnSave.ToolTip = RustPlusDesk.Properties.Resources.GetString("CodeUiSaveAlert");
             }
 
             // Icon-Farbe (Diskette):
@@ -6317,7 +6317,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             TrackingService.FcmExpiresAt = null;
             _vm.NotifyFcmChanged();
 
-            TxtPairingState.Text = "Pairing: config deleted";
+            TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingConfigDeleted");
             return true;
         }
         catch (Exception ex)
@@ -6394,7 +6394,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     _vm.IsUpdateAvailable = true;
                     _vm.UpdateTag = tag;
-                    _vm.UpdateStatusText = $"Update {tag} available";
+                    _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
                     _vm.IsUpdateStatusExpanded = true;
                     AppendLog($"Ã¢Å“Â¨ Update found: {tag}");
                     ShowUpdateSnackbar(tag, dlUrl);
@@ -6410,7 +6410,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
-            Title = "Update Available",
+            Title = Properties.Resources.UpdateAvailableHeader,
             Appearance = WpfUi.ControlAppearance.Success,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
             Timeout = TimeSpan.FromSeconds(7),
@@ -6529,7 +6529,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         string displayMessage = message;
         if (!string.IsNullOrEmpty(displayMessage) && !displayMessage.Contains("cloud features", StringComparison.OrdinalIgnoreCase))
         {
-            displayMessage = displayMessage.TrimEnd(' ', '.') + ". To continue using cloud features, you must update the application.";
+            displayMessage = displayMessage.TrimEnd(' ', '.') + ". " + Properties.Resources.GetString("CloudFeaturesUpdateRequired");
         }
 
         var textBlock = new TextBlock
@@ -6592,7 +6592,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
-            Title = "Update Required",
+            Title = Properties.Resources.GetString("UpdateRequiredTitle"),
             Content = stack,
             Appearance = WpfUi.ControlAppearance.Danger,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
@@ -7217,8 +7217,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsDownloadPaused = false;
             _vm.IsUpdateProcessing = false;
             _vm.IsUpdateStatusExpanded = true;
-            _vm.UpdateStatusText = $"Downloading {tag}";
-            _vm.PauseResumeButtonText = "Pause";
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatDownloadingUpdate"), tag);
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
             _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
 
             var prog = new Progress<DownloadReport>(r =>
@@ -7232,8 +7232,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsDownloadingUpdate = true;
                 _vm.IsDownloadPaused = true;
-                _vm.UpdateStatusText = "Update download paused";
-                _vm.PauseResumeButtonText = "Resume";
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+                _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
                 return;
             }
 
@@ -7242,45 +7242,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                ShowInfoSnackbar("Update", "Download failed.", WpfUi.ControlAppearance.Danger);
+                ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), Properties.Resources.GetString("DownloadFailed"), WpfUi.ControlAppearance.Danger);
                 return;
             }
 
             _updateService.PendingInstallerPath = path;
             _vm.IsUpdateAvailable = false;
-            _vm.UpdateStatusText = $"Update {tag} ready — installs on close";
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateReady"), tag);
             _vm.IsUpdateStatusExpanded = true;
-            ShowInfoSnackbar("Update Downloaded", "The update will be installed automatically when you close the app.", WpfUi.ControlAppearance.Success);
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateDownloadedTitle"), Properties.Resources.GetString("UpdateInstallsOnClose"), WpfUi.ControlAppearance.Success);
         }
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
             _vm.IsUpdateProcessing = false;
-            _vm.UpdateStatusText = "Update download failed";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadFailed");
             _vm.IsUpdateStatusExpanded = true;
             AppendLog("❌ Update download failed: " + ex.Message);
-            ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), string.Format(Properties.Resources.GetString("FormatDownloadFailed"), ex.Message), WpfUi.ControlAppearance.Danger);
         }
     }    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting || _vm.IsDownloadingUpdate) return;
         if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
         {
-            _vm.UpdateStatusText = "Update ready — installs on close";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
             _vm.IsUpdateStatusExpanded = true;
-            ShowInfoSnackbar("Update", "Update already downloaded. It will be installed when you close the app.", WpfUi.ControlAppearance.Info);
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), Properties.Resources.GetString("UpdateAlreadyDownloaded"), WpfUi.ControlAppearance.Info);
             return;
         }
 
         try
         {
-            _vm.UpdateStatusText = "Checking for updates...";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCheckingForUpdates");
             _vm.IsUpdateStatusExpanded = true;
             var curr = _updateService.VersionForCompare;
             var latestInfo = await _updateService.GetLatestReleaseAsync();
             if (latestInfo is null)
             {
-                _vm.UpdateStatusText = "Could not check for updates";
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCouldNotCheckForUpdates");
                 _vm.IsUpdateStatusExpanded = true;
                 System.Windows.MessageBox.Show(
                     "Could not query latest release. Please try again or open Releases page.",
@@ -7303,15 +7303,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!updateAvailable)
             {
                 _vm.IsUpdateAvailable = false;
-                _vm.UpdateStatusText = "You are up to date";
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate");
                 _vm.IsUpdateStatusExpanded = false;
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate"), RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _vm.IsUpdateAvailable = true;
             _vm.UpdateTag = tag;
-            _vm.UpdateStatusText = $"Update {tag} available";
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
             _vm.IsUpdateStatusExpanded = true;
 
             var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
@@ -7339,8 +7339,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsDownloadPaused = false;
             _vm.IsUpdateProcessing = false;
             _vm.IsUpdateStatusExpanded = true;
-            _vm.UpdateStatusText = $"Downloading {tag}";
-            _vm.PauseResumeButtonText = "Pause";
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatDownloadingUpdate"), tag);
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
             _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
 
             var prog = new Progress<DownloadReport>(r =>
@@ -7353,8 +7353,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsDownloadingUpdate = true;
                 _vm.IsDownloadPaused = true;
-                _vm.UpdateStatusText = "Update download paused";
-                _vm.PauseResumeButtonText = "Resume";
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+                _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
                 return;
             }
 
@@ -7363,12 +7363,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                System.Windows.MessageBox.Show("Download failed.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("DownloadFailed"), RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             AppendLog("Applying update...");
-            _vm.UpdateStatusText = "Applying update...";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
@@ -7379,10 +7379,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
             _vm.IsUpdateProcessing = false;
-            _vm.UpdateStatusText = "Update check failed";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateCheckFailed");
             _vm.IsUpdateStatusExpanded = true;
             AppendLog("❌ Update check failed: " + ex.Message);
-            System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateCheckFailed2") + ex.Message, RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
     private string? _lastDownloadUrl;
@@ -7406,8 +7406,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _updateService.ResumeDownload();
             _vm.IsDownloadPaused = false;
-            _vm.UpdateStatusText = "Resuming update download...";
-            _vm.PauseResumeButtonText = "Pause";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiResumingUpdateDownload");
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
             if (!string.IsNullOrEmpty(_lastDownloadUrl))
             {
                 _ = PerformUpdateDownloadAsync(_lastDownloadTag ?? "Update", _lastDownloadUrl);
@@ -7417,8 +7417,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _updateService.PauseDownload();
             _vm.IsDownloadPaused = true;
-            _vm.UpdateStatusText = "Update download paused";
-            _vm.PauseResumeButtonText = "Resume";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
         }
     }
 
@@ -7428,7 +7428,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.IsDownloadingUpdate = false;
         _vm.IsDownloadPaused = false;
         _vm.IsUpdateProcessing = false;
-        _vm.UpdateStatusText = "Update download cancelled";
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadCancelled");
         _vm.IsUpdateStatusExpanded = false;
         _vm.UpdateDownloadProgress = 0;
         _vm.UpdateDownloadPercentage = "0%";
@@ -7841,7 +7841,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (!RustPlusDesk.Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
             (tier != "developer" && tier != "lead_contributor" && tier != "lead_developer"))
         {
-            MessageBox.Show("Admin access requires Discord auth and a developer/lead contributor role.", "Admin Panel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole"), RustPlusDesk.Properties.Resources.GetString("UiAdminPanel"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -7923,7 +7923,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (_hotkeysActive)
         {
-            TxtBtnHotkeys.Text = "Hotkeys active";
+            TxtBtnHotkeys.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiHotkeysActive");
             if (BtnHotkeys.IsMouseOver)
             {
                 BtnHotkeys.Background = Brushes.Transparent;
@@ -7939,7 +7939,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         else
         {
-            TxtBtnHotkeys.Text = "Hotkeys";
+            TxtBtnHotkeys.Text = RustPlusDesk.Properties.Resources.GetString("Hotkeys");
             BtnHotkeys.ClearValue(Button.BackgroundProperty);
             BtnHotkeys.ClearValue(Button.BorderBrushProperty);
             BtnHotkeys.ClearValue(Button.ForegroundProperty);
@@ -8029,7 +8029,7 @@ public class RenameDialog : Window
     public string InputText { get; private set; } = string.Empty;
     public RenameDialog(string defaultText)
     {
-        Title = "Rename Custom Crosshair";
+        Title = Properties.Resources.GetString("RenameCustomCrosshair");
         Width = 300; SizeToContent = SizeToContent.Height;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
         ResizeMode = ResizeMode.NoResize;

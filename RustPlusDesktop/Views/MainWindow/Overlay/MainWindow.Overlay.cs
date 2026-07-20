@@ -187,7 +187,7 @@ private bool _overlayToolsVisible = false;
             if (subCount >= 5)
             {
                 AppendLog("[overlay/subscription] Maximum of 5 active subscriptions reached. Please unsubscribe from another player first.");
-                MessageBox.Show("Maximum of 5 active teammate subscriptions reached. Please unsubscribe from someone else first.", "Subscription Limit", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52"), RustPlusDesk.Properties.Resources.GetString("CodeUiSubscriptionLimit"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
         }
@@ -1537,17 +1537,17 @@ private bool _overlayToolsVisible = false;
         };
 
         // Farbe aendern (nur ein Beispiel)
-        var miRed = new MenuItem { Header = "Red" };
+        var miRed = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiRed") };
         miRed.Click += (_, __) => { _drawColor = Colors.Red; };
-        var miGreen = new MenuItem { Header = "Green" };
+        var miGreen = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiGreen") };
         miGreen.Click += (_, __) => { _drawColor = Colors.Lime; };
-        var miBlue = new MenuItem { Header = "Blue" };
+        var miBlue = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiBlue") };
         miBlue.Click += (_, __) => { _drawColor = Colors.DeepSkyBlue; };
 
         // Stiftdicke
-        var miThin = new MenuItem { Header = "Thickness: 3px" };
+        var miThin = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiThickness3px") };
         miThin.Click += (_, __) => { _drawThickness = 3.0; };
-        var miThick = new MenuItem { Header = "Thickness: 10px" };
+        var miThick = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiThickness10px") };
         miThick.Click += (_, __) => { _drawThickness = 10.0; };
 
         m.Items.Add(miRed);
@@ -1565,14 +1565,14 @@ private bool _overlayToolsVisible = false;
     {
         var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
 
-        var miWhite = new MenuItem { Header = "White" };
+        var miWhite = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiWhite") };
         miWhite.Click += (_, __) => { _textColor = Colors.White; };
-        var miYellow = new MenuItem { Header = "Red" };
+        var miYellow = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiRed") };
         miYellow.Click += (_, __) => { _textColor = Colors.Red; };
 
-        var miSmall = new MenuItem { Header = "Size: 14" };
+        var miSmall = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiSize14") };
         miSmall.Click += (_, __) => { _textSize = 14.0; };
-        var miBig = new MenuItem { Header = "Size: 40" };
+        var miBig = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiSize40") };
         miBig.Click += (_, __) => { _textSize = 40.0; };
 
         m.Items.Add(miWhite);
@@ -1614,9 +1614,9 @@ private bool _overlayToolsVisible = false;
     {
         var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
 
-        var miSmall = new MenuItem { Header = "Eraser small (5px)" };
+        var miSmall = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiEraserSmall5px") };
         miSmall.Click += (_, __) => { _eraserSize = 5.0; };
-        var miBig = new MenuItem { Header = "Eraser big (20px)" };
+        var miBig = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiEraserBig20px") };
         miBig.Click += (_, __) => { _eraserSize = 20.0; };
 
         m.Items.Add(miSmall);
@@ -3864,7 +3864,7 @@ private bool _overlayToolsVisible = false;
             catch { }
 
             // Change Icon – opens inline picker
-            var miChangeIcon = new MenuItem { Header = "Change Icon" };
+            var miChangeIcon = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiChangeIcon") };
             miChangeIcon.Click += (s, e) =>
             {
                 menu.IsOpen = false;
@@ -3874,7 +3874,7 @@ private bool _overlayToolsVisible = false;
             menu.Items.Add(miChangeIcon);
 
             // Change Color – opens inline picker
-            var miChangeColor = new MenuItem { Header = "Change Color" };
+            var miChangeColor = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiChangeColor") };
             miChangeColor.Click += (s, e) =>
             {
                 menu.IsOpen = false;
@@ -4175,7 +4175,7 @@ private bool _overlayToolsVisible = false;
             FontSize = 13,
             Margin   = new Thickness(0, 0, 5, 0),
         });
-        saveBtnContent.Children.Add(new System.Windows.Controls.TextBlock { Text = "Save", VerticalAlignment = VerticalAlignment.Center });
+        saveBtnContent.Children.Add(new System.Windows.Controls.TextBlock { Text = Properties.Resources.Save, VerticalAlignment = VerticalAlignment.Center });
 
         var saveBtn = new Button
         {

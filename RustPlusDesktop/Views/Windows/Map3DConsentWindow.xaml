@@ -1,10 +1,10 @@
-﻿<Window x:Class="RustPlusDesk.Views.Windows.Map3DConsentWindow"
+<Window x:Class="RustPlusDesk.Views.Windows.Map3DConsentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="Build 3D Map"
+        Title="{DynamicResource UiBuild3DMap}"
         Width="520"
-        SizeToContent="Height"
+        SizeToContent="{DynamicResource UiHeight}"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#0F1215"
@@ -26,9 +26,9 @@
             </Grid>
 
             <ui:SymbolIcon Symbol="Cube24" FontSize="42" Foreground="#FF8C00" HorizontalAlignment="Center" Margin="0,8,0,14"/>
-            <TextBlock Text="Build local 3D map" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+            <TextBlock Text="{DynamicResource UiBuildLocal3DMap}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,8"/>
             <TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="12" Foreground="#B8BDC7" Margin="32,0,32,18" LineHeight="20"
-                       Text="We can automatically locate the map in your Steam installation folder, extract it, and build a 3D map with heat maps and richer monument overlays. No data will be altered, and no unrelated Steam folder data will be accessed."/>
+                       Text="{DynamicResource UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E}"/>
             <Border Background="#1E2126" Height="1" Margin="24,0"/>
             <Grid Margin="24,20,24,24">
                 <Grid.ColumnDefinitions>
@@ -36,9 +36,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ui:Button Grid.Column="0" Content="Cancel" Appearance="Secondary" Margin="0,0,8,0" Height="38" Click="BtnCancel_Click"/>
-                <ui:Button Grid.Column="1" Content="Accept" Appearance="Secondary" Margin="0,0,8,0" Height="38" Click="BtnAccept_Click"/>
-                <ui:Button Grid.Column="2" Content="Accept and Remember" Appearance="Primary" Height="38" Click="BtnAcceptRemember_Click"/>
+                <ui:Button Grid.Column="0" Content="{DynamicResource Cancel}" Appearance="Secondary" Margin="0,0,8,0" Height="38" Click="BtnCancel_Click"/>
+                <ui:Button Grid.Column="1" Content="{DynamicResource Accept}" Appearance="Secondary" Margin="0,0,8,0" Height="38" Click="BtnAccept_Click"/>
+                <ui:Button Grid.Column="2" Content="{DynamicResource UiAcceptAndRemember}" Appearance="Primary" Height="38" Click="BtnAcceptRemember_Click"/>
             </Grid>
         </StackPanel>
     </Border>

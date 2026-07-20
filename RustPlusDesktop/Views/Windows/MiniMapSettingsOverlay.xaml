@@ -39,11 +39,11 @@
             </ComboBox>
 
             <!-- Opacity Slider -->
-            <TextBlock x:Name="LblOpacity" Text="Opacity: 100%" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblOpacity" Text="{DynamicResource UiOpacity100}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <Slider x:Name="SliOpacity" Minimum="0.2" Maximum="1.0" Value="1.0" ValueChanged="SliOpacity_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
 
             <!-- Size Slider -->
-            <TextBlock x:Name="LblSize" Text="Size: 100% (SHIFT+Mousewheel)" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblSize" Text="{DynamicResource UiSize100SHIFTMousewheel}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <Slider x:Name="SliSize" Minimum="160" Maximum="800" Value="260" ValueChanged="SliSize_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="10"/>
 
             <!-- Show Server Time CheckBox -->

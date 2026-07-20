@@ -308,8 +308,8 @@
                                                Width="28" Height="28"
                                                Padding="0"
                                                VerticalAlignment="Center"
-                                               ToolTip="Mute notifications from this server"
-                                               AutomationProperties.Name="Mute notifications from this server"
+                                               ToolTip="{DynamicResource UiMuteNotificationsFromThisServer}"
+                                               AutomationProperties.Name="{DynamicResource UiMuteNotificationsFromThisServer}"
                                                Style="{StaticResource NotificationServerButton}">
                                         <ui:SymbolIcon Symbol="SpeakerMute24" FontSize="14" Foreground="IndianRed"/>
                                     </ui:Button>
@@ -350,7 +350,7 @@
                                             FontSize="9"
                                             FontWeight="SemiBold"
                                             Foreground="#8C96A8"
-                                            Text="SERVER HIDDEN"
+                                            Text="{DynamicResource UiSERVERHIDDEN}"
                                             Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Vis}}" />
                                     </Grid>
                                 </ui:Button>

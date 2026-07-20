@@ -22,7 +22,7 @@
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0" Foreground="#22c55e"/>
-                    <TextBlock Text="Device Automation" FontSize="13" FontWeight="SemiBold"/>
+                    <TextBlock Text="{DynamicResource UiDeviceAutomation}" FontSize="13" FontWeight="SemiBold"/>
                 </StackPanel>
                 <Button Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" HorizontalAlignment="Right" Click="BtnClose_Click"/>
             </Grid>
@@ -30,12 +30,12 @@
 
         <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,12,12,8" BorderBrush="#22c55e" BorderThickness="1,0,0,0">
             <DockPanel LastChildFill="False">
-                <ui:ToggleSwitch Content="Automation Active"
+                <ui:ToggleSwitch Content="{DynamicResource UiAutomationActive}"
                                  DockPanel.Dock="Left"
                                  Margin="0,0,8,0"
                                  IsChecked="{Binding Selected.IsDeviceAutomationActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Checked="AutomationActive_Changed" Unchecked="AutomationActive_Changed"/>
-                <ui:Button Content="Add Automation" Icon="{ui:SymbolIcon Symbol=Add24}" Appearance="Primary"
+                <ui:Button Content="{DynamicResource UiAddAutomation}" Icon="{ui:SymbolIcon Symbol=Add24}" Appearance="Primary"
                            DockPanel.Dock="Right" Click="BtnAddRule_Click"/>
             </DockPanel>
         </Border>
@@ -74,10 +74,10 @@
                                         <Image Source="{Binding SelectedItem.CustomIcon, ElementName=TargetDeviceComboBox}"
                                                RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </Grid>
-                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" ToolTip="Enable automation"/>
+                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" ToolTip="{DynamicResource UiEnableAutomation}"/>
                                     <ui:TextBox Grid.Column="2" Text="{Binding Name, Mode=TwoWay}" FontWeight="SemiBold"/>
                                     <ui:Button Grid.Column="3" Appearance="Transparent" Width="30" Height="30" Padding="0"
-                                               ToolTip="Expand or collapse automation" Tag="{Binding}" Click="BtnToggleRuleExpand_Click">
+                                               ToolTip="{DynamicResource UiExpandOrCollapseAutomation}" Tag="{Binding}" Click="BtnToggleRuleExpand_Click">
                                         <Grid>
                                             <ui:SymbolIcon Symbol="ChevronRight24">
                                                 <ui:SymbolIcon.Style>
@@ -98,10 +98,10 @@
 
                                 <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <Separator Margin="0,10" Background="{DynamicResource CardBorder}"/>
-                                    <TextBlock Text="WHEN" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{DynamicResource UiWHEN}" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,0,0,5"/>
                                     <ComboBox SelectedValue="{Binding ConditionType, Mode=TwoWay}" SelectedValuePath="Tag" Width="190" HorizontalAlignment="Left" Margin="0,0,0,8">
-                                    <ComboBoxItem Content="Player proximity" Tag="PlayerProximity"/>
-                                    <ComboBoxItem Content="In-game time" Tag="GameTime"/>
+                                    <ComboBoxItem Content="{DynamicResource UiPlayerProximity}" Tag="PlayerProximity"/>
+                                    <ComboBoxItem Content="{DynamicResource UiInGameTime}" Tag="GameTime"/>
                                     </ComboBox>
 
                                 <StackPanel>
@@ -119,12 +119,12 @@
                                                   SelectedValue="{Binding LocationEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="AutomationDisplayName"
                                                   ToolTip="{Binding SelectedItem.AutomationDisplayName, RelativeSource={RelativeSource Self}}"/>
                                         <ComboBox Margin="0,0,0,6" SelectedValue="{Binding PlayerMatchMode, Mode=TwoWay}" SelectedValuePath="Tag">
-                                            <ComboBoxItem Content="Any online in range" Tag="AnyOnline"/>
-                                            <ComboBoxItem Content="All players in range" Tag="AllOnline"/>
-                                            <ComboBoxItem Content="Specific player in range" Tag="Specific"/>
-                                            <ComboBoxItem Content="Any player offline" Tag="AnyOffline"/>
-                                            <ComboBoxItem Content="All players offline" Tag="AllOffline"/>
-                                            <ComboBoxItem Content="Specific player offline" Tag="SpecificOffline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAnyOnlineInRange}" Tag="AnyOnline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAllPlayersInRange}" Tag="AllOnline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiSpecificPlayerInRange}" Tag="Specific"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAnyPlayerOffline}" Tag="AnyOffline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAllPlayersOffline}" Tag="AllOffline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiSpecificPlayerOffline}" Tag="SpecificOffline"/>
                                         </ComboBox>
                                         <ComboBox Margin="0,0,0,6"
                                                   ItemsSource="{Binding ParentWindow.TeamMembers, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -141,11 +141,11 @@
                                             </ComboBox.Style>
                                         </ComboBox>
                                         <WrapPanel>
-                                            <ui:TextBox Width="75" Text="{Binding DistanceMeters, Mode=TwoWay}" PlaceholderText="Meters" Margin="0,0,5,6"/>
-                                            <TextBlock Text="meters" VerticalAlignment="Center" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}"/>
+                                            <ui:TextBox Width="75" Text="{Binding DistanceMeters, Mode=TwoWay}" PlaceholderText="{DynamicResource UiMeters}" Margin="0,0,5,6"/>
+                                            <TextBlock Text="{DynamicResource UiMeters}" VerticalAlignment="Center" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}"/>
                                         </WrapPanel>
                                     </StackPanel>
-                                    <TextBlock Text="Dead players count as offline. Offline conditions ignore the radius."
+                                    <TextBlock Text="{DynamicResource UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius}"
                                                TextWrapping="Wrap" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8"/>
                                 </StackPanel>
 
@@ -156,28 +156,28 @@
                                             <Style.Triggers><DataTrigger Binding="{Binding ConditionType}" Value="GameTime"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers>
                                         </Style>
                                     </WrapPanel.Style>
-                                    <TextBlock Text="From" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{DynamicResource UiFrom}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <ui:TextBox Width="75" Text="{Binding StartTime, Mode=TwoWay}" PlaceholderText="20:00" Margin="0,0,10,0"/>
-                                    <TextBlock Text="until" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{DynamicResource UiUntil}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <ui:TextBox Width="75" Text="{Binding EndTime, Mode=TwoWay}" PlaceholderText="08:00"/>
                                 </WrapPanel>
 
-                                <TextBlock Text="THEN" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,2,0,5"/>
+                                <TextBlock Text="{DynamicResource UiTHEN}" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,2,0,5"/>
                                 <StackPanel>
                                     <ComboBox x:Name="TargetDeviceComboBox" Margin="0,0,0,6"
                                               ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
                                               SelectedValue="{Binding TargetEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="DisplayName"
                                               ToolTip="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource Self}}"/>
                                     <WrapPanel>
-                                        <TextBlock Text="Matched:" VerticalAlignment="Center" Margin="0,0,5,6"/>
+                                        <TextBlock Text="{DynamicResource UiMatched}" VerticalAlignment="Center" Margin="0,0,5,6"/>
                                         <ComboBox Width="80" Margin="0,0,12,6" SelectedValue="{Binding MatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
-                                            <ComboBoxItem Content="ON"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                            <ComboBoxItem Content="OFF"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource On}"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource Off}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
                                         </ComboBox>
-                                        <TextBlock Text="Otherwise:" VerticalAlignment="Center" Margin="0,0,5,6"/>
+                                        <TextBlock Text="{DynamicResource UiOtherwise}" VerticalAlignment="Center" Margin="0,0,5,6"/>
                                         <ComboBox Width="80" Margin="0,0,0,6" SelectedValue="{Binding UnmatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
-                                            <ComboBoxItem Content="ON"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                            <ComboBoxItem Content="OFF"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource On}"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource Off}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
                                         </ComboBox>
                                     </WrapPanel>
                                 </StackPanel>

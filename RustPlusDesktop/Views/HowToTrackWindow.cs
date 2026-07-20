@@ -35,7 +35,7 @@ public static class HowToTrackWindow
     {
         var win = new Window
         {
-            Title = "How to Track Players — Rust+ Desk",
+            Title = Properties.Resources.GetString("HowToTrackWindowTitle"),
             Width = 800,
             Height = 700,
             MinWidth = 600,

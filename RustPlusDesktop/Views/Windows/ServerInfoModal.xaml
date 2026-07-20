@@ -77,7 +77,7 @@
                 <Grid x:Name="PnlLoading" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <StackPanel HorizontalAlignment="Center">
                         <ui:ProgressRing Width="36" Height="36" IsIndeterminate="True" Margin="0,0,0,12" Foreground="{DynamicResource Accent}"/>
-                        <TextBlock Text="Loading server details..." Foreground="{DynamicResource TextSubtle}" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource UiLoadingServerDetails}" Foreground="{DynamicResource TextSubtle}" FontSize="13" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
 
@@ -119,7 +119,7 @@
                                    Click="BtnCopyAddress_Click">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Copy20" Margin="0,0,4,0" FontSize="12"/>
-                                <TextBlock Text="Copy IP"/>
+                                <TextBlock Text="{DynamicResource UiCopyIP}"/>
                             </StackPanel>
                         </ui:Button>
                     </StackPanel>
@@ -136,7 +136,7 @@
                         <Border Grid.Column="0" Margin="0,0,6,0" Background="#0FFFFFFF" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="8" Padding="10">
                             <StackPanel HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="People24" Filled="True" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
-                                <TextBlock Text="Players" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Players}" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="TxtPlayers" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>
@@ -145,7 +145,7 @@
                         <Border Grid.Column="1" Margin="3,0,3,0" Background="#0FFFFFFF" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="8" Padding="10">
                             <StackPanel HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="Clock24" Filled="True" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
-                                <TextBlock Text="Queue" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Queue}" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="TxtQueue" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>
@@ -154,7 +154,7 @@
                         <Border Grid.Column="2" Margin="6,0,0,0" Background="#0FFFFFFF" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="8" Padding="10">
                             <StackPanel HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="CalendarClock24" Filled="True" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
-                                <TextBlock Text="Wipe Cycle" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource UiWipeCycle}" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="TxtWipe" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>
@@ -199,13 +199,13 @@
                                    Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Globe24" Margin="0,0,6,0"/>
-                                <TextBlock Text="Visit Website"/>
+                                <TextBlock Text="{DynamicResource UiVisitWebsite}"/>
                             </StackPanel>
                         </ui:Button>
 
                         <!-- Close Button on Right -->
                         <ui:Button Grid.Column="1"
-                                   Content="Close" 
+                                   Content="{DynamicResource Close}"
                                    Appearance="Primary" 
                                    Width="100"
                                    Cursor="Hand"

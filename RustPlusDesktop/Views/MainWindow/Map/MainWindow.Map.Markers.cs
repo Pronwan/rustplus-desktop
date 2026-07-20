@@ -2030,7 +2030,7 @@ public partial class MainWindow
             if (cs.TimerLabel != null)
             {
                 int mins = (int)(DateTime.UtcNow - cs.CrashedAt).TotalMinutes;
-                cs.TimerLabel.Text = mins == 0 ? "just now" : $"{mins}m ago";
+                cs.TimerLabel.Text = mins == 0 ? RustPlusDesk.Properties.Resources.GetString("CodeUiJustNow") : $"{mins}m ago";
             }
         }
     }

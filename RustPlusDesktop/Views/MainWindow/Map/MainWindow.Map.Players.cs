@@ -647,11 +647,11 @@ public partial class MainWindow
         ToolTipService.SetToolTip(root, label);
         
         var cm = new ContextMenu { Style = TryFindResource("DarkContextMenu") as Style };
-        var miRename = new MenuItem { Header = Properties.Resources.RenameDeathMarker ?? "Umbenennen", Tag = id };
+        var miRename = new MenuItem { Header = Properties.Resources.RenameDeathMarker ?? RustPlusDesk.Properties.Resources.GetString("CodeUiUmbenennen"), Tag = id };
         miRename.Click += RenameDeathMarker_Click;
         cm.Items.Add(miRename);
 
-        var miDelete = new MenuItem { Header = Properties.Resources.DeleteDeathMarker ?? "Löschen", Tag = id, Foreground = Brushes.Red };
+        var miDelete = new MenuItem { Header = Properties.Resources.DeleteDeathMarker ?? RustPlusDesk.Properties.Resources.GetString("CodeUiLöschen"), Tag = id, Foreground = Brushes.Red };
         miDelete.Click += DeleteDeathMarker_Click;
         cm.Items.Add(miDelete);
 

@@ -1287,7 +1287,7 @@ public static class TrackingService
                 sb.AppendLine($"<h2>{p.Name}</h2>");
                 
                 var statusClass = isOnline ? "badge-online" : "badge-offline";
-                var statusText = isOnline ? "Online" : "Offline";
+                var statusText = isOnline ? RustPlusDesk.Properties.Resources.GetString("Online") : RustPlusDesk.Properties.Resources.GetString("Offline");
                 sb.AppendLine($"<div style='margin-bottom:20px;'><span class='badge {statusClass}'>{statusText}</span></div>");
 
                 var lastS = sessionsSnapshot.LastOrDefault();
@@ -1498,7 +1498,7 @@ public static class TrackingService
             {
                 if (server.Host == _lastServerHost && server.Port == _lastServerPort)
                 {
-                    StatusMessage = "Server offline (A2S Query Timeout)";
+                    StatusMessage = Properties.Resources.GetString("ServerOfflineA2S");
                     OnOnlinePlayersUpdated?.Invoke();
                 }
                 Log($"[A2S] Failed to background poll {server.Name} ({server.Host}:{server.Port}) - Timeout/Offline");
@@ -1527,7 +1527,7 @@ public static class TrackingService
             {
                 if (isCurrentServer)
                 {
-                    StatusMessage = "Auto-Discovering Query Port via Steam API...";
+                    StatusMessage = Properties.Resources.GetString("AutoDiscoveringQueryPort");
                     OnOnlinePlayersUpdated?.Invoke();
                 }
                 
@@ -1545,7 +1545,7 @@ public static class TrackingService
 
             if (isCurrentServer)
             {
-                StatusMessage = "Fetching players via Steam Query...";
+                StatusMessage = Properties.Resources.GetString("FetchingSteamPlayers");
                 OnOnlinePlayersUpdated?.Invoke();
             }
             var onlineList = new List<OnlinePlayerBM>();
@@ -1621,7 +1621,7 @@ public static class TrackingService
             {
                 if (onlineList.Count == 0)
                 {
-                    StatusMessage = "No online players found.";
+                    StatusMessage = Properties.Resources.GetString("NoOnlinePlayersFound");
                 }
                 else
                 {

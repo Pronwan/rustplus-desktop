@@ -23,7 +23,7 @@ namespace RustPlusDesk.Properties {
             set => resourceCulture = value;
         }
 
-        private static string GetString(string key)
+        public static string GetString(string key)
         {
             var val = ResourceManager.GetString(key, resourceCulture);
             if (string.IsNullOrWhiteSpace(val))

@@ -393,17 +393,17 @@ public partial class MainWindow
         if (ChatAnnounce != null)
         {
             ChatAnnounce.IsEnabled = !blocked;
-            ChatAnnounce.ToolTip = blocked ? message : FindResource("Alerts");
+            ChatAnnounce.ToolTip = blocked ? message : FindResource(RustPlusDesk.Properties.Resources.GetString("Alerts"));
         }
 
         if (ChatAlertsConfigureButton != null)
         {
             ChatAlertsConfigureButton.IsEnabled = !blocked;
-            ChatAlertsConfigureButton.ToolTip = blocked ? message : FindResource("Configure");
+            ChatAlertsConfigureButton.ToolTip = blocked ? message : FindResource(RustPlusDesk.Properties.Resources.GetString("Configure"));
         }
 
         if (BtnOpenChatCommands != null)
-            BtnOpenChatCommands.ToolTip = blocked ? message : FindResource("ChatCommandsSettings");
+            BtnOpenChatCommands.ToolTip = blocked ? message : FindResource(RustPlusDesk.Properties.Resources.GetString("ChatCommandsSettings"));
 
         if (ChatFeatureMasterWarningBadge != null)
             ChatFeatureMasterWarningBadge.Visibility = blocked ? Visibility.Visible : Visibility.Collapsed;
