@@ -1185,6 +1185,7 @@ private bool _overlayToolsVisible = false;
         bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
         bool isEmail = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
         _vm.IsCloudConnected = isDiscord || isEmail;
+        _vm.IsPremium = Services.Auth.SupabaseAuthManager.IsPremium;
         _vm.CloudAccountActionText = _vm.IsCloudConnected ? "Manage" : "Sign in";
         _vm.CloudAccountStatusText = _vm.IsCloudConnected
             ? $"{(isDiscord ? "Discord" : "Email")} · {Services.Auth.SupabaseAuthManager.CurrentTier.Replace('_', ' ')} plan"
