@@ -1557,7 +1557,7 @@ namespace RustPlusDesk.Views
             {
                 PnlMutedServers.Children.Add(new TextBlock
                 {
-                    Text = "No servers muted",
+                    Text = Properties.Resources.NoServersMuted,
                     Foreground = System.Windows.Media.Brushes.Gray,
                     FontSize = 11,
                     FontStyle = FontStyles.Italic,
@@ -1568,39 +1568,62 @@ namespace RustPlusDesk.Views
 
             foreach (var serverKey in muted)
             {
-                var grid = new Grid { Margin = new Thickness(0, 2, 0, 2) };
+                var savedProfile = (ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel)?.Servers
+                    .FirstOrDefault(server => $"{server.Host}:{server.Port}" == serverKey);
+                var serverName = TrackingService.GetMutedServerName(serverKey) ?? savedProfile?.Name;
+
+                var grid = new Grid { Margin = new Thickness(4, 4, 4, 4) };
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-                var txt = new TextBlock
+                var serverDetails = new StackPanel
                 {
-                    Text = serverKey,
-                    Foreground = System.Windows.Media.Brushes.White,
                     VerticalAlignment = VerticalAlignment.Center,
-                    FontSize = 11
+                    Margin = new Thickness(4, 0, 12, 0)
                 };
-                Grid.SetColumn(txt, 0);
-                grid.Children.Add(txt);
-
-                var btn = new Button
+                var nameText = new TextBlock
                 {
-                    Content = "Unmute",
-                    Height = 20,
-                    Padding = new Thickness(6, 1, 6, 1),
-                    FontSize = 10,
+                    Text = string.IsNullOrWhiteSpace(serverName) ? serverKey : serverName,
+                    FontSize = 12,
+                    FontWeight = FontWeights.SemiBold,
+                    TextTrimming = TextTrimming.CharacterEllipsis
+                };
+                nameText.SetResourceReference(TextBlock.ForegroundProperty, "TextPrimary");
+                serverDetails.Children.Add(nameText);
+
+                if (!string.IsNullOrWhiteSpace(serverName))
+                {
+                    var endpointText = new TextBlock
+                    {
+                        Text = serverKey,
+                        FontSize = 10,
+                        Margin = new Thickness(0, 2, 0, 0),
+                        TextTrimming = TextTrimming.CharacterEllipsis
+                    };
+                    endpointText.SetResourceReference(TextBlock.ForegroundProperty, "TextSubtle");
+                    serverDetails.Children.Add(endpointText);
+                }
+
+                Grid.SetColumn(serverDetails, 0);
+                grid.Children.Add(serverDetails);
+
+                var btn = new WpfUi.Button
+                {
+                    Content = Properties.Resources.UnmuteServer,
+                    Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.AlertOn24 },
+                    Appearance = WpfUi.ControlAppearance.Secondary,
+                    Height = 30,
+                    Padding = new Thickness(10, 4, 10, 4),
+                    FontSize = 11,
+                    VerticalAlignment = VerticalAlignment.Center,
                     Tag = serverKey,
-                    Style = FindResource("GhostButton") as Style
                 };
                 btn.Click += (s, e) =>
                 {
-                    if (s is Button b && b.Tag is string key)
+                    if (s is WpfUi.Button { Tag: string key })
                     {
-                        var parts = key.Split(':');
-                        if (parts.Length == 2 && int.TryParse(parts[1], out int port))
-                        {
-                            TrackingService.UnmuteServer(parts[0], port);
-                            PopulateMutedServers();
-                        }
+                        TrackingService.UnmuteServer(key);
+                        PopulateMutedServers();
                     }
                 };
                 Grid.SetColumn(btn, 1);

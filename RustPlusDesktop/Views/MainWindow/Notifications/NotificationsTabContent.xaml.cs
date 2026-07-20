@@ -142,6 +142,36 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void BtnMuteServer_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button { Tag: RustPlusNotification notif } ||
+                string.IsNullOrWhiteSpace(notif.ServerIp) ||
+                !notif.ServerPort.HasValue)
+            {
+                return;
+            }
+
+            var server = string.IsNullOrWhiteSpace(notif.ServerName)
+                ? $"{notif.ServerIp}:{notif.ServerPort.Value}"
+                : notif.ServerName;
+
+            if (MessageBox.Show(
+                    $"Mute all future Notification Center alerts from {server}?\n\nYou can unmute it in Settings > Alerts.",
+                    "Mute server notifications",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            TrackingService.MuteServer(notif.ServerIp, notif.ServerPort.Value, notif.ServerName);
+            MessageBox.Show(
+                $"Notifications from {server} are now muted.",
+                "Server muted",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
         private async void BtnServerTag_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is RustPlusNotification notif)

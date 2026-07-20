@@ -289,6 +289,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Short Timestamp -->
@@ -299,8 +300,22 @@
                                                VerticalAlignment="Center"
                                                Margin="0,0,6,0"/>
 
-                                    <!-- Action Button: Delete -->
+                                    <!-- Action Button: Mute server -->
                                     <ui:Button Grid.Column="1"
+                                               Click="BtnMuteServer_Click"
+                                               Tag="{Binding}"
+                                               Appearance="Transparent"
+                                               Width="28" Height="28"
+                                               Padding="0"
+                                               VerticalAlignment="Center"
+                                               ToolTip="Mute notifications from this server"
+                                               AutomationProperties.Name="Mute notifications from this server"
+                                               Style="{StaticResource NotificationServerButton}">
+                                        <ui:SymbolIcon Symbol="SpeakerMute24" FontSize="14" Foreground="IndianRed"/>
+                                    </ui:Button>
+
+                                    <!-- Action Button: Delete -->
+                                    <ui:Button Grid.Column="2"
                                                 Click="BtnDelete_Click" 
                                                 Tag="{Binding Id}"
                                                 Appearance="Transparent"

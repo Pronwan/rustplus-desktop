@@ -161,6 +161,7 @@ public class TrackingSettings
     public bool NotificationsSoundsEnabled { get; set; } = true;
     public int NotificationsRetentionDays { get; set; } = 30;
     public List<string> MutedNotificationServers { get; set; } = new();
+    public Dictionary<string, string> MutedNotificationServerNames { get; set; } = new();
 
     /// <summary>Extra monument type names (e.g. "Cave", "God Rock") that the user has chosen to hide on the map.</summary>
     public List<string> HiddenExtraMonumentTypes { get; set; } = new();
@@ -1856,21 +1857,34 @@ public static class TrackingService
         }
     }
 
-    public static void MuteServer(string host, int port)
+    public static void MuteServer(string host, int port, string? name = null)
     {
         var key = $"{host}:{port}";
         if (_settings.MutedNotificationServers == null) _settings.MutedNotificationServers = new();
+        if (_settings.MutedNotificationServerNames == null) _settings.MutedNotificationServerNames = new();
+        if (!string.IsNullOrWhiteSpace(name))
+            _settings.MutedNotificationServerNames[key] = name;
         if (!_settings.MutedNotificationServers.Contains(key))
         {
             _settings.MutedNotificationServers.Add(key);
             SaveDB();
         }
+        else if (!string.IsNullOrWhiteSpace(name))
+        {
+            SaveDB();
+        }
     }
 
-    public static void UnmuteServer(string host, int port)
+    public static string? GetMutedServerName(string key) =>
+        _settings.MutedNotificationServerNames?.GetValueOrDefault(key);
+
+    public static void UnmuteServer(string host, int port) => UnmuteServer($"{host}:{port}");
+
+    public static void UnmuteServer(string key)
     {
-        var key = $"{host}:{port}";
-        if (_settings.MutedNotificationServers != null && _settings.MutedNotificationServers.Remove(key))
+        var removed = _settings.MutedNotificationServers?.Remove(key) == true;
+        var removedName = _settings.MutedNotificationServerNames?.Remove(key) == true;
+        if (removed || removedName)
         {
             SaveDB();
         }
