@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
@@ -19,6 +20,66 @@ namespace RustPlusDesk.Views
     {
         public MainWindow? ParentWindow { get; set; }
         private bool _isSettingsInitialized = false;
+        private IReadOnlyList<SettingsSectionDefinition> _settingsSections = Array.Empty<SettingsSectionDefinition>();
+        private IReadOnlyList<SettingsOptionDefinition> _settingsOptions = Array.Empty<SettingsOptionDefinition>();
+        private string _activeSettingsCategory = "general";
+        private bool _isShowingSearchResults;
+        private bool _returnToCategoryPageAfterSearch;
+        private readonly List<(AdornerLayer Layer, Adorner Adorner)> _settingsHighlights = new();
+        private int _settingsHighlightGeneration;
+
+        private sealed class SettingsSectionDefinition
+        {
+            public required string Id { get; init; }
+            public required string Category { get; init; }
+            public required string Title { get; init; }
+            public required string Keywords { get; init; }
+            public required FrameworkElement Element { get; init; }
+        }
+
+        private sealed class SettingsSearchResult
+        {
+            public required string Id { get; init; }
+            public required string Category { get; init; }
+            public required string CategoryTitle { get; init; }
+            public required string Title { get; init; }
+        }
+
+        private sealed class SettingsOptionDefinition
+        {
+            public required string SectionId { get; init; }
+            public required string SectionTitle { get; init; }
+            public required string Category { get; init; }
+            public required string Title { get; init; }
+            public required string SearchText { get; init; }
+            public required Control Target { get; init; }
+        }
+
+        private sealed class SettingsOptionResult
+        {
+            public required string SectionId { get; init; }
+            public required string SectionTitle { get; init; }
+            public required string Category { get; init; }
+            public required string CategoryTitle { get; init; }
+            public required string BeforeMatch { get; init; }
+            public required string Match { get; init; }
+            public required string AfterMatch { get; init; }
+            public required Control Target { get; init; }
+        }
+
+        private sealed class SettingsMatchAdorner(UIElement adornedElement) : Adorner(adornedElement)
+        {
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                var bounds = new Rect(0, 0, AdornedElement.RenderSize.Width, AdornedElement.RenderSize.Height);
+                drawingContext.DrawRoundedRectangle(
+                    new SolidColorBrush(Color.FromArgb(0x24, 0x60, 0xCD, 0xFF)),
+                    new Pen(new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF)), 1.5),
+                    bounds,
+                    5,
+                    5);
+            }
+        }
 
         public class LanguageOption
         {
@@ -30,12 +91,426 @@ namespace RustPlusDesk.Views
         public AppSettingsOverlay()
         {
             InitializeComponent();
+            InitializeSettingsNavigation();
             Loaded += AppSettingsOverlay_Loaded;
+            IsVisibleChanged += AppSettingsOverlay_IsVisibleChanged;
+        }
+
+        private void AppSettingsOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is true)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    SettingsSearchBox.Focus();
+                    Keyboard.Focus(SettingsSearchBox);
+                    SettingsSearchBox.SelectAll();
+                }), System.Windows.Threading.DispatcherPriority.Input);
+                return;
+            }
+
+            _isShowingSearchResults = false;
+            _returnToCategoryPageAfterSearch = false;
+            SettingsSearchBox.Clear();
+            ClearSettingsHighlights();
+            ShowSettingsCategoryList();
         }
 
         private static string T(string key, string fallback)
         {
             return Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+        }
+
+        private void InitializeSettingsNavigation()
+        {
+            _settingsSections = new[]
+            {
+                Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server", SectionGeneral),
+                Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
+                Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
+                Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
+                Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
+                Section("team-markers", "map", T("TeamMarkersSettings", "Team Markers"), "profile player direction arrows death markers streamer icon scale", SectionTeamMarkers),
+                Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
+                Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync", SectionCloud),
+                Section("chat", "connected", T("Chat", "Chat"), "chat alerts commands modify", SectionChat),
+                Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
+                Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
+                Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
+            };
+
+            ShowSettingsCategoryList();
+        }
+
+        private static SettingsSectionDefinition Section(string id, string category, string title, string keywords, FrameworkElement element) =>
+            new() { Id = id, Category = category, Title = title, Keywords = keywords, Element = element };
+
+        private void BuildSettingsOptionIndex()
+        {
+            _settingsOptions = _settingsSections
+                .SelectMany(section => EnumerateControls(section.Element)
+                    .Where(IsSearchableSettingControl)
+                    .Select(control => new SettingsOptionDefinition
+                    {
+                        SectionId = section.Id,
+                        SectionTitle = section.Title,
+                        Category = section.Category,
+                        Title = GetControlTitle(control),
+                        SearchText = $"{GetControlTitle(control)} {control.ToolTip} {section.Title}",
+                        Target = control
+                    }))
+                .Where(option => option.Title.Length > 1)
+                .DistinctBy(option => $"{option.SectionId}|{option.Title}", StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private static bool IsSearchableSettingControl(Control control) =>
+            control is CheckBox or ComboBox or Slider or TextBox or ButtonBase or Expander;
+
+        private static IEnumerable<Control> EnumerateControls(DependencyObject root)
+        {
+            foreach (var child in LogicalTreeHelper.GetChildren(root).OfType<DependencyObject>())
+            {
+                if (child is Control control)
+                {
+                    yield return control;
+                }
+
+                foreach (var descendant in EnumerateControls(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+
+        private static string GetControlTitle(Control control)
+        {
+            var automationName = System.Windows.Automation.AutomationProperties.GetName(control);
+            if (!string.IsNullOrWhiteSpace(automationName))
+            {
+                return automationName.Trim();
+            }
+
+            object? label = control switch
+            {
+                HeaderedContentControl headered => headered.Header,
+                ContentControl content => content.Content,
+                _ => null
+            };
+            var contentText = ExtractText(label);
+            return string.IsNullOrWhiteSpace(contentText) ? HumanizeControlName(control.Name) : contentText;
+        }
+
+        private static string ExtractText(object? value)
+        {
+            if (value is string text)
+            {
+                return text.Trim();
+            }
+
+            if (value is TextBlock textBlock)
+            {
+                return textBlock.Text.Trim();
+            }
+
+            if (value is not DependencyObject element)
+            {
+                return "";
+            }
+
+            return string.Join(" ", LogicalTreeHelper.GetChildren(element)
+                .Cast<object>()
+                .Select(ExtractText)
+                .Where(text => text.Length > 0));
+        }
+
+        private static string HumanizeControlName(string name)
+        {
+            foreach (var prefix in new[] { "Chk", "Cmb", "Slider", "Txt", "Btn" })
+            {
+                if (name.StartsWith(prefix, StringComparison.Ordinal))
+                {
+                    name = name[prefix.Length..];
+                    break;
+                }
+            }
+
+            var words = new System.Text.StringBuilder();
+            for (var i = 0; i < name.Length; i++)
+            {
+                if (i > 0 && char.IsUpper(name[i]) && !char.IsUpper(name[i - 1]))
+                {
+                    words.Append(' ');
+                }
+                words.Append(name[i]);
+            }
+            return words.ToString().Replace("Url", "URL", StringComparison.Ordinal).Trim();
+        }
+
+        private void SettingsCategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SettingsCategoryList.SelectedItem is not ListBoxItem { Tag: string category })
+            {
+                return;
+            }
+
+            SettingsCategoryList.SelectedItem = null;
+            SettingsSearchBox.Clear();
+            ShowSettingsCategory(category);
+        }
+
+        private void ShowSettingsCategoryList()
+        {
+            SettingsCategoryPage.Visibility = Visibility.Visible;
+            SettingsDetailPage.Visibility = Visibility.Collapsed;
+            SettingsCategoryList.SelectedItem = null;
+        }
+
+        private void ShowSettingsCategory(string category, string? selectedSectionId = null)
+        {
+            _activeSettingsCategory = category;
+            var sections = _settingsSections.Where(section => section.Category == category).ToList();
+            foreach (var section in _settingsSections)
+            {
+                section.Element.Visibility = section.Category == category ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            var (title, description) = GetSettingsCategoryText(category);
+            SettingsDetailTitle.Text = title;
+            SettingsDetailSubtitle.Text = description;
+            SettingsCategoryPage.Visibility = Visibility.Collapsed;
+            SettingsDetailPage.Visibility = Visibility.Visible;
+            var submenuItems = sections.Select(section => new SettingsSearchResult
+            {
+                Id = section.Id,
+                Category = section.Category,
+                CategoryTitle = title,
+                Title = section.Title
+            }).ToList();
+            SettingsSectionList.ItemsSource = submenuItems;
+            SettingsSectionList.SelectedItem = selectedSectionId == null
+                ? null
+                : submenuItems.FirstOrDefault(item => item.Id == selectedSectionId);
+            SettingsSectionList.Visibility = Visibility.Visible;
+            SettingsSearchResultsScroller.Visibility = Visibility.Collapsed;
+            SettingsScrollViewer.Visibility = Visibility.Visible;
+            SettingsScrollViewer.ScrollToTop();
+
+            if (string.IsNullOrWhiteSpace(SettingsSearchBox.Text))
+            {
+                ClearSettingsHighlights();
+            }
+            else
+            {
+                HighlightMatchingSettings(SettingsSearchBox.Text, category);
+            }
+        }
+
+        private void HighlightMatchingSettings(string query, string category)
+        {
+            ClearSettingsHighlights();
+            var targets = _settingsOptions
+                .Where(option => option.Category == category && SettingsSearchMatcher.Matches(query, option.Title, option.SearchText))
+                .Select(option => option.Target)
+                .Distinct()
+                .ToList();
+            var generation = _settingsHighlightGeneration;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (generation != _settingsHighlightGeneration)
+                {
+                    return;
+                }
+
+                foreach (var target in targets)
+                {
+                    var layer = AdornerLayer.GetAdornerLayer(target);
+                    if (layer == null)
+                    {
+                        continue;
+                    }
+
+                    var adorner = new SettingsMatchAdorner(target) { IsHitTestVisible = false };
+                    layer.Add(adorner);
+                    _settingsHighlights.Add((layer, adorner));
+                }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        private void ClearSettingsHighlights()
+        {
+            _settingsHighlightGeneration++;
+            foreach (var (layer, adorner) in _settingsHighlights)
+            {
+                layer.Remove(adorner);
+            }
+            _settingsHighlights.Clear();
+        }
+
+        private void SettingsSectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SettingsSectionList.SelectedItem is not SettingsSearchResult selected)
+            {
+                return;
+            }
+
+            var section = _settingsSections.First(candidate => candidate.Id == selected.Id);
+            ScrollToSettingsElement(section.Element);
+        }
+
+        private void ScrollToSettingsElement(FrameworkElement target, bool focus = false)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ExpandAncestorSettingsGroups(target);
+                SettingsScrollViewer.UpdateLayout();
+                target.UpdateLayout();
+
+                try
+                {
+                    var top = target.TransformToAncestor(SettingsSectionsPanel).Transform(new Point()).Y;
+                    SettingsScrollViewer.ScrollToVerticalOffset(Math.Clamp(top - 12, 0, SettingsScrollViewer.ScrollableHeight));
+                }
+                catch (InvalidOperationException)
+                {
+                    target.BringIntoView();
+                }
+
+                if (focus)
+                {
+                    target.Focus();
+                    Keyboard.Focus(target);
+                }
+            }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+        }
+
+        private static void ExpandAncestorSettingsGroups(DependencyObject element)
+        {
+            for (var parent = GetSettingsParent(element); parent != null; parent = GetSettingsParent(parent))
+            {
+                if (parent is Expander expander)
+                {
+                    expander.IsExpanded = true;
+                }
+            }
+        }
+
+        private static DependencyObject? GetSettingsParent(DependencyObject element) =>
+            LogicalTreeHelper.GetParent(element) ?? (element is Visual or System.Windows.Media.Media3D.Visual3D ? VisualTreeHelper.GetParent(element) : null);
+
+        private static (string Title, string Description) GetSettingsCategoryText(string category) => category switch
+        {
+            "alerts" => ("Alerts", "Notifications, sounds, and offline death alerts"),
+            "map" => ("Map", "Performance, markers, and 3D map data"),
+            "connected" => ("Connected Services", "Cloud, integrations, chat, and account connections"),
+            "system" => ("System", "Maintenance, backup, reset, and application information"),
+            _ => ("General", "Language, startup, and application behavior")
+        };
+
+        private void SettingsBack_Click(object sender, RoutedEventArgs e)
+        {
+            _isShowingSearchResults = false;
+            SettingsSearchBox.Clear();
+            ShowSettingsCategoryList();
+        }
+
+        private void SettingsSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var query = SettingsSearchBox.Text.Trim();
+            if (query.Length == 0)
+            {
+                ClearSettingsHighlights();
+                if (!_isShowingSearchResults)
+                {
+                    return;
+                }
+
+                _isShowingSearchResults = false;
+                if (_returnToCategoryPageAfterSearch)
+                {
+                    ShowSettingsCategoryList();
+                }
+                else
+                {
+                    ShowSettingsCategory(_activeSettingsCategory);
+                }
+                return;
+            }
+
+            ClearSettingsHighlights();
+            if (!_isShowingSearchResults)
+            {
+                _returnToCategoryPageAfterSearch = SettingsCategoryPage.Visibility == Visibility.Visible;
+            }
+            _isShowingSearchResults = true;
+
+            if (_settingsOptions.Count == 0)
+            {
+                BuildSettingsOptionIndex();
+            }
+
+            var matches = _settingsOptions
+                .Where(option => SettingsSearchMatcher.Matches(query, option.Title, option.SearchText))
+                .OrderBy(option => option.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                .ThenBy(option => option.Title)
+                .ToList();
+            SettingsSearchResults.ItemsSource = matches.Select(option => CreateSettingsOptionResult(option, query)).ToList();
+            SettingsDetailTitle.Text = "Search results";
+            SettingsDetailSubtitle.Text = matches.Count == 0
+                ? $"No settings found for “{query}”"
+                : $"{matches.Count} setting{(matches.Count == 1 ? "" : "s")} found for “{query}”";
+            SettingsCategoryPage.Visibility = Visibility.Collapsed;
+            SettingsDetailPage.Visibility = Visibility.Visible;
+            SettingsSectionList.Visibility = Visibility.Collapsed;
+            SettingsScrollViewer.Visibility = Visibility.Collapsed;
+            SettingsSearchResultsScroller.Visibility = Visibility.Visible;
+        }
+
+        private static SettingsOptionResult CreateSettingsOptionResult(SettingsOptionDefinition option, string query)
+        {
+            var matchingTerm = query.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .FirstOrDefault(term => option.Title.Contains(term, StringComparison.OrdinalIgnoreCase));
+            if (matchingTerm == null)
+            {
+                return new SettingsOptionResult
+                {
+                    SectionId = option.SectionId,
+                    SectionTitle = option.SectionTitle,
+                    Category = option.Category,
+                    CategoryTitle = GetSettingsCategoryText(option.Category).Title,
+                    BeforeMatch = option.Title,
+                    Match = "",
+                    AfterMatch = "",
+                    Target = option.Target
+                };
+            }
+
+            var matchIndex = option.Title.IndexOf(matchingTerm, StringComparison.OrdinalIgnoreCase);
+            return new SettingsOptionResult
+            {
+                SectionId = option.SectionId,
+                SectionTitle = option.SectionTitle,
+                Category = option.Category,
+                CategoryTitle = GetSettingsCategoryText(option.Category).Title,
+                BeforeMatch = option.Title[..matchIndex],
+                Match = option.Title.Substring(matchIndex, matchingTerm.Length),
+                AfterMatch = option.Title[(matchIndex + matchingTerm.Length)..],
+                Target = option.Target
+            };
+        }
+
+        private void SettingsSearchResult_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not WpfUi.Button { Tag: SettingsOptionResult result })
+            {
+                return;
+            }
+
+            _isShowingSearchResults = false;
+            _returnToCategoryPageAfterSearch = false;
+            ShowSettingsCategory(result.Category, result.SectionId);
+            ScrollToSettingsElement(result.Target, focus: true);
         }
 
         private void AppSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
@@ -44,6 +519,7 @@ namespace RustPlusDesk.Views
             
             PopulateLanguages();
             LoadSettings();
+            BuildSettingsOptionIndex();
             _isSettingsInitialized = true;
         }
 

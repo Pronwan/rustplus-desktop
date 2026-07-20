@@ -19,6 +19,7 @@
     <Compile Include="..\RustPlusDesktop\Services\Raid\RaidDataService.cs" Link="Production\RaidDataService.cs" />
     <Compile Include="..\RustPlusDesktop\Services\Raid\RaidPlanStore.cs" Link="Production\RaidPlanStore.cs" />
     <Compile Include="..\RustPlusDesktop\Services\CloudTrafficPolicy.cs" Link="Production\CloudTrafficPolicy.cs" />
+    <Compile Include="..\RustPlusDesktop\Views\MainWindow\Map\SettingsSearchMatcher.cs" Link="Production\SettingsSearchMatcher.cs" />
     <EmbeddedResource Include="..\RustPlusDesktop\Assets\Data\raid-data.json" Link="Assets\Data\raid-data.json" />
   </ItemGroup>
 </Project>
