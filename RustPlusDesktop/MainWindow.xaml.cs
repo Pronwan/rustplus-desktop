@@ -2715,16 +2715,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private int _lastNonRaidTabIndex;
+    private int _lastWorkspaceTabIndex;
 
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.Source != MainTabs) return;
 
         bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
+        bool recyclerSelected = MainTabs.SelectedItem == RecyclerCalculatorTab;
         RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
-        if (!raidSelected)
-            _lastNonRaidTabIndex = MainTabs.SelectedIndex;
+        ServerContextPanel.Visibility = recyclerSelected ? Visibility.Collapsed : Visibility.Visible;
+        if (!raidSelected && !recyclerSelected)
+            _lastWorkspaceTabIndex = MainTabs.SelectedIndex;
 
         if (MainTabs.SelectedItem == NotificationsTab)
         {
@@ -2732,8 +2734,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void RaidCalculator_CloseRequested(object sender, RoutedEventArgs e) =>
-        MainTabs.SelectedIndex = Math.Clamp(_lastNonRaidTabIndex, 0, MainTabs.Items.Count - 2);
+    private void RaidCalculator_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+
+    private void ReturnToLastWorkspace() =>
+        MainTabs.SelectedIndex = Math.Clamp(_lastWorkspaceTabIndex, 0, MainTabs.Items.Count - 1);
 
     private void HandleOfflineDeath(OfflineDeathNotification d)
     {
