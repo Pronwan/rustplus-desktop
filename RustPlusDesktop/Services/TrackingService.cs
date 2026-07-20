@@ -109,8 +109,15 @@ public class TrackingSettings
     public bool AnnounceTradeAlerts { get; set; } = false;
     public string SelectedLanguage { get; set; } = "";
     public string DiscordWebhookUrl { get; set; } = "";
-    public string DiscordWebhookMention { get; set; } = "";
+    public string DiscordWebhookMention { get; set; } = "None";
     public string SmartHomeWebhookUrl { get; set; } = "";
+    public string TelegramCallWebhookUrl { get; set; } = "";
+    public string TelegramCallUser { get; set; } = "";
+    public string TelegramCallMsg { get; set; } = "Alarm ausgeloest!";
+    public string TelegramCallLang { get; set; } = "de-DE-Standard-A";
+    public bool TelegramCallIncTitle { get; set; } = true;
+    public bool TelegramCallIncMsg { get; set; } = true;
+    public bool TelegramCallIncType { get; set; } = false;
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
@@ -715,6 +722,42 @@ public static class TrackingService
     {
         get => _settings.SmartHomeWebhookUrl;
         set { _settings.SmartHomeWebhookUrl = value; SaveDB(); }
+    }
+    
+    public static string TelegramCallWebhookUrl
+    {
+        get => _settings.TelegramCallWebhookUrl;
+        set { _settings.TelegramCallWebhookUrl = value; SaveDB(); }
+    }
+    public static string TelegramCallUser
+    {
+        get => _settings.TelegramCallUser;
+        set { _settings.TelegramCallUser = value; SaveDB(); }
+    }
+    public static string TelegramCallMsg
+    {
+        get => _settings.TelegramCallMsg;
+        set { _settings.TelegramCallMsg = value; SaveDB(); }
+    }
+    public static string TelegramCallLang
+    {
+        get => _settings.TelegramCallLang;
+        set { _settings.TelegramCallLang = value; SaveDB(); }
+    }
+    public static bool TelegramCallIncTitle
+    {
+        get => _settings.TelegramCallIncTitle;
+        set { _settings.TelegramCallIncTitle = value; SaveDB(); }
+    }
+    public static bool TelegramCallIncMsg
+    {
+        get => _settings.TelegramCallIncMsg;
+        set { _settings.TelegramCallIncMsg = value; SaveDB(); }
+    }
+    public static bool TelegramCallIncType
+    {
+        get => _settings.TelegramCallIncType;
+        set { _settings.TelegramCallIncType = value; SaveDB(); }
     }
 
     public static bool AnnounceSpawnsMaster
