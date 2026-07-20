@@ -3119,14 +3119,14 @@
                                 </Style.Triggers>
                             </Style>
                             <DataTemplate x:Key="SidebarTabPopoverTemplate">
-                                <Grid Margin="0,6">
+                                <Grid Margin="0,12,14,12">
                                     <Border
                                         Width="34"
                                         Height="34"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Panel.ZIndex="2"
-                                        Background="#FF21272E"
+                                        Background="#FFE2E8ED"
                                         BorderBrush="#8060CDFF"
                                         BorderThickness="1"
                                         CornerRadius="17">
@@ -3139,7 +3139,11 @@
                                             Height="27"
                                             RenderOptions.BitmapScalingMode="HighQuality"
                                             Source="{Binding Converter={StaticResource RandomRustIconConverter}}"
-                                            Stretch="Uniform" />
+                                            Stretch="Uniform">
+                                            <Image.Effect>
+                                                <DropShadowEffect BlurRadius="3" Color="#FF0B0E11" Opacity="0.9" ShadowDepth="0" />
+                                            </Image.Effect>
+                                        </Image>
                                     </Border>
                                     <Border
                                         MinWidth="210"
@@ -3148,6 +3152,9 @@
                                         BorderThickness="1"
                                         CornerRadius="10"
                                         SnapsToDevicePixels="True">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="20" Color="#FF60CDFF" Opacity="0.42" ShadowDepth="0" />
+                                        </Border.Effect>
                                         <Border.BorderBrush>
                                             <SolidColorBrush Color="#3A687580" />
                                         </Border.BorderBrush>
@@ -3160,13 +3167,13 @@
                                         </Border.Background>
                                         <Grid ClipToBounds="True">
                                             <Border
-                                                Width="3"
-                                                Margin="0,10,0,10"
+                                                Width="4"
+                                                Margin="0,3,0,3"
                                                 HorizontalAlignment="Left"
-                                                Background="#FF60CDFF"
-                                                CornerRadius="0,2,2,0">
+                                                Background="#FF8DE5FF"
+                                                CornerRadius="0,3,3,0">
                                                 <Border.Effect>
-                                                    <DropShadowEffect BlurRadius="8" Color="#FF60CDFF" Opacity="0.65" ShadowDepth="0" />
+                                                    <DropShadowEffect BlurRadius="10" Color="#FF60CDFF" Opacity="0.9" ShadowDepth="0" />
                                                 </Border.Effect>
                                             </Border>
                                             <Border
