@@ -226,12 +226,12 @@ public partial class MainWindow : WpfUi.FluentWindow
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     private bool _isShuttingDown = false;
-    private const double CompactSidebarWidth = 72;
-    private const double MinExpandedSidebarWidth = 400;
-    private const double MaxExpandedSidebarWidth = 600;
+    private const double CompactSidebarWidth = 64;
+    private const double MinExpandedSidebarWidth = 360;
+    private const double MaxExpandedSidebarWidth = 480;
     private const int SidebarAnimationDurationMs = 180;
     private const int SidebarHoverExpandDelayMs = 200;
-    private double _expandedSidebarWidth = 600;
+    private double _expandedSidebarWidth = 420;
     private bool _isSidebarExpanded;
     private bool _isSidebarPinnedExpanded;
     private bool _isSidebarTemporarilyExpandedForOverlay;
@@ -395,6 +395,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        MainTabs.SelectedItem = DevicesTabItem;
         Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
         CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
         StateChanged += (_, _) =>
@@ -4434,7 +4435,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (PanelServerArea == null || IconToggleServerArea == null) return;
 
-        if (BtnToggleServerArea.IsChecked == true)
+        if (PanelServerArea.Visibility == Visibility.Visible)
         {
             PanelServerArea.Visibility = Visibility.Collapsed;
             IconToggleServerArea.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronDown20;
@@ -6763,10 +6764,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void CompactSidebarTab_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: string tag } && int.TryParse(tag, out int index))
+        if (sender is FrameworkElement { Tag: TabItem tab })
         {
-            MainTabs.SelectedIndex = index;
+            MainTabs.SelectedItem = tab;
             SetSidebarExpanded(true);
+        }
+    }
+
+    private void SidebarTabPopover_Opened(object? sender, EventArgs e)
+    {
+        if (sender is Popup { Child: DependencyObject child } &&
+            FindVisualChildByName<Image>(child, "RustPopoverIcon") is { } icon)
+        {
+            icon.GetBindingExpression(Image.SourceProperty)?.UpdateTarget();
         }
     }
 
@@ -6815,9 +6825,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             double width = Math.Clamp(_expandedSidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
             ColSidebar.MinWidth = CompactSidebarWidth;
-            LeftPanelBorder.Padding = new Thickness(16);
+            LeftPanelBorder.Padding = new Thickness(0);
             LeftPanelContent.Visibility = Visibility.Visible;
-            CompactSidebarRail.Visibility = Visibility.Collapsed;
+            CompactSidebarRail.Visibility = Visibility.Visible;
             AnimateSidebarWidth(width, () =>
             {
                 if (_isSidebarExpanded)

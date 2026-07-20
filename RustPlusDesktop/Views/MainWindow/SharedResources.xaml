@@ -76,6 +76,24 @@
         </Setter>
     </Style>
 
+    <!--  Main sidebar navigation lives in the permanent rail; only render the selected workspace here.  -->
+    <Style x:Key="SidebarTabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <ContentPresenter
+                        x:Name="PART_SelectedContentHost"
+                        ContentSource="SelectedContent"
+                        KeyboardNavigation.TabNavigation="Local"
+                        SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <ControlTemplate x:Key="DarkMenuItem_Header" TargetType="MenuItem">
         <Grid>
             <Border

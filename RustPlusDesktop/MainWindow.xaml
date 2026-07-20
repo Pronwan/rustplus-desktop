@@ -470,17 +470,17 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     x:Name="ColSidebar"
-                    Width="72"
-                    MinWidth="72"
-                    MaxWidth="600" />
-                <ColumnDefinition Width="8" />
+                    Width="64"
+                    MinWidth="64"
+                    MaxWidth="480" />
+                <ColumnDefinition Width="6" />
                 <ColumnDefinition Width="*" MinWidth="400" />
             </Grid.ColumnDefinitions>
 
             <GridSplitter
                 x:Name="SidebarSplitter"
                 Grid.Column="1"
-                Width="8"
+                Width="6"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="Transparent"
@@ -495,8 +495,8 @@
             <Border
                 x:Name="LeftPanelBorder"
                 Grid.Column="0"
-                MinWidth="72"
-                MaxWidth="600"
+                MinWidth="64"
+                MaxWidth="480"
                 Margin="0,0,0,0"
                 Padding="0"
                 Background="{DynamicResource Surface}"
@@ -517,6 +517,7 @@
                 <Grid>
                     <DockPanel
                         x:Name="LeftPanelContent"
+                        Margin="72,16,12,16"
                         LastChildFill="True"
                         Visibility="Collapsed">
 
@@ -529,7 +530,8 @@
                             Background="{DynamicResource SurfaceAlt}"
                             BorderBrush="{DynamicResource CardBorder}"
                             BorderThickness="1"
-                            CornerRadius="10">
+                            CornerRadius="10"
+                            Visibility="Collapsed">
                             <StackPanel>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -725,22 +727,25 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                FontSize="11"
-                                FontWeight="SemiBold"
-                                Foreground="{StaticResource TextBrushMuted}"
-                                Text="{DynamicResource PairedServers}" />
-                            <ToggleButton
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource TextSubtle}"
+                                Text="SERVERS" />
+                            <ui:Button
                                 x:Name="BtnToggleServerArea"
                                 HorizontalAlignment="Right"
-                                Padding="4,2"
-                                IsChecked="False"
+                                Padding="8,3"
+                                Appearance="Secondary"
                                 Click="BtnToggleServerArea_Click"
                                 ToolTip="{DynamicResource ToggleServerArea}">
-                                <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronUp20" />
-                            </ToggleButton>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="0,0,4,0" FontSize="11" Text="Change" />
+                                    <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronDown20" />
+                                </StackPanel>
+                            </ui:Button>
                         </Grid>
 
-                        <StackPanel x:Name="PanelServerArea">
+                        <StackPanel x:Name="PanelServerArea" Visibility="Collapsed">
 
                         <Grid x:Name="ServerListGrid">
                             <ListBox
@@ -819,11 +824,12 @@
                                 </TextBlock.Style>
                             </TextBlock>
                         </Grid>
+                        </StackPanel>
 
                         <!--  Compact Connection Card  -->
                         <Border
                             Margin="0,8,0,0"
-                            Padding="12,10"
+                            Padding="10,7"
                             Background="{DynamicResource SurfaceAlt}"
                             BorderBrush="{DynamicResource CardBorder}"
                             BorderThickness="1"
@@ -839,20 +845,20 @@
                                 </Style>
                             </Border.Style>
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <!--  Status Dot  -->
                                     <ColumnDefinition Width="*" />
-                                    <!--  Name + Status  -->
-                                    <ColumnDefinition Width="Auto" />
-                                    <!--  Buttons  -->
                                 </Grid.ColumnDefinitions>
 
                                 <!--  Status Dot  -->
                                 <Grid
                                     Width="10"
                                     Height="10"
-                                    Margin="0,0,12,0"
+                                    Margin="0,0,8,0"
                                     VerticalAlignment="Center">
                                     <Ellipse x:Name="StatusDot">
                                         <Ellipse.Style>
@@ -874,14 +880,42 @@
                                     </Ellipse>
                                 </Grid>
 
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <Grid Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock
-                                        FontSize="13"
+                                        FontSize="12"
                                         FontWeight="SemiBold"
                                         Foreground="White"
                                         Text="{Binding Selected.Name, FallbackValue='Select a Server'}"
-                                        TextTrimming="CharacterEllipsis" />
+                                        TextWrapping="Wrap"
+                                        ToolTip="{Binding Selected.Name}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsChecked, ElementName=BtnAbbreviateNames}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                     <TextBlock
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Foreground="{DynamicResource TextSubtle}"
+                                        Text="SERVER HIDDEN"
+                                        Visibility="{Binding IsChecked, ElementName=BtnAbbreviateNames, Converter={StaticResource BoolToVisibility}}" />
+                                </Grid>
+
+                                <DockPanel
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,6,0,0"
+                                    LastChildFill="False">
+                                    <TextBlock
+                                        DockPanel.Dock="Left"
+                                        VerticalAlignment="Center"
                                         FontSize="9"
                                         FontWeight="Bold"
                                         Opacity="0.7">
@@ -910,10 +944,10 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                </StackPanel>
 
-                                <StackPanel
-                                    Grid.Column="2"
+                                    <StackPanel
+                                    DockPanel.Dock="Right"
+                                    HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
                                     <!--  Connect  -->
@@ -973,7 +1007,8 @@
                                         ToolTip="{DynamicResource ServerDetails}" />
 
 
-                                </StackPanel>
+                                    </StackPanel>
+                                </DockPanel>
                             </Grid>
                         </Border>
 
@@ -984,7 +1019,7 @@
                                 FontWeight="Bold"
                                 Foreground="White"
                                 Opacity="0.6"
-                                Text="RUST+ COMPANION &amp; PAIRING" />
+                                Text="CONNECTION SERVICES" />
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -998,6 +1033,7 @@
                                         x:Name="BtnListenPairing"
                                         Padding="8,2"
                                         Appearance="Secondary"
+                                        AutomationProperties.HelpText="Listen for Rust+ pairing requests. Right-click for recovery options."
                                         Click="BtnListenPairing_Click"
                                         Content="{DynamicResource Listen}"
                                         Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
@@ -1101,8 +1137,6 @@
                                     Text="{DynamicResource RightClickOptions}" />
                             </Grid>
                         </StackPanel>
-                        </StackPanel>
-
                         <Border
                             Height="1"
                             Margin="0,4,0,4"
@@ -1230,9 +1264,9 @@
             <TabControl
                 x:Name="MainTabs"
                 VerticalAlignment="Stretch"
-                Style="{StaticResource PrettyTabControl}">
+                Style="{StaticResource SidebarTabControl}">
                 <!--  ===== DEVICES =====  -->
-                <TabItem Style="{StaticResource PrettyTabItem}">
+                <TabItem x:Name="DevicesTabItem" Style="{StaticResource PrettyTabItem}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="Connector24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
@@ -1240,8 +1274,22 @@
                         </StackPanel>
                     </TabItem.Header>
                     <DockPanel LastChildFill="True">
+                        <Grid Margin="0,0,0,10" DockPanel.Dock="Top">
+                            <TextBlock
+                                FontSize="18"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource TextPrimary}"
+                                Text="{DynamicResource DevicesTab}" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                FontSize="11"
+                                Foreground="{DynamicResource TextSubtle}"
+                                Text="{Binding CurrentDevices.Count, StringFormat={}{0} items}" />
+                        </Grid>
+
                         <!--  Footer  -->
-                        <StackPanel
+                        <WrapPanel
                             Margin="0,10,0,0"
                             HorizontalAlignment="Right"
                             DockPanel.Dock="Bottom"
@@ -1249,9 +1297,10 @@
                             <ui:Button
                                 x:Name="BtnHotkeys"
                                 Appearance="Secondary"
-                                MinWidth="135"
+                                MinWidth="100"
                                 Height="36"
                                 Margin="0,0,5,0"
+                                AutomationProperties.Name="Hotkeys"
                                 Click="BtnHotkeys_Click"
                                 MouseEnter="BtnHotkeys_MouseEnter"
                                 MouseLeave="BtnHotkeys_MouseLeave">
@@ -1280,31 +1329,34 @@
 
                             <ui:Button
                                 x:Name="BtnDevicesImport"
-                                Width="36"
+                                Width="32"
                                 Height="36"
-                                Margin="0,0,8,0"
+                                Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
+                                AutomationProperties.Name="Import devices"
                                 Click="BtnDevicesImport_Click"
                                 Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
                                 ToolTip="{DynamicResource ImportDevices}" />
                             <ui:Button
                                 x:Name="BtnDevicesExport"
-                                Width="36"
+                                Width="32"
                                 Height="36"
-                                Margin="0,0,8,0"
+                                Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
+                                AutomationProperties.Name="Cloud sync"
                                 Click="BtnDevicesExport_Click"
                                 Icon="{ui:SymbolIcon Symbol=Cloud24}"
                                 ToolTip="{DynamicResource ExportDevices}" />
                             <ui:Button
                                 x:Name="BtnLogicEngine"
-                                Width="36"
+                                Width="32"
                                 Height="36"
-                                Margin="0,0,8,0"
+                                Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
+                                AutomationProperties.Name="Logic engine"
                                 Click="BtnLogicEngine_Click"
                                 ToolTip="Logic Engine">
                                 <ui:Button.Icon>
@@ -1328,11 +1380,12 @@
                             </ui:Button>
                             <ui:Button
                                 x:Name="BtnDeviceAutomation"
-                                Width="36"
+                                Width="32"
                                 Height="36"
-                                Margin="0,0,8,0"
+                                Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
+                                AutomationProperties.Name="Device automation"
                                 Click="BtnDeviceAutomation_Click"
                                 ToolTip="Device Automation">
                                 <ui:Button.Icon>
@@ -1357,27 +1410,29 @@
                             </ui:Button>
                             <ui:Button
                                 x:Name="BtnDeviceRefresh"
-                                Width="36"
+                                Width="32"
                                 Height="36"
-                                Margin="0,0,8,0"
+                                Margin="0,0,4,0"
                                 Padding="4"
                                 Appearance="Secondary"
+                                AutomationProperties.Name="Refresh device states"
                                 Click="BtnDeviceRefresh_Click"
                                 Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}"
                                 ToolTip="{DynamicResource Refresh}" />
                             <ui:Button
                                 x:Name="BtnDeleteDevice"
-                                Width="36"
+                                Width="32"
                                 Height="36"
                                 Margin="0,0,0,0"
                                 Padding="4"
                                 Appearance="Secondary"
+                                AutomationProperties.Name="Delete missing device"
                                 Click="BtnDeleteDevice_Click"
                                 Icon="{ui:SymbolIcon Symbol=Delete24}"
                                 Foreground="IndianRed"
                                 IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"
                                 ToolTip="{DynamicResource DeleteMissingOnly}" />
-                        </StackPanel>
+                        </WrapPanel>
 
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -1416,6 +1471,7 @@
                                     <TreeView
                                         x:Name="ListDevices"
                                         Grid.Row="1"
+                                        Margin="-20,0,-20,0"
                                         HorizontalContentAlignment="Stretch"
                                         Background="Transparent"
                                         BorderThickness="0"
@@ -1513,9 +1569,9 @@
                                                     <!--  ===== Zeile =====  -->
                                                     <Border
                                                         x:Name="DeviceRowCard"
-                                                        Margin="0,3,0,3"
-                                                        Padding="10,9"
-                                                        CornerRadius="10"
+                                                        Margin="0,2,0,2"
+                                                        Padding="8,7"
+                                                        CornerRadius="8"
                                                         HorizontalAlignment="Left">
                                                         <Border.Width>
                                                             <MultiBinding Converter="{StaticResource DeviceTreeItemWidthConverter}" ConverterParameter="36,26,220">
@@ -1659,21 +1715,21 @@
                                                             <!--  Spalte 1: Icon  -->
                                                             <Border Grid.Column="0"
                                                                     x:Name="IconBorder"
-                                                                    Width="44"
-                                                                    Height="44"
+                                                                    Width="36"
+                                                                    Height="36"
                                                                     Background="#35FFFFFF"
-                                                                    CornerRadius="10"
+                                                                    CornerRadius="8"
                                                                     Padding="0"
-                                                                    Margin="0,0,10,0"
+                                                                    Margin="0,0,8,0"
                                                                     VerticalAlignment="Center"
                                                                     Cursor="Hand"
                                                                     ToolTip="Change Icon"
                                                                     PreviewMouseLeftButtonDown="DeviceIcon_PreviewMouseLeftButtonDown">
                                                                 <Grid>
-                                                                    <Image
-                                                                        x:Name="DeviceIconImg"
-                                                                        Width="34"
-                                                                        Height="34"
+                                                                        <Image
+                                                                            x:Name="DeviceIconImg"
+                                                                            Width="28"
+                                                                            Height="28"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         RenderOptions.BitmapScalingMode="HighQuality">
@@ -1786,7 +1842,7 @@
                                                                         <TextBlock
                                                                             x:Name="TxtDeviceNameView"
                                                                             VerticalAlignment="Center"
-                                                                            FontSize="13"
+                                                                            FontSize="12"
                                                                             FontWeight="SemiBold"
                                                                             Foreground="{DynamicResource TextPrimary}"
                                                                             TextTrimming="CharacterEllipsis"
@@ -1858,7 +1914,7 @@
                                                                 </Grid>
 
                                                                 <WrapPanel Grid.Row="1"
-                                                                           Margin="0,5,0,0"
+                                                                           Margin="0,3,0,0"
                                                                            Orientation="Horizontal">
                                                                     <TextBlock
                                                                         Margin="0,2,8,0"
@@ -2297,7 +2353,8 @@
                                                                  Grid.Column="2"
                                                                  Width="60"
                                                                  Height="22"
-                                                                 Margin="8,0,0,0"
+                                                                 Margin="8,0,34,0"
+                                                                 HorizontalAlignment="Left"
                                                                  VerticalAlignment="Center"
                                                                  Click="GroupToggle_Click"
                                                                  Content="{DynamicResource Toggle}"
@@ -2334,6 +2391,65 @@
                                                                      </Style>
                                                                  </ui:Button.Style>
                                                              </ui:Button>
+
+                                                            <!--  Clear expand/collapse control for group rows  -->
+                                                            <ToggleButton
+                                                                Grid.Column="2"
+                                                                Width="28"
+                                                                Height="28"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center"
+                                                                AutomationProperties.Name="Expand or collapse group"
+                                                                IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Mode=TwoWay}">
+                                                                <ToggleButton.Style>
+                                                                    <Style TargetType="ToggleButton">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Setter Property="Cursor" Value="Hand" />
+                                                                        <Setter Property="Background" Value="#16FFFFFF" />
+                                                                        <Setter Property="BorderBrush" Value="#28FFFFFF" />
+                                                                        <Setter Property="BorderThickness" Value="1" />
+                                                                        <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+                                                                        <Setter Property="Template">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                                    <Border
+                                                                                        x:Name="ChevronSurface"
+                                                                                        Background="{TemplateBinding Background}"
+                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                                                        CornerRadius="7">
+                                                                                        <ui:SymbolIcon
+                                                                                            x:Name="ChevronIcon"
+                                                                                            HorizontalAlignment="Center"
+                                                                                            VerticalAlignment="Center"
+                                                                                            FontSize="15"
+                                                                                            Foreground="{TemplateBinding Foreground}"
+                                                                                            Symbol="ChevronRight20" />
+                                                                                    </Border>
+                                                                                    <ControlTemplate.Triggers>
+                                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                                            <Setter TargetName="ChevronSurface" Property="Background" Value="#2860CDFF" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="BorderBrush" Value="#6060CDFF" />
+                                                                                            <Setter Property="Foreground" Value="White" />
+                                                                                        </Trigger>
+                                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                                            <Setter TargetName="ChevronIcon" Property="Symbol" Value="ChevronDown20" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="Background" Value="#1F60CDFF" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="BorderBrush" Value="#5060CDFF" />
+                                                                                            <Setter Property="Foreground" Value="#FF8DDFFF" />
+                                                                                        </Trigger>
+                                                                                    </ControlTemplate.Triggers>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsGroup}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ToggleButton.Style>
+                                                            </ToggleButton>
 
                                                             <!--  Spalte 3: Toggles NUR fÃ¼r SmartAlarm  -->
                                                             <StackPanel
@@ -2855,7 +2971,7 @@
                         </TabItem>
 
                         <!--  ===== CAMERAS =====  -->
-                        <TabItem Style="{StaticResource PrettyTabItem}">
+                        <TabItem x:Name="CamerasTabItem" Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Video24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
@@ -2919,7 +3035,7 @@
                         </TabItem>
 
                         <!--  ===== PLAYERS =====  -->
-                        <TabItem Style="{StaticResource PrettyTabItem}">
+                        <TabItem x:Name="PlayersTabItem" Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Globe24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
@@ -2983,103 +3099,302 @@
 
                     <Grid
                         x:Name="CompactSidebarRail"
-                        Width="72"
+                        Width="64"
                         HorizontalAlignment="Left"
-                        Background="{DynamicResource Surface}">
-                        <StackPanel
-                            Margin="0,14"
-                            HorizontalAlignment="Center">
+                        Background="#FF14181D">
+                        <Grid.Resources>
+                            <conv:RandomRustIconConverter x:Key="RandomRustIconConverter" />
+                            <Style x:Key="SidebarRailButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                <Setter Property="Width" Value="44" />
+                                <Setter Property="Height" Value="44" />
+                                <Setter Property="Margin" Value="0,0,0,6" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Appearance" Value="Transparent" />
+                                <Setter Property="AutomationProperties.HelpText" Value="Opens a sidebar workspace" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Tag.IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter Property="Appearance" Value="Primary" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                            <DataTemplate x:Key="SidebarTabPopoverTemplate">
+                                <Grid Margin="0,6">
+                                    <Border
+                                        Width="34"
+                                        Height="34"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Panel.ZIndex="2"
+                                        Background="#FF21272E"
+                                        BorderBrush="#8060CDFF"
+                                        BorderThickness="1"
+                                        CornerRadius="17">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="9" Color="#FF60CDFF" Opacity="0.28" ShadowDepth="0" />
+                                        </Border.Effect>
+                                        <Image
+                                            x:Name="RustPopoverIcon"
+                                            Width="27"
+                                            Height="27"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding Converter={StaticResource RandomRustIconConverter}}"
+                                            Stretch="Uniform" />
+                                    </Border>
+                                    <Border
+                                        MinWidth="210"
+                                        MaxWidth="270"
+                                        Margin="17,0,0,0"
+                                        BorderThickness="1"
+                                        CornerRadius="10"
+                                        SnapsToDevicePixels="True">
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Color="#3A687580" />
+                                        </Border.BorderBrush>
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#FF252D36" Offset="0" />
+                                                <GradientStop Color="#FF1A1F25" Offset="0.58" />
+                                                <GradientStop Color="#FF15191E" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid ClipToBounds="True">
+                                            <Border
+                                                Width="3"
+                                                Margin="0,10,0,10"
+                                                HorizontalAlignment="Left"
+                                                Background="#FF60CDFF"
+                                                CornerRadius="0,2,2,0">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="8" Color="#FF60CDFF" Opacity="0.65" ShadowDepth="0" />
+                                                </Border.Effect>
+                                            </Border>
+                                            <Border
+                                                Height="1"
+                                                Margin="12,0,12,0"
+                                                VerticalAlignment="Top"
+                                                CornerRadius="0.5">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                        <GradientStop Color="#00FFFFFF" Offset="0" />
+                                                        <GradientStop Color="#30FFFFFF" Offset="0.28" />
+                                                        <GradientStop Color="#4260CDFF" Offset="0.52" />
+                                                        <GradientStop Color="#24FFFFFF" Offset="0.74" />
+                                                        <GradientStop Color="#00FFFFFF" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+                                            <StackPanel Margin="29,11,14,12">
+                                                <Grid>
+                                                    <TextBlock
+                                                        Margin="0,0,50,0"
+                                                        FontSize="14"
+                                                        FontWeight="SemiBold"
+                                                        Foreground="#FFF6F8FA"
+                                                        Text="{Binding Path=(AutomationProperties.Name)}" />
+                                                    <Border
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center"
+                                                        Padding="6,2"
+                                                        Background="#2260CDFF"
+                                                        BorderBrush="#5560CDFF"
+                                                        BorderThickness="1"
+                                                        CornerRadius="6">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Tag.IsSelected}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock FontSize="8" FontWeight="Bold" Foreground="#FF8DDFFF" Text="ACTIVE" />
+                                                    </Border>
+                                                </Grid>
+                                                <TextBlock
+                                                    Margin="0,3,0,0"
+                                                    FontSize="10.5"
+                                                    Foreground="#BFD7DEE5"
+                                                    LineHeight="15"
+                                                    Text="{Binding Path=(AutomationProperties.HelpText)}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </Grid.Resources>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            Grid.RowSpan="3"
+                            Width="1"
+                            HorizontalAlignment="Right"
+                            Background="#24FFFFFF" />
+
+                        <ui:Button
+                            Grid.Row="0"
+                            Width="48"
+                            Height="48"
+                            Margin="10,12,10,16"
+                            Padding="0"
+                            HorizontalAlignment="Center"
+                            Appearance="Transparent"
+                            AutomationProperties.Name="Account menu"
+                            AutomationProperties.HelpText="Open sign-in and account management"
+                            Click="BtnCloudAccount_Click"
+                            ToolTip="Account menu">
+                            <Grid Width="44" Height="44">
+                                <Ellipse
+                                    Width="42"
+                                    Height="42"
+                                    Fill="#66E8612C"
+                                    Visibility="{Binding IsPremium, Converter={StaticResource BoolToVisibility}}">
+                                    <Ellipse.Effect>
+                                        <BlurEffect Radius="8" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Border
+                                    Width="40"
+                                    Height="40"
+                                    Padding="2"
+                                    CornerRadius="20">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#4A66717D" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPremium}" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                <GradientStop Color="#FFFFD36A" Offset="0" />
+                                                                <GradientStop Color="#FFE8612C" Offset="0.48" />
+                                                                <GradientStop Color="#FFFFB84D" Offset="1" />
+                                                            </LinearGradientBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid Width="36" Height="36">
+                                        <Ellipse Fill="#FF1B2026" />
+                                        <ui:SymbolIcon FontSize="18" Foreground="White" Opacity="0.45" Symbol="Person24" />
+                                        <Ellipse RenderOptions.BitmapScalingMode="HighQuality">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding MyAvatar}" Stretch="UniformToFill" />
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                    </Grid>
+                                </Border>
+                                <Border
+                                    Width="16"
+                                    Height="16"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#FF252C34" />
+                                            <Setter Property="BorderBrush" Value="#FF72808D" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPremium}" Value="True">
+                                                    <Setter Property="Background" Value="#FFFFC857" />
+                                                    <Setter Property="BorderBrush" Value="#FFFFE2A1" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <ui:SymbolIcon FontSize="10" Symbol="ChevronDown20">
+                                        <ui:SymbolIcon.Style>
+                                            <Style TargetType="ui:SymbolIcon">
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsPremium}" Value="True">
+                                                        <Setter Property="Foreground" Value="#FF5A2B12" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:SymbolIcon.Style>
+                                    </ui:SymbolIcon>
+                                </Border>
+                                <Border
+                                    Width="15"
+                                    Height="15"
+                                    Margin="0,1,1,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Background="#FFFFC857"
+                                    BorderBrush="#FFFFE2A1"
+                                    BorderThickness="1"
+                                    CornerRadius="7.5"
+                                    Visibility="{Binding IsPremium, Converter={StaticResource BoolToVisibility}}">
+                                    <ui:SymbolIcon FontSize="9" Foreground="#FF5A2B12" Symbol="Star24" />
+                                </Border>
+                            </Grid>
+                        </ui:Button>
+
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                            <Grid>
+                                <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Devices" AutomationProperties.HelpText="Monitor and control paired smart devices." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDevicesButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDevicesButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailDevicesButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailTeamButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Team" AutomationProperties.HelpText="Track teammates and shared activity." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=People24}" Tag="{Binding ElementName=TabTeam}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailTeamButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailTeamButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailTeamButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailCamerasButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Cameras" AutomationProperties.HelpText="View and control paired CCTV cameras." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Video24}" Tag="{Binding ElementName=CamerasTabItem}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailCamerasButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailCamerasButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailCamerasButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Players" AutomationProperties.HelpText="Browse online players and tracked targets." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailNotificationsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Notifications" AutomationProperties.HelpText="Review alerts and recent server events." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Alert24}" Tag="{Binding ElementName=NotificationsTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailNotificationsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailNotificationsButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailNotificationsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Raid calculator" AutomationProperties.HelpText="Calculate raid costs and required materials." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Calculator24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRaidCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRaidCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailRaidCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"
-                                Width="44"
-                                Height="40"
-                                Margin="0,0,0,8"
-                                Padding="0"
-                                Appearance="Secondary"
+                                Style="{StaticResource SidebarRailButton}"
+                                AutomationProperties.Name="Pin sidebar"
                                 Click="BtnToggleSidebarPin_Click"
                                 Icon="{ui:SymbolIcon Symbol=Pin24}"
                                 ToolTip="Keep sidebar unfolded" />
-
-                            <Border
-                                Width="40"
-                                Height="40"
-                                Margin="0,0,0,14"
-                                Background="#1AFFFFFF"
-                                ClipToBounds="True"
-                                CornerRadius="20"
-                                ToolTip="{DynamicResource SteamAccount}">
-                                <Grid>
-                                    <ui:SymbolIcon
-                                        FontSize="20"
-                                        Foreground="White"
-                                        Opacity="0.4"
-                                        Symbol="Person24" />
-                                    <Image
-                                        Source="{Binding MyAvatar}"
-                                        Stretch="UniformToFill"
-                                        RenderOptions.BitmapScalingMode="HighQuality" />
-                                </Grid>
-                            </Border>
-
                             <ui:Button
-                                Width="44"
-                                Height="40"
-                                Margin="0,0,0,8"
-                                Padding="0"
-                                Appearance="Secondary"
-                                Click="CompactSidebarTab_Click"
-                                Icon="{ui:SymbolIcon Symbol=Connector24}"
-                                Tag="0"
-                                ToolTip="{DynamicResource DevicesTab}" />
-                            <ui:Button
-                                Width="44"
-                                Height="40"
-                                Margin="0,0,0,8"
-                                Padding="0"
-                                Appearance="Secondary"
-                                Click="CompactSidebarTab_Click"
-                                Icon="{ui:SymbolIcon Symbol=People24}"
-                                Tag="1"
-                                ToolTip="{DynamicResource TeamTab}" />
-                            <ui:Button
-                                Width="44"
-                                Height="40"
-                                Margin="0,0,0,8"
-                                Padding="0"
-                                Appearance="Secondary"
-                                Click="CompactSidebarTab_Click"
-                                Icon="{ui:SymbolIcon Symbol=Video24}"
-                                Tag="2"
-                                ToolTip="{DynamicResource CamerasTab}" />
-                            <ui:Button
-                                Width="44"
-                                Height="40"
-                                Margin="0,0,0,8"
-                                Padding="0"
-                                Appearance="Secondary"
-                                Click="CompactSidebarTab_Click"
-                                Icon="{ui:SymbolIcon Symbol=Globe24}"
-                                Tag="3"
-                                ToolTip="{DynamicResource PlayersTab}" />
-                            <ui:Button
-                                Width="44"
-                                Height="40"
-                                Margin="0,0,0,8"
-                                Padding="0"
-                                Appearance="Secondary"
-                                Click="CompactSidebarTab_Click"
-                                Icon="{ui:SymbolIcon Symbol=Alert24}"
-                                Tag="4"
-                                ToolTip="{DynamicResource NotificationsTab}" />
-                            <ui:Button
-                                Width="44"
-                                Height="40"
-                                Padding="0"
-                                Appearance="Secondary"
-                                Click="CompactSidebarTab_Click"
-                                Icon="{ui:SymbolIcon Symbol=Calculator24}"
-                                Tag="5"
-                                ToolTip="Raid Calculator" />
+                                Style="{StaticResource SidebarRailButton}"
+                                Margin="0"
+                                AutomationProperties.Name="Settings"
+                                Click="BtnSettings_Click"
+                                Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                ToolTip="Settings" />
                         </StackPanel>
                     </Grid>
 
