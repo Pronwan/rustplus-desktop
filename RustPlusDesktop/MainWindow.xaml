@@ -1203,7 +1203,7 @@
                             Background="#12FFFFFF" />
                     </StackPanel>
 
-                    <!--  BOTTOM: Footer (Donate + Serverdaten) andocken  -->
+                    <!--  BOTTOM: Footer (Support + Serverdaten) andocken  -->
                     <Grid Margin="0,8,0,0" DockPanel.Dock="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -1211,18 +1211,30 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Donate  -->
+                        <!--  Supporter CTA  -->
                         <ui:Button
-                            x:Name="BtnDonate"
+                            x:Name="BtnSupport"
                             Grid.Column="0"
                             Margin="0,0,10,0"
                             Background="#991A1A00"
                             BorderBrush="#80FFD166"
-                            Click="BtnDonate_Click"
-                            Content="{DynamicResource Donate}"
+                            Click="BtnSupport_Click"
                             Foreground="#FFD166"
                             Icon="{ui:SymbolIcon Symbol=Heart24}"
-                            ToolTip="{DynamicResource SupportDeveloper}" />
+                            AutomationProperties.Name="Support RustPlusDesk">
+                            <ui:Button.Style>
+                                <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                    <Setter Property="Content" Value="Upgrade to Supporter" />
+                                    <Setter Property="ToolTip" Value="Unlock Supporter features" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPremium}" Value="True">
+                                            <Setter Property="Content" Value="Support Development" />
+                                            <Setter Property="ToolTip" Value="{DynamicResource SupportDeveloper}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:Button.Style>
+                        </ui:Button>
 
                         <!--  Language Settings -->
                         <Border Grid.Column="1" VerticalAlignment="Center">

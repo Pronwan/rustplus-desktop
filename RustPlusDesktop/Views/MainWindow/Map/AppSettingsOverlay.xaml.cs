@@ -987,6 +987,9 @@ namespace RustPlusDesk.Views
             cloudWindow.ShowDialog();
         }
 
+        private void BtnUpgradeSupporter_Click(object sender, RoutedEventArgs e) =>
+            ParentWindow?.OpenSupporterPage();
+
         public void BringCloudAccountIntoView() => CloudSettingsAnchor.BringIntoView();
 
         private async void BtnDiscordConnect_Click(object sender, RoutedEventArgs e)
