@@ -3373,7 +3373,7 @@
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Raid calculator" AutomationProperties.HelpText="Calculate raid costs and required materials." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Calculator24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
+                                <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Raid calculator" AutomationProperties.HelpText="Calculate raid costs and required materials." Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Rocket24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRaidCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRaidCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRaidCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
