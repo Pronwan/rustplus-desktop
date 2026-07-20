@@ -231,6 +231,13 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isCloudConnected = value; OnPropertyChanged(); }
     }
 
+    private bool _isPremium;
+    public bool IsPremium
+    {
+        get => _isPremium;
+        set { if (_isPremium != value) { _isPremium = value; OnPropertyChanged(); } }
+    }
+
     private string _cloudAccountStatusText = "Not signed in · sync and backups unavailable";
     public string CloudAccountStatusText
     {
