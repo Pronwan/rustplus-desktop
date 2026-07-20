@@ -107,6 +107,33 @@ namespace RustPlusDesk.Views
             ChkFcmMentionEveryone.IsChecked = fcmMention.Contains("@everyone");
             ChkFcmMentionHere.IsChecked = fcmMention.Contains("@here");
             TxtSmartHomeWebhookUrl.Text = TrackingService.SmartHomeWebhookUrl;
+            
+            // Load Telegram State
+            TxtTelegramUser.Text = TrackingService.TelegramCallUser;
+            TxtTelegramMsg.Text = TrackingService.TelegramCallMsg;
+            if (string.IsNullOrEmpty(TxtTelegramMsg.Text)) TxtTelegramMsg.Text = "Alarm ausgeloest!";
+            
+            foreach (ComboBoxItem item in CmbTelegramLang.Items)
+            {
+                if (item.Tag?.ToString() == TrackingService.TelegramCallLang)
+                {
+                    CmbTelegramLang.SelectedItem = item;
+                    break;
+                }
+            }
+            
+            ChkTelegramIncTitle.IsChecked = TrackingService.TelegramCallIncTitle;
+            ChkTelegramIncMsg.IsChecked = TrackingService.TelegramCallIncMsg;
+            ChkTelegramIncType.IsChecked = TrackingService.TelegramCallIncType;
+
+            var telegramUrl = TrackingService.TelegramCallWebhookUrl;
+            if (!string.IsNullOrEmpty(telegramUrl))
+            {
+                TxtGeneratedTelegramUrl.Text = telegramUrl;
+                TxtGeneratedTelegramUrl.Visibility = Visibility.Visible;
+                BtnTestTelegramUrl.Visibility = Visibility.Visible;
+                BtnRevokeTelegramUrl.Visibility = Visibility.Visible;
+            }
 
             // Map performance settings
             CmbMapScalingMode.SelectedIndex = Math.Clamp(TrackingService.MapBitmapScalingMode, 0, 2);
@@ -1121,6 +1148,97 @@ namespace RustPlusDesk.Views
         {
             if (!_isSettingsInitialized) return;
             TrackingService.SmartHomeWebhookUrl = TxtSmartHomeWebhookUrl.Text;
+        }
+
+        private async void BtnGenerateTelegramUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var user = TxtTelegramUser.Text?.Trim() ?? "";
+            if (!user.StartsWith("@")) user = "@" + user;
+            if (string.IsNullOrWhiteSpace(user) || user == "@")
+            {
+                MessageBox.Show("Please enter a valid Telegram username.", "Invalid Username", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var msg = TxtTelegramMsg.Text?.Trim() ?? "";
+            var lang = (CmbTelegramLang.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "de-DE-Standard-A";
+
+            if (ChkTelegramIncTitle.IsChecked == true) msg = "{{title}} " + msg;
+            if (ChkTelegramIncMsg.IsChecked == true) msg += " {{message}}";
+            if (ChkTelegramIncType.IsChecked == true) msg += " {{type}}";
+
+            var encodedMsg = Uri.EscapeDataString(msg).Replace("%20", "+");
+            var url = $"http://api.callmebot.com/start.php?user={user}&text={encodedMsg}&lang={lang}";
+
+            TxtGeneratedTelegramUrl.Text = url;
+            TrackingService.TelegramCallUser = user;
+            TrackingService.TelegramCallMsg = TxtTelegramMsg.Text?.Trim() ?? "";
+            TrackingService.TelegramCallLang = lang;
+            TrackingService.TelegramCallIncTitle = ChkTelegramIncTitle.IsChecked == true;
+            TrackingService.TelegramCallIncMsg = ChkTelegramIncMsg.IsChecked == true;
+            TrackingService.TelegramCallIncType = ChkTelegramIncType.IsChecked == true;
+            TrackingService.TelegramCallWebhookUrl = url;
+
+            TxtGeneratedTelegramUrl.Visibility = Visibility.Visible;
+            BtnTestTelegramUrl.Visibility = Visibility.Visible;
+            BtnRevokeTelegramUrl.Visibility = Visibility.Visible;
+
+            // Trigger FCM Sync directly to save
+            var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
+            if (consentDialog.ShowDialog() != true) return;
+
+            bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+            if (success)
+            {
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = "Success",
+                    Content = "Telegram Call URL generated and synced to the cloud worker successfully!",
+                    PrimaryButtonText = "OK"
+                };
+                await msgBox.ShowDialogAsync();
+            }
+            else
+            {
+                MessageBox.Show("Failed to sync FCM connection. Please ensure you are logged in.", "Cloud Sync Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnTestTelegramUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var url = TxtGeneratedTelegramUrl.Text;
+            if (!string.IsNullOrEmpty(url))
+            {
+                // Replace placeholders for the test call so the user actually hears something valid
+                var testUrl = url.Replace("%7B%7Btitle%7D%7D", "Test+Alarm")
+                                 .Replace("%7B%7Bmessage%7D%7D", "Test+Message")
+                                 .Replace("%7B%7Btype%7D%7D", "alarm");
+                                 
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = testUrl,
+                        UseShellExecute = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to open browser: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private async void BtnRevokeTelegramUrl_Click(object sender, RoutedEventArgs e)
+        {
+            TrackingService.TelegramCallWebhookUrl = "";
+            TxtGeneratedTelegramUrl.Text = "";
+            
+            TxtGeneratedTelegramUrl.Visibility = Visibility.Collapsed;
+            BtnTestTelegramUrl.Visibility = Visibility.Collapsed;
+            BtnRevokeTelegramUrl.Visibility = Visibility.Collapsed;
+
+            await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
         }
 
         private void PopulateAlexaServers()

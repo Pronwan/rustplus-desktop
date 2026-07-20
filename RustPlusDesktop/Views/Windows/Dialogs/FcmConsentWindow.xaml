@@ -40,7 +40,7 @@
                            HorizontalAlignment="Center" Margin="0,0,0,16"/>
 
                 <TextBlock TextWrapping="Wrap" Foreground="#DDDDDD" FontSize="14" LineHeight="20" Margin="0,0,0,24">
-                    By enabling Offline Alerts, you allow the Rust+ Desktop cloud worker to securely store your FCM credentials. This enables features like Discord Raid Alerts to work even when your PC is completely turned off.
+                    By enabling Offline Alerts, you allow the Rust+ Desktop cloud worker to securely store your FCM credentials. This enables features like Discord Raid Alerts, Alexa Integration, and Telegram Calls to work even when your PC is completely turned off.
                 </TextBlock>
 
                 <!-- Info Box -->

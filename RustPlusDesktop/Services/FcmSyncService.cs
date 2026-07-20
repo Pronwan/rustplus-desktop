@@ -56,6 +56,11 @@ namespace RustPlusDesk.Services
                     fcmConfigObj["smart_home_webhook_url"] = TrackingService.SmartHomeWebhookUrl;
                 }
 
+                if (!string.IsNullOrEmpty(TrackingService.TelegramCallWebhookUrl))
+                {
+                    fcmConfigObj["telegram_call_url"] = TrackingService.TelegramCallWebhookUrl;
+                }
+
                 var model = new UserFcmCredentialsModel
                 {
                     UserId = userId,
