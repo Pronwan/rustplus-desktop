@@ -4943,7 +4943,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return h;
         }
     }
-    private void BtnDonate_Click(object sender, RoutedEventArgs e)
+    private void BtnSupport_Click(object sender, RoutedEventArgs e) => OpenSupporterPage();
+
+    internal void OpenSupporterPage()
     {
         try
         {
@@ -4955,7 +4957,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
-            AppendLog("Couldn't open Donate Link: " + ex.Message);
+            AppendLog("Couldn't open supporter page: " + ex.Message);
         }
     }
     private bool _announceSpawns = false;
