@@ -132,7 +132,7 @@
 
                     <!-- Search box -->
                     <ui:TextBox Grid.Row="0"
-                                PlaceholderText="Search devices by name, type, owner, ID..."
+                                PlaceholderText="{DynamicResource UiSearchDevicesByNameTypeOwnerID}"
                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                                 Icon="{ui:SymbolIcon Symbol=Search24}"
                                 Margin="0,0,0,8"
@@ -330,7 +330,7 @@
                         </ScrollViewer>
 
                         <!-- Empty State -->
-                        <TextBlock Text="No devices match your search."
+                        <TextBlock Text="{DynamicResource UiNoDevicesMatchYourSearch}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Foreground="{DynamicResource TextSubtle}"

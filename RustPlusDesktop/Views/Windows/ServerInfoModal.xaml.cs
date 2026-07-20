@@ -83,7 +83,7 @@ namespace RustPlusDesk.Views
         {
             if (_rustClient == null)
             {
-                TxtDescription.Text = "No active connection to retrieve server info.";
+                TxtDescription.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoActiveConnectionToRetrieveServerInfo");
                 return;
             }
 
@@ -126,21 +126,21 @@ namespace RustPlusDesk.Views
 
                     if (!string.IsNullOrWhiteSpace(_websiteUrl))
                     {
-                        TxtDescription.Text = $"The Rust+ API does not provide a detailed description for this server.\n\nYou can find more information on the server's official website:\n{_websiteUrl}";
+                        TxtDescription.Text = string.Format(Properties.Resources.GetString("FormatServerDescriptionWebsite"), _websiteUrl);
                     }
                     else
                     {
-                        TxtDescription.Text = "The Rust+ API does not provide a detailed description for this server.";
+                        TxtDescription.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer");
                     }
                 }
                 else
                 {
-                    TxtDescription.Text = "Could not retrieve details from the Rust+ connection. Make sure you are connected to the server.";
+                    TxtDescription.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811");
                 }
             }
             catch (Exception ex)
             {
-                TxtDescription.Text = $"Failed to load server details: {ex.Message}";
+                TxtDescription.Text = string.Format(Properties.Resources.GetString("FormatFailedLoadServerDetails"), ex.Message);
             }
         }
 
@@ -172,7 +172,7 @@ namespace RustPlusDesk.Views
             try
             {
                 Clipboard.SetText($"{_profile.Host}:{_profile.Port}");
-                MessageBox.Show("Server address copied to clipboard!", "Copied", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiServerAddressCopiedToClipboard"), RustPlusDesk.Properties.Resources.GetString("CodeUiCopied"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch { }
         }

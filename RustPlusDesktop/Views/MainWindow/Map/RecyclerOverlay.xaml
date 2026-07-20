@@ -80,11 +80,11 @@
                                Source="pack://application:,,,/Assets/icons/recycler.png" />
 
                         <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="Recycling Calculator"
+                            <TextBlock Text="{DynamicResource Update700Title3}"
                                        FontSize="17"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource DeckText}" />
-                            <TextBlock Text="Inventory in, recycler yield out"
+                            <TextBlock Text="{DynamicResource UiInventoryInRecyclerYieldOut}"
                                        FontSize="11"
                                        Foreground="{StaticResource DeckMuted}" />
                         </StackPanel>
@@ -110,7 +110,7 @@
                                 Height="34"
                                 Margin="0,0,8,0"
                                 Padding="12,0,12,3"
-                                PlaceholderText="Search components..."
+                                PlaceholderText="{DynamicResource UiSearchComponents}"
                                 Icon="Search24"
                                 Background="{StaticResource DeckInput}"
                                 BorderBrush="{StaticResource DeckLine}"
@@ -143,11 +143,11 @@
                         </Grid.RowDefinitions>
 
                         <DockPanel Grid.Row="0" Margin="0,0,0,6">
-                            <TextBlock Text="ITEM BAY"
+                            <TextBlock Text="{DynamicResource UiITEMBAY}"
                                        FontSize="10"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource DeckMuted}" />
-                            <TextBlock Text="Scroll or Shift+Click changes by 10"
+                            <TextBlock Text="{DynamicResource UiScrollOrShiftClickChangesBy10}"
                                        DockPanel.Dock="Right"
                                        FontSize="10"
                                        Foreground="#6F7A8D"
@@ -239,12 +239,12 @@
                                 <ColumnDefinition Width="96" />
                                 <ColumnDefinition Width="96" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="YIELD BOARD"
+                            <TextBlock Text="{DynamicResource UiYIELDBOARD}"
                                        FontSize="10"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource DeckMuted}" />
-                            <TextBlock Grid.Column="1" Text="WILD" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center" ToolTip="100% Yield (Monuments)" />
-                            <TextBlock Grid.Column="2" Text="OUTPOST" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center" ToolTip="Outpost/Safezone Recycler" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource UiWILD}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center" ToolTip="{DynamicResource UiText100YieldMonuments}" />
+                            <TextBlock Grid.Column="2" Text="{DynamicResource UiOUTPOST}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center" ToolTip="{DynamicResource UiOutpostSafezoneRecycler}" />
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -284,10 +284,10 @@
                                                         ToolTip="{Binding WildToolTip}">
                                                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                                         <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center">
-                                                            <Run Text="Guar. " /><Run Text="{Binding WildGuaranteedText, Mode=OneWay}" />
+                                                            <Run Text="{DynamicResource UiGuar}" /><Run Text="{Binding WildGuaranteedText, Mode=OneWay}" />
                                                         </TextBlock>
                                                         <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="#B6FFE0" HorizontalAlignment="Center">
-                                                            <Run Text="Chance " /><Run Text="{Binding WildChanceText, Mode=OneWay}" />
+                                                            <Run Text="{DynamicResource UiChance}" /><Run Text="{Binding WildChanceText, Mode=OneWay}" />
                                                         </TextBlock>
                                                     </StackPanel>
                                                 </Border>
@@ -303,10 +303,10 @@
                                                         ToolTip="{Binding SafeToolTip}">
                                                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                                         <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center">
-                                                            <Run Text="Guar. " /><Run Text="{Binding SafeGuaranteedText, Mode=OneWay}" />
+                                                            <Run Text="{DynamicResource UiGuar}" /><Run Text="{Binding SafeGuaranteedText, Mode=OneWay}" />
                                                         </TextBlock>
                                                         <TextBlock FontSize="8.5" FontWeight="Bold" Foreground="#FFD4BF" HorizontalAlignment="Center">
-                                                            <Run Text="Chance " /><Run Text="{Binding SafeChanceText, Mode=OneWay}" />
+                                                            <Run Text="{DynamicResource UiChance}" /><Run Text="{Binding SafeChanceText, Mode=OneWay}" />
                                                         </TextBlock>
                                                     </StackPanel>
                                                 </Border>
@@ -336,15 +336,15 @@
                             BorderThickness="1"
                             CornerRadius="8">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="TIME" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckMuted}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                            <TextBlock x:Name="TxtWildTime" Text="00:00:00" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckWild}" Margin="0,0,9,0" VerticalAlignment="Center" ToolTip="Wild Recycler Time" />
-                            <TextBlock x:Name="TxtSafeTime" Text="00:00:00" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" VerticalAlignment="Center" ToolTip="Outpost Recycler Time" />
+                            <TextBlock Text="{DynamicResource Time}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckMuted}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TxtWildTime" Text="00:00:00" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckWild}" Margin="0,0,9,0" VerticalAlignment="Center" ToolTip="{DynamicResource UiWildRecyclerTime}" />
+                            <TextBlock x:Name="TxtSafeTime" Text="00:00:00" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" VerticalAlignment="Center" ToolTip="{DynamicResource UiOutpostRecyclerTime}" />
                         </StackPanel>
                     </Border>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <ui:Button Content="Clear All" Appearance="Secondary" Padding="13,6" Click="BtnClearAll_Click" Margin="0,0,8,0" FontSize="11" />
-                        <ui:Button Content="Fill Stacks" Appearance="Secondary" Padding="13,6" Click="BtnFillStacks_Click" FontSize="11" />
+                        <ui:Button Content="{DynamicResource UiClearAll}" Appearance="Secondary" Padding="13,6" Click="BtnClearAll_Click" Margin="0,0,8,0" FontSize="11" />
+                        <ui:Button Content="{DynamicResource UiFillStacks}" Appearance="Secondary" Padding="13,6" Click="BtnFillStacks_Click" FontSize="11" />
                     </StackPanel>
                 </Grid>
             </Grid>

@@ -89,12 +89,12 @@ namespace RustPlusDesk.Views
 
             if (isPlaceholder)
             {
-                TxtRustMapsStatus.Text = "Offline Map";
+                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiOfflineMap");
                 BtnOpenRustMaps.IsEnabled = false;
             }
             else if (_isRustMapsSearching)
             {
-                TxtRustMapsStatus.Text = "Searching...";
+                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("UiSearching");
                 BtnOpenRustMaps.IsEnabled = false;
             }
             else if (!string.IsNullOrEmpty(profile.RustMapsMapId))
@@ -104,7 +104,7 @@ namespace RustPlusDesk.Views
             }
             else
             {
-                TxtRustMapsStatus.Text = "No Map Found";
+                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoMapFound");
                 BtnOpenRustMaps.IsEnabled = false;
             }
 
@@ -422,7 +422,7 @@ namespace RustPlusDesk.Views
                     AppendLog($"[3D Map] Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
                     var picker = new Microsoft.Win32.OpenFileDialog
                     {
-                        Title = "Select Rust .map file",
+                        Title = Properties.Resources.GetString("SelectRustMapFile"),
                         Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
                         InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
                         CheckFileExists = true,
@@ -1508,7 +1508,7 @@ namespace RustPlusDesk.Views
                 if (!File.Exists(resolvedPath))
                 {
                     AppendLog($"[Offline Map] Source map '{sourceProfile.Name}' has not been parsed into 3D map data yet. Please open its 3D map once to parse it.");
-                    System.Windows.MessageBox.Show($"The offline map '{sourceProfile.Name}' has not been parsed yet. Please open its 3D Map once to parse it, then try copying again.", "Copy Map Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    System.Windows.MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapNotParsed"), sourceProfile.Name), Properties.Resources.GetString("CopyMapErrorTitle"), System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                     _copyMapSourceProfile = null;
                     return;
                 }
@@ -1525,7 +1525,7 @@ namespace RustPlusDesk.Views
                 if (!isGoodMatch)
                 {
                     AppendLog($"[Offline Map] Layout mismatch! Mapped count: {score.MatchedCount}, distance: {score.TotalDistance}. Aborting copy.");
-                    System.Windows.MessageBox.Show($"Map layouts do not match! The map '{sourceProfile.Name}' does not appear to be the same map as the connected server '{connectedProfile.Name}'.", "Map Mismatch", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    System.Windows.MessageBox.Show(string.Format(Properties.Resources.GetString("FormatMapMismatch"), sourceProfile.Name, connectedProfile.Name), Properties.Resources.GetString("MapMismatchTitle"), System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                     _copyMapSourceProfile = null;
                     return;
                 }
@@ -1544,12 +1544,12 @@ namespace RustPlusDesk.Views
                 _vm.Save();
 
                 AppendLog($"[Offline Map] Map successfully copied from '{sourceProfile.Name}' to '{connectedProfile.Name}'!");
-                System.Windows.MessageBox.Show($"Successfully copied 3D map and local assets from '{sourceProfile.Name}' to '{connectedProfile.Name}'!", "Map Copied", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                System.Windows.MessageBox.Show(string.Format(Properties.Resources.GetString("FormatMapCopied"), sourceProfile.Name, connectedProfile.Name), Properties.Resources.GetString("MapCopiedTitle"), System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 AppendLog($"[Offline Map] Error during map copy: {ex.Message}");
-                System.Windows.MessageBox.Show($"An error occurred while copying the map: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(Properties.Resources.GetString("FormatMapCopyError"), ex.Message), Properties.Resources.GetString("ErrorTitle"), System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
             finally
             {

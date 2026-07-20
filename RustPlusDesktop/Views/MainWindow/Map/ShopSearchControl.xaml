@@ -214,7 +214,7 @@
                 <Grid>
                     <ui:TextBox
                         x:Name="TxtShopSearch"
-                        PlaceholderText="Search items or type freely..."
+                        PlaceholderText="{DynamicResource UiSearchItemsOrTypeFreely}"
                         TextChanged="TxtShopSearch_TextChanged"
                         PreviewKeyDown="TxtShopSearch_PreviewKeyDown"
                         GotFocus="TxtShopSearch_GotFocus"
@@ -272,11 +272,11 @@
                     x:Name="BtnShopProfit"
                     Style="{StaticResource ActionToolbarButton}"
                     Click="BtnShopProfit_Click"
-                    ToolTip="Find profitable shop trades"
-                    AutomationProperties.Name="Find profitable shop trades">
+                    ToolTip="{DynamicResource UiFindProfitableShopTrades}"
+                    AutomationProperties.Name="{DynamicResource UiFindProfitableShopTrades}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F4B0;" FontSize="14" VerticalAlignment="Center" />
-                        <TextBlock Text=" Profit" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
+                        <TextBlock Text="{DynamicResource UiProfit}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
 
@@ -284,11 +284,11 @@
                     x:Name="BtnShopBuyX"
                     Style="{StaticResource ActionToolbarButton}"
                     Click="BtnShopBuyX_Click"
-                    ToolTip="Find where to buy an item"
-                    AutomationProperties.Name="Find where to buy an item">
+                    ToolTip="{DynamicResource UiFindWhereToBuyAnItem}"
+                    AutomationProperties.Name="{DynamicResource UiFindWhereToBuyAnItem}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F50D;" FontSize="14" VerticalAlignment="Center" />
-                        <TextBlock Text=" Buy X" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
+                        <TextBlock Text="{DynamicResource UiBuyX}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
 
@@ -297,11 +297,11 @@
                     Style="{StaticResource ActionToolbarButton}"
                     Margin="0"
                     Click="BtnShopAddAlert_Click"
-                    ToolTip="Create a shop alert"
-                    AutomationProperties.Name="Create a shop alert">
+                    ToolTip="{DynamicResource UiCreateAShopAlert}"
+                    AutomationProperties.Name="{DynamicResource UiCreateAShopAlert}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F514;" FontSize="14" VerticalAlignment="Center" />
-                        <TextBlock Text=" Alert" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
+                        <TextBlock Text="{DynamicResource UiAlert}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -314,10 +314,10 @@
                 Style="{StaticResource GlassyPillButton}"
                 Click="TglShopSells_Click"
                 Margin="0,0,6,6"
-                ToolTip="Show shops that sell item">
+                ToolTip="{DynamicResource UiShowShopsThatSellItem}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="💰 " FontSize="10.5" VerticalAlignment="Center" />
-                    <TextBlock Text="Sells" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource AlertShopSells}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -326,10 +326,10 @@
                 Style="{StaticResource GlassyPillButton}"
                 Click="TglShopBuys_Click"
                 Margin="0,0,6,6"
-                ToolTip="Show shops that buy item">
+                ToolTip="{DynamicResource UiShowShopsThatBuyItem}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="🛒 " FontSize="10.5" VerticalAlignment="Center" />
-                    <TextBlock Text="Buys" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource AlertShopBuys}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -338,10 +338,10 @@
                 Style="{StaticResource GlassyPillButton}"
                 Click="TglShopHideZero_Click"
                 Margin="0,0,0,6"
-                ToolTip="Don't show offers without stock">
+                ToolTip="{DynamicResource UiDonTShowOffersWithoutStock}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="👁 " FontSize="10.5" VerticalAlignment="Center" />
-                    <TextBlock Text="Hide 0-stock" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource UiHide0Stock}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
         </WrapPanel>
@@ -354,18 +354,18 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                <TextBlock Text="Sort by" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiSortBy}" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbSort" SelectionChanged="CmbSort_SelectionChanged" Height="34">
-                    <ComboBoxItem Content="Default" Tag="default" IsSelected="True"/>
-                    <ComboBoxItem Content="Price (Low to High)" Tag="price_asc"/>
-                    <ComboBoxItem Content="Price (High to Low)" Tag="price_desc"/>
-                    <ComboBoxItem Content="Stock" Tag="stock"/>
-                    <ComboBoxItem Content="Currency" Tag="currency"/>
+                    <ComboBoxItem Content="{DynamicResource UiDefault}" Tag="default" IsSelected="True"/>
+                    <ComboBoxItem Content="{DynamicResource UiPriceLowToHigh}" Tag="price_asc"/>
+                    <ComboBoxItem Content="{DynamicResource UiPriceHighToLow}" Tag="price_desc"/>
+                    <ComboBoxItem Content="{DynamicResource Stock}" Tag="stock"/>
+                    <ComboBoxItem Content="{DynamicResource UiCurrency}" Tag="currency"/>
                 </ComboBox>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                <TextBlock Text="Payment Resource" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiPaymentResource}" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbResource" SelectionChanged="CmbResource_SelectionChanged" Height="34">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -409,7 +409,7 @@
                     <Grid>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🚨 " FontSize="12" VerticalAlignment="Center" />
-                            <TextBlock Text="Active Item Alerts" FontWeight="Bold" Foreground="#ECEFF1" FontSize="12.5" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource UiActiveItemAlerts}" FontWeight="Bold" Foreground="#ECEFF1" FontSize="12.5" VerticalAlignment="Center" />
                         </StackPanel>
                         <TextBlock
                             x:Name="TxtAlertArrow"

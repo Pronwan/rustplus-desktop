@@ -32,7 +32,7 @@ namespace RustPlusDesk.Views.Windows
                 {
                     msg += $"\n\nDetails: {error}";
                 }
-                MessageBox.Show(msg, "Admin Panel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(msg, RustPlusDesk.Properties.Resources.GetString("UiAdminPanel"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 Close();
                 return;
             }
@@ -78,7 +78,7 @@ namespace RustPlusDesk.Views.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading users: {ex.Message}");
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatErrorLoadingUsers"), ex.Message));
             }
         }
 
@@ -99,7 +99,7 @@ namespace RustPlusDesk.Views.Windows
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error updating override: {ex.Message}");
+                    MessageBox.Show(string.Format(Properties.Resources.GetString("FormatErrorUpdatingOverride"), ex.Message));
                 }
             }
         }

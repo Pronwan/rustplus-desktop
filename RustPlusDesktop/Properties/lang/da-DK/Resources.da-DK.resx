@@ -2742,7 +2742,1966 @@ Venligst parre denne server først.</value>
   <data name="GenericClose" xml:space="preserve">
     <value>Tæt</value>
   </data>
+  <data name="UiOpensTheIncomingAlarmsWindow" xml:space="preserve">
+    <value>— åbner vinduet Indgående alarmer.</value>
+  </data>
+  <data name="UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound" xml:space="preserve">
+    <value>— afspiller alarmlyden. Brug knappen … til at vælge en brugerdefineret lyd.</value>
+  </data>
+  <data name="UiShowsTheRedAlarmCardInsideTheApp" xml:space="preserve">
+    <value>— viser det røde alarmkort inde i appen.</value>
+  </data>
+  <data name="UiText2FpsRecommendedForAPIStability" xml:space="preserve">
+    <value>(2 fps anbefales til API-stabilitet)</value>
+  </data>
+  <data name="UiLogicRule" xml:space="preserve">
+    <value>[Logisk regel]</value>
+  </data>
+  <data name="UiNameMinutes" xml:space="preserve">
+    <value>[navn], [minutter]</value>
+  </data>
+  <data name="UiEveryone" xml:space="preserve">
+    <value>@alle</value>
+  </data>
+  <data name="UiHere" xml:space="preserve">
+    <value>@her</value>
+  </data>
+  <data name="UiJump" xml:space="preserve">
+    <value>▲ Hop</value>
+  </data>
+  <data name="UiDuck" xml:space="preserve">
+    <value>▼ And</value>
+  </data>
+  <data name="UiFire" xml:space="preserve">
+    <value>🎯 Ild</value>
+  </data>
+  <data name="UiReload" xml:space="preserve">
+    <value>🔄 Genindlæs</value>
+  </data>
+  <data name="UiText100Native" xml:space="preserve">
+    <value>100 % (Native)</value>
+  </data>
+  <data name="UiText100YieldMonuments" xml:space="preserve">
+    <value>100 % udbytte (monumenter)</value>
+  </data>
+  <data name="UiText125Sharp" xml:space="preserve">
+    <value>125 % (skarp)</value>
+  </data>
+  <data name="UiText150HighResolution" xml:space="preserve">
+    <value>150 % (høj opløsning)</value>
+  </data>
+  <data name="UiText200UltraHighResolution" xml:space="preserve">
+    <value>200 % (Ultra høj opløsning)</value>
+  </data>
+  <data name="UiText2D" xml:space="preserve">
+    <value>2D</value>
+  </data>
+  <data name="UiText5MinAFK" xml:space="preserve">
+    <value>5 min AFK</value>
+  </data>
+  <data name="UiText50Fastest" xml:space="preserve">
+    <value>50 % (hurtigst)</value>
+  </data>
+  <data name="UiText75Performance" xml:space="preserve">
+    <value>75 % (Ydeevne)</value>
+  </data>
+  <data name="UiA" xml:space="preserve">
+    <value>A...</value>
+  </data>
+  <data name="UiAcceptSync" xml:space="preserve">
+    <value>Accepter og synkroniser</value>
+  </data>
+  <data name="UiAcceptAndRemember" xml:space="preserve">
+    <value>Accepter og husk</value>
+  </data>
+  <data name="UiACCOUNT" xml:space="preserve">
+    <value>KONTO</value>
+  </data>
+  <data name="UiAccountMenu" xml:space="preserve">
+    <value>Konto menu</value>
+  </data>
+  <data name="UiActiveItemAlerts" xml:space="preserve">
+    <value>Aktive vareadvarsler</value>
+  </data>
+  <data name="UiActiveRule" xml:space="preserve">
+    <value>Aktiv regel:</value>
+  </data>
+  <data name="UiActiveON" xml:space="preserve">
+    <value>Aktiv/TIL</value>
+  </data>
+  <data name="UiAddATargetToSeeRaidCosts" xml:space="preserve">
+    <value>Tilføj et mål for at se raid-omkostninger.</value>
+  </data>
+  <data name="UiAddAutomation" xml:space="preserve">
+    <value>Tilføj automatisering</value>
+  </data>
+  <data name="UiAddExecutionStep" xml:space="preserve">
+    <value>Tilføj udførelsestrin</value>
+  </data>
+  <data name="UiAddLogin" xml:space="preserve">
+    <value>Tilføj login</value>
+  </data>
+  <data name="UiAddNestedAction" xml:space="preserve">
+    <value>Tilføj indlejret handling</value>
+  </data>
+  <data name="UiAddRule" xml:space="preserve">
+    <value>Tilføj regel</value>
+  </data>
+  <data name="UiAdminPanel" xml:space="preserve">
+    <value>Admin panel</value>
+  </data>
+  <data name="UiAdminPanelUserOverview" xml:space="preserve">
+    <value>Admin Panel - Brugeroversigt</value>
+  </data>
+  <data name="UiAdvancedDiscordBotIntegration" xml:space="preserve">
+    <value>Avanceret Discord Bot-integration</value>
+  </data>
+  <data name="UiAdvancedDiscordBotSettings" xml:space="preserve">
+    <value>Avanceret Discord Botindstillinger</value>
+  </data>
+  <data name="UiÃƒâ" xml:space="preserve">
+    <value>Ãƒâ€”</value>
+  </data>
+  <data name="UiAgricultureFood" xml:space="preserve">
+    <value>Landbrug &amp; Fødevarer</value>
+  </data>
+  <data name="UiAlarm" xml:space="preserve">
+    <value>Alarm</value>
+  </data>
+  <data name="UiAlarmAusgeloest" xml:space="preserve">
+    <value>Alarm ausgeloest!</value>
+  </data>
+  <data name="UiAlert" xml:space="preserve">
+    <value>Advarsel</value>
+  </data>
+  <data name="UiAlexaSetupInfo" xml:space="preserve">
+    <value>Alexa Opsætningsinfo</value>
+  </data>
+  <data name="UiAlexaSmartHome" xml:space="preserve">
+    <value>Alexa Smart Home</value>
+  </data>
+  <data name="UiAllPlayersInRange" xml:space="preserve">
+    <value>Alle spillere inden for rækkevidde</value>
+  </data>
+  <data name="UiAllPlayersOffline" xml:space="preserve">
+    <value>Alle spillere offline</value>
+  </data>
+  <data name="UiAllowDiscordCommands" xml:space="preserve">
+    <value>Tillad Discord kommandoer</value>
+  </data>
+  <data name="UiAllowedCommandRoleIDs" xml:space="preserve">
+    <value>Tilladte kommandorolle-id&apos;er</value>
+  </data>
+  <data name="UiAmazonAlexaLogin" xml:space="preserve">
+    <value>Amazon Alexa Login</value>
+  </data>
+  <data name="UiAND" xml:space="preserve">
+    <value>OG</value>
+  </data>
+  <data name="UiAnyOnlineInRange" xml:space="preserve">
+    <value>Enhver online inden for rækkevidde</value>
+  </data>
+  <data name="UiAnyPlayerOffline" xml:space="preserve">
+    <value>Enhver spiller offline</value>
+  </data>
+  <data name="UiAutomationActive" xml:space="preserve">
+    <value>Automation aktiv</value>
+  </data>
+  <data name="UiBackToSettingsCategories" xml:space="preserve">
+    <value>Tilbage til indstillingskategorier</value>
+  </data>
+  <data name="UiBalancedLinear" xml:space="preserve">
+    <value>Balanceret (lineær)</value>
+  </data>
+  <data name="UiBaseDetails" xml:space="preserve">
+    <value>Grunddetaljer</value>
+  </data>
+  <data name="UiBasicDiscordIntegration" xml:space="preserve">
+    <value>Grundlæggende Discord Integration</value>
+  </data>
+  <data name="UiBasicDiscordWebhooks" xml:space="preserve">
+    <value>Grundlæggende Discord Webhooks</value>
+  </data>
+  <data name="UiBears" xml:space="preserve">
+    <value>Bjørne</value>
+  </data>
+  <data name="UiBerries" xml:space="preserve">
+    <value>Bær</value>
+  </data>
+  <data name="UiBicycles" xml:space="preserve">
+    <value>Cykler</value>
+  </data>
+  <data name="UiBlue" xml:space="preserve">
+    <value>Blå</value>
+  </data>
+  <data name="UiBoars" xml:space="preserve">
+    <value>Orner</value>
+  </data>
+  <data name="UiBOOMREQUIRED" xml:space="preserve">
+    <value>BOM PÅKRÆVET</value>
+  </data>
+  <data name="UiBrowseMonuments" xml:space="preserve">
+    <value>Gennemse monumenter</value>
+  </data>
+  <data name="UiBrowseOnlinePlayersAndTrackedTargets" xml:space="preserve">
+    <value>Gennemse online spillere og sporede mål.</value>
+  </data>
+  <data name="UiBuild3DMap" xml:space="preserve">
+    <value>Byg 3D-kort</value>
+  </data>
+  <data name="UiBuildLocal3DMap" xml:space="preserve">
+    <value>Byg lokalt 3D-kort</value>
+  </data>
+  <data name="UiBuyX" xml:space="preserve">
+    <value>Køb X</value>
+  </data>
+  <data name="UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness" xml:space="preserve">
+    <value>Caches kortgengivelse på GPU&apos;en. Forbedrer ekstremt glathed ved panorering og zoom.</value>
+  </data>
+  <data name="UiCalculateComponentYieldsForWildAndSafeZoneRecyclers" xml:space="preserve">
+    <value>Beregn komponentudbyttet for genbrugere i vilde og sikre zoner.</value>
+  </data>
+  <data name="UiCalculateRaidCostsAndRequiredMaterials" xml:space="preserve">
+    <value>Beregn raidomkostninger og nødvendige materialer.</value>
+  </data>
+  <data name="UiCancelDownload" xml:space="preserve">
+    <value>Annuller download</value>
+  </data>
+  <data name="UiChance" xml:space="preserve">
+    <value>Chance</value>
+  </data>
+  <data name="UiChange" xml:space="preserve">
+    <value>Skift</value>
+  </data>
+  <data name="UiChangeCommand" xml:space="preserve">
+    <value>Skift kommando</value>
+  </data>
+  <data name="UiChangeIcon" xml:space="preserve">
+    <value>Skift ikon</value>
+  </data>
+  <data name="UiChannelID" xml:space="preserve">
+    <value>Kanal-id</value>
+  </data>
+  <data name="UiChannelNotificationsConfig" xml:space="preserve">
+    <value>Kanalmeddelelser Konfig</value>
+  </data>
+  <data name="UiChatAlertsDiscord" xml:space="preserve">
+    <value>Chatadvarsler -&gt; Discord</value>
+  </data>
+  <data name="UiChatAlertsChannelID" xml:space="preserve">
+    <value>Chat-advarsler kanal-id</value>
+  </data>
+  <data name="UiChatMasterSlaves" xml:space="preserve">
+    <value>Chat Master &amp; Slaves</value>
+  </data>
+  <data name="UiChatMessageAlerts" xml:space="preserve">
+    <value>Chatmeddelelsesalarmer</value>
+  </data>
+  <data name="UiCheckAvailability" xml:space="preserve">
+    <value>Tjek tilgængelighed</value>
+  </data>
+  <data name="UiChickens" xml:space="preserve">
+    <value>Høns</value>
+  </data>
+  <data name="UiChooseACategory" xml:space="preserve">
+    <value>Vælg en kategori</value>
+  </data>
+  <data name="UiChooseATargetFromTheCatalogue" xml:space="preserve">
+    <value>Vælg et mål fra kataloget.</value>
+  </data>
+  <data name="UiClearAll" xml:space="preserve">
+    <value>Ryd alle</value>
+  </data>
+  <data name="UiClearRaidPlan" xml:space="preserve">
+    <value>Ryd raidplan</value>
+  </data>
+  <data name="UiClearWebhookURL" xml:space="preserve">
+    <value>Ryd Webhook URL</value>
+  </data>
+  <data name="UiCloseRaidCalculator" xml:space="preserve">
+    <value>Luk raid-beregneren</value>
+  </data>
+  <data name="UiCloseShopsPanel" xml:space="preserve">
+    <value>Luk Butikker-panelet</value>
+  </data>
+  <data name="UiCloseTeamPanel" xml:space="preserve">
+    <value>Luk Team-panelet</value>
+  </data>
+  <data name="UiCloudAccountSync" xml:space="preserve">
+    <value>Cloud-konto og synkronisering</value>
+  </data>
+  <data name="UiCloudBaseScreenshots" xml:space="preserve">
+    <value>Cloud Base-skærmbilleder</value>
+  </data>
+  <data name="UiCloudUserID" xml:space="preserve">
+    <value>Cloud bruger-id</value>
+  </data>
+  <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
+    <value>Cloud, Discord, Alexa, chat og Steam</value>
+  </data>
+  <data name="UiCMD" xml:space="preserve">
+    <value>CMD</value>
+  </data>
+  <data name="UiColor" xml:space="preserve">
+    <value>Farve:</value>
+  </data>
+  <data name="UiCommaSeparatedRoleIDs" xml:space="preserve">
+    <value>Kommaseparerede rolle-id&apos;er</value>
+  </data>
+  <data name="UiCommandPermissions" xml:space="preserve">
+    <value>Kommandotilladelser</value>
+  </data>
+  <data name="UiConfirmDelete" xml:space="preserve">
+    <value>Bekræft sletning</value>
+  </data>
+  <data name="UiConnectRustCompanion" xml:space="preserve">
+    <value>Tilslut Rust+ ledsager</value>
+  </data>
+  <data name="UiConnectedServices" xml:space="preserve">
+    <value>Tilknyttede tjenester</value>
+  </data>
+  <data name="UiCONNECTIONSERVICES" xml:space="preserve">
+    <value>FORBINDELSESTJENESTER</value>
+  </data>
+  <data name="UiControlYourRustSmartSwitchesWithAmazonAlexaVoiceCommandsAn5B51481980" xml:space="preserve">
+    <value>Styr dine Rust Smart Switche med Amazon Alexa stemmekommandoer og udløser Alexa rutiner, når dine Smart Alarms går i gang.</value>
+  </data>
+  <data name="UiControlsMapImageScalingFilteringMode" xml:space="preserve">
+    <value>Styrer filtreringstilstand for skalering af kortbilleder.</value>
+  </data>
+  <data name="UiCopyADiscordReadySummary" xml:space="preserve">
+    <value>Kopiér en Discord-klar oversigt</value>
+  </data>
+  <data name="UiCopyIP" xml:space="preserve">
+    <value>Kopiér IP</value>
+  </data>
+  <data name="UiCopyMapToServer" xml:space="preserve">
+    <value>Kopier kort til server...</value>
+  </data>
+  <data name="UiCopyRaidSummary" xml:space="preserve">
+    <value>Kopier raid oversigt</value>
+  </data>
+  <data name="UiCorn" xml:space="preserve">
+    <value>Majs</value>
+  </data>
+  <data name="UiCount" xml:space="preserve">
+    <value>Tæl</value>
+  </data>
+  <data name="UiCreateAShopAlert" xml:space="preserve">
+    <value>Opret en butiksadvarsel</value>
+  </data>
+  <data name="UiCrocodiles" xml:space="preserve">
+    <value>Krokodiller</value>
+  </data>
+  <data name="UiCurrency" xml:space="preserve">
+    <value>Valuta</value>
+  </data>
+  <data name="UiCurrentStep" xml:space="preserve">
+    <value>Nuværende trin:</value>
+  </data>
+  <data name="UiCustomAlarmName" xml:space="preserve">
+    <value>Brugerdefineret alarmnavn</value>
+  </data>
+  <data name="UiCyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="UiDeDEStandardA" xml:space="preserve">
+    <value>de-DE-Standard-A</value>
+  </data>
+  <data name="UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius" xml:space="preserve">
+    <value>Døde spillere tæller som offline. Offline forhold ignorerer radius.</value>
+  </data>
+  <data name="UiDeathMarkerSettings" xml:space="preserve">
+    <value>Indstillinger for dødsmarkør</value>
+  </data>
+  <data name="UiDecreaseQuantity" xml:space="preserve">
+    <value>Reducer mængden</value>
+  </data>
+  <data name="UiDecreaseTargetQuantity" xml:space="preserve">
+    <value>Reducer målmængden</value>
+  </data>
+  <data name="UiDeers" xml:space="preserve">
+    <value>Hjorte</value>
+  </data>
+  <data name="UiDefault" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="UiDeleteMissingDevice" xml:space="preserve">
+    <value>Slet manglende enhed</value>
+  </data>
+  <data name="UiDeleteRule" xml:space="preserve">
+    <value>Slet regel</value>
+  </data>
+  <data name="UiDeleteStep" xml:space="preserve">
+    <value>Slet trin</value>
+  </data>
+  <data name="UiDeleteTimer" xml:space="preserve">
+    <value>Slet timer</value>
+  </data>
+  <data name="UiDestructionMethod" xml:space="preserve">
+    <value>Destruktionsmetode</value>
+  </data>
+  <data name="UiDetailedMapLayerOptions" xml:space="preserve">
+    <value>Detaljerede muligheder for kortlag</value>
+  </data>
+  <data name="UiDetails" xml:space="preserve">
+    <value>Detaljer</value>
+  </data>
+  <data name="UiDeviceAutomation" xml:space="preserve">
+    <value>Enhedsautomatisering</value>
+  </data>
+  <data name="UiDeviceCloudSync" xml:space="preserve">
+    <value>Enhed Cloud Sync</value>
+  </data>
+  <data name="UiDisableGridAntiAliasingAliasedEdgeMode" xml:space="preserve">
+    <value>Deaktiver Grid Anti-Aliasing (Aliased Edge Mode)</value>
+  </data>
+  <data name="UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1" xml:space="preserve">
+    <value>Deaktiverer anti-aliasing på gitterlinjer og markører. Forbedrer gengivelseshastigheden på low-end systemer.</value>
+  </data>
+  <data name="UiDiscordName" xml:space="preserve">
+    <value>Discord Navn</value>
+  </data>
+  <data name="UiDiscordServerIDGuildID" xml:space="preserve">
+    <value>Discord Server-id (laug-id)</value>
+  </data>
+  <data name="UiDiscordWebhook" xml:space="preserve">
+    <value>Discord Webhook</value>
+  </data>
+  <data name="UiDiscordWebhookChatAlerts" xml:space="preserve">
+    <value>Discord Webhook (chatbeskeder)</value>
+  </data>
+  <data name="UiDiscordWebhookURL" xml:space="preserve">
+    <value>Discord Webhook URL</value>
+  </data>
+  <data name="UiDiscordWebhookURLOfflineAlerts" xml:space="preserve">
+    <value>Discord Webhook-URL (Offline-advarsler)</value>
+  </data>
+  <data name="UiDiscordWebhooksGuide" xml:space="preserve">
+    <value>Discord Webhooks Guide</value>
+  </data>
+  <data name="UiDismiss" xml:space="preserve">
+    <value>Afvis</value>
+  </data>
+  <data name="UiDisplay" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="UiDisplayName" xml:space="preserve">
+    <value>Vist navn</value>
+  </data>
+  <data name="UiDollar" xml:space="preserve">
+    <value>Dollar</value>
+  </data>
+  <data name="UiDonTShowOffersWithoutStock" xml:space="preserve">
+    <value>Vis ikke tilbud uden lager</value>
+  </data>
+  <data name="UiDoubleClickToEditCommand" xml:space="preserve">
+    <value>Dobbeltklik for at redigere kommandoen</value>
+  </data>
+  <data name="UiDuplicateTarget" xml:space="preserve">
+    <value>Dublet mål</value>
+  </data>
+  <data name="UiÐŸ" xml:space="preserve">
+    <value>ðŸ’¤</value>
+  </data>
+  <data name="UiÐŸ2" xml:space="preserve">
+    <value>ðŸ“·</value>
+  </data>
+  <data name="UiEGNAME2" xml:space="preserve">
+    <value>f.eks. NAVN2</value>
+  </data>
+  <data name="UiEditCommand" xml:space="preserve">
+    <value>Rediger kommando</value>
+  </data>
+  <data name="UiEditSubscriptionsDrawingOverlay" xml:space="preserve">
+    <value>Rediger abonnementer (tegningsoverlejring)</value>
+  </data>
+  <data name="UiEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="UiEmailAndPassword" xml:space="preserve">
+    <value>E-mail og adgangskode</value>
+  </data>
+  <data name="UiEnGBStandardA" xml:space="preserve">
+    <value>da-DK-Standard-A</value>
+  </data>
+  <data name="UiEnUSStandardA" xml:space="preserve">
+    <value>da-US-Standard-A</value>
+  </data>
+  <data name="UiEnableAutomation" xml:space="preserve">
+    <value>Aktiver automatisering</value>
+  </data>
+  <data name="UiEnableGPUBitmapCaching" xml:space="preserve">
+    <value>Aktiver GPU Bitmap Caching</value>
+  </data>
+  <data name="UiEnableRule" xml:space="preserve">
+    <value>Aktiver regel</value>
+  </data>
+  <data name="UiEnemyBaseRed" xml:space="preserve">
+    <value>Fjendtlig base (rød)</value>
+  </data>
+  <data name="UiEngineActivePlayStop" xml:space="preserve">
+    <value>Motor aktiv (afspil/stop)</value>
+  </data>
+  <data name="UiEsESStandardA" xml:space="preserve">
+    <value>es-ES-Standard-A</value>
+  </data>
+  <data name="UiEventsAlertsChannelID" xml:space="preserve">
+    <value>Begivenhedsadvarsler Kanal-id</value>
+  </data>
+  <data name="UiExecutionSteps" xml:space="preserve">
+    <value>Udførelsestrin</value>
+  </data>
+  <data name="UiExpand" xml:space="preserve">
+    <value>Udvid</value>
+  </data>
+  <data name="UiExpandOrCollapseAutomation" xml:space="preserve">
+    <value>Udvid eller skjul automatisering</value>
+  </data>
+  <data name="UiExpandOrCollapseGroup" xml:space="preserve">
+    <value>Udvid eller skjul gruppe</value>
+  </data>
+  <data name="UiExpandServerDetails" xml:space="preserve">
+    <value>Udvid serverdetaljer</value>
+  </data>
+  <data name="UiExpandCollapse" xml:space="preserve">
+    <value>Udvid/Skjul sammen</value>
+  </data>
+  <data name="UiEXTRAMONUMENTTYPES" xml:space="preserve">
+    <value>EKSTRA MONUMENTTYPER</value>
+  </data>
+  <data name="UiFaunaWildlife" xml:space="preserve">
+    <value>Fauna og dyreliv</value>
+  </data>
+  <data name="UiFillStacks" xml:space="preserve">
+    <value>Fyld stakke</value>
+  </data>
+  <data name="UiFilterLogs" xml:space="preserve">
+    <value>Filtrer logfiler...</value>
+  </data>
+  <data name="UiFindProfitableShopTrades" xml:space="preserve">
+    <value>Find rentable butikshandler</value>
+  </data>
+  <data name="UiFindWhereToBuyAnItem" xml:space="preserve">
+    <value>Find, hvor du kan købe en vare</value>
+  </data>
+  <data name="UiFitMapToView" xml:space="preserve">
+    <value>Tilpas kort til at se</value>
+  </data>
+  <data name="UiFlowers" xml:space="preserve">
+    <value>Blomster</value>
+  </data>
+  <data name="UiForceOFF" xml:space="preserve">
+    <value>Tving FRA</value>
+  </data>
+  <data name="UiForceON" xml:space="preserve">
+    <value>Tving TIL</value>
+  </data>
+  <data name="UiForceRefetchMap" xml:space="preserve">
+    <value>Force Refetch Map</value>
+  </data>
+  <data name="UiForceRefreshAllSubscriptions" xml:space="preserve">
+    <value>Tving opdatering af alle abonnementer</value>
+  </data>
+  <data name="UiForgotPassword" xml:space="preserve">
+    <value>Glemt adgangskode?</value>
+  </data>
+  <data name="UiFrFRStandardA" xml:space="preserve">
+    <value>fr-FR-Standard-A</value>
+  </data>
+  <data name="UiFrom" xml:space="preserve">
+    <value>Fra</value>
+  </data>
+  <data name="UiGatingConditionOptional" xml:space="preserve">
+    <value>Porttilstand (valgfrit)</value>
+  </data>
+  <data name="UiGenerateSave" xml:space="preserve">
+    <value>Generer &amp; Gem</value>
+  </data>
+  <data name="UiGenerateLoginPIN" xml:space="preserve">
+    <value>Generer login-PIN</value>
+  </data>
+  <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
+    <value>Generer 3D-kortet, før du bruger varmekort.</value>
+  </data>
+  <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
+    <value>Generer 3D-kortet for at aktivere zoner, der ikke skal bygges.</value>
+  </data>
+  <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
+    <value>Generiske alarmlydmuligheder</value>
+  </data>
+  <data name="UiGENERICALARMS" xml:space="preserve">
+    <value>GENERISKE ALARMER</value>
+  </data>
+  <data name="UiGPURenderingScale" xml:space="preserve">
+    <value>GPU-gengivelsesskala</value>
+  </data>
+  <data name="UiGreen" xml:space="preserve">
+    <value>Grøn</value>
+  </data>
+  <data name="UiGuar" xml:space="preserve">
+    <value>Guar.</value>
+  </data>
+  <data name="UiGun" xml:space="preserve">
+    <value>Pistol</value>
+  </data>
+  <data name="UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D" xml:space="preserve">
+    <value>Krudt, sprængstoffer, timing og kogte/malmkonverteringer vises kun, når de leveres af datasættet. Aktuelle data er allerede udvidet til råvarer.</value>
+  </data>
+  <data name="UiHeatmaps" xml:space="preserve">
+    <value>Heatmaps</value>
+  </data>
+  <data name="UiHeatmapsUnavailable" xml:space="preserve">
+    <value>Heatmaps er ikke tilgængelige</value>
+  </data>
+  <data name="UiHeight" xml:space="preserve">
+    <value>Højde</value>
+  </data>
+  <data name="UiHide0Stock" xml:space="preserve">
+    <value>Skjul 0-lager</value>
+  </data>
+  <data name="UiHighQualityBicubic" xml:space="preserve">
+    <value>Høj kvalitet (bikubisk)</value>
+  </data>
+  <data name="UiHome" xml:space="preserve">
+    <value>Hjem</value>
+  </data>
+  <data name="UiHorses" xml:space="preserve">
+    <value>Heste</value>
+  </data>
+  <data name="UiHotAirBalloons" xml:space="preserve">
+    <value>Varmluftsballoner</value>
+  </data>
+  <data name="UiHotkeyTriggers" xml:space="preserve">
+    <value>Genvejstaster</value>
+  </data>
+  <data name="UiIcons" xml:space="preserve">
+    <value>Ikoner</value>
+  </data>
+  <data name="UiIcons2" xml:space="preserve">
+    <value>Ikoner:</value>
+  </data>
+  <data name="UiID" xml:space="preserve">
+    <value>ID:</value>
+  </data>
+  <data name="UiIDLE" xml:space="preserve">
+    <value>TOMGANG</value>
+  </data>
+  <data name="UiImageScalingQuality" xml:space="preserve">
+    <value>Billedskaleringskvalitet</value>
+  </data>
+  <data name="UiImageZoomView" xml:space="preserve">
+    <value>Billedzoomvisning</value>
+  </data>
+  <data name="UiInGameTime" xml:space="preserve">
+    <value>Tid i spillet</value>
+  </data>
+  <data name="UiInactiveOFF" xml:space="preserve">
+    <value>Inaktiv/OFF</value>
+  </data>
+  <data name="UiIncludeMessageMessage" xml:space="preserve">
+    <value>Inkluder meddelelse ({({message}})</value>
+  </data>
+  <data name="UiIncludeNameTitle" xml:space="preserve">
+    <value>Inkluder navn ({({title}})</value>
+  </data>
+  <data name="UiIncludeTypeType" xml:space="preserve">
+    <value>Inkluder type ({({type}})</value>
+  </data>
+  <data name="UiIncreaseQuantity" xml:space="preserve">
+    <value>Forøg mængden</value>
+  </data>
+  <data name="UiIncreaseTargetQuantity" xml:space="preserve">
+    <value>Øg målmængden</value>
+  </data>
+  <data name="UiInventoryInRecyclerYieldOut" xml:space="preserve">
+    <value>Inventar i, genbruger udbytte</value>
+  </data>
+  <data name="UiInviteDiscordBotToServer" xml:space="preserve">
+    <value>Inviter Discord Bot til serveren</value>
+  </data>
+  <data name="UiISOFFLINE" xml:space="preserve">
+    <value>ER OFFLINE</value>
+  </data>
+  <data name="UiISONLINE" xml:space="preserve">
+    <value>ER ONLINE</value>
+  </data>
+  <data name="UiITEMBAY" xml:space="preserve">
+    <value>ITEM BAY</value>
+  </data>
+  <data name="UiJunkpiles" xml:space="preserve">
+    <value>Junkpiles</value>
+  </data>
+  <data name="UiKeepSidebarUnfolded" xml:space="preserve">
+    <value>Hold sidebjælken udfoldet</value>
+  </data>
+  <data name="UiLanguageStartupAndAppBehavior" xml:space="preserve">
+    <value>Sprog, opstart og app-adfærd</value>
+  </data>
+  <data name="UiLastActive" xml:space="preserve">
+    <value>Sidst aktive</value>
+  </data>
+  <data name="UiLayers" xml:space="preserve">
+    <value>Lag</value>
+  </data>
+  <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
+    <value>Lad være tom for at tillade alle på serveren.</value>
+  </data>
+  <data name="UiLinkSelectedServer" xml:space="preserve">
+    <value>Link valgt server</value>
+  </data>
+  <data name="UiListenForRustPairingRequestsRightClickForRecoveryOptions" xml:space="preserve">
+    <value>Lyt efter Rust+ parringsanmodninger. Højreklik for gendannelsesmuligheder.</value>
+  </data>
+  <data name="UiListening" xml:space="preserve">
+    <value>At lytte</value>
+  </data>
+  <data name="UiLoadShopsAutomaticallyOnConnect" xml:space="preserve">
+    <value>Indlæs butikker automatisk ved tilslutning</value>
+  </data>
+  <data name="UiLoadingServerDetails" xml:space="preserve">
+    <value>Indlæser serveroplysninger...</value>
+  </data>
+  <data name="UiLocalSetup" xml:space="preserve">
+    <value>Lokal opsætning</value>
+  </data>
+  <data name="UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps" xml:space="preserve">
+    <value>Log ind på din Rust+ skrivebordskonto for at generere 3D-kort og varmekort.</value>
+  </data>
+  <data name="UiLogOut" xml:space="preserve">
+    <value>Log ud</value>
+  </data>
+  <data name="UiLogPiles" xml:space="preserve">
+    <value>Log bunker</value>
+  </data>
+  <data name="UiLogicEngine" xml:space="preserve">
+    <value>Logisk motor</value>
+  </data>
+  <data name="UiLogicEngineRuntime" xml:space="preserve">
+    <value>Logic Engine Runtime</value>
+  </data>
+  <data name="UiLogicRules" xml:space="preserve">
+    <value>Logiske regler</value>
+  </data>
+  <data name="UiLoginRequired" xml:space="preserve">
+    <value>Login påkrævet</value>
+  </data>
+  <data name="UiLoopAfterCompletion" xml:space="preserve">
+    <value>Løkke efter færdiggørelse</value>
+  </data>
+  <data name="UiLoot" xml:space="preserve">
+    <value>Plyndre</value>
+  </data>
+  <data name="UiLootTransport" xml:space="preserve">
+    <value>Plyndre &amp; Transport</value>
+  </data>
+  <data name="UiMaintenanceBackupResetAndCredits" xml:space="preserve">
+    <value>Vedligeholdelse, backup, nulstilling og kreditering</value>
+  </data>
+  <data name="UiManualPremium" xml:space="preserve">
+    <value>Manuel Premium</value>
+  </data>
+  <data name="UiManualSince" xml:space="preserve">
+    <value>Manual siden</value>
+  </data>
+  <data name="UiMap" xml:space="preserve">
+    <value>Kort</value>
+  </data>
+  <data name="UiMapLayers" xml:space="preserve">
+    <value>Kortlag</value>
+  </data>
+  <data name="UiMapPerformanceQuality" xml:space="preserve">
+    <value>Kort ydeevne og kvalitet</value>
+  </data>
+  <data name="UiMarker" xml:space="preserve">
+    <value>Markør:</value>
+  </data>
+  <data name="UiMatched" xml:space="preserve">
+    <value>Matchet:</value>
+  </data>
+  <data name="UiMeters" xml:space="preserve">
+    <value>meter</value>
+  </data>
+  <data name="UiMethodComparisonMode" xml:space="preserve">
+    <value>Metodesammenligningstilstand</value>
+  </data>
+  <data name="UiMinProfit" xml:space="preserve">
+    <value>Min fortjeneste:</value>
+  </data>
+  <data name="UiModularCars" xml:space="preserve">
+    <value>Modulære biler</value>
+  </data>
+  <data name="UiMonitorAndControlPairedSmartDevices" xml:space="preserve">
+    <value>Overvåg og kontroller parrede smartenheder.</value>
+  </data>
+  <data name="UiMushrooms" xml:space="preserve">
+    <value>Svampe</value>
+  </data>
+  <data name="UiMuteNotificationsFromThisServer" xml:space="preserve">
+    <value>Slå meddelelser fra denne server fra</value>
+  </data>
+  <data name="UiNames" xml:space="preserve">
+    <value>Navne</value>
+  </data>
+  <data name="UiNestedStepsIfConditionMet" xml:space="preserve">
+    <value>Indlejrede trin (hvis betingelsen er opfyldt)</value>
+  </data>
+  <data name="UiNewPassword6Characters" xml:space="preserve">
+    <value>Ny adgangskode (6+ tegn)</value>
+  </data>
+  <data name="UiNoBuild" xml:space="preserve">
+    <value>Ingen bygning</value>
+  </data>
+  <data name="UiNoDevicesMatchYourSearch" xml:space="preserve">
+    <value>Ingen enheder matcher din søgning.</value>
+  </data>
+  <data name="UiNoHeatmapActive" xml:space="preserve">
+    <value>Intet varmekort aktivt</value>
+  </data>
+  <data name="UiNoMatchingTargets" xml:space="preserve">
+    <value>Ingen matchende mål</value>
+  </data>
+  <data name="UiNoPendingRules" xml:space="preserve">
+    <value>Ingen afventende regler</value>
+  </data>
+  <data name="UiNoTargetsSelected" xml:space="preserve">
+    <value>Ingen mål valgt</value>
+  </data>
+  <data name="UiNotConnected" xml:space="preserve">
+    <value>Ikke forbundet</value>
+  </data>
+  <data name="UiNothingToTotalYet" xml:space="preserve">
+    <value>Intet til alt endnu</value>
+  </data>
+  <data name="UiNotificationsSoundsAndOfflineDeath" xml:space="preserve">
+    <value>Notifikationer, lyde og offline død</value>
+  </data>
+  <data name="UiOfflineAlertsSetup" xml:space="preserve">
+    <value>Opsætning af offlineadvarsler</value>
+  </data>
+  <data name="UiOfflineCloudAlertsDiscordWebhookTelegramCalls" xml:space="preserve">
+    <value>Offline skyadvarsler | Discord, Webhook &amp; Telegram opkald</value>
+  </data>
+  <data name="UiOpacity100" xml:space="preserve">
+    <value>Opacitet: 100%</value>
+  </data>
+  <data name="UiOpenCloudAccount" xml:space="preserve">
+    <value>Åbn cloud-konto</value>
+  </data>
+  <data name="UiOpenInteractive3DMapOnRustMaps" xml:space="preserve">
+    <value>Åbn interaktivt 3D-kort på RustMaps</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanel" xml:space="preserve">
+    <value>Åbn eller luk Butikker-panelet</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanelCtrlShiftS" xml:space="preserve">
+    <value>Åbn eller luk Butikker-panelet (Ctrl+Shift+S)</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanel" xml:space="preserve">
+    <value>Åbn eller luk Team-panelet</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
+    <value>Åbn eller luk Teampanel (Ctrl+Shift+T)</value>
+  </data>
+  <data name="UiOpenShopFilters" xml:space="preserve">
+    <value>Åbn butiksfiltre</value>
+  </data>
+  <data name="UiOpenSignInAndAccountManagement" xml:space="preserve">
+    <value>Åbn login og kontoadministration</value>
+  </data>
+  <data name="UiOptimalMultiHopTradePathfinder" xml:space="preserve">
+    <value>Optimal multi-hop handelsstifinder</value>
+  </data>
+  <data name="UiOptionalPings" xml:space="preserve">
+    <value>Valgfri Pings</value>
+  </data>
+  <data name="UiOR" xml:space="preserve">
+    <value>ELLER</value>
+  </data>
+  <data name="UiOrGroupName" xml:space="preserve">
+    <value>eller gruppenavn</value>
+  </data>
+  <data name="UiOres" xml:space="preserve">
+    <value>Malme</value>
+  </data>
+  <data name="UiOtherwise" xml:space="preserve">
+    <value>Ellers:</value>
+  </data>
+  <data name="UiOUTPOST" xml:space="preserve">
+    <value>UDPOST</value>
+  </data>
+  <data name="UiOutpostRecyclerTime" xml:space="preserve">
+    <value>Outpost Recycler Time</value>
+  </data>
+  <data name="UiOutpostSafezoneRecycler" xml:space="preserve">
+    <value>Udpost/Safezone Genbruger</value>
+  </data>
+  <data name="UiOverlayStorage" xml:space="preserve">
+    <value>Overlay opbevaring</value>
+  </data>
+  <data name="UiOwnBaseBlack" xml:space="preserve">
+    <value>Egen base (sort)</value>
+  </data>
+  <data name="UiParachute" xml:space="preserve">
+    <value>Faldskærm</value>
+  </data>
+  <data name="UiParse3DMapManually" xml:space="preserve">
+    <value>Parse 3D-kort manuelt</value>
+  </data>
+  <data name="UiPayItemEGCloth" xml:space="preserve">
+    <value>Betalingsgenstande (f.eks. klud)...</value>
+  </data>
+  <data name="UiPaymentResource" xml:space="preserve">
+    <value>Betalingsressource</value>
+  </data>
+  <data name="UiPendingQueue" xml:space="preserve">
+    <value>Afventende kø</value>
+  </data>
+  <data name="UiPerformanceNearestNeighbor" xml:space="preserve">
+    <value>Præstation (nærmeste nabo)</value>
+  </data>
+  <data name="UiPerformanceMarkersAnd3DData" xml:space="preserve">
+    <value>Ydeevne, markører og 3D-data</value>
+  </data>
+  <data name="UiPin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="UiPinSidebar" xml:space="preserve">
+    <value>Fastgør sidebjælken</value>
+  </data>
+  <data name="UiPLANUSAGE" xml:space="preserve">
+    <value>PLANBRUG</value>
+  </data>
+  <data name="UiPlay1minCountdownAudio" xml:space="preserve">
+    <value>Afspil 1 min nedtællingslyd</value>
+  </data>
+  <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
+    <value>Spil høj alarm kl. 00:00</value>
+  </data>
+  <data name="UiPlayerProximity" xml:space="preserve">
+    <value>Spillerens nærhed</value>
+  </data>
+  <data name="UiPotatoes" xml:space="preserve">
+    <value>Kartofler</value>
+  </data>
+  <data name="UiPressDesiredKeyCombination" xml:space="preserve">
+    <value>Tryk på den ønskede tastekombination...</value>
+  </data>
+  <data name="UiPressESCToCancelEnterToSave" xml:space="preserve">
+    <value>Tryk på ESC for at annullere, Enter for at gemme</value>
+  </data>
+  <data name="UiPressHotkey" xml:space="preserve">
+    <value>Tryk på genvejstast</value>
+  </data>
+  <data name="UiPriceHighToLow" xml:space="preserve">
+    <value>Pris (høj til lav)</value>
+  </data>
+  <data name="UiPriceLowToHigh" xml:space="preserve">
+    <value>Pris (lav til høj)</value>
+  </data>
+  <data name="UiProceduralHeatmaps" xml:space="preserve">
+    <value>Procedurelle varmekort</value>
+  </data>
+  <data name="UiProfit" xml:space="preserve">
+    <value>Fortjeneste</value>
+  </data>
+  <data name="UiPumpkins" xml:space="preserve">
+    <value>Græskar</value>
+  </data>
+  <data name="UiPurple" xml:space="preserve">
+    <value>Lilla</value>
+  </data>
+  <data name="UiRaidAlertsChannelID" xml:space="preserve">
+    <value>Raid Alerts kanal-id</value>
+  </data>
+  <data name="UiRaidCalculator" xml:space="preserve">
+    <value>Raid lommeregner</value>
+  </data>
+  <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
+    <value>Raid-genstande og rå håndværksingredienser</value>
+  </data>
+  <data name="UiRaidPlan" xml:space="preserve">
+    <value>Raid plan</value>
+  </data>
+  <data name="UiRaidSummary" xml:space="preserve">
+    <value>Raid oversigt</value>
+  </data>
+  <data name="UiRAWRESOURCES" xml:space="preserve">
+    <value>RÅ RESSOURCER</value>
+  </data>
+  <data name="UiReadAlertsAloudViaDiscordTTS" xml:space="preserve">
+    <value>Læs alarmer højt via Discord TTS</value>
+  </data>
+  <data name="UiRed" xml:space="preserve">
+    <value>Rød</value>
+  </data>
+  <data name="UiRefreshDeviceStates" xml:space="preserve">
+    <value>Opdater enhedstilstande</value>
+  </data>
+  <data name="UiRemoveTarget" xml:space="preserve">
+    <value>Fjern målet</value>
+  </data>
+  <data name="UiRepeats0Indefinitely" xml:space="preserve">
+    <value>gentages (0 = på ubestemt tid)</value>
+  </data>
+  <data name="UiResetSoundsToDefault" xml:space="preserve">
+    <value>Nulstil lyde til standard</value>
+  </data>
+  <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
+    <value>Opløsningsskala for den cachelagrede GPU-bitmap. Lavere skalaer forbedrer ydeevnen på langsommere GPU&apos;er.</value>
+  </data>
+  <data name="UiResourcesForestry" xml:space="preserve">
+    <value>Ressourcer og skovbrug</value>
+  </data>
+  <data name="UiRestoreLocalBackup" xml:space="preserve">
+    <value>Gendan lokal backup</value>
+  </data>
+  <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
+    <value>Gennemgå advarsler og seneste serverhændelser.</value>
+  </data>
+  <data name="UiRevoke" xml:space="preserve">
+    <value>Tilbagekald</value>
+  </data>
+  <data name="UiRevokeAccess" xml:space="preserve">
+    <value>Tilbagekald adgang</value>
+  </data>
+  <data name="UiRock" xml:space="preserve">
+    <value>Rock</value>
+  </data>
+  <data name="UiRowboats" xml:space="preserve">
+    <value>Robåde</value>
+  </data>
+  <data name="UiRuleCompleted" xml:space="preserve">
+    <value>Regel gennemført</value>
+  </data>
+  <data name="UiRuleName" xml:space="preserve">
+    <value>Regelnavn</value>
+  </data>
+  <data name="UiRuleTriggered" xml:space="preserve">
+    <value>Regel udløst</value>
+  </data>
+  <data name="UiRunThisRuleAgainAfterItCompletesAPositiveWaitStepIsRequired" xml:space="preserve">
+    <value>Kør denne regel igen, når den er fuldført. Et positivt ventetrin er påkrævet.</value>
+  </data>
+  <data name="UiRUNNING" xml:space="preserve">
+    <value>LØB</value>
+  </data>
+  <data name="UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2" xml:space="preserve">
+    <value>Rust sender nogle gange en raid-meddelelse uden Smart Alarms enheds-id. RustPlusDesk kan ikke fortælle, hvilken alarm der udløste den, så de delte indstillinger nedenfor bruges i stedet for en enheds egne indstillinger.</value>
+  </data>
+  <data name="UiRUSTCOMPANION" xml:space="preserve">
+    <value>RUST+ LEDER</value>
+  </data>
+  <data name="UiRustCompanionConnection" xml:space="preserve">
+    <value>Rust+ Ledsagende forbindelse</value>
+  </data>
+  <data name="UiRustCompanionSession" xml:space="preserve">
+    <value>Rust+ Ledsagende session</value>
+  </data>
+  <data name="UiRustDesktopV600Update" xml:space="preserve">
+    <value>Rust+ Desktop 🛠️ v6.0.0 Opdatering</value>
+  </data>
+  <data name="UiRustSteamAccount" xml:space="preserve">
+    <value>Rust+ Steam konto</value>
+  </data>
+  <data name="UiRustmapsCom" xml:space="preserve">
+    <value>rustmaps.com</value>
+  </data>
+  <data name="UiSAMSite" xml:space="preserve">
+    <value>SAM websted</value>
+  </data>
+  <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
+    <value>Gem og luk chatkommandoindstillinger</value>
+  </data>
+  <data name="UiSaveChannelsConfig" xml:space="preserve">
+    <value>Gem kanaler Konfig</value>
+  </data>
+  <data name="UiSavedBases" xml:space="preserve">
+    <value>Gemte baser</value>
+  </data>
+  <data name="UiScope" xml:space="preserve">
+    <value>Omfang</value>
+  </data>
+  <data name="UiScrollOrShiftClickChangesBy10" xml:space="preserve">
+    <value>Rul eller Shift+klik ændres med 10</value>
+  </data>
+  <data name="UiScrollToZoomDragToPanClickOrESCToCloseDoubleClickToReset" xml:space="preserve">
+    <value>Rul til Zoom • Træk for at panorere • Klik eller ESC for at lukke • Dobbeltklik for at nulstille</value>
+  </data>
+  <data name="UiSearchComponents" xml:space="preserve">
+    <value>Søg komponenter...</value>
+  </data>
+  <data name="UiSearchDevicesByNameTypeOwnerID" xml:space="preserve">
+    <value>Søg efter enheder efter navn, type, ejer, id...</value>
+  </data>
+  <data name="UiSearchDevices" xml:space="preserve">
+    <value>Søg efter enheder...</value>
+  </data>
+  <data name="UiSearchItemsEGSulfur" xml:space="preserve">
+    <value>Søg efter emner (f.eks. svovl)...</value>
+  </data>
+  <data name="UiSearchItemsOrTypeFreely" xml:space="preserve">
+    <value>Søg efter varer eller skriv frit...</value>
+  </data>
+  <data name="UiSearchMonument" xml:space="preserve">
+    <value>Søg monument...</value>
+  </data>
+  <data name="UiSearchRaidTargets" xml:space="preserve">
+    <value>Søg raidmål</value>
+  </data>
+  <data name="UiSearchSettings" xml:space="preserve">
+    <value>Søgeindstillinger</value>
+  </data>
+  <data name="UiSearchTargets" xml:space="preserve">
+    <value>Søg efter mål...</value>
+  </data>
+  <data name="UiSearching" xml:space="preserve">
+    <value>Søger...</value>
+  </data>
+  <data name="UiSeconds" xml:space="preserve">
+    <value>sekunder</value>
+  </data>
+  <data name="UiSecs" xml:space="preserve">
+    <value>Sek</value>
+  </data>
+  <data name="UiSelectALayerToViewSpawnDensity" xml:space="preserve">
+    <value>Vælg et lag for at se spawn-tætheden</value>
+  </data>
+  <data name="UiSelectCustom1MinuteCountdownSound" xml:space="preserve">
+    <value>Vælg tilpasset 1 minuts nedtællingslyd</value>
+  </data>
+  <data name="UiSelectCustomAlarmSound0000" xml:space="preserve">
+    <value>Vælg tilpasset alarmlyd (00:00)</value>
+  </data>
+  <data name="UiSelectMultipleRaidItemsForTheSmartCombinationSearch" xml:space="preserve">
+    <value>Vælg flere raid-elementer til den smarte kombinationssøgning</value>
+  </data>
+  <data name="UiSelectServerToSyncWithAlexa" xml:space="preserve">
+    <value>Vælg server at synkronisere med Alexa</value>
+  </data>
+  <data name="UiSelectSmartMixRaidItems" xml:space="preserve">
+    <value>Vælg smart mix raid elementer</value>
+  </data>
+  <data name="UiSelectTheSourceRuleForThisTrigger" xml:space="preserve">
+    <value>Vælg kildereglen for denne trigger.</value>
+  </data>
+  <data name="UiSendCurrentMapViewToDiscordChannel" xml:space="preserve">
+    <value>Send den aktuelle kortvisning til Discord kanal</value>
+  </data>
+  <data name="UiSendToDiscord" xml:space="preserve">
+    <value>Send til Discord</value>
+  </data>
+  <data name="UiSERVERHIDDEN" xml:space="preserve">
+    <value>SERVER SKJULT</value>
+  </data>
+  <data name="UiServerName1430" xml:space="preserve">
+    <value>Servernavn - 14:30</value>
+  </data>
+  <data name="UiSERVERS" xml:space="preserve">
+    <value>SERVERE</value>
+  </data>
+  <data name="UiSetShortcut" xml:space="preserve">
+    <value>Indstil genvej</value>
+  </data>
+  <data name="UiSettingsAreGroupedByWhatTheyControl" xml:space="preserve">
+    <value>Indstillinger er grupperet efter, hvad de kontrollerer.</value>
+  </data>
+  <data name="UiShield" xml:space="preserve">
+    <value>Skjold</value>
+  </data>
+  <data name="UiShopAlertsChannelID" xml:space="preserve">
+    <value>Shop Alerts kanal-id</value>
+  </data>
+  <data name="UiShow2DMap" xml:space="preserve">
+    <value>Vis 2D-kort</value>
+  </data>
+  <data name="UiShowAll" xml:space="preserve">
+    <value>Vis alle</value>
+  </data>
+  <data name="UiShowDamageOverkillAndIngredientBreakdowns" xml:space="preserve">
+    <value>Vis skader, overkill og sammenbrud af ingredienser</value>
+  </data>
+  <data name="UiShowLocal3DMap" xml:space="preserve">
+    <value>Vis lokalt 3D-kort</value>
+  </data>
+  <data name="UiShowMarkersOnMap" xml:space="preserve">
+    <value>Vis markører på kortet</value>
+  </data>
+  <data name="UiShowShopsThatBuyItem" xml:space="preserve">
+    <value>Vis butikker, der køber varer</value>
+  </data>
+  <data name="UiShowShopsThatSellItem" xml:space="preserve">
+    <value>Vis butikker, der sælger varer</value>
+  </data>
+  <data name="UiShowThe2DMap" xml:space="preserve">
+    <value>Vis 2D-kortet</value>
+  </data>
+  <data name="UiSIGNINMETHODS" xml:space="preserve">
+    <value>LOGIN-METODER</value>
+  </data>
+  <data name="UiSize" xml:space="preserve">
+    <value>Størrelse:</value>
+  </data>
+  <data name="UiSize100SHIFTMousewheel" xml:space="preserve">
+    <value>Størrelse: 100% (SHIFT+musehjul)</value>
+  </data>
+  <data name="UiSkull" xml:space="preserve">
+    <value>Skalle</value>
+  </data>
+  <data name="UiSleep" xml:space="preserve">
+    <value>Sov</value>
+  </data>
+  <data name="UiSmartHomeWebhookURLEGIFTTTAlexaGoogle" xml:space="preserve">
+    <value>Smart Home Webhook URL (f.eks. IFTTT, Alexa, Google)</value>
+  </data>
+  <data name="UiSmartSwitch" xml:space="preserve">
+    <value>Smart Switch</value>
+  </data>
+  <data name="UiSnakes" xml:space="preserve">
+    <value>Slanger</value>
+  </data>
+  <data name="UiSnooze" xml:space="preserve">
+    <value>Snooze</value>
+  </data>
+  <data name="UiSnoozeAlarm" xml:space="preserve">
+    <value>Snooze alarm</value>
+  </data>
+  <data name="UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D" xml:space="preserve">
+    <value>Nogle udvalgte metoder har ingen fremstillingsomkostninger i datasættet; deres ressourcer er udelukket.</value>
+  </data>
+  <data name="UiSortBy" xml:space="preserve">
+    <value>Sorter efter</value>
+  </data>
+  <data name="UiSpecificPlayerInRange" xml:space="preserve">
+    <value>Specifik spiller inden for rækkevidde</value>
+  </data>
+  <data name="UiSpecificPlayerOffline" xml:space="preserve">
+    <value>Specifik spiller offline</value>
+  </data>
+  <data name="UiSteamID" xml:space="preserve">
+    <value>Steam ID</value>
+  </data>
+  <data name="UiStopAlarmSound" xml:space="preserve">
+    <value>Stop alarmlyden</value>
+  </data>
+  <data name="UiStorage" xml:space="preserve">
+    <value>Opbevaring</value>
+  </data>
+  <data name="UiSupportRustPlusDesk" xml:space="preserve">
+    <value>Support RustPlusDesk</value>
+  </data>
+  <data name="UiSwitch" xml:space="preserve">
+    <value>Skift</value>
+  </data>
+  <data name="UiSyncCloudConnection" xml:space="preserve">
+    <value>Synkroniser skyforbindelse</value>
+  </data>
+  <data name="UiSyncOK" xml:space="preserve">
+    <value>Synkroniser OK</value>
+  </data>
+  <data name="UiSyncYourRustConnection" xml:space="preserve">
+    <value>Synkroniser din Rust+ forbindelse</value>
+  </data>
+  <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
+    <value>Synkroniser din Rust+ forbindelse til skyen for at modtage smarte Raid-/hændelsesalarmer på Discord, Alexa og Google Home, selv når din desktop-app er lukket.</value>
+  </data>
+  <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
+    <value>Synkronisering, sikkerhedskopier, teamfunktioner og supportadgang. Denne konto er adskilt fra Rust+ ledsagerparring og FCM.</value>
+  </data>
+  <data name="UiSyncedDevices" xml:space="preserve">
+    <value>Synkroniserede enheder</value>
+  </data>
+  <data name="UiSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="UiTargetCategory" xml:space="preserve">
+    <value>Målkategori</value>
+  </data>
+  <data name="UiTargetQuantity" xml:space="preserve">
+    <value>Målmængde</value>
+  </data>
+  <data name="UiTeamPathsTracking" xml:space="preserve">
+    <value>Sporing af teamstier</value>
+  </data>
+  <data name="UiTelegramCallViaCallMeBot" xml:space="preserve">
+    <value>Telegram Ring via CallMeBot</value>
+  </data>
+  <data name="UiTestCall" xml:space="preserve">
+    <value>Testopkald</value>
+  </data>
+  <data name="UiTextToSpeechForWebhook" xml:space="preserve">
+    <value>Tekst-til-tale til Webhook</value>
+  </data>
+  <data name="UiTheCloudWorkerListensForIncomingAlarms" xml:space="preserve">
+    <value>Skyarbejderen lytter efter indgående alarmer.</value>
+  </data>
+  <data name="UiTHEN" xml:space="preserve">
+    <value>SÅ</value>
+  </data>
+  <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
+    <value>Denne forbindelse er til Rust companion API. Det muliggør FCM parring, udsendelser i spillet, alarmer og teamchat. Din Cloud-konto er separat.</value>
+  </data>
+  <data name="UiTier" xml:space="preserve">
+    <value>Tier</value>
+  </data>
+  <data name="UiTigers" xml:space="preserve">
+    <value>Tigre</value>
+  </data>
+  <data name="UiToggleDelay150ms" xml:space="preserve">
+    <value>Toggle Delay: 150ms</value>
+  </data>
+  <data name="UiToggleDevice" xml:space="preserve">
+    <value>Skift enhed</value>
+  </data>
+  <data name="UiToggleMiniMap" xml:space="preserve">
+    <value>Skift minikort</value>
+  </data>
+  <data name="UiToggleMonumentList" xml:space="preserve">
+    <value>Skift monumentliste</value>
+  </data>
+  <data name="UiTrackTeammatesAndSharedActivity" xml:space="preserve">
+    <value>Spor holdkammerater og delt aktivitet.</value>
+  </data>
+  <data name="UiTriggerEvent" xml:space="preserve">
+    <value>Udløs begivenhed</value>
+  </data>
+  <data name="UiTriggered" xml:space="preserve">
+    <value>Udløst</value>
+  </data>
+  <data name="UiTryAnotherSearchOrCategory" xml:space="preserve">
+    <value>Prøv en anden søgning eller kategori.</value>
+  </data>
+  <data name="UiTTS" xml:space="preserve">
+    <value>TTS</value>
+  </data>
+  <data name="UiTTSLanguage" xml:space="preserve">
+    <value>TTS sprog</value>
+  </data>
+  <data name="UiTurret" xml:space="preserve">
+    <value>Turret</value>
+  </data>
+  <data name="UiUntil" xml:space="preserve">
+    <value>indtil</value>
+  </data>
+  <data name="UiUpgradeToSupporter" xml:space="preserve">
+    <value>Opgrader til Supporter</value>
+  </data>
+  <data name="UiUsernameEGBrunhilde" xml:space="preserve">
+    <value>Brugernavn (f.eks. @Brunhilde)</value>
+  </data>
+  <data name="UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired" xml:space="preserve">
+    <value>Bruger dit Rust+ / Steam login i browseren. Cloud-login er ikke påkrævet.</value>
+  </data>
+  <data name="UiViewAndControlPairedCCTVCameras" xml:space="preserve">
+    <value>Se og kontroller parrede CCTV-kameraer.</value>
+  </data>
+  <data name="UiViewPlayers" xml:space="preserve">
+    <value>Se spillere</value>
+  </data>
+  <data name="UiVisitWebsite" xml:space="preserve">
+    <value>Besøg hjemmesiden</value>
+  </data>
+  <data name="UiWait" xml:space="preserve">
+    <value>Vent</value>
+  </data>
+  <data name="UiWantItemEGBlue" xml:space="preserve">
+    <value>Ønsker en vare (f.eks. blå)...</value>
+  </data>
+  <data name="UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E" xml:space="preserve">
+    <value>Vi kan automatisk lokalisere kortet i din Steam installationsmappe, udtrække det og bygge et 3D-kort med varmekort og rigere monumentoverlejringer. Ingen data vil blive ændret, og ingen urelaterede Steam mappedata vil blive tilgået.</value>
+  </data>
+  <data name="UiWebhookInfo" xml:space="preserve">
+    <value>Webhook info</value>
+  </data>
+  <data name="UiWhatHappensNext" xml:space="preserve">
+    <value>Hvad sker der derefter:</value>
+  </data>
+  <data name="UiWhatIsAGenericAlarm" xml:space="preserve">
+    <value>Hvad er en generisk alarm?</value>
+  </data>
+  <data name="UiWheat" xml:space="preserve">
+    <value>Hvede</value>
+  </data>
+  <data name="UiWHEN" xml:space="preserve">
+    <value>HVORNÅR</value>
+  </data>
+  <data name="UiWILD" xml:space="preserve">
+    <value>VILDT</value>
+  </data>
+  <data name="UiWildRecyclerTime" xml:space="preserve">
+    <value>Wild Recycler Time</value>
+  </data>
+  <data name="UiWipeCycle" xml:space="preserve">
+    <value>Wipe Cycle</value>
+  </data>
+  <data name="UiWolves" xml:space="preserve">
+    <value>Ulve</value>
+  </data>
+  <data name="UiWoodPiles" xml:space="preserve">
+    <value>Træpæle</value>
+  </data>
+  <data name="UiX" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="UiYellow" xml:space="preserve">
+    <value>Gul</value>
+  </data>
+  <data name="UiYIELDBOARD" xml:space="preserve">
+    <value>UDBYTTAÆL</value>
+  </data>
+  <data name="UiYouCanRevokeThisAccessAtAnyTime" xml:space="preserve">
+    <value>Du kan til enhver tid tilbagekalde denne adgang.</value>
+  </data>
+  <data name="UiYourFCMConnectionTokenIsUploadedSecurely" xml:space="preserve">
+    <value>Dit FCM forbindelsestoken uploades sikkert.</value>
+  </data>
+  <data name="UiZZZ" xml:space="preserve">
+    <value>ZZZ</value>
+  </data>
+  <data name="CodeUi3DMapData" xml:space="preserve">
+    <value>3D kortdata</value>
+  </data>
+  <data name="CodeUiÃÂÂ" xml:space="preserve">
+    <value>Ã¢â‚¬Â¦</value>
+  </data>
+  <data name="CodeUiAccessRevoked" xml:space="preserve">
+    <value>Adgang tilbagekaldt</value>
+  </data>
+  <data name="CodeUiAddAnEmailAndPasswordToThisAccount" xml:space="preserve">
+    <value>Tilføj en e-mail og adgangskode til denne konto</value>
+  </data>
+  <data name="CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole" xml:space="preserve">
+    <value>Adminadgang kræver Discord godkendelse og en udvikler/hovedbidragyderrolle.</value>
+  </data>
+  <data name="CodeUiAlexaAccessRevokedSuccessfully" xml:space="preserve">
+    <value>Alexa adgang tilbagekaldt.</value>
+  </data>
+  <data name="CodeUiApplyingUpdate" xml:space="preserve">
+    <value>Anvender opdatering...</value>
+  </data>
+  <data name="CodeUiAreYouSureYouWantToClearTheOfflineDeathLog" xml:space="preserve">
+    <value>Er du sikker på, at du vil rydde offline dødsloggen?</value>
+  </data>
+  <data name="CodeUiArrivalWarningUnlearned" xml:space="preserve">
+    <value>Ankomstadvarsel (ulært)</value>
+  </data>
+  <data name="CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain" xml:space="preserve">
+    <value>Cachelagrede 3D-kortdata slettet. Det bliver genopbygget, når du åbner et 3D-kort igen.</value>
+  </data>
+  <data name="CodeUiChangeColor" xml:space="preserve">
+    <value>Skift farve</value>
+  </data>
+  <data name="CodeUiChannelsConfigurationSavedSuccessfully" xml:space="preserve">
+    <value>Kanalkonfigurationen blev gemt!</value>
+  </data>
+  <data name="CodeUiCheckingDevices" xml:space="preserve">
+    <value>Tjekker enheder...</value>
+  </data>
+  <data name="CodeUiCheckingForUpdates" xml:space="preserve">
+    <value>Søger efter opdateringer...</value>
+  </data>
+  <data name="CodeUiClearEveryTargetFromThisRaidPlan" xml:space="preserve">
+    <value>Vil du fjerne hvert mål fra denne raidplan?</value>
+  </data>
+  <data name="CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612" xml:space="preserve">
+    <value>Cloud-adgang er blevet tilbagekaldt, og dine legitimationsoplysninger er blevet slettet fra skyen.</value>
+  </data>
+  <data name="CodeUiCloudSyncFailed" xml:space="preserve">
+    <value>Cloud Sync mislykkedes</value>
+  </data>
+  <data name="CodeUiCloudUser" xml:space="preserve">
+    <value>Cloud bruger</value>
+  </data>
+  <data name="CodeUiCollapse" xml:space="preserve">
+    <value>Kollaps</value>
+  </data>
+  <data name="CodeUiConfirmClear" xml:space="preserve">
+    <value>Bekræft Ryd</value>
+  </data>
+  <data name="CodeUiConnected" xml:space="preserve">
+    <value>Forbundet</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncEnabled" xml:space="preserve">
+    <value>Forbundet · skysynkronisering aktiveret</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncPaused" xml:space="preserve">
+    <value>Forbundet · skysynkronisering sat på pause</value>
+  </data>
+  <data name="CodeUiCopied" xml:space="preserve">
+    <value>Kopieret</value>
+  </data>
+  <data name="CodeUiCopyMap" xml:space="preserve">
+    <value>Kopier kort</value>
+  </data>
+  <data name="CodeUiCouldNotCheckForUpdates" xml:space="preserve">
+    <value>Kunne ikke søge efter opdateringer</value>
+  </data>
+  <data name="CodeUiCouldNotCopySummary" xml:space="preserve">
+    <value>Resuméet kunne ikke kopieres</value>
+  </data>
+  <data name="CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811" xml:space="preserve">
+    <value>Kunne ikke hente detaljer fra Rust+ forbindelsen. Sørg for, at du er forbundet til serveren.</value>
+  </data>
+  <data name="CodeUiDeviceImportFailed" xml:space="preserve">
+    <value>Enhedsimport mislykkedes:</value>
+  </data>
+  <data name="CodeUiDiscordServerLinkedSuccessfully" xml:space="preserve">
+    <value>Discord Server forbundet med succes!</value>
+  </data>
+  <data name="CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E" xml:space="preserve">
+    <value>Discord Linket til serveren blev fjernet. Botten vil ikke længere interagere med din server.</value>
+  </data>
+  <data name="CodeUiEmailLoginEnabled" xml:space="preserve">
+    <value>E-mail-login aktiveret</value>
+  </data>
+  <data name="CodeUiEnabled" xml:space="preserve">
+    <value>Aktiveret</value>
+  </data>
+  <data name="CodeUiEraserBig20px" xml:space="preserve">
+    <value>Viskelæder stort (20px)</value>
+  </data>
+  <data name="CodeUiEraserSmall5px" xml:space="preserve">
+    <value>Viskelæder lille (5px)</value>
+  </data>
+  <data name="CodeUiFailedToLinkDiscordServer" xml:space="preserve">
+    <value>Kunne ikke linke Discord Server.</value>
+  </data>
+  <data name="CodeUiFailedToRevokeFCMConnection" xml:space="preserve">
+    <value>Kunne ikke tilbagekalde FCM forbindelse.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
+    <value>Kunne ikke synkronisere FCM forbindelse. Sørg for, at du er logget ind, har et aktivt Premium/Supporter-niveau, og at din forbindelse i Rust+ Companion er aktiv.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
+    <value>Kunne ikke synkronisere FCM forbindelse. Sørg for, at du er logget ind.</value>
+  </data>
+  <data name="CodeUiFehler" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="CodeUiHotkeysActive" xml:space="preserve">
+    <value>Genvejstaster aktive</value>
+  </data>
+  <data name="CodeUiInvalidUsername" xml:space="preserve">
+    <value>Ugyldigt brugernavn</value>
+  </data>
+  <data name="CodeUiJustNow" xml:space="preserve">
+    <value>lige nu</value>
+  </data>
+  <data name="CodeUiLinkDiscord" xml:space="preserve">
+    <value>Link Discord</value>
+  </data>
+  <data name="CodeUiLinked" xml:space="preserve">
+    <value>Forbundet</value>
+  </data>
+  <data name="CodeUiLinkedToThisCloudAccount" xml:space="preserve">
+    <value>Linket til denne cloud-konto</value>
+  </data>
+  <data name="CodeUiLöschen" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="CodeUiManageEmailAccount" xml:space="preserve">
+    <value>Administrer e-mail-konto</value>
+  </data>
+  <data name="CodeUiManagePlayerGroup" xml:space="preserve">
+    <value>Administrer spillergruppe</value>
+  </data>
+  <data name="CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52" xml:space="preserve">
+    <value>Maksimalt 5 aktive teammate-abonnementer nået. Afmeld venligst fra en anden først.</value>
+  </data>
+  <data name="CodeUiMaximumOf5CustomTimersAllowed" xml:space="preserve">
+    <value>Maksimalt 5 brugerdefinerede timere tilladt.</value>
+  </data>
+  <data name="CodeUiMissingChannelConfig" xml:space="preserve">
+    <value>Manglende kanalkonfiguration</value>
+  </data>
+  <data name="CodeUiNoActiveConnectionToRetrieveServerInfo" xml:space="preserve">
+    <value>Ingen aktiv forbindelse til at hente serverinfo.</value>
+  </data>
+  <data name="CodeUiNoCompanionSession" xml:space="preserve">
+    <value>Ingen ledsager session</value>
+  </data>
+  <data name="CodeUiNoDeviceExportsFoundForYourTeamServer" xml:space="preserve">
+    <value>Der blev ikke fundet nogen enhedseksporter til dit team/server.</value>
+  </data>
+  <data name="CodeUiNoFrame" xml:space="preserve">
+    <value>ingen ramme</value>
+  </data>
+  <data name="CodeUiNoMapFound" xml:space="preserve">
+    <value>Intet kort fundet</value>
+  </data>
+  <data name="CodeUiNoOffersAvailable" xml:space="preserve">
+    <value>Ingen tilgængelige tilbud</value>
+  </data>
+  <data name="CodeUiNoResultsFoundMatchingFilter" xml:space="preserve">
+    <value>Ingen resultater fundet matchende filter.</value>
+  </data>
+  <data name="CodeUiNoTextFound" xml:space="preserve">
+    <value>Ingen tekst fundet</value>
+  </data>
+  <data name="CodeUiNoValidRouteBottlenecks" xml:space="preserve">
+    <value>Ingen gyldig rute (flaskehalse).</value>
+  </data>
+  <data name="CodeUiNotLinked" xml:space="preserve">
+    <value>Ikke forbundet</value>
+  </data>
+  <data name="CodeUiNotSignedInSyncAndBackupsUnavailable" xml:space="preserve">
+    <value>Ikke logget ind · synkronisering og sikkerhedskopier utilgængelige</value>
+  </data>
+  <data name="CodeUiOfflineMap" xml:space="preserve">
+    <value>Offline kort</value>
+  </data>
+  <data name="CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers" xml:space="preserve">
+    <value>Kun manuelt parsede offlinekort kan kopieres til andre servere.</value>
+  </data>
+  <data name="CodeUiPINGeneratedValidFor15m" xml:space="preserve">
+    <value>Pinkode genereret (gyldig i 15 m)</value>
+  </data>
+  <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
+    <value>Konfigurer venligst en Discord &apos;Chat Alerts&apos; eller &apos;Begivenhed Alerts&apos; kanal i Indstillinger først.</value>
+  </data>
+  <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
+    <value>Tilslut venligst din Cloud-konto først.</value>
+  </data>
+  <data name="CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN" xml:space="preserve">
+    <value>Aktiver Cloud Sync først, før du genererer en Alexa PIN-kode.</value>
+  </data>
+  <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
+    <value>Indtast venligst et gyldigt Telegram brugernavn.</value>
+  </data>
+  <data name="CodeUiPleaseSaveADiscordServerIDFirst" xml:space="preserve">
+    <value>Gem venligst et Discord server-id først.</value>
+  </data>
+  <data name="CodeUiResumingUpdateDownload" xml:space="preserve">
+    <value>Genoptager download af opdatering...</value>
+  </data>
+  <data name="CodeUiSaveAlert" xml:space="preserve">
+    <value>Gem advarsel</value>
+  </data>
+  <data name="CodeUiSavedClickToUnsave" xml:space="preserve">
+    <value>Gemt (klik for at slette)</value>
+  </data>
+  <data name="CodeUiSearchResults" xml:space="preserve">
+    <value>Søgeresultater</value>
+  </data>
+  <data name="CodeUiSending" xml:space="preserve">
+    <value>Sender...</value>
+  </data>
+  <data name="CodeUiServerAddressCopiedToClipboard" xml:space="preserve">
+    <value>Serveradresse kopieret til udklipsholder!</value>
+  </data>
+  <data name="CodeUiShowNoBuildZones" xml:space="preserve">
+    <value>Vis byggeforbudszoner</value>
+  </data>
+  <data name="CodeUiSize14" xml:space="preserve">
+    <value>Størrelse: 14</value>
+  </data>
+  <data name="CodeUiSize40" xml:space="preserve">
+    <value>Størrelse: 40</value>
+  </data>
+  <data name="CodeUiSteamIDNotFoundPleaseConnectToAServerFirst" xml:space="preserve">
+    <value>Steam ID ikke fundet. Opret forbindelse til en server først.</value>
+  </data>
+  <data name="CodeUiSubscriptionLimit" xml:space="preserve">
+    <value>Abonnementsgrænse</value>
+  </data>
+  <data name="CodeUiSuccess" xml:space="preserve">
+    <value>Succes</value>
+  </data>
+  <data name="CodeUiSynced" xml:space="preserve">
+    <value>Synkroniseret!</value>
+  </data>
+  <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
+    <value>Rust+ API&apos;en giver ikke en detaljeret beskrivelse af denne server.</value>
+  </data>
+  <data name="CodeUiThickness10px" xml:space="preserve">
+    <value>Tykkelse: 10px</value>
+  </data>
+  <data name="CodeUiThickness3px" xml:space="preserve">
+    <value>Tykkelse: 3px</value>
+  </data>
+  <data name="CodeUiTimer" xml:space="preserve">
+    <value>Timer</value>
+  </data>
+  <data name="CodeUiTranslate" xml:space="preserve">
+    <value>Oversæt</value>
+  </data>
+  <data name="CodeUiTranslated" xml:space="preserve">
+    <value>Oversat</value>
+  </data>
+  <data name="CodeUiTranslating" xml:space="preserve">
+    <value>Oversætter...</value>
+  </data>
+  <data name="CodeUiTranslationFailed" xml:space="preserve">
+    <value>Oversættelse mislykkedes:</value>
+  </data>
+  <data name="CodeUiUmbenennen" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="CodeUiUnavailable" xml:space="preserve">
+    <value>Ikke tilgængelig</value>
+  </data>
+  <data name="CodeUiUngültigeEingaben" xml:space="preserve">
+    <value>Ungültige Eingaben.</value>
+  </data>
+  <data name="CodeUiUnlimited" xml:space="preserve">
+    <value>Ubegrænset</value>
+  </data>
+  <data name="CodeUiUpdate" xml:space="preserve">
+    <value>Opdatering</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed" xml:space="preserve">
+    <value>Opdateringstjek mislykkedes</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed2" xml:space="preserve">
+    <value>Opdateringstjek mislykkedes.</value>
+  </data>
+  <data name="CodeUiUpdateDownloadCancelled" xml:space="preserve">
+    <value>Download af opdatering annulleret</value>
+  </data>
+  <data name="CodeUiUpdateDownloadFailed" xml:space="preserve">
+    <value>Download af opdatering mislykkedes</value>
+  </data>
+  <data name="CodeUiUpdateDownloadPaused" xml:space="preserve">
+    <value>Download af opdatering sat på pause</value>
+  </data>
+  <data name="CodeUiUpdateReadyInstallsOnClose" xml:space="preserve">
+    <value>Opdatering klar - installeres ved lukning</value>
+  </data>
+  <data name="CodeUiWhite" xml:space="preserve">
+    <value>Hvid</value>
+  </data>
+  <data name="FormatOfflineMapImported" xml:space="preserve">
+    <value>Offlinekort blev importeret som &apos;{0}&apos;!</value>
+  </data>
+  <data name="MapImportedTitle" xml:space="preserve">
+    <value>Kort importeret</value>
+  </data>
+  <data name="FormatFailedImportMap" xml:space="preserve">
+    <value>Kunne ikke importere kort: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Fejl</value>
+  </data>
+  <data name="CopyMapStagedMessage" xml:space="preserve">
+    <value>Vælg eller opret forbindelse til en parret server på listen. Hvis dets layout matcher, kopieres kortet automatisk.</value>
+  </data>
+  <data name="CopyMapStagedTitle" xml:space="preserve">
+    <value>Kopier kort iscenesat</value>
+  </data>
+  <data name="FormatUpdateAvailable" xml:space="preserve">
+    <value>Opdatering {0} tilgængelig</value>
+  </data>
+  <data name="FormatDownloadingUpdate" xml:space="preserve">
+    <value>Downloader {0}</value>
+  </data>
+  <data name="FormatUpdateReady" xml:space="preserve">
+    <value>Opdatering {0} klar - installeres ved afslutning</value>
+  </data>
+  <data name="FormatPlayerStatusError" xml:space="preserve">
+    <value>Fejl: {0}</value>
+  </data>
+  <data name="FormatFailedOpenPlayers" xml:space="preserve">
+    <value>Kunne ikke åbne spillervinduet:
+
+{0}: {1}
+
+Stak:
+{2}</value>
+  </data>
+  <data name="FormatOfflineMapNotParsed" xml:space="preserve">
+    <value>Offlinekortet &apos;{0}&apos; er ikke blevet analyseret endnu. Åbn dets 3D kort én gang for at parse det, og prøv derefter at kopiere igen.</value>
+  </data>
+  <data name="CopyMapErrorTitle" xml:space="preserve">
+    <value>Kopier kortfejl</value>
+  </data>
+  <data name="FormatMapMismatch" xml:space="preserve">
+    <value>Kortlayouterne stemmer ikke overens. Kortet &apos;{0}&apos; ser ikke ud til at være det samme kort som den tilsluttede server &apos;{1}&apos;.</value>
+  </data>
+  <data name="MapMismatchTitle" xml:space="preserve">
+    <value>Kort uoverensstemmelse</value>
+  </data>
+  <data name="FormatMapCopied" xml:space="preserve">
+    <value>Kopieret 3D-kortet og de lokale aktiver fra &apos;{0}&apos; til &apos;{1}&apos;!</value>
+  </data>
+  <data name="MapCopiedTitle" xml:space="preserve">
+    <value>Kort kopieret</value>
+  </data>
+  <data name="FormatMapCopyError" xml:space="preserve">
+    <value>Der opstod en fejl under kopiering af kortet: {0}</value>
+  </data>
+  <data name="FormatCloudLimits" xml:space="preserve">
+    <value>{0}
+Planbrug:
+• Overlejringsstørrelse: {1} KB / {2}
+• Enheder: {3} / {4}
+• Baser: {5} / {6}</value>
+  </data>
+  <data name="FormatFailedUnlinkDiscord" xml:space="preserve">
+    <value>Kunne ikke fjerne linket til Discord server: {0}</value>
+  </data>
+  <data name="FormatFailedLinkDiscord" xml:space="preserve">
+    <value>Kunne ikke linke Discord server: {0}</value>
+  </data>
+  <data name="FormatFailedSaveChannels" xml:space="preserve">
+    <value>Kunne ikke gemme kanaler: {0}</value>
+  </data>
+  <data name="FormatFailedOpenBrowser" xml:space="preserve">
+    <value>Kunne ikke åbne browser: {0}</value>
+  </data>
+  <data name="FormatFailedGeneratePin" xml:space="preserve">
+    <value>Kunne ikke generere PIN: {0}</value>
+  </data>
+  <data name="FormatFailedRevokeAlexa" xml:space="preserve">
+    <value>Kunne ikke tilbagekalde Alexa adgang: {0}</value>
+  </data>
+  <data name="FormatPremiumPlan" xml:space="preserve">
+    <value>{0} · Premium</value>
+  </data>
+  <data name="FormatFreePlan" xml:space="preserve">
+    <value>{0} · Gratis</value>
+  </data>
+  <data name="FormatCouldNotLoadImage" xml:space="preserve">
+    <value>Billedet kunne ikke indlæses: {0}</value>
+  </data>
+  <data name="FormatErrorSavingCrosshair" xml:space="preserve">
+    <value>Fejl ved lagring af trådkors: {0}</value>
+  </data>
+  <data name="FormatCheckingDevice" xml:space="preserve">
+    <value>Kontrollerer enhed #{0} ({1})...</value>
+  </data>
+  <data name="FormatToggleDelay" xml:space="preserve">
+    <value>Til/fra-forsinkelse: {0} ms</value>
+  </data>
+  <data name="FormatErrorLoadingUsers" xml:space="preserve">
+    <value>Fejl ved indlæsning af brugere: {0}</value>
+  </data>
+  <data name="FormatErrorUpdatingOverride" xml:space="preserve">
+    <value>Fejl ved opdatering af tilsidesættelse: {0}</value>
+  </data>
+  <data name="FormatServerDescriptionWebsite" xml:space="preserve">
+    <value>Rust+ API&apos;en giver ikke en detaljeret beskrivelse af denne server.
+
+Du kan finde mere information på serverens officielle hjemmeside:
+{0}</value>
+  </data>
+  <data name="FormatFailedLoadServerDetails" xml:space="preserve">
+    <value>Kunne ikke indlæse serveroplysninger: {0}</value>
+  </data>
+  <data name="RaidLoadingData" xml:space="preserve">
+    <value>Indlæser raid-data...</value>
+  </data>
+  <data name="RaidNoTargetsAvailable" xml:space="preserve">
+    <value>Ingen raidmål er tilgængelige.</value>
+  </data>
+  <data name="FormatRaidUnavailable" xml:space="preserve">
+    <value>Raid-beregneren er ikke tilgængelig: {0}</value>
+  </data>
+  <data name="FormatRaidSaveFailed" xml:space="preserve">
+    <value>Kunne ikke gemme raid-planen: {0}</value>
+  </data>
+  <data name="UpdateSuccessfulTitle" xml:space="preserve">
+    <value>Opdatering lykkedes</value>
+  </data>
+  <data name="FormatUpdateSuccessful" xml:space="preserve">
+    <value>Rust+ Desktop blev opdateret til v({0}!</value>
+  </data>
+  <data name="UpdateDownloadedTitle" xml:space="preserve">
+    <value>Opdatering downloadet</value>
+  </data>
+  <data name="UpdateInstallsOnClose" xml:space="preserve">
+    <value>Opdateringen installeres automatisk, når du lukker appen.</value>
+  </data>
+  <data name="FormatDownloadFailed" xml:space="preserve">
+    <value>Download mislykkedes: {0}</value>
+  </data>
+  <data name="UpdateAlreadyDownloaded" xml:space="preserve">
+    <value>Opdateringen er allerede downloadet. Det vil blive installeret, når du lukker appen.</value>
+  </data>
+  <data name="SelectRustMapFile" xml:space="preserve">
+    <value>Vælg Rust .map-fil</value>
+  </data>
+  <data name="CloudFeaturesUpdateRequired" xml:space="preserve">
+    <value>For at fortsætte med at bruge skyfunktioner skal du opdatere applikationen.</value>
+  </data>
+  <data name="RenameCustomCrosshair" xml:space="preserve">
+    <value>Omdøb Custom Crosshair</value>
+  </data>
+  <data name="HowToTrackWindowTitle" xml:space="preserve">
+    <value>Sådan spores spillere — Rust+ Desk</value>
+  </data>
+  <data name="DiscordClientInitializing" xml:space="preserve">
+    <value>Desktop-klienten initialiseres eller er ikke fuldt indlæst.</value>
+  </data>
+  <data name="FormatCurrentServerTime" xml:space="preserve">
+    <value>🕒 Aktuel servertid: {0}</value>
+  </data>
+  <data name="FormatServerPopulation" xml:space="preserve">
+    <value>👥 Serverpopulation: {0}</value>
+  </data>
+  <data name="DiscordInvalidCommandPayload" xml:space="preserve">
+    <value>❌ Ugyldig kommando: Enhedens navn eller ID mangler.</value>
+  </data>
+  <data name="DiscordRenderingMap" xml:space="preserve">
+    <value>⌛ Kortet gengives. Vent venligst.</value>
+  </data>
+  <data name="DiscordRenderingFullMap" xml:space="preserve">
+    <value>⌛ Det fulde kort gengives. Vent venligst.</value>
+  </data>
+  <data name="FormatUnknownCommand" xml:space="preserve">
+    <value>Ukendt eller ikke-understøttet kommando: {0}</value>
+  </data>
+  <data name="FormatCommandError" xml:space="preserve">
+    <value>Fejl ved udførelse af kommando: {0}</value>
+  </data>
+  <data name="Existing3DMapReused" xml:space="preserve">
+    <value>Eksisterende 3D kortdata blev genbrugt; ingen aftørring blev fundet.</value>
+  </data>
+  <data name="ServerOfflineA2S" xml:space="preserve">
+    <value>Server offline (A2S-forespørgsel fik timeout)</value>
+  </data>
+  <data name="AutoDiscoveringQueryPort" xml:space="preserve">
+    <value>Finder forespørgselsporten gennem Steam API...</value>
+  </data>
+  <data name="FetchingSteamPlayers" xml:space="preserve">
+    <value>Henter spillere gennem Steam Forespørgsel...</value>
+  </data>
+  <data name="NoOnlinePlayersFound" xml:space="preserve">
+    <value>Ingen online spillere fundet.</value>
+  </data>
+  <data name="AssignGroupTitle" xml:space="preserve">
+    <value>Tildel gruppe</value>
+  </data>
+  <data name="OfflineCloudAlertsTitle" xml:space="preserve">
+    <value>Offline skyadvarsler</value>
+  </data>
+  <data name="AlexaSmartHomeTitle" xml:space="preserve">
+    <value>Alexa Smart Home</value>
+  </data>
+  <data name="SelectCustomDeathSound" xml:space="preserve">
+    <value>Vælg Custom Death Sound</value>
+  </data>
+  <data name="CountdownOneMinute" xml:space="preserve">
+    <value>1 minuts nedtælling...</value>
+  </data>
+  <data name="TimerExpiredTitle" xml:space="preserve">
+    <value>Timeren er udløbet</value>
+  </data>
+  <data name="SelectTimerAlarmSound" xml:space="preserve">
+    <value>Vælg Timer Alarm Lyd</value>
+  </data>
+  <data name="SelectTimerCountdownSound" xml:space="preserve">
+    <value>Vælg Timer 1 minuts nedtællingslyd</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Opdatering</value>
+  </data>
+  <data name="UpdateRequiredTitle" xml:space="preserve">
+    <value>Opdatering påkrævet</value>
+  </data>
+  <data name="PauseUpdate" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="ResumeUpdate" xml:space="preserve">
+    <value>Genoptag</value>
+  </data>
 </root>
-
-
-

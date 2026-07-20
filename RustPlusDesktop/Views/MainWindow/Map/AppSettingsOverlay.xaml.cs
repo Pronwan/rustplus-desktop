@@ -456,7 +456,7 @@ namespace RustPlusDesk.Views
                 .ThenBy(option => option.Title)
                 .ToList();
             SettingsSearchResults.ItemsSource = matches.Select(option => CreateSettingsOptionResult(option, query)).ToList();
-            SettingsDetailTitle.Text = "Search results";
+            SettingsDetailTitle.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiSearchResults");
             SettingsDetailSubtitle.Text = matches.Count == 0
                 ? $"No settings found for “{query}”"
                 : $"{matches.Count} setting{(matches.Count == 1 ? "" : "s")} found for “{query}”";
@@ -587,7 +587,7 @@ namespace RustPlusDesk.Views
             // Load Telegram State
             TxtTelegramUser.Text = TrackingService.TelegramCallUser;
             TxtTelegramMsg.Text = TrackingService.TelegramCallMsg;
-            if (string.IsNullOrEmpty(TxtTelegramMsg.Text)) TxtTelegramMsg.Text = "Alarm ausgeloest!";
+            if (string.IsNullOrEmpty(TxtTelegramMsg.Text)) TxtTelegramMsg.Text = RustPlusDesk.Properties.Resources.GetString("UiAlarmAusgeloest");
             
             foreach (ComboBoxItem item in CmbTelegramLang.Items)
             {
@@ -674,14 +674,14 @@ namespace RustPlusDesk.Views
                 int currentBases = ParentWindow != null ? ParentWindow.GetCurrentBaseCount() : 0;
 
                 string baseText = string.Format(T("AuthDiscordConnectedFormat", "Discord connected - Tier: {0}"), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
-                TxtAuthStatus.Text = $"{baseText}\nLimits Usage:\n• Overlay size: {currentOverlayKb} KB / {maxOverlay}\n• Devices: {currentDevices} / {maxDevs}\n• Bases: {currentBases} / {maxBs}";
+                TxtAuthStatus.Text = string.Format(Properties.Resources.GetString("FormatCloudLimits"), baseText, currentOverlayKb, maxOverlay, currentDevices, maxDevs, currentBases, maxBs);
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }
             else if (isEmail)
             {
                 var email = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser?.Email ?? "";
-                TxtDiscordBtnLabel.Text = "Sign in with Discord";
+                TxtDiscordBtnLabel.Text = RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptDiscordButton");
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
 
                 int maxBytes = Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
@@ -696,13 +696,13 @@ namespace RustPlusDesk.Views
                 int currentBases = ParentWindow != null ? ParentWindow.GetCurrentBaseCount() : 0;
 
                 string baseText = string.Format(T("AuthEmailConnectedFormat", "Email connected: {0} - Tier: {1}"), email, Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
-                TxtAuthStatus.Text = $"{baseText}\nLimits Usage:\n• Overlay size: {currentOverlayKb} KB / {maxOverlay}\n• Devices: {currentDevices} / {maxDevs}\n• Bases: {currentBases} / {maxBs}";
+                TxtAuthStatus.Text = string.Format(Properties.Resources.GetString("FormatCloudLimits"), baseText, currentOverlayKb, maxOverlay, currentDevices, maxDevs, currentBases, maxBs);
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }
             else
             {
-                TxtDiscordBtnLabel.Text = "Sign in with Discord";
+                TxtDiscordBtnLabel.Text = RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptDiscordButton");
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
                 TxtAuthStatus.Text = T("AuthNotConnectedStatus", "Not connected - sign in to use Cloud Sync and backups");
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
@@ -711,7 +711,7 @@ namespace RustPlusDesk.Views
 
             BrdSupporterSettings.IsEnabled = connected && isPremium;
             BrdSupporterSettings.Opacity = (connected && isPremium) ? 1.0 : 0.5;
-            BtnEmailConnect.Content = isEmail ? "Manage email account" : "Sign in with email";
+            BtnEmailConnect.Content = isEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiManageEmailAccount") : RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptEmailButton");
 
             if (connected && isPremium)
             {
@@ -884,7 +884,7 @@ namespace RustPlusDesk.Views
             var deleted = Map3DLocalBuildService.DeleteAllCachedMapData();
             ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
             ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
-            MessageBox.Show(owner, "Cached 3D map data deleted. It will be rebuilt when you open a 3D map again.", "3D Map Data", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(owner, RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void BtnManuallyParseMap_Click(object sender, RoutedEventArgs e)
@@ -1124,9 +1124,9 @@ namespace RustPlusDesk.Views
             var msg = "With Webhooks, we can automatically send FCM notifications (Offline Death and Raid Alerts) to Discord or other Smart Home solutions like IFTTT to e.g. trigger smart lights or be called when a raid happens.";
             var msgBox = new Wpf.Ui.Controls.MessageBox
             {
-                Title = "Offline Cloud Alerts",
+                Title = Properties.Resources.GetString("OfflineCloudAlertsTitle"),
                 Content = msg,
-                PrimaryButtonText = "OK"
+                PrimaryButtonText = Properties.Resources.OK
             };
             await msgBox.ShowDialogAsync();
         }
@@ -1144,9 +1144,9 @@ namespace RustPlusDesk.Views
                       "If new devices are added later, they can easily be found in Alexa via the device search. After a wipe, simply delete the old devices from the Alexa App.";
             var msgBox = new Wpf.Ui.Controls.MessageBox
             {
-                Title = "Alexa Smart Home",
+                Title = Properties.Resources.GetString("AlexaSmartHomeTitle"),
                 Content = msg,
-                PrimaryButtonText = "OK"
+                PrimaryButtonText = Properties.Resources.OK
             };
             await msgBox.ShowDialogAsync();
         }
@@ -1180,14 +1180,14 @@ namespace RustPlusDesk.Views
                 {
                     if (btn != null)
                     {
-                        btn.Content = "Synced!";
+                        btn.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiSynced");
                         btn.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Checkmark24 };
                         btn.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Failed to sync FCM connection. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.", "Cloud Sync Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudSyncFailed"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             finally
@@ -1206,14 +1206,14 @@ namespace RustPlusDesk.Views
                 bool success = await RustPlusDesk.Services.FcmSyncService.RevokeFcmCredentialsAsync();
                 if (success)
                 {
-                    BtnSyncFcm.Content = "Sync Cloud Connection";
+                    BtnSyncFcm.Content = RustPlusDesk.Properties.Resources.GetString("UiSyncCloudConnection");
                     BtnSyncFcm.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.CloudArrowUp24 };
                     BtnSyncFcm.ClearValue(WpfUi.Button.ForegroundProperty);
-                    MessageBox.Show("Cloud access has been revoked and your credentials have been deleted from the cloud.", "Access Revoked", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612"), RustPlusDesk.Properties.Resources.GetString("CodeUiAccessRevoked"), MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    MessageBox.Show("Failed to revoke FCM connection.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToRevokeFCMConnection"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             finally
@@ -1262,12 +1262,12 @@ namespace RustPlusDesk.Views
                         await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Delete, null, delParams);
                     }
                     
-                    MessageBox.Show("Discord Server unlinked successfully. The bot will no longer interact with your server.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
                     _ = LoadDiscordBotSettingsAsync();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to unlink Discord Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedUnlinkDiscord"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {
@@ -1293,16 +1293,16 @@ namespace RustPlusDesk.Views
                 var registration = resultList?.FirstOrDefault();
                 if (registration == null || !registration.Success)
                 {
-                    MessageBox.Show(registration?.Message ?? "Failed to link Discord Server.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(registration?.Message ?? RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToLinkDiscordServer"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                MessageBox.Show("Discord Server linked successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerLinkedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
                 _ = LoadDiscordBotSettingsAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to link Discord Server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedLinkDiscord"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -1316,7 +1316,7 @@ namespace RustPlusDesk.Views
             var guildId = TxtDiscordGuildId.Text?.Trim();
             if (string.IsNullOrEmpty(guildId))
             {
-                MessageBox.Show("Please save a Discord Server ID first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseSaveADiscordServerIDFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1372,11 +1372,11 @@ namespace RustPlusDesk.Views
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
                 await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
 
-                MessageBox.Show("Channels configuration saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiChannelsConfigurationSavedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to save channels: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedSaveChannels"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -1525,7 +1525,7 @@ namespace RustPlusDesk.Views
             var ofd = new Microsoft.Win32.OpenFileDialog
             {
                 Filter = "Audio Files (*.mp3, *.wav)|*.mp3;*.wav",
-                Title = "Select Custom Death Sound"
+                Title = Properties.Resources.GetString("SelectCustomDeathSound")
             };
             if (ofd.ShowDialog() == true)
             {
@@ -1658,7 +1658,7 @@ namespace RustPlusDesk.Views
             if (!user.StartsWith("@")) user = "@" + user;
             if (string.IsNullOrWhiteSpace(user) || user == "@")
             {
-                MessageBox.Show("Please enter a valid Telegram username.", "Invalid Username", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnterAValidTelegramUsername"), RustPlusDesk.Properties.Resources.GetString("CodeUiInvalidUsername"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -1694,15 +1694,15 @@ namespace RustPlusDesk.Views
             {
                 var msgBox = new Wpf.Ui.Controls.MessageBox
                 {
-                    Title = "Success",
+                    Title = Properties.Resources.GetString("CodeUiSuccess"),
                     Content = "Telegram Call URL generated and synced to the cloud worker successfully!",
-                    PrimaryButtonText = "OK"
+                    PrimaryButtonText = Properties.Resources.OK
                 };
                 await msgBox.ShowDialogAsync();
             }
             else
             {
-                MessageBox.Show("Failed to sync FCM connection. Please ensure you are logged in.", "Cloud Sync Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudSyncFailed"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -1726,7 +1726,7 @@ namespace RustPlusDesk.Views
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to open browser: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedOpenBrowser"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -1797,7 +1797,7 @@ namespace RustPlusDesk.Views
         {
             if (Services.Auth.SupabaseAuthManager.Client == null)
             {
-                MessageBox.Show("Please connect your Cloud Account first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1805,7 +1805,7 @@ namespace RustPlusDesk.Views
             var steamId = vm?.SteamId64;
             if (string.IsNullOrEmpty(steamId))
             {
-                MessageBox.Show("Steam ID not found. Please connect to a server first.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -1818,7 +1818,7 @@ namespace RustPlusDesk.Views
                 var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
                 if (response == null)
                 {
-                    MessageBox.Show("Please enable Cloud Sync first before generating an Alexa PIN.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     BtnGenerateAlexaPIN.IsEnabled = true;
                     return;
                 }
@@ -1832,11 +1832,11 @@ namespace RustPlusDesk.Views
 
                 TxtAlexaPIN.Text = pin;
                 TxtAlexaPIN.Visibility = Visibility.Visible;
-                BtnGenerateAlexaPIN.Content = "PIN Generated (valid for 15m)";
+                BtnGenerateAlexaPIN.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiPINGeneratedValidFor15m");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to generate PIN: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedGeneratePin"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -1848,7 +1848,7 @@ namespace RustPlusDesk.Views
         {
             if (Services.Auth.SupabaseAuthManager.Client == null)
             {
-                MessageBox.Show("Please connect your Cloud Account first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1856,7 +1856,7 @@ namespace RustPlusDesk.Views
             var serverKey = selected?.Tag?.ToString();
             if (string.IsNullOrEmpty(serverKey))
             {
-                MessageBox.Show("Please select a server first.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("PleaseSelectServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -1864,7 +1864,7 @@ namespace RustPlusDesk.Views
             var steamId = vm?.SteamId64;
             if (string.IsNullOrEmpty(steamId))
             {
-                MessageBox.Show("Steam ID not found. Please connect to a server first.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -1882,9 +1882,9 @@ namespace RustPlusDesk.Views
                 {
                     var msgBox = new Wpf.Ui.Controls.MessageBox
                     {
-                        Title = "Cloud Sync Failed",
+                        Title = Properties.Resources.GetString("CodeUiCloudSyncFailed"),
                         Content = "Failed to sync FCM connection. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.",
-                        PrimaryButtonText = "OK"
+                        PrimaryButtonText = Properties.Resources.OK
                     };
                     await msgBox.ShowDialogAsync();
                     return;
@@ -1925,9 +1925,9 @@ namespace RustPlusDesk.Views
 
                     var msgBox = new Wpf.Ui.Controls.MessageBox
                     {
-                        Title = "Success",
+                        Title = Properties.Resources.GetString("CodeUiSuccess"),
                         Content = "Alexa Server linked successfully! Alexa will now control devices from this server and receive Smart Alarms.",
-                        PrimaryButtonText = "OK"
+                        PrimaryButtonText = Properties.Resources.OK
                     };
                     await msgBox.ShowDialogAsync();
                 }
@@ -1936,9 +1936,9 @@ namespace RustPlusDesk.Views
             {
                 var msgBox = new Wpf.Ui.Controls.MessageBox
                 {
-                    Title = "Error",
+                    Title = Properties.Resources.GetString("ErrorTitle"),
                     Content = $"Failed to link Alexa Server: {ex.Message}",
-                    PrimaryButtonText = "OK"
+                    PrimaryButtonText = Properties.Resources.OK
                 };
                 await msgBox.ShowDialogAsync();
             }
@@ -1962,11 +1962,11 @@ namespace RustPlusDesk.Views
                     .Delete();
 
                 CmbAlexaServer.SelectedItem = null;
-                MessageBox.Show("Alexa access revoked successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to revoke Alexa access: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedRevokeAlexa"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {

@@ -25,21 +25,21 @@ public partial class CloudAccountWindow : Window
         bool hasEmail = SupabaseAuthManager.HasAuthProvider("email");
         string tier = FriendlyTier(SupabaseAuthManager.CurrentTier);
 
-        TxtPlanBadge.Text = SupabaseAuthManager.IsPremium ? $"{tier} · Premium" : $"{tier} · Free";
-        TxtAccountSummary.Text = TrackingService.CloudSyncEnabled ? "Connected · cloud sync enabled" : "Connected · cloud sync paused";
-        TxtDisplayName.Text = GetDisplayName(user?.UserMetadata) ?? user?.Email ?? "Cloud user";
-        TxtEmail.Text = string.IsNullOrWhiteSpace(user?.Email) ? "Not linked" : user.Email;
-        TxtUserId.Text = user?.Id ?? "Unavailable";
+        TxtPlanBadge.Text = string.Format(Properties.Resources.GetString(SupabaseAuthManager.IsPremium ? "FormatPremiumPlan" : "FormatFreePlan"), tier);
+        TxtAccountSummary.Text = TrackingService.CloudSyncEnabled ? RustPlusDesk.Properties.Resources.GetString("CodeUiConnectedCloudSyncEnabled") : RustPlusDesk.Properties.Resources.GetString("CodeUiConnectedCloudSyncPaused");
+        TxtDisplayName.Text = GetDisplayName(user?.UserMetadata) ?? user?.Email ?? RustPlusDesk.Properties.Resources.GetString("CodeUiCloudUser");
+        TxtEmail.Text = string.IsNullOrWhiteSpace(user?.Email) ? RustPlusDesk.Properties.Resources.GetString("CodeUiNotLinked") : user.Email;
+        TxtUserId.Text = user?.Id ?? RustPlusDesk.Properties.Resources.GetString("CodeUiUnavailable");
         TxtSteamAccount.Text = string.IsNullOrWhiteSpace(_owner.ViewModel.SteamId64)
             ? "Not connected"
             : $"{_owner.SteamDisplayName} · {_owner.ViewModel.SteamId64}";
 
-        TxtDiscordState.Text = hasDiscord ? "Linked to this cloud account" : "Not linked";
-        BtnLinkDiscord.Content = hasDiscord ? "Linked" : "Link Discord";
+        TxtDiscordState.Text = hasDiscord ? RustPlusDesk.Properties.Resources.GetString("CodeUiLinkedToThisCloudAccount") : RustPlusDesk.Properties.Resources.GetString("CodeUiNotLinked");
+        BtnLinkDiscord.Content = hasDiscord ? RustPlusDesk.Properties.Resources.GetString("CodeUiLinked") : RustPlusDesk.Properties.Resources.GetString("CodeUiLinkDiscord");
         BtnLinkDiscord.IsEnabled = !hasDiscord;
 
-        TxtEmailState.Text = hasEmail ? "Email login enabled" : "Add an email and password to this account";
-        BtnShowEmailLink.Content = hasEmail ? "Enabled" : "Add login";
+        TxtEmailState.Text = hasEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiEmailLoginEnabled") : RustPlusDesk.Properties.Resources.GetString("CodeUiAddAnEmailAndPasswordToThisAccount");
+        BtnShowEmailLink.Content = hasEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiEnabled") : RustPlusDesk.Properties.Resources.GetString("UiAddLogin");
         BtnShowEmailLink.IsEnabled = !hasEmail;
         if (!hasEmail && !string.IsNullOrWhiteSpace(user?.Email))
             TxtLinkEmail.Text = user.Email;
@@ -48,7 +48,7 @@ public partial class CloudAccountWindow : Window
         SetUsage(TxtBasesUsage, ProgressBases, _owner.GetCurrentBaseCount(), SupabaseAuthManager.GetMaxBases(), value => value.ToString());
         SetUsage(TxtOverlayUsage, ProgressOverlay, _owner.GetCurrentOverlaySizeBytes(), SupabaseAuthManager.GetMaxOverlayBytes(), FormatBytes);
         int screenshotLimit = SupabaseAuthManager.GetMaxScreenshotsPerBase();
-        TxtScreenshotLimit.Text = $"Screenshots per base: {(screenshotLimit == int.MaxValue ? "Unlimited" : screenshotLimit)}";
+        TxtScreenshotLimit.Text = $"Screenshots per base: {(screenshotLimit == int.MaxValue ? RustPlusDesk.Properties.Resources.GetString("CodeUiUnlimited") : screenshotLimit)}";
     }
 
     private static string? GetDisplayName(System.Collections.Generic.Dictionary<string, object>? metadata)
@@ -68,7 +68,7 @@ public partial class CloudAccountWindow : Window
         int current, int limit, Func<int, string> formatter)
     {
         bool unlimited = limit == int.MaxValue;
-        label.Text = $"{formatter(current)} / {(unlimited ? "Unlimited" : formatter(limit))}";
+        label.Text = $"{formatter(current)} / {(unlimited ? RustPlusDesk.Properties.Resources.GetString("CodeUiUnlimited") : formatter(limit))}";
         bar.Value = unlimited || limit <= 0 ? 0 : Math.Clamp(current * 100.0 / limit, 0, 100);
         bar.IsIndeterminate = false;
     }

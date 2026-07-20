@@ -117,7 +117,7 @@ namespace RustPlusDesk;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Could not load image: {ex.Message}");
+                    MessageBox.Show(string.Format(Properties.Resources.GetString("FormatCouldNotLoadImage"), ex.Message));
                 }
             }
         }
@@ -447,7 +447,7 @@ namespace RustPlusDesk;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving crosshair: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatErrorSavingCrosshair"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

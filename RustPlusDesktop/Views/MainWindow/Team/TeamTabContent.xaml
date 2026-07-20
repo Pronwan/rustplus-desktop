@@ -95,7 +95,7 @@
                                     VerticalAlignment="Center"
                                     Cursor="Hand"
                                     IsChecked="{Binding ShowMarkers}"
-                                    ToolTip="Show markers on map">
+                                    ToolTip="{DynamicResource UiShowMarkersOnMap}">
                                     <CheckBox.Style>
                                         <Style TargetType="CheckBox">
                                             <Setter Property="Template">
@@ -397,7 +397,7 @@
                         FontSize="10"
                         FontWeight="Bold"
                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                        Text="A..." />
+                        Text="{DynamicResource UiA}" />
                 </ToggleButton>
 
                 <!-- Icon Size -->

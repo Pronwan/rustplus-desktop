@@ -29,7 +29,7 @@ public partial class MainWindow
         {
             ChkNoBuildZones.IsChecked = false;
             ChkNoBuildZones.IsEnabled = false;
-            ChkNoBuildZones.ToolTip = "Generate the 3D map to enable no-build zones.";
+            ChkNoBuildZones.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
         }
 
         foreach (var shape in _buildingBlockedZoneEls)
@@ -70,7 +70,7 @@ public partial class MainWindow
         {
             ChkNoBuildZones.IsEnabled = false;
             ChkNoBuildZones.IsChecked = false;
-            ChkNoBuildZones.ToolTip = "Generate the 3D map to enable no-build zones.";
+            ChkNoBuildZones.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
         }
 
         if (string.IsNullOrWhiteSpace(folderPath))
@@ -106,7 +106,7 @@ public partial class MainWindow
         if (ChkNoBuildZones != null)
         {
             ChkNoBuildZones.IsEnabled = hasData;
-            ChkNoBuildZones.ToolTip = hasData ? "Show no-build zones" : "Generate the 3D map to enable no-build zones.";
+            ChkNoBuildZones.ToolTip = hasData ? RustPlusDesk.Properties.Resources.GetString("CodeUiShowNoBuildZones") : RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
             ChkNoBuildZones.IsChecked = false;
         }
         RedrawGrid();

@@ -223,7 +223,7 @@ public class DiscordBotListenerService
                 var mainWindow = System.Windows.Application.Current.MainWindow as RustPlusDesk.Views.MainWindow;
                 if (mainWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm)
                 {
-                    result.Message = "Desktop client is initializing or not fully loaded.";
+                    result.Message = Properties.Resources.GetString("DiscordClientInitializing");
                     return result;
                 }
 
@@ -234,7 +234,7 @@ public class DiscordBotListenerService
                         var timeStr = vm.ServerTime;
                         if (!string.IsNullOrWhiteSpace(vm.TimeUntilNextPhase))
                             timeStr += $" ({vm.TimeUntilNextPhase})";
-                        result.Message = $"🕒 Current Server Time: {timeStr}";
+                        result.Message = string.Format(Properties.Resources.GetString("FormatCurrentServerTime"), timeStr);
                         break;
 
                     case "pop":
@@ -242,7 +242,7 @@ public class DiscordBotListenerService
                         var popStr = $"Players: {vm.ServerPlayers}";
                         if (vm.ServerQueue != "0" && vm.ServerQueue != "-")
                             popStr += $" (Queue: {vm.ServerQueue})";
-                        result.Message = $"👥 Server Population: {popStr}";
+                        result.Message = string.Format(Properties.Resources.GetString("FormatServerPopulation"), popStr);
                         break;
 
                     case "toggle_switch":
@@ -258,7 +258,7 @@ public class DiscordBotListenerService
 
                             if (string.IsNullOrEmpty(deviceNameOrId))
                             {
-                                result.Message = "❌ Invalid command payload: missing device name or ID.";
+                                result.Message = Properties.Resources.GetString("DiscordInvalidCommandPayload");
                             }
                             else
                             {
@@ -311,7 +311,7 @@ public class DiscordBotListenerService
 
                     case "map":
                         result.Success = true;
-                        result.Message = "⌛ Die Map wird gerendert... bitte warten.";
+                        result.Message = Properties.Resources.GetString("DiscordRenderingMap");
                         // Start upload asynchronously so it doesn't block
                         _ = Task.Run(async () =>
                         {
@@ -324,7 +324,7 @@ public class DiscordBotListenerService
 
                     case "mapfull":
                         result.Success = true;
-                        result.Message = "⌛ Die gesamte Map wird gerendert... bitte warten.";
+                        result.Message = Properties.Resources.GetString("DiscordRenderingFullMap");
                         _ = Task.Run(async () =>
                         {
                             var base64 = await mainWindow.GetFullMapScreenshotBase64Async();
@@ -335,13 +335,13 @@ public class DiscordBotListenerService
                         break;
 
                     default:
-                        result.Message = $"Unknown or unsupported command: {commandType}";
+                        result.Message = string.Format(Properties.Resources.GetString("FormatUnknownCommand"), commandType);
                         break;
                 }
             }
             catch (Exception ex)
             {
-                result.Message = $"Error executing command: {ex.Message}";
+                result.Message = string.Format(Properties.Resources.GetString("FormatCommandError"), ex.Message);
             }
             return result;
         }).Task.Unwrap();

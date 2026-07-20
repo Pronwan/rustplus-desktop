@@ -338,11 +338,11 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 using var ms = new MemoryStream(frame.Bytes);
                 bi.BeginInit(); bi.CacheOption = BitmapCacheOption.OnLoad; bi.StreamSource = ms; bi.EndInit(); bi.Freeze();
                 img.Source = bi;
-                if (status != null) status.Text = (frame.Width > 0 && frame.Height > 0) ? $"{frame.Width}×{frame.Height}" : "snapshot";
+                if (status != null) status.Text = (frame.Width > 0 && frame.Height > 0) ? $"{frame.Width}×{frame.Height}" : Properties.Resources.Snapshot.TrimEnd(':', ' ');
             }
             else
             {
-                if (status != null) status.Text = "no frame";
+                if (status != null) status.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoFrame");
             }
         }
         catch (Exception ex)

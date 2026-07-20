@@ -367,7 +367,7 @@ public partial class MainWindow
         shopRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
         // Clean shop title
-        var shopTitle = CleanLabel(shop.Label) ?? "Shop";
+        var shopTitle = CleanLabel(shop.Label) ?? Properties.Resources.ShopWord;
         var shopTxt = new TextBlock
         {
             Text = $"{shopTitle} ({GetGridLabel(shop)})",
@@ -1737,7 +1737,7 @@ public partial class MainWindow
         });
 
         // Shop label
-        var shopTitle = CleanLabel(step.Shop.Label) ?? "Shop";
+        var shopTitle = CleanLabel(step.Shop.Label) ?? Properties.Resources.ShopWord;
         leftStack.Children.Add(new TextBlock
         {
             Text = $"📍 {shopTitle} ({GetGridLabel(step.Shop)})",
@@ -2111,7 +2111,7 @@ public partial class MainWindow
         }
         if (shown == 0)
         {
-            _pathResultList.Items.Add(new TextBlock { Text = "No valid route (bottlenecks).", Foreground = SearchText });
+            _pathResultList.Items.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoValidRouteBottlenecks"), Foreground = SearchText });
         }
     }
 

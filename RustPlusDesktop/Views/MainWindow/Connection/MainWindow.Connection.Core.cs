@@ -112,7 +112,7 @@ public partial class MainWindow
         }
         else
         {
-            MessageBox.Show("Ungültige Eingaben.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiUngültigeEingaben"), RustPlusDesk.Properties.Resources.GetString("CodeUiFehler"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
