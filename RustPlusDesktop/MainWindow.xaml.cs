@@ -4405,6 +4405,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     public void RefreshStreamerModeUI()
     {
         if (TxtSteamId == null || TxtSteamName == null || _vm == null) return;
+        if (NotificationsTabControl != null) NotificationsTabControl.IsStreamerMode = _abbreviateNames;
         
         var sid = _vm.SteamId64;
         if (string.IsNullOrWhiteSpace(sid))

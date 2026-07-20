@@ -13,7 +13,22 @@ namespace RustPlusDesk.Views
 {
     public partial class NotificationsTabContent : UserControl
     {
+        public static readonly DependencyProperty IsStreamerModeProperty = DependencyProperty.Register(
+            nameof(IsStreamerMode),
+            typeof(bool),
+            typeof(NotificationsTabContent),
+            new PropertyMetadata(false, OnIsStreamerModeChanged));
+
+        public bool IsStreamerMode
+        {
+            get => (bool)GetValue(IsStreamerModeProperty);
+            set => SetValue(IsStreamerModeProperty, value);
+        }
+
         private ICollectionView? _notificationsView;
+
+        private static void OnIsStreamerModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            ((NotificationsTabContent)d)._notificationsView?.Refresh();
 
         public NotificationsTabContent()
         {
@@ -46,7 +61,7 @@ namespace RustPlusDesk.Views
             {
                 bool titleMatch = notif.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
                 bool msgMatch = notif.Message?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
-                bool serverMatch = notif.ServerName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
+                bool serverMatch = !IsStreamerMode && (notif.ServerName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false);
                 if (!titleMatch && !msgMatch && !serverMatch)
                 {
                     return false;

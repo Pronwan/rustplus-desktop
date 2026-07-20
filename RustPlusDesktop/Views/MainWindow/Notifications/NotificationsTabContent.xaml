@@ -317,17 +317,27 @@
                                            Tag="{Binding}"
                                            Margin="10,8,12,0"
                                            Style="{StaticResource NotificationServerButton}">
-                                    <TextBlock FontSize="9"
-                                               Foreground="#60CDFF"
-                                               FontWeight="SemiBold"
-                                               TextTrimming="CharacterEllipsis">
-                                        <TextBlock.Text>
-                                            <PriorityBinding>
-                                                <Binding Path="ServerName" />
-                                                <Binding Path="ServerIp" />
-                                            </PriorityBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
+                                    <Grid>
+                                        <TextBlock
+                                            FontSize="9"
+                                            FontWeight="SemiBold"
+                                            Foreground="#60CDFF"
+                                            TextTrimming="CharacterEllipsis"
+                                            Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource VisInv}}">
+                                            <TextBlock.Text>
+                                                <PriorityBinding>
+                                                    <Binding Path="ServerName" />
+                                                    <Binding Path="ServerIp" />
+                                                </PriorityBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock
+                                            FontSize="9"
+                                            FontWeight="SemiBold"
+                                            Foreground="#8C96A8"
+                                            Text="SERVER HIDDEN"
+                                            Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Vis}}" />
+                                    </Grid>
                                 </ui:Button>
                             </Grid>
                         </Border>
