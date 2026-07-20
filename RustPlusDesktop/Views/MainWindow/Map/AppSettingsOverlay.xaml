@@ -443,7 +443,7 @@
                                    TextWrapping="Wrap"/>
 
                         <!-- Offline Alarms Sync -->
-                        <Expander Header="Offline Cloud Alerts (FCM)" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
+                        <Expander Header="Offline Cloud Alerts | Discord, Webhook &amp; Telegram Calls" Margin="-4,0,0,10" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextPrimary}" Padding="0">
                             <StackPanel Margin="0,8,0,0">
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -466,10 +466,54 @@
                                 <TextBlock Text="Smart Home Webhook URL (e.g. IFTTT, Alexa, Google)" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,2" />
                                 <TextBox x:Name="TxtSmartHomeWebhookUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Margin="0,0,0,12" VerticalAlignment="Center" TextChanged="TxtSmartHomeWebhookUrl_TextChanged"/>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                     <ui:Button x:Name="BtnSyncFcm" Content="Sync Cloud Connection" Icon="{ui:SymbolIcon Symbol=CloudArrowUp24}" Click="BtnSyncFcm_Click" Margin="0,0,8,0" />
                                     <ui:Button x:Name="BtnRevokeFcm" Content="Revoke Access" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnRevokeFcm_Click" Appearance="Secondary" Foreground="#FF5555" />
                                 </StackPanel>
+
+                                <TextBlock Text="Telegram Call via CallMeBot" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Margin="0,8,0,4" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                        <TextBlock Text="Username (e.g. @Brunhilde)" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
+                                        <TextBox x:Name="TxtTelegramUser" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" />
+                                    </StackPanel>
+                                    
+                                    <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                                        <TextBlock Text="Message" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
+                                        <TextBox x:Name="TxtTelegramMsg" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" Padding="6,4" Text="Alarm ausgeloest!" />
+                                    </StackPanel>
+                                    
+                                    <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                                        <TextBlock Text="TTS Language" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
+                                        <ComboBox x:Name="CmbTelegramLang" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="White" SelectedIndex="0" VerticalContentAlignment="Center" Padding="8,4,0,0">
+                                            <ComboBoxItem Content="de-DE-Standard-A" Tag="de-DE-Standard-A" />
+                                            <ComboBoxItem Content="en-US-Standard-A" Tag="en-US-Standard-A" />
+                                            <ComboBoxItem Content="en-GB-Standard-A" Tag="en-GB-Standard-A" />
+                                            <ComboBoxItem Content="es-ES-Standard-A" Tag="es-ES-Standard-A" />
+                                            <ComboBoxItem Content="fr-FR-Standard-A" Tag="fr-FR-Standard-A" />
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <CheckBox x:Name="ChkTelegramIncTitle" Content="Include Name ({{title}})" IsChecked="True" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkTelegramIncMsg" Content="Include Message ({{message}})" IsChecked="True" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}" />
+                                    <CheckBox x:Name="ChkTelegramIncType" Content="Include Type ({{type}})" IsChecked="False" Foreground="{DynamicResource TextSubtle}" FontSize="11" Style="{StaticResource DotCheckBox}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                    <ui:Button x:Name="BtnGenerateTelegramUrl" Content="Generate &amp; Save" Click="BtnGenerateTelegramUrl_Click" Margin="0,0,8,0" Height="26" Padding="8,0" />
+                                    <ui:Button x:Name="BtnTestTelegramUrl" Content="Test Call" Click="BtnTestTelegramUrl_Click" Margin="0,0,8,0" Height="26" Padding="8,0" Appearance="Secondary" Visibility="Collapsed" />
+                                    <ui:Button x:Name="BtnRevokeTelegramUrl" Content="Revoke" Click="BtnRevokeTelegramUrl_Click" Margin="0,0,0,0" Height="26" Padding="8,0" Appearance="Danger" Visibility="Collapsed" />
+                                </StackPanel>
+                                
+                                <TextBox x:Name="TxtGeneratedTelegramUrl" Height="28" Background="#1AFFFFFF" BorderBrush="#33FFFFFF" Foreground="{DynamicResource TextSubtle}" Padding="6,4" Margin="0,0,0,16" VerticalAlignment="Center" IsReadOnly="True" Opacity="0.7" Visibility="Collapsed" />
                             </StackPanel>
                         </Expander>
 
