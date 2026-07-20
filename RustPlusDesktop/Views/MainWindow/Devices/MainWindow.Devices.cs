@@ -1687,38 +1687,37 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         if (!await EnsureConnectedAsync())
             return;
 
-        var list = _vm.Selected.Devices;
-        if (list == null || list.Count == 0)
+        var devices = _vm.Selected.AllDevices.ToList();
+        if (devices.Count == 0)
         {
             AppendLog("No Devices Available.");
             return;
         }
 
-        var leaves = LeafDevices(list).ToList();
         if (skipIfRecentlyChecked
-            && leaves.Count > 0
-            && leaves.All(d => (DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15))
+            && devices.All(d => (DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15))
         {
             AppendLog("Device status refresh skipped; recent check is still fresh.");
             return;
         }
 
         AppendLog("Updating Device Status (sequential).");
-        StartProgress(list.Count);
+        StartProgress(devices.Count);
 
-        foreach (var d in list)
+        foreach (var device in devices)
         {
             try
             {
-                _vm.DeviceStatusText = $"Checking device #{d.EntityId} ({d.DisplayName})...";
-                await RefreshDeviceRecursiveAsync(d, maxRetries);
+                _vm.DeviceStatusText = $"Checking device #{device.EntityId} ({device.DisplayName})...";
+                await RefreshDeviceStateAsync(device, log: true, forcePull: true, maxRetries: maxRetries);
+                device.LastPolledAt = DateTime.UtcNow;
                 _vm.DeviceStatusProgress++;
                 await Task.Delay(250); // Increased gap to prevent API spam
             }
             catch (Exception ex)
             {
                 _vm.DeviceStatusProgress++;
-                AppendLog($"Error refreshing {d.DisplayName}: {ex.Message}");
+                AppendLog($"Error refreshing {device.DisplayName}: {ex.Message}");
             }
         }
         
@@ -1732,56 +1731,6 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             Interlocked.Exchange(ref _refreshAllBusy, 0);
         }
 
-        static IEnumerable<SmartDevice> LeafDevices(IEnumerable<SmartDevice> devices)
-        {
-            foreach (var d in devices)
-            {
-                if (!d.IsGroup)
-                {
-                    yield return d;
-                    continue;
-                }
-
-                foreach (var child in LeafDevices(d.Children))
-                    yield return child;
-            }
-        }
-    }
-
-    private async Task RefreshDeviceRecursiveAsync(SmartDevice d, int maxRetries = 3)
-    {
-        try
-        {
-            if (!d.IsGroup)
-            {
-                if ((DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15)
-                {
-                    // Skip if recently polled
-                    return;
-                }
-                
-                await RefreshDeviceStateAsync(d, log: true, forcePull: true, maxRetries: maxRetries);
-                d.LastPolledAt = DateTime.UtcNow;
-            }
-            else
-            {
-                // Gruppen haben keinen direkten Status, aber wir refreshen Kinder
-                d.IsMissing = false; // groups are never missing
-                if (d.Children != null)
-                {
-                    foreach (var child in d.Children)
-                    {
-                        await RefreshDeviceRecursiveAsync(child);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            d.IsMissing = true;
-            if (!d.IsGroup)
-                AppendLog($"#{d.EntityId}: Status Request Failed → {ex.Message}");
-        }
     }
 
     private void AddDeviceToImportItems(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)
