@@ -83,7 +83,7 @@ public class TrackingSettings
     public bool AutoStartEnabled { get; set; } = false;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
-    public double SidebarWidth { get; set; } = 600;
+    public double SidebarWidth { get; set; } = 420;
     public bool SidebarPinned { get; set; } = true;
     public double WindowWidth { get; set; } = 1280;
     public double WindowHeight { get; set; } = 720;
