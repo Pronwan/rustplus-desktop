@@ -114,6 +114,12 @@ public partial class MainWindow
             _ = SendDiscordWebhookAsync(_vm?.Selected, discordText ?? text);
         }
 
+        // If Discord Exclusive (not in-game) is enabled, skip posting to Rust in-game team chat
+        if (_vm?.Selected?.DiscordWebhookChatAlertsExclusive == true)
+        {
+            return;
+        }
+
         // Thread-safe wrapper für Hintergrund-Alerts
         try
         {
