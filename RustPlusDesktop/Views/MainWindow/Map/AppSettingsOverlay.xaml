@@ -713,6 +713,9 @@
                             <ui:Button x:Name="BtnBackupData" Grid.Column="0" Content="{DynamicResource BackupData}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=ArrowUpload24}" HorizontalAlignment="Stretch" Height="36" Margin="0,0,4,0" Click="BtnBackupData_Click" />
                             <ui:Button x:Name="BtnRestoreData" Grid.Column="1" Content="{DynamicResource RestoreData}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRestoreData_Click" />
                         </Grid>
+                        
+                        <!-- Purge Orphaned Cloud Data Button -->
+                        <ui:Button x:Name="BtnPurgeOrphanedCloudData" Content="{DynamicResource PurgeOrphanedCloudData}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Delete24}" HorizontalAlignment="Stretch" Height="36" Margin="0,8,0,0" Click="BtnPurgeOrphanedCloudData_Click" ToolTip="{DynamicResource PurgeOrphanedCloudDataTooltip}" />
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>

@@ -4707,4 +4707,19 @@ You can find more information on the server&apos;s official website:
   <data name="ResumeUpdate" xml:space="preserve">
     <value>Resume</value>
   </data>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>Purge Orphaned Cloud Data</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>Scans Supabase database and removes devices, overlays, and markers from deleted servers.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>Purge Orphaned Cloud Data</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to scan Supabase and permanently delete all cloud devices, map overlays, and base markers belonging to servers no longer in your server list?</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>Successfully purged orphaned cloud data:&#10;- Map Overlays: {0}&#10;- Base Markers: {1}&#10;- Smart Devices: {2}&#10;- Server Registrations: {3}</value>
+  </data>
 </root>
