@@ -4720,6 +4720,14 @@
                                                                      </StackPanel>
                                                                          
                                                                      <ui:ToggleSwitch Content="{DynamicResource UiTTS}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="0,8,0,0" Foreground="{DynamicResource TextSubtle}" ToolTip="{DynamicResource UiReadAlertsAloudViaDiscordTTS}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                     <Grid Margin="0,8,0,0">
+                                                                         <Grid.ColumnDefinitions>
+                                                                             <ColumnDefinition Width="*" />
+                                                                             <ColumnDefinition Width="Auto" />
+                                                                         </Grid.ColumnDefinitions>
+                                                                         <ui:ToggleSwitch Content="{DynamicResource UiDiscordWebhookExclusive}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsExclusive, Mode=TwoWay}" Foreground="{DynamicResource TextSubtle}" ToolTip="{DynamicResource UiDiscordWebhookExclusiveTooltip}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                         <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Info24}" Appearance="Transparent" Foreground="{DynamicResource TextSubtle}" BorderThickness="0" Padding="2,0" Margin="4,0,0,0" ToolTip="{DynamicResource UiDiscordWebhookExclusiveTooltip}" VerticalAlignment="Center" />
+                                                                     </Grid>
                                                                  </StackPanel>
                                                              </MenuItem.Header>
                                                          </MenuItem>

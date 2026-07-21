@@ -4778,4 +4778,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
     <value>Verwaiste Cloud-Daten erfolgreich bereinigt:&#10;- Map Overlays: {0}&#10;- Base Marker: {1}&#10;- Smart Devices: {2}&#10;- Server-Registrierungen: {3}</value>
   </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Nur Discord (kein In-Game Chat)</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>Wenn aktiviert, werden Benachrichtigungen direkt an Discord gesendet, ohne in den Rust In-Game Team-Chat zu posten. Ideal für Solo-Server oder Server ohne Team-Chat.</value>
+  </data>
 </root>

@@ -735,6 +735,8 @@ namespace RustPlusDesk.Properties {
         public static string PurgeOrphanedCloudDataConfirmTitle => GetString("PurgeOrphanedCloudDataConfirmTitle");
         public static string PurgeOrphanedCloudDataConfirmMessage => GetString("PurgeOrphanedCloudDataConfirmMessage");
         public static string PurgeOrphanedCloudDataSuccessMessage => GetString("PurgeOrphanedCloudDataSuccessMessage");
+        public static string UiDiscordWebhookExclusive => GetString("UiDiscordWebhookExclusive");
+        public static string UiDiscordWebhookExclusiveTooltip => GetString("UiDiscordWebhookExclusiveTooltip");
     }
 }
 

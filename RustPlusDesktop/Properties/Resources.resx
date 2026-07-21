@@ -4722,4 +4722,10 @@ You can find more information on the server&apos;s official website:
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
     <value>Successfully purged orphaned cloud data:&#10;- Map Overlays: {0}&#10;- Base Markers: {1}&#10;- Smart Devices: {2}&#10;- Server Registrations: {3}</value>
   </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Discord Exclusive (not in-game)</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
 </root>
