@@ -420,7 +420,13 @@
                             <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" Margin="0,0,4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
                             <ui:TextBox Width="130" Margin="0,0,4,0" Height="24" Padding="4,2" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TxtSettingsDiscordWebhook_TextChanged" />
                             <ui:ToggleSwitch Content="{DynamicResource UiTTS}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="4,0,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="{DynamicResource UiTextToSpeechForWebhook}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
-                            <ui:ToggleSwitch Content="{DynamicResource UiDiscordWebhookExclusive}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsExclusive, Mode=TwoWay}" Margin="8,0,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="{DynamicResource UiDiscordWebhookExclusiveTooltip}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                            <ui:ToggleSwitch Content="{DynamicResource UiDiscordWebhookExclusive}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsExclusive, Mode=TwoWay}" Margin="8,0,0,0" Foreground="{DynamicResource TextPrimary}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center">
+                                <ui:ToggleSwitch.ToolTip>
+                                    <ToolTip Background="#1F232A" BorderBrush="#3A404D" BorderThickness="1" Padding="8,6">
+                                        <TextBlock Text="{DynamicResource UiDiscordWebhookExclusiveTooltip}" MaxWidth="240" TextWrapping="Wrap" Foreground="#E1E4EA" FontSize="11" />
+                                    </ToolTip>
+                                </ui:ToggleSwitch.ToolTip>
+                            </ui:ToggleSwitch>
                             <ui:Button Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnDiscordWebhookHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="2,0,0,0" ToolTip="{DynamicResource UiDiscordWebhooksGuide}" />
                         </StackPanel>
                     </StackPanel>
