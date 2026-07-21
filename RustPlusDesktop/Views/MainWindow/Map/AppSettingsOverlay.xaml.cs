@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Net.Http;
 using System.Text.Json;
 using RustPlusDesk.Services;
+using RustPlusDesk.Models;
 using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views
@@ -885,6 +886,55 @@ namespace RustPlusDesk.Views
             ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
             ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
             MessageBox.Show(owner, RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private async void BtnPurgeOrphanedCloudData_Click(object sender, RoutedEventArgs e)
+        {
+            var owner = ParentWindow ?? Window.GetWindow(this);
+            if (!Services.Auth.SupabaseAuthManager.IsAuthenticated)
+            {
+                MessageBox.Show(owner, "Cloud connection is not active. Please connect to cloud first.", "Purge Cloud Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string steamId = ParentWindow?.ViewModel?.SteamId64 ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(steamId))
+            {
+                MessageBox.Show(owner, "Steam ID is missing. Please log in to your account.", "Purge Cloud Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                owner,
+                Properties.Resources.PurgeOrphanedCloudDataConfirmMessage ?? "Scan Supabase cloud database and delete all overlays, base markers, and devices belonging to servers no longer in your server list?",
+                Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            try
+            {
+                IEnumerable<ServerProfile> activeServers = ParentWindow?.ViewModel?.Servers ?? (IEnumerable<ServerProfile>)Array.Empty<ServerProfile>();
+                var result = await Services.Auth.SupabaseCloudCleanupService.PurgeOrphanedCloudDataAsync(activeServers, steamId);
+
+                if (result.Success)
+                {
+                    string formatStr = Properties.Resources.PurgeOrphanedCloudDataSuccessMessage ?? "Purged orphaned cloud data:\n- Map Overlays: {0}\n- Base Markers: {1}\n- Smart Devices: {2}\n- Server Registrations: {3}";
+                    string msg = string.Format(formatStr, result.PurgedMapOverlays, result.PurgedBaseMarkers, result.PurgedSmartDevices, result.PurgedUserServers);
+
+                    ParentWindow?.AppendLog($"[Cloud] Orphaned cloud data purge complete: {result.TotalPurgedCount} items removed.");
+                    MessageBox.Show(owner, msg, Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show(owner, $"Failed to purge cloud data: {result.ErrorMessage}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(owner, $"Error during cloud data purge: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void BtnManuallyParseMap_Click(object sender, RoutedEventArgs e)

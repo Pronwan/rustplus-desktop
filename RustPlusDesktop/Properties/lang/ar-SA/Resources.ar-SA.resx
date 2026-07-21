@@ -4004,6 +4004,24 @@
   <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
     <value>المزامنة والنسخ الاحتياطية وميزات الفريق والوصول إلى الداعمين. هذا الحساب منفصل عن Rust+ الاقتران المصاحب و FCM.</value>
   </data>
+  <data name="ResumeUpdate" xml:space="preserve">
+    <value>استئناف</value>
+  </data>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>تنظيف البيانات السحابية المهجورة</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>يفحص قاعدة بيانات Supabase ويزيل الأجهزة والطبقات والعلامات الخاصة بالسيرفرات المحذوفة.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>تنظيف البيانات السحابية المهجورة</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد من أنك تريد فحص Supabase والحذف النهائي لجميع الأجهزة والطبقات والعلامات التابعة لسيرفرات لم تعد في قائمتك؟</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:&#10;- طبقات الخريطة: {0}&#10;- علامات القواعد: {1}&#10;- الأجهزة الذكية: {2}&#10;- تسجيلات السيرفر: {3}</value>
+  </data>
   <data name="UiSyncedDevices" xml:space="preserve">
     <value>الأجهزة التي تمت مزامنتها</value>
   </data>
@@ -4699,5 +4717,19 @@
   </data>
   <data name="ResumeUpdate" xml:space="preserve">
     <value>استئناف</value>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>تنظيف البيانات السحابية المهجورة</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>يفحص قاعدة بيانات Supabase ويزيل الأجهزة والطبقات والعلامات الخاصة بالسيرفرات المحذوفة.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>تنظيف البيانات السحابية المهجورة</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد من أنك تريد فحص Supabase والحذف النهائي لجميع الأجهزة والطبقات والعلامات التابعة لسيرفرات لم تعد في قائمتك؟</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:&#10;- طبقات الخريطة: {0}&#10;- علامات القواعد: {1}&#10;- الأجهزة الذكية: {2}&#10;- تسجيلات السيرفر: {3}</value>
   </data>
 </root>

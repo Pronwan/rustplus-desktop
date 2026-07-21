@@ -4032,7 +4032,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _serverToDelete = null;
     }
 
-    private void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    private async void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
     {
         if (_serverToDelete != null)
         {
@@ -4041,19 +4041,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.Save();
             AppendLog($"Server deleted: {prof.Name}");
 
-            // Automatically unlink from Alexa if this server was the linked one
+            // Clean up cloud data (devices, overlays, base markers, server registration, and reset Alexa active server)
             try
             {
-                if (Services.Auth.SupabaseAuthManager.Client != null && Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser != null)
+                string steamIdStr = _mySteamId > 0 ? _mySteamId.ToString() : string.Empty;
+                if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
                 {
-                    var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
-                    var serverKey = $"{prof.Host}-{prof.Port}";
-                    _ = Services.Auth.SupabaseAuthManager.Client.From<Models.UserAlexaSettingsModel>()
-                        .Where(x => x.UserId == user.Id && x.ActiveServerKey == serverKey)
-                        .Delete();
+                    bool cleaned = await Services.Auth.SupabaseCloudCleanupService.DeleteCloudDataForServerAsync(prof.Host, prof.Port, steamIdStr);
+                    if (cleaned)
+                    {
+                        AppendLog($"[Cloud] Purged cloud data for server {prof.Name} ({prof.Host}:{prof.Port}).");
+                    }
                 }
             }
-            catch { /* Ignored */ }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud] Cloud cleanup error for deleted server {prof.Name}: {ex.Message}");
+            }
         }
 
         DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
