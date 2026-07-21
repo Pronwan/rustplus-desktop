@@ -76,7 +76,8 @@ namespace RustPlusDesk.Services.Auth
                 var payload = new
                 {
                     active_server_keys = activeKeys,
-                    steam_id = steamId
+                    steam_id = steamId,
+                    action = "purge-orphaned"
                 };
 
                 var responseJson = await SupabaseAuthManager.CallEdgeFunctionAsync("overlay/purge-orphaned", HttpMethod.Post, payload);
