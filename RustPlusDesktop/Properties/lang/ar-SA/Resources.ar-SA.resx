@@ -4715,4 +4715,10 @@
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
     <value>تم تنظيف البيانات السحابية المهجورة بنجاح:&#10;- طبقات الخريطة: {0}&#10;- علامات القواعد: {1}&#10;- الأجهزة الذكية: {2}&#10;- تسجيلات السيرفر: {3}</value>
   </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Discord فقط</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>عند التمكين، يتم إرسال إشعارات التنبيه مباشرة إلى Discord دون نشرها في دردشة الفريق داخل لعبة Rust. مثالي للسيرفرات الفردية أو السيرفرات التي لا تحتوي على دردشة فريق.</value>
+  </data>
 </root>
