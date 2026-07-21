@@ -3205,7 +3205,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Dispatcher.Invoke(() =>
                 {
                     _isShuttingDown = true;
-                    this.Close();
+                    try { this.Close(); } catch { }
+                    System.Windows.Application.Current.Shutdown();
                 });
             }
         });
