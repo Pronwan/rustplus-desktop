@@ -4718,4 +4718,10 @@ Vous pouvez trouver plus d&apos;informations sur le site officiel du serveur :
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
     <value>Données orphelines purgées avec succès :&#10;- Calques de carte : {0}&#10;- Repères de base : {1}&#10;- Appareils intelligents : {2}&#10;- Enregistrements de serveur : {3}</value>
   </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Discord uniquement</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>Si cette option est activée, les notifications d'alerte sont envoyées directement à Discord sans être publiées dans le tchat d'équipe de Rust. Idéal pour les serveurs solo ou sans tchat d'équipe.</value>
+  </data>
 </root>

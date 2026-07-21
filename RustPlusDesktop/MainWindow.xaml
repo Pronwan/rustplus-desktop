@@ -4674,7 +4674,20 @@
                                                              </MenuItem.Header>
                                                          </MenuItem>
                                                          
-                                                         <MenuItem StaysOpenOnClick="True" Focusable="False" Style="{StaticResource DarkMenuItem}" IsEnabled="{Binding IsCloudConnected}">
+                                                         <MenuItem StaysOpenOnClick="True" Focusable="False" IsEnabled="{Binding IsCloudConnected}">
+                                                             <MenuItem.Style>
+                                                                 <Style TargetType="MenuItem">
+                                                                     <Setter Property="Template">
+                                                                         <Setter.Value>
+                                                                             <ControlTemplate TargetType="MenuItem">
+                                                                                 <Border Padding="6,4,6,6" Background="Transparent" SnapsToDevicePixels="True">
+                                                                                     <ContentPresenter ContentSource="Header" />
+                                                                                 </Border>
+                                                                             </ControlTemplate>
+                                                                         </Setter.Value>
+                                                                     </Setter>
+                                                                 </Style>
+                                                             </MenuItem.Style>
                                                              <MenuItem.Header>
                                                                  <StackPanel Margin="0,0,0,8">
                                                                      <StackPanel.Resources>
@@ -4698,14 +4711,14 @@
                                                                          <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                                                                      </Grid>
                                                                      
-                                                                     <TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,4,0,2" />
+                                                                     <TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,4,0,4" />
                                                                      <StackPanel Orientation="Vertical">
                                                                          <CheckBox
                                                                              x:Name="ChkChatAlertWebhookMentionEveryone"
                                                                              Content="{DynamicResource UiEveryone}"
                                                                              Foreground="{DynamicResource TextSubtle}"
                                                                              FontSize="11"
-                                                                             Margin="0,0,0,4"
+                                                                             Margin="0,3,0,3"
                                                                              Style="{StaticResource DotCheckBox}"
                                                                              IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                              IsChecked="{Binding Selected.DiscordWebhookChatAlertsMentionEveryone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -4714,21 +4727,20 @@
                                                                              Content="{DynamicResource UiHere}"
                                                                              Foreground="{DynamicResource TextSubtle}"
                                                                              FontSize="11"
+                                                                             Margin="0,3,0,3"
                                                                              Style="{StaticResource DotCheckBox}"
                                                                              IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                              IsChecked="{Binding Selected.DiscordWebhookChatAlertsMentionHere, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                                     </StackPanel>
-                                                                         
                                                                          <CheckBox
                                                                              x:Name="ChkChatAlertWebhookTts"
                                                                              Content="{DynamicResource UiTTS}"
                                                                              Foreground="{DynamicResource TextSubtle}"
                                                                              FontSize="11"
-                                                                             Margin="0,0,0,4"
+                                                                             Margin="0,3,0,3"
                                                                              Style="{StaticResource DotCheckBox}"
                                                                              IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                              IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                                         <Grid Margin="0,2,0,0">
+                                                                         <Grid Margin="0,3,0,3">
                                                                              <Grid.ColumnDefinitions>
                                                                                  <ColumnDefinition Width="*" />
                                                                                  <ColumnDefinition Width="Auto" />
@@ -4773,7 +4785,8 @@
                                                                              </ui:SymbolIcon>
                                                                          </Grid>
                                                                      </StackPanel>
-                                                                 </MenuItem.Header>
+                                                                 </StackPanel>
+                                                         </MenuItem.Header>
                                                          </MenuItem>
                                                      </MenuItem>
                                                  </ContextMenu>
