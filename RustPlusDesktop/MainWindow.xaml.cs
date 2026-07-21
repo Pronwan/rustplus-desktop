@@ -6051,16 +6051,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
 
+                // 9) Zeitstempel für diese Kombo sofort updaten, um Duplikate im Update-Loop zu vermeiden
+                rule.LastAnnouncements[sig] = DateTime.UtcNow;
+
                 if (rule.NotifyChat)
-                    await SendTeamChatSafeAsync(msg, false, true);
+                    _ = SendTeamChatSafeAsync(msg, false, true);
                 
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **Trade Alert:** {msg}");
 
                 if (rule.NotifySound)
                     PlayShopAlertSound();
-
-                // 9) Zeitstempel fÃƒÂ¼r diese Kombo updaten
-                rule.LastAnnouncements[sig] = DateTime.UtcNow;
             }           // end foreach order
             }           // end foreach shop
 
