@@ -62,7 +62,6 @@ public partial class MainWindow : WpfUi.FluentWindow
     internal string SteamDisplayName => !string.IsNullOrWhiteSpace(_steamDisplayName)
         ? _steamDisplayName
         : TxtSteamName?.Text ?? Properties.Resources.SteamAccount;
-    private bool _chatOpenedForCommandsOnly = false;
     private readonly UpdateService _updateService = new();
     private string? _fetchedSteamId64;
     private string? _steamDisplayName;
@@ -824,7 +823,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
-        ChatCommandsOverlay.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
+        AppSettingsPanel.ChatCommandsEditor.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
     {
@@ -4998,30 +4997,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void EditAlertTemplates_Click(object sender, RoutedEventArgs e)
     {
-        var win = new Views.Windows.CustomAlertsWindow();
-        win.Owner = this;
-        _activeDialog = win;
-        ApplyWindowBlur();
-        if (Root != null)
-        {
-            Root.IsHitTestVisible = false;
-        }
-
-        win.Closed += (s, ev) =>
-        {
-            if (ReferenceEquals(_activeDialog, win))
-            {
-                _activeDialog = null;
-            }
-            RemoveWindowBlur();
-            if (Root != null)
-            {
-                Root.IsHitTestVisible = true;
-            }
-        };
-
-        win.Show();
-        CenterActiveDialog();
+        OpenSettingsCategory("alert-templates");
     }
 
     private void SetAllAlerts(bool val)
@@ -7074,6 +7050,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private void OpenSettingsCategory(string category)
+    {
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        AppSettingsPanel.LoadSettings();
+        AppSettingsPanel.Visibility = Visibility.Visible;
+        AppSettingsPanel.OpenCategory(category);
+    }
+
     private void BtnCloudAccount_Click(object sender, RoutedEventArgs e)
     {
         if (!_vm.IsCloudConnected)
@@ -7172,18 +7159,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    public void OpenChatAlertsFromSettings()
-    {
-        Dispatcher.BeginInvoke(new Action(() => {
-            if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
-            {
-                cm.PlacementTarget = ChatAlertsConfigureButton;
-                cm.Placement = System.Windows.Controls.Primitives.PlacementMode.Custom;
-                cm.IsOpen = true;
-            }
-        }), System.Windows.Threading.DispatcherPriority.Input);
-    }
-
     public System.Windows.Controls.Primitives.CustomPopupPlacement[] CenterMegaMenu_Callback(Size popupSize, Size targetSize, Point offset)
     {
         double targetLeft = ChatAlertsConfigureButton.TranslatePoint(new Point(0, 0), this).X;
@@ -7194,19 +7169,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
 
-    public async void OpenChatCommandsFromSettings()
-    {
-        if (ChatContentBorder.Visibility != Visibility.Visible)
-        {
-            _chatOpenedForCommandsOnly = true;
-            await OpenChatOverlayAsync();
-        }
-        else
-        {
-            _chatOpenedForCommandsOnly = false;
-        }
-        BtnOpenChatCommands_Click(null, null);
-    }    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
+    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
     {
         try
         {

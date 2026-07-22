@@ -413,7 +413,7 @@ public partial class MainWindow
                 ? TeamFeatureText("ChatFeatureMasterOnlineTitle", "Chat Master online")
                 : "";
 
-        ChatCommandsOverlay?.SetMasterBlocked(blocked, message);
+        AppSettingsPanel?.ChatCommandsEditor.SetMasterBlocked(blocked, message);
     }
 
     private bool HasLocalChatFeatureIntent()

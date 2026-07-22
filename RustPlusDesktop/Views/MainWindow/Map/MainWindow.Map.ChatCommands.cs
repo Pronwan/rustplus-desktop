@@ -14,18 +14,7 @@ public partial class MainWindow
     private void BtnOpenChatCommands_Click(object? sender, System.Windows.RoutedEventArgs? e)
     {
         _vm.Selected?.SyncChatCommands();
-        ChatCommandsOverlay.Visibility = System.Windows.Visibility.Visible;
-    }
-
-    private void BtnCloseChatCommands_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-        ChatCommandsOverlay.Visibility = System.Windows.Visibility.Collapsed;
-        _vm.Save(); // Save the new configuration settings
-        if (_chatOpenedForCommandsOnly)
-        {
-            _chatOpenedForCommandsOnly = false;
-            ChatContentBorder.Visibility = System.Windows.Visibility.Collapsed;
-        }
+        OpenSettingsCategory("chat-commands");
     }
 
     private void ChatCommandsOverlay_CommandsEnabledChanged(object sender, System.Windows.RoutedEventArgs e)

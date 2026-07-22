@@ -4,28 +4,19 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class CustomAlertsWindow : Window
+    public partial class CustomAlertsEditor : UserControl
     {
         public List<AlertModel> Alerts { get; set; } = new();
 
-        public CustomAlertsWindow()
+        public CustomAlertsEditor()
         {
             InitializeComponent();
             LoadAlerts();
             AlertsItemsControl.ItemsSource = Alerts;
-        }
-
-        private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                DragMove();
-            }
         }
 
         private void LoadAlerts()
@@ -149,11 +140,6 @@ namespace RustPlusDesk.Views.Windows
 
             // Restore original background brush
             textBox.Background = originalBrush;
-        }
-
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
     }
 

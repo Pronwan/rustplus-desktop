@@ -15,22 +15,14 @@
         <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
     </UserControl.Resources>
 
-    <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="12" Margin="10">
+    <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="12">
         <Grid Margin="15">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,15">
-                <TextBlock Text="{DynamicResource ChatCommandsSettings}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" />
-                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Click="BtnClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" ToolTip="{DynamicResource UiSaveAndCloseChatCommandSettings}" AutomationProperties.Name="{DynamicResource UiSaveAndCloseChatCommandSettings}" />
-            </Grid>
-
             <!-- Content -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid>
                 <StackPanel DataContext="{Binding Selected}">
                     <StackPanel Margin="0,0,0,15">
                         <CheckBox x:Name="EnableChatCommandsCheckBox" Content="{DynamicResource EnableChatCommands}" IsChecked="{Binding ChatCommandsEnabled}" Checked="EnableChatCommandsCheckBox_Changed" Unchecked="EnableChatCommandsCheckBox_Changed" Style="{StaticResource DotCheckBox}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,0,12" />
@@ -279,10 +271,7 @@
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
-            </ScrollViewer>
-
-            <!-- Footer -->
-            <ui:Button Grid.Row="2" Content="{DynamicResource SaveAndClose}" Margin="0,15,0,0" Appearance="Primary" Click="BtnClose_Click" HorizontalAlignment="Right" Width="120" Height="32" />
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
