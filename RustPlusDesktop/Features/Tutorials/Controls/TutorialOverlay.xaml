@@ -2,8 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Visibility="Collapsed" IsTabStop="False">
-    <Canvas x:Name="OverlayCanvas" ClipToBounds="True">
+    Visibility="Collapsed" IsTabStop="False" FlowDirection="LeftToRight">
+    <Canvas x:Name="OverlayCanvas" ClipToBounds="True" FlowDirection="LeftToRight">
         <Path x:Name="DimPath" Fill="#B8000000" Stretch="None" />
         <Border x:Name="TargetBlocker" Background="Transparent" />
         <Border x:Name="SpotlightBorder" BorderBrush="#FF60CDFF" BorderThickness="3" CornerRadius="10"

@@ -56,7 +56,8 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             !Tutorial.GetAllowInteraction(presentation.Target.Element)
             ? Visibility.Visible : Visibility.Collapsed;
         Visibility = Visibility.Visible;
-        FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
+        FlowDirection = FlowDirection.LeftToRight;
+        Popover.FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         ApplyContrast();
         RenderPresentation();
@@ -84,7 +85,8 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         SpotlightBorder.Visibility = Visibility.Collapsed;
         TargetBlocker.Visibility = Visibility.Collapsed;
         Visibility = Visibility.Visible;
-        FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
+        FlowDirection = FlowDirection.LeftToRight;
+        Popover.FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         RenderCentered();
         Dispatcher.BeginInvoke(() => Keyboard.Focus(WelcomePanel), DispatcherPriority.Loaded);
