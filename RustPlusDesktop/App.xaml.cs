@@ -87,89 +87,122 @@ public partial class App : Application
         // Wait for the splash thread to be ready before proceeding
         await splashReadyTcs.Task;
 
-        // ── Slow synchronous init on the main thread (splash is already visible) ─
-        SetLanguage(applySynchronously: true);
-
-        bool isBackgroundArg = args.Contains("--background");
-        _single = new Mutex(initiallyOwned: true, name: SingleMutexName, createdNew: out bool createdNew);
-
-        if (!createdNew)
+        try
         {
-            // Another instance is running
+            // ── Slow synchronous init on the main thread (splash is already visible) ─
+            SetLanguage(applySynchronously: true);
+
+            bool isBackgroundArg = args.Contains("--background");
+            _single = new Mutex(initiallyOwned: true, name: SingleMutexName, createdNew: out bool createdNew);
+
+            if (!createdNew)
+            {
+                // Another instance is running
+                if (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
+                    _ = SendLinkToRunningInstanceAsync(args[0]);
+                else if (!isBackgroundArg)
+                    _ = SendCommandToRunningInstanceAsync("SHOWUI");
+
+                CloseSplashThread(splash, splashDispatcher);
+                Shutdown();
+                return;
+            }
+
+            UpdateSplashStatus(splash, splashDispatcher, "Initializing…");
+            _ = SupabaseAuthManager.InitializeAsync();
+
+            UpdateSplashStatus(splash, splashDispatcher, "Setting up tray…");
+            SetupTrayIcon();
+
+            if (TrackingService.IsBackgroundTrackingEnabled)
+            {
+                var (host, port, name) = TrackingService.LastServer;
+                TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
+            }
+
+            // ── Load MainWindow invisibly on the main thread ─────────────────────────
+            UpdateSplashStatus(splash, splashDispatcher, "Loading app…");
+
+            bool shouldShowMain = !isBackgroundArg
+                || !TrackingService.StartMinimizedEnabled
+                || (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase));
+
+            var mainReadyTcs = new TaskCompletionSource<bool>();
+            WindowState targetState = WindowState.Normal;
+
+            if (shouldShowMain)
+            {
+                // Load MainWindow completely hidden.
+                // Opacity=0 + ShowInTaskbar=false + ShowActivated=false keeps it
+                // invisible while WPF performs its full layout + render pass.
+                // ContentRendered fires after that first pass — the true "ready" signal.
+                _main = new MainWindow();
+                _main.Closed += (s, ev) => _main = null;
+                _main.ContentRendered += (_, _) => mainReadyTcs.TrySetResult(true);
+
+                targetState = _main.WindowState;
+
+                _main.Opacity = 0;
+                _main.ShowActivated = false;
+                _main.ShowInTaskbar = false;
+
+                // WPF forbids ShowActivated = false when WindowState is Maximized.
+                // Temporarily switch to Normal for hidden initialization if needed.
+                if (_main.WindowState == WindowState.Maximized)
+                {
+                    _main.WindowState = WindowState.Normal;
+                }
+
+                _main.Show();
+            }
+            else
+            {
+                mainReadyTcs.SetResult(true);
+            }
+
+            // Hold splash until MainWindow ContentRendered fires AND at least 500ms
+            // have elapsed, or timeout after 10s so splash never hangs infinitely.
+            await Task.WhenAny(
+                Task.WhenAll(mainReadyTcs.Task, Task.Delay(500)),
+                Task.Delay(10000)
+            );
+
+            // ── Fade out splash, reveal MainWindow ───────────────────────────────────
+            FadeAndCloseSplash(splash, splashDispatcher);
+            await Task.Delay(300); // wait for the 250ms fade + small margin
+
+            if (_main != null)
+            {
+                _main.ShowActivated = true;
+                _main.ShowInTaskbar = true;
+                _main.Opacity = 1;
+                _main.WindowState = targetState;
+                _main.Activate();
+                _main.Topmost = true; _main.Topmost = false;
+            }
+
+            _ = StartPipeServerAsync();
+
             if (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
-                _ = SendLinkToRunningInstanceAsync(args[0]);
-            else if (!isBackgroundArg)
-                _ = SendCommandToRunningInstanceAsync("SHOWUI");
+                _main?.HandleRustPlusLink(args[0]);
 
-            CloseSplashThread(splash, splashDispatcher);
-            Shutdown();
-            return;
+            _ = Task.Run(async () => { await Task.Delay(5000); CleanupLegacyInnoSetupInstallation(); });
+            _ = Task.Run(async () => { await Task.Delay(1000); EnsureUrlProtocolRegistered(); });
         }
-
-        UpdateSplashStatus(splash, splashDispatcher, "Initializing…");
-        _ = SupabaseAuthManager.InitializeAsync();
-
-        UpdateSplashStatus(splash, splashDispatcher, "Setting up tray…");
-        SetupTrayIcon();
-
-        if (TrackingService.IsBackgroundTrackingEnabled)
+        catch (Exception ex)
         {
-            var (host, port, name) = TrackingService.LastServer;
-            TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
+            System.Diagnostics.Debug.WriteLine($"[Startup] Exception during startup: {ex}");
+            FadeAndCloseSplash(splash, splashDispatcher);
+            if (_main != null)
+            {
+                _main.ShowActivated = true;
+                _main.ShowInTaskbar = true;
+                _main.Opacity = 1;
+                _main.WindowState = WindowState.Normal;
+                _main.Show();
+                _main.Activate();
+            }
         }
-
-        // ── Load MainWindow invisibly on the main thread ─────────────────────────
-        UpdateSplashStatus(splash, splashDispatcher, "Loading app…");
-
-        bool shouldShowMain = !isBackgroundArg
-            || !TrackingService.StartMinimizedEnabled
-            || (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase));
-
-        var mainReadyTcs = new TaskCompletionSource<bool>();
-
-        if (shouldShowMain)
-        {
-            // Load MainWindow completely hidden.
-            // Opacity=0 + ShowInTaskbar=false + ShowActivated=false keeps it
-            // invisible while WPF performs its full layout + render pass.
-            // ContentRendered fires after that first pass — the true "ready" signal.
-            _main = new MainWindow();
-            _main.Closed += (s, ev) => _main = null;
-            _main.ContentRendered += (_, _) => mainReadyTcs.TrySetResult(true);
-            _main.Opacity = 0;
-            _main.ShowActivated = false;
-            _main.ShowInTaskbar = false;
-            _main.Show();
-        }
-        else
-        {
-            mainReadyTcs.SetResult(true);
-        }
-
-        // Hold splash until MainWindow ContentRendered fires AND at least 500ms
-        // have elapsed, so it never vanishes too fast on a quick machine.
-        await Task.WhenAll(mainReadyTcs.Task, Task.Delay(500));
-
-        // ── Fade out splash, reveal MainWindow ───────────────────────────────────
-        FadeAndCloseSplash(splash, splashDispatcher);
-        await Task.Delay(300); // wait for the 250ms fade + small margin
-
-        if (_main != null)
-        {
-            _main.ShowInTaskbar = true;
-            _main.Opacity = 1;
-            _main.WindowState = WindowState.Normal;
-            _main.Activate();
-            _main.Topmost = true; _main.Topmost = false;
-        }
-
-        _ = StartPipeServerAsync();
-
-        if (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
-            _main?.HandleRustPlusLink(args[0]);
-
-        _ = Task.Run(async () => { await Task.Delay(5000); CleanupLegacyInnoSetupInstallation(); });
-        _ = Task.Run(async () => { await Task.Delay(1000); EnsureUrlProtocolRegistered(); });
     }
 
     // ── Splash thread helpers ────────────────────────────────────────────────────
@@ -235,10 +268,14 @@ public partial class App : Application
             _main = new MainWindow();
             _main.Closed += (s, ev) => _main = null;
         }
+        _main.ShowActivated = true;
         _main.ShowInTaskbar = true;
         _main.Opacity = 1;
+        if (_main.WindowState == WindowState.Minimized)
+        {
+            _main.WindowState = WindowState.Normal;
+        }
         _main.Show();
-        _main.WindowState = WindowState.Normal;
         _main.Activate();
         _main.Topmost = true; _main.Topmost = false;
     }
