@@ -4353,7 +4353,7 @@
     <value>تم إنشاء رقم التعريف الشخصي (صالح لمدة 15 مترًا)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Please configure a Discord &apos;Chat Alerts&apos; or &apos;Events Alerts&apos; channel in Settings first.</value>
+    <value>Please configure a Discord 'Chat Alerts' or 'Events Alerts' channel in Settings first.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>يرجى توصيل حسابك السحابي أولاً.</value>
@@ -4467,7 +4467,7 @@
     <value>أبيض</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>تم استيراد الخريطة غير المتصلة بالإنترنت بنجاح باسم &apos;{0}&apos;!</value>
+    <value>تم استيراد الخريطة غير المتصلة بالإنترنت بنجاح باسم '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>تم استيراد الخريطة</value>
@@ -4505,19 +4505,19 @@
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>لم يتم تحليل الخريطة غير المتصلة بالإنترنت &apos;{0}&apos; بعد. افتح خريطتها 3D مرة واحدة لتحليلها، ثم حاول النسخ مرة أخرى.</value>
+    <value>لم يتم تحليل الخريطة غير المتصلة بالإنترنت '{0}' بعد. افتح خريطتها 3D مرة واحدة لتحليلها، ثم حاول النسخ مرة أخرى.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>خطأ في نسخ الخريطة</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>تخطيطات الخريطة غير متطابقة. لا يبدو أن الخريطة &apos;{0}&apos; هي نفس خريطة الخادم المتصل &apos;{1}&apos;.</value>
+    <value>تخطيطات الخريطة غير متطابقة. لا يبدو أن الخريطة '{0}' هي نفس خريطة الخادم المتصل '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>عدم تطابق الخريطة</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>تم بنجاح نسخ الخريطة 3D والأصول المحلية من &apos;{0}&apos; إلى &apos;{1}&apos;!</value>
+    <value>تم بنجاح نسخ الخريطة 3D والأصول المحلية من '{0}' إلى '{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>تم نسخ الخريطة</value>
@@ -4713,12 +4713,808 @@
     <value>هل أنت متأكد من أنك تريد فحص Supabase والحذف النهائي لجميع الأجهزة والطبقات والعلامات التابعة لسيرفرات لم تعد في قائمتك؟</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:&#10;- طبقات الخريطة: {0}&#10;- علامات القواعد: {1}&#10;- الأجهزة الذكية: {2}&#10;- تسجيلات السيرفر: {3}</value>
+    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:
+- طبقات الخريطة: {0}
+- علامات القواعد: {1}
+- الأجهزة الذكية: {2}
+- تسجيلات السيرفر: {3}</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Discord فقط</value>
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>عند التمكين، يتم إرسال إشعارات التنبيه مباشرة إلى Discord دون نشرها في دردشة الفريق داخل لعبة Rust. مثالي للسيرفرات الفردية أو السيرفرات التي لا تحتوي على دردشة فريق.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>تخطي البرنامج التعليمي</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>للخلف</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>إنهاء</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>هل تريد إلغاء هذا البرنامج التعليمي؟</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>تم حفظ تقدمك. يمكنك المتابعة من مركز الدروس في أي وقت.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>استمر في التعلم</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>إلغاء البرنامج التعليمي</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>الخطوة {0} من {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>هذه الميزة غير متوفرة في حالة التطبيق الحالية. تابع بأمان ثم عد عندما يتوفر الخادم أو الحساب أو البيانات المطلوبة.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>إعادة الضبط</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>إعادة التشغيل</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>تابع</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>ابدأ</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} من {1} الخطوات</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>تعلم RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>الدروس المركزة لهذا الإصدار. لا تقوم البرامج التعليمية مطلقًا بتنشيط الأجهزة أو إرسال الرسائل أو حذف البيانات أو تشغيل عمليات التشغيل الآلي.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>ابدأ البرامج التعليمية الموصى بها</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>تابع البرنامج التعليمي الأخير</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>إعادة تشغيل كافة البرامج التعليمية</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>إعادة تعيين تقدم البرنامج التعليمي</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>ابدأ الأساسيات للمستخدمين الجدد</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>تقديم برامج تعليمية حول الميزات الجديدة</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>مرحبًا بك في RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>قم بجولة قصيرة حول التنقل والاتصال بالخادم والخرائط والأجهزة - أو اختر الدروس التي تحتاجها فقط.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>ابدأ الجولة السريعة</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>اختر البرامج التعليمية</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>ليس الآن</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>لم يبدأ</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>قيد التقدم</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>اكتمل</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>تم تخطيه</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>تم التحديث</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>ميزة جديدة</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>البدء</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>الخرائط</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>الأجهزة</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>الفريق والتواصل</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>التشغيل الآلي</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>المراقبة</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>الأدوات</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>الإعدادات والدعم</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>أساسيات التطبيق</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>تعرف على التنقل وسياق الخادم وحالة الاتصال والإشعارات ومكان إعادة تشغيل الدروس.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>الحساب والسحابة</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>فهم الميزات المحلية وتسجيل الدخول إلى السحابة والمزامنة ووصول الداعم.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>الاقتران وإدارة الخادم</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>قم بإقران Rust+، واختر خادمًا، وافهم الأوضاع الناعمة والكاملة وغير المتصلة.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D أساسيات الخريطة</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>تعرف على التنقل في الخريطة والطبقات والخرائط الحرارية وأدوات الرسم ونقطة الدخول 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>الخرائط الحرارية للموارد</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>تعرف على ما تظهره تراكبات كثافة النشر المستخرجة وكيفية تحديدها أو مسحها.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D الخريطة</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>استكشف منفذ العرض المحلي 3D وشريط الأدوات ومنشئ البصمة وعرض الأداء وإجراءات الإغلاق.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>الأجهزة الذكية</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>يمكنك البحث عن الأجهزة الذكية المقترنة وتصفيتها وتحديثها وتنظيمها وفهمها بأمان.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>تتبع الفريق واللاعب</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>قم بمراجعة أعضاء الفريق والعلامات ومتابعة السلوك ومتطلبات المشاركة.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>دردشة الفريق والأوامر</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>قراءة الدردشة الجماعية وإنشاء الرسائل وتكوين الأوامر دون إرسال أي شيء.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord التكامل</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>ابحث عن نقاط الدخول والتكوين والأذونات وحدود الخصوصية Discord.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>محرك المنطق والأتمتة</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>فهم القواعد والمشغلات والشروط والإجراءات وحالة وقت التشغيل والاختبار الآمن.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>الإخطارات والتنبيهات</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>تصفية إشعارات التطبيق والبحث فيها ومراجعتها ووضع علامة عليها ومسحها.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>الكاميرات والمراقبة</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>قم بإضافة ومراجعة الكاميرات المقترنة مع الحفاظ على خصوصية معرفات الكاميرا.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>حاسبة الغارة</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>أنشئ خطة مداهمة، وقارن بين الطرق، وراجع إجماليات المواد.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>حاسبة إعادة التدوير</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>أضف العناصر وقارن بين إنتاجية القائمين على إعادة التدوير في المناطق البرية والآمنة.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>ابحث عن اللغة وأداء الخريطة والخدمات المتصلة وعناصر التحكم في الصيانة.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>التحديثات والتشخيصات</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>تحقق من تحديثات التطبيق وحدد موقع سجل التشخيص دون بدء التحديث.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>التنقل الرئيسي</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>استخدم هذا الشريط الجانبي للتنقل بين الأجهزة وتتبع الفريق والكاميرات واللاعبين والإشعارات والآلات الحاسبة.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>توسيع التنقل</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>قم بتثبيت الشريط الجانبي أو طيه لتبادل التسميات للحصول على المزيد من مساحة عمل الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>الخادم الحالي</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>تحدد هذه المنطقة خادم Rust المحدد وسياق الحساب الخاص به.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>حالة الاتصال</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>تُظهر بطاقات الخادم ما إذا كان الخادم غير متصل أو متصل بشكل بسيط أو متصل بالكامل.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>الإخطارات</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>يتم جمع مشكلات الاتصال والإنذارات والوفيات ونتائج التشغيل الآلي هنا.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>مركز الدروس</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>أعد تشغيل الدروس أو تابعها أو أعد تشغيلها أو اكتشف الدروس المحدثة هنا.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>سياق الحساب</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>الوصول إلى السحابة منفصل عن اقتران Rust+. تظل الميزات المحلية متاحة بدون المزامنة السحابية.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>الحساب السحابي</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>قم بتسجيل الدخول هنا للحصول على المزامنة المدعومة؛ لا تعرض البرامج التعليمية أبدًا بيانات الحساب الخاص.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>حالة الداعم</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>يؤدي وصول الداعم إلى فتح الميزات المسورة. لا يتطلب تقدم البرنامج التعليمي المحلي أي اشتراك.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>الزوج Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>يؤدي الاقتران إلى ربط هذا التطبيق بـ Rust Companion قبل أن تعمل ميزات الخادم المباشر.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>ابدأ الاقتران</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>ابدأ الاستماع، ثم استخدم تدفق الاقتران Rust داخل اللعبة Rust+ داخل اللعبة. لا يتم تسجيل بيانات الاعتماد أبدا.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>الخوادم المقترنة</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>حدد خادمًا تم تكوينه محليًا قبل الاتصال أو تغيير الإعدادات الخاصة بالخادم.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>اتصال ناعم</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>يقوم Connect بتحميل اتصالات محدودة دون تهيئة كل ميزة مباشرة.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>اتصال كامل</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>يعمل الاتصال الكامل على تهيئة بيانات الخريطة والأجهزة وبيانات الفريق واشتراكات Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>قطع الاتصال</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>يؤدي قطع الاتصال إلى إيقاف الاتصال المباشر. هذا الدرس لا يستدعي الإجراء أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>إعادة تعيين الاقتران</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>توجد أوامر الاسترداد في قائمة سياق الإقران. تؤدي إعادة الضبط إلى إزالة تكوين الاقتران المحلي.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>لوحة الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>قم بالتحريك عن طريق السحب، والتكبير/التصغير باستخدام العجلة، والتفاعل مع العلامات الموجودة على خريطة Rust الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>شريط أدوات الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>يتحكم شريط الأدوات في الطبقات والدردشة والتراكبات والمؤقتات وأوضاع 2D أو 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>إعادة تعيين العرض</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>قم بضبط الخريطة مرة أخرى في مساحة العمل بعد التحريك أو التكبير/التصغير.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>طبقات الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>اختر الشبكة والمشغل والنصب التذكاري والمتجر والخيارات المرئية المتقدمة هنا.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>الخرائط الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>فتح تراكبات الكثافة المستخرجة. إنها تظهر مناطق الانتشار المحتملة، وليس الكيانات الحية.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>افتح خريطة 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>قم بإنشاء أو فتح تمثيل 3D المحلي للخريطة الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>أدوات الرسم</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>ارسم ملاحظات التخطيط غير المتلفة على الخريطة واترك وضع الرسم عند الانتهاء.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>افتح الخرائط الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>تصفح طبقات الكثافة المتاحة للخريطة التي تم تحليلها حاليًا.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>محدد الخريطة الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>حدد فئة واحدة مستخرجة أو قم بمسح التراكب النشط.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>كيف تعمل الخرائط الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>تلخص الخرائط الحرارية مناطق الانتشار المحتملة؛ إنهم لا يضمنون وجود كيان حي في مكان ما.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>إنشاء أو فتح 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>يقوم التطبيق بتحليل بيانات الخريطة محليًا وإعادة استخدام ذاكرة التخزين المؤقت الخاصة به عندما يكون ذلك ممكنًا.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D إطار العرض</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>قم بتدوير تمثيل تفاعلي للخريطة المحددة وتحريكها وتكبيرها/تصغيرها.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D شريط الأدوات</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>طبقات التحكم، والعلامات المباشرة، وملء الشاشة، والإعدادات، وأدوات البصمة.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>منشئ البصمة الأساسية</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>يضع وضع البناء أسس التخطيط فقط؛ ولا يقوم بتعديل خادم Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>مؤشر الأداء</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS وتفاصيل توازن الدقة التكيفية مع التفاعل السلس.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>إغلاق عرض 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>ارجع إلى 2D وقم بتحرير موارد 3D المضمنة الثقيلة.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>قائمة الأجهزة</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>تظهر هنا المفاتيح المقترنة والإنذارات وشاشات التخزين في مجموعات.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>بحث الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>تصفية الأجهزة حسب الاسم أو الأمر دون تغيير حالتها.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>مرشح نوع الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>قصر القائمة على المفاتيح أو الإنذارات أو شاشات التخزين أو جميع الأجهزة.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>حالات التحديث</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>طلب حالة جديدة للقراءة فقط؛ يعتمد التوفر على الاتصال.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>أدوات الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>يتم جمع الاستيراد والمزامنة السحابية والأتمتة ومفاتيح التشغيل السريع والتحديث والتنظيف هنا.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>بطاقة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>تعرض البطاقة الهوية وحالة الاتصال والأوامر وعناصر التحكم الخاصة بالجهاز.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>سلامة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>لا تقوم البرامج التعليمية مطلقًا بتبديل المفتاح أو حذف جهاز أو تشغيل مفتاح التشغيل السريع.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>قائمة الفريق</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>يظهر هنا زملاء الفريق المحملين، وحالة الاتصال بالإنترنت، والصور الرمزية، وإجراءات السياق.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>علامات الفريق</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>اختر أنماط علامات زميل الفريق التي تظهر على الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>اتبع اللاعب</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>تقوم المراكز التالية بتعيين التحديثات على زميل في الفريق وتتطلب بيانات الفريق الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>مشاركة الفريق</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>قد تتطلب مشاركة القاعدة ولقطات الشاشة الحصول على حساب وموافقة على التحميل.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>سجل الدردشة</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>تظهر هنا رسائل فريق Rust الأخيرة عندما يوفر الاتصال بيانات الدردشة.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>إدخال الرسالة</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>أنشئ رسالة للفريق هنا. لا يقوم البرنامج التعليمي أبدًا بإدراج أو إرسال واحدة.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>أرسل رسالة</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>إرسال المشاركات إلى دردشة فريق Rust. يتم تمييز عنصر التحكم هذا فقط.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>إعدادات الأوامر</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>قم بتكوين البادئات وارتباطات الأجهزة والتأخيرات وإتاحة الأوامر.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord المجتمع</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>هذا الاختصار يفتح المجتمع؛ إعدادات التكامل منفصلة.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord الإعدادات</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>قم بتكوين الروبوت والجماعة والقنوات والأوامر والأذونات دون تسجيل المعرفات.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord السلامة</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>لا تنشر البرامج التعليمية مطلقًا رسائل أو تسجل النقابة أو القناة أو معرفات المستخدم.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>افتح محرك المنطق</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>افتح محرر قواعد الخادم المحدد.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>قائمة القواعد</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>تظهر هنا القواعد وخطوات التشغيل والحالة والتأخير والإجراء الخاصة بها.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>حالة المحرك</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>تمكين تنفيذ القاعدة أو إيقافه مؤقتًا. البرنامج التعليمي لا يغير هذا المفتاح أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>سير عمل القاعدة</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>مشغل يبدأ قاعدة؛ بوابة الشروط الإجراءات اللاحقة؛ الخطوات تسير بالترتيب.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>سلامة الأتمتة</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>لا تحافظ البرامج التعليمية على القواعد أو تبديل الأجهزة أو إرسال الدردشة أو تنفيذ الأتمتة.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>مركز الإشعارات</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>قم بمراجعة التنبيهات دون الاعتماد على إشعارات سطح المكتب العابرة.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>مرشحات الإشعارات</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>التبديل بين جميع الإشعارات والإنذارات والوفيات.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>إشعارات البحث</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>ابحث عن الإشعارات حسب المحتوى المعروض أو سياق الخادم.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>الإجراءات المجمعة</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>وضع علامة على كل المحفوظات المقروءة أو مسحها؛ البرامج التعليمية لا تنفذ هذه الإجراءات أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>قائمة الكاميرا</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>تظهر المعاينات التي تم تكوينها عند توفر خادم وكاميرا محددين.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>أضف الكاميرا</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>أضف كاميرا باستخدام معرفها Rust؛ لا تلتقط البرامج التعليمية رموز الكاميرا أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>خصوصية الكاميرا</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>يتم استبعاد معرفات الكاميرا وإطاراتها من تشخيصات البرنامج التعليمي.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>أهداف البحث</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>ابحث عن جدار أو باب أو هدف قابل للنشر أو أي هدف آخر في مجموعة البيانات المجمعة.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>خطة الغارة</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>مراجعة الأهداف والصحة والكميات والأساليب والتكاليف المحسوبة.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>مقارنة الطرق</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>حدد المتفجرات أو الأدوات المسموح بها وقارن بين البدائل.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>مسح الخطة</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>يؤدي المسح إلى إزالة الخطة؛ يسلط البرنامج التعليمي الضوء عليه دون تغيير الإدخالات.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>عناصر البحث</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>ابحث عن عنصر قابل لإعادة التدوير وأضفه إلى الآلة الحاسبة.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>فئة العنصر</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>تضييق كتالوج العناصر حسب الفئة.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>عناصر الإدخال</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>ضبط الكميات أو إزالة الإدخالات؛ الدروس لا تغير حالة الآلة الحاسبة.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>نتائج إعادة التدوير</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>قارن بين الإنتاجية والأوقات الخاصة بإعادة التدوير في المناطق البرية والآمنة.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>افتح الإعدادات</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>سلوك التطبيق وعمليات التكامل والأداء والنسخ الاحتياطي والصيانة موجودة هنا.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>اختر لغة واجهة المستخدم. يستخدم النص التعليمي نفس نظام الموارد.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>أداء الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>ضبط قياس الصورة والتخزين المؤقت لوحدة معالجة الرسومات ومقياس العرض ووضع الحافة.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>الصيانة</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>يمكن أن تكون عناصر التحكم في النسخ الاحتياطي وإعادة التعيين والتطهير وذاكرة التخزين المؤقت مدمرة ولا يتم استدعاؤها أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>التحقق من وجود تحديثات</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>اطلب توفر التحديث بدون تنزيل أو تثبيت.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>تحديث الحالة</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>يظهر تقدم الإصدار والتنزيل في منطقة شريط العنوان هذه.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>سجل التشخيص</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>قم بتصفية التشخيصات المحلية قبل مشاركة التفاصيل غير الحساسة فقط.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>المحلات التجارية والبيع</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>ابحث عن عروض البيع، وقارن الصفقات، وافهم توقيت التحديث.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>مراقبة الأحداث والخادم</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>اقرأ مؤشرات الأحداث المباشرة وقم بإنشاء مؤقتات محلية.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>القواعد ولقطات الشاشة</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>قم بإنشاء علامات قاعدة الخريطة وإدارة الملاحظات ولقطات الشاشة الخاصة بها بأمان.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>أتمتة الجهاز</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>قم بتكوين أتمتة حالة الجهاز البسيطة بشكل منفصل عن المحرك المنطقي.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>افتح بحث المتجر</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>افتح لوحة بحث البيع الخاصة بالخريطة دون تغيير الخريطة الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>بحث المتجر</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>بحث العناصر ومراجعة كميات البيع والشراء وفتح النتائج على الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>توقيت التحديث</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>تعتمد عروض المتجر على اتصال الخادم وقد تكون قديمة بين عمليات تحديث Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>منصة الأحداث المباشرة</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>تظهر هنا مؤشرات الشحن، والمروحية، وChinook، والبائعين، وغيرها من مؤشرات الأحداث النشطة عندما تكون متاحة.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>مؤقت مخصص</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>قم بإنشاء تذكير محلي دون تغيير حالة الخادم.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>نضارة الحدث</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>تعتمد بيانات الحدث على الاتصال المحدد وقد تختفي عندما تصبح قديمة.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>العلامات الأساسية</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>يتم وضع العلامات الأساسية وفتحها على خريطة 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>الملاحظات الأساسية ولقطات الشاشة</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>استخدم إجراءات سياق الخريطة لتسمية القاعدة وإرفاق لقطات الشاشة؛ تتطلب المشاركة السحابية موافقة.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>احذف الأمان</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>لا يتم حذف قاعدة أو لقطة شاشة أبدًا من خلال برنامج تعليمي ويتطلب دائمًا مدخلاتك.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>افتح أتمتة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>افتح أتمتة حالة الجهاز خفيفة الوزن للخادم المحدد.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>إجراءات الأتمتة</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>إيقاف التنفيذ مؤقتًا أو إضافة عملية أتمتة؛ لا تغير البرامج التعليمية حالة المحرك أبدًا أو تنشئ بيانات.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>قواعد التشغيل الآلي</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>قم بمراجعة الأجهزة المصدر والإجراءات المستهدفة والتوقيت والحالة الممكّنة لكل قاعدة.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>سلامة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>لا يوجد برنامج تعليمي ينفذ قاعدة أو يبدل جهازًا ذكيًا حقيقيًا.</value>
   </data>
 </root>

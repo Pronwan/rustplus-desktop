@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Операцію вибіркового скидання успішно завершено.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Видалити маркери смерті</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Очистити все</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Прийняти</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Перейменувати маркер смерті</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Напрямок</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Профіль</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Смерть</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Маркери:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Пошук піктограм (наприклад, турель, перемикач)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} днів</value>
   </data>
@@ -2758,7 +2757,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>[Логічні правила]</value>
   </data>
   <data name="UiNameMinutes" xml:space="preserve">
-    <value>[ім&apos;я],[хвилини]</value>
+    <value>[ім'я],[хвилини]</value>
   </data>
   <data name="UiEveryone" xml:space="preserve">
     <value>@кожний</value>
@@ -2782,7 +2781,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>100% (рідний)</value>
   </data>
   <data name="UiText100YieldMonuments" xml:space="preserve">
-    <value>100% вихід (пам&apos;ятники)</value>
+    <value>100% вихід (пам'ятники)</value>
   </data>
   <data name="UiText125Sharp" xml:space="preserve">
     <value>125% (різкий)</value>
@@ -2812,7 +2811,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Прийняти та синхронізувати</value>
   </data>
   <data name="UiAcceptAndRemember" xml:space="preserve">
-    <value>Прийміть і запам&apos;ятайте</value>
+    <value>Прийміть і запам'ятайте</value>
   </data>
   <data name="UiACCOUNT" xml:space="preserve">
     <value>ОБЛІКОВИЙ ЗАПИС</value>
@@ -2941,7 +2940,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>ПОТРІБНА СТРІЛА</value>
   </data>
   <data name="UiBrowseMonuments" xml:space="preserve">
-    <value>Перегляньте пам&apos;ятники</value>
+    <value>Перегляньте пам'ятники</value>
   </data>
   <data name="UiBrowseOnlinePlayersAndTrackedTargets" xml:space="preserve">
     <value>Переглядайте онлайн-гравців і відстежувані цілі.</value>
@@ -3160,7 +3159,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Вимикає згладжування ліній сітки та маркерів. Покращує швидкість візуалізації на системах низького рівня.</value>
   </data>
   <data name="UiDiscordName" xml:space="preserve">
-    <value>Discord Ім&apos;я</value>
+    <value>Discord Ім'я</value>
   </data>
   <data name="UiDiscordServerIDGuildID" xml:space="preserve">
     <value>Discord ID сервера (ID гільдії)</value>
@@ -3187,7 +3186,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Дисплей</value>
   </data>
   <data name="UiDisplayName" xml:space="preserve">
-    <value>Відображуване ім&apos;я</value>
+    <value>Відображуване ім'я</value>
   </data>
   <data name="UiDollar" xml:space="preserve">
     <value>долар</value>
@@ -3268,7 +3267,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Розгорнути/Згорнути</value>
   </data>
   <data name="UiEXTRAMONUMENTTYPES" xml:space="preserve">
-    <value>ДОДАТКОВІ ТИПИ ПАМ&apos;ЯТНИКІВ</value>
+    <value>ДОДАТКОВІ ТИПИ ПАМ'ЯТНИКІВ</value>
   </data>
   <data name="UiFaunaWildlife" xml:space="preserve">
     <value>Фауна та дика природа</value>
@@ -3313,7 +3312,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Від</value>
   </data>
   <data name="UiGatingConditionOptional" xml:space="preserve">
-    <value>Стан стробування (необов&apos;язково)</value>
+    <value>Стан стробування (необов'язково)</value>
   </data>
   <data name="UiGenerateSave" xml:space="preserve">
     <value>Створити та зберегти</value>
@@ -3844,7 +3843,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Шукайте елементи або вільно вводьте...</value>
   </data>
   <data name="UiSearchMonument" xml:space="preserve">
-    <value>Пошук пам&apos;ятника...</value>
+    <value>Пошук пам'ятника...</value>
   </data>
   <data name="UiSearchRaidTargets" xml:space="preserve">
     <value>Пошук цілей рейду</value>
@@ -4138,7 +4137,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Вовки</value>
   </data>
   <data name="UiWoodPiles" xml:space="preserve">
-    <value>Дерев&apos;яні палі</value>
+    <value>Дерев'яні палі</value>
   </data>
   <data name="UiX" xml:space="preserve">
     <value>x</value>
@@ -4282,7 +4281,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Гарячі клавіші активні</value>
   </data>
   <data name="CodeUiInvalidUsername" xml:space="preserve">
-    <value>Недійсне ім&apos;я користувача</value>
+    <value>Недійсне ім'я користувача</value>
   </data>
   <data name="CodeUiJustNow" xml:space="preserve">
     <value>тільки зараз</value>
@@ -4291,7 +4290,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Посилання Discord</value>
   </data>
   <data name="CodeUiLinked" xml:space="preserve">
-    <value>Пов&apos;язано</value>
+    <value>Пов'язано</value>
   </data>
   <data name="CodeUiLinkedToThisCloudAccount" xml:space="preserve">
     <value>Пов’язано з цим хмарним обліковим записом</value>
@@ -4342,7 +4341,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Немає дійсного маршруту (вузькі місця).</value>
   </data>
   <data name="CodeUiNotLinked" xml:space="preserve">
-    <value>Не пов&apos;язано</value>
+    <value>Не пов'язано</value>
   </data>
   <data name="CodeUiNotSignedInSyncAndBackupsUnavailable" xml:space="preserve">
     <value>Ви не ввійшли · синхронізація та резервне копіювання недоступні</value>
@@ -4471,7 +4470,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Білий</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Офлайн-карту успішно імпортовано як &quot;{0}&quot;!</value>
+    <value>Офлайн-карту успішно імпортовано як "{0}"!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Карту імпортовано</value>
@@ -4509,19 +4508,19 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>Автономну карту &quot;{0}&quot; ще не проаналізовано. Відкрийте його 3D карту один раз, щоб проаналізувати її, а потім спробуйте скопіювати знову.</value>
+    <value>Автономну карту "{0}" ще не проаналізовано. Відкрийте його 3D карту один раз, щоб проаналізувати її, а потім спробуйте скопіювати знову.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Помилка копіювання карти</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Макети карт не збігаються. Карта &quot;{0}&quot; не збігається з картою підключеного сервера &quot;{1}&quot;.</value>
+    <value>Макети карт не збігаються. Карта "{0}" не збігається з картою підключеного сервера "{1}".</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Невідповідність карти</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>Карту 3D і локальні активи успішно скопійовано з «{0}» до «{1}&apos;!</value>
+    <value>Карту 3D і локальні активи успішно скопійовано з «{0}» до «{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Карту скопійовано</value>
@@ -4709,5 +4708,797 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Пропустити урок</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Далі</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Фініш</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Скасувати цей урок?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Твій прогрес збережено. Ви можете продовжити навчання з Навчального центру у будь-який час.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Продовжуйте вчитися</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Скасувати навчання</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Крок {0} {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Ця функція недоступна в поточному стані додатку. Продовжуйте безпечно і поверніться, коли з'явиться необхідний сервер, обліковий запис або дані.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Скидання</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Перезапуск</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Продовжуй</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Початок</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} {1} кроків</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Вчитися RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Сфокусовані уроки для цієї збірки. Туторіали ніколи не активують пристрої, не надсилають повідомлень, не видаляють дані і не запускають автоматизації.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Почніть рекомендовані навчальні матеріали</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Продовжити останній урок</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Перезапустити всі навчальні матеріали</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Скинути прогрес навчання</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Початок основ для нових користувачів</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Пропонуйте навчальні матеріали для нових функцій</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Ласкаво просимо до RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Зробіть коротку екскурсію навігації, підключення до серверів, карт і пристроїв — або оберіть лише потрібні уроки.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Початок швидкої екскурсії</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Виберіть навчальні матеріали</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Не зараз</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Не розпочато</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>У процесі</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Завершено</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Пропущено</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Оновлено</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Нова функція</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Початок роботи</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Карти</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Пристрої</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Команда та комунікація</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Автоматизація</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Моніторинг</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Інструменти</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Налаштування та підтримка</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Основи застосування</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Вивчіть навігацію, контекст сервера, стан з'єднання, сповіщення та місця для повторного проходження уроків.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Обліковий запис і хмара</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Розумійте локальні функції, вхід у хмару, синхронізацію та доступ до Supporter.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Спарювання та управління серверами</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Підключіть Rust+, оберіть сервер і зрозумійте м'які, повні та відключені режими.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Основи карти</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Вивчіть навігацію по карті, шари, теплові карти, інструменти для малювання та точку входу 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Теплові карти ресурсів</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Дізнайтеся, що показують витягнуті накладки щільності спавну і як їх вибрати або очистити.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Карта</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Досліджуйте локальний 3D viewport, панель інструментів, конструктор слідів, дисплей продуктивності та близький екшн.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Розумні пристрої</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Знаходити, фільтрувати, оновлювати, організовувати та безпечно розуміти спарені розумні пристрої.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Відстеження команди та гравців</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Перевірити вимоги щодо товаришів по команді, маркери, дотримуватися поведінки та ділитися.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Командний чат і команди</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Читати командний чат, складати повідомлення та налаштовувати команди, не надсилаючи нічого нового.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Інтеграція</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Знайти Discord точки входу, конфігурацію, дозволи та межі конфіденційності.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Логічний та автоматизований рушій</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Розумійте правила, тригери, умови, дії, стан виконання та безпечне тестування.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Сповіщення та сповіщення</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Фільтрація, пошук, перегляд, позначення та очищення сповіщень про заявки.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Камери та моніторинг</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Додавайте та переглядайте парні камери, зберігаючи ідентифікатори камер у приватності.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Калькулятор рейду</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Складіть план рейду, порівняйте методи та перегляньте загальні матеріали.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Калькулятор переробки</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Додавайте товари та порівнюйте врожайність диких і безпечних переробників.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Знайти мову, роботу карт, підключені сервіси та керування обслуговуванням.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Оновлення та діагностика</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Перевірте оновлення додатків і знайдіть діагностичний журнал без початку оновлення.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Головна навігація</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Використовуйте цю бічну панель для переміщення між пристроями, відстеження команди, камер, гравців, сповіщень і калькуляторів.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Розширення навігації</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Закріпіть або згорніть бічну панель, щоб обміняти мітки на більший робочий простір на карті.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Поточний сервер</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Ця область ідентифікує обраний сервер Rust та контекст його облікового запису.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Стан з'єднання</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Серверні карти показують, чи сервер відключений, м'який або повністю підключений.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Сповіщення</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Тут зібрані результати про проблеми з підключенням, сигналізації, смерті та автоматизацію.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Навчальний центр</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Повторюйте, продовжуйте, перезапустіть або відкрийте оновлені уроки тут.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Контекст акаунта</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Доступ до хмари відокремлений від Rust+ парування. Локальні функції залишаються доступними без синхронізації з хмарою.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Хмарний акаунт</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Увійдіть тут для підтримки синхронізації; У туторіалах ніколи не відображаються дані приватного акаунта.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Статус уболівальника</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Доступ для підтримки відкриває закриті функції. Для проходження локального навчання не потрібна підписка.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Пара Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Парування з'єднує цей додаток із Rust Companion до того, як функції живого сервера запрацюють.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Почати поєднувати пари</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Почніть слухати, потім використайте ігровий Rust+ потік Rust парування. Документи ніколи не фіксуються.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Парні сервери</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Виберіть локально налаштований сервер перед підключенням або зміною конкретних налаштувань.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect навантажує обмежений зв'язок без ініціалізації всіх живих функцій.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Повне підключення</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Повне з'єднання ініціалізує дані карти, пристрої, дані команди та підписки на Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Відключення</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Відключення зупиняє живий контакт. Цей урок ніколи не викликає дії.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Відновлення пари</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Команди відновлення знаходяться в контекстному меню Pair. Скидання прибирає локальну конфігурацію парування.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Картовий полотно</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Панорамувати шляхом перетягування, збільшувати за допомогою колеса та взаємодіяти з маркерами на поточній Rust карті.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Панель інструментів карти</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Панель інструментів керує шарами, чатом, накладаннями, таймерами та режимами 2D або 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Скидання перегляду</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Після панорамування або масштабування карти встановіть карту назад у робочий простір.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Шари карти</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Виберіть сітку, гравця, пам'ятник, магазин і розширені візуальні опції тут.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Теплові карти</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Відкриті накладки з витягнутою щільністю. Вони показують ймовірні зони появи, а не живі сутності.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Відкрити карту 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Згенерувати або відкрити локальне 3D представлення поточної карти.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Інструменти для малювання</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Намалювати неруйнівні планувальні нотатки на карті та виходити з режиму малювання після завершення.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Відкриті теплові карти</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Перегляньте доступні щільні шари для поточної парсованої карти.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Селектор теплової карти</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Виберіть одну витягнуту категорію або очистите активний оверлей.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Як працюють теплові карти</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Теплові карти узагальнюють ймовірні місця появи; Вони не гарантують наявність живої суб'єктності в певному місці.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Генерувати або відкривати 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Додаток локально аналізує дані карти і повторно використовує кеш, коли це можливо.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Оглядовий віктор</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Орбітати, панорамувати та масштабувати по інтерактивному представленню обраної карти.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Панель інструментів</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Керуючі шари, живі маркери, повноекранні, налаштування та інструменти для визначення відбитків.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Будівельник базового сліду</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Режим будівництва розміщує лише основи планування; Він не змінює Rust сервер.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Індикатор продуктивності</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS та адаптивна роздільна здатність балансують деталі з плавною взаємодією.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Закрити 3D огляд</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Повернутися до 2D і випустити важкі вбудовані 3D ресурси.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Список пристроїв</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Тут групами з'являються парні перемикачі, сигналізації та монітори зберігання.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Пошук пристроїв</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Фільтруйте пристрої за назвою або командою, не змінюючи їхнього стану.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Фільтр типу пристрою</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Обмежте список вимикачами, сигналізаціями, моніторами зберігання або всіма пристроями.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Штати оновлення</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Запитати новий стан лише для читання; Доступність залежить від з'єднання.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Інструменти пристроїв</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Імпорт, синхронізація з хмарою, автоматизація, гарячі клавіші, оновлення та очищення зібрані тут.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Карта пристрою</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Картка показує ідентифікацію, стан з'єднання, команди та специфічні для пристрою керування.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Безпека пристрою</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>У туторіалах ніколи не перемикається перемикач, не видаляє пристрій і не запускає гарячу клавішу.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Список команд</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Завантажені товариші по команді, онлайн-стан, аватари та дії контексту з'являються тут.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Командні маркери</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Виберіть стилі маркерів для товаришів по команді, які видно на карті.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Слідувати за гравцем</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Слідування центрів оновлює карту товариша по команді та вимагає актуальних даних команди.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Спільне командування</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Для обміну базою та скріншотами може знадобитися наявність акаунта та згоду на завантаження.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Історія чату</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Останні повідомлення команди Rust з'являються тут, коли з'єднання надає дані чату.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Введення повідомлення</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Напишіть командне повідомлення тут. У туторіалі жодного разу не вставляють і не надсилають.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Надіслати повідомлення</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Надсилаю пости в Rust командний чат. Цей контроль виділений лише на місці.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Налаштування команд</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Налаштувати префікси, зв'язки пристроїв, затримки та доступність команд.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Спільнота Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Цей короткий шлях відкриває спільноту; Налаштування інтеграції окремі.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Налаштування</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Налаштувати бота, гільдію, канали, команди та дозволи без логових ID.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Безпека</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>У туторіалах ніколи не публікуються повідомлення і не містять логів гільдій, каналів чи ідентифікаторів користувачів.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Відкритий логічний рушій</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Відкрити редактор правил обраного сервера.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Список правил</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Правила та їхні тригери, умови, затримки та кроки дій наведені тут.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Стан двигуна</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Увімкнути або призупинити виконання правил. У туторіалі цей перемикач ніколи не змінюється.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Робочий процес правил</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Тригер запускає правило; умови гейту наступні дії; Кроки йдуть послідовно.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Безпека автоматизації</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Уроки не зберігають правила, не перемикають пристрої, не надсилають чат і не виконують автоматизацію.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Центр сповіщень</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Переглядайте сповіщення без використання тимчасових сповіщень з робочого столу.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Фільтри сповіщень</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Перемикайтеся між усіма сповіщеннями, тривогами та смертями.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Сповіщення про пошук</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Знаходити сповіщення за відображаним контентом або контекстом сервера.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Масові дії</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Позначи всю прочитану або очисти історію; Туторіали ніколи не виконують таких дій.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Список камер</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Налаштовані попередні перегляди з'являються, коли доступні обраний сервер і камера.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Додати камеру</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Додати камеру з її ідентифікатором Rust; Туторіали ніколи не фіксують коди камери.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Конфіденційність камери</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Ідентифікатори камери та кадри виключені з навчальної діагностики.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Об'єкти пошуку</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Знайдіть стіну, двері, пристрій для розгортання або іншу ціль у зібраному наборі даних.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>План рейду</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Перегляньте цілі, стан стану, кількості, методи та розраховані витрати.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Методи порівняння</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Виберіть дозволені вибухові речовини або інструменти та порівняйте альтернативи.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Чіткий план</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Клір скасовує план; У туторіалі це підкреслюється, не змінюючи записів.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Пошукові елементи</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Знайдіть товар, який можна переробити, і додайте його до калькулятора.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Категорія товару</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Звузьте каталог товарів за категоріями.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Вхідні елементи</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Коригувати кількість або видаляти записи; Уроки не змінюють стан калькулятора.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Результати переробки</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Порівняйте врожайність і час для диких і безпечних переробників.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Відкрити налаштування</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Тут присутня поведінка додатків, інтеграції, продуктивність, резервне копіювання та обслуговування.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Виберіть мову інтерфейсу. Навчальний текст використовує ту ж систему ресурсів.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Продуктивність карти</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Налаштування масштабування зображення, кешування GPU, масштабування рендеру та режим краю.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Обслуговування</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Резервне копіювання, скидання, очищення та керування кешом може бути руйнівним і ніколи не викликається.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Перевірте оновлення</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Запитуйте доступність оновлень без завантаження чи встановлення.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Статус оновлення</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Версія та прогрес завантаження відображаються в цій розділі заголовків.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Діагностичний журнал</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Фільтруйте локальну діагностику перед тим, як ділитися лише нечутливими даними.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Магазини та торгові магазини</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Шукайте пропозиції вендингу, порівнюйте угоди та розумійте час оновлення.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Події та моніторинг серверів</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Читайте живі індикатори подій і створюйте місцеві таймери.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Бази та скріншоти</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Створюйте базові маркери карти та безпечно керуйте їхніми нотатками та скріншотами.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Автоматизація пристроїв</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Налаштувати просту автоматизацію стану пристрою окремо від логічного рушія.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Відкритий пошук магазину</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Відкрити панель пошуку торгових продуктів на карті, не змінюючи поточну карту.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Пошук магазину</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Пошук товарів, перегляд обсягів купівлі та продажу, а також відкриття результатів на карті.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Час оновлення</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Пропозиції магазину залежать від підключення до сервера і можуть бути застарілими між Rust+ оновленнями.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Доки живої події</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Індикатори вантажних, гелікоптерних, Chinook, продавців та інших активних подій, з'являються тут, коли вони доступні.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Кастомний таймер</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Створіть локальне нагадування без зміни стану сервера.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Свіжість заходу</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Дані про події залежать від обраного з'єднання і можуть зникати, коли вони стають застарілими.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Маркери бази</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>На 2D карті розміщуються та відкриваються маркери основи.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Базові нотатки та скріншоти</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Використовуйте дії контексту карти для назви бази та додавання скріншотів; Хмарний обмін потребує згоди.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Безпека видалення</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Видалення бази чи скріншоту ніколи не виконується навчальним посібником і завжди вимагає вашої участі.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Автоматизація відкритих пристроїв</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Відкрити легку автоматизацію стану пристрою для обраного сервера.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Автоматизовані дії</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Призупинити виконання або додати автоматизацію; Туторіали ніколи не змінюють стан двигуна і не створюють дані.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Правила автоматизації</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Перегляд вихідних пристроїв, цільових дій, часу та увімкненого стану для кожного правила.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Безпека пристрою</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Жоден туторіал не виконує правило і не перемикає справжній розумний пристрій.</value>
   </data>
 </root>

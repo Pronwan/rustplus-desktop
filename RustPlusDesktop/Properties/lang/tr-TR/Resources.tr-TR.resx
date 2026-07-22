@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Seçici sıfırlama işlemi başarıyla tamamlandı.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Ölüm İşaretlerini Sil</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Tümünü Sil</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Kabul</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Ölüm İşaretini Yeniden Adlandır</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Yön</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profil</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Ölüm</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>İşaretler:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Simgeleri ara (ör. taret, anahtar)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} gün</value>
   </data>
@@ -2956,7 +2955,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>X Satın Al</value>
   </data>
   <data name="UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness" xml:space="preserve">
-    <value>GPU&apos;da harita oluşturmayı önbelleğe alır. Kaydırma ve yakınlaştırma düzgünlüğünü son derece artırır.</value>
+    <value>GPU'da harita oluşturmayı önbelleğe alır. Kaydırma ve yakınlaştırma düzgünlüğünü son derece artırır.</value>
   </data>
   <data name="UiCalculateComponentYieldsForWildAndSafeZoneRecyclers" xml:space="preserve">
     <value>Vahşi ve güvenli bölge geri dönüşümcüleri için bileşen verimlerini hesaplayın.</value>
@@ -3016,7 +3015,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Baskın planını temizle</value>
   </data>
   <data name="UiClearWebhookURL" xml:space="preserve">
-    <value>Web Kancası URL&apos;sini temizle</value>
+    <value>Web Kancası URL'sini temizle</value>
   </data>
   <data name="UiCloseRaidCalculator" xml:space="preserve">
     <value>Baskın hesaplayıcıyı kapat</value>
@@ -3073,7 +3072,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Discord hazır özetini kopyalayın</value>
   </data>
   <data name="UiCopyIP" xml:space="preserve">
-    <value>IP&apos;yi kopyala</value>
+    <value>IP'yi kopyala</value>
   </data>
   <data name="UiCopyMapToServer" xml:space="preserve">
     <value>Haritayı sunucuya kopyala...</value>
@@ -3172,10 +3171,10 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Discord Web Kancası (Sohbet Uyarıları)</value>
   </data>
   <data name="UiDiscordWebhookURL" xml:space="preserve">
-    <value>Discord Web kancası URL&apos;si</value>
+    <value>Discord Web kancası URL'si</value>
   </data>
   <data name="UiDiscordWebhookURLOfflineAlerts" xml:space="preserve">
-    <value>Discord Web Kancası URL&apos;si (Çevrimdışı Uyarılar)</value>
+    <value>Discord Web Kancası URL'si (Çevrimdışı Uyarılar)</value>
   </data>
   <data name="UiDiscordWebhooksGuide" xml:space="preserve">
     <value>Discord Web Kancaları Kılavuzu</value>
@@ -3319,7 +3318,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Oluştur ve Kaydet</value>
   </data>
   <data name="UiGenerateLoginPIN" xml:space="preserve">
-    <value>Giriş PIN&apos;i Oluştur</value>
+    <value>Giriş PIN'i Oluştur</value>
   </data>
   <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
     <value>Isı haritalarını kullanmadan önce 3B haritayı oluşturun.</value>
@@ -3589,7 +3588,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Bulut hesabını aç</value>
   </data>
   <data name="UiOpenInteractive3DMapOnRustMaps" xml:space="preserve">
-    <value>RustMaps&apos;te İnteraktif 3D Haritayı Aç</value>
+    <value>RustMaps'te İnteraktif 3D Haritayı Aç</value>
   </data>
   <data name="UiOpenOrCloseShopsPanel" xml:space="preserve">
     <value>Mağazalar panelini aç veya kapat</value>
@@ -3676,7 +3675,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>1 dakikalık geri sayım sesini çal</value>
   </data>
   <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
-    <value>Saat 00:00&apos;da yüksek sesli alarm çal</value>
+    <value>Saat 00:00'da yüksek sesli alarm çal</value>
   </data>
   <data name="UiPlayerProximity" xml:space="preserve">
     <value>Oyuncu yakınlığı</value>
@@ -3688,7 +3687,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>İstediğiniz tuş kombinasyonuna basın...</value>
   </data>
   <data name="UiPressESCToCancelEnterToSave" xml:space="preserve">
-    <value>İptal etmek için ESC&apos;ye, kaydetmek için Enter&apos;a basın</value>
+    <value>İptal etmek için ESC'ye, kaydetmek için Enter'a basın</value>
   </data>
   <data name="UiPressHotkey" xml:space="preserve">
     <value>Kısayol tuşuna basın</value>
@@ -3748,7 +3747,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Sesleri varsayılana sıfırla</value>
   </data>
   <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
-    <value>Önbelleğe alınan GPU bit haritasının çözünürlük ölçeği. Daha düşük ölçekler, daha yavaş GPU&apos;larda performansı artırır.</value>
+    <value>Önbelleğe alınan GPU bit haritasının çözünürlük ölçeği. Daha düşük ölçekler, daha yavaş GPU'larda performansı artırır.</value>
   </data>
   <data name="UiResourcesForestry" xml:space="preserve">
     <value>Kaynaklar ve Ormancılık</value>
@@ -3823,10 +3822,10 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Kapsam</value>
   </data>
   <data name="UiScrollOrShiftClickChangesBy10" xml:space="preserve">
-    <value>Kaydırma veya Shift+Tıklama 10&apos;luk değişiklikler</value>
+    <value>Kaydırma veya Shift+Tıklama 10'luk değişiklikler</value>
   </data>
   <data name="UiScrollToZoomDragToPanClickOrESCToCloseDoubleClickToReset" xml:space="preserve">
-    <value>Yakınlaştırmaya Kaydırın • Kaydırmak için Sürükleyin • Kapatmak için veya ESC&apos;ye tıklayın • Sıfırlamak için Çift Tıklayın</value>
+    <value>Yakınlaştırmaya Kaydırın • Kaydırmak için Sürükleyin • Kapatmak için veya ESC'ye tıklayın • Sıfırlamak için Çift Tıklayın</value>
   </data>
   <data name="UiSearchComponents" xml:space="preserve">
     <value>Bileşenleri ara...</value>
@@ -3952,7 +3951,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Uyku</value>
   </data>
   <data name="UiSmartHomeWebhookURLEGIFTTTAlexaGoogle" xml:space="preserve">
-    <value>Akıllı Ev Web Kancası URL&apos;si (ör. IFTTT, Alexa, Google)</value>
+    <value>Akıllı Ev Web Kancası URL'si (ör. IFTTT, Alexa, Google)</value>
   </data>
   <data name="UiSmartSwitch" xml:space="preserve">
     <value>Akıllı Anahtar</value>
@@ -4003,10 +4002,10 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Rust+ Bağlantınızı senkronize edin</value>
   </data>
   <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
-    <value>Masaüstü Uygulamanız kapalıyken bile Discord, Alexa ve Google Home&apos;da akıllı Baskın/Etkinlik uyarıları almak için Rust+ Bağlantınızı bulutla senkronize edin.</value>
+    <value>Masaüstü Uygulamanız kapalıyken bile Discord, Alexa ve Google Home'da akıllı Baskın/Etkinlik uyarıları almak için Rust+ Bağlantınızı bulutla senkronize edin.</value>
   </data>
   <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
-    <value>Senkronizasyon, yedeklemeler, takım özellikleri ve taraftar erişimi. Bu hesap Rust+ Tamamlayıcı eşleştirmeden ve FCM&apos;den ayrıdır.</value>
+    <value>Senkronizasyon, yedeklemeler, takım özellikleri ve taraftar erişimi. Bu hesap Rust+ Tamamlayıcı eşleştirmeden ve FCM'den ayrıdır.</value>
   </data>
   <data name="UiSyncedDevices" xml:space="preserve">
     <value>Senkronize edilen cihazlar</value>
@@ -4039,7 +4038,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>SONRA</value>
   </data>
   <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
-    <value>Bu bağlantı Rust tamamlayıcı API&apos;si içindir. FCM eşleştirmeyi, oyun içi yayınları, alarmları ve takım sohbetini etkinleştirir. Bulut hesabınız ayrıdır.</value>
+    <value>Bu bağlantı Rust tamamlayıcı API'si içindir. FCM eşleştirmeyi, oyun içi yayınları, alarmları ve takım sohbetini etkinleştirir. Bulut hesabınız ayrıdır.</value>
   </data>
   <data name="UiTier" xml:space="preserve">
     <value>Seviye</value>
@@ -4216,7 +4215,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Daralt</value>
   </data>
   <data name="CodeUiConfirmClear" xml:space="preserve">
-    <value>Temizle&apos;yi Onayla</value>
+    <value>Temizle'yi Onayla</value>
   </data>
   <data name="CodeUiConnected" xml:space="preserve">
     <value>Bağlı</value>
@@ -4270,7 +4269,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>FCM bağlantısı iptal edilemedi.</value>
   </data>
   <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
-    <value>FCM bağlantısı senkronize edilemedi. Giriş yaptığınızdan, etkin bir Premium/Destekçi katmanına sahip olduğunuzdan ve Rust+ Companion&apos;daki bağlantınızın etkin olduğundan emin olun.</value>
+    <value>FCM bağlantısı senkronize edilemedi. Giriş yaptığınızdan, etkin bir Premium/Destekçi katmanına sahip olduğunuzdan ve Rust+ Companion'daki bağlantınızın etkin olduğundan emin olun.</value>
   </data>
   <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
     <value>FCM bağlantısı senkronize edilemedi. Lütfen giriş yaptığınızdan emin olun.</value>
@@ -4357,13 +4356,13 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>PIN Oluşturuldu (15 dakika boyunca geçerli)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Lütfen önce Ayarlar&apos;da bir Discord &apos;Sohbet Uyarıları&apos; veya &apos;Etkinlik Uyarıları&apos; kanalını yapılandırın.</value>
+    <value>Lütfen önce Ayarlar'da bir Discord 'Sohbet Uyarıları' veya 'Etkinlik Uyarıları' kanalını yapılandırın.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Lütfen önce Bulut Hesabınızı bağlayın.</value>
   </data>
   <data name="CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN" xml:space="preserve">
-    <value>Lütfen Alexa PIN&apos;i oluşturmadan önce Cloud Sync&apos;i etkinleştirin.</value>
+    <value>Lütfen Alexa PIN'i oluşturmadan önce Cloud Sync'i etkinleştirin.</value>
   </data>
   <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
     <value>Lütfen geçerli bir Telegram kullanıcı adı girin.</value>
@@ -4411,7 +4410,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Senkronize edildi!</value>
   </data>
   <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
-    <value>Rust+ API&apos;si bu sunucu için ayrıntılı bir açıklama sağlamaz.</value>
+    <value>Rust+ API'si bu sunucu için ayrıntılı bir açıklama sağlamaz.</value>
   </data>
   <data name="CodeUiThickness10px" xml:space="preserve">
     <value>Kalınlık: 10 piksel</value>
@@ -4471,7 +4470,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Beyaz</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Çevrimdışı harita başarıyla &apos;{0}&apos; olarak içe aktarıldı!</value>
+    <value>Çevrimdışı harita başarıyla '{0}' olarak içe aktarıldı!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Harita İçe Aktarıldı</value>
@@ -4509,19 +4508,19 @@ Yığın:
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>&apos;{0}&apos; çevrimdışı haritası henüz ayrıştırılmadı. 3D haritasını ayrıştırmak için bir kez açın, ardından kopyalamayı tekrar deneyin.</value>
+    <value>'{0}' çevrimdışı haritası henüz ayrıştırılmadı. 3D haritasını ayrıştırmak için bir kez açın, ardından kopyalamayı tekrar deneyin.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Haritayı Kopyalama Hatası</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Harita düzenleri eşleşmiyor. &apos;({0}&apos; haritası, bağlı sunucu &apos;{1})&apos; ile aynı harita gibi görünmüyor.</value>
+    <value>Harita düzenleri eşleşmiyor. '({0}' haritası, bağlı sunucu '{1})' ile aynı harita gibi görünmüyor.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Harita Uyuşmazlığı</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>3D haritasını ve yerel varlıkları &apos;{0}&apos; öğesinden &apos;{1}&apos; öğesine başarıyla kopyaladı!</value>
+    <value>3D haritasını ve yerel varlıkları '{0}' öğesinden '{1}' öğesine başarıyla kopyaladı!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Harita Kopyalandı</value>
@@ -4579,7 +4578,7 @@ Kullanım planı:
     <value>Geçersiz kılma güncellenirken hata oluştu: {0}</value>
   </data>
   <data name="FormatServerDescriptionWebsite" xml:space="preserve">
-    <value>Rust+ API&apos;si bu sunucu için ayrıntılı bir açıklama sağlamaz.
+    <value>Rust+ API'si bu sunucu için ayrıntılı bir açıklama sağlamaz.
 
 Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
 {0}</value>
@@ -4660,7 +4659,7 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
     <value>Sunucu çevrimdışı (A2S sorgusu zaman aşımına uğradı)</value>
   </data>
   <data name="AutoDiscoveringQueryPort" xml:space="preserve">
-    <value>Steam API&apos;si aracılığıyla sorgu bağlantı noktasını bulma...</value>
+    <value>Steam API'si aracılığıyla sorgu bağlantı noktasını bulma...</value>
   </data>
   <data name="FetchingSteamPlayers" xml:space="preserve">
     <value>Steam Sorgusu aracılığıyla oyuncular getiriliyor...</value>
@@ -4709,5 +4708,797 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Eğitimi Atla</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Sıradaki</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Bitir</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Bu eğitimi iptal etmek mi?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>İlerlemeniz kaydedildi. Eğitim Merkezi'nden istediğiniz zaman devam edebilirsiniz.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Öğrenmeye Devam Edin</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Eğitimi İptal Et</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>{0} adım {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Bu özellik mevcut uygulama durumunda mevcut değil. Güvenli bir şekilde devam edin ve gerekli sunucu, hesap veya veri mevcut olduğunda geri dönün.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Sıfırlama</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Yeniden başlatma</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Devam et</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Başla</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} {1} adım</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Öğrenin RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Bu yapı için odaklanmış dersler. Eğitimler cihazları asla etkinleştirmez, mesaj göndermez, veri silmez veya otomasyonlar çalıştırmaz.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Önerilen Eğitimlere Başla</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Son Eğitime Devam Et</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Tüm eğitimleri yeniden başlat</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Eğitim İlerlemesi Sıfırlama</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Yeni kullanıcılar için temel bilgilere başla</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Yeni özellikler için eğitimler sunmak</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Hoş geldiniz RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Navigasyon, sunucu bağlantısı, haritalar ve cihazlar hakkında kısa bir tur yapın—ya da sadece ihtiyacınız olan dersleri seçin.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Hızlı Tura Başlayın</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Eğitimleri Seç</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Şimdi değil</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Başlamadı</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>Devam Ediyor</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Atlandı</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Güncellendi</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Yeni özellik</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Başlangıç</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Haritalar</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Cihazlar</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Ekip ve İletişim</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Otomasyon</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>İzleme</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Araçlar</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Ayarlar ve Destek</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Uygulama Temelleri</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Navigasyon, sunucu bağlamı, bağlantı durumu, bildirimler ve derslerin nerede tekrar oynanacağını öğrenin.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Hesap ve Bulut</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Yerel özellikleri, bulut girişini, senkronizasyonu ve Destekçi erişimini anlayın.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Eşleştirme ve Sunucu Yönetimi</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Rust+ eşleştirin, bir sunucu seçin ve yumuşak, tam ve bağlantısız modları anlayın.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Harita Temelleri</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Harita navigasyonunu, katmanları, ısı haritalarını, çizim araçlarını ve 3D giriş noktasını öğrenin.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Kaynak Isı Haritaları</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Çıkarılmış spawn yoğunluğu üstlenmelerinin ne gösterdiğini ve bunları nasıl seçip temizleyeceğinizi öğrenin.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Haritası</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Yerel 3D viewport, araç çubuğu, ayak izi oluşturucu, performans göstergesi ve yakın aksiyonu keşfedin.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Akıllı Cihazlar</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Eşleştirilmiş akıllı cihazları bulmak, filtrelemek, yenilemek, organize etmek ve güvenli bir şekilde anlamaktır.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Takım ve Oyuncu Takibi</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Takım arkadaşlarını, işaretleyicileri, davranışları takip etmeyi ve paylaşım gereksinimlerini gözden geçirin.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Takım Sohbeti ve Komutlar</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Ekip sohbetini okuyun, mesajlar oluşturun ve komutları yapılandırmak, hiçbir şey göndermeden.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Entegrasyonu</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Discord giriş noktalarını, yapılandırmaları, izinleri ve gizlilik sınırlarını bulun.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Mantık ve Otomasyon Motoru</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Kuralları, tetikleyicileri, koşulları, eylemleri, çalışma zamanı durumunu ve güvenli testleri anlayın.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Bildirimler ve Uyarılar</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Başvuru bildirimlerini filtreleyin, arayın, inceleyin, işaretleyin ve temizleyin.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Kameralar ve İzleme</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Eşleştirilmiş kameraları ekleyin ve inceleyin, ancak kamera tanımlayıcılarını gizli tutun.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Baskın Hesaplayıcısı</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Bir baskın planı oluşturun, yöntemleri karşılaştırın ve malzeme toplamlarını gözden geçirin.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Geri Dönüşüm Hesaplayıcısı</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Ürünler ekleyin ve vahşi ile güvenli bölgedeki geri dönüşüm verimlerini karşılaştırın.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Dil, harita performansı, bağlı hizmetler ve bakım kontrollerini bulun.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Güncellemeler ve Tanı</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Uygulama güncellemelerini kontrol edin ve güncelleme başlatmadan tanı kaydını bulun.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Ana Navigasyon</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Bu yan çubuğu cihazlar, takım takibi, kameralar, oyuncular, bildirimler ve hesap makineleri arasında geçiş yapmak için kullanın.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Navigasyon Genişletmesi</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Etiketleri takas etmek için kenar çubuğunu sabitleyin veya katlayın, böylece daha fazla harita çalışma alanı alın.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Güncel Sunucu</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Bu alan, seçilen Rust sunucusunu ve hesap bağlamını tanımlar.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Bağlantı Durumu</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Sunucu kartları, bir sunucunun bağlantısı kesilmiş, yumuşak bağlı mı yoksa tamamen bağlı mı olduğunu gösterir.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Bildirimler</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Bağlantı sorunları, alarmlar, ölümler ve otomasyon sonuçları burada toplanmıştır.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Eğitim Merkezi</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Burada tekrar oynayın, devam edin, yeniden başlatın veya güncellenmiş dersleri keşfedin.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Hesap Bağlamı</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Bulut erişimi Rust+ eşleşmeden ayrıdır. Yerel özellikler bulut senkronizasyonu olmadan da kullanılabilir hale geliyor.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Bulut Hesabı</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Desteklenen senkronizasyon için buradan giriş yapın; Eğitimler hiçbir zaman özel hesap verilerini göstermez.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Destekçi Durumu</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Destekçi erişimi, kapalı özellikleri açar. Yerel eğitim ilerlemesi için abonelik gerektirmez.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Çift Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Eşleştirmek, bu uygulamayı canlı sunucu özellikleri çalışmadan önce Rust Companion ile eşleştiriyor.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Eşleşmeye Başlayın</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Dinlemeye başlayın, sonra Rust'un oyun içi Rust+ eşleştirme akışını kullanın. Kimlik bilgileri asla kaydedilmez.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Eşleştirilmiş Sunucular</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Sunucuya özgü ayarları bağlamadan veya değiştirmeden önce yerel olarak yapılandırılmış bir sunucu seçin.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Yumuşak Bağlantı</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Bağlantı, her canlı özelliği başlatmadan sınırlı iletişimi yükler.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Tam Bağlantı</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Tam bağlantı harita verilerini, cihazları, takım verilerini ve Rust+ aboneliklerini başlatıyor.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Bağlantıyı kesin</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Bağlantı kesilmesi, canlı iletişimi durdurur. Bu ders asla eylemi çağrıştırmaz.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Eşleşmeyi Sıfırlama</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Kurtarma komutları Çift bağlam menüsünde. Sıfırlama, yerel eşleştirme yapılandırmasını kaldırır.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Harita Tuvalı</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Sürükleyerek kaydır, tekerlekle zoom et ve mevcut Rust haritasında işaretleyicilerle etkileşime gir.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Harita Araç Çubuğu</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Araç çubuğu katmanları, sohbetleri, üst üstlemeleri, zamanlayıcıları ve 2D veya 3D modlarını kontrol eder.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Görünüm Sıfırlama</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Haritayı pan veya zoom yaptıktan sonra tekrar çalışma alanına yerleştirin.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Harita Katmanları</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Buradan ızgara, oyuncu, anıt, mağaza ve gelişmiş görsel seçenekleri seçin.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Isı haritaları</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Açık çıkarılmış yoğunluk örtüleri. Muhtemelen doğma bölgelerini gösteriyorlar, canlı varlıkları değil.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Open 3D Haritası</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Mevcut haritanın yerel 3D temsilini oluştur veya aç.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Çizim Araçları</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Harita üzerine yıkıcı olmayan planlama notları çizin ve bitince çizim modundan çıkın.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Açık Isı Haritaları</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Mevcut ayrıştırılmış harita için mevcut yoğunluk katmanlarına göz at.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Isı haritası seçicisi</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Bir kategori seçin veya aktif üst katmanı temizleyin.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Isı Haritaları Nasıl Çalışır</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Isı haritaları muhtemel doğuş alanlarını özetliyor; Bir yerde canlı bir varlığın garantisi olmaz.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Oluştur veya Aç 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Uygulama, harita verilerini yerel olarak ayrıştırır ve mümkün olduğunda önbelleğini yeniden kullanır.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Viewport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Seçilen haritanın etkileşimli bir temsilini yörünge, kaydırma ve zoom etrafında hareket ettirin.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Araç Çubuğu</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Kontrol katmanları, canlı işaretleyiciler, tam ekran, ayarlar ve ayak izi araçları.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Temel Ayak Alanı Oluşturucu</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Build modu sadece planlama temellerini yerleştirir; Rust sunucusunu değiştirmez.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Performans Göstergesi</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS ve uyarlanabilir çözünürlük, detayları akıcı etkileşimle dengeler.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Close 3D View</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>2D'e geri dönün ve ağır gömülü 3D kaynaklarını serbest bırakın.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Cihaz Listesi</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Eşleştirilmiş anahtarlar, alarmlar ve depolama monitörleri burada gruplar halinde görünüyor.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Cihaz Arama</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Cihazları durumlarını değiştirmeden isim veya komuta göre filtreleyin.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Cihaz Tipi Filtre</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Listeyi anahtarlar, alarmlar, depolama monitörleri veya tüm cihazlarla sınırlayın.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Durumları yenile</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Yeni okunabilir durum talep edin; Erişilebilirlik bağlantıya bağlıdır.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Cihaz Araçları</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>İçe aktarma, bulut senkronizasyonu, otomasyon, kısayot tuşları, yenileme ve temizleme burada toplanıyor.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Cihaz Kartı</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Bir kart kimliği, bağlantı durumu, komutları ve cihaza özgü kontrolleri gösterir.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Cihaz Güvenliği</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Eğitimler asla bir anahtarı açmaz, cihazı silmez veya kısayol tuşunu çalıştırmaz.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Takım Listesi</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Yüklü takım arkadaşları, çevrimiçi durum, avatarlar ve bağlam eylemleri burada görünüyor.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Takım İşaretçileri</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Haritada hangi takım arkadaşı işaretleme stillerinin göründüğünü seçin.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Oyuncuyu Takip Et</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Takip merkezleri, bir takım arkadaşının güncellemelerini haritalar ve güncel takım verilerini gerektirir.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Takım Paylaşımı</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Temel ve ekran görüntüsü paylaşımı için hesap ve yükleme izni gerekebilir.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Sohbet Geçmişi</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Son zamanlarda yapılan Rust takım mesajları, bağlantı sohbet verisi sağladığında burada görünür.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Mesaj Girişi</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Burada bir ekip mesajı yazın. Eğitim asla ekliyor ya da göndermiyor.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Mesaj Gönder</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Ekip sohbetine Rust gönderi göndermek. Bu kontrol sadece vurgulanmıştır.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Komut Ayarları</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Ön ekleri, cihaz bağlamalarını, gecikmeleri ve komut erişilebilirliğini yapılandırın.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord Topluluğu</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Bu kestirme yol topluluğu açar; Entegrasyon ayarları ayrı.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Ayarlar</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Bot, lonca, kanallar, komutlar ve izinleri kimlik kaydetmeden yapılandırın.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Güvenlik</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Eğitimler asla mesaj paylaşmaz veya lonca, kanal veya kullanıcı tanımlayıcılarını kaydetmez.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Açık Mantık Motoru</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Seçilen sunucunun kural düzenleyicisini açın.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Kural Listesi</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Kurallar ve bunların tetikleyici, koşulları, gecikmeleri ve eylem adımları burada yer almaktadır.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Motor Durumu</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Kural yürütmesini etkinleştirin veya duraklatın. Eğitim bu anahtarı hiç değiştirmez.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Kural İş Akışı</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Bir tetikleyici bir kural başlatır; koşullar sonraki eylemleri kaptırır; Adım sırayla koşuyor.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Otomasyon Güvenliği</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Eğitimler kuralları sürdürmez, cihazları değiştirmez, sohbet göndermez veya otomasyonu çalıştırmaz.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Bildirim Merkezi</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Geçici masaüstü bildirimlerine güvenmeden uyarıları inceleyin.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Bildirim Filtreleri</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Tüm bildirimler, alarmlar ve ölümler arasında geçiş yapın.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Arama Bildirimleri</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Gösterilen içerik veya sunucu bağlamına göre bildirimleri bulun.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Toplu Eylemler</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Okunan herkesi işaretleyin veya geçmişi temizleyin; Eğitimler bu işlemleri asla yapmaz.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Kamera Listesi</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Seçilen bir sunucu ve kamera mevcut olduğunda yapılandırılmış önizlemeler görünür.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Kamera Ekle</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Bir kamerayı Rust tanımlayıcısını kullanarak ekleyin; Eğitimler asla kamera kodlarını yakalamaz.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Kamera Gizliliği</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Kamera tanımlayıcıları ve çerçeveler eğitim tanılamalarından hariç tutulmuştur.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Arama Hedefleri</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Paketlenmiş veri setinde bir duvar, kapı, dağıtılabilir veya başka bir hedef bulun.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Baskın Planı</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Hedefleri, sağlık, miktarları, yöntemleri ve hesaplanan maliyetleri gözden geçirin.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Yöntemleri Karşılaştırın</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>İzin verilen patlayıcıları veya aletleri seçin ve alternatifleri karşılaştırın.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Net Plan</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear planı kaldırır; Eğitim, girişleri değiştirmeden bunu vurguluyor.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Eşya Arama</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Geri dönüştürülebilir bir ürün bulun ve hesap makinesine ekleyin.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Öğe Kategorisi</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Ürün kataloğunu kategoriye göre daraltın.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Giriş Öğeleri</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Miktarları ayarlayın veya girişleri çıkarın; Eğitimler hesaplayıcı durumunu değiştirmez.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Geri Dönüşümcü Sonuçları</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Vahşi ve güvenli bölge geri dönüştürücülerinin verimlerini ve sürelerini karşılaştırın.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Açık Ayarlar</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Uygulama davranışı, entegrasyonlar, performans, yedekleme ve bakım burada yaşıyor.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Arayüz dilini seçin. Eğitim metni aynı kaynak sistemini kullanır.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Harita Performansı</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Görüntü ölçeklendirmesini, GPU önbelleğini, render ölçeğini ve kenar modunu ayarlayın.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Bakım</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Yedek, sıfırlama, temizleme ve önbellek kontrolleri yıkıcı olabilir ve asla çağrılmaz.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Güncellemeleri kontrol edin</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>İndirmeden veya yüklemeden güncelleme bulunabilirliği talep edin.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Güncelleme Durumu</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Sürüm ve indirme ilerlemesi bu başlık çubuğu alanında görünüyor.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Tanı Kaydı</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Sadece hassas olmayan bilgileri paylaşmadan önce yerel tanılamaları filtreleyin.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Mağazalar ve Otomat</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Otomat tekliflerini arayın, işlemleri karşılaştırın ve yenileme zamanlamasını anlayın.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Olaylar ve Sunucu İzleme</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Canlı etkinlik göstergelerini okuyun ve yerel zamanlayıcılar oluşturun.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Temeller ve Ekran Görüntüleri</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Harita tabanı işaretleyicileri oluşturun ve notlarını ve ekran görüntülerini güvenli bir şekilde yönetin.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Cihaz Otomasyonu</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Mantık motorundan ayrı basit cihaz-durum otomasyonunu yapılandırın.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Açık Mağaza Araması</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Haritanın otomat arama panelini mevcut haritayı değiştirmeden açın.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Mağaza Araması</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Ürün ara, alım-satım miktarlarını gözden geçir ve haritada sonuçları aç.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Zamanlamayı yenile</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Mağaza teklifleri sunucu bağlantısına bağlıdır ve Rust+ yenilemeler arasında durabilir olabilir.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Canlı Etkinlik İskelesi</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Kargo, helikopter, Chinook, tedarikçi ve diğer aktif etkinlik göstergeleri burada mevcut olduğunda görünür.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Özel Zamanlayıcı</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Sunucu durumunu değiştirmeden yerel bir hatırlatma oluşturun.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Etkinlik Tazeliği</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Olay verisi seçilen bağlantıya bağlıdır ve bayatlaştığında kaybolabilir.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Taban İşareleri</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>2D haritasında üs işaretleri yerleştirilir ve açılır.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Temel Notlar ve Ekran Görüntüleri</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Bir üs isimlendirmek ve ekran görüntüleri eklemek için harita bağlamı eylemlerini kullanın; Bulut paylaşımı onay gerektirir.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Sil Güvenlik</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Bir temel veya ekran görüntüsünü silmek hiçbir zaman bir eğitim tarafından yapılmaz ve her zaman sizin katkınız gerekir.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Açık Cihaz Otomasyonu</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Seçilen sunucu için açık hafif cihaz-durum otomasyonu.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Otomasyon Eylemleri</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Yürütmeyi durdurma veya otomasyon ekleyin; Eğitimler asla motor durumunu değiştirmez veya veri oluşturmaz.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Otomasyon Kuralları</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Her kural için kaynak cihazları, hedef eylemleri, zamanlamayı ve etkinleştirilmiş durumu inceleyin.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Cihaz Güvenliği</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Hiçbir eğitim kuralı çalıştırmaz veya gerçek bir akıllı cihazı açmaz.</value>
   </data>
 </root>

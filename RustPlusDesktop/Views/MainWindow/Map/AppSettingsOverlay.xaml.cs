@@ -575,7 +575,7 @@ namespace RustPlusDesk.Views
                 new() { Name = "Čeština",            Code = "cs-CZ",  ImagePath = "pack://application:,,,/Assets/Flags/cs.png" },
                 new() { Name = "Magyar",             Code = "hu-HU",  ImagePath = "pack://application:,,,/Assets/Flags/hu.png" },
                 new() { Name = "Română",             Code = "ro-RO",  ImagePath = "pack://application:,,,/Assets/Flags/ro.png" },
-                new() { Name = "Srpski",             Code = "sr-SP",  ImagePath = "pack://application:,,,/Assets/Flags/sr.png" },
+                new() { Name = "Srpski",             Code = "sr-Latn-RS", ImagePath = "pack://application:,,,/Assets/Flags/sr.png" },
                 new() { Name = "Ελληνικά",           Code = "el-GR",  ImagePath = "pack://application:,,,/Assets/Flags/el.png" },
                 new() { Name = "Українська",         Code = "uk-UA",  ImagePath = "pack://application:,,,/Assets/Flags/uk.png" },
                 new() { Name = "Tiếng Việt",         Code = "vi-VN",  ImagePath = "pack://application:,,,/Assets/Flags/vi.png" },
@@ -1858,7 +1858,8 @@ namespace RustPlusDesk.Views
 
         private async void BtnGenerateAlexaPIN_Click(object sender, RoutedEventArgs e)
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null)
+            var client = Services.Auth.SupabaseAuthManager.Client;
+            if (client == null)
             {
                 MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1878,7 +1879,7 @@ namespace RustPlusDesk.Views
                 var random = new Random();
                 string pin = random.Next(100000, 999999).ToString();
 
-                var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
+                var response = await client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
                 if (response == null)
                 {
                     MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -1891,7 +1892,7 @@ namespace RustPlusDesk.Views
                 fcmConfig["alexa_pin_expires"] = DateTime.UtcNow.AddMinutes(15).ToString("O");
                 response.FcmConfig = fcmConfig;
                 
-                await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Upsert(response);
+                await client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Upsert(response);
 
                 TxtAlexaPIN.Text = pin;
                 TxtAlexaPIN.Visibility = Visibility.Visible;
@@ -1909,7 +1910,8 @@ namespace RustPlusDesk.Views
 
         private async void BtnLinkAlexa_Click(object sender, RoutedEventArgs e)
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null)
+            var client = Services.Auth.SupabaseAuthManager.Client;
+            if (client == null)
             {
                 MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1923,16 +1925,16 @@ namespace RustPlusDesk.Views
                 return;
             }
 
-            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            var steamId = vm?.SteamId64;
+            if (ParentWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm) return;
+            var steamId = vm.SteamId64;
             if (string.IsNullOrEmpty(steamId))
             {
                 MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
-            if (user == null) return;
+            var userId = client.Auth.CurrentUser?.Id;
+            if (string.IsNullOrEmpty(userId)) return;
 
             var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
             if (consentDialog.ShowDialog() != true) return;
@@ -1959,24 +1961,24 @@ namespace RustPlusDesk.Views
                     // 1. Link Alexa active server
                     var alexaModel = new RustPlusDesk.Models.UserAlexaSettingsModel
                     {
-                        UserId = user.Id,
+                        UserId = userId,
                         ActiveServerKey = serverKey,
                         SteamId = steamId,
                         UpdatedAt = DateTime.UtcNow
                     };
-                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>().Upsert(alexaModel);
+                    await client.From<RustPlusDesk.Models.UserAlexaSettingsModel>().Upsert(alexaModel);
 
                     // 2. Upload Server Credentials for Cloud Worker
                     var serverCredsModel = new RustPlusDesk.Models.UserServerModel
                     {
-                        UserId = user.Id,
+                        UserId = userId,
                         SteamId = steamId,
                         ServerIp = serverProfile.Host,
                         ServerPort = serverProfile.Port,
                         PlayerToken = serverProfile.PlayerToken,
                         UpdatedAt = DateTime.UtcNow
                     };
-                    await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserServerModel>().Upsert(serverCredsModel);
+                    await client.From<RustPlusDesk.Models.UserServerModel>().Upsert(serverCredsModel);
 
                     // 3. Force Sync Devices for Alexa Discovery
                     if (ulong.TryParse(steamId, out var steamIdUlong))

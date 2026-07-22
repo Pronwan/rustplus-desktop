@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Operace selektivního resetu byla úspěšně dokončena.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Směr</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Hledat ikony (např. věž, přepínač)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dní</value>
   </data>
@@ -4357,7 +4356,7 @@ Nejprve prosím spárujte tento server.</value>
     <value>PIN vygenerován (platný 15m)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Nejprve v Nastavení nakonfigurujte kanál Discord &apos;Upozornění na chat&apos; nebo &apos;Upozornění na události&apos;.</value>
+    <value>Nejprve v Nastavení nakonfigurujte kanál Discord 'Upozornění na chat' nebo 'Upozornění na události'.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Nejprve připojte svůj cloudový účet.</value>
@@ -4471,7 +4470,7 @@ Nejprve prosím spárujte tento server.</value>
     <value>Bílá</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Offline mapa úspěšně importována jako &apos;{0}&apos;!</value>
+    <value>Offline mapa úspěšně importována jako '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Mapa importována</value>
@@ -4509,13 +4508,13 @@ Zásobník:
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>Offline mapa &apos;{0}&apos; ještě nebyla analyzována. Jednou otevřete jeho mapu 3D, abyste ji analyzovali, a poté zkuste zkopírovat znovu.</value>
+    <value>Offline mapa '{0}' ještě nebyla analyzována. Jednou otevřete jeho mapu 3D, abyste ji analyzovali, a poté zkuste zkopírovat znovu.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Chyba kopírování mapy</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Rozvržení mapy se neshoduje. Zdá se, že mapa &apos;{0}&apos; není stejná mapa jako připojený server &apos;{1}&apos;.</value>
+    <value>Rozvržení mapy se neshoduje. Zdá se, že mapa '{0}' není stejná mapa jako připojený server '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Neshoda mapy</value>
@@ -4709,5 +4708,797 @@ Více informací naleznete na oficiálních stránkách serveru:
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Přeskočit výukový program</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Další</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Dokončete</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Zrušit tento kurz?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Váš postup je uložen. Kdykoli můžete pokračovat z Centra výukových programů.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Učte se</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Zrušit výukový program</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Krok {0} z {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Tato funkce není v aktuálním stavu aplikace dostupná. Pokračujte bezpečně a vraťte se, až budou k dispozici požadovaný server, účet nebo data.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Resetovat</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Restartujte</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Pokračujte</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Začátek</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} z {1} kroků</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Naučte se RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Zaměřené lekce pro toto sestavení. Výukové programy nikdy neaktivují zařízení, neodesílají zprávy, neodstraňují data ani nespouštějí automatizaci.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Spusťte doporučené výukové programy</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Pokračovat v posledním kurzu</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Restartujte všechny výukové programy</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Resetujte průběh kurzu</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Základní informace pro nové uživatele</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Nabídněte výukové programy pro nové funkce</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Vítejte v RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Udělejte si krátkou prohlídku navigace, připojení k serveru, map a zařízení – nebo si vyberte pouze lekce, které potřebujete.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Spusťte rychlou prohlídku</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Zvolte Výukové programy</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Teď ne</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Nespuštěno</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>Probíhá</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Dokončeno</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Přeskočeno</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Aktualizováno</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Nová funkce</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Začínáme</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Mapy</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Zařízení</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Tým a komunikace</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automatizace</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Monitorování</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Nástroje</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Nastavení a podpora</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Základy aplikace</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Naučte se navigaci, kontext serveru, stav připojení, upozornění a kde si přehrát lekce.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Účet a cloud</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Pochopte místní funkce, přihlašování do cloudu, synchronizaci a přístup pro podporu.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Párování a správa serveru</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Spárujte Rust+, vyberte server a pochopte měkký, plný a odpojený režim.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Základy mapy</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Naučte se mapovou navigaci, vrstvy, tepelné mapy, kreslicí nástroje a vstupní bod 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Tepelné mapy zdrojů</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Zjistěte, co extrahovaná překryvná data s hustotou výskytu zobrazují a jak je vybrat nebo vymazat.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Mapa</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Prozkoumejte místní výřez 3D, panel nástrojů, tvůrce footprintu, zobrazení výkonu a akci zavření.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Chytrá zařízení</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Najděte, filtrujte, obnovujte, organizujte a bezpečně rozumějte spárovaným chytrým zařízením.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Sledování týmu a hráčů</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Zkontrolujte spoluhráče, značky, sledujte chování a požadavky na sdílení.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Týmový chat a příkazy</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Čtěte týmový chat, sestavujte zprávy a konfigurujte příkazy, aniž byste cokoli posílali.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Integrace</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Najděte Discord vstupní body, konfiguraci, oprávnění a hranice ochrany osobních údajů.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Logic and Automation Engine</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Pochopte pravidla, spouštěče, podmínky, akce, stav běhu a bezpečné testování.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Oznámení a výstrahy</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Filtrujte, prohledávejte, kontrolujte, označujte a mažte oznámení aplikací.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Kamery a monitorování</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Přidávejte a kontrolujte spárované kamery, přičemž identifikátory kamer zůstávají soukromé.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Raid Calculator</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Sestavte plán nájezdu, porovnejte metody a prohlédněte si součty materiálu.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Recycler Calculator</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Přidejte položky a porovnejte výnosy recyklátorů v divoké a bezpečné zóně.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Nastavení</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Najděte jazyk, výkon mapy, připojené služby a ovládací prvky údržby.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Aktualizace a diagnostika</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Zkontrolujte aktualizace aplikace a vyhledejte protokol diagnostiky bez spuštění aktualizace.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Hlavní navigace</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Pomocí tohoto postranního panelu se můžete pohybovat mezi zařízeními, sledováním týmu, kamerami, hráči, oznámeními a kalkulačkami.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Rozšíření navigace</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Připněte nebo sbalte postranní panel, abyste mohli vyměnit štítky za více mapového pracovního prostoru.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Aktuální server</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Tato oblast identifikuje vybraný server Rust a jeho kontext účtu.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Stav připojení</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Karty serveru ukazují, zda je server odpojen, měkký nebo plně připojen.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Oznámení</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Zde jsou shromážděny problémy s připojením, alarmy, úmrtí a výsledky automatizace.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Centrum výukových programů</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Zde si přehrajte, pokračujte, restartujte nebo objevte aktualizované lekce.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Kontext účtu</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Přístup ke cloudu je oddělený od párování Rust+. Místní funkce zůstávají dostupné bez synchronizace s cloudem.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Cloudový účet</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Přihlaste se zde pro podporovanou synchronizaci; výukové programy nikdy nezobrazují údaje o soukromých účtech.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Stav podporovatele</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Přístup podporovatele odemkne chráněné funkce. Postup místního kurzu nevyžaduje žádné předplatné.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Pár Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Spárování propojí tuto aplikaci s Rust Companion, než budou fungovat funkce živého serveru.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Zahajte párování</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Začněte poslouchat a poté použijte postup párování Rust+ ve hře Rust. Pověření se nikdy nezaznamenávají.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Spárované servery</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Před připojením nebo změnou nastavení specifických pro server vyberte lokálně nakonfigurovaný server.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect načítá omezenou komunikaci bez inicializace všech živých funkcí.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Úplné připojení</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Úplné připojení inicializuje mapová data, zařízení, týmová data a předplatná Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Odpojit</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Odpojení zastaví živou komunikaci. Tato lekce nikdy nevyvolá akci.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Resetujte párování</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Příkazy obnovy jsou v kontextové nabídce Párovat. Resetováním se odstraní místní konfigurace párování.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Map Canvas</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Posouvejte tažením, přibližujte pomocí kolečka a pracujte se značkami na aktuální mapě Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Panel nástrojů mapy</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Panel nástrojů ovládá vrstvy, chat, překryvy, časovače a režimy 2D nebo 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Obnovit zobrazení</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Po posunutí nebo přiblížení umístěte mapu zpět do pracovního prostoru.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Mapové vrstvy</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Zde si vyberte mřížku, přehrávač, památku, obchod a pokročilé vizuální možnosti.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Teplotní mapy</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Otevřete překryvy extrahované hustoty. Zobrazují pravděpodobné zóny spawn, nikoli živé entity.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Otevřete mapu 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Vygenerujte nebo otevřete místní 3D reprezentaci aktuální mapy.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Nástroje kreslení</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Nakreslete na mapu nedestruktivní plánovací poznámky a po dokončení opusťte režim kreslení.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Otevřete Heatmaps</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Procházejte dostupné vrstvy hustoty pro aktuální analyzovanou mapu.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Volič teplotní mapy</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Vyberte jednu extrahovanou kategorii nebo vymažte aktivní překrytí.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Jak fungují teplotní mapy</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Teplotní mapy shrnují pravděpodobné oblasti spawnu; nezaručují živou entitu na místě.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Vygenerujte nebo otevřete 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Aplikace analyzuje mapová data lokálně a pokud je to možné, znovu používá svou mezipaměť.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Viewport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Obíhat, posouvat a přibližovat kolem interaktivní reprezentace vybrané mapy.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Toolbar</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Ovládejte vrstvy, živé značky, celou obrazovku, nastavení a nástroje footprint.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Tvůrce základní stopy</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Režim Build umístí pouze základy plánování; nemění server Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Indikátor výkonu</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS a adaptivní rozlišení detailů vyvážení s hladkou interakcí.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Zavřete zobrazení 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Vraťte se do 2D a uvolněte těžké vložené prostředky 3D.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Seznam zařízení</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Spárované přepínače, alarmy a monitory úložiště se zde zobrazují ve skupinách.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Vyhledávání zařízení</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Filtrujte zařízení podle názvu nebo příkazu beze změny jejich stavu.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Filtr typu zařízení</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Omezte seznam na přepínače, alarmy, monitory úložiště nebo všechna zařízení.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Obnovit stavy</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Požadavek na nový stav pouze pro čtení; dostupnost závisí na připojení.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Nástroje zařízení</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Zde jsou shromažďovány importy, synchronizace s cloudem, automatizace, klávesové zkratky, aktualizace a čištění.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Karta zařízení</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Karta zobrazuje identitu, stav připojení, příkazy a ovládací prvky specifické pro zařízení.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Bezpečnost zařízení</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Výukové programy nikdy nepřepínají přepínač, neodstraňují zařízení ani nespouštějí klávesovou zkratku.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Seznam týmů</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Zde se zobrazí načtení spoluhráči, online stav, avataři a kontextové akce.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Týmové značky</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Vyberte, které styly značek spoluhráčů jsou viditelné na mapě.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Sledujte hráče</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Následující aktualizace map center na spoluhráče a vyžadují aktuální týmová data.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Týmové sdílení</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Sdílení základny a snímku obrazovky může vyžadovat účet a souhlas s nahráváním.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Historie chatu</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Zde se zobrazí nedávné zprávy Rust týmu, když připojení poskytuje data chatu.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Vstup zprávy</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Zde vytvořte týmovou zprávu. Výukový program nikdy žádný nevloží ani neodešle.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Odeslat zprávu</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Odesílání příspěvků do týmového chatu Rust. Tento ovládací prvek je pouze zvýrazněn.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Nastavení příkazů</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Nakonfigurujte předpony, vazby zařízení, zpoždění a dostupnost příkazů.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Komunita Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Tato zkratka otevírá komunitu; nastavení integrace jsou samostatná.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Nastavení Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Nakonfigurujte robota, spolek, kanály, příkazy a oprávnění bez protokolování ID.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Bezpečnost</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Výukové programy nikdy neposílají zprávy ani protokolují identifikátory cechu, kanálu nebo uživatele.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Otevřené logické jádro</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Otevřete editor pravidel vybraného serveru.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Seznam pravidel</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Zde se zobrazují pravidla a jejich spouštění, podmínka, zpoždění a kroky akcí.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Stav motoru</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Povolí nebo pozastaví provádění pravidla. Tutoriál tento přepínač nikdy nemění.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Pracovní postup pravidel</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Spouštěč spustí pravidlo; podmínky brány pozdější akce; kroky probíhají v pořadí.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Bezpečnost automatizace</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Výukové programy neukládají pravidla, nepřepínají zařízení, neodesílají chat ani neprovádějí automatizaci.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Centrum oznámení</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Prohlížejte si upozornění, aniž byste se spoléhali na přechodná upozornění na ploše.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Filtry oznámení</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Přepínání mezi všemi upozorněními, alarmy a úmrtími.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Oznámení o vyhledávání</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Najděte oznámení podle zobrazeného obsahu nebo kontextu serveru.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Hromadné akce</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Označit celou historii jako přečtenou nebo vymazat; tutoriály tyto akce nikdy neprovádějí.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Seznam kamer</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Konfigurované náhledy se zobrazí, když je dostupný vybraný server a kamera.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Přidat kameru</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Přidejte kameru pomocí jejího identifikátoru Rust; tutoriály nikdy nezachycují kódy fotoaparátu.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Soukromí fotoaparátu</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Identifikátory kamer a rámečky jsou vyloučeny z diagnostiky výukového programu.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Cíle vyhledávání</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Najděte zeď, dveře, rozmístění nebo jiný cíl v přibalené datové sadě.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Plán nájezdu</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Zkontrolujte cíle, zdraví, množství, metody a vypočítané náklady.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Porovnání metod</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Vyberte povolené výbušniny nebo nástroje a porovnejte alternativy.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Jasný plán</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear odstraní plán; tutoriál jej zvýrazní beze změny položek.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Hledat položky</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Najděte recyklovatelnou položku a přidejte ji do kalkulačky.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Kategorie položky</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Zúžení katalogu položek podle kategorie.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Vstupní položky</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Upravte množství nebo odstraňte položky; tutoriály nemění stav kalkulačky.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Výsledky recyklátoru</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Porovnejte výnosy a časy pro recyklátory v divoké a bezpečné zóně.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Otevřete Nastavení</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Chování aplikací, integrace, výkon, zálohování a údržba zde.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Jazyk</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Vyberte jazyk uživatelského rozhraní. Text výukového programu používá stejný systém zdrojů.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Výkon mapy</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Vylaďte měřítko obrazu, ukládání do mezipaměti GPU, měřítko vykreslování a režim okrajů.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Údržba</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Ovládací prvky zálohování, resetování, čištění a mezipaměti mohou být destruktivní a nejsou nikdy vyvolány.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Zkontrolujte aktualizace</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Požádejte o dostupnost aktualizace bez stahování nebo instalace.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Stav aktualizace</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Verze a průběh stahování se zobrazí v této oblasti záhlaví.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Diagnostický protokol</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Filtrujte místní diagnostiku před sdílením pouze necitlivých podrobností.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Obchody a prodej</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Hledejte prodejní nabídky, porovnávejte obchody a pochopte načasování obnovení.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Události a monitorování serveru</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Čtení indikátorů živých událostí a vytváření místních časovačů.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Báze a snímky obrazovky</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Vytvářejte značky mapových podkladů a bezpečně spravujte jejich poznámky a snímky obrazovky.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Automatizace zařízení</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Nakonfigurujte jednoduchou automatizaci stavu zařízení odděleně od logického jádra.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Otevřete Shop Search</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Otevřete vyhledávací panel na mapě, aniž byste změnili aktuální mapu.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Hledání v obchodě</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Vyhledávejte položky, kontrolujte množství nákupu a prodeje a otevírejte výsledky na mapě.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Časování obnovení</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Nabídky obchodů závisí na připojení k serveru a mezi aktualizacemi Rust+ mohou být zastaralé.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Live Event Dock</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Zde se zobrazují indikátory nákladu, vrtulníku, Chinook, dodavatele a dalších aktivních událostí, pokud jsou k dispozici.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Vlastní časovač</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Vytvořte místní připomenutí bez změny stavu serveru.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Aktuálnost události</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Data události závisí na vybraném připojení a mohou zmizet, když se stane zastaralým.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Základní značky</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Základní značky jsou umístěny a otevřeny na mapě 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Základní poznámky a snímky obrazovky</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Pomocí kontextových akcí mapy pojmenujte základnu a připojte snímky obrazovky; cloudové sdílení vyžaduje souhlas.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Odstranit bezpečnost</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Odstranění základny nebo snímku obrazovky nikdy neprovádí výukový program a vždy vyžaduje váš vstup.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Otevřete automatizaci zařízení</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Otevře odlehčenou automatizaci stavu zařízení pro vybraný server.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Automatizační akce</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Pozastavit provádění nebo přidat automatizaci; výukové programy nikdy nemění stav motoru ani nevytvářejí data.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Pravidla automatizace</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Zkontrolujte zdrojová zařízení, cílové akce, načasování a stav povolení pro každé pravidlo.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Bezpečnost zařízení</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Žádný výukový program neprovádí pravidlo ani nepřepíná skutečné chytré zařízení.</value>
   </data>
 </root>

@@ -32,6 +32,7 @@ public partial class App : Application
     private MainWindow? _main;
     private System.Windows.Forms.NotifyIcon? _trayIcon;
     private static readonly ConcurrentDictionary<string, IReadOnlyDictionary<string, string>> _resourceCache = new();
+    private ResourceDictionary? _localizedResources;
     private int _languageApplyVersion;
 
     [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -268,6 +269,13 @@ public partial class App : Application
         try
         {
             string lang = TrackingService.SelectedLanguage;
+            if (string.Equals(lang, "sr-SP", StringComparison.OrdinalIgnoreCase))
+            {
+                // Migrate the obsolete culture code used by older builds. Using a
+                // real Serbian Latin culture also allows MSBuild to emit a satellite.
+                lang = "sr-Latn-RS";
+                TrackingService.SelectedLanguage = lang;
+            }
             CultureInfo culture;
 
             if (string.IsNullOrEmpty(lang))
@@ -360,11 +368,17 @@ public partial class App : Application
 
     private void ApplyDynamicResources(IReadOnlyDictionary<string, string> resourceMap)
     {
+        var replacement = new ResourceDictionary();
         foreach (var entry in resourceMap)
-        {
-            if (!Resources.Contains(entry.Key) || !Equals(Resources[entry.Key], entry.Value))
-                Resources[entry.Key] = entry.Value;
-        }
+            replacement[entry.Key] = entry.Value;
+
+        // Replacing one merged dictionary causes a single resource-tree refresh.
+        // Updating ~1,800 Application resources individually made WPF re-evaluate
+        // DynamicResource bindings repeatedly and visibly froze the settings UI.
+        if (_localizedResources != null)
+            Resources.MergedDictionaries.Remove(_localizedResources);
+        _localizedResources = replacement;
+        Resources.MergedDictionaries.Add(replacement);
     }
 
     private async Task StartPipeServerAsync()

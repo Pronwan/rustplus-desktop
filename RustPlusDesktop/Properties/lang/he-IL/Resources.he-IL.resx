@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] פעולת האיפוס הסלקטיבי הושלמה בהצלחה.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>כיוון</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1895,7 +1895,6 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>חפש סמלים (למשל: צריח, מפסק)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} ימים</value>
   </data>
@@ -2986,16 +2985,16 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>תצורת התראות ערוץ</value>
   </data>
   <data name="UiChatAlertsDiscord" xml:space="preserve">
-    <value>התראות צ&apos;אט -&gt; Discord</value>
+    <value>התראות צ'אט -&gt; Discord</value>
   </data>
   <data name="UiChatAlertsChannelID" xml:space="preserve">
-    <value>מזהה ערוץ של התראות צ&apos;אט</value>
+    <value>מזהה ערוץ של התראות צ'אט</value>
   </data>
   <data name="UiChatMasterSlaves" xml:space="preserve">
-    <value>צ&apos;אט מאסטר ועבדים</value>
+    <value>צ'אט מאסטר ועבדים</value>
   </data>
   <data name="UiChatMessageAlerts" xml:space="preserve">
-    <value>התראות על הודעות צ&apos;אט</value>
+    <value>התראות על הודעות צ'אט</value>
   </data>
   <data name="UiCheckAvailability" xml:space="preserve">
     <value>בדוק זמינות</value>
@@ -3037,7 +3036,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>מזהה משתמש בענן</value>
   </data>
   <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
-    <value>ענן, Discord, Alexa, צ&apos;אט ו-Steam</value>
+    <value>ענן, Discord, Alexa, צ'אט ו-Steam</value>
   </data>
   <data name="UiCMD" xml:space="preserve">
     <value>CMD</value>
@@ -3169,7 +3168,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>Discord Webhook</value>
   </data>
   <data name="UiDiscordWebhookChatAlerts" xml:space="preserve">
-    <value>Discord Webhook (התראות צ&apos;אט)</value>
+    <value>Discord Webhook (התראות צ'אט)</value>
   </data>
   <data name="UiDiscordWebhookURL" xml:space="preserve">
     <value>Discord URL של Webhook</value>
@@ -3217,7 +3216,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>ערוך מינויים (שכבת על ציור)</value>
   </data>
   <data name="UiEmail" xml:space="preserve">
-    <value>דוא&quot;ל</value>
+    <value>דוא"ל</value>
   </data>
   <data name="UiEmailAndPassword" xml:space="preserve">
     <value>דואר אלקטרוני וסיסמא</value>
@@ -3811,7 +3810,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>אתר SAM</value>
   </data>
   <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
-    <value>שמור וסגור את הגדרות פקודת הצ&apos;אט</value>
+    <value>שמור וסגור את הגדרות פקודת הצ'אט</value>
   </data>
   <data name="UiSaveChannelsConfig" xml:space="preserve">
     <value>שמור תצורת ערוצים</value>
@@ -4039,7 +4038,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>ואז</value>
   </data>
   <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
-    <value>חיבור זה מיועד ל-Rust companion API. זה מאפשר FCM זיווג, שידורים במשחק, אזעקות וצ&apos;אט צוות. חשבון הענן שלך נפרד.</value>
+    <value>חיבור זה מיועד ל-Rust companion API. זה מאפשר FCM זיווג, שידורים במשחק, אזעקות וצ'אט צוות. חשבון הענן שלך נפרד.</value>
   </data>
   <data name="UiTier" xml:space="preserve">
     <value>שכבה</value>
@@ -4354,10 +4353,10 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>ניתן להעתיק רק מפות לא מקוונות שמנותחות באופן ידני לשרתים אחרים.</value>
   </data>
   <data name="CodeUiPINGeneratedValidFor15m" xml:space="preserve">
-    <value>נוצר PIN (תקף למשך 15 מ&apos;)</value>
+    <value>נוצר PIN (תקף למשך 15 מ')</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>אנא הגדר תחילה ערוץ &apos;התראות צ&apos;אט&apos; או &apos;התראות אירועים&apos; Discord בהגדרות.</value>
+    <value>אנא הגדר תחילה ערוץ 'התראות צ'אט' או 'התראות אירועים' Discord בהגדרות.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>אנא חבר את חשבון הענן שלך תחילה.</value>
@@ -4471,7 +4470,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>לבן</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>המפה הלא מקוונת יובאה בהצלחה בתור &apos;{0}&apos;!</value>
+    <value>המפה הלא מקוונת יובאה בהצלחה בתור '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>מפה מיובאת</value>
@@ -4509,19 +4508,19 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>המפה הלא מקוונת &apos;{0}&apos; עדיין לא נותחה. פתח את המפה 3D שלו פעם אחת כדי לנתח אותה, ואז נסה להעתיק שוב.</value>
+    <value>המפה הלא מקוונת '{0}' עדיין לא נותחה. פתח את המפה 3D שלו פעם אחת כדי לנתח אותה, ואז נסה להעתיק שוב.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>שגיאת העתקת מפה</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>פריסות המפה אינן תואמות. המפה &apos;{0}&apos; אינה זהה למפה של השרת המחובר &apos;{1}&apos;.</value>
+    <value>פריסות המפה אינן תואמות. המפה '{0}' אינה זהה למפה של השרת המחובר '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>אי התאמה במפה</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>הועתק בהצלחה את המפה 3D ואת הנכסים המקומיים מ-&apos;{0}&apos; ל-&apos;{1}&apos;!</value>
+    <value>הועתק בהצלחה את המפה 3D ואת הנכסים המקומיים מ-'{0}' ל-'{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>המפה הועתקה</value>
@@ -4709,5 +4708,797 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>דלג על הדרכה</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>חזרה</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>הבא</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>סיום</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>לבטל מדריך זה?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>ההתקדמות שלך נשמרת. ניתן להמשיך ממרכז ההדרכות בכל עת.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>המשך ללמוד</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>בטל מדריך</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>שלב {0} מתוך {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>תכונה זו אינה זמינה במצב האפליקציה הנוכחי. המשך בבטחה וחזור כאשר השרת, החשבון או הנתונים הדרושים זמינים.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>אפס</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>הפעל מחדש</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>המשך</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>התחל</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} מתוך {1} שלבים</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>למד RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>שיעורים ממוקדים עבור המבנה הזה. מדריכים לעולם אינם מפעילים מכשירים, שולחים הודעות, מוחקים נתונים או מפעילים אוטומציות.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>התחל מדריכים מומלצים</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>המשך הדרכה אחרונה</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>הפעל מחדש את כל ההדרכות</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>אפס את התקדמות ההדרכה</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>התחל את היסודות עבור משתמשים חדשים</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>הצע הדרכות לתכונות חדשות</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>ברוכים הבאים אל RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>צא לסיור קצר בניווט, חיבור לשרת, מפות ומכשירים - או בחר רק את השיעורים שאתה צריך.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>התחל סיור מהיר</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>בחר מדריכים</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>לא עכשיו</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>לא הופעל</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>בתהליך</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>הושלם</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>דילג</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>עודכן</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>תכונה חדשה</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>תחילת העבודה</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>מפות</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>התקנים</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>צוות ותקשורת</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>אוטומציה</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>ניטור</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>כלים</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>הגדרות ותמיכה</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>יסודות היישום</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>למד ניווט, הקשר שרת, מצב חיבור, התראות והיכן להשמיע שיעורים חוזרים.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>חשבון וענן</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>הבן תכונות מקומיות, כניסה בענן, סנכרון וגישה לתומכים.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>זיווג וניהול שרתים</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>התאם את Rust+, בחר שרת והבין מצבים רכים, מלאים ומנותקים.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D יסודות המפה</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>למד ניווט במפה, שכבות, מפות חום, כלי ציור ונקודת הכניסה 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>מפות חום של משאבים</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>למד מה מציגות שכבות-על של צפיפות שרצים שחולצו וכיצד לבחור או לנקות אותן.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D מפה</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>חקור את נקודת התצוגה המקומית 3D, סרגל הכלים, בונה טביעות הרגל, תצוגת ביצועים ופעולת סגירה.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>מכשירים חכמים</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>מצא, סנן, רענן, ארגן והבין בבטחה מכשירים חכמים מותאמים.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>מעקב אחר צוות ושחקנים</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>סקור חברי צוות, סמנים, עקוב אחר התנהגות ודרישות שיתוף.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>צ'אט צוות ופקודות</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>קרא צ'אט צוות, חבר הודעות והגדר פקודות מבלי לשלוח דבר.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord אינטגרציה</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>מצא Discord נקודות כניסה, תצורה, הרשאות וגבולות פרטיות.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>מנוע לוגיקה ואוטומציה</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>הבן כללים, טריגרים, תנאים, פעולות, מצב זמן ריצה ובדיקות בטוחות.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>הודעות והתראות</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>סנן, חפש, סקור, סמן ונקה הודעות אפליקציה.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>מצלמות וניטור</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>הוסף ובדוק מצלמות מותאמות תוך שמירה על פרטיות מזהי המצלמה.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>מחשבון פשיטה</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>בניית תוכנית פשיטה, השוואה בין שיטות וסקור סיכומי חומר.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>מחשבון מיחזור</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>הוסף פריטים והשווה את התפוקות של מחזר פראי ואזור בטוח.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>מצא שפה, ביצועי מפה, שירותים מחוברים ובקרות תחזוקה.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>עדכונים ואבחונים</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>בדוק עדכוני יישומים ואתר את יומן האבחון מבלי להתחיל עדכון.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>ניווט ראשי</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>השתמש בסרגל הצד הזה כדי לעבור בין מכשירים, מעקב אחר צוות, מצלמות, שחקנים, התראות ומחשבונים.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>הרחבת ניווט</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>הצמד או כווץ את סרגל הצד כדי להחליף תוויות עבור שטח עבודה נוסף במפה.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>שרת נוכחי</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>אזור זה מזהה את שרת Rust שנבחר ואת הקשר החשבון שלו.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>מצב חיבור</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>כרטיסי שרת מראים אם שרת מנותק, מחובר רך או מחובר במלואו.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>הודעות</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>בעיות חיבור, אזעקות, מקרי מוות ותוצאות אוטומציה נאספות כאן.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>מרכז ההדרכה</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>הפעל מחדש, המשך, הפעל מחדש או גלה שיעורים מעודכנים כאן.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>הקשר חשבון</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>גישה לענן נפרדת מההתאמה של Rust+. תכונות מקומיות נשארות זמינות ללא סנכרון בענן.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>חשבון ענן</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>היכנס כאן לסנכרון נתמך; מדריכים לעולם אינם מציגים נתוני חשבון פרטיים.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>סטטוס תומך</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>גישה לתומכים פותחת תכונות סגורות. התקדמות ההדרכה המקומית אינה דורשת מנוי.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>צמד Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>צימוד מקשר את האפליקציה הזו ל-Rust Companion לפני שתכונות השרת החיות יכולות לעבוד.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>התחל זיווג</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>התחל להאזין, ולאחר מכן השתמש בזרימת הצימוד Rust+ של Rust במשחק. אישורים לעולם אינם נרשמים.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>שרתים מותאמים</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>בחר שרת בעל תצורה מקומית לפני חיבור או שינוי הגדרות ספציפיות לשרת.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>חיבור רך</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>חיבור עומס תקשורת מוגבל מבלי לאתחל כל תכונה חיה.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>חיבור מלא</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>חיבור מלא מאתחל נתוני מפה, מכשירים, נתוני צוות ומנויים של Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>נתק</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>ניתוק מפסיק תקשורת חיה. שיעור זה לעולם אינו מפעיל את הפעולה.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>אפס צימוד</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>פקודות שחזור נמצאות בתפריט ההקשר Pair. איפוס מסיר את תצורת ההתאמה המקומית.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>בד מפה</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>פנה על ידי גרירה, הגדל עם הגלגל ופעל עם סמנים במפת Rust הנוכחית.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>סרגל הכלים של מפות</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>סרגל הכלים שולט בשכבות, צ'אט, שכבות-על, טיימרים ומצבי 2D או 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>איפוס תצוגת</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>הכנס את המפה בחזרה לסביבת העבודה לאחר הזזה או התקרבות.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>שכבות מפה</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>בחר רשת, נגן, אנדרטה, חנות ואפשרויות חזותיות מתקדמות כאן.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>מפות חום</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>שכבות על צפיפות שחולצו פתוחות. הם מראים אזורי שרצים סבירים, לא ישויות חיות.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>פתח את מפת 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>צור או פתח את ייצוג ה-3D המקומי של המפה הנוכחית.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>כלי ציור</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>צייר הערות תכנון לא הרסניות על המפה ועזוב את מצב הציור בסיום.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>פתח מפות חום</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>עיין בשכבות צפיפות זמינות עבור המפה המנותחת הנוכחית.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>בורר מפת חום</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>בחר קטגוריה אחת שחולצה או נקה את שכבת העל הפעילה.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>כיצד פועלות מפות חום</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>מפות חום מסכמות אזורי השרצה סבירים; הם לא מבטיחים ישות חיה במיקום מסוים.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>צור או פתח את 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>האפליקציה מנתחת נתוני מפה באופן מקומי ומשתמשת מחדש במטמון שלה במידת האפשר.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D נקודת מבט</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>סיבוב, הזזה והתקרבות סביב ייצוג אינטראקטיבי של המפה שנבחרה.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>סרגל הכלים 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>שליטה בשכבות, סמנים חיים, מסך מלא, הגדרות וכלי טביעת רגל.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Base Footprint Builder</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>מצב בנייה מציב יסודות תכנון בלבד; זה לא משנה את שרת Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>מחוון ביצועים</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS ופרט ברזולוציה אדפטיבית מאזנים עם אינטראקציה חלקה.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>סגור את תצוגת 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>חזור אל 2D ושחרר את משאבי ה-3D הכבדים המוטבעים.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>רשימת התקנים</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>מתגים מזווגים, אזעקות וצגי אחסון מופיעים כאן בקבוצות.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>חיפוש מכשירים</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>סינון התקנים לפי שם או פקודה מבלי לשנות את מצבם.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>מסנן סוג התקן</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>הגבל את הרשימה למתגים, אזעקות, צגי אחסון או כל המכשירים.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>רענון מדינות</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>בקש מצב חדש לקריאה בלבד; הזמינות תלויה בחיבור.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>כלי מכשיר</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>ייבוא, סנכרון ענן, אוטומציה, מקשי קיצור, רענון וניקוי נאספים כאן.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>כרטיס מכשיר</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>כרטיס מציג זהות, מצב חיבור, פקודות ופקדים ספציפיים למכשיר.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>בטיחות המכשיר</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>הדרכות לעולם אינן מחליפות מתג, למחוק מכשיר או להפעיל מקש קיצור.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>רשימת צוותים</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>חברי צוות טעונים, מצב מקוון, אווטרים ופעולות הקשר מופיעות כאן.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>סמני צוות</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>בחר אילו סגנונות סמן של חבר צוות גלויים על המפה.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>עקוב אחר שחקן</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>מרכז מעקב אחר עדכוני מפה על חבר לצוות ודורש נתוני צוות עדכניים.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>שיתוף צוות</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>שיתוף בסיס וצילום מסך עשוי לדרוש חשבון והסכמה להעלאה.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>היסטוריית צ'אט</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>הודעות צוות Rust אחרונות מופיעות כאן כאשר החיבור מספק נתוני צ'אט.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>קלט הודעה</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>כתוב הודעת צוות כאן. המדריך אף פעם לא מוסיף או שולח אחד.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>שלח הודעה</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>שליחת פוסטים לצ'אט צוות Rust. שליטה זו מודגשת בלבד.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>הגדרות פקודה</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>הגדר קידומות, כריכות מכשירים, עיכובים וזמינות פקודות.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>קהילה Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>קיצור דרך זה פותח את הקהילה; הגדרות האינטגרציה נפרדות.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord הגדרות</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>הגדר בוט, גילדה, ערוצים, פקודות והרשאות ללא מזהי רישום.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord בטיחות</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>מדריכים לעולם אינם מפרסמים הודעות או רושמים גילדה, ערוץ או מזהי משתמשים.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Open Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>פתח את עורך הכללים של השרת שנבחר.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>רשימת כללים</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>כללים ושלבי ההפעלה, המצב, ההשהיה והפעולה שלהם מופיעים כאן.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>מצב מנוע</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>אפשר או השהה ביצוע כללים. המדריך לעולם לא משנה את המתג הזה.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>זרימת עבודה של כללים</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>טריגר מתחיל כלל; שער תנאים פעולות מאוחרות יותר; שלבים רצים לפי הסדר.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>בטיחות אוטומציה</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>מדריכים אינם מקיימים כללים, מחליפים מכשירים, שולחים צ'אט או מבצעים אוטומציה.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>מרכז הודעות</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>סקור התראות מבלי להסתמך על התראות חולפות בשולחן העבודה.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>מסנני התראות</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>מעבר בין כל ההתראות, האזעקות ומקרי המוות.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>הודעות חיפוש</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>מצא הודעות לפי תוכן המוצג או הקשר שרת.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>פעולות בכמות גדולה</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>סמן את כל ההיסטוריה שנקראה או נקה; מדריכים לעולם אינם מבצעים את הפעולות הללו.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>רשימת מצלמות</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>תצוגות מקדימות מוגדרות מופיעות כאשר שרת ומצלמה נבחרים זמינים.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>הוסף מצלמה</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>הוסף מצלמה באמצעות המזהה Rust שלה; מדריכים לעולם אינם מצלמים קודי מצלמה.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>פרטיות המצלמה</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>מזהי מצלמה ומסגרות אינם נכללים באבחון הדרכה.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>יעדי חיפוש</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>מצא קיר, דלת, פריסה או יעד אחר במערך הנתונים המצורף.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>תוכנית פשיטה</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>סקור יעדים, בריאות, כמויות, שיטות ועלויות מחושבות.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>השווה שיטות</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>בחר חומרי נפץ או כלים מותרים והשווה חלופות.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>תוכנית ברורה</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear מסיר את התוכנית; המדריך מדגיש אותו מבלי לשנות ערכים.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>חיפוש פריטים</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>מצא פריט שניתן למחזור והוסף אותו למחשבון.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>קטגוריית פריט</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>צמצם את קטלוג הפריטים לפי קטגוריה.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>פריטי קלט</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>התאם כמויות או הסר ערכים; הדרכות אינן משנות את מצב המחשבון.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>תוצאות ממחזר</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>השווה תפוקות וזמנים עבור ממחזרי פרא ובאזור בטוח.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>פתח את ההגדרות</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>התנהגות יישומים, אינטגרציות, ביצועים, גיבוי ותחזוקה חיים כאן.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>שפה</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>בחר את שפת המשתמש. טקסט הדרכה משתמש באותה מערכת משאבים.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>ביצועי מפה</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>כוונן את קנה המידה של התמונה, שמירה במטמון של GPU, קנה המידה של רינדור ומצב קצה.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>תחזוקה</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>בקרות גיבוי, איפוס, טיהור וזיכרון מטמון עלולים להיות הרסניים ולעולם אינם מופעלים.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>בדוק אם קיימים עדכונים</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>בקש זמינות עדכון מבלי להוריד או להתקין.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>סטטוס עדכון</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>התקדמות הגרסה וההורדה מופיעות באזור שורת הכותרת.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>יומן אבחון</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>סנן אבחון מקומי לפני שיתוף פרטים לא רגישים בלבד.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>חנויות ומוכרים</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>חפש הצעות לממכר אוטומטיות, השווה עסקאות והבין את תזמון הרענון.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>אירועים וניטור שרתים</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>קרא מחווני אירועים חיים וצור טיימרים מקומיים.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>בסיסים וצילומי מסך</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>צור סמני בסיס מפה ונהל את ההערות וצילומי המסך שלהם בבטחה.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>אוטומציה של מכשירים</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>הגדר אוטומציה פשוטה של מצב התקן בנפרד ממנוע ההיגיון.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>פתח חיפוש בחנות</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>פתח את לוח החיפוש למכירת מכירה של המפה מבלי לשנות את המפה הנוכחית.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>חיפוש בחנות</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>חפש פריטים, סקור כמויות קנייה ומכירה ופתח תוצאות על המפה.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>תזמון רענון</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>הצעות החנות תלויות בקישוריות השרת ועשויות להיות מיושנות בין רענון Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>רציף לאירועים חיים</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>אינדיקטורים לאירועים פעילים של מטען, מסוק, צ'ינוק, ספקים ואחרים מופיעים כאן כאשר הם זמינים.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>טיימר מותאם אישית</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>צור תזכורת מקומית מבלי לשנות את מצב השרת.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>רעננות אירועים</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>נתוני האירוע תלויים בחיבור שנבחר ועשויים להיעלם כאשר הם יתיישנים.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>סמני בסיס</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>סמני בסיס ממוקמים ונפתחים על המפה 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>הערות בסיס וצילומי מסך</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>השתמש בפעולות ההקשר של המפה כדי לתת שם לבסיס ולצרף צילומי מסך; שיתוף בענן דורש הסכמה.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>מחק בטיחות</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>מחיקת בסיס או צילום מסך לעולם לא מבוצעת על ידי מדריך ותמיד דורשת קלט שלך.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>פתח אוטומציה של מכשירים</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>פתח אוטומציה קלה של מצב התקן עבור השרת הנבחר.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>פעולות אוטומציה</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>השהה ביצוע או הוסף אוטומציה; מדריכים לעולם אינם משנים את מצב המנוע או יוצרים נתונים.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>כללי אוטומציה</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>סקור מכשירי מקור, פעולות יעד, תזמון ומצב מופעל עבור כל כלל.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>בטיחות מכשיר</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>אף מדריך לא מבצע כלל או מחליף מכשיר חכם אמיתי.</value>
   </data>
 </root>

@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Estàs segur que vols continuar?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] L'operació de reinici selectiu s'ha completat correctament.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Direcció</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1830,13 +1830,13 @@ Estàs segur que vols continuar?</value>
     <value>[Hotkey] {0}: canviat a {1} (activat per {2})</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
-    <value>Cerca i selecciona una icona d&apos;element per a aquest dispositiu.</value>
+    <value>Cerca i selecciona una icona d'element per a aquest dispositiu.</value>
   </data>
   <data name="ChangeDeviceIconTitle" xml:space="preserve">
     <value>Canviar la icona del dispositiu</value>
   </data>
   <data name="ChangeRuleIconSubtitle" xml:space="preserve">
-    <value>Cerca i selecciona una icona d&apos;element per a aquesta regla.</value>
+    <value>Cerca i selecciona una icona d'element per a aquesta regla.</value>
   </data>
   <data name="ChangeRuleIconTitle" xml:space="preserve">
     <value>Canviar la icona de la regla</value>
@@ -1850,7 +1850,6 @@ Estàs segur que vols continuar?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Cercar icones (p. ex.: torreta, interruptor)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dies</value>
   </data>
@@ -2743,16 +2742,16 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Tancar</value>
   </data>
   <data name="UiOpensTheIncomingAlarmsWindow" xml:space="preserve">
-    <value>— obre la finestra d&apos;alarmes entrants.</value>
+    <value>— obre la finestra d'alarmes entrants.</value>
   </data>
   <data name="UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound" xml:space="preserve">
-    <value>— reprodueix el so de l&apos;alarma. Feu servir el botó... per triar un so personalitzat.</value>
+    <value>— reprodueix el so de l'alarma. Feu servir el botó... per triar un so personalitzat.</value>
   </data>
   <data name="UiShowsTheRedAlarmCardInsideTheApp" xml:space="preserve">
-    <value>— mostra la targeta d&apos;alarma vermella dins de l&apos;aplicació.</value>
+    <value>— mostra la targeta d'alarma vermella dins de l'aplicació.</value>
   </data>
   <data name="UiText2FpsRecommendedForAPIStability" xml:space="preserve">
-    <value>(Es recomana 2 fps per a l&apos;estabilitat de l&apos;API)</value>
+    <value>(Es recomana 2 fps per a l'estabilitat de l'API)</value>
   </data>
   <data name="UiLogicRule" xml:space="preserve">
     <value>[Regla lògica]</value>
@@ -2821,7 +2820,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Menú del compte</value>
   </data>
   <data name="UiActiveItemAlerts" xml:space="preserve">
-    <value>Alertes d&apos;articles actius</value>
+    <value>Alertes d'articles actius</value>
   </data>
   <data name="UiActiveRule" xml:space="preserve">
     <value>Regla activa:</value>
@@ -2833,10 +2832,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Afegiu un objectiu per veure els costos de la incursió.</value>
   </data>
   <data name="UiAddAutomation" xml:space="preserve">
-    <value>Afegeix l&apos;automatització</value>
+    <value>Afegeix l'automatització</value>
   </data>
   <data name="UiAddExecutionStep" xml:space="preserve">
-    <value>Afegeix un pas d&apos;execució</value>
+    <value>Afegeix un pas d'execució</value>
   </data>
   <data name="UiAddLogin" xml:space="preserve">
     <value>Afegeix un inici de sessió</value>
@@ -2848,10 +2847,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Afegeix una regla</value>
   </data>
   <data name="UiAdminPanel" xml:space="preserve">
-    <value>Panell d&apos;administració</value>
+    <value>Panell d'administració</value>
   </data>
   <data name="UiAdminPanelUserOverview" xml:space="preserve">
-    <value>Tauler d&apos;administració - Visió general de l&apos;usuari</value>
+    <value>Tauler d'administració - Visió general de l'usuari</value>
   </data>
   <data name="UiAdvancedDiscordBotIntegration" xml:space="preserve">
     <value>Avançada Discord Integració de bot</value>
@@ -2881,7 +2880,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Alexa Smart Home</value>
   </data>
   <data name="UiAllPlayersInRange" xml:space="preserve">
-    <value>Tots els jugadors a l&apos;abast</value>
+    <value>Tots els jugadors a l'abast</value>
   </data>
   <data name="UiAllPlayersOffline" xml:space="preserve">
     <value>Tots els jugadors fora de línia</value>
@@ -2899,7 +2898,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>I</value>
   </data>
   <data name="UiAnyOnlineInRange" xml:space="preserve">
-    <value>Qualsevol en línia a l&apos;abast</value>
+    <value>Qualsevol en línia a l'abast</value>
   </data>
   <data name="UiAnyPlayerOffline" xml:space="preserve">
     <value>Qualsevol jugador fora de línia</value>
@@ -2968,13 +2967,13 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Cancel·la la descàrrega</value>
   </data>
   <data name="UiChance" xml:space="preserve">
-    <value>L&apos;atzar</value>
+    <value>L'atzar</value>
   </data>
   <data name="UiChange" xml:space="preserve">
     <value>Canviar</value>
   </data>
   <data name="UiChangeCommand" xml:space="preserve">
-    <value>Canvia l&apos;ordre</value>
+    <value>Canvia l'ordre</value>
   </data>
   <data name="UiChangeIcon" xml:space="preserve">
     <value>Canvia icona</value>
@@ -2989,7 +2988,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Alertes de xat -&gt; Discord</value>
   </data>
   <data name="UiChatAlertsChannelID" xml:space="preserve">
-    <value>Identificador del canal d&apos;alertes de xat</value>
+    <value>Identificador del canal d'alertes de xat</value>
   </data>
   <data name="UiChatMasterSlaves" xml:space="preserve">
     <value>Mestre i esclaus de xat</value>
@@ -3016,7 +3015,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Pla de raid clar</value>
   </data>
   <data name="UiClearWebhookURL" xml:space="preserve">
-    <value>Esborra l&apos;URL del webhook</value>
+    <value>Esborra l'URL del webhook</value>
   </data>
   <data name="UiCloseRaidCalculator" xml:space="preserve">
     <value>Tanca la calculadora de raid</value>
@@ -3034,7 +3033,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Captures de pantalla de Cloud Base</value>
   </data>
   <data name="UiCloudUserID" xml:space="preserve">
-    <value>ID d&apos;usuari del núvol</value>
+    <value>ID d'usuari del núvol</value>
   </data>
   <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
     <value>Núvol, Discord, Alexa, xat i Steam</value>
@@ -3064,10 +3063,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>SERVEIS DE CONNEXIONS</value>
   </data>
   <data name="UiControlYourRustSmartSwitchesWithAmazonAlexaVoiceCommandsAn5B51481980" xml:space="preserve">
-    <value>Controleu els vostres Rust Smart Switches amb les ordres de veu d&apos;Amazon Alexa i activeu les rutines Alexa quan s&apos;apaguin les vostres alarmes intel·ligents.</value>
+    <value>Controleu els vostres Rust Smart Switches amb les ordres de veu d'Amazon Alexa i activeu les rutines Alexa quan s'apaguin les vostres alarmes intel·ligents.</value>
   </data>
   <data name="UiControlsMapImageScalingFilteringMode" xml:space="preserve">
-    <value>Controla el mode de filtrat d&apos;escala de la imatge del mapa.</value>
+    <value>Controla el mode de filtrat d'escala de la imatge del mapa.</value>
   </data>
   <data name="UiCopyADiscordReadySummary" xml:space="preserve">
     <value>Copieu un resum Discord preparat</value>
@@ -3079,7 +3078,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Copia el mapa al servidor...</value>
   </data>
   <data name="UiCopyRaidSummary" xml:space="preserve">
-    <value>Copia el resum de l&apos;atac</value>
+    <value>Copia el resum de l'atac</value>
   </data>
   <data name="UiCorn" xml:space="preserve">
     <value>Blat de moro</value>
@@ -3100,7 +3099,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Pas actual:</value>
   </data>
   <data name="UiCustomAlarmName" xml:space="preserve">
-    <value>Nom d&apos;alarma personalitzat</value>
+    <value>Nom d'alarma personalitzat</value>
   </data>
   <data name="UiCyan" xml:space="preserve">
     <value>Cian</value>
@@ -3154,10 +3153,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Sincronització al núvol del dispositiu</value>
   </data>
   <data name="UiDisableGridAntiAliasingAliasedEdgeMode" xml:space="preserve">
-    <value>Desactiva l&apos;antialiasing de quadrícula (mode de vora amb alias)</value>
+    <value>Desactiva l'antialiasing de quadrícula (mode de vora amb alias)</value>
   </data>
   <data name="UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1" xml:space="preserve">
-    <value>Desactiva l&apos;antialiasing a les línies de la quadrícula i als marcadors. Millora la velocitat de renderització en sistemes de gamma baixa.</value>
+    <value>Desactiva l'antialiasing a les línies de la quadrícula i als marcadors. Millora la velocitat de renderització en sistemes de gamma baixa.</value>
   </data>
   <data name="UiDiscordName" xml:space="preserve">
     <value>Discord Nom</value>
@@ -3196,7 +3195,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>No mostris ofertes sense estoc</value>
   </data>
   <data name="UiDoubleClickToEditCommand" xml:space="preserve">
-    <value>Feu doble clic per editar l&apos;ordre</value>
+    <value>Feu doble clic per editar l'ordre</value>
   </data>
   <data name="UiDuplicateTarget" xml:space="preserve">
     <value>Objectiu duplicat</value>
@@ -3211,7 +3210,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>p. ex. NOM2</value>
   </data>
   <data name="UiEditCommand" xml:space="preserve">
-    <value>Edita l&apos;ordre</value>
+    <value>Edita l'ordre</value>
   </data>
   <data name="UiEditSubscriptionsDrawingOverlay" xml:space="preserve">
     <value>Edita les subscripcions (superposició de dibuix)</value>
@@ -3229,7 +3228,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>en-US-Standard-A</value>
   </data>
   <data name="UiEnableAutomation" xml:space="preserve">
-    <value>Activa l&apos;automatització</value>
+    <value>Activa l'automatització</value>
   </data>
   <data name="UiEnableGPUBitmapCaching" xml:space="preserve">
     <value>Activa la memòria cau de mapa de bits de la GPU</value>
@@ -3247,16 +3246,16 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>es-ES-Standard-A</value>
   </data>
   <data name="UiEventsAlertsChannelID" xml:space="preserve">
-    <value>Identificador del canal d&apos;alertes d&apos;esdeveniments</value>
+    <value>Identificador del canal d'alertes d'esdeveniments</value>
   </data>
   <data name="UiExecutionSteps" xml:space="preserve">
-    <value>Passos d&apos;execució</value>
+    <value>Passos d'execució</value>
   </data>
   <data name="UiExpand" xml:space="preserve">
     <value>Ampliar</value>
   </data>
   <data name="UiExpandOrCollapseAutomation" xml:space="preserve">
-    <value>Amplieu o col·lapse l&apos;automatització</value>
+    <value>Amplieu o col·lapse l'automatització</value>
   </data>
   <data name="UiExpandOrCollapseGroup" xml:space="preserve">
     <value>Amplia o replega el grup</value>
@@ -3286,7 +3285,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Trobeu on comprar un article</value>
   </data>
   <data name="UiFitMapToView" xml:space="preserve">
-    <value>Ajusta el mapa per veure&apos;l</value>
+    <value>Ajusta el mapa per veure'l</value>
   </data>
   <data name="UiFlowers" xml:space="preserve">
     <value>Flors</value>
@@ -3301,7 +3300,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Mapa de recuperació de força</value>
   </data>
   <data name="UiForceRefreshAllSubscriptions" xml:space="preserve">
-    <value>Força l&apos;actualització de totes les subscripcions</value>
+    <value>Força l'actualització de totes les subscripcions</value>
   </data>
   <data name="UiForgotPassword" xml:space="preserve">
     <value>Heu oblidat la contrasenya?</value>
@@ -3319,16 +3318,16 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Genera i desa</value>
   </data>
   <data name="UiGenerateLoginPIN" xml:space="preserve">
-    <value>Genera el PIN d&apos;inici de sessió</value>
+    <value>Genera el PIN d'inici de sessió</value>
   </data>
   <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
-    <value>Genereu el mapa 3D abans d&apos;utilitzar mapes de calor.</value>
+    <value>Genereu el mapa 3D abans d'utilitzar mapes de calor.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
     <value>Genereu el mapa 3D per habilitar zones sense construcció.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
-    <value>Opcions d&apos;àudio d&apos;alarma genèriques</value>
+    <value>Opcions d'àudio d'alarma genèriques</value>
   </data>
   <data name="UiGENERICALARMS" xml:space="preserve">
     <value>ALARMES GENÈRICS</value>
@@ -3346,7 +3345,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Pistola</value>
   </data>
   <data name="UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D" xml:space="preserve">
-    <value>La pólvora, els explosius, el temps i les conversions de mineral cuit/mineral només es mostren quan el conjunt de dades els proporciona. Les dades actuals ja s&apos;amplien a les matèries primeres.</value>
+    <value>La pólvora, els explosius, el temps i les conversions de mineral cuit/mineral només es mostren quan el conjunt de dades els proporciona. Les dades actuals ja s'amplien a les matèries primeres.</value>
   </data>
   <data name="UiHeatmaps" xml:space="preserve">
     <value>Mapes de calor</value>
@@ -3370,10 +3369,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Cavalls</value>
   </data>
   <data name="UiHotAirBalloons" xml:space="preserve">
-    <value>Globus d&apos;aire calent</value>
+    <value>Globus d'aire calent</value>
   </data>
   <data name="UiHotkeyTriggers" xml:space="preserve">
-    <value>Activadors de tecles d&apos;accés directe</value>
+    <value>Activadors de tecles d'accés directe</value>
   </data>
   <data name="UiIcons" xml:space="preserve">
     <value>Icones</value>
@@ -3388,7 +3387,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>INACTIVE</value>
   </data>
   <data name="UiImageScalingQuality" xml:space="preserve">
-    <value>Qualitat d&apos;escala d&apos;imatge</value>
+    <value>Qualitat d'escala d'imatge</value>
   </data>
   <data name="UiImageZoomView" xml:space="preserve">
     <value>Vista de zoom de la imatge</value>
@@ -3427,7 +3426,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>ESTÀ EN LINEA</value>
   </data>
   <data name="UiITEMBAY" xml:space="preserve">
-    <value>BADIA D&apos;ARTÍCULS</value>
+    <value>BADIA D'ARTÍCULS</value>
   </data>
   <data name="UiJunkpiles" xml:space="preserve">
     <value>Piles de brossa</value>
@@ -3436,7 +3435,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Manteniu la barra lateral desplegada</value>
   </data>
   <data name="UiLanguageStartupAndAppBehavior" xml:space="preserve">
-    <value>Idioma, inici i comportament de l&apos;aplicació</value>
+    <value>Idioma, inici i comportament de l'aplicació</value>
   </data>
   <data name="UiLastActive" xml:space="preserve">
     <value>Últim actiu</value>
@@ -3451,7 +3450,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Enllaça el servidor seleccionat</value>
   </data>
   <data name="UiListenForRustPairingRequestsRightClickForRecoveryOptions" xml:space="preserve">
-    <value>Escolteu les sol·licituds d&apos;aparellament Rust+. Feu clic amb el botó dret per veure les opcions de recuperació.</value>
+    <value>Escolteu les sol·licituds d'aparellament Rust+. Feu clic amb el botó dret per veure les opcions de recuperació.</value>
   </data>
   <data name="UiListening" xml:space="preserve">
     <value>Escoltant</value>
@@ -3460,13 +3459,13 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Carregueu les botigues automàticament en connectar</value>
   </data>
   <data name="UiLoadingServerDetails" xml:space="preserve">
-    <value>S&apos;estan carregant els detalls del servidor...</value>
+    <value>S'estan carregant els detalls del servidor...</value>
   </data>
   <data name="UiLocalSetup" xml:space="preserve">
     <value>Configuració local</value>
   </data>
   <data name="UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps" xml:space="preserve">
-    <value>Inicieu sessió al vostre Rust+ compte d&apos;escriptori per generar mapes 3D i mapes de calor.</value>
+    <value>Inicieu sessió al vostre Rust+ compte d'escriptori per generar mapes 3D i mapes de calor.</value>
   </data>
   <data name="UiLogOut" xml:space="preserve">
     <value>Tanca la sessió</value>
@@ -3478,7 +3477,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Motor lògic</value>
   </data>
   <data name="UiLogicEngineRuntime" xml:space="preserve">
-    <value>Temps d&apos;execució del motor lògic</value>
+    <value>Temps d'execució del motor lògic</value>
   </data>
   <data name="UiLogicRules" xml:space="preserve">
     <value>Regles lògiques</value>
@@ -3538,7 +3537,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Bolets</value>
   </data>
   <data name="UiMuteNotificationsFromThisServer" xml:space="preserve">
-    <value>Silencia les notificacions d&apos;aquest servidor</value>
+    <value>Silencia les notificacions d'aquest servidor</value>
   </data>
   <data name="UiNames" xml:space="preserve">
     <value>Noms</value>
@@ -3565,7 +3564,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>No hi ha normes pendents</value>
   </data>
   <data name="UiNoTargetsSelected" xml:space="preserve">
-    <value>No s&apos;ha seleccionat cap objectiu</value>
+    <value>No s'ha seleccionat cap objectiu</value>
   </data>
   <data name="UiNotConnected" xml:space="preserve">
     <value>No connectat</value>
@@ -3577,7 +3576,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Notificacions, sons i mort fora de línia</value>
   </data>
   <data name="UiOfflineAlertsSetup" xml:space="preserve">
-    <value>Configuració d&apos;alertes fora de línia</value>
+    <value>Configuració d'alertes fora de línia</value>
   </data>
   <data name="UiOfflineCloudAlertsDiscordWebhookTelegramCalls" xml:space="preserve">
     <value>Alertes de núvol fora de línia | Discord, Webhook i Telegram Trucades</value>
@@ -3649,7 +3648,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Analitza el mapa 3D manualment</value>
   </data>
   <data name="UiPayItemEGCloth" xml:space="preserve">
-    <value>Pagar l&apos;article (per exemple, roba)...</value>
+    <value>Pagar l'article (per exemple, roba)...</value>
   </data>
   <data name="UiPaymentResource" xml:space="preserve">
     <value>Recurs de pagament</value>
@@ -3673,7 +3672,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>PLANIFICAR ÚS</value>
   </data>
   <data name="UiPlay1minCountdownAudio" xml:space="preserve">
-    <value>Reprodueix l&apos;àudio del compte enrere d&apos;1 min</value>
+    <value>Reprodueix l'àudio del compte enrere d'1 min</value>
   </data>
   <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
     <value>Toca una alarma forta a les 00:00</value>
@@ -3691,7 +3690,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Premeu ESC per cancel·lar, Intro per desar</value>
   </data>
   <data name="UiPressHotkey" xml:space="preserve">
-    <value>Premeu la tecla d&apos;accés ràpid</value>
+    <value>Premeu la tecla d'accés ràpid</value>
   </data>
   <data name="UiPriceHighToLow" xml:space="preserve">
     <value>Preu (de alt a baix)</value>
@@ -3712,13 +3711,13 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Lila</value>
   </data>
   <data name="UiRaidAlertsChannelID" xml:space="preserve">
-    <value>Identificador del canal d&apos;alertes de raid</value>
+    <value>Identificador del canal d'alertes de raid</value>
   </data>
   <data name="UiRaidCalculator" xml:space="preserve">
     <value>Calculadora de raid</value>
   </data>
   <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
-    <value>Articles de raid i ingredients d&apos;elaboració artesanal</value>
+    <value>Articles de raid i ingredients d'elaboració artesanal</value>
   </data>
   <data name="UiRaidPlan" xml:space="preserve">
     <value>Pla de raid</value>
@@ -3739,7 +3738,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Actualitza els estats del dispositiu</value>
   </data>
   <data name="UiRemoveTarget" xml:space="preserve">
-    <value>Elimina l&apos;objectiu</value>
+    <value>Elimina l'objectiu</value>
   </data>
   <data name="UiRepeats0Indefinitely" xml:space="preserve">
     <value>es repeteix (0 = indefinidament)</value>
@@ -3763,7 +3762,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Revocar</value>
   </data>
   <data name="UiRevokeAccess" xml:space="preserve">
-    <value>Revoca l&apos;accés</value>
+    <value>Revoca l'accés</value>
   </data>
   <data name="UiRock" xml:space="preserve">
     <value>Roca</value>
@@ -3781,13 +3780,13 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Regla activada</value>
   </data>
   <data name="UiRunThisRuleAgainAfterItCompletesAPositiveWaitStepIsRequired" xml:space="preserve">
-    <value>Torna a executar aquesta regla un cop s&apos;hagi completat. Cal un pas d&apos;espera positiu.</value>
+    <value>Torna a executar aquesta regla un cop s'hagi completat. Cal un pas d'espera positiu.</value>
   </data>
   <data name="UiRUNNING" xml:space="preserve">
     <value>CÓRRER</value>
   </data>
   <data name="UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2" xml:space="preserve">
-    <value>Rust de vegades envia una notificació d&apos;incursió sense l&apos;identificador del dispositiu de l&apos;alarma intel·ligent. RustPlusDesk no pot saber quina alarma l&apos;ha activat, de manera que s&apos;utilitza la configuració compartida següent en lloc de la configuració pròpia d&apos;un dispositiu.</value>
+    <value>Rust de vegades envia una notificació d'incursió sense l'identificador del dispositiu de l'alarma intel·ligent. RustPlusDesk no pot saber quina alarma l'ha activat, de manera que s'utilitza la configuració compartida següent en lloc de la configuració pròpia d'un dispositiu.</value>
   </data>
   <data name="UiRUSTCOMPANION" xml:space="preserve">
     <value>RUST+ COMPANION</value>
@@ -3811,7 +3810,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Lloc SAM</value>
   </data>
   <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
-    <value>Desa i tanca la configuració de l&apos;ordre de xat</value>
+    <value>Desa i tanca la configuració de l'ordre de xat</value>
   </data>
   <data name="UiSaveChannelsConfig" xml:space="preserve">
     <value>Desa la configuració dels canals</value>
@@ -3847,7 +3846,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Cerca monument...</value>
   </data>
   <data name="UiSearchRaidTargets" xml:space="preserve">
-    <value>Cerca objectius d&apos;incursió</value>
+    <value>Cerca objectius d'incursió</value>
   </data>
   <data name="UiSearchSettings" xml:space="preserve">
     <value>Configuració de cerca</value>
@@ -3856,7 +3855,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Cerca objectius...</value>
   </data>
   <data name="UiSearching" xml:space="preserve">
-    <value>S&apos;està buscant...</value>
+    <value>S'està buscant...</value>
   </data>
   <data name="UiSeconds" xml:space="preserve">
     <value>segons</value>
@@ -3868,10 +3867,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Seleccioneu una capa per veure la densitat de generació</value>
   </data>
   <data name="UiSelectCustom1MinuteCountdownSound" xml:space="preserve">
-    <value>Seleccioneu un so de compte enrere personalitzat d&apos;1 minut</value>
+    <value>Seleccioneu un so de compte enrere personalitzat d'1 minut</value>
   </data>
   <data name="UiSelectCustomAlarmSound0000" xml:space="preserve">
-    <value>Seleccioneu el so d&apos;alarma personalitzat (00:00)</value>
+    <value>Seleccioneu el so d'alarma personalitzat (00:00)</value>
   </data>
   <data name="UiSelectMultipleRaidItemsForTheSmartCombinationSearch" xml:space="preserve">
     <value>Seleccioneu diversos elements de raid per a la cerca de combinació intel·ligent</value>
@@ -3883,7 +3882,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Seleccioneu elements de raid de barreja intel·ligent</value>
   </data>
   <data name="UiSelectTheSourceRuleForThisTrigger" xml:space="preserve">
-    <value>Seleccioneu la regla d&apos;origen per a aquest activador.</value>
+    <value>Seleccioneu la regla d'origen per a aquest activador.</value>
   </data>
   <data name="UiSendCurrentMapViewToDiscordChannel" xml:space="preserve">
     <value>Envia la visualització del mapa actual al canal Discord.</value>
@@ -3904,13 +3903,13 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Estableix la drecera</value>
   </data>
   <data name="UiSettingsAreGroupedByWhatTheyControl" xml:space="preserve">
-    <value>La configuració s&apos;agrupa segons el que controlen.</value>
+    <value>La configuració s'agrupa segons el que controlen.</value>
   </data>
   <data name="UiShield" xml:space="preserve">
     <value>Escut</value>
   </data>
   <data name="UiShopAlertsChannelID" xml:space="preserve">
-    <value>Identificador del canal d&apos;alertes de botiga</value>
+    <value>Identificador del canal d'alertes de botiga</value>
   </data>
   <data name="UiShow2DMap" xml:space="preserve">
     <value>Mostra mapa 2D</value>
@@ -3919,7 +3918,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Mostra-ho tot</value>
   </data>
   <data name="UiShowDamageOverkillAndIngredientBreakdowns" xml:space="preserve">
-    <value>Mostra danys, excés i avaries d&apos;ingredients</value>
+    <value>Mostra danys, excés i avaries d'ingredients</value>
   </data>
   <data name="UiShowLocal3DMap" xml:space="preserve">
     <value>Mostra el mapa 3D local</value>
@@ -3937,7 +3936,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Mostra el mapa 2D</value>
   </data>
   <data name="UiSIGNINMETHODS" xml:space="preserve">
-    <value>MÈTODES D&apos;INSCRIPCIÓ</value>
+    <value>MÈTODES D'INSCRIPCIÓ</value>
   </data>
   <data name="UiSize" xml:space="preserve">
     <value>Mida:</value>
@@ -3964,10 +3963,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Posposa</value>
   </data>
   <data name="UiSnoozeAlarm" xml:space="preserve">
-    <value>Posposa l&apos;alarma</value>
+    <value>Posposa l'alarma</value>
   </data>
   <data name="UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D" xml:space="preserve">
-    <value>Alguns mètodes seleccionats no tenen cap cost d&apos;elaboració al conjunt de dades; els seus recursos estan exclosos.</value>
+    <value>Alguns mètodes seleccionats no tenen cap cost d'elaboració al conjunt de dades; els seus recursos estan exclosos.</value>
   </data>
   <data name="UiSortBy" xml:space="preserve">
     <value>Ordena per</value>
@@ -3982,7 +3981,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Steam ID</value>
   </data>
   <data name="UiStopAlarmSound" xml:space="preserve">
-    <value>Atura el so de l&apos;alarma</value>
+    <value>Atura el so de l'alarma</value>
   </data>
   <data name="UiStorage" xml:space="preserve">
     <value>Emmagatzematge</value>
@@ -4003,10 +4002,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Sincronitza la teva connexió Rust+.</value>
   </data>
   <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
-    <value>Sincronitza la teva connexió Rust+ al núvol per rebre alertes intel·ligents de raid/esdeveniment a Discord, Alexa i Google Home, fins i tot quan l&apos;aplicació d&apos;escriptori estigui tancada.</value>
+    <value>Sincronitza la teva connexió Rust+ al núvol per rebre alertes intel·ligents de raid/esdeveniment a Discord, Alexa i Google Home, fins i tot quan l'aplicació d'escriptori estigui tancada.</value>
   </data>
   <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
-    <value>Sincronització, còpies de seguretat, funcions de l&apos;equip i accés de seguidors. Aquest compte està separat de (Rust+ aparellament d&apos;acompanyants i FCM.</value>
+    <value>Sincronització, còpies de seguretat, funcions de l'equip i accés de seguidors. Aquest compte està separat de (Rust+ aparellament d'acompanyants i FCM.</value>
   </data>
   <data name="UiSyncedDevices" xml:space="preserve">
     <value>Dispositius sincronitzats</value>
@@ -4021,7 +4020,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Quantitat objectiu</value>
   </data>
   <data name="UiTeamPathsTracking" xml:space="preserve">
-    <value>Seguiment de rutes d&apos;equip</value>
+    <value>Seguiment de rutes d'equip</value>
   </data>
   <data name="UiTelegramCallViaCallMeBot" xml:space="preserve">
     <value>Telegram Truqueu mitjançant CallMeBot</value>
@@ -4039,7 +4038,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>LLAVORS</value>
   </data>
   <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
-    <value>Aquesta connexió és per a l&apos;API de Rust. Permet l&apos;aparellament FCM, les emissions dins del joc, les alarmes i el xat d&apos;equip. El vostre compte de Cloud és independent.</value>
+    <value>Aquesta connexió és per a l'API de Rust. Permet l'aparellament FCM, les emissions dins del joc, les alarmes i el xat d'equip. El vostre compte de Cloud és independent.</value>
   </data>
   <data name="UiTier" xml:space="preserve">
     <value>Nivell</value>
@@ -4060,7 +4059,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Commuta la llista de monuments</value>
   </data>
   <data name="UiTrackTeammatesAndSharedActivity" xml:space="preserve">
-    <value>Feu un seguiment dels companys d&apos;equip i de l&apos;activitat compartida.</value>
+    <value>Feu un seguiment dels companys d'equip i de l'activitat compartida.</value>
   </data>
   <data name="UiTriggerEvent" xml:space="preserve">
     <value>Esdeveniment desencadenant</value>
@@ -4087,7 +4086,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Actualitza a Supporter</value>
   </data>
   <data name="UiUsernameEGBrunhilde" xml:space="preserve">
-    <value>Nom d&apos;usuari (p. ex. @Brunhilde)</value>
+    <value>Nom d'usuari (p. ex. @Brunhilde)</value>
   </data>
   <data name="UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired" xml:space="preserve">
     <value>Utilitza el vostre Rust+ / Steam inici de sessió al navegador. No cal iniciar la sessió al núvol.</value>
@@ -4105,10 +4104,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Espera</value>
   </data>
   <data name="UiWantItemEGBlue" xml:space="preserve">
-    <value>Voleu l&apos;article (per exemple, blau)...</value>
+    <value>Voleu l'article (per exemple, blau)...</value>
   </data>
   <data name="UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E" xml:space="preserve">
-    <value>Podem localitzar automàticament el mapa a la vostra carpeta d&apos;instal·lació Steam, extreure-lo i crear un mapa 3D amb mapes de calor i superposicions de monuments més riques. No s&apos;alterarà cap dada i no s&apos;accedirà a cap informació de carpeta no relacionada Steam.</value>
+    <value>Podem localitzar automàticament el mapa a la vostra carpeta d'instal·lació Steam, extreure-lo i crear un mapa 3D amb mapes de calor i superposicions de monuments més riques. No s'alterarà cap dada i no s'accedirà a cap informació de carpeta no relacionada Steam.</value>
   </data>
   <data name="UiWebhookInfo" xml:space="preserve">
     <value>Informació del webhook</value>
@@ -4153,7 +4152,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Podeu revocar aquest accés en qualsevol moment.</value>
   </data>
   <data name="UiYourFCMConnectionTokenIsUploadedSecurely" xml:space="preserve">
-    <value>El vostre testimoni de connexió FCM s&apos;ha penjat de manera segura.</value>
+    <value>El vostre testimoni de connexió FCM s'ha penjat de manera segura.</value>
   </data>
   <data name="UiZZZ" xml:space="preserve">
     <value>ZZZ</value>
@@ -4171,40 +4170,40 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Afegiu un correu electrònic i una contrasenya a aquest compte</value>
   </data>
   <data name="CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole" xml:space="preserve">
-    <value>L&apos;accés d&apos;administrador requereix Discord autenticació i un rol de desenvolupador/col·laborador principal.</value>
+    <value>L'accés d'administrador requereix Discord autenticació i un rol de desenvolupador/col·laborador principal.</value>
   </data>
   <data name="CodeUiAlexaAccessRevokedSuccessfully" xml:space="preserve">
-    <value>Alexa l&apos;accés s&apos;ha revocat correctament.</value>
+    <value>Alexa l'accés s'ha revocat correctament.</value>
   </data>
   <data name="CodeUiApplyingUpdate" xml:space="preserve">
-    <value>S&apos;està aplicant l&apos;actualització...</value>
+    <value>S'està aplicant l'actualització...</value>
   </data>
   <data name="CodeUiAreYouSureYouWantToClearTheOfflineDeathLog" xml:space="preserve">
     <value>Esteu segur que voleu esborrar el registre de morts fora de línia?</value>
   </data>
   <data name="CodeUiArrivalWarningUnlearned" xml:space="preserve">
-    <value>Avís d&apos;arribada (no aprenent)</value>
+    <value>Avís d'arribada (no aprenent)</value>
   </data>
   <data name="CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain" xml:space="preserve">
-    <value>S&apos;han suprimit les dades del mapa 3D a la memòria cau. Es reconstruirà quan tornis a obrir un mapa en 3D.</value>
+    <value>S'han suprimit les dades del mapa 3D a la memòria cau. Es reconstruirà quan tornis a obrir un mapa en 3D.</value>
   </data>
   <data name="CodeUiChangeColor" xml:space="preserve">
     <value>Canvia el color</value>
   </data>
   <data name="CodeUiChannelsConfigurationSavedSuccessfully" xml:space="preserve">
-    <value>La configuració dels canals s&apos;ha desat correctament!</value>
+    <value>La configuració dels canals s'ha desat correctament!</value>
   </data>
   <data name="CodeUiCheckingDevices" xml:space="preserve">
-    <value>S&apos;estan comprovant els dispositius...</value>
+    <value>S'estan comprovant els dispositius...</value>
   </data>
   <data name="CodeUiCheckingForUpdates" xml:space="preserve">
-    <value>S&apos;estan buscant actualitzacions...</value>
+    <value>S'estan buscant actualitzacions...</value>
   </data>
   <data name="CodeUiClearEveryTargetFromThisRaidPlan" xml:space="preserve">
-    <value>Esborra tots els objectius d&apos;aquest pla d&apos;atac?</value>
+    <value>Esborra tots els objectius d'aquest pla d'atac?</value>
   </data>
   <data name="CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612" xml:space="preserve">
-    <value>S&apos;ha revocat l&apos;accés al núvol i les teves credencials s&apos;han suprimit del núvol.</value>
+    <value>S'ha revocat l'accés al núvol i les teves credencials s'han suprimit del núvol.</value>
   </data>
   <data name="CodeUiCloudSyncFailed" xml:space="preserve">
     <value>La sincronització al núvol ha fallat</value>
@@ -4225,7 +4224,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Connectat · sincronització al núvol activada</value>
   </data>
   <data name="CodeUiConnectedCloudSyncPaused" xml:space="preserve">
-    <value>Connectat · La sincronització al núvol s&apos;ha posat en pausa</value>
+    <value>Connectat · La sincronització al núvol s'ha posat en pausa</value>
   </data>
   <data name="CodeUiCopied" xml:space="preserve">
     <value>Copiat</value>
@@ -4234,10 +4233,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Copia el mapa</value>
   </data>
   <data name="CodeUiCouldNotCheckForUpdates" xml:space="preserve">
-    <value>No s&apos;han pogut comprovar si hi ha actualitzacions</value>
+    <value>No s'han pogut comprovar si hi ha actualitzacions</value>
   </data>
   <data name="CodeUiCouldNotCopySummary" xml:space="preserve">
-    <value>No s&apos;ha pogut copiar el resum</value>
+    <value>No s'ha pogut copiar el resum</value>
   </data>
   <data name="CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811" xml:space="preserve">
     <value>Could not retrieve details from the Rust+ connection. Assegureu-vos que esteu connectat al servidor.</value>
@@ -4249,7 +4248,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Discord Servidor enllaçat correctament!</value>
   </data>
   <data name="CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E" xml:space="preserve">
-    <value>Discord El servidor s&apos;ha desenllaçat correctament. El bot ja no interactuarà amb el vostre servidor.</value>
+    <value>Discord El servidor s'ha desenllaçat correctament. El bot ja no interactuarà amb el vostre servidor.</value>
   </data>
   <data name="CodeUiEmailLoginEnabled" xml:space="preserve">
     <value>Inici de sessió per correu electrònic activat</value>
@@ -4258,31 +4257,31 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Habilitat</value>
   </data>
   <data name="CodeUiEraserBig20px" xml:space="preserve">
-    <value>Goma d&apos;esborrar gran (20 píxels)</value>
+    <value>Goma d'esborrar gran (20 píxels)</value>
   </data>
   <data name="CodeUiEraserSmall5px" xml:space="preserve">
-    <value>Goma d&apos;esborrar petita (5 píxels)</value>
+    <value>Goma d'esborrar petita (5 píxels)</value>
   </data>
   <data name="CodeUiFailedToLinkDiscordServer" xml:space="preserve">
-    <value>No s&apos;ha pogut enllaçar Discord el servidor.</value>
+    <value>No s'ha pogut enllaçar Discord el servidor.</value>
   </data>
   <data name="CodeUiFailedToRevokeFCMConnection" xml:space="preserve">
-    <value>No s&apos;ha pogut revocar la connexió FCM.</value>
+    <value>No s'ha pogut revocar la connexió FCM.</value>
   </data>
   <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
-    <value>No s&apos;ha pogut sincronitzar la connexió FCM. Assegureu-vos que hàgiu iniciat la sessió, que teniu un nivell Premium/Supporter actiu i que la vostra connexió a Rust+ Companion estigui activa.</value>
+    <value>No s'ha pogut sincronitzar la connexió FCM. Assegureu-vos que hàgiu iniciat la sessió, que teniu un nivell Premium/Supporter actiu i que la vostra connexió a Rust+ Companion estigui activa.</value>
   </data>
   <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
-    <value>No s&apos;ha pogut sincronitzar la connexió FCM. Assegureu-vos d&apos;haver iniciat sessió.</value>
+    <value>No s'ha pogut sincronitzar la connexió FCM. Assegureu-vos d'haver iniciat sessió.</value>
   </data>
   <data name="CodeUiFehler" xml:space="preserve">
     <value>Fehler</value>
   </data>
   <data name="CodeUiHotkeysActive" xml:space="preserve">
-    <value>Tecles d&apos;accés directe actives</value>
+    <value>Tecles d'accés directe actives</value>
   </data>
   <data name="CodeUiInvalidUsername" xml:space="preserve">
-    <value>Nom d&apos;usuari no vàlid</value>
+    <value>Nom d'usuari no vàlid</value>
   </data>
   <data name="CodeUiJustNow" xml:space="preserve">
     <value>just ara</value>
@@ -4306,7 +4305,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Gestiona el grup de jugadors</value>
   </data>
   <data name="CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52" xml:space="preserve">
-    <value>S&apos;han assolit un màxim de 5 subscripcions de companys d&apos;equip actius. Si us plau, cancel·leu la subscripció d&apos;una altra persona primer.</value>
+    <value>S'han assolit un màxim de 5 subscripcions de companys d'equip actius. Si us plau, cancel·leu la subscripció d'una altra persona primer.</value>
   </data>
   <data name="CodeUiMaximumOf5CustomTimersAllowed" xml:space="preserve">
     <value>Es permeten un màxim de 5 temporitzadors personalitzats.</value>
@@ -4321,25 +4320,25 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Sense sessió acompanyant</value>
   </data>
   <data name="CodeUiNoDeviceExportsFoundForYourTeamServer" xml:space="preserve">
-    <value>No s&apos;han trobat exportacions de dispositius per al vostre equip/servidor.</value>
+    <value>No s'han trobat exportacions de dispositius per al vostre equip/servidor.</value>
   </data>
   <data name="CodeUiNoFrame" xml:space="preserve">
     <value>cap marc</value>
   </data>
   <data name="CodeUiNoMapFound" xml:space="preserve">
-    <value>No s&apos;ha trobat cap mapa</value>
+    <value>No s'ha trobat cap mapa</value>
   </data>
   <data name="CodeUiNoOffersAvailable" xml:space="preserve">
     <value>No hi ha ofertes disponibles</value>
   </data>
   <data name="CodeUiNoResultsFoundMatchingFilter" xml:space="preserve">
-    <value>No s&apos;han trobat resultats que coincideixin amb el filtre.</value>
+    <value>No s'han trobat resultats que coincideixin amb el filtre.</value>
   </data>
   <data name="CodeUiNoTextFound" xml:space="preserve">
-    <value>No s&apos;ha trobat cap text</value>
+    <value>No s'ha trobat cap text</value>
   </data>
   <data name="CodeUiNoValidRouteBottlenecks" xml:space="preserve">
-    <value>Cap ruta vàlida (colls d&apos;ampolla).</value>
+    <value>Cap ruta vàlida (colls d'ampolla).</value>
   </data>
   <data name="CodeUiNotLinked" xml:space="preserve">
     <value>No enllaçat</value>
@@ -4357,7 +4356,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>PIN generat (vàlid durant 15 m)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Primer, configureu un Discord &quot;Alertes de xat&quot; o &quot;Alertes d&apos;esdeveniments&quot; a Configuració.</value>
+    <value>Primer, configureu un Discord "Alertes de xat" o "Alertes d'esdeveniments" a Configuració.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Connecteu primer el vostre compte al núvol.</value>
@@ -4366,16 +4365,16 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Activeu Cloud Sync abans de generar un PIN Alexa.</value>
   </data>
   <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
-    <value>Introduïu un nom d&apos;usuari Telegram vàlid.</value>
+    <value>Introduïu un nom d'usuari Telegram vàlid.</value>
   </data>
   <data name="CodeUiPleaseSaveADiscordServerIDFirst" xml:space="preserve">
     <value>Deseu primer un Discord ID de servidor.</value>
   </data>
   <data name="CodeUiResumingUpdateDownload" xml:space="preserve">
-    <value>S&apos;està reprenent la baixada de l&apos;actualització...</value>
+    <value>S'està reprenent la baixada de l'actualització...</value>
   </data>
   <data name="CodeUiSaveAlert" xml:space="preserve">
-    <value>Guarda l&apos;alerta</value>
+    <value>Guarda l'alerta</value>
   </data>
   <data name="CodeUiSavedClickToUnsave" xml:space="preserve">
     <value>Desat (feu clic per desar-lo)</value>
@@ -4384,10 +4383,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Resultats de la cerca</value>
   </data>
   <data name="CodeUiSending" xml:space="preserve">
-    <value>S&apos;està enviant...</value>
+    <value>S'està enviant...</value>
   </data>
   <data name="CodeUiServerAddressCopiedToClipboard" xml:space="preserve">
-    <value>L&apos;adreça del servidor s&apos;ha copiat al porta-retalls!</value>
+    <value>L'adreça del servidor s'ha copiat al porta-retalls!</value>
   </data>
   <data name="CodeUiShowNoBuildZones" xml:space="preserve">
     <value>Mostra les zones sense construcció</value>
@@ -4411,7 +4410,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Sincronitzat!</value>
   </data>
   <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
-    <value>L&apos;API Rust+ no proporciona una descripció detallada d&apos;aquest servidor.</value>
+    <value>L'API Rust+ no proporciona una descripció detallada d'aquest servidor.</value>
   </data>
   <data name="CodeUiThickness10px" xml:space="preserve">
     <value>Gruix: 10px</value>
@@ -4429,7 +4428,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Traduït</value>
   </data>
   <data name="CodeUiTranslating" xml:space="preserve">
-    <value>S&apos;està traduint...</value>
+    <value>S'està traduint...</value>
   </data>
   <data name="CodeUiTranslationFailed" xml:space="preserve">
     <value>La traducció ha fallat:</value>
@@ -4450,34 +4449,34 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Actualització</value>
   </data>
   <data name="CodeUiUpdateCheckFailed" xml:space="preserve">
-    <value>La comprovació d&apos;actualització ha fallat</value>
+    <value>La comprovació d'actualització ha fallat</value>
   </data>
   <data name="CodeUiUpdateCheckFailed2" xml:space="preserve">
-    <value>La comprovació d&apos;actualització ha fallat.</value>
+    <value>La comprovació d'actualització ha fallat.</value>
   </data>
   <data name="CodeUiUpdateDownloadCancelled" xml:space="preserve">
-    <value>Descàrrega de l&apos;actualització cancel·lada</value>
+    <value>Descàrrega de l'actualització cancel·lada</value>
   </data>
   <data name="CodeUiUpdateDownloadFailed" xml:space="preserve">
-    <value>La descàrrega de l&apos;actualització ha fallat</value>
+    <value>La descàrrega de l'actualització ha fallat</value>
   </data>
   <data name="CodeUiUpdateDownloadPaused" xml:space="preserve">
-    <value>Descàrrega de l&apos;actualització en pausa</value>
+    <value>Descàrrega de l'actualització en pausa</value>
   </data>
   <data name="CodeUiUpdateReadyInstallsOnClose" xml:space="preserve">
-    <value>Actualització preparada: s&apos;instal·la al tancar</value>
+    <value>Actualització preparada: s'instal·la al tancar</value>
   </data>
   <data name="CodeUiWhite" xml:space="preserve">
     <value>Blanc</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>El mapa fora de línia s&apos;ha importat correctament com a &quot;{0}&quot;!</value>
+    <value>El mapa fora de línia s'ha importat correctament com a "{0}"!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Mapa importat</value>
   </data>
   <data name="FormatFailedImportMap" xml:space="preserve">
-    <value>No s&apos;ha pogut importar el mapa: {0}</value>
+    <value>No s'ha pogut importar el mapa: {0}</value>
   </data>
   <data name="ErrorTitle" xml:space="preserve">
     <value>Error</value>
@@ -4492,16 +4491,16 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Actualització {0} disponible</value>
   </data>
   <data name="FormatDownloadingUpdate" xml:space="preserve">
-    <value>S&apos;està baixant {0}</value>
+    <value>S'està baixant {0}</value>
   </data>
   <data name="FormatUpdateReady" xml:space="preserve">
-    <value>Actualització {0} a punt: s&apos;instal·la al tancar</value>
+    <value>Actualització {0} a punt: s'instal·la al tancar</value>
   </data>
   <data name="FormatPlayerStatusError" xml:space="preserve">
     <value>Error: {0}</value>
   </data>
   <data name="FormatFailedOpenPlayers" xml:space="preserve">
-    <value>No s&apos;ha pogut obrir la finestra dels jugadors:
+    <value>No s'ha pogut obrir la finestra dels jugadors:
 
 {0}: {1}
 
@@ -4509,50 +4508,50 @@ Pila:
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>El mapa fora de línia &apos;{0}&apos; encara no s&apos;ha analitzat. Obriu el mapa 3D una vegada per analitzar-lo i, a continuació, proveu de copiar-lo de nou.</value>
+    <value>El mapa fora de línia '{0}' encara no s'ha analitzat. Obriu el mapa 3D una vegada per analitzar-lo i, a continuació, proveu de copiar-lo de nou.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Error de còpia del mapa</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Els dissenys del mapa no coincideixen. El mapa &quot;{0}&quot; no sembla ser el mateix mapa que el servidor connectat &quot;{1}&quot;.</value>
+    <value>Els dissenys del mapa no coincideixen. El mapa "{0}" no sembla ser el mateix mapa que el servidor connectat "{1}".</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Desconcordança del mapa</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>S&apos;han copiat correctament el mapa 3D i els recursos locals de &quot;{0}&quot; a &quot;{1}&quot;!</value>
+    <value>S'han copiat correctament el mapa 3D i els recursos locals de "{0}" a "{1}"!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Mapa copiat</value>
   </data>
   <data name="FormatMapCopyError" xml:space="preserve">
-    <value>S&apos;ha produït un error en copiar el mapa: {0}</value>
+    <value>S'ha produït un error en copiar el mapa: {0}</value>
   </data>
   <data name="FormatCloudLimits" xml:space="preserve">
     <value>{0}
-Pla d&apos;ús:
+Pla d'ús:
 • Mida de la superposició: ({1} KB / {2}
 • Dispositius: ({3} / {4}
 • Bases: ({5} / {6}</value>
   </data>
   <data name="FormatFailedUnlinkDiscord" xml:space="preserve">
-    <value>No s&apos;ha pogut desenllaçar el servidor Discord: {0}</value>
+    <value>No s'ha pogut desenllaçar el servidor Discord: {0}</value>
   </data>
   <data name="FormatFailedLinkDiscord" xml:space="preserve">
-    <value>No s&apos;ha pogut enllaçar el servidor Discord: {0}</value>
+    <value>No s'ha pogut enllaçar el servidor Discord: {0}</value>
   </data>
   <data name="FormatFailedSaveChannels" xml:space="preserve">
-    <value>No s&apos;han pogut desar els canals: {0}</value>
+    <value>No s'han pogut desar els canals: {0}</value>
   </data>
   <data name="FormatFailedOpenBrowser" xml:space="preserve">
-    <value>No s&apos;ha pogut obrir el navegador: ({0}</value>
+    <value>No s'ha pogut obrir el navegador: ({0}</value>
   </data>
   <data name="FormatFailedGeneratePin" xml:space="preserve">
-    <value>No s&apos;ha pogut generar PIN: {0}</value>
+    <value>No s'ha pogut generar PIN: {0}</value>
   </data>
   <data name="FormatFailedRevokeAlexa" xml:space="preserve">
-    <value>No s&apos;ha pogut revocar l&apos;accés Alexa: {0}</value>
+    <value>No s'ha pogut revocar l'accés Alexa: {0}</value>
   </data>
   <data name="FormatPremiumPlan" xml:space="preserve">
     <value>{0} · Premium</value>
@@ -4561,13 +4560,13 @@ Pla d&apos;ús:
     <value>{0} · Gratuït</value>
   </data>
   <data name="FormatCouldNotLoadImage" xml:space="preserve">
-    <value>No s&apos;ha pogut carregar la imatge: {0}</value>
+    <value>No s'ha pogut carregar la imatge: {0}</value>
   </data>
   <data name="FormatErrorSavingCrosshair" xml:space="preserve">
     <value>Error en desar el punt de mira: {0}</value>
   </data>
   <data name="FormatCheckingDevice" xml:space="preserve">
-    <value>S&apos;està comprovant el dispositiu #{0} ({1})...</value>
+    <value>S'està comprovant el dispositiu #{0} ({1})...</value>
   </data>
   <data name="FormatToggleDelay" xml:space="preserve">
     <value>Retard de commutació: {0} ms</value>
@@ -4579,49 +4578,49 @@ Pla d&apos;ús:
     <value>Error en actualitzar la substitució: {0}</value>
   </data>
   <data name="FormatServerDescriptionWebsite" xml:space="preserve">
-    <value>L&apos;API Rust+ no proporciona una descripció detallada d&apos;aquest servidor.
+    <value>L'API Rust+ no proporciona una descripció detallada d'aquest servidor.
 
 Podeu trobar més informació al lloc web oficial del servidor:
 {0}</value>
   </data>
   <data name="FormatFailedLoadServerDetails" xml:space="preserve">
-    <value>No s&apos;han pogut carregar els detalls del servidor: {0}</value>
+    <value>No s'han pogut carregar els detalls del servidor: {0}</value>
   </data>
   <data name="RaidLoadingData" xml:space="preserve">
-    <value>S&apos;estan carregant les dades del raid...</value>
+    <value>S'estan carregant les dades del raid...</value>
   </data>
   <data name="RaidNoTargetsAvailable" xml:space="preserve">
-    <value>No hi ha objectius d&apos;incursió disponibles.</value>
+    <value>No hi ha objectius d'incursió disponibles.</value>
   </data>
   <data name="FormatRaidUnavailable" xml:space="preserve">
     <value>La calculadora de raid no està disponible: {0}</value>
   </data>
   <data name="FormatRaidSaveFailed" xml:space="preserve">
-    <value>No s&apos;ha pogut desar el pla de raid: {0}</value>
+    <value>No s'ha pogut desar el pla de raid: {0}</value>
   </data>
   <data name="UpdateSuccessfulTitle" xml:space="preserve">
     <value>Actualització correcta</value>
   </data>
   <data name="FormatUpdateSuccessful" xml:space="preserve">
-    <value>Rust+ Desktop s&apos;ha actualitzat correctament a v{0}!</value>
+    <value>Rust+ Desktop s'ha actualitzat correctament a v{0}!</value>
   </data>
   <data name="UpdateDownloadedTitle" xml:space="preserve">
     <value>Actualització baixada</value>
   </data>
   <data name="UpdateInstallsOnClose" xml:space="preserve">
-    <value>L&apos;actualització s&apos;instal·larà automàticament quan tanqueu l&apos;aplicació.</value>
+    <value>L'actualització s'instal·larà automàticament quan tanqueu l'aplicació.</value>
   </data>
   <data name="FormatDownloadFailed" xml:space="preserve">
     <value>La baixada ha fallat: {0}</value>
   </data>
   <data name="UpdateAlreadyDownloaded" xml:space="preserve">
-    <value>L&apos;actualització ja està descarregada. S&apos;instal·larà quan tanqueu l&apos;aplicació.</value>
+    <value>L'actualització ja està descarregada. S'instal·larà quan tanqueu l'aplicació.</value>
   </data>
   <data name="SelectRustMapFile" xml:space="preserve">
     <value>Seleccioneu el fitxer Rust .map</value>
   </data>
   <data name="CloudFeaturesUpdateRequired" xml:space="preserve">
-    <value>Per continuar utilitzant les funcions del núvol, heu d&apos;actualitzar l&apos;aplicació.</value>
+    <value>Per continuar utilitzant les funcions del núvol, heu d'actualitzar l'aplicació.</value>
   </data>
   <data name="RenameCustomCrosshair" xml:space="preserve">
     <value>Canvia el nom de Crosshair personalitzat</value>
@@ -4630,7 +4629,7 @@ Podeu trobar més informació al lloc web oficial del servidor:
     <value>Com fer el seguiment dels jugadors — Rust+ Desk</value>
   </data>
   <data name="DiscordClientInitializing" xml:space="preserve">
-    <value>El client d&apos;escriptori s&apos;està inicialitzant o no està completament carregat.</value>
+    <value>El client d'escriptori s'està inicialitzant o no està completament carregat.</value>
   </data>
   <data name="FormatCurrentServerTime" xml:space="preserve">
     <value>🕒 Hora actual del servidor: {0}</value>
@@ -4639,34 +4638,34 @@ Podeu trobar més informació al lloc web oficial del servidor:
     <value>👥 Població del servidor: {0}</value>
   </data>
   <data name="DiscordInvalidCommandPayload" xml:space="preserve">
-    <value>❌ Ordre no vàlida: falta el nom o l&apos;identificador del dispositiu.</value>
+    <value>❌ Ordre no vàlida: falta el nom o l'identificador del dispositiu.</value>
   </data>
   <data name="DiscordRenderingMap" xml:space="preserve">
-    <value>⌛ El mapa s&apos;està renderitzant. Si us plau, espereu.</value>
+    <value>⌛ El mapa s'està renderitzant. Si us plau, espereu.</value>
   </data>
   <data name="DiscordRenderingFullMap" xml:space="preserve">
-    <value>⌛ S&apos;està mostrant el mapa complet. Si us plau, espereu.</value>
+    <value>⌛ S'està mostrant el mapa complet. Si us plau, espereu.</value>
   </data>
   <data name="FormatUnknownCommand" xml:space="preserve">
     <value>Ordre desconeguda o no compatible: {0}</value>
   </data>
   <data name="FormatCommandError" xml:space="preserve">
-    <value>Error en executar l&apos;ordre: {0}</value>
+    <value>Error en executar l'ordre: {0}</value>
   </data>
   <data name="Existing3DMapReused" xml:space="preserve">
-    <value>S&apos;han reutilitzat les dades del mapa existents 3D; no s&apos;ha detectat cap neteja.</value>
+    <value>S'han reutilitzat les dades del mapa existents 3D; no s'ha detectat cap neteja.</value>
   </data>
   <data name="ServerOfflineA2S" xml:space="preserve">
-    <value>Servidor fora de línia (esgotat el temps d&apos;espera de la consulta A2S)</value>
+    <value>Servidor fora de línia (esgotat el temps d'espera de la consulta A2S)</value>
   </data>
   <data name="AutoDiscoveringQueryPort" xml:space="preserve">
-    <value>Trobar el port de consulta mitjançant l&apos;API Steam...</value>
+    <value>Trobar el port de consulta mitjançant l'API Steam...</value>
   </data>
   <data name="FetchingSteamPlayers" xml:space="preserve">
-    <value>S&apos;estan obtenint jugadors mitjançant Steam Consulta...</value>
+    <value>S'estan obtenint jugadors mitjançant Steam Consulta...</value>
   </data>
   <data name="NoOnlinePlayersFound" xml:space="preserve">
-    <value>No s&apos;han trobat jugadors en línia.</value>
+    <value>No s'han trobat jugadors en línia.</value>
   </data>
   <data name="AssignGroupTitle" xml:space="preserve">
     <value>Assigna un grup</value>
@@ -4681,16 +4680,16 @@ Podeu trobar més informació al lloc web oficial del servidor:
     <value>Seleccioneu So de mort personalitzat</value>
   </data>
   <data name="CountdownOneMinute" xml:space="preserve">
-    <value>Compte enrere d&apos;1 minut...</value>
+    <value>Compte enrere d'1 minut...</value>
   </data>
   <data name="TimerExpiredTitle" xml:space="preserve">
     <value>Temporitzador caducat</value>
   </data>
   <data name="SelectTimerAlarmSound" xml:space="preserve">
-    <value>Seleccioneu So d&apos;alarma del temporitzador</value>
+    <value>Seleccioneu So d'alarma del temporitzador</value>
   </data>
   <data name="SelectTimerCountdownSound" xml:space="preserve">
-    <value>Seleccioneu Temporitzador So de compte enrere d&apos;1 minut</value>
+    <value>Seleccioneu Temporitzador So de compte enrere d'1 minut</value>
   </data>
   <data name="UpdateTitle" xml:space="preserve">
     <value>Actualització</value>
@@ -4709,5 +4708,797 @@ Podeu trobar més informació al lloc web oficial del servidor:
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Omet el tutorial</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Enrere</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Següent</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Acabat</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>cancel·lar aquest tutorial?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>el vostre progrés s'ha desat. Pots continuar des del Centre Tutorial en qualsevol moment.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Continua aprenent</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Cancel·la el tutorial</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>pas {0} de {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>aquesta funció no està disponible en l'estat actual de l'aplicació. Continueu amb seguretat i torneu quan el servidor, el compte o les dades necessaris estiguin disponibles.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Restableix</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Reinicia</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Continua</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Inici</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} de {1} passos</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>aprendre RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>lliçons enfocades per a aquesta compilació. Els tutorials mai activen dispositius, envien missatges, suprimeixen dades ni executen automatitzacions.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Inicia els tutorials recomanats</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Continua l'últim tutorial</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Reinicieu tots els tutorials</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Restableix el progrés del tutorial</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Iniciar conceptes bàsics per a usuaris nous</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>ofereix tutorials per a noves funcions</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Benvingut a RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>feu un recorregut breu per la navegació, la connexió al servidor, els mapes i els dispositius, o trieu només les lliçons que necessiteu.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Inicia la visita ràpida</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Trieu Tutorials</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Ara no</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>No s'ha iniciat</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>En curs</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Completat</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>S'ha omès</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>actualitzat</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>nova característica</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Primers passos</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>mapes</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Dispositius</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Equip i Comunicació</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automatització</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Seguiment</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Eines</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Configuració i suport</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Fonaments de l'aplicació</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>aprèn la navegació, el context del servidor, l'estat de connexió, les notificacions i on reproduir les lliçons.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Compte i núvol</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>entendre les característiques locals, l'inici de sessió al núvol, la sincronització i l'accés al suport.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Emparejament i gestió del servidor</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>vincula Rust+, tria un servidor i entén els modes suaus, complets i desconnectats.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Conceptes bàsics del mapa</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>aprèn la navegació per mapes, les capes, els mapes de calor, les eines de dibuix i el punt d'entrada 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>mapes de calor de recursos</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>obteniu informació sobre què mostren les superposicions de densitat de generació extretes i com seleccionar-les o esborrar-les.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Mapa</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Exploreu la finestra local 3D, la barra d'eines, el creador d'empremtes, la visualització del rendiment i l'acció de tancament.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Dispositius intel·ligents</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>cerqueu, filtreu, actualitzeu, organitzeu i comprengueu de manera segura els dispositius intel·ligents emparellats.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Seguiment d'equips i jugadors</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>revisa els companys d'equip, els marcadors, segueix el comportament i els requisits per compartir.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Xat d'equip i ordres</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>llegiu el xat d'equip, redacteu missatges i configureu ordres sense enviar res.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Integració</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Trobeu Discord punts d'entrada, configuració, permisos i límits de privadesa.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Motor lògic i d'automatització</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>entendre les regles, activadors, condicions, accions, estat d'execució i proves segures.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Notificacions i alertes</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>filtra, cerca, revisa, marca i esborra les notificacions d'aplicacions.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Càmeres i monitoratge</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>afegiu i reviseu les càmeres aparellades mentre mantingueu privats els identificadors de la càmera.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Calculadora de raid</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>creeu un pla de raid, compareu mètodes i reviseu els totals del material.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Calculadora de reciclatge</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>afegiu articles i compareu els rendiments dels recicladors salvatges i de la zona segura.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Configuració</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>cerca l'idioma, el rendiment del mapa, els serveis connectats i els controls de manteniment.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Actualitzacions i diagnòstics</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>comproveu les actualitzacions de l'aplicació i localitzeu el registre de diagnòstic sense iniciar una actualització.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Navegació principal</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>utilitzeu aquesta barra lateral per moure's entre dispositius, seguiment d'equips, càmeres, jugadors, notificacions i calculadores.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Expansió de navegació</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Fixeu o replega la barra lateral per canviar les etiquetes per més espai de treball del mapa.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Servidor actual</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>aquesta àrea identifica el servidor Rust seleccionat i el context del seu compte.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Estat de la connexió</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Les targetes de servidor mostren si un servidor està desconnectat, connectat de manera programada o completament connectat.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Notificacions</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>aquí es recullen problemes de connexió, alarmes, morts i resultats d'automatització.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Centre de tutories</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>reprodueix, continua, reinicia o descobreix lliçons actualitzades aquí.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Context del compte</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>l'accés al núvol és independent de l'aparellament Rust+. Les funcions locals continuen disponibles sense la sincronització al núvol.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Compte al núvol</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>inicieu la sessió aquí per obtenir la sincronització compatible; els tutorials no mostren mai les dades del compte privat.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Estat del suport</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>l'accés dels seguidors desbloqueja funcions tancades. El progrés del tutorial local no requereix cap subscripció.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Parella Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>l'aparellament enllaça aquesta aplicació amb Rust Companion abans que les funcions del servidor en directe puguin funcionar.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Començar l'aparellament</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>comença a escoltar i, després, utilitza el flux d'aparellament Rust+ dins del joc de Rust. Les credencials mai es registren.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Servidors emparellats</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>seleccioneu un servidor configurat localment abans de connectar-vos o canviar la configuració específica del servidor.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connectar carrega una comunicació limitada sense inicialitzar totes les funcions en directe.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>connexió completa</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>la connexió completa inicialitza les dades del mapa, els dispositius, les dades de l'equip i les subscripcions a Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Desconnectar</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>La desconnexió atura la comunicació en directe. Aquesta lliçó mai invoca l'acció.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Restableix l'aparellament</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>les ordres de recuperació es troben al menú contextual Parella. El restabliment elimina la configuració d'aparellament local.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>llenç del mapa</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Panorama arrossegant, amplia amb la roda i interactua amb els marcadors del mapa Rust actual.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Barra d'eines de mapes</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>la barra d'eines controla les capes, el xat, les superposicions, els temporitzadors i els modes 2D o 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Restableix la vista</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Torneu a ajustar el mapa a l'espai de treball després de fer una panoràmica o fer zoom.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Capes de mapa</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>trieu aquí les opcions visuals avançades de quadrícula, reproductor, monument, botiga i avançades.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Mapes de calor</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Obriu les superposicions de densitat extretes. Mostren zones de generació probable, no entitats vives.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Obre el mapa 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>genera o obre la representació local 3D del mapa actual.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Eines de dibuix</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>dibuixeu notes de planificació no destructives sobre el mapa i deixeu el mode de dibuix quan acabeu.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>mapes de calor oberts</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>navega per les capes de densitat disponibles per al mapa analitzat actual.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Selector de mapa de calor</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>seleccioneu una categoria extreta o esborra la superposició activa.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Com funcionen els mapes de calor</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>els mapes de calor resumeixen les àrees de generació probables; no garanteixen una entitat viva en una ubicació.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>genera o obre 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>l'aplicació analitza les dades del mapa localment i reutilitza la seva memòria cau quan és possible.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Viewport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>òrbita, panoràmica i zoom al voltant d'una representació interactiva del mapa seleccionat.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Barra d'eines</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Capes de control, marcadors en directe, pantalla completa, configuració i eines d'empremta.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Creador d'empremtes base</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>el mode de construcció només col·loca fonaments de planificació; no modifica el servidor Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Indicador de rendiment</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS i detall d'equilibri de resolució adaptativa amb una interacció suau.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Tanca la vista 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>torneu a 2D i allibereu els recursos pesats 3D incrustats.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Llista de dispositius</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>els interruptors, les alarmes i els monitors d'emmagatzematge aparellats apareixen aquí en grups.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Cerca de dispositius</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>filtra els dispositius per nom o comanda sense canviar-ne l'estat.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>filtre de tipus de dispositiu</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Limiteu la llista a interruptors, alarmes, monitors d'emmagatzematge o tots els dispositius.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>estats d'actualització</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>sol·licitar un nou estat de només lectura; la disponibilitat depèn de la connexió.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Eines del dispositiu</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>aquí es recullen la importació, la sincronització al núvol, l'automatització, les tecles d'accés ràpid, l'actualització i la neteja.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Targeta de dispositiu</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>una targeta mostra la identitat, l'estat de connexió, les ordres i els controls específics del dispositiu.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Seguretat del dispositiu</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>els tutorials no activen mai cap interruptor, suprimeixen un dispositiu ni executen una tecla d'accés ràpid.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Llista d'equips</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>aquí apareixen els companys d'equip carregats, l'estat en línia, els avatars i les accions de context.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Marcadors d'equip</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>trieu quins estils de marcador de companys d'equip són visibles al mapa.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Segueix el jugador</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Seguir les actualitzacions de mapes de centres sobre un company d'equip i requereix dades actuals de l'equip.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Compartició d'equips</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>l'ús compartit de la base i la captura de pantalla pot requerir un compte i el consentiment de càrrega.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Historial de xat</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Els missatges recents de l'equip Rust apareixen aquí quan la connexió proporciona dades de xat.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Entrada de missatge</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>redacteu un missatge d'equip aquí. El tutorial mai insereix ni envia cap.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Enviar missatge</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>enviant publicacions al xat de l'equip Rust. Aquest control només està ressaltat.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Configuració d'ordres</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>configureu els prefixos, els enllaços de dispositius, els retards i la disponibilitat d'ordres.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Comunitat Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>aquesta drecera obre la comunitat; els paràmetres d'integració són separats.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Configuració</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Configura bot, gremi, canals, ordres i permisos sense identificadors de registre.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Seguretat</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Els tutorials mai publiquen missatges ni registren els identificadors de gremis, canal o usuaris.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Motor lògic obert</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Obriu l'editor de regles del servidor seleccionat.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Llista de regles</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>les regles i els passos d'activació, condició, retard i acció apareixen aquí.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Estat del motor</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>activa o posa en pausa l'execució de la regla. El tutorial mai canvia aquest interruptor.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>flux de treball de regles</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>un activador inicia una regla; les condicions porten accions posteriors; els passos s'executen en ordre.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Seguretat de l'automatització</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>els tutorials no persisteixen les regles, no canvien els dispositius, no envien xat ni executen l'automatització.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Centre de notificacions</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>reviseu les alertes sense dependre de les notificacions transitòries d'escriptori.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Filtres de notificació</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Canvia entre totes les notificacions, alarmes i morts.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Notificacions de cerca</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>cerqueu notificacions per contingut mostrat o context del servidor.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Accions massives</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Marca tot llegit o esborra l'historial; els tutorials mai realitzen aquestes accions.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Llista de càmeres</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Les visualitzacions prèvies configurades apareixen quan un servidor i una càmera seleccionats estan disponibles.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Afegeix una càmera</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>afegiu una càmera utilitzant el seu identificador Rust; els tutorials mai capturen codis de càmera.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Privadesa de la càmera</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>els identificadors i els marcs de la càmera estan exclosos dels diagnòstics del tutorial.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Objectius de cerca</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>cerqueu un mur, una porta, un desplegable o un altre objectiu al conjunt de dades agrupat.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Pla Raid</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>revisa els objectius, la salut, les quantitats, els mètodes i els costos calculats.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Comparar mètodes</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Seleccioneu explosius o eines permesos i compareu alternatives.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Pla clar</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear elimina el pla; el tutorial el destaca sense canviar les entrades.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Cerca elements</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Trobeu un article reciclable i afegiu-lo a la calculadora.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Categoria d'element</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>restringeix el catàleg d'articles per categoria.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Elements d'entrada</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>ajustar quantitats o eliminar entrades; els tutorials no alteren l'estat de la calculadora.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Resultats del reciclador</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>compareu els rendiments i els temps dels recicladors salvatges i de la zona segura.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Obriu la configuració</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Comportament de l'aplicació, integracions, rendiment, còpia de seguretat i manteniment en directe aquí.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Llengua</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>trieu l'idioma de la IU. El text del tutorial utilitza el mateix sistema de recursos.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Rendiment del mapa</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Ajusta l'escala de la imatge, la memòria cau de la GPU, l'escala de renderització i el mode de vora.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Manteniment</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Els controls de còpia de seguretat, restabliment, purga i memòria cau poden ser destructius i no s'invoquen mai.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Comproveu si hi ha actualitzacions</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>sol·liciteu la disponibilitat d'actualització sense descarregar ni instal·lar.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Estat d'actualització</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>la versió i el progrés de la baixada apareixen en aquesta àrea de la barra de títol.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Registre de diagnòstic</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>filtreu els diagnòstics locals abans de compartir només els detalls no sensibles.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Botigues i Vending</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>cerqueu ofertes de vendes expenedores, compareu les operacions i entengueu el temps d'actualització.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Monitorització d'esdeveniments i servidors</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>llegiu els indicadors d'esdeveniments en directe i creeu temporitzadors locals.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Bases i captures de pantalla</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>creeu marcadors de base de mapes i gestioneu les seves notes i captures de pantalla de manera segura.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Automatització de dispositius</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>configureu l'automatització simple de l'estat del dispositiu per separat del motor lògic.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>cerca de botiga oberta</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Obriu el tauler de cerca de vendes expenedores del mapa sense canviar el mapa actual.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Cerca de botigues</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>cerqueu articles, reviseu les quantitats de compra i venda i obriu els resultats al mapa.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Actualització del temps</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>les ofertes de la botiga depenen de la connectivitat del servidor i poden quedar obsoletes entre les actualitzacions de Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Dock d'esdeveniments en directe</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Els indicadors de càrrega, helicòpter, Chinook, venedor i altres esdeveniments actius apareixen aquí quan estan disponibles.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Temporitzador personalitzat</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>creeu un recordatori local sense canviar l'estat del servidor.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Actualitat de l'esdeveniment</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Les dades de l'esdeveniment depenen de la connexió seleccionada i poden desaparèixer quan estigui obsoleta.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Marcadors de base</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>els marcadors base es col·loquen i s'obren al mapa 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>notes base i captures de pantalla</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Utilitzeu accions de context de mapa per anomenar una base i adjuntar captures de pantalla; L'ús compartit al núvol requereix consentiment.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Suprimeix la seguretat</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>la supressió d'una base o captura de pantalla mai es realitza mitjançant un tutorial i sempre requereix la vostra entrada.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Automatització del dispositiu obert</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Obriu l'automatització lleugera de l'estat del dispositiu per al servidor seleccionat.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Accions d'automatització</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Posa en pausa l'execució o afegeix una automatització; els tutorials mai canvien l'estat del motor ni creen dades.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Regles d'automatització</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>reviseu els dispositius d'origen, les accions de destinació, el temps i l'estat activat per a cada regla.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Seguretat del dispositiu</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>cap tutorial executa una regla ni alterna un dispositiu intel·ligent real.</value>
   </data>
 </root>

@@ -4,6 +4,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
              Background="{DynamicResource Surface}"
              Foreground="{DynamicResource TextPrimary}">
     <UserControl.Resources>
@@ -28,7 +29,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,12,12,8" BorderBrush="#22c55e" BorderThickness="1,0,0,0">
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,12,12,8" BorderBrush="#22c55e" BorderThickness="1,0,0,0" tutorials:Tutorial.TargetId="DeviceAutomation.Actions">
             <DockPanel LastChildFill="False">
                 <ui:ToggleSwitch Content="{DynamicResource UiAutomationActive}"
                                  DockPanel.Dock="Left"
@@ -44,7 +45,7 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
                       Padding="12,0,12,12">
-            <ItemsControl x:Name="RulesItemsControl" HorizontalContentAlignment="Stretch">
+            <ItemsControl x:Name="RulesItemsControl" tutorials:Tutorial.TargetId="DeviceAutomation.Rules" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource Card}" Margin="0,0,0,10" Padding="12">

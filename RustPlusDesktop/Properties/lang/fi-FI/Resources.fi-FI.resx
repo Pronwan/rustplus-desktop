@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Haluatko varmasti jatkaa?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Valikoiva nollaus suoritettu onnistuneesti.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Suunta</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Haluatko varmasti jatkaa?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Etsi kuvakkeita (esim. tykkitorni, kytkin)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} päivää</value>
   </data>
@@ -4357,7 +4356,7 @@ Yhdistä tämä palvelin ensin.</value>
     <value>Luotu PIN-koodi (voimassa 15 m)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Määritä ensin asetuksista Discord &apos;Chat Alerts&apos; tai &apos;Events Alerts&apos; -kanava.</value>
+    <value>Määritä ensin asetuksista Discord 'Chat Alerts' tai 'Events Alerts' -kanava.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Yhdistä ensin Cloud-tilisi.</value>
@@ -4471,7 +4470,7 @@ Yhdistä tämä palvelin ensin.</value>
     <value>Valkoinen</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Offline-kartan tuonti onnistui nimellä &apos;{0}&apos;!</value>
+    <value>Offline-kartan tuonti onnistui nimellä '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Kartta tuotu</value>
@@ -4509,19 +4508,19 @@ Pino:
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>Offline-karttaa &apos;{0}&apos; ei ole vielä jäsennetty. Avaa sen 3D-kartta kerran jäsentääksesi sen ja yritä sitten kopioida uudelleen.</value>
+    <value>Offline-karttaa '{0}' ei ole vielä jäsennetty. Avaa sen 3D-kartta kerran jäsentääksesi sen ja yritä sitten kopioida uudelleen.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Kopioi karttavirhe</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Kartan asettelut eivät täsmää. Kartta &apos;{0}&apos; ei näytä olevan sama kartta kuin yhdistetty palvelin &apos;{1}&apos;.</value>
+    <value>Kartan asettelut eivät täsmää. Kartta '{0}' ei näytä olevan sama kartta kuin yhdistetty palvelin '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Kartta ei täsmää</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>3D -kartan ja paikallisten resurssien kopioiminen tiedostosta &apos;{0}&apos; kansioon &apos;{1}&apos;!</value>
+    <value>3D -kartan ja paikallisten resurssien kopioiminen tiedostosta '{0}' kansioon '{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Kartta kopioitu</value>
@@ -4709,5 +4708,797 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Ohita opetusohjelma</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Takaisin</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Seuraava</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Valmis</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Perutaanko tämä opetusohjelma?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Edistymisesi on tallennettu. Voit jatkaa opetuskeskuksesta milloin tahansa.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Jatka oppimista</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Peruuta opetusohjelma</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Vaihe {0} / {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Tämä ominaisuus ei ole käytettävissä sovelluksen nykyisessä tilassa. Jatka turvallisesti ja palaa, kun tarvittava palvelin, tili tai tiedot ovat saatavilla.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Nollaa</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Käynnistä uudelleen</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Jatka</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Aloita</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} / {1} vaihetta</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Opi RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Tämän koontiversion kohdennettuja oppitunteja. Opetusohjelmat eivät koskaan aktivoi laitteita, lähetä viestejä, poista tietoja tai suorita automatisointeja.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Aloita suositellut opetusohjelmat</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Jatka viimeistä opetusohjelmaa</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Käynnistä kaikki opetusohjelmat uudelleen</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Nollaa opetusohjelman edistyminen</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Aloita perustiedot uusille käyttäjille</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Tarjoa opetusohjelmia uusille ominaisuuksille</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Tervetuloa RustPlusDesktop -palveluun</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Tutustu lyhyeen navigointiin, palvelinyhteyteen, karttoihin ja laitteisiin tai valitse vain tarvitsemasi oppitunnit.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Aloita pikakierros</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Valitse Tutorials</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Ei nyt</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Ei aloitettu</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>Meneillään</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Valmis</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Ohitettu</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Päivitetty</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Uusi ominaisuus</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Aloitus</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Kartat</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Laitteet</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Tiimi ja viestintä</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automaatio</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Valvonta</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Työkalut</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Asetukset ja tuki</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Sovelluksen perusteet</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Opi navigointia, palvelinkontekstia, yhteyden tilaa, ilmoituksia ja oppituntien toistamista.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Tili ja pilvi</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Ymmärrä paikalliset ominaisuudet, pilvikirjautuminen, synkronointi ja tukijan käyttöoikeudet.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Pariliitos ja palvelimen hallinta</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Muodosta laitepari Rust+, valitse palvelin ja ymmärrä pehmeä, täysi ja irrotettu tilat.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Kartan perusteet</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Opi karttanavigointia, tasoja, lämpökarttoja, piirustustyökaluja ja 3D-alkukohtaa.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Resurssien lämpökartat</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Opi, mitä poimitut kudostiheyspeittokuvat näyttävät ja kuinka ne valitaan tai tyhjennetään.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Kartta</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Tutustu paikalliseen 3D-näkymäporttiin, työkalupalkkiin, jalanjäljen rakennustyökaluun, suorituskyvyn näyttöön ja sulkemiseen.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Älylaitteet</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Etsi, suodata, päivitä, järjestä ja ymmärrä pariksi liitetyt älylaitteet turvallisesti.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Joukkueen ja pelaajien seuranta</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Tarkista tiimitoverit, merkit, seuraa käyttäytymistä ja jakamisvaatimuksia.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Ryhmäkeskustelu ja komennot</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Lue ryhmäkeskusteluja, kirjoita viestejä ja määritä komentoja lähettämättä mitään.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Integrointi</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Etsi Discord aloituspistettä, kokoonpanoa, käyttöoikeuksia ja tietosuojarajat.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Logiikka- ja automaatiomoottori</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Ymmärrä säännöt, triggerit, ehdot, toiminnot, ajonaikainen tila ja turvallinen testaus.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Ilmoitukset ja hälytykset</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Suodata, etsi, tarkista, merkitse ja tyhjennä sovellusilmoitukset.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Kamerat ja valvonta</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Lisää ja tarkista pariksi liitetyt kamerat pitäen kameran tunnisteet yksityisinä.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Raid-laskin</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Rakenna raidsuunnitelma, vertaa menetelmiä ja tarkista materiaalien kokonaismäärä.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Kierrätyslaskin</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Lisää kohteita ja vertaile luonnonvaraisten ja turvavyöhykkeiden kierrättäjien tuottoa.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Etsi kieli, kartan suorituskyky, yhdistetyt palvelut ja ylläpidon hallintalaitteet.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Päivitykset ja diagnostiikka</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Tarkista sovelluspäivitykset ja etsi diagnostiikkaloki käynnistämättä päivitystä.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Päänavigointi</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Käytä tätä sivupalkkia siirtyäksesi laitteiden välillä, joukkueen seurantaa, kameroita, pelaajia, ilmoituksia ja laskimia.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Navigoinnin laajennus</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Kiinnitä tai tiivistä sivupalkki vaihtaaksesi tarroja lisää karttatyötilaa.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Nykyinen palvelin</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Tämä alue tunnistaa valitun Rust-palvelimen ja sen tilikontekstin.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Yhteyden tila</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Palvelinkortit osoittavat, onko palvelin irrotettu, yhdistetty pehmeästi vai täysin yhdistetty.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Ilmoitukset</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Yhteysongelmat, hälytykset, kuolemat ja automaatiotulokset kerätään tänne.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Opetuskeskus</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Toista, jatka, aloita uudelleen tai löydä päivitetyt oppitunnit täältä.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Tilin konteksti</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Pilvikäyttö on erillinen Rust+-pariliitoksen muodostamisesta. Paikalliset ominaisuudet ovat käytettävissä ilman pilvisynkronointia.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Pilvitili</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Kirjaudu sisään tästä tuettua synkronointia varten; opetusohjelmat eivät koskaan näytä yksityisiä tilitietoja.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Tukijan tila</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Tukiohjelman käyttöoikeus avaa porteilla suojattuja ominaisuuksia. Paikallisen opetusohjelman eteneminen ei vaadi tilausta.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Yhdistä Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Pariliitoksen muodostaminen linkittää tämän sovelluksen Rust Companioniin, ennen kuin live-palvelinominaisuudet voivat toimia.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Aloita pariliitos</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Aloita kuunteleminen ja käytä sitten Rust-pelin sisäistä Rust+-pariliitoskulkua. Tunnuksia ei koskaan tallenneta.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Parilliset palvelimet</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Valitse paikallisesti määritetty palvelin ennen yhteyden muodostamista tai palvelinkohtaisten asetusten muuttamista.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Yhdistä kuormitusti rajoitettu tietoliikenne alustamatta jokaista live-toimintoa.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Täysi yhteys</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Täysi yhteys alustaa karttatiedot, laitteet, tiimin tiedot ja Rust+ tilaukset.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Katkaise yhteys</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Katkaise yhteys katkaisee suoran yhteyden. Tämä oppitunti ei koskaan vedota toimintaan.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Nollaa pariliitos</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Palautuskomennot ovat Pari-kontekstivalikossa. Nollaus poistaa paikallisen pariliitoksen määrityksen.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Karttapohja</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Panoroi vetämällä, zoomaa pyörällä ja käytä merkkejä nykyisellä Rust-kartalla.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Karttatyökalupalkki</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Työkalupalkki ohjaa tasoja, keskustelua, peittokuvia, ajastimia ja 2D- tai 3D-tiloja.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Palauta näkymä</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Sovita kartta takaisin työtilaan panoroinnin tai zoomauksen jälkeen.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Karttatasot</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Valitse tästä ruudukko, soitin, monumentti, kauppa ja edistyneet visuaaliset vaihtoehdot.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Lämpökartat</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Avaa erotetut tiheyspeittokuvat. Ne näyttävät todennäköisiä syntyvyöhykkeitä, eivät eläviä olentoja.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Avaa 3D kartta</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Luo tai avaa nykyisen kartan paikallinen 3D-esitys.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Piirustustyökalut</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Piirrä tuhoamattomat suunnittelumuistiinpanot kartan päälle ja poistu piirustustilasta, kun olet valmis.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Avaa lämpökartat</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Selaa nykyisen jäsennetyn kartan käytettävissä olevia tiheystasoja.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Lämpökartan valitsin</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Valitse yksi purettu luokka tai tyhjennä aktiivinen peittokuva.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Kuinka lämpökartat toimivat</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Lämpökartat sisältävät yhteenvedon todennäköisistä kutualueista; ne eivät takaa elävää kokonaisuutta paikassa.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Luo tai avaa 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Sovellus jäsentää karttatiedot paikallisesti ja käyttää välimuistiaan uudelleen, kun mahdollista.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Näkymäportti</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Kierrä, panoroi ja zoomaa valitun kartan interaktiivista esitystä.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Työkalupalkki</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Hallitse tasoja, reaaliaikaisia merkkejä, koko näyttöä, asetuksia ja jalanjälkityökaluja.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Base Footprint Builder</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Rakennustila asettaa vain suunnitteluperustat; se ei muuta Rust-palvelinta.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Suorituskyvyn osoitin</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS ja mukautuva tarkkuustasapaino, sujuva vuorovaikutus.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Sulje 3D-näkymä</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Palaa kohtaan 2D ja vapauta raskaat upotetut 3D-resurssit.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Laiteluettelo</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Parilliset kytkimet, hälytykset ja tallennusmonitorit näkyvät tässä ryhmissä.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Laitehaku</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Suodata laitteet nimen tai komennon mukaan muuttamatta niiden tilaa.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Laitetyyppisuodatin</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Rajoita luettelo kytkimiin, hälytyksiin, tallennusmonitoreihin tai kaikkiin laitteisiin.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Päivitä tilat</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Pyydä uutta vain luku -tilaa; saatavuus riippuu yhteydestä.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Laitetyökalut</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Tuonti, pilvisynkronointi, automaatio, pikanäppäimet, päivitys ja puhdistus kerätään tänne.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Laitekortti</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Kortti näyttää henkilöllisyyden, yhteyden tilan, komennot ja laitekohtaiset säätimet.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Laitteen turvallisuus</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Opetusohjelmat eivät koskaan vaihda kytkintä, poista laitetta tai käytä pikanäppäintä.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Joukkueluettelo</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Ladatut joukkuetoverit, online-tila, avatarit ja kontekstitoiminnot näkyvät täällä.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Team Markers</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Valitse, mitkä joukkuetovereiden merkkityylit näkyvät kartalla.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Seuraa pelaajaa</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Seuraaminen keskittää tiimitoverin päivitykset ja vaatii nykyiset tiimitiedot.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Tiimien jakaminen</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Perustietojen ja kuvakaappausten jakaminen voi vaatia tilin ja latauksen suostumuksen.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Chat-historia</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Viimeisimmät Rust-tiimin viestit näkyvät tässä, kun yhteys tarjoaa chat-tietoja.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Viestin syöttö</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Kirjoita tiimiviesti tähän. Opetusohjelma ei koskaan lisää tai lähetä sitä.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Lähetä viesti</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Viestien lähettäminen Rust-tiimichatiin. Tämä säädin on vain korostettuna.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Komentoasetukset</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Määritä etuliitteet, laitesidokset, viiveet ja komentojen saatavuus.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord Yhteisö</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Tämä pikakuvake avaa yhteisön; integrointiasetukset ovat erillisiä.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Asetukset</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Määritä botti, kilta, kanavat, komennot ja käyttöoikeudet kirjaamatta tunnuksia.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Turvallisuus</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Opetusohjelmat eivät koskaan lähetä viestejä tai loki kiltaa, kanavaa tai käyttäjätunnuksia.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Avaa logiikkamoottori</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Avaa valitun palvelimen sääntöeditori.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Sääntöluettelo</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Säännöt ja niiden laukaisu-, ehto-, viive- ja toimintavaiheet näkyvät täällä.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Moottorin tila</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Ota säännön suorittaminen käyttöön tai keskeytä se. Opetusohjelma ei koskaan muuta tätä kytkintä.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Sääntötyönkulku</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Liipaisin käynnistää säännön; ehdot portti myöhempiä toimia; askeleet kulkevat järjestyksessä.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Automaatioturvallisuus</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Opetusohjelmat eivät noudata sääntöjä, vaihda laitteita, lähetä keskustelua tai suorita automatisointia.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Ilmoituskeskus</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Tarkista hälytykset turvautumatta ohimeneviin työpöytäilmoituksiin.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Ilmoitussuodattimet</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Vaihda kaikkien ilmoitusten, hälytysten ja kuolemantapausten välillä.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Hakuilmoitukset</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Etsi ilmoituksia näytetyn sisällön tai palvelinkontekstin mukaan.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Joukkotoiminnot</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Merkitse kaikki luetut tai tyhjennä historia; opetusohjelmat eivät koskaan suorita näitä toimintoja.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Kameraluettelo</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Määritetyt esikatselut näkyvät, kun valittu palvelin ja kamera ovat käytettävissä.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Lisää kamera</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Lisää kamera käyttämällä sen Rust-tunnistetta; opetusohjelmat eivät koskaan tallenna kamerakoodeja.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Kameran tietosuoja</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Kameran tunnisteet ja kehykset eivät sisälly opetusohjelman diagnostiikkaan.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Hakukohteet</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Etsi seinä, ovi, käyttöönotettava tai muu kohde niputetusta tietojoukosta.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Raid Plan</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Tarkista tavoitteet, terveys, määrät, menetelmät ja lasketut kustannukset.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Vertaa menetelmiä</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Valitse sallitut räjähteet tai työkalut ja vertaa vaihtoehtoja.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Selkeä suunnitelma</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear poistaa suunnitelman; opetusohjelma korostaa sitä muuttamatta merkintöjä.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Etsi kohteita</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Etsi kierrätettävä esine ja lisää se laskimeen.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Tuoteluokka</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Tarkenna tuoteluetteloa luokittain.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Syöttökohteet</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Säädä määriä tai poista merkintöjä; opetusohjelmat eivät muuta laskimen tilaa.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Kierrättäjätulokset</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Vertaile luonnonvaraisten ja turvavyöhykkeiden kierrättäjien tuottoja ja aikoja.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Avaa Asetukset</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Sovellusten käyttäytyminen, integraatiot, suorituskyky, varmuuskopiointi ja ylläpito ovat täällä.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Kieli</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Valitse käyttöliittymän kieli. Opetusteksti käyttää samaa resurssijärjestelmää.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Kartan suorituskyky</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Säädä kuvan skaalaus, GPU-välimuisti, renderöinnin mittakaava ja reunatila.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Huolto</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Varmuuskopiointi-, nollaus-, tyhjennys- ja välimuistiohjaimet voivat olla tuhoisia, eikä niitä koskaan vedota.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Tarkista päivitykset</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Pyydä päivityksen saatavuutta lataamatta tai asentamatta.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Päivityksen tila</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Versio ja latauksen edistyminen näkyvät tällä otsikkopalkin alueella.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Diagnostiikkaloki</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Suodata paikallinen diagnostiikka ennen kuin jaat vain ei-arkaluonteisia tietoja.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Kaupat ja myyntipisteet</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Hae myyntitarjouksia, vertaa kauppoja ja ymmärrä päivitysajoitus.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Tapahtumat ja palvelimen valvonta</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Lue suorien tapahtumien ilmaisimia ja luo paikallisia ajastimia.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Pohjat ja kuvakaappaukset</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Luo karttapohjamerkit ja hallitse niiden muistiinpanoja ja kuvakaappauksia turvallisesti.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Laiteautomaatio</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Määritä yksinkertainen laitetilaautomaatio erillään logiikkakoneesta.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Avaa kauppahaku</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Avaa kartan myyntiautomaattien hakupaneeli muuttamatta nykyistä karttaa.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Kauppahaku</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Hae kohteita, tarkastele osto- ja myyntimääriä ja avaa tuloksia kartalla.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Päivitä ajoitus</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Kaupan tarjoukset riippuvat palvelinyhteyksistä ja voivat olla vanhentuneet Rust+ päivityksen välillä.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Live-tapahtumatelakka</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Rahti-, helikopteri-, Chinook-, toimittaja- ja muut aktiivisen tapahtuman ilmaisimet näkyvät tässä, kun ne ovat saatavilla.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Mukautettu ajastin</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Luo paikallinen muistutus muuttamatta palvelimen tilaa.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Tapahtuman tuoreus</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Tapahtumatiedot riippuvat valitusta yhteydestä ja voivat kadota, kun ne vanhentuvat.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Pohjamerkit</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Perusmerkit sijoitetaan ja avataan kartalla 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Perusmuistiinpanot ja kuvakaappaukset</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Käytä karttakontekstitoimintoja perustan nimeämiseen ja kuvakaappausten liittämiseen; pilven jakamiseen tarvitaan suostumus.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Poista Turvallisuus</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Peruskirjan tai kuvakaappauksen poistamista ei koskaan suoriteta opetusohjelmassa, ja se vaatii aina oman panoksen.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Open Device Automation</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Avaa kevyt laitetilaautomaatio valitulle palvelimelle.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Automaatiotoiminnot</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Keskeytä suoritus tai lisää automaatio; opetusohjelmat eivät koskaan muuta moottorin tilaa tai luo tietoja.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Automaatiosäännöt</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Tarkista kunkin säännön lähdelaitteet, kohdetoiminnot, ajoitus ja käytössä oleva tila.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Laitteen turvallisuus</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Mikään opetusohjelma ei suorita sääntöä tai vaihda todellista älylaitetta.</value>
   </data>
 </root>

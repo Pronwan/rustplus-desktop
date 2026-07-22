@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Селективна операција ресетовања успешно завршена.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Обриши ознаке смрти</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Обриши све</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Прихвати</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Преименуј ознаку смрти</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Правац</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Профил</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Смрт</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Ознаке:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Pretraži ikone (npr. kula, prekidač)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} дана</value>
   </data>
@@ -4357,7 +4356,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>ПИН генерисан (важи за 15м)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Прво конфигуришите канал Discord &apos;Обавештења о ћаскању&apos; или &apos;Обавештења о догађајима&apos; у подешавањима.</value>
+    <value>Прво конфигуришите канал Discord 'Обавештења о ћаскању' или 'Обавештења о догађајима' у подешавањима.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Прво повежите свој Цлоуд налог.</value>
@@ -4471,7 +4470,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>Бела</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Офлајн мапа је успешно увезена као &apos;{0}&apos;!</value>
+    <value>Офлајн мапа је успешно увезена као '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Мапа је увезена</value>
@@ -4509,19 +4508,19 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>Офлајн мапа &apos;{0}&apos; још није рашчлањена. Отворите 3D мапу једном да је рашчланите, а затим покушајте поново да копирате.</value>
+    <value>Офлајн мапа '{0}' још није рашчлањена. Отворите 3D мапу једном да је рашчланите, а затим покушајте поново да копирате.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Грешка при копирању мапе</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Изгледи карте се не поклапају. Изгледа да мапа &apos;{0}&apos; није иста мапа као повезани сервер &apos;{1}&apos;.</value>
+    <value>Изгледи карте се не поклапају. Изгледа да мапа '{0}' није иста мапа као повезани сервер '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Мап Мисматцх</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>Успешно копирана 3D мапа и локална средства из &apos;{0}&apos; у &apos;{1}&apos;!</value>
+    <value>Успешно копирана 3D мапа и локална средства из '{0}' у '{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Мапа је копирана</value>
@@ -4709,5 +4708,797 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Preskoči tutorijal</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Nazad</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Sledeće</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Završi</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Otkažite ovaj tekst?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Vaš napredak je sačuvan. Možete nastaviti iz Tutorial Centra u bilo kom trenutku.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Nastavite da učite</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Otkaži tutorial</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Korak {0} {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Ova funkcija nije dostupna u trenutnom stanju aplikacije. Nastavite bezbedno i vratite se kada je potreban server, nalog ili podaci dostupni.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Resetovanje</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Ponovo pokrenite</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Nastavi</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Početak</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} {1} koraka</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Saznajte RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Fokusirane lekcije za ovu gradnju. Uputstva nikada ne aktiviraju uređaje, šalju poruke, brišu podatke ili pokreću automatizaciju.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Pokrenite preporučene tutorijale</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Nastaviti poslednji tutorijal</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Ponovo pokrenite sve tutorijale</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Poništavanje napretka tutorijala</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Pokrenite osnove za nove korisnike</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Ponuda tutorijala za nove funkcije</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Dobrodošli u RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Uzmite kratak obilazak navigacije, veze sa serverom, mapa i uređaja - ili izaberite samo lekcije koje su vam potrebne.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Započnite brzu turneju</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Izaberite tutorijale</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Ne sada</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Nije počelo</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>U toku</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Završeno</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Preskočeno</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Ažurirano</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Nova funkcija</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Prvi koraci</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Mapi</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Uređaji</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Tim i komunikacija</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automatizacija</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Alati</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Podešavanja i podrška</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Osnove primene</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Naučite navigaciju, kontekst servera, stanje veze, obaveštenja i gde da ponovite lekcije.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Račun i oblak</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Razumeti lokalne funkcije, prijavljivanje u oblaku, sinhronizaciju i pristup podržavaocima.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Uparivanje i upravljanje serverom</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Uparite Rust+, izaberite server i razumejte meke, pune i isključene režime.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Osnove mape</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Naučite navigaciju po mapama, slojeve, toplotne mape, alate za crtanje i ulaznu tačku 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Resursne toplotne mape</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Saznajte šta prikazuju izdvojeni prekrivači gustine mrijesta i kako ih odabrati ili izbrisati.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D mapa</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Istražite lokalnu 3D prikaz, traku sa alatkama, graditelja otisaka, prikaz performansi i blisku akciju.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Pametni uređaji</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Pronađite, filtrirajte, osvežite, organizujte i bezbedno razumejte uparene pametne uređaje.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Praćenje tima i igrača</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Pregledajte saigrače, markere, pratite ponašanje i zahteve za deljenje.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Timsko ćaskanje i komande</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Čitajte timsko ćaskanje, sastavljajte poruke i konfigurišite komande bez slanja bilo čega.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord integracija</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Pronađite Discord ulazne tačke, konfiguraciju, dozvole i granice privatnosti.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Logika i automatizacija motora</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Razumeti pravila, okidače, uslove, akcije, stanje izvođenja i sigurno testiranje.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Obaveštenja i upozorenja</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Filtrirajte, pretragujte, pregledajte, označite i obrišite obaveštenja o aplikacijama.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Kamere i monitoring</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Dodajte i pregledajte uparene kamere uz zadržavanje identifikatora kamere privatnim.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Raid Kalkulator</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Napravite plan napada, uporedite metode i pregledajte ukupne materijale.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Kalkulator reciklaže</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Dodajte stavke i uporedite prinose divlje i sigurne zone reciklaže.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Podešavanja</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Pronađite jezik, performanse mape, povezane usluge i kontrole održavanja.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Ažuriranja i dijagnostika</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Proverite ažuriranja aplikacija i pronađite dijagnostički dnevnik bez pokretanja ažuriranja.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Glavna navigacija</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Koristite ovu bočnu traku za kretanje između uređaja, praćenja tima, kamera, igrača, obaveštenja i kalkulatora.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Proširenje navigacije</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Prikvačite ili srušite bočnu traku da biste trgovali oznakama za više radnog prostora mape.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Trenutni server</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Ova oblast identifikuje izabrani Rust server i njegov kontekst naloga.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Status veze</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Server kartice pokazuju da li je server isključen, meko povezan ili potpuno povezan.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Obaveštenja</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Ovde se prikupljaju problemi sa vezom, alarmi, smrtni slučajevi i rezultati automatizacije.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Tutorial centar</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Ponovite, nastavite, ponovo pokrenite ili otkrijte ažurirane lekcije ovde.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Kontekst naloga</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Pristup oblaku je odvojen od Rust+ uparivanja. Lokalne funkcije ostaju dostupne bez sinhronizacije oblaka.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Cloud nalog</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Prijavite se ovde za podržanu sinhronizaciju; Uputstva nikada ne prikazuju podatke o privatnom računu.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Status pristalice</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Pristup podržavatelja otključava zatvorene funkcije. Napredak lokalnog tutorijala ne zahteva pretplatu.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Uparite Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Uparivanje povezuje ovu aplikaciju sa Rust Companion-om pre nego što funkcije živog servera mogu da rade.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Započnite uparivanje</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Počnite da slušate, a zatim koristite Rust-ov tok Rust+ uparivanja u igri. Akreditivi se nikada ne evidentiraju.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Upareni serveri</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Izaberite lokalno konfigurisan server pre povezivanja ili promene podešavanja specifičnih za server.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect učitava ograničenu komunikaciju bez inicijalizacije svake funkcije uživo.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Potpuno povezivanje</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Puna veza inicijalizuje podatke mape, uređaje, podatke o timu i Rust+ pretplate.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Prekini vezu</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Prekid veze zaustavlja živu komunikaciju. Ova lekcija nikada ne priziva akciju.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Poništi uparivanje</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Komande za oporavak su u kontekstnom meniju Pair. Resetovanje uklanja lokalnu konfiguraciju uparivanja.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Mapa Platno</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Pan povlačenjem, zumiranje sa točkom i interakcija sa markerima na trenutnoj Rust mapi.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Mapa sa alatkama</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Traka sa alatkama kontroliše slojeve, ćaskanje, prekrivače, tajmere i 2D ili 3D režime.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Poništi Pogledaj</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Vratite mapu u radni prostor nakon pomicanja ili zumiranja.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Slojevi mapa</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Izaberite mrežu, igrača, spomenik, prodavnicu i napredne vizuelne opcije ovde.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Toplotne mape</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Otvorite izdvojene prekrivače gustine. Oni pokazuju verovatne zone mrijesta, a ne žive entitete.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Otvori 3D mapu</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Generišite ili otvorite lokalnu 3D reprezentaciju trenutne mape.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Alati za crtanje</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Nacrtajte nedestruktivne beleške o planiranju preko mape i ostavite režim crtanja kada završite.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Otvorite toplotne mape</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Pregledajte dostupne slojeve gustine za trenutnu obrađenu mapu.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Selektor toplotne mape</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Izaberite jednu izdvojenu kategoriju ili obrišite aktivni prekrivač.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Kako funkcionišu toplotne mape</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Toplotne mape sumiraju verovatna područja mrijesta; oni ne garantuju živi entitet na lokaciji.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Generišite ili otvorite 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Aplikacija lokalno analizira podatke mape i ponovo koristi keš kada je to moguće.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Vievport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Orbita, pan, i zumiranje oko interaktivnog predstavljanja izabrane mape.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Toolbar</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Kontrolni slojevi, živi markeri, preko celog ekrana, podešavanja i alati za otisak.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Baza Otisak Graditelj</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Build mod stavlja samo temelje za planiranje; ne menja Rust server.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Indikator učinka</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS i adaptivna rezolucija balansiraju detalje sa glatkom interakcijom.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Zatvori 3D Pogledaj</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Vratite se na 2D i oslobodite teške ugrađene 3D resurse.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Lista uređaja</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Upareni prekidači, alarmi i monitori za skladištenje pojavljuju se ovde u grupama.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Pretraga uređaja</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Filtrirajte uređaje po imenu ili komandi bez promene njihovog stanja.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Tip uređaja Filter</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Ograničite listu na prekidače, alarme, monitore za skladištenje ili sve uređaje.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Osvežite države</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Zahtev za novo stanje samo za čitanje; dostupnost zavisi od veze.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Alati uređaja</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Ovde se prikupljaju uvoz, sinhronizacija oblaka, automatizacija, prečice, osvežavanje i čišćenje.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Kartica uređaja</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Kartica prikazuje identitet, stanje veze, komande i kontrole specifične za uređaj.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Bezbednost uređaja</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Uputstva nikada ne prebacuju prekidač, brišu uređaj ili pokreću prečicu.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Lista timova</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Ovde se pojavljuju učitani saigrači, online stanje, avatari i kontekstne akcije.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Timski markeri</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Izaberite koji stilovi markera saigrača su vidljivi na mapi.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Pratite igrača</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Praćenje centara mapira ažuriranja na saigrača i zahteva trenutne podatke o timu.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Deljenje tima</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Deljenje baze i snimaka ekrana može zahtevati nalog i saglasnost za otpremanje.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Istorija ćaskanja</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Nedavne poruke Rust tima pojavljuju se ovde kada veza pruža podatke o ćaskanju.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Unos poruke</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Sastavite timsku poruku ovde. Vodič nikada ne ubacuje ili šalje jedan.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Pošalji poruku</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Slanje postova na Rust timsko ćaskanje. Ova kontrola je samo istaknuta.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Podešavanja komande</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Konfigurišite prefikse, vezivanje uređaja, kašnjenja i dostupnost komandi.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord zajednica</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Ova prečica otvara zajednicu; podešavanja integracije su odvojena.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord podešavanja</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Konfigurišite bot, esnaf, kanale, komande i dozvole bez ID-ova za prijavljivanje.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord bezbednosti</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Tutorijali nikada ne objavljuju poruke ili prijavljuju identifikatore saveza, kanala ili korisnika.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Otvorite logički motor</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Otvorite urednik pravila izabranog servera.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Lista pravila</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Ovde se pojavljuju pravila i njihovi okidači, uslovi, kašnjenje i koraci akcije.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Stanje motora</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Omogućite ili pauzirajte izvršenje pravila. Vodič nikada ne menja ovaj prekidač.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Tok posla pravila</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Okidač pokreće pravilo; uslovi vrata kasnije akcije; koraci rade redom.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Automatizacija bezbednosti</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Uputstva ne traju pravila, prebacuju uređaje, šalju ćaskanje ili izvršavaju automatizaciju.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Centar za obaveštenja</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Pregledajte upozorenja bez oslanjanja na prolazna obaveštenja na radnoj površini.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Filteri obaveštenja</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Prebacivanje između svih obaveštenja, alarma i smrti.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Obaveštenja o pretragi</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Pronađite obaveštenja po prikazanom sadržaju ili kontekstu servera.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Bulk akcije</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Označite sve pročitane ili obrišite istoriju; tutorijala nikada ne obavljaju ove radnje.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Lista kamera</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Konfigurisani pregledi se pojavljuju kada su izabrani server i kamera dostupni.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Dodaj kameru</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Dodajte kameru koristeći svoj identifikator Rust; tutorijala nikada ne snimaju kodove kamere.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Privatnost kamere</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Identifikatori kamere i okviri su isključeni iz dijagnostike tutorijala.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Ciljevi pretrage</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Pronađite zid, vrata, raspoređivanje ili drugu metu u paketu podataka.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Plan napada</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Pregledajte ciljeve, zdravlje, količine, metode i izračunate troškove.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Uporedite metode</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Izaberite dozvoljene eksplozive ili alate i uporedite alternative.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Jasan plan</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear uklanja plan; Vodič ga naglašava bez promene unosa.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Stavke za pretragu</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Pronađite predmet koji se može reciklirati i dodajte ga u kalkulator.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Kategorija predmeta</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Suzite katalog artikala po kategorijama.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Ulazne stavke</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Podesite količine ili uklonite unose; tutorijala ne menjaju stanje kalkulatora.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Rezultati reciklaže</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Uporedite prinose i vremena za divlje i sigurne zone reciklaže.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Otvorite Podešavanja</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Ponašanje aplikacija, integracije, performanse, rezervne kopije i održavanje žive ovde.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Jezik</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Izaberite jezik korisničkog interfejsa. Tekst tutorijala koristi isti sistem resursa.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Performanse mape</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Podesite skaliranje slike, keširanje GPU-a, skalu rendera i režim ivice.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Održavanje</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Kontrole rezervne kopije, resetovanja, čišćenja i keša mogu biti destruktivne i nikada se ne pozivaju.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Proverite ažuriranja</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Zatražite dostupnost ažuriranja bez preuzimanja ili instaliranja.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Ažuriranje statusa</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Napredak verzije i preuzimanja pojavljuju se u ovoj oblasti naslovne trake.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Dijagnostički dnevnik</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Filtrirajte lokalnu dijagnostiku pre nego što delite samo neosetljive detalje.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Prodavnice i prodaja</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Traži vending ponude, uporedite trgovine, i razumeju osvežavanje tajming.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Događaji i nadgledanje servera</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Pročitajte indikatore događaja uživo i kreirajte lokalne tajmere.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Baze i slike sa ekrana</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Kreirajte osnovne markere mape i bezbedno upravljajte svojim beleškama i snimcima ekrana.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Automatizacija uređaja</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Konfigurišite jednostavnu automatizaciju stanja uređaja odvojeno od logičkog motora.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Otvorite pretragu prodavnice</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Otvorite tablu za pretragu automata na mapi bez promene trenutne mape.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Pretraga prodavnice</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Pretražite stavke, pregledajte količine kupovine i prodaje i otvorite rezultate na mapi.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Osvežite vreme</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Ponude prodavnica zavise od povezivanja servera i mogu biti ustajale između Rust+ osvežavanja.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Live Event Dock</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Teret, helikopter, Chinook, prodavac i drugi aktivni indikatori događaja pojavljuju se ovde kada su dostupni.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Prilagođeni tajmer</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Kreirajte lokalni podsetnik bez promene stanja servera.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Svežina događaja</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Podaci o događaju zavise od izabrane veze i mogu nestati kada postane ustajala.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Osnovni markeri</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Osnovni markeri se postavljaju i otvaraju na 2D mapi.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Osnovne beleške i snimci ekrana</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Koristite akcije konteksta mape da biste imenovali bazu i priložili snimke ekrana; Za deljenje oblaka potrebna je saglasnost.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Izbriši bezbednost</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Brisanje baze ili snimka ekrana nikada se ne izvodi u uputstvu i uvek zahteva vaš unos.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Otvorite automatizaciju uređaja</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Otvorite laganu automatizaciju stanja uređaja za izabrani server.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Akcije automatizacije</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Pauzirajte izvršenje ili dodajte automatizaciju; Uputstva nikada ne menjaju stanje motora ili stvaraju podatke.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Pravila automatizacije</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Pregledajte izvorne uređaje, ciljne akcije, vreme i omogućeno stanje za svako pravilo.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Bezbednost uređaja</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Ne udžbenik izvršava pravilo ili prebacuje pravi pametan uređaj.</value>
   </data>
 </root>

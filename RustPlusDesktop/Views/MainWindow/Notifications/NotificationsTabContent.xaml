@@ -4,9 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+    xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
     xmlns:services="clr-namespace:RustPlusDesk.Services">
     
-    <Grid Background="#181A1E">
+    <Grid Background="#181A1E" tutorials:Tutorial.TargetId="Notifications.Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -75,7 +76,7 @@
         <Border Grid.Row="0" Margin="8,8,8,4" Padding="10" Background="#FF141F2D" CornerRadius="8">
             <StackPanel>
                 <!-- Row 1: Filters -->
-                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8" tutorials:Tutorial.TargetId="Notifications.Filters">
                     <TextBlock Text="{DynamicResource NotificationsFilter}" VerticalAlignment="Center" Foreground="#8C96A8" FontSize="11" Margin="4,0,8,0" FontWeight="SemiBold"/>
                     <RadioButton x:Name="RadAll" Content="{DynamicResource NotificationsAll}" IsChecked="True" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                     <RadioButton x:Name="RadAlarms" Content="{DynamicResource NotificationsAlarms}" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
@@ -90,6 +91,7 @@
                     </Grid.ColumnDefinitions>
 
                     <ui:TextBox x:Name="TxtSearch" 
+                                tutorials:Tutorial.TargetId="Notifications.Search"
                                 Margin="0,0,8,0" 
                                 PlaceholderText="{DynamicResource SearchNotificationsPlaceholder}" 
                                 TextChanged="TxtSearch_TextChanged"
@@ -97,7 +99,7 @@
                                 VerticalAlignment="Center"
                                 Height="28"/>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" tutorials:Tutorial.TargetId="Notifications.Actions">
                         <ui:Button Click="BtnMarkAllRead_Click" 
                                    Content="{DynamicResource MarkAllAsRead}" 
                                    Appearance="Secondary"

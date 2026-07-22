@@ -8,6 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:RustPlusDesk.Properties"
     xmlns:services="clr-namespace:RustPlusDesk.Services"
+    xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
+    xmlns:tutorialControls="clr-namespace:RustPlusDesk.Features.Tutorials.Controls"
+    xmlns:tutorialViews="clr-namespace:RustPlusDesk.Features.Tutorials.Views"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:views="clr-namespace:RustPlusDesk.Views"
@@ -302,6 +305,7 @@
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <ui:Button
                         x:Name="BtnDiscord"
+                        tutorials:Tutorial.TargetId="Navigation.Discord"
                         Width="36"
                         Height="36"
                         Margin="2,6"
@@ -327,6 +331,7 @@
                         ToolTip="{DynamicResource PatchNotes}" />
                     <ui:Button
                         x:Name="BtnSettings"
+                        tutorials:Tutorial.TargetId="Navigation.Settings"
                         Width="36"
                         Height="36"
                         Margin="2,6"
@@ -337,6 +342,7 @@
                         ToolTip="{DynamicResource Settings}" />
                     <Border
                         Height="36"
+                        tutorials:Tutorial.TargetId="Updates.Status"
                         Margin="6,6,8,6"
                         HorizontalAlignment="Right"
                         BorderThickness="1"
@@ -369,6 +375,7 @@
                             </Grid.ColumnDefinitions>
                             <ui:Button
                                 x:Name="BtnCheckUpdates"
+                                tutorials:Tutorial.TargetId="Updates.Check"
                                 MinWidth="34"
                                 Height="34"
                                 Padding="7,3"
@@ -494,6 +501,7 @@
             <!--  Left Panel  -->
             <Border
                 x:Name="LeftPanelBorder"
+                tutorials:Tutorial.TargetId="Navigation.Main"
                 Grid.Column="0"
                 MinWidth="64"
                 MaxWidth="480"
@@ -522,7 +530,7 @@
                         Visibility="Collapsed">
 
                     <!--  TOP: Account + Serverliste  -->
-                    <StackPanel x:Name="ServerContextPanel" DockPanel.Dock="Top">
+                    <StackPanel x:Name="ServerContextPanel" DockPanel.Dock="Top" tutorials:Tutorial.TargetId="Servers.Current">
                         <!--  Header  -->
                         <Border
                             Margin="0,0,0,10"
@@ -680,6 +688,7 @@
                                     </StackPanel>
                                     <ui:Button
                                         x:Name="BtnCloudAccount"
+                                        tutorials:Tutorial.TargetId="Account.Cloud"
                                         Grid.Column="2"
                                         MinWidth="62"
                                         Height="26"
@@ -747,9 +756,10 @@
 
                         <StackPanel x:Name="PanelServerArea" Visibility="Collapsed">
 
-                        <Grid x:Name="ServerListGrid">
+                        <Grid x:Name="ServerListGrid" tutorials:Tutorial.TargetId="Servers.ConnectionStatus">
                             <ListBox
                                 x:Name="ListServers"
+                                tutorials:Tutorial.TargetId="Servers.List"
                                 MinHeight="60"
                                 MaxHeight="100"
                                 DisplayMemberPath="Name"
@@ -946,6 +956,7 @@
                                     </TextBlock>
 
                                     <StackPanel
+                                    tutorials:Tutorial.TargetId="Servers.ConnectionActions"
                                     DockPanel.Dock="Right"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
@@ -953,6 +964,7 @@
                                     <!--  Connect  -->
                                     <ui:Button
                                         x:Name="UiBtnConnect"
+                                        tutorials:Tutorial.TargetId="Servers.Connect"
                                         Margin="0,0,4,0"
                                         Padding="10,4"
                                         Appearance="Primary"
@@ -964,6 +976,7 @@
                                     <!--  Full Connect  -->
                                     <ui:Button
                                         x:Name="UiBtnFullConnect"
+                                        tutorials:Tutorial.TargetId="Servers.FullConnect"
                                         Margin="0,0,4,0"
                                         Padding="10,4"
                                         Appearance="Primary"
@@ -990,6 +1003,7 @@
                                     <!--  Disconnect  -->
                                     <ui:Button
                                         x:Name="UiBtnDisconnect"
+                                        tutorials:Tutorial.TargetId="Servers.Disconnect"
                                         Padding="10,4"
                                         Appearance="Caution"
                                         Click="BtnDisconnect_Click"
@@ -1012,7 +1026,7 @@
                             </Grid>
                         </Border>
 
-                        <StackPanel Margin="0,16,0,0">
+                        <StackPanel Margin="0,16,0,0" tutorials:Tutorial.TargetId="Servers.PairingService">
                             <TextBlock
                                 Margin="0,0,0,10"
                                 FontSize="10"
@@ -1031,6 +1045,7 @@
                                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                                     <ui:Button
                                         x:Name="BtnListenPairing"
+                                        tutorials:Tutorial.TargetId="Servers.Pair"
                                         Padding="8,2"
                                         Appearance="Secondary"
                                         AutomationProperties.HelpText="{DynamicResource UiListenForRustPairingRequestsRightClickForRecoveryOptions}"
@@ -1214,6 +1229,7 @@
                         <!--  Supporter CTA  -->
                         <ui:Button
                             x:Name="BtnSupport"
+                            tutorials:Tutorial.TargetId="Account.Support"
                             Grid.Column="0"
                             Margin="0,0,10,0"
                             Background="#991A1A00"
@@ -1270,6 +1286,18 @@
                             </StackPanel>
                         </Border>
 
+                        <ui:Button
+                            x:Name="BtnTutorials"
+                            Grid.Column="2"
+                            Width="32"
+                            Height="32"
+                            Padding="0"
+                            Appearance="Secondary"
+                            Click="BtnTutorials_Click"
+                            Icon="{ui:SymbolIcon Symbol=BookQuestionMark24}"
+                            ToolTip="{DynamicResource Tutorials.Center.Title}"
+                            AutomationProperties.Name="{DynamicResource Tutorials.Center.Title}"
+                            tutorials:Tutorial.TargetId="Tutorials.NavigationItem" />
                     </Grid>
 
                     <!--  CENTER: TabControl fÃ¼llt den Rest, mit MindesthÃ¶he  -->
@@ -1302,6 +1330,7 @@
 
                         <!-- Device actions -->
                         <Border
+                            tutorials:Tutorial.TargetId="Devices.Actions"
                             Margin="0,10,0,0"
                             Padding="6"
                             DockPanel.Dock="Bottom"
@@ -1382,6 +1411,7 @@
                                 ToolTip="{DynamicResource ExportDevices}" />
                             <ui:Button
                                 x:Name="BtnLogicEngine"
+                                tutorials:Tutorial.TargetId="Automation.Open"
                                 Grid.Column="4"
                                 Width="34"
                                 Height="34"
@@ -1412,6 +1442,7 @@
                             </ui:Button>
                             <ui:Button
                                 x:Name="BtnDeviceAutomation"
+                                tutorials:Tutorial.TargetId="DeviceAutomation.Open"
                                 Grid.Column="5"
                                 Width="34"
                                 Height="34"
@@ -1443,6 +1474,7 @@
                             </ui:Button>
                             <ui:Button
                                 x:Name="BtnDeviceRefresh"
+                                tutorials:Tutorial.TargetId="Devices.Refresh"
                                 Grid.Column="6"
                                 Width="34"
                                 Height="34"
@@ -1484,6 +1516,7 @@
 
                                         <ui:TextBox
                                             x:Name="TxtDeviceFilter"
+                                            tutorials:Tutorial.TargetId="Devices.Search"
                                             Grid.Column="0"
                                             Height="30"
                                             Margin="0,0,8,0"
@@ -1493,6 +1526,7 @@
 
                                         <ComboBox
                                             x:Name="CmbDeviceTypeFilter"
+                                            tutorials:Tutorial.TargetId="Devices.TypeFilter"
                                             Grid.Column="1"
                                             Height="30"
                                             FontSize="11"
@@ -1506,6 +1540,7 @@
 
                                     <TreeView
                                         x:Name="ListDevices"
+                                        tutorials:Tutorial.TargetId="Devices.List"
                                         Grid.Row="1"
                                         Margin="-20,0,-20,0"
                                         HorizontalContentAlignment="Stretch"
@@ -1605,6 +1640,7 @@
                                                     <!--  ===== Zeile =====  -->
                                                     <Border
                                                         x:Name="DeviceRowCard"
+                                                        tutorials:Tutorial.TargetId="Devices.Item.FirstAvailable"
                                                         Margin="0,2,0,2"
                                                         Padding="8,7"
                                                         CornerRadius="8"
@@ -2718,6 +2754,7 @@
                                     <!--  Liste oben  -->
                                     <ListBox
                                         x:Name="TeamList"
+                                        tutorials:Tutorial.TargetId="Team.List"
                                         Grid.Row="0"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding TeamMembers, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -2871,7 +2908,7 @@
                                             <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
                                             
                                             <!-- Profile Markers -->
-                                            <CheckBox x:Name="ChkProfileMarkers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
+                                            <CheckBox x:Name="ChkProfileMarkers" tutorials:Tutorial.TargetId="Team.Markers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
                                                         <Grid Width="40" Height="40">
@@ -3021,7 +3058,7 @@
                                     HorizontalAlignment="Right"
                                     DockPanel.Dock="Bottom"
                                     Orientation="Horizontal">
-                                    <Button x:Name="BtnAddCam" Style="{StaticResource PrimaryButton}">
+                                    <Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource UiÐŸ2}" />
                                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
@@ -3030,7 +3067,7 @@
 
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid>
-                                        <ItemsControl x:Name="CamItems">
+                                        <ItemsControl x:Name="CamItems" tutorials:Tutorial.TargetId="Cameras.List">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <WrapPanel ItemHeight="180" ItemWidth="220" />
@@ -3082,7 +3119,7 @@
                         </TabItem>
 
                         <!--  ===== NOTIFICATIONS =====  -->
-                        <TabItem Style="{StaticResource PrettyTabItem}" x:Name="NotificationsTab">
+                        <TabItem Style="{StaticResource PrettyTabItem}" x:Name="NotificationsTab" tutorials:Tutorial.TargetId="Navigation.Notifications">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Alert24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
@@ -3446,6 +3483,7 @@
                         <StackPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"
+                                tutorials:Tutorial.TargetId="Navigation.Collapse"
                                 Style="{StaticResource SidebarRailButton}"
                                 AutomationProperties.Name="{DynamicResource UiPinSidebar}"
                                 Click="BtnToggleSidebarPin_Click"
@@ -3781,6 +3819,7 @@
                     <!--  RE-DESIGNED MAP CONTROL BAR  -->
                     <Border
                         Grid.Row="0"
+                        tutorials:Tutorial.TargetId="Map.Toolbar"
                         Margin="-12,-12,-12,0"
                         Padding="16,8"
                         Background="{DynamicResource SurfaceAlt}"
@@ -3846,6 +3885,7 @@
                                 </Border>
                                 <ui:Button
                                     x:Name="BtnLayers"
+                                    tutorials:Tutorial.TargetId="Map.Layers"
                                     Margin="0,0,8,0"
                                     Padding="10,6"
                                     Click="BtnLayers_Click"
@@ -4886,6 +4926,7 @@
                                     <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
                                     <Button
                                         x:Name="BtnOpen3DMap"
+                                        tutorials:Tutorial.TargetId="Map.Open3D"
                                         Width="38"
                                         Click="BtnOpen3DMap_Click"
                                         MouseEnter="BtnOpen3DMap_MouseEnter"
@@ -4904,6 +4945,7 @@
                             </Border>
                             <ui:Button
                                 x:Name="BtnFitMap"
+                                tutorials:Tutorial.TargetId="Map.ResetView"
                                 Width="32"
                                 Height="32"
                                 Margin="4,0,0,0"
@@ -5169,6 +5211,7 @@
 
                     <Grid
                         x:Name="WebViewHost"
+                        tutorials:Tutorial.TargetId="Map.Canvas"
                         Grid.Row="1"
                         Margin="-12,0,-12,0"
                         Background="#0B3A4A"
@@ -5409,7 +5452,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Background="#FF0E1117"
-                            Panel.ZIndex="35"
+                            Panel.ZIndex="10000"
                             Visibility="Collapsed" />
 
                         <StackPanel
@@ -5432,6 +5475,7 @@
                                     <StackPanel>
                                         <CheckBox
                                             x:Name="ServerHudToggle"
+                                            tutorials:Tutorial.TargetId="Map.ServerHud"
                                             Height="36"
                                             Padding="10,0"
                                             Cursor="Hand"
@@ -5614,6 +5658,7 @@
                                             <Border x:Name="HeatmapActiveGlow" Background="#FF8A00" Opacity="0.18" CornerRadius="4" Visibility="Collapsed" />
                                             <ui:Button
                                                 x:Name="BtnToggleHeatmap"
+                                                tutorials:Tutorial.TargetId="Map.Heatmaps"
                                                 Padding="6,4"
                                                 Appearance="Transparent"
                                                 BorderThickness="0"
@@ -5666,6 +5711,7 @@
                                         </Popup>
                                         <Popup
                                             x:Name="HeatmapPopup"
+                                            tutorials:Tutorial.TargetId="Map.HeatmapSelector"
                                             AllowsTransparency="True"
                                             PopupAnimation="Fade"
                                             IsOpen="False"
@@ -6335,10 +6381,12 @@
                             
                             <StackPanel
                                 x:Name="EventDock"
+                                tutorials:Tutorial.TargetId="Events.Dock"
                                 Orientation="Vertical" />
                             
                             <ui:Button
                                 x:Name="BtnCustomTimer"
+                                tutorials:Tutorial.TargetId="Events.Timer"
                                 HorizontalAlignment="Right"
                                 Margin="0,10,0,0"
                                 Padding="8"
@@ -6816,6 +6864,7 @@
 
                                 <Border
                                     x:Name="ShopSearchContent"
+                                    tutorials:Tutorial.TargetId="Shops.Panel"
                                     Grid.Row="0"
                                     Panel.ZIndex="5"
                                     Height="540"
@@ -6927,6 +6976,7 @@
                                     CornerRadius="8,8,0,0">
                                     <Button
                                         x:Name="BtnShopToggle"
+                                        tutorials:Tutorial.TargetId="Shops.Open"
                                         Padding="0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch"
@@ -7039,6 +7089,7 @@
                                         <!--  Chat-History  -->
                                         <ListBox
                                             x:Name="ChatList"
+                                            tutorials:Tutorial.TargetId="Chat.History"
                                             Grid.Row="1"
                                             ScrollViewer.ScrollChanged="ChatScrollViewer_ScrollChanged"
                                             PreviewMouseWheel="ChatList_PreviewMouseWheel"
@@ -7178,6 +7229,7 @@
                                             <DockPanel Margin="12,10,12,4">
                                                 <ui:Button
                                                     x:Name="BtnSendChat"
+                                                    tutorials:Tutorial.TargetId="Chat.Send"
                                                     Width="Auto"
                                                     Padding="12,0"
                                                     Height="36"
@@ -7191,6 +7243,7 @@
 
                                                 <ui:TextBox
                                                     x:Name="TxtChatInput"
+                                                    tutorials:Tutorial.TargetId="Chat.Input"
                                                     PlaceholderText="{DynamicResource ChatMessagePlaceholder}"
                                                     VerticalContentAlignment="Center"
                                                     KeyDown="TxtChatInput_KeyDown"
@@ -7200,6 +7253,7 @@
 
                                             <ui:Button
                                                 x:Name="BtnOpenChatCommands"
+                                                tutorials:Tutorial.TargetId="Chat.Commands"
                                                 Margin="12,0,0,8"
                                                 Padding="6,4"
                                                 HorizontalAlignment="Left"
@@ -7291,6 +7345,7 @@
                                     <!--  Zeichnen  -->
                                     <Button
                                         x:Name="ToolDrawButton"
+                                        tutorials:Tutorial.TargetId="Map.Drawing"
                                         Width="32"
                                         Height="32"
                                         Margin="2,0"
@@ -7554,6 +7609,7 @@
 
                     <Grid
                         x:Name="LogPanel"
+                        tutorials:Tutorial.TargetId="Diagnostics.Logs"
                         Grid.Row="2"
                         Height="200">
                         <Border
@@ -7643,7 +7699,8 @@
 
             <!--  Dedicated Login & Pairing Overlay  -->
             <Grid
-                Panel.ZIndex="9998"
+                Grid.ColumnSpan="3"
+                Panel.ZIndex="30000"
                 Background="#DD0F1115"
                 IsHitTestVisible="True"
                 Visibility="{Binding ShowLoginOverlay, Converter={StaticResource BoolToVisibility}}">
@@ -7926,6 +7983,17 @@
                   Visibility="Collapsed"
                   Panel.ZIndex="9990"
                   MouseLeftButtonDown="ServerInfoBackdrop_MouseLeftButtonDown" />
+
+            <tutorialViews:TutorialsPage
+                x:Name="TutorialsPagePanel"
+                Grid.ColumnSpan="3"
+                Panel.ZIndex="18000"
+                Visibility="Collapsed" />
+
+            <tutorialControls:TutorialOverlay
+                x:Name="TutorialOverlay"
+                Grid.ColumnSpan="3"
+                Panel.ZIndex="20000" />
 
             <!--  Wpf.Ui: WinUI 3 Snackbar presenter (toast notifications)  -->
             <ui:SnackbarPresenter

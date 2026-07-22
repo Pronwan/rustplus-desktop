@@ -2,8 +2,10 @@
     x:Class="RustPlusDesk.Views.PlayersTabContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
     <TabControl
+        tutorials:Tutorial.TargetId="Players.Center"
         Margin="0,10,0,0"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
@@ -95,7 +97,7 @@
                             ToolTip="{DynamicResource OpenPlayersSeparateWindow}"
                             Content="{DynamicResource Popout}" />
                     </Grid>
-                    <DockPanel x:Name="PnlManualTrack" x:FieldModifier="public" Grid.Row="1" Margin="0,0,0,8">
+                    <DockPanel x:Name="PnlManualTrack" x:FieldModifier="public" Grid.Row="1" Margin="0,0,0,8" tutorials:Tutorial.TargetId="Players.Track">
                         <ui:Button
                             x:Name="BtnAddManual"
                             x:FieldModifier="public"
@@ -112,6 +114,7 @@
                     </DockPanel>
                     <ui:TextBox
                         x:Name="TxtOnlineFilter"
+                        tutorials:Tutorial.TargetId="Players.Search"
                         x:FieldModifier="public"
                         Grid.Row="2"
                         Margin="0,0,0,8"

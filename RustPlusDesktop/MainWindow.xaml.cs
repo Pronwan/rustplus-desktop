@@ -488,23 +488,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
 
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
-        AppendLog($"[items-new] baseDir={baseDir}");
-        EnsureNewItemDbLoaded();
-        AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
-        StartIconAutoDownload();
-
-        // NEU: Hintergrund-Update der Item-Liste von rusthelp.com
-        _ = Task.Run(async () =>
-        {
-            if (await TryUpdateItemDbAsync())
-            {
-                Dispatcher.Invoke(() => {
-                    EnsureNewItemDbLoaded(force: true);
-                    AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
-                    StartIconAutoDownload();
-                });
-            }
-        });
+        AppendLog($"[startup] baseDir={baseDir}");
         // GridLayer.RenderTransform = MapTransform;
         // Overlay.RenderTransform   = MapTransform;
         // bei Host-Resize: nur Markerpositionen neu berechnen
@@ -526,6 +510,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.Focusable = true;
         DataContext = _vm;
         _vm.Load();
+        InitializeTutorials();
         // NEU: einmalig auf die aktuell ausgewÃƒÂ¤hlte Server-Instanz Ã¢â‚¬Å¾umsteckenÃ¢â‚¬Å“
         SwitchCameraSourceTo(_vm.Selected);
 
@@ -724,7 +709,11 @@ public partial class MainWindow : WpfUi.FluentWindow
             _vm.IsPairingBusy = false; // Update UI button state
             TxtPairingState.Text = Properties.Resources.PairingStopped;
         }));
-        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() => _vm.NotifyFcmChanged()));
+        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _vm.NotifyFcmChanged();
+            _ = StartTutorialOnboardingIfReadyAsync();
+        }));
         _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
@@ -819,7 +808,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         this.Closing += MainWindow_Closing;
         Services.Auth.SupabaseAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
-        _ = EnsureWebView2Async();
+        ContentRendered += MainWindow_ContentRendered;
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
@@ -871,6 +860,35 @@ public partial class MainWindow : WpfUi.FluentWindow
                 UpdateLanguageFlag();
             }));
         };
+    }
+
+    private async void MainWindow_ContentRendered(object? sender, EventArgs e)
+    {
+        ContentRendered -= MainWindow_ContentRendered;
+
+        // Let WPF present the first usable frame before initializing the embedded
+        // browser and parsing catalogs that are not required to construct the shell.
+        await Dispatcher.Yield(DispatcherPriority.ContextIdle);
+        _ = EnsureWebView2Async();
+
+        await Dispatcher.InvokeAsync(() =>
+        {
+            AppendLog("[items-new] loading deferred item catalog");
+            EnsureNewItemDbLoaded();
+            AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+            StartIconAutoDownload();
+        }, DispatcherPriority.ApplicationIdle);
+
+        _ = Task.Run(async () =>
+        {
+            if (!await TryUpdateItemDbAsync().ConfigureAwait(false)) return;
+            await Dispatcher.InvokeAsync(() =>
+            {
+                EnsureNewItemDbLoaded(force: true);
+                AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+                StartIconAutoDownload();
+            }, DispatcherPriority.ApplicationIdle);
+        });
     }
 
     private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -2723,6 +2741,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
         bool recyclerSelected = MainTabs.SelectedItem == RecyclerCalculatorTab;
         RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
+        if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
         ServerContextPanel.Visibility = recyclerSelected ? Visibility.Collapsed : Visibility.Visible;
         if (!raidSelected && !recyclerSelected)
             _lastWorkspaceTabIndex = MainTabs.SelectedIndex;
@@ -6717,14 +6736,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
     {
-        if (_isSidebarPinnedExpanded)
+        if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true)
         {
             return;
         }
 
         Dispatcher.BeginInvoke(() =>
         {
-            if (_isSidebarPinnedExpanded)
+            if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true)
             {
                 return;
             }
@@ -7108,6 +7127,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         LogicEnginePanel.Visibility = Visibility.Collapsed;
         DeviceAutomationPanel.RefreshListBindings();
         DeviceAutomationPanel.Visibility = Visibility.Visible;
+        _ = OfferNewFeatureTutorialOnceAsync("device-automation");
     }
 
     private void BtnLanguageSettings_Click(object sender, RoutedEventArgs e)

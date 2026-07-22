@@ -1,4 +1,4 @@
-<UserControl x:Class="RustPlusDesk.Views.AppSettingsOverlay" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:conv="clr-namespace:RustPlusDesk.Converters" xmlns:p="clr-namespace:RustPlusDesk.Properties" xmlns:views="clr-namespace:RustPlusDesk.Views" xmlns:windows="clr-namespace:RustPlusDesk.Views.Windows" mc:Ignorable="d" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextPrimary}">
+<UserControl x:Class="RustPlusDesk.Views.AppSettingsOverlay" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:conv="clr-namespace:RustPlusDesk.Converters" xmlns:p="clr-namespace:RustPlusDesk.Properties" xmlns:views="clr-namespace:RustPlusDesk.Views" xmlns:windows="clr-namespace:RustPlusDesk.Views.Windows" xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials" mc:Ignorable="d" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextPrimary}" tutorials:Tutorial.TargetId="Settings.Panel">
 
     <Grid ClipToBounds="True">
         <Grid.Resources>
@@ -164,7 +164,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ui:TextBlock Text="{DynamicResource Language}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                            <ComboBox Grid.Column="1" x:Name="CmbLanguage" Width="150" SelectedValuePath="Code" SelectionChanged="CmbLanguage_SelectionChanged">
+                            <ComboBox Grid.Column="1" x:Name="CmbLanguage" tutorials:Tutorial.TargetId="Settings.Language" Width="150" SelectedValuePath="Code" SelectionChanged="CmbLanguage_SelectionChanged">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -295,7 +295,7 @@
                 </StackPanel>
 
                 <!-- Map Performance Section -->
-                <StackPanel x:Name="SectionMapPerformance">
+                <StackPanel x:Name="SectionMapPerformance" tutorials:Tutorial.TargetId="Settings.Map">
                 <ui:TextBlock Text="{DynamicResource UiMapPerformanceQuality}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
@@ -402,7 +402,7 @@
                 </StackPanel>
 
                 <!-- Cloud Section -->
-                <StackPanel x:Name="SectionCloud">
+                <StackPanel x:Name="SectionCloud" tutorials:Tutorial.TargetId="Settings.Cloud">
                 <ui:TextBlock x:Name="CloudSettingsAnchor" Text="{DynamicResource UiCloudAccountSync}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:TextBlock Margin="0,-4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1}" TextWrapping="Wrap" />
                 
@@ -531,7 +531,7 @@
 
                         <ui:CardExpander Header="{DynamicResource UiAdvancedDiscordBotIntegration}" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
                             <StackPanel Margin="0,8,0,0">
-                                <ui:Button x:Name="BtnInviteDiscordBot" Content="{DynamicResource UiInviteDiscordBotToServer}" Icon="{ui:SymbolIcon Symbol=Add24}" Margin="0,0,0,8" PreviewMouseDown="PremiumFeature_PreviewMouseDown" Click="BtnInviteDiscordBot_Click" />
+                                <ui:Button x:Name="BtnInviteDiscordBot" tutorials:Tutorial.TargetId="Settings.Discord" Content="{DynamicResource UiInviteDiscordBotToServer}" Icon="{ui:SymbolIcon Symbol=Add24}" Margin="0,0,0,8" PreviewMouseDown="PremiumFeature_PreviewMouseDown" Click="BtnInviteDiscordBot_Click" />
                                 
                                 <ui:TextBlock Text="{DynamicResource UiDiscordServerIDGuildID}" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,4,0,2" />
                                 <Grid Margin="0,0,0,12">
@@ -677,7 +677,7 @@
                 </StackPanel>
 
                 <!-- Chat Commands Section -->
-                <StackPanel x:Name="SectionChatCommands">
+                <StackPanel x:Name="SectionChatCommands" tutorials:Tutorial.TargetId="Settings.ChatCommands">
                 <ui:TextBlock Text="{DynamicResource ChatCommandsSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <views:ChatCommandsOverlay x:Name="ChatCommandsEditor" />
                 </StackPanel>
@@ -704,7 +704,7 @@
                 </StackPanel>
 
                 <!-- Maintenance Section -->
-                <StackPanel x:Name="SectionMaintenance">
+                <StackPanel x:Name="SectionMaintenance" tutorials:Tutorial.TargetId="Settings.Maintenance">
                 <ui:TextBlock Text="{DynamicResource MaintenanceTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>

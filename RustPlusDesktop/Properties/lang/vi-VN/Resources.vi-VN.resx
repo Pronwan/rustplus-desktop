@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Quá trình khôi phục cài đặt gốc đã hoàn tất thành công.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Xóa đánh dấu tử vong</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Xóa tất cả</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Chấp nhận</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Đổi tên đánh dấu tử vong</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Hướng</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Hồ sơ</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Tử vong</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Đánh dấu:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Tìm kiếm biểu tượng (ví dụ: tháp pháo, công tắc)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} ngày</value>
   </data>
@@ -4162,7 +4161,7 @@ Vui lòng ghép nối máy chủ này trước.</value>
     <value>Dữ liệu bản đồ 3D</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã ¢ â&apos; Â¦</value>
+    <value>Ã ¢ â' Â¦</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Quyền truy cập đã bị thu hồi</value>
@@ -4357,7 +4356,7 @@ Vui lòng ghép nối máy chủ này trước.</value>
     <value>Đã tạo mã PIN (có giá trị trong 15 phút)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Trước tiên, vui lòng định cấu hình kênh Discord &apos;Cảnh báo trò chuyện&apos; hoặc &apos;Cảnh báo sự kiện&apos; trong Cài đặt.</value>
+    <value>Trước tiên, vui lòng định cấu hình kênh Discord 'Cảnh báo trò chuyện' hoặc 'Cảnh báo sự kiện' trong Cài đặt.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Vui lòng kết nối Tài khoản đám mây của bạn trước.</value>
@@ -4471,7 +4470,7 @@ Vui lòng ghép nối máy chủ này trước.</value>
     <value>trắng</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Bản đồ ngoại tuyến đã được nhập thành công dưới dạng &apos;{0}&apos;!</value>
+    <value>Bản đồ ngoại tuyến đã được nhập thành công dưới dạng '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Bản đồ đã được nhập</value>
@@ -4509,19 +4508,19 @@ ngăn xếp:
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>Bản đồ ngoại tuyến &apos;{0}&apos; chưa được phân tích cú pháp. Mở bản đồ 3D của nó một lần để phân tích cú pháp, sau đó thử sao chép lại.</value>
+    <value>Bản đồ ngoại tuyến '{0}' chưa được phân tích cú pháp. Mở bản đồ 3D của nó một lần để phân tích cú pháp, sau đó thử sao chép lại.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Sao chép bản đồ lỗi</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Bố cục bản đồ không khớp. Bản đồ &apos;{0}&apos; có vẻ không giống với bản đồ của máy chủ được kết nối &apos;{1}&apos;.</value>
+    <value>Bố cục bản đồ không khớp. Bản đồ '{0}' có vẻ không giống với bản đồ của máy chủ được kết nối '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Bản đồ không khớp</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>Đã sao chép thành công bản đồ 3D bản đồ và nội dung cục bộ từ &apos;{0}&apos; sang &apos;{1}&apos;!</value>
+    <value>Đã sao chép thành công bản đồ 3D bản đồ và nội dung cục bộ từ '{0}' sang '{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Đã sao chép bản đồ</value>
@@ -4709,5 +4708,797 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Bỏ qua hướng dẫn</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Tiếp theo</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Kết thúc</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Hủy hướng dẫn này?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Tiến trình của bạn đã được lưu. Bạn có thể tiếp tục từ Trung tâm Hướng dẫn bất cứ lúc nào.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Tiếp tục học hỏi</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Hủy hướng dẫn</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Bước {0} của {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Tính năng này không khả dụng ở trạng thái ứng dụng hiện tại. Tiếp tục an toàn và quay lại khi có máy chủ, tài khoản hoặc dữ liệu cần thiết.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Đặt lại</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Khởi động lại</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Tiếp tục</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Bắt đầu</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} các bước {1}</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Tìm hiểu RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Các bài học tập trung cho bản dựng này. Hướng dẫn không bao giờ kích hoạt thiết bị, gửi tin nhắn, xóa dữ liệu hoặc chạy tự động hóa.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Bắt đầu các hướng dẫn được đề xuất</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Tiếp tục hướng dẫn cuối cùng</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Khởi động lại tất cả các hướng dẫn</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Đặt lại tiến trình hướng dẫn</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Bắt đầu thông tin cơ bản cho người dùng mới</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Cung cấp hướng dẫn về các tính năng mới</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Chào mừng bạn đến với RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Tham quan ngắn về điều hướng, kết nối máy chủ, bản đồ và thiết bị — hoặc chỉ chọn các bài học bạn cần.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Bắt đầu tham quan nhanh</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Chọn Hướng dẫn</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Không phải bây giờ</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Chưa bắt đầu</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>Đang tiến hành</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Đã hoàn thành</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Đã bỏ qua</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Cập nhật</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Tính năng mới</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Bắt đầu</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Thiết bị</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Nhóm và Truyền thông</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Tự động hóa</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Giám sát</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Công cụ</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Cài đặt và hỗ trợ</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Khái niệm cơ bản về ứng dụng</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Tìm hiểu điều hướng, ngữ cảnh máy chủ, trạng thái kết nối, thông báo và vị trí phát lại bài học.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Tài khoản và đám mây</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Hiểu các tính năng cục bộ, đăng nhập đám mây, đồng bộ hóa và quyền truy cập của Người hỗ trợ.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Ghép nối và quản lý máy chủ</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Ghép nối Rust+, chọn máy chủ và hiểu các chế độ mềm, đầy đủ và ngắt kết nối.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>Khái niệm cơ bản về bản đồ 2D</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Tìm hiểu điều hướng bản đồ, lớp, bản đồ nhiệt, công cụ vẽ và điểm vào 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Bản đồ nhiệt tài nguyên</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Tìm hiểu những gì lớp phủ mật độ sinh sản được trích xuất hiển thị và cách chọn hoặc xóa chúng.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>Bản đồ 3D</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Khám phá chế độ xem 3D cục bộ, thanh công cụ, trình tạo dấu chân, hiển thị hiệu suất và hành động đóng.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Thiết bị thông minh</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Tìm, lọc, làm mới, sắp xếp và hiểu các thiết bị thông minh được ghép nối một cách an toàn.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Theo dõi đội và người chơi</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Xem xét đồng đội, điểm đánh dấu, theo dõi hành vi và chia sẻ yêu cầu.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Trò chuyện nhóm và lệnh</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Đọc trò chuyện nhóm, soạn tin nhắn và định cấu hình lệnh mà không cần gửi bất cứ thứ gì.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Tích hợp Discord</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Tìm Discord điểm truy cập, cấu hình, quyền và ranh giới quyền riêng tư.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Công cụ logic và tự động hóa</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Hiểu các quy tắc, trình kích hoạt, điều kiện, hành động, trạng thái thời gian chạy và kiểm tra an toàn.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Thông báo và cảnh báo</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Lọc, tìm kiếm, xem xét, đánh dấu và xóa thông báo ứng dụng.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Camera và giám sát</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Thêm và xem lại các camera được ghép nối trong khi vẫn giữ mã định danh camera ở chế độ riêng tư.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Máy tính Raid</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Xây dựng kế hoạch đột kích, so sánh các phương pháp và xem xét tổng số nguyên liệu.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Máy tính tái chế</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Thêm các mặt hàng và so sánh năng suất tái chế hoang dã và vùng an toàn.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Tìm ngôn ngữ, hiệu suất bản đồ, dịch vụ được kết nối và kiểm soát bảo trì.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Cập nhật và chẩn đoán</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Kiểm tra các bản cập nhật ứng dụng và tìm nhật ký chẩn đoán mà không cần bắt đầu cập nhật.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Điều hướng chính</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Sử dụng thanh bên này để di chuyển giữa các thiết bị, theo dõi nhóm, camera, người chơi, thông báo và máy tính.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Mở rộng điều hướng</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Ghim hoặc thu gọn thanh bên để trao đổi nhãn để có thêm không gian làm việc trên bản đồ.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Máy chủ hiện tại</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Khu vực này xác định máy chủ Rust đã chọn và ngữ cảnh tài khoản của nó.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Trạng thái kết nối</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Thẻ máy chủ cho biết máy chủ đã bị ngắt kết nối, kết nối mềm hay được kết nối hoàn toàn.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Thông báo</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Sự cố kết nối, cảnh báo, tử vong và kết quả tự động hóa được thu thập tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Trung tâm hướng dẫn</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Phát lại, tiếp tục, khởi động lại hoặc khám phá các bài học đã cập nhật tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Ngữ cảnh tài khoản</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Quyền truy cập đám mây tách biệt với Rust+ ghép nối. Các tính năng cục bộ vẫn khả dụng mà không cần đồng bộ hóa đám mây.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Tài khoản đám mây</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Đăng nhập vào đây để đồng bộ hóa được hỗ trợ; hướng dẫn không bao giờ hiển thị dữ liệu tài khoản cá nhân.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Trạng thái người ủng hộ</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Quyền truy cập của người ủng hộ mở khóa các tính năng được kiểm soát. Tiến trình hướng dẫn cục bộ không yêu cầu đăng ký.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Ghép nối Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Ghép nối liên kết ứng dụng này với Rust Companion trước khi các tính năng của máy chủ trực tiếp có thể hoạt động.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Bắt đầu ghép nối</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Bắt đầu nghe, sau đó sử dụng quy trình ghép nối Rust+ trong trò chơi của Rust. Thông tin đăng nhập không bao giờ được ghi lại.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Máy chủ được ghép nối</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Chọn một máy chủ được định cấu hình cục bộ trước khi kết nối hoặc thay đổi cài đặt dành riêng cho máy chủ.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Kết nối mềm</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Kết nối tải giao tiếp hạn chế mà không cần khởi tạo mọi tính năng trực tiếp.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Kết nối đầy đủ</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Kết nối đầy đủ khởi tạo dữ liệu bản đồ, thiết bị, dữ liệu nhóm và đăng ký Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Ngắt kết nối</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Ngắt kết nối sẽ dừng giao tiếp trực tiếp. Bài học này không bao giờ gợi lên hành động.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Đặt lại ghép nối</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Các lệnh khôi phục nằm trong menu ngữ cảnh Ghép nối. Đặt lại sẽ xóa cấu hình ghép nối cục bộ.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Canvas bản đồ</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Xoay bằng cách kéo, thu phóng bằng bánh xe và tương tác với các điểm đánh dấu trên bản đồ Rust hiện tại.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Thanh công cụ bản đồ</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Thanh công cụ điều khiển các lớp, trò chuyện, lớp phủ, bộ hẹn giờ và chế độ 2D hoặc 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Đặt lại chế độ xem</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Đưa bản đồ trở lại không gian làm việc sau khi xoay hoặc thu phóng.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Lớp bản đồ</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Chọn lưới, người chơi, tượng đài, cửa hàng và các tùy chọn hình ảnh nâng cao tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Bản đồ nhiệt</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Mở lớp phủ mật độ được trích xuất. Chúng hiển thị các khu vực có khả năng xuất hiện, không phải các thực thể sống.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Mở bản đồ 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Tạo hoặc mở biểu diễn 3D cục bộ của bản đồ hiện tại.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Công cụ vẽ</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Vẽ các ghi chú quy hoạch không phá hủy trên bản đồ và rời khỏi chế độ vẽ khi hoàn tất.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Mở bản đồ nhiệt</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Duyệt qua các lớp mật độ có sẵn cho bản đồ được phân tích cú pháp hiện tại.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Bộ chọn bản đồ nhiệt</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Chọn một danh mục được trích xuất hoặc xóa lớp phủ đang hoạt động.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Cách hoạt động của bản đồ nhiệt</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Bản đồ nhiệt tóm tắt các khu vực có khả năng xuất hiện; Họ không đảm bảo một thực thể sống tại một địa điểm.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Tạo hoặc mở 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Ứng dụng phân tích cú pháp cục bộ dữ liệu bản đồ và sử dụng lại bộ nhớ đệm khi có thể.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>Khung nhìn 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Quay quay, xoay và thu phóng xung quanh biểu diễn tương tác của bản đồ đã chọn.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>Thanh công cụ 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Kiểm soát các lớp, điểm đánh dấu trực tiếp, toàn màn hình, cài đặt và công cụ dấu chân.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Trình tạo dấu chân cơ sở</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Chế độ xây dựng chỉ đặt nền móng quy hoạch; Nó không sửa đổi máy chủ Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Chỉ số hiệu suất</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>Độ phân giải FPS và thích ứng cân bằng chi tiết với tương tác mượt mà.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Đóng 3D View</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Quay lại 2D và giải phóng các tài nguyên 3D nhúng nặng.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Danh sách thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Các công tắc, báo thức và màn hình lưu trữ được ghép nối xuất hiện ở đây theo nhóm.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Tìm kiếm thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Lọc thiết bị theo tên hoặc lệnh mà không thay đổi trạng thái của chúng.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Bộ lọc loại thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Giới hạn danh sách ở công tắc, báo thức, màn hình lưu trữ hoặc tất cả các thiết bị.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Làm mới trạng thái</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Yêu cầu trạng thái chỉ đọc mới; Tính khả dụng phụ thuộc vào kết nối.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Công cụ thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Nhập, đồng bộ hóa đám mây, tự động hóa, phím nóng, làm mới và dọn dẹp được thu thập tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Thẻ thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Thẻ hiển thị danh tính, trạng thái kết nối, lệnh và điều khiển dành riêng cho thiết bị.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>An toàn thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Hướng dẫn không bao giờ chuyển đổi công tắc, xóa thiết bị hoặc chạy phím nóng.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Danh sách đội</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Đồng đội đã tải, trạng thái trực tuyến, hình đại diện và hành động ngữ cảnh xuất hiện tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Điểm đánh dấu đội</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Chọn kiểu điểm đánh dấu đồng đội hiển thị trên bản đồ.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Theo dõi người chơi</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Các trung tâm sau cập nhật bản đồ về đồng đội và yêu cầu dữ liệu nhóm hiện tại.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Chia sẻ nhóm</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Chia sẻ cơ sở và ảnh chụp màn hình có thể yêu cầu sự đồng ý của tài khoản và tải lên.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Lịch sử trò chuyện</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Tin nhắn nhóm Rust gần đây xuất hiện ở đây khi kết nối cung cấp dữ liệu trò chuyện.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Nhập tin nhắn</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Soạn tin nhắn nhóm tại đây. Hướng dẫn không bao giờ chèn hoặc gửi một.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Gửi tin nhắn</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Gửi bài đăng đến Rust trò chuyện nhóm. Điều khiển này chỉ được đánh dấu.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Cài đặt lệnh</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Định cấu hình tiền tố, liên kết thiết bị, độ trễ và tính khả dụng của lệnh.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Cộng đồng Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Phím tắt này mở ra cộng đồng; Cài đặt tích hợp là riêng biệt.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Cài đặt Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Định cấu hình bot, bang hội, kênh, lệnh và quyền mà không cần ghi nhật ký ID.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>An toàn Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Hướng dẫn không bao giờ đăng tin nhắn hoặc ghi nhật ký bang hội, kênh hoặc giá trị nhận dạng người dùng.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Mở Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Mở trình sửa quy tắc của máy chủ đã chọn.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Danh sách quy tắc</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Các quy tắc và các bước kích hoạt, điều kiện, độ trễ và hành động xuất hiện tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Trạng thái động cơ</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Bật hoặc tạm dừng thực thi quy tắc. Hướng dẫn không bao giờ thay đổi công tắc này.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Quy trình làm việc quy tắc</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Trình kích hoạt bắt đầu một quy tắc; điều kiện cổng các hành động sau này; các bước chạy theo thứ tự.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>An toàn tự động hóa</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Hướng dẫn không duy trì các quy tắc, chuyển đổi thiết bị, gửi trò chuyện hoặc thực hiện tự động hóa.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Trung tâm thông báo</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Xem lại cảnh báo mà không cần dựa vào thông báo tạm thời trên màn hình.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Bộ lọc thông báo</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Chuyển đổi giữa tất cả các thông báo, báo thức và tử vong.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Tìm kiếm thông báo</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Tìm thông báo theo nội dung được hiển thị hoặc ngữ cảnh máy chủ.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Hành động hàng loạt</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Đánh dấu tất cả lịch sử đã đọc hoặc xóa; hướng dẫn không bao giờ thực hiện các hành động này.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Danh sách máy ảnh</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Các bản xem trước được định cấu hình xuất hiện khi máy chủ và máy ảnh được chọn khả dụng.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Thêm máy ảnh</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Thêm máy ảnh bằng mã định danh Rust của nó; Hướng dẫn không bao giờ chụp mã camera.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Quyền riêng tư của máy ảnh</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Mã định danh và khung hình máy ảnh bị loại trừ khỏi chẩn đoán hướng dẫn.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Mục tiêu tìm kiếm</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Tìm tường, cửa, mục tiêu có thể triển khai hoặc mục tiêu khác trong tập dữ liệu đi kèm.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Kế hoạch đột kích</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Xem xét mục tiêu, sức khỏe, số lượng, phương pháp và chi phí tính toán.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>So sánh các phương pháp</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Chọn chất nổ hoặc công cụ được phép và so sánh các lựa chọn thay thế.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Kế hoạch rõ ràng</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Xóa xóa kế hoạch; Hướng dẫn làm nổi bật nó mà không thay đổi mục nhập.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Tìm kiếm mục</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Tìm một mặt hàng có thể tái chế và thêm nó vào máy tính.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Danh mục mặt hàng</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Thu hẹp danh mục mặt hàng theo danh mục.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Các mục đầu vào</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Điều chỉnh số lượng hoặc loại bỏ mục nhập; hướng dẫn không thay đổi trạng thái máy tính.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Kết quả tái chế</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>So sánh năng suất và thời gian cho các nhà tái chế hoang dã và vùng an toàn.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Mở Cài đặt</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Hành vi ứng dụng, tích hợp, hiệu suất, sao lưu và bảo trì trực tiếp tại đây.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Chọn ngôn ngữ giao diện người dùng. Văn bản hướng dẫn sử dụng cùng một hệ thống tài nguyên.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Hiệu suất bản đồ</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Điều chỉnh tỷ lệ hình ảnh, bộ nhớ đệm GPU, tỷ lệ kết xuất và chế độ cạnh.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Bảo trì</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Các điều khiển sao lưu, đặt lại, xóa và lưu vào bộ nhớ cache có thể phá hủy và không bao giờ được gọi.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Kiểm tra bản cập nhật</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Yêu cầu tính khả dụng của bản cập nhật mà không cần tải xuống hoặc cài đặt.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Cập nhật trạng thái</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Phiên bản và tiến trình tải xuống xuất hiện trong khu vực thanh tiêu đề này.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Nhật ký chẩn đoán</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Lọc chẩn đoán cục bộ trước khi chỉ chia sẻ các chi tiết không nhạy cảm.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Cửa hàng và Bán hàng tự động</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Tìm kiếm ưu đãi bán hàng tự động, so sánh giao dịch và hiểu thời gian làm mới.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Giám sát sự kiện và máy chủ</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Đọc các chỉ báo sự kiện trực tiếp và tạo bộ đếm thời gian địa phương.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Cơ sở và ảnh chụp màn hình</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Tạo điểm đánh dấu cơ sở bản đồ và quản lý ghi chú cũng như ảnh chụp màn hình của họ một cách an toàn.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Tự động hóa thiết bị</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Định cấu hình tự động hóa trạng thái thiết bị đơn giản riêng biệt với công cụ logic.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Mở Tìm kiếm trên Shop</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Mở bảng tìm kiếm bán hàng tự động của bản đồ mà không thay đổi bản đồ hiện tại.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Tìm kiếm cửa hàng</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Tìm kiếm mặt hàng, xem lại số lượng mua và bán và mở kết quả trên bản đồ.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Thời gian làm mới</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Ưu đãi của Shop phụ thuộc vào kết nối máy chủ và có thể cũ giữa các lần làm mới Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Dock sự kiện trực tiếp</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Hàng hóa, trực thăng, Chinook, nhà cung cấp và các chỉ báo sự kiện đang hoạt động khác xuất hiện ở đây khi có sẵn.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Hẹn giờ tùy chỉnh</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Tạo lời nhắc cục bộ mà không thay đổi trạng thái máy chủ.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Sự mới mẻ của sự kiện</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Dữ liệu sự kiện phụ thuộc vào kết nối đã chọn và có thể biến mất khi kết nối cũ.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Điểm đánh dấu cơ sở</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Các điểm đánh dấu căn cứ được đặt và mở trên bản đồ 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Ghi chú cơ bản và ảnh chụp màn hình</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Sử dụng các hành động ngữ cảnh bản đồ để đặt tên cho căn cứ và đính kèm ảnh chụp màn hình; Chia sẻ đám mây cần có sự đồng ý.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Xóa an toàn</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Xóa cơ sở hoặc ảnh chụp màn hình không bao giờ được thực hiện bởi hướng dẫn và luôn yêu cầu bạn nhập liệu.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Mở Tự động hóa thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Mở tự động hóa trạng thái thiết bị nhẹ cho máy chủ đã chọn.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Hành động tự động hóa</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Tạm dừng thực thi hoặc thêm tự động hóa; hướng dẫn không bao giờ thay đổi trạng thái công cụ hoặc tạo dữ liệu.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Quy tắc tự động hóa</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Xem lại thiết bị nguồn, hành động mục tiêu, thời gian và trạng thái bật cho từng quy tắc.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>An toàn thiết bị</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Không có hướng dẫn nào thực thi quy tắc hoặc chuyển đổi thiết bị thông minh thực.</value>
   </data>
 </root>
