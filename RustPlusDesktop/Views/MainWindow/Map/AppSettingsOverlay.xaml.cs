@@ -52,7 +52,7 @@ namespace RustPlusDesk.Views
             public required string Category { get; init; }
             public required string Title { get; init; }
             public required string SearchText { get; init; }
-            public required Control Target { get; init; }
+            public required FrameworkElement Target { get; init; }
         }
 
         private sealed class SettingsOptionResult
@@ -64,7 +64,7 @@ namespace RustPlusDesk.Views
             public required string BeforeMatch { get; init; }
             public required string Match { get; init; }
             public required string AfterMatch { get; init; }
-            public required Control Target { get; init; }
+            public required FrameworkElement Target { get; init; }
         }
 
         private sealed class SettingsMatchAdorner(UIElement adornedElement) : Adorner(adornedElement)
@@ -111,6 +111,10 @@ namespace RustPlusDesk.Views
 
             _isShowingSearchResults = false;
             _returnToCategoryPageAfterSearch = false;
+            if (DataContext is ViewModels.MainViewModel viewModel)
+            {
+                viewModel.Save();
+            }
             SettingsSearchBox.Clear();
             ClearSettingsHighlights();
             ShowSettingsCategoryList();
@@ -133,7 +137,8 @@ namespace RustPlusDesk.Views
                 Section("team-markers", "map", T("TeamMarkersSettings", "Team Markers"), "profile player direction arrows death markers streamer icon scale", SectionTeamMarkers),
                 Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
                 Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync", SectionCloud),
-                Section("chat", "connected", T("Chat", "Chat"), "chat alerts commands modify", SectionChat),
+                Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
+                Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
                 Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
                 Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
                 Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
@@ -148,7 +153,19 @@ namespace RustPlusDesk.Views
         private void BuildSettingsOptionIndex()
         {
             _settingsOptions = _settingsSections
-                .SelectMany(section => EnumerateControls(section.Element)
+                .SelectMany(section => new[]
+                    {
+                        new SettingsOptionDefinition
+                        {
+                            SectionId = section.Id,
+                            SectionTitle = section.Title,
+                            Category = section.Category,
+                            Title = section.Title,
+                            SearchText = $"{section.Title} {section.Keywords}",
+                            Target = section.Element
+                        }
+                    }
+                    .Concat(EnumerateControls(section.Element)
                     .Where(IsSearchableSettingControl)
                     .Select(control => new SettingsOptionDefinition
                     {
@@ -158,7 +175,7 @@ namespace RustPlusDesk.Views
                         Title = GetControlTitle(control),
                         SearchText = $"{GetControlTitle(control)} {control.ToolTip} {section.Title}",
                         Target = control
-                    }))
+                    })))
                 .Where(option => option.Title.Length > 1)
                 .DistinctBy(option => $"{option.SectionId}|{option.Title}", StringComparer.OrdinalIgnoreCase)
                 .ToList();
@@ -404,6 +421,8 @@ namespace RustPlusDesk.Views
             "alerts" => ("Alerts", "Notifications, sounds, and offline death alerts"),
             "map" => ("Map", "Performance, markers, and 3D map data"),
             "connected" => ("Connected Services", "Cloud, integrations, chat, and account connections"),
+            "chat-commands" => (T("ChatCommandsSettings", "Chat Commands"), "Team chat commands and device bindings"),
+            "alert-templates" => (T("CustomAlertsHeader", "Chat Alert Templates"), T("CustomAlertsDesc", "Customize automated chat alert messages")),
             "system" => ("System", "Maintenance, backup, reset, and application information"),
             _ => ("General", "Language, startup, and application behavior")
         };
@@ -413,6 +432,14 @@ namespace RustPlusDesk.Views
             _isShowingSearchResults = false;
             SettingsSearchBox.Clear();
             ShowSettingsCategoryList();
+        }
+
+        public void OpenCategory(string category)
+        {
+            _isShowingSearchResults = false;
+            _returnToCategoryPageAfterSearch = false;
+            SettingsSearchBox.Clear();
+            ShowSettingsCategory(category);
         }
 
         private void SettingsSearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -1058,20 +1085,6 @@ namespace RustPlusDesk.Views
                 LoadSettings();
                 ParentWindow?.UpdateCloudSyncUI();
             }
-        }
-
-        private void BtnModifyChatAlerts_Click(object sender, RoutedEventArgs e)
-        {
-            Visibility = Visibility.Collapsed;
-            ParentWindow?.ApplySettings();
-            ParentWindow?.OpenChatAlertsFromSettings();
-        }
-
-        private void BtnChatCommands_Click(object sender, RoutedEventArgs e)
-        {
-            Visibility = Visibility.Collapsed;
-            ParentWindow?.ApplySettings();
-            ParentWindow?.OpenChatCommandsFromSettings();
         }
 
         private void PremiumFeature_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

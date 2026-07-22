@@ -10,7 +10,6 @@ public partial class ChatCommandsOverlay : UserControl
         InitializeComponent();
     }
 
-    public event RoutedEventHandler? CloseRequested;
     public event RoutedEventHandler? CommandsEnabledChanged;
 
     public void SetMasterBlocked(bool blocked, string message)
@@ -23,11 +22,6 @@ public partial class ChatCommandsOverlay : UserControl
 
         if (ChatCommandsMasterWarningText != null)
             ChatCommandsMasterWarningText.Text = message;
-    }
-
-    private void BtnClose_Click(object sender, RoutedEventArgs e)
-    {
-        CloseRequested?.Invoke(this, e);
     }
 
     private void EnableChatCommandsCheckBox_Changed(object sender, RoutedEventArgs e)

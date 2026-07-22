@@ -7152,13 +7152,6 @@
                                             </ui:Button>
                                         </StackPanel>
 
-                                        <!--  Chat Commands Overlay  -->
-                                        <views:ChatCommandsOverlay
-                                            x:Name="ChatCommandsOverlay"
-                                            Grid.RowSpan="3"
-                                            Panel.ZIndex="2000"
-                                            CloseRequested="BtnCloseChatCommands_Click"
-                                            Visibility="Collapsed" />
                                     </Grid>
                                 </Border>
 
