@@ -4761,6 +4761,27 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Pause</value>
   </data>
   <data name="ResumeUpdate" xml:space="preserve">
-    <value>Lebenslauf</value>
+    <value>Fortsetzen</value>
+  </data>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>Verwaiste Cloud-Daten bereinigen</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>Durchsucht die Supabase-Datenbank und entfernt Geräte, Overlays und Marker gelöschter Server.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>Verwaiste Cloud-Daten bereinigen</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>Möchtest du Supabase wirklich durchsuchen und alle Cloud-Geräte, Map-Overlays und Base Marker von Servern löschen, die sich nicht mehr in deiner Serverliste befinden?</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>Verwaiste Cloud-Daten erfolgreich bereinigt:&#10;- Map Overlays: {0}&#10;- Base Marker: {1}&#10;- Smart Devices: {2}&#10;- Server-Registrierungen: {3}</value>
+  </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Nur Discord</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>Wenn aktiviert, werden Benachrichtigungen direkt an Discord gesendet, ohne in den Rust In-Game Team-Chat zu posten. Ideal für Solo-Server oder Server ohne Team-Chat.</value>
   </data>
 </root>

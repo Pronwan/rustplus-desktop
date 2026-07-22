@@ -4701,6 +4701,27 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Pausa</value>
   </data>
   <data name="ResumeUpdate" xml:space="preserve">
-    <value>Currículum</value>
+    <value>Reanudar</value>
+  </data>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>Depurar datos obsoletos de la nube</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>Escanea la base de datos Supabase y elimina dispositivos, capas y marcadores de servidores eliminados.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>Depurar datos obsoletos de la nube</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>&#191;Est&#225;s seguro de que deseas escanear Supabase y eliminar permanentemente todos los dispositivos, capas y marcadores pertenecientes a servidores que ya no est&#225;n en tu lista?</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>Datos obsoletos depurados con &#233;xito:&#10;- Capas de mapa: {0}&#10;- Marcadores de base: {1}&#10;- Dispositivos inteligentes: {2}&#10;- Registros de servidor: {3}</value>
+  </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Solo Discord</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>Si se activa, las notificaciones de alerta se env&#237;an directamente a Discord sin publicarlas en el chat de equipo de Rust. Ideal para servidores en solitario o sin chat de equipo.</value>
   </data>
 </root>

@@ -4704,4 +4704,10 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="ResumeUpdate" xml:space="preserve">
     <value>קורות חיים</value>
   </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Discord only</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
 </root>

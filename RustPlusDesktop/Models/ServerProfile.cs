@@ -405,6 +405,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _discordWebhookChatAlertsTts = value; OnProp(); }
     }
 
+    private bool _discordWebhookChatAlertsExclusive = false;
+    public bool DiscordWebhookChatAlertsExclusive
+    {
+        get => _discordWebhookChatAlertsExclusive;
+        set { _discordWebhookChatAlertsExclusive = value; OnProp(); }
+    }
+
     private bool _timerAlarmEnabled = true;
     public bool TimerAlarmEnabled
     {

@@ -730,6 +730,13 @@ namespace RustPlusDesk.Properties {
         public static string SearchIconsPlaceholder => GetString("SearchIconsPlaceholder");
         public static string ResetToDefaultIcon => GetString("ResetToDefaultIcon");
         public static string Rule => GetString("Rule");
+        public static string PurgeOrphanedCloudData => GetString("PurgeOrphanedCloudData");
+        public static string PurgeOrphanedCloudDataTooltip => GetString("PurgeOrphanedCloudDataTooltip");
+        public static string PurgeOrphanedCloudDataConfirmTitle => GetString("PurgeOrphanedCloudDataConfirmTitle");
+        public static string PurgeOrphanedCloudDataConfirmMessage => GetString("PurgeOrphanedCloudDataConfirmMessage");
+        public static string PurgeOrphanedCloudDataSuccessMessage => GetString("PurgeOrphanedCloudDataSuccessMessage");
+        public static string UiDiscordWebhookExclusive => GetString("UiDiscordWebhookExclusive");
+        public static string UiDiscordWebhookExclusiveTooltip => GetString("UiDiscordWebhookExclusiveTooltip");
     }
 }
 
