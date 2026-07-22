@@ -7,13 +7,13 @@ using System.Windows;
 
 namespace RustPlusDesk.Features.Tutorials;
 
-public sealed class WebViewTutorialBridge(Func<WebView2CompositionControl?> getWebView) : IWebViewTutorialBridge
+public sealed class WebViewTutorialBridge(Func<WebView2?> getWebView) : IWebViewTutorialBridge
 {
     private sealed record BoundsResponse(double Left, double Top, double Width, double Height, bool Visible);
 
     public async Task<Rect?> GetTargetBoundsAsync(string targetId, FrameworkElement relativeTo, CancellationToken cancellationToken = default)
     {
-        WebView2CompositionControl? webView = getWebView();
+        WebView2? webView = getWebView();
         if (webView?.CoreWebView2 is null || !webView.IsVisible) return null;
 
         string idJson = JsonSerializer.Serialize(targetId);
