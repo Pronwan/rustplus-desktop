@@ -366,6 +366,8 @@ public partial class App : Application
             string lang = TrackingService.SelectedLanguage;
             if (string.Equals(lang, "sr-SP", StringComparison.OrdinalIgnoreCase))
             {
+                // Migrate the obsolete culture code used by older builds. Using a
+                // real Serbian Latin culture also allows MSBuild to emit a satellite.
                 lang = "sr-Latn-RS";
                 TrackingService.SelectedLanguage = lang;
             }
@@ -460,6 +462,9 @@ public partial class App : Application
         foreach (var entry in resourceMap)
             replacement[entry.Key] = entry.Value;
 
+        // Replacing one merged dictionary causes a single resource-tree refresh.
+        // Updating ~1,800 Application resources individually made WPF re-evaluate
+        // DynamicResource bindings repeatedly and visibly froze the settings UI.
         if (_localizedResources != null)
             Resources.MergedDictionaries.Remove(_localizedResources);
         _localizedResources = replacement;
