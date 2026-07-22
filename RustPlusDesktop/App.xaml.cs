@@ -14,6 +14,7 @@ using System.Runtime.Loader;
 using System.Windows.Threading;
 using RustPlusDesk.Views;
 using RustPlusDesk.Services;
+using RustPlusDesk.Views.Windows;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -51,68 +52,161 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
-        SetLanguage(applySynchronously: true);
         base.OnStartup(e);
+        _ = StartupWithSplashAsync(e.Args);
+    }
 
-        // Run legacy Inno Setup cleanup in the background after a 5-second delay to ensure smooth startup
-        Task.Run(async () =>
+    private async Task StartupWithSplashAsync(string[] args)
+    {
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+        // ── Splash on its own STA thread ────────────────────────────────────────
+        // The MainWindow takes several seconds to parse and render its 648 KB of
+        // XAML — all on the UI thread. Running the splash on a dedicated STA thread
+        // means its animations and interactions stay fully responsive the whole time,
+        // regardless of how long the main thread is busy.
+        SplashWindow? splash = null;
+        Dispatcher? splashDispatcher = null;
+        var splashReadyTcs = new TaskCompletionSource<bool>();
+
+        var splashThread = new Thread(() =>
         {
-            await Task.Delay(5000);
-            CleanupLegacyInnoSetupInstallation();
-        });
+            splash = new SplashWindow();
+            splashDispatcher = Dispatcher.CurrentDispatcher;
+            splash.Show();
 
-        // Run URL protocol registration in the background after a 1-second delay
-        Task.Run(async () =>
-        {
-            await Task.Delay(1000);
-            EnsureUrlProtocolRegistered();
+            // Signal that the splash is up before starting the message pump
+            splashReadyTcs.TrySetResult(true);
+            Dispatcher.Run(); // keeps this thread alive and processing messages
         });
+        splashThread.SetApartmentState(ApartmentState.STA);
+        splashThread.IsBackground = true;
+        splashThread.Name = "SplashThread";
+        splashThread.Start();
 
-        bool isBackgroundArg = e.Args.Contains("--background");
-        bool createdNew;
-        _single = new Mutex(initiallyOwned: true, name: SingleMutexName, createdNew: out createdNew);
+        // Wait for the splash thread to be ready before proceeding
+        await splashReadyTcs.Task;
+
+        // ── Slow synchronous init on the main thread (splash is already visible) ─
+        SetLanguage(applySynchronously: true);
+
+        bool isBackgroundArg = args.Contains("--background");
+        _single = new Mutex(initiallyOwned: true, name: SingleMutexName, createdNew: out bool createdNew);
 
         if (!createdNew)
         {
-            // Already running
-            if (e.Args.Length > 0 && e.Args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
-                _ = SendLinkToRunningInstanceAsync(e.Args[0]);
+            // Another instance is running
+            if (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
+                _ = SendLinkToRunningInstanceAsync(args[0]);
             else if (!isBackgroundArg)
                 _ = SendCommandToRunningInstanceAsync("SHOWUI");
 
+            CloseSplashThread(splash, splashDispatcher);
             Shutdown();
             return;
         }
 
-        // Initialize Supabase Client
+        UpdateSplashStatus(splash, splashDispatcher, "Initializing…");
         _ = SupabaseAuthManager.InitializeAsync();
 
+        UpdateSplashStatus(splash, splashDispatcher, "Setting up tray…");
         SetupTrayIcon();
 
-        // Start polling if enabled
         if (TrackingService.IsBackgroundTrackingEnabled)
         {
             var (host, port, name) = TrackingService.LastServer;
             TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
         }
 
-        if (isBackgroundArg && TrackingService.StartMinimizedEnabled)
+        // ── Load MainWindow invisibly on the main thread ─────────────────────────
+        UpdateSplashStatus(splash, splashDispatcher, "Loading app…");
+
+        bool shouldShowMain = !isBackgroundArg
+            || !TrackingService.StartMinimizedEnabled
+            || (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase));
+
+        var mainReadyTcs = new TaskCompletionSource<bool>();
+
+        if (shouldShowMain)
         {
-            // Started by Windows (auto-start) and minimized is enabled
-            if (e.Args.Length > 0 && e.Args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
-                ShowMainWindow();
+            // Load MainWindow completely hidden.
+            // Opacity=0 + ShowInTaskbar=false + ShowActivated=false keeps it
+            // invisible while WPF performs its full layout + render pass.
+            // ContentRendered fires after that first pass — the true "ready" signal.
+            _main = new MainWindow();
+            _main.Closed += (s, ev) => _main = null;
+            _main.ContentRendered += (_, _) => mainReadyTcs.TrySetResult(true);
+            _main.Opacity = 0;
+            _main.ShowActivated = false;
+            _main.ShowInTaskbar = false;
+            _main.Show();
         }
         else
         {
-            // Manual start by user, or auto-start with minimized disabled
-            ShowMainWindow();
+            mainReadyTcs.SetResult(true);
+        }
+
+        // Hold splash until MainWindow ContentRendered fires AND at least 500ms
+        // have elapsed, so it never vanishes too fast on a quick machine.
+        await Task.WhenAll(mainReadyTcs.Task, Task.Delay(500));
+
+        // ── Fade out splash, reveal MainWindow ───────────────────────────────────
+        FadeAndCloseSplash(splash, splashDispatcher);
+        await Task.Delay(300); // wait for the 250ms fade + small margin
+
+        if (_main != null)
+        {
+            _main.ShowInTaskbar = true;
+            _main.Opacity = 1;
+            _main.WindowState = WindowState.Normal;
+            _main.Activate();
+            _main.Topmost = true; _main.Topmost = false;
         }
 
         _ = StartPipeServerAsync();
 
-        if (e.Args.Length > 0 && e.Args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
-            _main?.HandleRustPlusLink(e.Args[0]);
+        if (args.Length > 0 && args[0].StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
+            _main?.HandleRustPlusLink(args[0]);
+
+        _ = Task.Run(async () => { await Task.Delay(5000); CleanupLegacyInnoSetupInstallation(); });
+        _ = Task.Run(async () => { await Task.Delay(1000); EnsureUrlProtocolRegistered(); });
     }
+
+    // ── Splash thread helpers ────────────────────────────────────────────────────
+
+    private static void UpdateSplashStatus(SplashWindow? splash, Dispatcher? splashDispatcher, string message)
+    {
+        if (splash == null || splashDispatcher == null) return;
+        splashDispatcher.InvokeAsync(() => splash.SetStatus(message));
+    }
+
+    private static void FadeAndCloseSplash(SplashWindow? splash, Dispatcher? splashDispatcher)
+    {
+        if (splash == null || splashDispatcher == null) return;
+        splashDispatcher.InvokeAsync(() =>
+        {
+            var anim = new System.Windows.Media.Animation.DoubleAnimation
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250)
+            };
+            anim.Completed += (_, _) => CloseSplashThread(splash, splashDispatcher);
+            splash.BeginAnimation(System.Windows.UIElement.OpacityProperty, anim);
+        });
+    }
+
+    private static void CloseSplashThread(SplashWindow? splash, Dispatcher? splashDispatcher)
+    {
+        if (splashDispatcher == null) return;
+        splashDispatcher.InvokeAsync(() =>
+        {
+            splash?.Close();
+            splashDispatcher.InvokeShutdown(); // stops Dispatcher.Run() on the splash thread
+        });
+    }
+
+    // ── Rest of the class (unchanged) ───────────────────────────────────────────
 
     private static Assembly? ResolveSatelliteAssemblyFromLangFolder(AssemblyLoadContext context, AssemblyName assemblyName)
     {
@@ -141,6 +235,8 @@ public partial class App : Application
             _main = new MainWindow();
             _main.Closed += (s, ev) => _main = null;
         }
+        _main.ShowInTaskbar = true;
+        _main.Opacity = 1;
         _main.Show();
         _main.WindowState = WindowState.Normal;
         _main.Activate();
@@ -155,26 +251,26 @@ public partial class App : Application
         _trayIcon.Visible = true;
 
         var menu = new System.Windows.Forms.ContextMenuStrip();
-        
-        // Dynamic update on open
+
         menu.Opening += (s, e) =>
         {
             menu.Items.Clear();
             var status = TrackingService.IsTracking ? "Active" : "Idle";
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--:--";
-            
+
             var statusItem = new System.Windows.Forms.ToolStripMenuItem(string.Format(RustPlusDesk.Properties.Resources.TrayTrackingStatus, status));
             statusItem.Enabled = false;
             menu.Items.Add(statusItem);
-            
+
             var lastItem = new System.Windows.Forms.ToolStripMenuItem(string.Format(RustPlusDesk.Properties.Resources.TrayLastUpdate, last));
             lastItem.Enabled = false;
             menu.Items.Add(lastItem);
-            
+
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             menu.Items.Add(RustPlusDesk.Properties.Resources.OpenRustPlusDesk, null, (s, ex) => ShowMainWindow());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            menu.Items.Add(RustPlusDesk.Properties.Resources.Exit, null, (s, ex) => {
+            menu.Items.Add(RustPlusDesk.Properties.Resources.Exit, null, (s, ex) =>
+            {
                 if (_trayIcon != null) _trayIcon.Visible = false;
                 Current.Shutdown();
             });
@@ -184,18 +280,14 @@ public partial class App : Application
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                // Ensure the window exists to provide a handle for focus management
                 if (_main == null)
                 {
                     _main = new MainWindow();
                     _main.Closed += (s, ev) => _main = null;
                 }
 
-                // This is a known fix for NotifyIcon context menus in WPF.
-                // It ensures the menu opens on the first click and closes when clicking away.
                 var handle = new System.Windows.Interop.WindowInteropHelper(_main).Handle;
                 SetForegroundWindow(handle);
-
                 menu.Show(System.Windows.Forms.Control.MousePosition);
             }
         };
@@ -209,21 +301,24 @@ public partial class App : Application
                 if (_trayIcon != null)
                 {
                     var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
-                    _trayIcon.Text = TrackingService.IsTracking 
+                    _trayIcon.Text = TrackingService.IsTracking
                         ? string.Format(RustPlusDesk.Properties.Resources.TrayIconTracking, last)
                         : RustPlusDesk.Properties.Resources.TrayIconDefault;
                 }
             });
         };
-        
-        // Also update tray tooltip periodically or on event
-        TrackingService.OnOnlinePlayersUpdated += () => {
+
+        TrackingService.OnOnlinePlayersUpdated += () =>
+        {
             var last = TrackingService.LastPullTime?.ToString("HH:mm:ss") ?? "--:--";
-            Dispatcher.Invoke(() => {
-                try {
+            Dispatcher.Invoke(() =>
+            {
+                try
+                {
                     if (_trayIcon != null)
                         _trayIcon.Text = string.Format(RustPlusDesk.Properties.Resources.TrayIconTracking, last);
-                } catch { }
+                }
+                catch { }
             });
         };
     }
@@ -246,7 +341,7 @@ public partial class App : Application
             var exe = System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName!;
             shell.SetValue("", $"\"{exe}\" \"%1\"");
         }
-        catch { /* unkritisch */ }
+        catch { }
     }
 
     private static async Task SendCommandToRunningInstanceAsync(string cmd)
@@ -271,28 +366,21 @@ public partial class App : Application
             string lang = TrackingService.SelectedLanguage;
             if (string.Equals(lang, "sr-SP", StringComparison.OrdinalIgnoreCase))
             {
-                // Migrate the obsolete culture code used by older builds. Using a
-                // real Serbian Latin culture also allows MSBuild to emit a satellite.
                 lang = "sr-Latn-RS";
                 TrackingService.SelectedLanguage = lang;
             }
             CultureInfo culture;
 
             if (string.IsNullOrEmpty(lang))
-            {
                 culture = CultureInfo.InstalledUICulture;
-            }
             else
-            {
                 culture = new CultureInfo(lang);
-            }
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = culture;
 
-            // Also set it for the generated Resources class
             RustPlusDesk.Properties.Resources.Culture = culture;
 
             int version = Interlocked.Increment(ref _languageApplyVersion);
@@ -372,9 +460,6 @@ public partial class App : Application
         foreach (var entry in resourceMap)
             replacement[entry.Key] = entry.Value;
 
-        // Replacing one merged dictionary causes a single resource-tree refresh.
-        // Updating ~1,800 Application resources individually made WPF re-evaluate
-        // DynamicResource bindings repeatedly and visibly froze the settings UI.
         if (_localizedResources != null)
             Resources.MergedDictionaries.Remove(_localizedResources);
         _localizedResources = replacement;
@@ -397,9 +482,7 @@ public partial class App : Application
                     _main.Dispatcher.Invoke(() =>
                     {
                         if (link == "SHOWUI")
-                        {
                             ShowMainWindow();
-                        }
                         else if (link.StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
                         {
                             ShowMainWindow();
@@ -412,10 +495,7 @@ public partial class App : Application
                     Dispatcher.Invoke(ShowMainWindow);
                 }
             }
-            catch
-            {
-                // Pipe neu starten, wenn irgendwas schief ging
-            }
+            catch { }
         }
     }
 
@@ -426,13 +506,8 @@ public partial class App : Application
             string baseDir = AppContext.BaseDirectory;
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             if (!baseDir.StartsWith(localAppData, StringComparison.OrdinalIgnoreCase))
-            {
-                // Not running from AppData (e.g. running from C:\Program Files or development folder)
                 return;
-            }
 
-            // Find the Inno Setup uninstaller path from the registry.
-            // AppID could have one or two closing braces due to Inno Setup escaping: {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}_is1 or {E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}_is1
             string[] possibleKeys = new[]
             {
                 @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}_is1",
@@ -442,50 +517,33 @@ public partial class App : Application
             string? uninstallString = null;
             foreach (var keyPath in possibleKeys)
             {
-                // Try 64-bit Registry View
                 using (var baseKey64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 using (var subKey64 = baseKey64.OpenSubKey(keyPath))
-                {
                     uninstallString = subKey64?.GetValue("UninstallString")?.ToString();
-                }
 
-                // Try 32-bit Registry View if not found
                 if (string.IsNullOrEmpty(uninstallString))
                 {
                     using (var baseKey32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
                     using (var subKey32 = baseKey32.OpenSubKey(keyPath))
-                    {
                         uninstallString = subKey32?.GetValue("UninstallString")?.ToString();
-                    }
                 }
 
                 if (!string.IsNullOrEmpty(uninstallString))
-                {
                     break;
-                }
             }
 
-            if (string.IsNullOrEmpty(uninstallString))
-            {
-                return; // Inno Setup version is not installed.
-            }
+            if (string.IsNullOrEmpty(uninstallString)) return;
 
             string uninstallerExe = uninstallString.Replace("\"", "").Trim();
-            if (!File.Exists(uninstallerExe))
-            {
-                return;
-            }
+            if (!File.Exists(uninstallerExe)) return;
 
-            // Run the uninstaller silently (will prompt for UAC)
-            var psi = new System.Diagnostics.ProcessStartInfo
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
                 FileName = uninstallerExe,
                 Arguments = "/SILENT /SUPPRESSMSGBOXES /NORESTART",
                 UseShellExecute = true,
                 Verb = "runas"
-            };
-
-            System.Diagnostics.Process.Start(psi);
+            });
         }
         catch (Exception ex)
         {
