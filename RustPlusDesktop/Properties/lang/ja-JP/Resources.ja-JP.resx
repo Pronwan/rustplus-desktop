@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] 選択リセット操作が正常に完了しました。</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>方向</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>アイコンを検索（例：タレット、スイッチ）...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} 日</value>
   </data>
@@ -4471,7 +4470,7 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
     <value>ホワイト</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>オフライン マップは &apos;{0}&apos; として正常にインポートされました。</value>
+    <value>オフライン マップは '{0}' として正常にインポートされました。</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>インポートされた地図</value>
@@ -4509,19 +4508,19 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>オフライン マップ &apos;{0}&apos; はまだ解析されていません。 3D マップを一度開いて解析し、再度コピーしてみてください。</value>
+    <value>オフライン マップ '{0}' はまだ解析されていません。 3D マップを一度開いて解析し、再度コピーしてみてください。</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>マップのコピーエラー</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>マップのレイアウトが一致しません。マップ &apos;{0}&apos; は、接続されたサーバー &apos;{1}&apos; と同じマップではないようです。</value>
+    <value>マップのレイアウトが一致しません。マップ '{0}' は、接続されたサーバー '{1}' と同じマップではないようです。</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>マップの不一致</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>3D マップとローカル アセットを &apos;{0}&apos; から &apos;{1}&apos; に正常にコピーしました。</value>
+    <value>3D マップとローカル アセットを '{0}' から '{1}' に正常にコピーしました。</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>地図をコピーしました</value>
@@ -4709,5 +4708,797 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>チュートリアルをスキップ</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>このチュートリアルをキャンセルしますか?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>進行状況が保存されました。チュートリアル センターからいつでも続行できます。</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>学び続けましょう</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>チュートリアルをキャンセルします</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>ステップ {0}/{1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>この機能は、現在のアプリの状態では使用できません。安全に続行し、必要なサーバー、アカウント、またはデータが利用可能になったら戻ってください。</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>リセット</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>再起動</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>続行</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>開始</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0}/{1} ステップ</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>RustPlusDesktop を学ぶ</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>このビルドの集中レッスン。チュートリアルでは、デバイスのアクティブ化、メッセージの送信、データの削除、自動化の実行は行われません。</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>推奨チュートリアルの開始</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>最後のチュートリアルを続ける</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>すべてのチュートリアルを再起動します</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>チュートリアルの進行状況をリセット</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>新規ユーザー向けの基本を開始する</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>新機能のチュートリアルを提供する</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>RustPlusDesktop へようこそ</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>ナビゲーション、サーバー接続、マップ、デバイスに関する短いツアーに参加することも、必要なレッスンのみを選択することもできます。</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>クイック ツアーの開始</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>チュートリアルの選択</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>今はありません</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>未開始</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>進行中</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>完了しました</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>スキップされました</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>更新されました</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>新機能</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>はじめに</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>マップ</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>デバイス</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>チームとコミュニケーション</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>モニタリング</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>ツール</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>設定とサポート</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>アプリケーションの基本</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>ナビゲーション、サーバー コンテキスト、接続状態、通知、レッスンを再生する場所について学習します。</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>アカウントとクラウド</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>ローカル機能、クラウド サインイン、同期、サポーター アクセスを理解します。</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>ペアリングとサーバー管理</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Rust+ をペアリングし、サーバーを選択し、ソフト、フル、切断モードを理解します。</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D マップの基本</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>マップ ナビゲーション、レイヤー、ヒートマップ、描画ツール、3D エントリ ポイントについて学びます。</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>リソースのヒートマップ</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>抽出されたスポーン密度オーバーレイに表示されるものと、それらを選択またはクリアする方法を学びます。</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D マップ</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>ローカルの 3D ビューポート、ツールバー、フットプリント ビルダー、パフォーマンス表示、および閉じるアクションを調べます。</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>スマートデバイス</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>ペアリングされたスマート デバイスを検索、フィルター、更新、整理し、安全に理解します。</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>チームとプレーヤーの追跡</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>チームメイト、マーカー、フォロー行動、共有要件を確認します。</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>チームチャットとコマンド</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>何も送信せずに、チーム チャットを読み取り、メッセージを作成し、コマンドを構成します。</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord 統合</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Discord エントリ ポイント、構成、権限、プライバシー境界を見つけます。</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>ロジックおよび自動化エンジン</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>ルール、トリガー、条件、アクション、実行時の状態、および安全なテストを理解します。</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>通知とアラート</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>アプリケーション通知のフィルター、検索、レビュー、マーク、およびクリア。</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>カメラとモニタリング</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>カメラ識別子を非公開にしながら、ペアリングされたカメラを追加および確認します。</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>レイド計算機</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>襲撃計画を作成し、方法を比較し、資材の合計を確認します。</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>リサイクル業者の計算機</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>アイテムを追加し、野生リサイクル業者と安全ゾーンのリサイクル業者の収量を比較します。</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>言語、マップのパフォーマンス、接続されたサービス、およびメンテナンス制御を検索します。</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>アップデートと診断</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>アップデートを開始せずに、アプリケーションのアップデートを確認し、診断ログを見つけます。</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>メインナビゲーション</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>このサイドバーを使用して、デバイス、チーム追跡、カメラ、プレーヤー、通知、および電卓間を移動します。</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>ナビゲーションの拡張</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>サイドバーを固定するか折りたたんで、ラベルをより多くのマップ ワークスペースと交換します。</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>現在のサーバー</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>この領域は、選択した Rust サーバーとそのアカウント コンテキストを識別します。</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>接続ステータス</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>サーバー カードは、サーバーが切断されているか、ソフト接続されているか、完全に接続されているかを示します。</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>接続の問題、アラーム、停止、自動化の結果がここに収集されます。</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>チュートリアル センター</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>ここで、更新されたレッスンを再生、続行、再開、または発見します。</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>アカウントコンテキスト</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>クラウド アクセスは、Rust+ ペアリングとは別のものです。ローカル機能はクラウド同期なしでも引き続き利用できます。</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>クラウドアカウント</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>サポートされている同期を利用するには、ここにサインインしてください。チュートリアルではプライベート アカウント データは表示されません。</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>サポーターステータス</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>サポーターのアクセスにより、ゲート機能のロックが解除されます。ローカル チュートリアルの進行にはサブスクリプションは必要ありません。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Rust+ のペア</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>ライブサーバー機能が動作する前に、ペアリングによりこのアプリが Rust Companion にリンクされます。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>ペアリングの開始</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>リスニングを開始してから、Rust のゲーム内 Rust+ ペアリング フローを使用します。資格情報は決して記録されません。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>ペアリングされたサーバー</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>接続する前、またはサーバー固有の設定を変更する前に、ローカルに構成されたサーバーを選択してください。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>ソフト接続</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect は、すべてのライブ機能を初期化せずに、制限された通信を読み込みます。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>完全接続</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>完全な接続により、マップ データ、デバイス、チーム データ、Rust+ サブスクリプションが初期化されます。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>切断</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>切断によりライブ通信が停止します。このレッスンではアクションを呼び出すことはありません。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>ペアリングをリセット</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>回復コマンドはペアのコンテキスト メニューにあります。リセットすると、ローカル ペアリング設定が削除されます。</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>マップ キャンバス</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>現在の Rust マップ上のドラッグによるパン、ホイールによるズーム、マーカーの操作を行います。</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>マップツールバー</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>ツールバーは、レイヤー、チャット、オーバーレイ、タイマー、2D または 3D モードを制御します。</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>ビューをリセット</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>パンまたはズームした後、マップをワークスペースに戻します。</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>マップレイヤー</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>ここでグリッド、プレーヤー、記念碑、ショップ、および高度なビジュアル オプションを選択します。</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>ヒートマップ</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>抽出された密度オーバーレイを開きます。これらは、生きている実体ではなく、おそらくスポーンゾーンを示しています。</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>3D マップを開く</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>現在のマップのローカル 3D 表現を生成または開きます。</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>描画ツール</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>マップ上に非破壊計画メモを描画し、終了したら描画モードを終了します。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>ヒートマップを開く</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>現在解析されたマップで使用可能な密度レイヤーを参照します。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>ヒートマップ セレクター</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>抽出されたカテゴリを 1 つ選択するか、アクティブなオーバーレイをクリアします。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>ヒートマップの仕組み</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>ヒートマップはスポーンする可能性のあるエリアを要約します。ある場所に生きている実体があることを保証するものではありません。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>3D を生成または開く</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>アプリはローカルで地図データを解析し、可能な場合はそのキャッシュを再利用します。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D ビューポート</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>選択したマップのインタラクティブな表現の周りを周回、パン、ズームします。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D ツールバー</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>コントロールレイヤー、ライブマーカー、フルスクリーン、設定、およびフットプリントツール。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>ベース フットプリント ビルダー</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>構築モードでは計画の基礎のみが配置されます。 Rust サーバーは変更されません。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>パフォーマンス インジケーター</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS およびアダプティブ解像度バランスの詳細とスムーズなインタラクション。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>3D ビューを閉じる</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>2D に戻り、重く埋め込まれた 3D リソースを解放します。</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>デバイスリスト</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>ペアになったスイッチ、アラーム、ストレージ モニターがグループとしてここに表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>デバイス検索</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>デバイスの状態を変更せずに、名前またはコマンドでデバイスをフィルターします。</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>デバイス タイプ フィルター</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>リストをスイッチ、アラーム、ストレージ モニター、またはすべてのデバイスに制限します。</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>リフレッシュ状態</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>新しい読み取り専用状態を要求します。可用性は接続によって異なります。</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>デバイスツール</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>インポート、クラウド同期、自動化、ホットキー、更新、クリーンアップがここに収集されます。</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>デバイスカード</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>カードには ID、接続状態、コマンド、およびデバイス固有のコントロールが表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>デバイスの安全性</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>チュートリアルでは、スイッチの切り替え、デバイスの削除、ホットキーの実行は行われません。</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>チームリスト</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>ロードされたチームメイト、オンライン状態、アバター、およびコンテキスト アクションがここに表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>チームマーカー</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>マップ上に表示されるチームメイト マーカー スタイルを選択します。</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>プレーヤーをフォローする</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>次のセンターはチームメイトの更新情報をマップしており、現在のチーム データが必要です。</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>チーム共有</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>ベースとスクリーンショットの共有には、アカウントとアップロードの同意が必要な場合があります。</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>チャット履歴</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>接続でチャット データが提供されると、最近の Rust チーム メッセージがここに表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>メッセージ入力</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>ここでチームメッセージを作成します。チュートリアルでは挿入や送信は行いません。</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>メッセージを送信</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Rust チーム チャットに投稿を送信しています。このコントロールは強調表示のみされます。</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>コマンド設定</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>プレフィックス、デバイス バインド、遅延、およびコマンドの可用性を構成します。</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord コミュニティ</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>このショートカットによりコミュニティが開きます。統合設定は別です。</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord 設定</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>ID を記録せずにボット、ギルド、チャネル、コマンド、および権限を構成します。</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord 安全性</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>チュートリアルでは、メッセージを投稿したり、ギルド、チャネル、ユーザー ID をログに記録したりすることはありません。</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>オープンロジックエンジン</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>選択したサーバーのルール エディターを開きます。</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>ルールリスト</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>ルールとそのトリガー、条件、遅延、およびアクションのステップがここに表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>エンジンの状態</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>ルールの実行を有効または一時停止します。チュートリアルではこのスイッチを変更することはありません。</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>ルールのワークフロー</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>トリガーはルールを開始します。条件は後のアクションをゲートします。ステップが順番に実行されます。</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>オートメーションの安全性</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>チュートリアルでは、ルールの永続化、デバイスの切り替え、チャットの送信、自動化の実行は行われません。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>通知センター</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>一時的なデスクトップ通知に依存せずにアラートを確認します。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>通知フィルター</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>すべての通知、アラーム、死亡を切り替えます。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>検索通知</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>表示されたコンテンツまたはサーバー コンテキストによって通知を検索します。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>一括アクション</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>すべての読み取り履歴をマークするか、履歴をクリアします。チュートリアルではこれらのアクションは決して実行しません。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>カメラリスト</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>選択したサーバーとカメラが使用可能な場合、構成されたプレビューが表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>カメラを追加</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Rust 識別子を使用してカメラを追加します。チュートリアルではカメラ コードをキャプチャすることはありません。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>カメラのプライバシー</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>カメラ識別子とフレームはチュートリアル診断から除外されます。</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>検索対象</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>バンドルされたデータセット内で壁、ドア、展開可能なターゲット、またはその他のターゲットを検索します。</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>襲撃計画</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>ターゲット、健全性、数量、方法、および計算されたコストを確認します。</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>メソッドの比較</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>許可されている爆発物またはツールを選択し、代替品を比較します。</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>明確な計画</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>クリアするとプランが削除されます。チュートリアルでは、エントリを変更せずにそれを強調表示します。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>検索項目</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>リサイクル可能なアイテムを見つけて、計算機に追加します。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>アイテムカテゴリ</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>カテゴリ別にアイテム カタログを絞り込みます。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>入力項目</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>数量を調整するか、エントリを削除します。チュートリアルでは電卓の状態は変更されません。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>リサイクラーの結果</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>野生リサイクル業者と安全地帯リサイクル業者の収量と時間を比較します。</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>設定を開く</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>アプリケーションの動作、統合、パフォーマンス、バックアップ、メンテナンスがここに存在します。</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>UI 言語を選択します。チュートリアル テキストは同じリソース システムを使用します。</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>マップのパフォーマンス</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>イメージ スケーリング、GPU キャッシュ、レンダリング スケール、およびエッジ モードを調整します。</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>メンテナンス</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>バックアップ、リセット、パージ、およびキャッシュの制御は破壊的な可能性があるため、決して呼び出されません。</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>アップデートの確認</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>ダウンロードまたはインストールせずにアップデートの可用性をリクエストします。</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>ステータスの更新</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>バージョンとダウンロードの進行状況がこのタイトル バー領域に表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>診断ログ</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>機密性のない詳細のみを共有する前に、ローカル診断をフィルタリングします。</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>ショップと自動販売機</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>自動販売機のオファーを検索し、取引を比較し、更新のタイミングを理解します。</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>イベントとサーバーの監視</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>ライブ イベント インジケーターを読み取り、ローカル タイマーを作成します。</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>ベースとスクリーンショット</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>マップ ベース マーカーを作成し、そのメモとスクリーンショットを安全に管理します。</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>デバイスの自動化</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>単純なデバイス状態の自動化をロジック エンジンとは別に構成します。</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>ショップ検索を開く</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>現在のマップを変更せずに、マップの自動販売機検索パネルを開きます。</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>ショップ検索</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>アイテムを検索し、売買数量を確認し、結果をマップ上で開きます。</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>リフレッシュのタイミング</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>ショップのオファーはサーバーの接続に依存しており、Rust+ の更新の間は古くなっている可能性があります。</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>ライブ イベント ドック</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>貨物、ヘリコプター、チヌーク、ベンダー、およびその他のアクティブなイベント インジケーターが利用可能な場合、ここに表示されます。</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>カスタムタイマー</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>サーバーの状態を変更せずにローカル リマインダーを作成します。</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>イベントの鮮度</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>イベント データは選択した接続に依存しており、古くなると消える可能性があります。</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>ベースマーカー</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>ベース マーカーが 2D マップ上に配置され、開かれます。</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>ベースノートとスクリーンショット</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>マップ コンテキスト アクションを使用してベースに名前を付け、スクリーンショットを添付します。クラウド共有には同意が必要です。</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>セーフティの削除</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>ベースまたはスクリーンショットの削除はチュートリアルによって実行されることはなく、常にユーザーの入力が必要です。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>オープンデバイスオートメーション</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>選択したサーバーの軽量デバイス状態自動化を開きます。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>自動化アクション</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>実行を一時停止するか、自動化を追加してください。チュートリアルでは、エンジンの状態を変更したり、データを作成したりすることはありません。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>自動化ルール</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>各ルールのソース デバイス、ターゲット アクション、タイミング、有効な状態を確認します。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>デバイスの安全性</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>ルールを実行したり、実際のスマート デバイスを切り替えたりするチュートリアルはありません。</value>
   </data>
 </root>

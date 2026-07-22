@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
              mc:Ignorable="d"
              d:DesignHeight="540" d:DesignWidth="450"
              Background="Transparent">
@@ -105,7 +106,7 @@
                         <ColumnDefinition Width="124" />
                     </Grid.ColumnDefinitions>
 
-                    <ui:TextBox x:Name="SearchTextBox"
+                    <ui:TextBox x:Name="SearchTextBox" tutorials:Tutorial.TargetId="Recycler.Search"
                                 Grid.Column="0"
                                 Height="34"
                                 Margin="0,0,8,0"
@@ -119,7 +120,7 @@
                                 VerticalContentAlignment="Center"
                                 TextChanged="SearchTextBox_TextChanged" />
 
-                    <ComboBox x:Name="CategoryComboBox"
+                    <ComboBox x:Name="CategoryComboBox" tutorials:Tutorial.TargetId="Recycler.Category"
                               Grid.Column="1"
                               Height="34"
                               Padding="9,3"
@@ -154,7 +155,7 @@
                                        HorizontalAlignment="Right" />
                         </DockPanel>
 
-                        <ScrollViewer x:Name="InputsScrollViewer"
+                        <ScrollViewer x:Name="InputsScrollViewer" tutorials:Tutorial.TargetId="Recycler.Inputs"
                                       Grid.Row="1"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled"
@@ -248,7 +249,7 @@
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                            <ItemsControl x:Name="OutputsControl">
+                            <ItemsControl x:Name="OutputsControl" tutorials:Tutorial.TargetId="Recycler.Results">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border x:Name="OutputRowBorder"

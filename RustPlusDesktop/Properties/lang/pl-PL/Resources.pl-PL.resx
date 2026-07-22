@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Czy na pewno chcesz kontynuować?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>Operacja resetu selektywnego [WIPE] została zakończona pomyślnie.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Kierunek</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Czy na pewno chcesz kontynuować?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Wyszukaj ikony (np. wieżyczka, przełącznik)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dni</value>
   </data>
@@ -4709,5 +4708,797 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Pomiń tutorial</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Z powrotem</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Następny</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Koniec</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Anulować ten samouczek?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Twój postęp jest zapisany. Możesz kontynuować z Centrum Samouczka w dowolnym momencie.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Ucz się dalej</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Anuluj tutorial</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Krok {0} {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Ta funkcja nie jest dostępna w obecnej wersji aplikacji. Kontynuuj bezpiecznie i wróć, gdy dostępny będzie wymagany serwer, konto lub dane.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Kontynuuj</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} {1} kroków</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Ucz się RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Skoncentrowane lekcje do tego builda. Samouczki nigdy nie aktywują urządzeń, nie wysyłają wiadomości, nie usuwają danych ani nie uruchamiają automatyzacji.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Rozpocznij polecane tutoriale</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Kontynuuj poprzedni tutorial</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Zrestartuj wszystkie tutoriale</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Zresetuj postępy w samouczku</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Podstawy dla nowych użytkowników</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Oferować tutoriale dotyczące nowych funkcji</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Witamy w RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Wybierz krótką wycieczkę po nawigacji, połączeniu z serwerem, mapach i urządzeniach — lub wybierz tylko potrzebne lekcje.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Rozpocznij szybką wycieczkę</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Wybierz Samouczki</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Nie teraz</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Nie zaczęto</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>W trakcie realizacji</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Ukończone</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Pominięte</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Zaktualizowano</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Nowa funkcja</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Zaczynamy</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Mapy</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Urządzenia</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Zespół i komunikacja</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automatyzacja</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Monitorowanie</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Narzędzia</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Ustawienia i wsparcie</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Podstawy aplikacji</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Naucz się nawigacji, kontekstu serwera, stanu połączenia, powiadomień oraz miejsc powtórki lekcji.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Konto i chmura</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Zrozum funkcje lokalne, logowanie do chmury, synchronizację oraz dostęp do Supporterów.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Parowanie i zarządzanie serwerami</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Sparuj Rust+, wybierz serwer i zrozum tryby miękki, pełny i rozłączony.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>Podstawy mapy 2D</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Poznaj nawigację po mapie, warstwy, mapy ciepła, narzędzia do rysowania oraz 3D punkt wejścia.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Mapy ciepła zasobów</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Dowiedz się, co pokazują wyodrębnione nakładki gęstości pojawiania się i jak je wybrać lub wyczyścić.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Map</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Eksploruj lokalny widok 3D, pasek narzędzi, kreator odrysów, wyświetlacz wydajności i zamykaj akcję.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Inteligentne urządzenia</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Znajdź, filtruj, odświeżaj, organizuj i bezpiecznie rozumiej połączone inteligentne urządzenia.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Śledzenie drużyny i zawodników</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Przeglądaj członków zespołu, markery, zachowania i wymagania dotyczące dzielenia się tematem.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Czat zespołu i komendy</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Czytaj czat zespołu, komponuj wiadomości i konfiguruj polecenia bez wysyłania czegokolwiek.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Integracja Discord</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Znajdź Discord punkty wejścia, konfigurację, uprawnienia i granice prywatności.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Logic and Automation Engine</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Rozumienie reguł, wyzwalaczy, warunków, akcji, stanu działania i bezpieczne testowanie.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Powiadomienia i alerty</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Filtruj, wyszukuj, przeglądaj, oznaczaj i czyść powiadomienia o zgłoszeniach.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Kamery i monitoring</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Dodaj i przeglądaj sparowane kamery, zachowując jednocześnie prywatność identyfikatorów kamer.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Kalkulator rajdu</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Zbuduj plan rajdu, porównaj metody i przejrzyj sumy materiałów.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Kalkulator recyklingu</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Dodaj przedmioty i porównaj urodzaj dzikich i bezpiecznych recyklerów.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Znajdź język, mapuj wydajność, usługi połączone i kontrolę konserwacyjną.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Aktualizacje i diagnostyka</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Sprawdź aktualizacje aplikacji i zlokalizuj log diagnostyczny bez rozpoczynania aktualizacji.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Główna Nawigacja</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Użyj tego paska bocznego, aby poruszać się między urządzeniami, śledzeniem drużyny, kamerami, zawodnikami, powiadomieniami i kalkulatorami.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Rozszerzenie nawigacji</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Przypiń lub złóż pasek boczny, aby wymienić etykiety i uzyskać większą przestrzeń roboczą mapy.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Obecny serwer</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Ta część identyfikuje wybrany serwer Rust oraz kontekst jego konta.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Status połączenia</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Karty serwera pokazują, czy serwer jest rozłączony, miękko połączony, czy w pełni połączony.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Powiadomienia</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Tutaj zbieramy problemy z połączeniem, alarmy, zgony i wyniki automatyzacji.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Centrum Tutoriali</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Odtwarzaj ponownie, kontynuuj, ponownie lub odkryj zaktualizowane lekcje tutaj.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Kontekst konta</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Dostęp do chmury jest oddzielny od Rust+ parowania. Funkcje lokalne pozostają dostępne bez synchronizacji w chmurze.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Konto chmurowe</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Zaloguj się tutaj, aby wspierać synchronizację; Tutoriale nigdy nie wyświetlają danych o prywatnych kontach.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Status kibica</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Dostęp wspierający odblokowuje funkcje ograniczone. Postępy w lokalnym tutorialu nie wymagają subskrypcji.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Para Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Parowanie łączy tę aplikację z Rust Companion, zanim funkcje serwera na żywo będą mogły działać.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Rozpocznij parowanie</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Zacznij słuchać, a potem skorzystaj z Rust Rust+ flow parowania. Dokumenty uwierzytelniające nigdy nie są rejestrowane.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Serwery sparowane</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Wybierz lokalnie skonfigurowany serwer przed połączeniem lub zmianą ustawień specyficznych dla serwera.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect obciąża ograniczoną komunikację bez inicjalizacji każdej funkcji na żywo.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Pełne połączenie</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Pełne połączenie inicjuje dane mapy, urządzenia, dane zespołu oraz subskrypcje Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Rozłączenie</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Rozłączenie kończy transmisję na żywo. Ta lekcja nigdy nie wywołuje działania.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Resetowanie parowania</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Polecenia odzyskiwania znajdują się w menu kontekstowym Pary. Resetowanie usuwa lokalną konfigurację parowania.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Płótno mapy</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Przesuwaj ruch, powiększ kółkiem i wchodź w interakcje ze znacznikami na aktualnej Rust mapie.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Pasek Map</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Pasek narzędzi kontroluje warstwy, czat, nakładki, timery oraz tryby 2D lub 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Zresetuj widok</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Po przesunięciu lub przybliżeniu dopasuj mapę z powrotem do przestrzeni roboczej.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Warstwy mapy</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Wybierz siatkę, gracza, pomnik, sklep i zaawansowane opcje wizualne tutaj.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Mapy ciepła</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Otwarte nakładki wyodrębnionej gęstości. Pokazują prawdopodobnie strefy odrodzenia, a nie żywe byty.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Otwórz 3D mapę</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Wygeneruj lub otwórz lokalną reprezentację 3D aktualnej mapy.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Narzędzia do rysowania</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Rysuj niedestrukcyjne notatki planistyczne na mapie i po zakończeniu wyjdź z trybu rysowania.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Otwórz mapy ciepła</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Przeglądaj dostępne warstwy gęstości dla obecnie przeanalizowanej mapy.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Selektor mapy cieplnej</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Wybierz jedną wyodrębnioną kategorię lub usuń aktywną nakładkę.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Jak działają mapy cieplne</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Mapy ciepła podsumowują prawdopodobne obszary odrodzenia; Nie gwarantują aktywnej jednostki w danym miejscu.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Generuj lub otwieraj 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Aplikacja analizuje dane mapy lokalnie i ponownie wykorzystuje ich cache, gdy to możliwe.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Viewport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Orbituj, przesuwaj i powiększaj wokół interaktywnej reprezentacji wybranej mapy.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Toolbar</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Warstwy kontrolne, markery na żywo, pełnoekranowy, ustawienia i narzędzia do odrysowania.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Budowniczy bazowego śladu</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Tryb budowy zakłada tylko planowanie fundamentów; Nie modyfikuje serwera Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Wskaźnik wydajności</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS i adaptacyjne rozdzielczość równoważą detale z płynną interakcją.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Close 3D View</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Wróć do 2D i zwolnij ciężkie wbudowane zasoby 3D.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Lista urządzeń</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Tutaj w grupach pojawiają się sparowane przełączniki, alarmy i monitory pamięci masowej.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Wyszukiwanie urządzeń</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Filtruj urządzenia według nazwy lub polecenia bez zmiany ich stanu.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Filtr typu urządzenia</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Ogranicz listę do przełączników, alarmów, monitorów pamięci masowej lub wszystkich urządzeń.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Odśwież stany</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Żądaj nowego stanu tylko do odczytu; Dostępność zależy od połączenia.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Narzędzia Device</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Import, synchronizacja chmury, automatyzacja, skróty klawiszowe, odświeżanie i czyszczenie są zebrane tutaj.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Karta urządzenia</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Karta pokazuje tożsamość, stan połączenia, polecenia oraz specyficzne dla urządzenia kontrole.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Bezpieczeństwo urządzeń</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Samouczki nigdy nie przełączają przełącznika, nie usuwają urządzenia ani nie uruchamiają skrótu klawiszowego.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Lista drużyn</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Tutaj pojawiają się załadowani sojusznicy, stan online, awatary i akcje kontekstowe.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Markery drużynowe</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Wybierz, które style znaczników drużyny są widoczne na mapie.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Podążaj za graczem</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Następujące centra mapują aktualizacje na członku drużyny i wymagają aktualnych danych zespołowych.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Współdzielenie zespołów</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Udostępnianie bazy i zrzutów ekranu może wymagać konta i zgody na przesyłanie danych.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Historia czatu</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Najnowsze wiadomości zespołu Rust pojawiają się tutaj, gdy połączenie dostarcza dane czatu.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Wejście wiadomości</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Napisz tutaj wiadomość zespołową. Samouczek nigdy nie wstawia ani nie wysyła żadnego.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Wyślij wiadomość</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Wysyłanie postów na czat zespołu Rust. Ta kontrola jest podświetlona tylko na miejscu.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Ustawienia poleceń</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Konfiguruj prefiksy, przypisania urządzeń, opóźnienia i dostępność poleceń.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord Społeczność</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Ten skrót otwiera społeczność; Ustawienia integracji są oddzielne.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Ustawienia</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Konfiguruj bota, gildię, kanały, polecenia i uprawnienia bez logowania identyfikatorów.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Bezpieczeństwo</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Samouczki nigdy nie publikują wiadomości ani nie rejestrują identyfikatorów gildii, kanałów czy użytkowników.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Silnik Open Logic</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Otwórz edytor reguł wybranego serwera.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Lista zasad</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Zasady oraz ich wyzwalacze, warunki, opóźnienia i kroki działania znajdują się tutaj.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Stan silnika</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Włącz lub wstrzymaj wykonywanie reguł. Samouczek nigdy nie zmienia tego przełącznika.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Przepływ pracy z regułami</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Wyzwalacz uruchamia regułę; warunki blokują późniejsze działania; Kroki idą po kolei.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Bezpieczeństwo automatyzacji</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Samouczki nie zachowują reguł, nie przełączają urządzeń, nie wysyłają czatu ani nie uruchamiają automatyzacji.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Centrum powiadomień</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Przeglądaj powiadomienia bez polegania na przejściowych powiadomieniach na pulpicie.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Filtry powiadomień</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Przełączaj się między wszystkimi powiadomieniami, alarmami i śmierciami.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Powiadomienia o wyszukiwaniu</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Znajdź powiadomienia według wyświetlanej treści lub kontekstu serwera.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Akcje masowe</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Zaznacz wszystkie przeczytane lub czyste historie; Samouczki nigdy nie wykonują tych czynności.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Lista kamer</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Skonfigurowane podglądy pojawiają się, gdy wybrany serwer i kamera są dostępne.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Dodaj kamerę</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Dodaj kamerę używając jej identyfikatora Rust; Samouczki nigdy nie rejestrują kodów kamer.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Prywatność kamery</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Identyfikatory kamer i klatki są wyłączone z diagnostyki samouczka.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Cele poszukiwań</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Znajdź ścianę, drzwi, możliwość wdrożenia lub inny cel w zestawie danych.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Plan rajdu</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Przegląd celów, stanu zdrowia, ilości, metod oraz obliczonych kosztów.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Porównaj metody</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Wybierz dozwolone materiały wybuchowe lub narzędzia i porównaj alternatywy.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Jasny plan</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear usuwa plan; Samouczek podkreśla go bez zmiany wpisów.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Wyszukiwanie elementów</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Znajdź przedmiot nadający się do recyklingu i dodaj go do kalkulatora.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Kategoria przedmiotu</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Zawęż katalog przedmiotów według kategorii.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Elementy wejściowe</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Dostosuj ilości lub usuń wpisy; Samouczki nie zmieniają stanu kalkulatora.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Wyniki recyklingu</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Porównaj plony i czasy dla dzikich i bezpiecznych recyklerów.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Otwórz Ustawienia</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Zachowanie aplikacji, integracje, wydajność, kopie zapasowe i konserwacja są dostępne tutaj.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Wybierz język interfejsu. Tekst samouczka korzysta z tego samego systemu zasobów.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Wydajność mapy</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Dostrajaj skalowanie obrazów, buforowanie GPU, skalowanie renderowania oraz tryb brzegowy.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Konserwacja</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Kontrola kopii zapasowej, resetu, czyszczenia i pamięci podręcznej może być destrukcyjna i nigdy nie jest uruchamiana.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Sprawdź aktualizacje</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Proś o dostępność aktualizacji bez pobierania lub instalowania.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Status aktualizacji</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Postęp w wersji i pobieraniu pojawiają się w tym obszarze z paskiem tytułowym.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Dziennik diagnostyczny</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Filtruj lokalne diagnostyki przed udostępnieniem tylko niewrażliwych danych.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Sklepy i sprzedaż</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Wyszukaj oferty sprzedaży, porównaj transakcje i znaj czas odświeżania.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Monitorowanie zdarzeń i serwerów</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Czytaj wskaźniki wydarzeń na żywo i twórz lokalne liczniki.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Bazy i zrzuty ekranu</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Twórz markery bazowe na mapie i bezpiecznie zarządzaj ich notatkami oraz zrzutami ekranu.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Automatyzacja urządzeń</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Konfiguruj prostą automatyzację stanu urządzenia oddzielnie od silnika logicznego.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Otwórz wyszukiwanie w sklepie</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Otwórz panel wyszukiwania sprzedań na mapie bez zmiany obecnej mapy.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Wyszukiwanie w sklepie</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Przeszukuj przedmioty, przeglądaj ilości kupna i sprzedaży oraz otwieraj wyniki na mapie.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Odświeżanie czasu</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Oferty sklepów zależą od łączności z serwerem i mogą być nieaktualne między Rust+ odświeżeniami.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Dock na żywo</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Wskaźniki zdarzeń towarowych, helikopterowych, chinook, sprzedawców i innych aktywnych zdarzeń pojawiają się tutaj, gdy są dostępne.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Niestandardowy Timer</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Stwórz lokalne przypomnienie bez zmiany stanu serwera.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Świeżość wydarzenia</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Dane zdarzeń zależą od wybranego połączenia i mogą zniknąć, gdy stanie się ono nieaktualne.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Markery bazowe</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Znaczniki baz są umieszczane i otwierane na 2D mapie.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Podstawowe notatki i zrzuty ekranu</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Użyj akcji kontekstu mapy, aby nazwać bazę i dołączyć zrzuty ekranu; Udostępnianie w chmurze wymaga zgody.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Usuń bezpieczeństwo</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Usuwanie bazy lub zrzutu ekranu nigdy nie jest wykonywane przez samouczek i zawsze wymaga twojej pomocy.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Otwarta automatyzacja urządzeń</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Otwórz lekką automatyzację stanu urządzenia dla wybranego serwera.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Działania automatyzacji</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Wstrzymać wykonanie lub dodać automatyzację; Samouczki nigdy nie zmieniają stanu silnika ani nie tworzą danych.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Zasady automatyzacji</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Przejrzyj urządzenia źródłowe, akcje docelowe, czas i stan włączenia dla każdej reguły.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Bezpieczeństwo urządzeń</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Żaden samouczek nie wykonuje reguły ani nie przełącza prawdziwego inteligentnego urządzenia.</value>
   </data>
 </root>

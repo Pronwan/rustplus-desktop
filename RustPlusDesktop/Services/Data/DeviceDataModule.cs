@@ -173,7 +173,7 @@ namespace RustPlusDesk.Services.Data
             return newGroup;
         }
 
-        public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData canvasOverlay, bool explicitWipe = false)
+        public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData? canvasOverlay, bool explicitWipe = false)
         {
             var dtoList = new List<ExportedDeviceDto>();
             foreach (var d in devices)

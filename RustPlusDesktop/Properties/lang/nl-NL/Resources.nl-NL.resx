@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Selectieve resetoperatie succesvol voltooid.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Richting</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Pictogrammen zoeken (bijv. geschutskoepel, schakelaar)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} dagen</value>
   </data>
@@ -2890,7 +2889,7 @@ Koppel deze server eerst.</value>
     <value>Sta Discord-opdrachten toe</value>
   </data>
   <data name="UiAllowedCommandRoleIDs" xml:space="preserve">
-    <value>Toegestane opdrachtrol-ID&apos;s</value>
+    <value>Toegestane opdrachtrol-ID's</value>
   </data>
   <data name="UiAmazonAlexaLogin" xml:space="preserve">
     <value>Amazon Alexa Inloggen</value>
@@ -3046,7 +3045,7 @@ Koppel deze server eerst.</value>
     <value>Kleur:</value>
   </data>
   <data name="UiCommaSeparatedRoleIDs" xml:space="preserve">
-    <value>Door komma&apos;s gescheiden rol-ID&apos;s</value>
+    <value>Door komma's gescheiden rol-ID's</value>
   </data>
   <data name="UiCommandPermissions" xml:space="preserve">
     <value>Opdrachtmachtigingen</value>
@@ -3529,7 +3528,7 @@ Koppel deze server eerst.</value>
     <value>Minimale winst:</value>
   </data>
   <data name="UiModularCars" xml:space="preserve">
-    <value>Modulaire auto&apos;s</value>
+    <value>Modulaire auto's</value>
   </data>
   <data name="UiMonitorAndControlPairedSmartDevices" xml:space="preserve">
     <value>Bewaak en bedien gekoppelde slimme apparaten.</value>
@@ -3748,7 +3747,7 @@ Koppel deze server eerst.</value>
     <value>Zet geluiden terug naar de standaardwaarden</value>
   </data>
   <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
-    <value>Resolutieschaal van de in de cache opgeslagen GPU-bitmap. Lagere schalen verbeteren de prestaties op langzamere GPU&apos;s.</value>
+    <value>Resolutieschaal van de in de cache opgeslagen GPU-bitmap. Lagere schalen verbeteren de prestaties op langzamere GPU's.</value>
   </data>
   <data name="UiResourcesForestry" xml:space="preserve">
     <value>Hulpbronnen en bosbouw</value>
@@ -4093,7 +4092,7 @@ Koppel deze server eerst.</value>
     <value>Gebruikt uw Rust+ / Steam login in de browser. Aanmelden bij de cloud is niet vereist.</value>
   </data>
   <data name="UiViewAndControlPairedCCTVCameras" xml:space="preserve">
-    <value>Bekijk en bedien gekoppelde CCTV-camera&apos;s.</value>
+    <value>Bekijk en bedien gekoppelde CCTV-camera's.</value>
   </data>
   <data name="UiViewPlayers" xml:space="preserve">
     <value>Bekijk spelers</value>
@@ -4357,7 +4356,7 @@ Koppel deze server eerst.</value>
     <value>PIN gegenereerd (geldig voor 15m)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Configureer eerst een kanaal Discord &apos;Chatwaarschuwingen&apos; of &apos;Evenementenwaarschuwingen&apos; in Instellingen.</value>
+    <value>Configureer eerst een kanaal Discord 'Chatwaarschuwingen' of 'Evenementenwaarschuwingen' in Instellingen.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Koppel eerst uw Cloud-account.</value>
@@ -4471,7 +4470,7 @@ Koppel deze server eerst.</value>
     <value>Wit</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Offline kaart succesvol geïmporteerd als &apos;{0}&apos;!</value>
+    <value>Offline kaart succesvol geïmporteerd als '{0}'!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Kaart geïmporteerd</value>
@@ -4509,19 +4508,19 @@ Stapel:
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>De offline kaart &apos;{0}&apos; is nog niet geparseerd. Open de kaart 3D één keer om deze te parseren en probeer vervolgens opnieuw te kopiëren.</value>
+    <value>De offline kaart '{0}' is nog niet geparseerd. Open de kaart 3D één keer om deze te parseren en probeer vervolgens opnieuw te kopiëren.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Kopieer kaartfout</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Kaartindelingen komen niet overeen. De kaart &apos;{0}&apos; lijkt niet dezelfde kaart te zijn als de verbonden server &apos;{1}&apos;.</value>
+    <value>Kaartindelingen komen niet overeen. De kaart '{0}' lijkt niet dezelfde kaart te zijn als de verbonden server '{1}'.</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Kaart komt niet overeen</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>De 3D kaart en lokale elementen zijn met succes gekopieerd van &apos;{0}&apos; naar &apos;{1}&apos;!</value>
+    <value>De 3D kaart en lokale elementen zijn met succes gekopieerd van '{0}' naar '{1}'!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Kaart gekopieerd</value>
@@ -4709,5 +4708,797 @@ Meer informatie vindt u op de officiële website van de server:
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Tutorial overslaan</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Terug</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Voltooien</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Deze tutorial annuleren?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Je voortgang wordt opgeslagen. U kunt op elk gewenst moment doorgaan vanuit het Tutorial Center.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Blijf leren</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Zelfstudie annuleren</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Stap {0} van {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Deze functie is niet beschikbaar in de huidige app-status. Ga veilig verder en keer terug wanneer de vereiste server, account of gegevens beschikbaar zijn.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Opnieuw instellen</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Opnieuw opstarten</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Ga verder</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Begin</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} van {1} stappen</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Leer RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Gerichte lessen voor deze build. In de tutorials worden nooit apparaten geactiveerd, berichten verzonden, gegevens verwijderd of automatiseringen uitgevoerd.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Start aanbevolen tutorials</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Ga door met de laatste zelfstudie</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Start alle zelfstudies opnieuw</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Voortgang van de zelfstudie opnieuw instellen</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Basisbeginselen voor nieuwe gebruikers</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Bied tutorials aan voor nieuwe functies</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Welkom bij RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Volg een korte rondleiding door navigatie, serververbinding, kaarten en apparaten, of kies alleen de lessen die u nodig heeft.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Snelle rondleiding starten</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Kies Tutorials</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Niet nu</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Niet gestart</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>In uitvoering</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>voltooid</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>overgeslagen</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>bijgewerkt</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Nieuwe functie</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Aan de slag</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Kaarten</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Apparaten</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Team en communicatie</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automatisering</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Toezicht</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Gereedschap</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Instellingen en ondersteuning</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Basisprincipes van applicaties</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Leer navigatie, servercontext, verbindingsstatus, meldingen en waar u lessen kunt herhalen.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Account en cloud</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Begrijp lokale functies, inloggen in de cloud, synchronisatie en supportertoegang.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Koppelen en serverbeheer</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Koppel Rust+, kies een server en begrijp de zachte, volledige en niet-verbonden modi.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Kaartbasis</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Leer kaartnavigatie, lagen, heatmaps, tekenhulpmiddelen en het 3D startpunt.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Heatmaps voor bronnen</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Ontdek wat geëxtraheerde overlays met spawn-dichtheid laten zien en hoe u deze kunt selecteren of wissen.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Kaart</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Verken de lokale 3D-viewport, werkbalk, footprintbouwer, prestatieweergave en sluitactie.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Slimme apparaten</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Gekoppelde slimme apparaten zoeken, filteren, vernieuwen, ordenen en veilig begrijpen.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Team- en spelertracking</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Bekijk teamgenoten, markers, volggedrag en vereisten voor delen.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Teamchat en opdrachten</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Teamchat lezen, berichten opstellen en opdrachten configureren zonder iets te verzenden.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Integratie</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Vind Discord toegangspunten, configuratie, machtigingen en privacygrenzen.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Logica- en automatiseringsengine</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Begrijp regels, triggers, voorwaarden, acties, runtimestatus en veilig testen.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Meldingen en waarschuwingen</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Applicatiemeldingen filteren, zoeken, beoordelen, markeren en wissen.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Camera's en monitoring</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Gekoppelde camera's toevoegen en bekijken terwijl de camera-ID's privé blijven.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Raid-calculator</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Stel een invalplan op, vergelijk methoden en bekijk materiële totalen.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Recycler-calculator</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Voeg items toe en vergelijk de opbrengsten van recyclers in de wilde en veilige zone.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Vind taal, kaartprestaties, verbonden services en onderhoudsopties.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Updates en diagnostiek</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Controleer applicatie-updates en zoek het diagnostische logboek zonder een update te starten.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Hoofdnavigatie</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Gebruik deze zijbalk om te schakelen tussen apparaten, teamtracking, camera's, spelers, meldingen en rekenmachines.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Navigatie-uitbreiding</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Zet de zijbalk vast of vouw deze samen om labels uit te wisselen voor meer kaartwerkruimte.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Huidige server</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Dit gebied identificeert de geselecteerde Rust server en de accountcontext ervan.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Verbindingsstatus</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Serverkaarten geven aan of een server niet verbonden, zacht verbonden of volledig verbonden is.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Meldingen</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Verbindingsproblemen, alarmen, sterfgevallen en automatiseringsresultaten worden hier verzameld.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Tutorialcentrum</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Speel hier opnieuw, ga door, herstart of ontdek bijgewerkte lessen.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Accountcontext</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Cloudtoegang staat los van Rust+-koppeling. Lokale functies blijven beschikbaar zonder cloudsynchronisatie.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Cloud-account</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Meld u hier aan voor ondersteunde synchronisatie; tutorials geven nooit privé-accountgegevens weer.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Supporterstatus</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Toegang voor supporters ontgrendelt beveiligde functies. Voor de voortgang van lokale tutorials is geen abonnement vereist.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Paar Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Koppelen koppelt deze app aan Rust Companion voordat de live serverfuncties kunnen werken.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Begin met koppelen</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Begin met luisteren en gebruik vervolgens de in-game Rust+ koppelingsstroom van Rust. Inloggegevens worden nooit geregistreerd.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Gekoppelde servers</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Selecteer een lokaal geconfigureerde server voordat u verbinding maakt of serverspecifieke instellingen wijzigt.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Zachte verbinding</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect belast beperkte communicatie zonder elke live-functie te initialiseren.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Volledige verbinding</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Volledige verbinding initialiseert kaartgegevens, apparaten, teamgegevens en Rust+ abonnementen.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Verbinding verbreken</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Verbinding verbreken stopt livecommunicatie. Deze les roept nooit de actie op.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Koppeling opnieuw instellen</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Herstelopdrachten staan in het contextmenu Koppelen. Door te resetten wordt de lokale koppelingsconfiguratie verwijderd.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Kaartdoek</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Pannen door te slepen, zoomen met het wiel en communiceren met markeringen op de huidige Rust kaart.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Kaartwerkbalk</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>De werkbalk bestuurt lagen, chat, overlays, timers en 2D of 3D modi.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Weergave opnieuw instellen</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Plaats de kaart terug in de werkruimte na het pannen of zoomen.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Kaartlagen</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Kies hier raster-, speler-, monument-, winkel- en geavanceerde visuele opties.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Warmtekaarten</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Open geëxtraheerde dichtheidsoverlays. Ze tonen waarschijnlijke spawnzones, geen levende entiteiten.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Open 3D kaart</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Genereer of open de lokale 3D weergave van de huidige kaart.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Tekenhulpmiddelen</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Teken niet-destructieve planningsnotities op de kaart en verlaat de tekenmodus als u klaar bent.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Heatmaps openen</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Blader door beschikbare dichtheidslagen voor de huidige ontlede kaart.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Heatmap-kiezer</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Selecteer één geëxtraheerde categorie of wis de actieve overlay.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Hoe heatmaps werken</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Heatmaps vatten waarschijnlijke spawngebieden samen; ze garanderen geen levende entiteit op een locatie.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Genereer of open 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>De app parseert kaartgegevens lokaal en hergebruikt de cache indien mogelijk.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Viewport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Draai, pan en zoom rond een interactieve weergave van de geselecteerde kaart.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Werkbalk</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Controlelagen, livemarkeringen, volledig scherm, instellingen en voetafdruktools.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Basisvoetafdrukbouwer</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Bouwmodus plaatst alleen planningsfunderingen; het wijzigt de Rust-server niet.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Prestatie-indicator</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS en adaptieve resolutie balanceren details met vloeiende interactie.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Sluit 3D weergave</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Keer terug naar 2D en geef de zware ingebedde 3D bronnen vrij.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Apparaatlijst</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Gekoppelde schakelaars, alarmen en opslagmonitors verschijnen hier in groepen.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Apparaat zoeken</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Filter apparaten op naam of commando zonder hun status te wijzigen.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Apparaattypefilter</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Beperk de lijst tot schakelaars, alarmen, opslagmonitors of alle apparaten.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Statussen vernieuwen</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Nieuwe alleen-lezen-status aanvragen; beschikbaarheid is afhankelijk van de verbinding.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Apparaathulpmiddelen</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Importeren, cloudsynchronisatie, automatisering, sneltoetsen, vernieuwen en opschonen worden hier verzameld.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Apparaatkaart</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Een kaart toont identiteit, verbindingsstatus, opdrachten en apparaatspecifieke bedieningselementen.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Apparaatveiligheid</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>In de tutorials kun je nooit een schakelaar omzetten, een apparaat verwijderen of een sneltoets gebruiken.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Teamlijst</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Geladen teamgenoten, online status, avatars en contextacties verschijnen hier.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Teammarkeringen</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Kies welke teamgenootmarkeringsstijlen zichtbaar zijn op de kaart.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Volg speler</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Voor het volgen van centra zijn kaartupdates van een teamgenoot vereist en zijn actuele teamgegevens vereist.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Teamdeling</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Voor het delen van basis- en screenshots is mogelijk een account en toestemming voor uploaden vereist.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Chatgeschiedenis</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Recente Rust teamberichten verschijnen hier wanneer de verbinding chatgegevens levert.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Berichtinvoer</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Stel hier een teambericht op. De tutorial voegt er nooit een in of verzendt er geen.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Bericht verzenden</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Berichten verzenden naar Rust teamchat. Dit besturingselement is alleen gemarkeerd.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Opdrachtinstellingen</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Configureer voorvoegsels, apparaatbindingen, vertragingen en beschikbaarheid van opdrachten.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord Gemeenschap</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Deze snelkoppeling opent de community; integratie-instellingen zijn gescheiden.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Instellingen</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Configureer bot, gilde, kanalen, opdrachten en machtigingen zonder ID's te loggen.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Veiligheid</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Tutorials plaatsen nooit berichten of loggen gilde-, kanaal- of gebruikers-ID's.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Open Logic-engine</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Open de regeleditor van de geselecteerde server.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Regellijst</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Regels en hun trigger-, voorwaarde-, vertragings- en actiestappen worden hier weergegeven.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Motorstatus</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Uitvoering van regels inschakelen of onderbreken. De tutorial verandert deze schakelaar nooit.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Regelwerkstroom</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Een trigger start een regel; omstandigheden leiden tot latere acties; stappen lopen op volgorde.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Automatiseringsveiligheid</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Tutorials bevatten geen regels, schakelen niet tussen apparaten, verzenden geen chat en voeren geen automatisering uit.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Meldingscentrum</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Bekijk waarschuwingen zonder te vertrouwen op tijdelijke bureaubladmeldingen.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Meldingsfilters</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Schakelen tussen alle meldingen, alarmen en sterfgevallen.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Zoekmeldingen</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Vind meldingen op basis van weergegeven inhoud of servercontext.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Bulkacties</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Alles markeren als gelezen of geschiedenis wissen; tutorials voeren deze acties nooit uit.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Cameralijst</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Geconfigureerde voorbeelden verschijnen wanneer een geselecteerde server en camera beschikbaar zijn.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Camera toevoegen</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Voeg een camera toe met behulp van de Rust-identificatie; tutorials leggen nooit cameracodes vast.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Cameraprivacy</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Camera-ID's en frames zijn uitgesloten van zelfstudiediagnostiek.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Zoekdoelen</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Zoek een muur, deur, inzetbaar of ander doelwit in de gebundelde dataset.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Invalplan</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Beoordeel doelstellingen, gezondheid, hoeveelheden, methoden en berekende kosten.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Methoden vergelijken</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Selecteer toegestane explosieven of gereedschappen en vergelijk alternatieven.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Duidelijk plan</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear verwijdert het plan; de tutorial benadrukt het zonder de vermeldingen te wijzigen.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Items zoeken</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Zoek een recyclebaar item en voeg het toe aan de rekenmachine.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Artikelcategorie</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Verfijn de artikelcatalogus op categorie.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Invoeritems</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Hoeveelheden aanpassen of vermeldingen verwijderen; tutorials veranderen de status van de rekenmachine niet.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Recyclerresultaten</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Vergelijk opbrengsten en tijden voor recyclers in wilde en veilige zones.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Instellingen openen</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Applicatiegedrag, integraties, prestaties, back-up en onderhoud zijn hier live.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Taal</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Kies de UI-taal. De zelfstudietekst gebruikt hetzelfde bronnensysteem.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Kaartprestaties</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Stem de schaling van afbeeldingen, GPU-caching, renderschaal en edge-modus af.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Onderhoud</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Besturingselementen voor het maken van back-ups, opnieuw instellen, opschonen en cachen kunnen destructief zijn en worden nooit aangeroepen.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Controleren op updates</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Vraag beschikbaarheid van updates aan zonder te downloaden of te installeren.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Updatestatus</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Versie- en downloadvoortgang verschijnen in dit titelbalkgebied.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Diagnostisch logboek</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Filter lokale diagnostische gegevens voordat u alleen niet-gevoelige details deelt.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Winkels en verkoopautomaten</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Zoek verkoopaanbiedingen, vergelijk transacties en begrijp de vernieuwingstijdstip.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Gebeurtenissen en serverbewaking</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Live-gebeurtenisindicatoren lezen en lokale timers maken.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Basissen en screenshots</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Maak kaartbasismarkeringen en beheer hun aantekeningen en schermafbeeldingen veilig.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Apparaatautomatisering</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Configureer eenvoudige apparaatstatusautomatisering afzonderlijk van de logische engine.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Winkelzoekopdracht openen</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Open het verkoopvenster van de kaart zonder de huidige kaart te wijzigen.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Winkel zoeken</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Zoek items, bekijk koop- en verkoophoeveelheden en open resultaten op de kaart.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Vernieuwingstijd</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Winkelaanbiedingen zijn afhankelijk van de serverconnectiviteit en kunnen verouderd zijn tussen Rust+ vernieuwingen.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Dock voor live-evenementen</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Indicatoren voor vracht, helikopter, Chinook, leverancier en andere actieve gebeurtenissen verschijnen hier indien beschikbaar.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Aangepaste timer</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Maak een lokale herinnering zonder de serverstatus te wijzigen.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Evenementversheid</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Gebeurtenisgegevens zijn afhankelijk van de geselecteerde verbinding en kunnen verdwijnen als deze verouderd raakt.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Basismarkeringen</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Basismarkeringen worden geplaatst en geopend op de 2D kaart.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Basisnotities en screenshots</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Gebruik kaartcontextacties om een basis een naam te geven en schermafbeeldingen toe te voegen; Voor delen in de cloud is toestemming vereist.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Beveiliging verwijderen</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Het verwijderen van een basis of screenshot wordt nooit uitgevoerd door een tutorial en vereist altijd uw input.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Open apparaatautomatisering</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Open lichtgewicht apparaatstatusautomatisering voor de geselecteerde server.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Automatiseringsacties</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Uitvoering onderbreken of een automatisering toevoegen; tutorials veranderen nooit de motorstatus en creëren nooit gegevens.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Automatiseringsregels</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Controleer bronapparaten, doelacties, timing en ingeschakelde status voor elke regel.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Apparaatveiligheid</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Geen enkele tutorial voert een regel uit of schakelt een echt smartapparaat in.</value>
   </data>
 </root>

@@ -6,6 +6,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:services="clr-namespace:RustPlusDesk.Services"
+             xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              Background="{DynamicResource Surface}"
@@ -55,12 +56,12 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <ui:ToggleSwitch x:Name="ToggleEngineActive" Content="{DynamicResource UiEngineActivePlayStop}"
+                        <ui:ToggleSwitch x:Name="ToggleEngineActive" tutorials:Tutorial.TargetId="Automation.Enabled" Content="{DynamicResource UiEngineActivePlayStop}"
                                           IsChecked="{Binding Selected.IsLogicEngineActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Checked="ToggleEngineActive_StateChanged" Unchecked="ToggleEngineActive_StateChanged"/>
                     </StackPanel>
 
-                    <ui:Button Grid.Column="1" Click="BtnAddRule_Click" Appearance="Primary" Content="{DynamicResource UiAddRule}" Icon="{ui:SymbolIcon Symbol=Add24}"/>
+                    <ui:Button x:Name="BtnAddRule" tutorials:Tutorial.TargetId="Automation.CreateRule" Grid.Column="1" Click="BtnAddRule_Click" Appearance="Primary" Content="{DynamicResource UiAddRule}" Icon="{ui:SymbolIcon Symbol=Add24}"/>
                 </Grid>
             </Border>
 
@@ -120,7 +121,7 @@
 
             <!-- Rules List -->
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="12">
-                <ItemsControl x:Name="RulesItemsControl" ItemsSource="{Binding Selected.LogicRules}">
+                <ItemsControl x:Name="RulesItemsControl" tutorials:Tutorial.TargetId="Automation.Rules" ItemsSource="{Binding Selected.LogicRules}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1" BorderBrush="{DynamicResource CardBorder}" Background="{DynamicResource SurfaceAlt}" CornerRadius="8" Margin="0,0,0,12" Padding="12">

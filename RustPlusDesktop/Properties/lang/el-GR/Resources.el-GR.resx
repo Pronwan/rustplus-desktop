@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1793,28 +1793,28 @@ Open Releases page?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Η λειτουργία επιλεκτικής επαναφοράς ολοκληρώθηκε με επιτυχία.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Κατεύθυνση</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Open Releases page?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Αναζήτηση εικονιδίων (π.χ. πυργίσκος, διακόπτης)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} ημέρες</value>
   </data>
@@ -3742,7 +3741,7 @@ Open Releases page?</value>
     <value>Αφαίρεση στόχου</value>
   </data>
   <data name="UiRepeats0Indefinitely" xml:space="preserve">
-    <value>επαναλαμβάνει (0 = επ&apos; αόριστον)</value>
+    <value>επαναλαμβάνει (0 = επ' αόριστον)</value>
   </data>
   <data name="UiResetSoundsToDefault" xml:space="preserve">
     <value>Επαναφέρετε τους ήχους στις προεπιλογές</value>
@@ -4357,7 +4356,7 @@ Open Releases page?</value>
     <value>Δημιουργήθηκε PIN (ισχύει για 15 μέτρα)</value>
   </data>
   <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
-    <value>Διαμορφώστε πρώτα ένα Discord κανάλι &quot;Ειδοποιήσεις συνομιλίας&quot; ή &quot;Ειδοποιήσεις συμβάντων&quot; στις Ρυθμίσεις.</value>
+    <value>Διαμορφώστε πρώτα ένα Discord κανάλι "Ειδοποιήσεις συνομιλίας" ή "Ειδοποιήσεις συμβάντων" στις Ρυθμίσεις.</value>
   </data>
   <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
     <value>Συνδέστε πρώτα τον λογαριασμό σας στο Cloud.</value>
@@ -4471,7 +4470,7 @@ Open Releases page?</value>
     <value>Λευκό</value>
   </data>
   <data name="FormatOfflineMapImported" xml:space="preserve">
-    <value>Ο χάρτης εκτός σύνδεσης εισήχθη επιτυχώς ως &quot;{0}&quot;!</value>
+    <value>Ο χάρτης εκτός σύνδεσης εισήχθη επιτυχώς ως "{0}"!</value>
   </data>
   <data name="MapImportedTitle" xml:space="preserve">
     <value>Εισαγωγή χάρτη</value>
@@ -4509,19 +4508,19 @@ Open Releases page?</value>
 {2}</value>
   </data>
   <data name="FormatOfflineMapNotParsed" xml:space="preserve">
-    <value>Ο χάρτης εκτός σύνδεσης &quot;{0}&quot; δεν έχει αναλυθεί ακόμα. Ανοίξτε τον 3D χάρτη του μία φορά για να τον αναλύσετε και μετά δοκιμάστε να τον αντιγράψετε ξανά.</value>
+    <value>Ο χάρτης εκτός σύνδεσης "{0}" δεν έχει αναλυθεί ακόμα. Ανοίξτε τον 3D χάρτη του μία φορά για να τον αναλύσετε και μετά δοκιμάστε να τον αντιγράψετε ξανά.</value>
   </data>
   <data name="CopyMapErrorTitle" xml:space="preserve">
     <value>Σφάλμα αντιγραφής χάρτη</value>
   </data>
   <data name="FormatMapMismatch" xml:space="preserve">
-    <value>Οι διατάξεις χάρτη δεν ταιριάζουν. Ο χάρτης &quot;{0}&quot; δεν φαίνεται να είναι ο ίδιος χάρτης με τον συνδεδεμένο διακομιστή &quot;{1}&quot;.</value>
+    <value>Οι διατάξεις χάρτη δεν ταιριάζουν. Ο χάρτης "{0}" δεν φαίνεται να είναι ο ίδιος χάρτης με τον συνδεδεμένο διακομιστή "{1}".</value>
   </data>
   <data name="MapMismatchTitle" xml:space="preserve">
     <value>Αναντιστοιχία χάρτη</value>
   </data>
   <data name="FormatMapCopied" xml:space="preserve">
-    <value>Αντιγράφηκε με επιτυχία ο χάρτης 3D και τα τοπικά στοιχεία από &quot;{0}&quot; σε &quot;{1}&quot;!</value>
+    <value>Αντιγράφηκε με επιτυχία ο χάρτης 3D και τα τοπικά στοιχεία από "{0}" σε "{1}"!</value>
   </data>
   <data name="MapCopiedTitle" xml:space="preserve">
     <value>Ο χάρτης αντιγράφηκε</value>
@@ -4709,5 +4708,797 @@ Open Releases page?</value>
   </data>
   <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
     <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Παράλειψη φροντιστηρίου</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Πίσω</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Επόμενο</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Τερματισμός</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Ακύρωση αυτού του σεμιναρίου;</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Η πρόοδός σας αποθηκεύτηκε. Μπορείτε να συνεχίσετε από το Tutorial Center ανά πάσα στιγμή.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Συνεχίστε να μαθαίνετε</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Ακύρωση φροντιστηρίου</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Βήμα {0} από {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Αυτή η δυνατότητα δεν είναι διαθέσιμη στην τρέχουσα κατάσταση εφαρμογής. Συνεχίστε με ασφάλεια και επιστρέψτε όταν είναι διαθέσιμος ο απαιτούμενος διακομιστής, λογαριασμός ή δεδομένα.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Επανεκκίνηση</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Συνέχεια</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Έναρξη</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} από {1} βήματα</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Μάθετε RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Επικεντρωμένα μαθήματα για αυτήν την κατασκευή. Τα σεμινάρια δεν ενεργοποιούν ποτέ συσκευές, δεν στέλνουν μηνύματα, διαγράφουν δεδομένα ή εκτελούν αυτοματισμούς.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Ξεκινήστε τα προτεινόμενα σεμινάρια</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Συνέχεια τελευταίου φροντιστηρίου</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Επανεκκίνηση όλων των σεμιναρίων</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Επαναφορά προόδου εκμάθησης</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Ξεκινήστε τα βασικά για νέους χρήστες</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Προσφέρετε μαθήματα για νέες δυνατότητες</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Καλώς ήρθατε στο RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Κάντε μια σύντομη περιήγηση στην πλοήγηση, τη σύνδεση διακομιστή, τους χάρτες και τις συσκευές—ή επιλέξτε μόνο τα μαθήματα που χρειάζεστε.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Ξεκινήστε τη γρήγορη περιήγηση</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Επιλέξτε Tutorials</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Όχι τώρα</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Δεν έχει ξεκινήσει</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>Σε εξέλιξη</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Ολοκληρώθηκε</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Παράβλεψη</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Ενημερώθηκε</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Νέα δυνατότητα</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Ξεκινώντας</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Χάρτες</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Συσκευές</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Ομάδα και Επικοινωνία</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Αυτοματισμός</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Παρακολούθηση</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Εργαλεία</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Ρυθμίσεις και υποστήριξη</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Βασικά στοιχεία εφαρμογής</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Μάθετε πλοήγηση, περιβάλλον διακομιστή, κατάσταση σύνδεσης, ειδοποιήσεις και πού να αναπαράγετε μαθήματα.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Λογαριασμός και Cloud</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Κατανοήστε τις τοπικές λειτουργίες, τη σύνδεση στο cloud, τον συγχρονισμό και την πρόσβαση Υποστήριξης.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Σύζευξη και Διαχείριση διακομιστή</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Κάντε σύζευξη Rust+, επιλέξτε διακομιστή και κατανοήστε τις ήπιες, πλήρεις και αποσυνδεδεμένες λειτουργίες.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Βασικά στοιχεία χάρτη</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Μάθετε την πλοήγηση σε χάρτη, τα επίπεδα, τους χάρτες θερμότητας, τα εργαλεία σχεδίασης και το σημείο εισόδου 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Χάρτες θερμότητας πόρων</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Μάθετε τι δείχνουν οι εξαγόμενες επικαλύψεις πυκνότητας αναπαραγωγής και πώς να τις επιλέξετε ή να τις διαγράψετε.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Χάρτης</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Εξερευνήστε την τοπική θύρα προβολής 3D, τη γραμμή εργαλείων, το footprint builder, την εμφάνιση απόδοσης και την κοντινή ενέργεια.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Έξυπνες συσκευές</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Βρείτε, φιλτράρετε, ανανεώστε, οργανώστε και κατανοήστε με ασφάλεια τις ζευγαρωμένες έξυπνες συσκευές.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Παρακολούθηση ομάδας και παικτών</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Ελέγξτε τους συμπαίκτες, τους δείκτες, ακολουθήστε τη συμπεριφορά και τις απαιτήσεις κοινής χρήσης.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Συνομιλία ομάδας και εντολές</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Διαβάστε τη συνομιλία της ομάδας, συνθέστε μηνύματα και διαμορφώστε εντολές χωρίς να στείλετε τίποτα.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Ενσωμάτωση</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Βρείτε Discord σημεία εισόδου, διαμόρφωση, δικαιώματα και όρια απορρήτου.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Μηχανή Λογικής και Αυτοματισμού</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Κατανόηση κανόνων, ενεργειών, συνθηκών, ενεργειών, κατάστασης χρόνου εκτέλεσης και ασφαλούς δοκιμής.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Ειδοποιήσεις και ειδοποιήσεις</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Φιλτράρισμα, αναζήτηση, έλεγχος, επισήμανση και διαγραφή ειδοποιήσεων εφαρμογών.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Κάμερες και παρακολούθηση</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Προσθέστε και ελέγξτε τις ζευγαρωμένες κάμερες, διατηρώντας παράλληλα ιδιωτικά τα αναγνωριστικά κάμερας.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Υπολογιστής Raid</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Δημιουργήστε ένα σχέδιο επιδρομής, συγκρίνετε μεθόδους και αναθεωρήστε τα σύνολα υλικού.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Υπολογιστής Recycler</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Προσθέστε αντικείμενα και συγκρίνετε τις αποδόσεις των ανακυκλωτών άγριων και ασφαλών ζωνών.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Ρυθμίσεις</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Βρείτε γλώσσα, απόδοση χάρτη, συνδεδεμένες υπηρεσίες και στοιχεία ελέγχου συντήρησης.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Ενημερώσεις και διαγνωστικά</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Ελέγξτε τις ενημερώσεις εφαρμογών και εντοπίστε το αρχείο καταγραφής διαγνωστικών χωρίς να ξεκινήσετε μια ενημέρωση.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Κύρια πλοήγηση</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτήν την πλαϊνή γραμμή για να μετακινηθείτε μεταξύ συσκευών, παρακολούθησης ομάδας, καμερών, παικτών, ειδοποιήσεων και αριθμομηχανών.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Επέκταση πλοήγησης</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Καρφιτσώστε ή συμπτύξτε την πλαϊνή γραμμή για να ανταλλάξετε ετικέτες για περισσότερο χώρο εργασίας χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Τρέχων διακομιστής</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Αυτή η περιοχή προσδιορίζει τον επιλεγμένο διακομιστή Rust και το περιβάλλον του λογαριασμού του.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Κατάσταση σύνδεσης</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Οι κάρτες διακομιστή δείχνουν εάν ένας διακομιστής είναι αποσυνδεδεμένος, soft συνδεδεμένος ή πλήρως συνδεδεμένος.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Ειδοποιήσεις</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Ζητήματα σύνδεσης, συναγερμοί, θάνατοι και αποτελέσματα αυτοματισμού συλλέγονται εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Φροντιστήριο</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Επαναλάβετε, συνεχίστε, επανεκκινήστε ή ανακαλύψτε ενημερωμένα μαθήματα εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Περιεχόμενο λογαριασμού</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Η πρόσβαση στο cloud είναι ξεχωριστή από τη σύζευξη Rust+. Οι τοπικές λειτουργίες παραμένουν διαθέσιμες χωρίς συγχρονισμό cloud.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Λογαριασμός Cloud</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Συνδεθείτε εδώ για υποστηριζόμενο συγχρονισμό. Τα σεμινάρια δεν εμφανίζουν ποτέ δεδομένα ιδιωτικού λογαριασμού.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Κατάσταση υποστηρικτή</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Η πρόσβαση υποστηρικτών ξεκλειδώνει τις περιφραγμένες λειτουργίες. Η πρόοδος του τοπικού σεμιναρίου δεν απαιτεί συνδρομή.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Ζεύγος Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Η σύζευξη συνδέει αυτήν την εφαρμογή με Rust Companion προτού λειτουργήσουν οι ζωντανές λειτουργίες διακομιστή.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Έναρξη σύζευξης</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Ξεκινήστε να ακούτε και, στη συνέχεια, χρησιμοποιήστε τη ροή σύζευξης Rust+ του παιχνιδιού Rust. Τα διαπιστευτήρια δεν καταγράφονται ποτέ.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Ζεύγοι διακομιστές</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Επιλέξτε έναν τοπικά διαμορφωμένο διακομιστή πριν συνδέσετε ή αλλάξετε ρυθμίσεις για συγκεκριμένο διακομιστή.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Συνδέστε φορτώνει περιορισμένη επικοινωνία χωρίς να αρχικοποιήσετε κάθε ζωντανή λειτουργία.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Πλήρης σύνδεση</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Η πλήρης σύνδεση προετοιμάζει δεδομένα χάρτη, συσκευές, δεδομένα ομάδας και συνδρομές Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Αποσύνδεση</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Η αποσύνδεση διακόπτει τη ζωντανή επικοινωνία. Αυτό το μάθημα δεν επικαλείται ποτέ τη δράση.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Επαναφορά σύζευξης</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Οι εντολές ανάκτησης βρίσκονται στο μενού περιβάλλοντος Pair. Η επαναφορά καταργεί τη διαμόρφωση τοπικής σύζευξης.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Καμβάς χάρτη</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Μετακίνηση σύροντας, μεγέθυνση με τον τροχό και αλληλεπίδραση με δείκτες στον τρέχοντα χάρτη Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Γραμμή εργαλείων χάρτη</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Η γραμμή εργαλείων ελέγχει επίπεδα, συνομιλίες, επικαλύψεις, χρονόμετρα και λειτουργίες 2D ή 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Επαναφορά προβολής</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Τοποθετήστε ξανά τον χάρτη στον χώρο εργασίας μετά τη μετατόπιση ή τη μεγέθυνση.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Επίπεδα χάρτη</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Επιλέξτε πλέγμα, συσκευή αναπαραγωγής, μνημείο, κατάστημα και προηγμένες οπτικές επιλογές εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Χάρτες θερμότητας</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>Ανοίξτε τις επικαλύψεις εξαγόμενης πυκνότητας. Εμφανίζουν πιθανές ζώνες αναπαραγωγής, όχι ζωντανές οντότητες.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Ανοίξτε τον χάρτη 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Δημιουργήστε ή ανοίξτε την τοπική αναπαράσταση 3D του τρέχοντος χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Εργαλεία σχεδίασης</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Σχεδιάστε μη καταστροφικές σημειώσεις σχεδιασμού πάνω από τον χάρτη και αφήστε τη λειτουργία σχεδίασης όταν τελειώσετε.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Ανοίξτε τους χάρτες θερμότητας</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Περιηγηθείτε στα διαθέσιμα επίπεδα πυκνότητας για τον τρέχοντα αναλυμένο χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Επιλογέας χάρτη θερμότητας</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Επιλέξτε μια εξαγόμενη κατηγορία ή διαγράψτε την ενεργή επικάλυψη.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Πώς λειτουργούν οι χάρτες θερμότητας</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Οι χάρτες θερμότητας συνοψίζουν πιθανές περιοχές αναπαραγωγής. δεν εγγυώνται μια ζωντανή οντότητα σε μια τοποθεσία.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Δημιουργία ή άνοιγμα 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Η εφαρμογή αναλύει τα δεδομένα χάρτη τοπικά και επαναχρησιμοποιεί την κρυφή μνήμη όταν είναι δυνατόν.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Θύρα προβολής</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Περιφορά, μετατόπιση και μεγέθυνση γύρω από μια διαδραστική αναπαράσταση του επιλεγμένου χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Γραμμή εργαλείων</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Ελέγχετε επίπεδα, ζωντανούς δείκτες, πλήρη οθόνη, ρυθμίσεις και εργαλεία αποτύπωσης.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Base Footprint Builder</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Λειτουργία δόμησης μόνο θεμελίων σχεδιασμού θέσεων. δεν τροποποιεί τον διακομιστή Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Δείκτης απόδοσης</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS και προσαρμοστική λεπτομέρεια ισορροπίας ανάλυσης με ομαλή αλληλεπίδραση.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Κλείσιμο προβολής 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Επιστρέψτε στο 2D και απελευθερώστε τους βαρείς ενσωματωμένους πόρους 3D.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Λίστα συσκευών</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Οι ζευγαρωμένοι διακόπτες, οι συναγερμοί και οι οθόνες αποθήκευσης εμφανίζονται εδώ σε ομάδες.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Αναζήτηση συσκευής</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Φιλτράρετε συσκευές με όνομα ή εντολή χωρίς να αλλάξετε την κατάστασή τους.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Φίλτρο τύπου συσκευής</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Περιορίστε τη λίστα σε διακόπτες, συναγερμούς, οθόνες αποθήκευσης ή όλες τις συσκευές.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Ανανέωση καταστάσεων</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Αίτημα νέας κατάστασης μόνο για ανάγνωση. η διαθεσιμότητα εξαρτάται από τη σύνδεση.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Εργαλεία συσκευής</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Η εισαγωγή, ο συγχρονισμός cloud, η αυτοματοποίηση, τα πλήκτρα πρόσβασης, η ανανέωση και η εκκαθάριση συλλέγονται εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Κάρτα συσκευής</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Μια κάρτα εμφανίζει ταυτότητα, κατάσταση σύνδεσης, εντολές και στοιχεία ελέγχου για τη συγκεκριμένη συσκευή.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Ασφάλεια συσκευής</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Τα σεμινάρια δεν αλλάζουν ποτέ έναν διακόπτη, δεν διαγράφουν μια συσκευή ή εκτελούν ένα πλήκτρο πρόσβασης.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Λίστα ομάδας</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Οι φορτωμένοι συμπαίκτες, η online κατάσταση, τα avatar και οι ενέργειες περιβάλλοντος εμφανίζονται εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Δείκτες ομάδας</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Επιλέξτε ποια στυλ δείκτη συμπαίκτη είναι ορατά στον χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Ακολουθήστε το πρόγραμμα αναπαραγωγής</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Το ακόλουθο κέντρο επικεντρώνει τις ενημερώσεις χαρτών σε έναν συμπαίκτη και απαιτεί τρέχοντα δεδομένα ομάδας.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Κοινή χρήση ομάδας</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Η κοινή χρήση βάσης και στιγμιότυπου οθόνης ενδέχεται να απαιτεί λογαριασμό και συγκατάθεση μεταφόρτωσης.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Ιστορικό συνομιλίας</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Τα πρόσφατα μηνύματα Rust ομάδας εμφανίζονται εδώ όταν η σύνδεση παρέχει δεδομένα συνομιλίας.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Εισαγωγή μηνύματος</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Συνθέστε ένα μήνυμα ομάδας εδώ. Το σεμινάριο δεν εισάγει ούτε στέλνει ποτέ ένα.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Αποστολή μηνύματος</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Αποστολή αναρτήσεων σε συνομιλία ομάδας Rust. Αυτό το στοιχείο ελέγχου επισημαίνεται μόνο.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Ρυθμίσεις εντολών</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Διαμορφώστε τα προθέματα, τις συνδέσεις συσκευών, τις καθυστερήσεις και τη διαθεσιμότητα εντολών.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord Κοινότητα</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Αυτή η συντόμευση ανοίγει την κοινότητα. Οι ρυθμίσεις ενοποίησης είναι ξεχωριστές.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Ρυθμίσεις</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Διαμορφώστε το bot, το σωματείο, τα κανάλια, τις εντολές και τα δικαιώματα χωρίς καταγραφή αναγνωριστικών.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Ασφάλεια</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Τα σεμινάρια δεν δημοσιεύουν ποτέ μηνύματα ή αναγνωριστικά ομάδας καταγραφής, καναλιών ή χρηστών.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Open Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Ανοίξτε το πρόγραμμα επεξεργασίας κανόνων του επιλεγμένου διακομιστή.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Λίστα κανόνων</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Οι κανόνες και τα βήματα ενεργοποίησης, κατάστασης, καθυστέρησης και δράσης εμφανίζονται εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Κατάσταση κινητήρα</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Ενεργοποίηση ή παύση της εκτέλεσης κανόνα. Το σεμινάριο δεν αλλάζει ποτέ αυτόν τον διακόπτη.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Ροή εργασίας κανόνων</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Ένας κανόνας ενεργοποιεί έναν κανόνα. προϋποθέσεις πύλη μεταγενέστερες ενέργειες? τα βήματα τρέχουν με τη σειρά.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Ασφάλεια Αυτοματισμού</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Τα σεμινάρια δεν επιμένουν στους κανόνες, δεν αλλάζουν συσκευές, δεν στέλνουν συνομιλία ή δεν εκτελούν αυτοματισμούς.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Κέντρο ειδοποιήσεων</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Ελέγξτε τις ειδοποιήσεις χωρίς να βασίζεστε σε παροδικές ειδοποιήσεις επιφάνειας εργασίας.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Φίλτρα ειδοποιήσεων</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ όλων των ειδοποιήσεων, των συναγερμών και των θανάτων.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Ειδοποιήσεις αναζήτησης</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Βρείτε ειδοποιήσεις με βάση το περιεχόμενο που εμφανίζεται ή το περιβάλλον διακομιστή.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Μαζικές ενέργειες</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Επισήμανση ολόκληρου του ιστορικού ως αναγνωσμένου ή διαγραφής. τα σεμινάρια δεν εκτελούν ποτέ αυτές τις ενέργειες.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Λίστα κάμερας</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Οι διαμορφωμένες προεπισκοπήσεις εμφανίζονται όταν ένας επιλεγμένος διακομιστής και κάμερα είναι διαθέσιμοι.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Προσθήκη κάμερας</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Προσθέστε μια κάμερα χρησιμοποιώντας το αναγνωριστικό Rust της. Τα σεμινάρια δεν καταγράφουν ποτέ κωδικούς κάμερας.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Απόρρητο κάμερας</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Τα αναγνωριστικά κάμερας και τα καρέ εξαιρούνται από τα εκπαιδευτικά διαγνωστικά.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Στόχοι αναζήτησης</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Βρείτε έναν τοίχο, μια πόρτα, έναν αναπτυσσόμενο ή άλλο στόχο στο ομαδοποιημένο σύνολο δεδομένων.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Σχέδιο επιδρομής</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Ελέγξτε τους στόχους, την υγεία, τις ποσότητες, τις μεθόδους και το υπολογισμένο κόστος.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Σύγκριση μεθόδων</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Επιλέξτε επιτρεπόμενα εκρηκτικά ή εργαλεία και συγκρίνετε εναλλακτικές.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Καθαρό σχέδιο</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Το Clear καταργεί το σχέδιο. το σεμινάριο το επισημαίνει χωρίς να αλλάζει καταχωρήσεις.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Αναζήτηση αντικειμένων</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Βρείτε ένα ανακυκλώσιμο αντικείμενο και προσθέστε το στην αριθμομηχανή.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Κατηγορία αντικειμένου</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Περιορίστε τον κατάλογο ειδών ανά κατηγορία.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Εισαγωγή στοιχείων</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Προσαρμόστε τις ποσότητες ή αφαιρέστε καταχωρήσεις. Τα σεμινάρια δεν αλλάζουν την κατάσταση της αριθμομηχανής.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Αποτελέσματα ανακυκλωτή</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Συγκρίνετε τις αποδόσεις και τους χρόνους για ανακυκλωτές άγριων και ασφαλών ζωνών.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Ανοίξτε τις Ρυθμίσεις</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Συμπεριφορά εφαρμογών, ενσωματώσεις, απόδοση, δημιουργία αντιγράφων ασφαλείας και συντήρηση ζωντανά εδώ.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Γλώσσα</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Επιλέξτε τη γλώσσα διεπαφής χρήστη. Το κείμενο εκμάθησης χρησιμοποιεί το ίδιο σύστημα πόρων.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Απόδοση χάρτη</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Συντονίστε την κλίμακα εικόνας, την προσωρινή αποθήκευση GPU, την κλίμακα απόδοσης και τη λειτουργία άκρων.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Συντήρηση</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Τα στοιχεία ελέγχου δημιουργίας αντιγράφων ασφαλείας, επαναφοράς, εκκαθάρισης και προσωρινής μνήμης μπορεί να είναι καταστροφικά και δεν γίνονται ποτέ επίκληση.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Ελέγξτε για ενημερώσεις</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Ζητήστε διαθεσιμότητα ενημέρωσης χωρίς λήψη ή εγκατάσταση.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Κατάσταση ενημέρωσης</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Η πρόοδος έκδοσης και λήψης εμφανίζεται σε αυτήν την περιοχή της γραμμής τίτλου.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Διαγνωστικό αρχείο καταγραφής</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Φιλτράρετε τα τοπικά διαγνωστικά πριν κοινοποιήσετε μόνο μη ευαίσθητες λεπτομέρειες.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Καταστήματα και πωλήσεις</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Αναζητήστε προσφορές αυτόματης πώλησης, συγκρίνετε συναλλαγές και κατανοήστε το χρόνο ανανέωσης.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Παρακολούθηση συμβάντων και διακομιστή</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Διαβάστε δείκτες ζωντανών συμβάντων και δημιουργήστε τοπικούς χρονοδιακόπτες.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Βάσεις και στιγμιότυπα οθόνης</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Δημιουργήστε δείκτες βάσης χάρτη και διαχειριστείτε τις σημειώσεις και τα στιγμιότυπά τους με ασφάλεια.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Αυτοματισμός συσκευής</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Διαμορφώστε τον απλό αυτοματισμό κατάστασης συσκευής ξεχωριστά από τη λογική μηχανή.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Ανοίξτε την Αναζήτηση καταστήματος</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Ανοίξτε τον πίνακα αυτόματης αναζήτησης του χάρτη χωρίς να αλλάξετε τον τρέχοντα χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Αναζήτηση καταστημάτων</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Αναζητήστε αντικείμενα, ελέγξτε τις ποσότητες αγοράς και πώλησης και ανοίξτε τα αποτελέσματα στο χάρτη.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Χρόνος ανανέωσης</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Οι προσφορές καταστημάτων εξαρτώνται από τη συνδεσιμότητα διακομιστή και ενδέχεται να είναι μπαγιάτικες μεταξύ των ανανεώσεων Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Αποβάθρα ζωντανών εκδηλώσεων</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Οι ενδείξεις φορτίου, ελικοπτέρου, Chinook, προμηθευτή και άλλων ενεργών συμβάντων εμφανίζονται εδώ όταν είναι διαθέσιμες.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Προσαρμοσμένο χρονόμετρο</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Δημιουργήστε μια τοπική υπενθύμιση χωρίς να αλλάξετε την κατάσταση του διακομιστή.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Φρεσκάδα εκδηλώσεων</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Τα δεδομένα συμβάντος εξαρτώνται από την επιλεγμένη σύνδεση και ενδέχεται να εξαφανιστούν όταν μείνει μπαγιάτικο.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Βασικοί δείκτες</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Οι δείκτες βάσης τοποθετούνται και ανοίγονται στον χάρτη 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Βασικές σημειώσεις και στιγμιότυπα οθόνης</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Χρησιμοποιήστε ενέργειες περιβάλλοντος χάρτη για να ονομάσετε μια βάση και να επισυνάψετε στιγμιότυπα οθόνης. Η κοινή χρήση cloud απαιτεί συναίνεση.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Διαγραφή ασφάλειας</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Η διαγραφή μιας βάσης ή ενός στιγμιότυπου οθόνης δεν εκτελείται ποτέ από εκπαιδευτικό πρόγραμμα και απαιτεί πάντα τη συμβολή σας.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Ανοίξτε το Device Automation</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Ανοίξτε ελαφρύ αυτοματισμό κατάστασης συσκευής για τον επιλεγμένο διακομιστή.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Ενέργειες αυτοματισμού</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Παύση εκτέλεσης ή προσθήκη αυτοματισμού. Τα σεμινάρια δεν αλλάζουν ποτέ την κατάσταση του κινητήρα ούτε δημιουργούν δεδομένα.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Κανόνες αυτοματισμού</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Ελέγξτε τις συσκευές πηγής, τις ενέργειες στόχευσης, το χρονοδιάγραμμα και την κατάσταση ενεργοποίησης για κάθε κανόνα.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Ασφάλεια συσκευής</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Κανένα σεμινάριο δεν εκτελεί έναν κανόνα ή εναλλάσσει μια πραγματική έξυπνη συσκευή.</value>
   </data>
 </root>

@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:conv="clr-namespace:RustPlusDesk.Converters"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
     xmlns:vm="clr-namespace:RustPlusDesk.ViewModels"
     Loaded="RaidCalculatorView_Loaded"
     UseLayoutRounding="True"
@@ -107,7 +108,7 @@
                 </Border>
                 <CheckBox Margin="0,0,8,0" VerticalAlignment="Center" Content="{DynamicResource UiDetails}" IsChecked="{Binding ShowDetails}" ToolTip="{DynamicResource UiShowDamageOverkillAndIngredientBreakdowns}" />
                 <ui:Button Appearance="Secondary" Click="CopySummary_Click" Icon="{ui:SymbolIcon Symbol=Copy24}" ToolTip="{DynamicResource UiCopyADiscordReadySummary}" AutomationProperties.Name="{DynamicResource UiCopyRaidSummary}" />
-                <ui:Button Margin="8,0,0,0" Appearance="Secondary" Click="ClearPlan_Click" Icon="{ui:SymbolIcon Symbol=Delete24}" ToolTip="{DynamicResource UiClearRaidPlan}" AutomationProperties.Name="{DynamicResource UiClearRaidPlan}" IsEnabled="{Binding HasPlan}" />
+                <ui:Button x:Name="ClearPlanButton" tutorials:Tutorial.TargetId="Raid.Clear" Margin="8,0,0,0" Appearance="Secondary" Click="ClearPlan_Click" Icon="{ui:SymbolIcon Symbol=Delete24}" ToolTip="{DynamicResource UiClearRaidPlan}" AutomationProperties.Name="{DynamicResource UiClearRaidPlan}" IsEnabled="{Binding HasPlan}" />
                 <ui:Button Margin="8,0,0,0" Appearance="Secondary" Click="Close_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" ToolTip="{DynamicResource UiCloseRaidCalculator}" AutomationProperties.Name="{DynamicResource UiCloseRaidCalculator}" />
             </StackPanel>
         </Grid>
@@ -129,7 +130,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid>
-                        <TextBox x:Name="TargetSearchBox" Height="34" Padding="9,5" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox x:Name="TargetSearchBox" tutorials:Tutorial.TargetId="Raid.Search" Height="34" Padding="9,5" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                                  ToolTip="{DynamicResource UiSearchRaidTargets}" AutomationProperties.Name="{DynamicResource UiSearchRaidTargets}" />
                         <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource TextCaption}" IsHitTestVisible="False" Text="{DynamicResource UiSearchTargets}">
                             <TextBlock.Style>
@@ -192,13 +193,13 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="2" Style="{StaticResource RaidPanel}" Padding="10">
+            <Border Grid.Column="2" Style="{StaticResource RaidPanel}" Padding="10" tutorials:Tutorial.TargetId="Raid.Plan">
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
                     <Grid Margin="2,0,2,9">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="220" /><ColumnDefinition Width="180" /></Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource UiRaidPlan}" />
-                        <ToggleButton x:Name="SmartMixButton" Grid.Column="1" Height="32" Margin="0,0,8,0" Content="{Binding SmartMixCaption}"
+                        <ToggleButton x:Name="SmartMixButton" tutorials:Tutorial.TargetId="Raid.Methods" Grid.Column="1" Height="32" Margin="0,0,8,0" Content="{Binding SmartMixCaption}"
                                       ToolTip="{DynamicResource UiSelectMultipleRaidItemsForTheSmartCombinationSearch}" AutomationProperties.Name="{DynamicResource UiSelectSmartMixRaidItems}" />
                         <Popup IsOpen="{Binding IsChecked, ElementName=SmartMixButton}" Placement="Bottom" PlacementTarget="{Binding ElementName=SmartMixButton}" StaysOpen="False" AllowsTransparency="True">
                             <Border Width="260" MaxHeight="410" Margin="0,4,0,0" Padding="8" Background="#FF24272D" BorderBrush="#FF454A54" BorderThickness="1" CornerRadius="7">

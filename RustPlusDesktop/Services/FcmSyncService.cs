@@ -35,8 +35,9 @@ namespace RustPlusDesk.Services
                     return false;
                 }
 
-                var userId = SupabaseAuthManager.Client?.Auth?.CurrentUser?.Id;
-                if (string.IsNullOrEmpty(userId))
+                var client = SupabaseAuthManager.Client;
+                var userId = client?.Auth?.CurrentUser?.Id;
+                if (client is null || string.IsNullOrEmpty(userId))
                 {
                     SupabaseAuthManager.AppendLog("[FcmSync] User not authenticated.");
                     return false;
@@ -69,7 +70,7 @@ namespace RustPlusDesk.Services
                     UpdatedAt = DateTime.UtcNow
                 };
 
-                var response = await SupabaseAuthManager.Client.From<UserFcmCredentialsModel>().Upsert(model);
+                var response = await client.From<UserFcmCredentialsModel>().Upsert(model);
                 
                 // Sync User Servers for the Cloud Worker
                 try
@@ -97,8 +98,8 @@ namespace RustPlusDesk.Services
                         if (serverModels.Count > 0)
                         {
                             // Delete old servers first to prevent accumulation
-                            await SupabaseAuthManager.Client.From<UserServerModel>().Where(x => x.UserId == userId).Delete();
-                            await SupabaseAuthManager.Client.From<UserServerModel>().Upsert(serverModels);
+                            await client.From<UserServerModel>().Where(x => x.UserId == userId).Delete();
+                            await client.From<UserServerModel>().Upsert(serverModels);
                             SupabaseAuthManager.AppendLog($"[FcmSync] Synced {serverModels.Count} servers to cloud.");
                         }
                     }
@@ -131,11 +132,12 @@ namespace RustPlusDesk.Services
             if (!SupabaseAuthManager.IsAuthenticated) return false;
             try
             {
-                var userId = SupabaseAuthManager.Client?.Auth?.CurrentUser?.Id;
-                if (string.IsNullOrEmpty(userId)) return false;
+                var client = SupabaseAuthManager.Client;
+                var userId = client?.Auth?.CurrentUser?.Id;
+                if (client is null || string.IsNullOrEmpty(userId)) return false;
 
-                await SupabaseAuthManager.Client.From<UserServerModel>().Where(x => x.UserId == userId).Delete();
-                await SupabaseAuthManager.Client.From<UserFcmCredentialsModel>().Where(x => x.UserId == userId).Delete();
+                await client.From<UserServerModel>().Where(x => x.UserId == userId).Delete();
+                await client.From<UserFcmCredentialsModel>().Where(x => x.UserId == userId).Delete();
                 
                 SupabaseAuthManager.AppendLog("[FcmSync] Successfully revoked FCM credentials and deleted cloud servers.");
                 return true;

@@ -25,7 +25,7 @@ namespace RustPlusDesk.Views
         private bool _isRustMapsSearching;
         private bool _isMap3DPreparing;
         private bool _isMap3DActive;
-        private WebView2? _map3DWebView;
+        private WebView2CompositionControl? _map3DWebView;
         private string? _currentMapFolderPath;
         private EventHandler<CoreWebView2WebResourceRequestedEventArgs>? _map3DResourceRequestHandler;
         private static readonly Lazy<IReadOnlyDictionary<string, string>> Map3DResourceNameMap = new(() =>
@@ -367,6 +367,9 @@ namespace RustPlusDesk.Views
         }
 
         private async void BtnOpen3DMap_Click(object sender, RoutedEventArgs e)
+            => await OpenMap3DAsync();
+
+        private async Task OpenMap3DAsync()
         {
             if (_isMap3DActive)
                 return;
@@ -544,7 +547,7 @@ namespace RustPlusDesk.Views
                          $"{(hasBlocked ? "&hasBlocked=1" : "")}";
 
             CloseMap3DView();
-            _map3DWebView = new WebView2
+            _map3DWebView = new WebView2CompositionControl
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch

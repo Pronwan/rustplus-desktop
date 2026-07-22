@@ -362,6 +362,22 @@ public static class TrackingService
         catch { }
     }
 
+    private static void SaveSettings()
+    {
+        try
+        {
+            var dir = Path.GetDirectoryName(_settingsPath);
+            if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            string json;
+            lock (_dbLock)
+            {
+                json = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
+            }
+            File.WriteAllText(_settingsPath, json);
+        }
+        catch { }
+    }
+
     private static void Log(string message)
     {
         try
@@ -704,7 +720,14 @@ public static class TrackingService
     public static string SelectedLanguage
     {
         get => _settings.SelectedLanguage;
-        set { _settings.SelectedLanguage = value; SaveDB(); }
+        set
+        {
+            if (string.Equals(_settings.SelectedLanguage, value, StringComparison.Ordinal)) return;
+            _settings.SelectedLanguage = value;
+            // A language change only modifies settings. Rewriting the complete
+            // tracked-player history here caused an avoidable UI-thread pause.
+            SaveSettings();
+        }
     }
 
     public static string DiscordWebhookUrl
