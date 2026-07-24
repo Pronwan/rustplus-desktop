@@ -551,6 +551,7 @@ private bool _overlayToolsVisible = false;
             Canvas.SetTop(tb, txt.Y);
 
             Overlay.Children.Add(tb);
+            Panel.SetZIndex(tb, 901);
             myList.Add(tb);
         }
 
