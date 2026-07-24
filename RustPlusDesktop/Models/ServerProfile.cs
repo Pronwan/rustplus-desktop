@@ -45,6 +45,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _localMapImagePath = value; OnProp(); }
     }
 
+    private string? _customMapUrl;
+    public string? CustomMapUrl
+    {
+        get => _customMapUrl;
+        set { _customMapUrl = value; OnProp(); }
+    }
+
     private bool _isConnected;
     public bool IsConnected
     {

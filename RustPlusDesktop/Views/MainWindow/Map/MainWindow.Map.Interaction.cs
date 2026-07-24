@@ -126,15 +126,14 @@ public partial class MainWindow
     }
 
     // Welt->Bild (Pixel im Bildkoordinatensystem - vor Zoom/Pan)
-    private const double PAD_WORLD = 2000.0;
-
     private Point WorldToImagePx(double x, double y)
     {
         if (_worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0)
             return new Point(0, 0);
 
-        double totalWorld = _worldSizeS + PAD_WORLD;
-        double halfPad = PAD_WORLD * 0.5;
+        double padWorld = GetCurrentMapPaddingWorld();
+        double totalWorld = _worldSizeS + padWorld;
+        double halfPad = padWorld * 0.5;
 
         double xx = Math.Clamp(x, -halfPad, _worldSizeS + halfPad);
         double yy = Math.Clamp(y, -halfPad, _worldSizeS + halfPad);

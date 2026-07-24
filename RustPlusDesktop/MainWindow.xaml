@@ -5503,8 +5503,8 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#FFD166" Text="&#xE706;" />
-                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" Text="{Binding ServerTime}" />
+                                                <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" ToolTip="{Binding TimeUntilNextPhase}" />
+                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" Text="{Binding ServerTime}" ToolTip="{Binding TimeUntilNextPhase}" />
                                                 <StackPanel Grid.Column="2" Margin="16,0,0,0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
                                                     <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="#8D98A8" Symbol="People20" />
                                                     <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerPlayers}" />

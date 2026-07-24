@@ -337,6 +337,27 @@
                         <ui:ToggleSwitch x:Name="ChkMapUseAliasedEdgeMode" Content="{DynamicResource UiDisableGridAntiAliasingAliasedEdgeMode}" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1}" />
                     </StackPanel>
                 </ui:Card>
+
+                <!-- Custom HD Map Image Card -->
+                <ui:TextBlock Text="Custom HD Map Image" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" Margin="0,8,0,0" />
+                <ui:Card Style="{StaticResource SettingsNativeCard}">
+                    <StackPanel>
+                        <ui:TextBlock Text="Use a custom high-definition map image from a URL source instead of the map coming from the server. Cached locally and automatically wiped when a server wipe is detected." TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,10" />
+                        
+                        <ui:TextBlock Text="Custom Map Image URL" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,4" />
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox x:Name="TxtCustomMapUrl" Height="32" Padding="6,4" PlaceholderText="https://example.com/rust_map_hd.png" VerticalContentAlignment="Center" TextChanged="TxtCustomMapUrl_TextChanged" />
+                            <ui:Button Grid.Column="1" x:Name="BtnApplyCustomMapUrl" Content="Apply" Appearance="Primary" Height="32" Margin="6,0,0,0" Click="BtnApplyCustomMapUrl_Click" />
+                            <ui:Button Grid.Column="2" x:Name="BtnClearCustomMapUrl" Content="Clear" Appearance="Secondary" Height="32" Margin="6,0,0,0" Click="BtnClearCustomMapUrl_Click" />
+                        </Grid>
+                        <ui:TextBlock x:Name="TxtCustomMapStatus" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:Card>
                 </StackPanel>
 
 

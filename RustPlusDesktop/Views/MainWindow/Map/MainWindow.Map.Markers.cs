@@ -273,6 +273,80 @@ public partial class MainWindow
         try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + ".json")); } catch { }
     }
 
+    private bool IsCustomMapActive()
+    {
+        var profile = _vm?.Selected;
+        return profile != null && !string.IsNullOrWhiteSpace(profile.CustomMapUrl);
+    }
+
+    private double GetCurrentMapPaddingWorld()
+    {
+        return IsCustomMapActive() ? 1000.0 : 2000.0;
+    }
+
+
+
+    private static BitmapImage? TryLoadCustomMapCache(string key)
+    {
+        try
+        {
+            string imgPath = System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png");
+            if (!System.IO.File.Exists(imgPath)) return null;
+
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(imgPath));
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
+        }
+        catch { return null; }
+    }
+
+    private static void SaveCustomMapCache(string key, BitmapSource bitmap)
+    {
+        try
+        {
+            System.IO.Directory.CreateDirectory(s_mapCacheDir);
+            string imgPath = System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png");
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            using var ms = new System.IO.MemoryStream();
+            encoder.Save(ms);
+            System.IO.File.WriteAllBytes(imgPath, ms.ToArray());
+        }
+        catch { /* non-critical */ }
+    }
+
+    public static void DeleteCustomMapCache(string key)
+    {
+        try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png")); } catch { }
+    }
+
+    private static async Task<BitmapImage?> DownloadCustomImageFromUrlAsync(string url, CancellationToken ct = default)
+    {
+        try
+        {
+            using var client = new System.Net.Http.HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(20);
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+            byte[] bytes = await client.GetByteArrayAsync(url, ct).ConfigureAwait(false);
+            if (bytes == null || bytes.Length == 0) return null;
+
+            using var ms = new System.IO.MemoryStream(bytes);
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+            bi.StreamSource = ms;
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
+        }
+        catch { return null; }
+    }
+
     /// <summary>
     /// Returns true if current monument harbors indicate a server wipe vs what was previously saved.
     /// </summary>
@@ -306,6 +380,11 @@ public partial class MainWindow
     }
     // ──────────────────────────────────────────────────────────────────────────────────────────
 
+    public async Task ReloadMapAsync()
+    {
+        await LoadMapAsync();
+    }
+
     private async Task LoadMapAsync()
     {
         if (_rust is not RustPlusClientReal real) return;
@@ -317,25 +396,40 @@ public partial class MainWindow
 
         RustPlusClientReal.MapWithMonuments? map = null;
 
-        // ── Try disk cache first ──────────────────────────────────────────────────────────────
+        // ── Check wipe status on existing caches ─────────────────────────────────────────────
         var cached = TryLoadMapCache(cacheKey);
+        bool isWipe = false;
         if (cached != null)
         {
             if (IsNewerWipe(currentWipeTime, cached.WipeTime))
             {
                 AppendLog("[map-cache] New wipe detected from server WipeTime; invalidating map cache.");
-                DeleteMapCache(cacheKey);
+                isWipe = true;
             }
             else if (currentWipeTime == null && IsWipeDetected(host, cached.Monuments))
             {
                 AppendLog("[map-cache] Wipe detected from monument layout; invalidating map cache.");
-                DeleteMapCache(cacheKey);
+                isWipe = true;
             }
-            else
+        }
+
+        if (isWipe)
+        {
+            DeleteMapCache(cacheKey);
+            DeleteCustomMapCache(cacheKey);
+            cached = null;
+            if (_vm?.Selected != null && !string.IsNullOrEmpty(_vm.Selected.CustomMapUrl))
             {
-                AppendLog($"[map-cache] Loaded map from disk cache ({cacheKey}).");
-                map = cached;
+                AppendLog("[map-cache] Wipe detected; resetting Custom HD Map URL for current server profile.");
+                _vm.Selected.CustomMapUrl = null;
+                _vm.Save();
             }
+        }
+
+        if (cached != null)
+        {
+            AppendLog($"[map-cache] Loaded map from disk cache ({cacheKey}).");
+            map = cached;
         }
 
         // ── Fetch from server if no valid cache ───────────────────────────────────────────────
@@ -352,6 +446,44 @@ public partial class MainWindow
             await Task.Run(() => SaveMapCache(cacheKey, map));
         }
 
+        // ── Check Custom HD Map Image override ───────────────────────────────────────────────
+        string? customUrl = _vm?.Selected?.CustomMapUrl?.Trim();
+        if (!string.IsNullOrWhiteSpace(customUrl))
+        {
+            BitmapSource? customBmp = TryLoadCustomMapCache(cacheKey);
+            if (customBmp == null)
+            {
+                AppendLog($"[custom-map] Downloading custom HD map image from URL: {customUrl}");
+                customBmp = await DownloadCustomImageFromUrlAsync(customUrl);
+                if (customBmp != null)
+                {
+                    AppendLog($"[custom-map] Download successful. Caching custom map image ({cacheKey}).");
+                    await Task.Run(() => SaveCustomMapCache(cacheKey, customBmp));
+                }
+                else
+                {
+                    AppendLog("[custom-map] Failed to download image from URL. Falling back to server map.");
+                }
+            }
+            else
+            {
+                AppendLog($"[custom-map] Loaded custom HD map image from disk cache ({cacheKey}).");
+            }
+
+            if (customBmp != null)
+            {
+                map = new RustPlusClientReal.MapWithMonuments
+                {
+                    Bitmap = customBmp,
+                    PixelWidth = customBmp.PixelWidth,
+                    PixelHeight = customBmp.PixelHeight,
+                    WorldSize = map.WorldSize,
+                    WipeTime = map.WipeTime,
+                    Monuments = map.Monuments
+                };
+            }
+        }
+
         await Dispatcher.InvokeAsync(() =>
         {
             ShowMapBasic(map.Bitmap);
@@ -360,7 +492,7 @@ public partial class MainWindow
 
             double wDip = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
             double hDip = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
-            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, 2000);
+            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
             ResetMapZoom();
             RedrawGrid();
             Dispatcher.InvokeAsync(() =>
@@ -426,7 +558,7 @@ public partial class MainWindow
             {
                 CheckAndExecutePendingMapCopy(activeProfile);
             }
-            var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
+            var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: GetCurrentMapPaddingWorld());
             AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");
 
             var mons = map.Monuments.Where(m => !string.IsNullOrWhiteSpace(m.Name)).ToList();

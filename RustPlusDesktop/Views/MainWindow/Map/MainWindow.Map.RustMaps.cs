@@ -58,7 +58,7 @@ namespace RustPlusDesk.Views
                 double hDip = bitmap.PixelHeight * (96.0 / bitmap.DpiY);
 
                 _worldSizeS = parsedSize;
-                _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, 2000);
+                _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
 
                 AppendLog($"[Offline Map] Restored worldSize={parsedSize} from cached map_data.json. worldRectPx=[{(int)_worldRectPx.X},{(int)_worldRectPx.Y},{(int)_worldRectPx.Width}x{(int)_worldRectPx.Height}]");
             }
@@ -412,14 +412,29 @@ namespace RustPlusDesk.Views
 
             try
             {
-                var texture = ImgMap.Source as BitmapSource;
+                BitmapSource? texture = null;
+                if (profile != null)
+                {
+                    string host = profile.Host ?? "unknown";
+                    int port = profile.Port;
+                    string cacheKey = MapCacheKey(host, port);
+                    var serverCached = TryLoadMapCache(cacheKey);
+                    if (serverCached?.Bitmap != null)
+                    {
+                        texture = serverCached.Bitmap;
+                    }
+                }
+                if (texture == null)
+                {
+                    texture = ImgMap.Source as BitmapSource;
+                }
                 var references = (_monData ?? new List<(double X, double Y, string Name)>())
                     .Where(m => !string.IsNullOrWhiteSpace(m.Name))
                     .Take(12)
                     .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
                     .ToList();
 
-                var result = await Map3DLocalBuildService.PrepareAsync(profile, texture, profile.RustMapsMapId, references, _worldSizeS, isPlaceholder ? profile.LocalMapFilePath : null);
+                var result = await Map3DLocalBuildService.PrepareAsync(profile!, texture, profile!.RustMapsMapId, references, _worldSizeS, isPlaceholder ? profile!.LocalMapFilePath : null);
                 if (result.NeedsManualMapSelection)
                 {
                     AppendLog($"[3D Map] Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
@@ -838,7 +853,14 @@ namespace RustPlusDesk.Views
             CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
 
             CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
-            await WriteViewerMapDataAsync(Path.Combine(result.FolderPath, "map_data.json"), Path.Combine(currentDir, "map_data_viewer.json"), _worldRectPx, ImgMap.Width, ImgMap.Height);
+
+            double imgW = 0, imgH = 0;
+            if (ImgMap?.Source is BitmapSource bmp)
+            {
+                imgW = bmp.PixelWidth;
+                imgH = bmp.PixelHeight;
+            }
+            await WriteViewerMapDataAsync(Path.Combine(result.FolderPath, "map_data.json"), Path.Combine(currentDir, "map_data_viewer.json"), _worldRectPx, imgW, imgH);
             return runtimeRoot;
         }
 
@@ -988,8 +1010,24 @@ namespace RustPlusDesk.Views
             if (node == null) throw new InvalidDataException("map_data.json root must be an object.");
 
             string parentDir = Path.GetDirectoryName(targetPath) ?? "";
-            bool hasTexture = File.Exists(Path.Combine(parentDir, "map_texture.png"));
+            string targetTexturePath = Path.Combine(parentDir, "map_texture.png");
+            bool hasTexture = File.Exists(targetTexturePath);
             node["mapTextureSource"] = hasTexture ? "/maps/current/map_texture.png" : null;
+
+            if ((imageWidth <= 0 || imageHeight <= 0 || double.IsNaN(imageWidth) || double.IsNaN(imageHeight)) && hasTexture)
+            {
+                try
+                {
+                    var bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.UriSource = new Uri(targetTexturePath);
+                    bi.EndInit();
+                    imageWidth = bi.PixelWidth;
+                    imageHeight = bi.PixelHeight;
+                }
+                catch { }
+            }
 
             // Read worldSize from the parsed map_data.json (written by MapParser as "size").
             // This is critical for offline/placeholder maps where _worldSizeS is 0 because

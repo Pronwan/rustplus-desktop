@@ -655,6 +655,21 @@ namespace RustPlusDesk.Views
 
             ChkMapUseAliasedEdgeMode.IsChecked = TrackingService.MapUseAliasedEdgeMode;
 
+            // Custom HD Map Image setting load
+            var selectedProfile = ParentWindow?.ViewModel?.Selected;
+            if (selectedProfile != null && TxtCustomMapUrl != null)
+            {
+                TxtCustomMapUrl.Text = selectedProfile.CustomMapUrl ?? "";
+                if (!string.IsNullOrWhiteSpace(selectedProfile.CustomMapUrl))
+                {
+                    TxtCustomMapStatus.Text = "Custom HD Map active. Map image is cached locally and will automatically reset on server wipe.";
+                }
+                else
+                {
+                    TxtCustomMapStatus.Text = "No custom map URL set. Standard server map image is currently in use.";
+                }
+            }
+
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
 
@@ -2037,6 +2052,53 @@ namespace RustPlusDesk.Views
             {
                 BtnRevokeAlexa.IsEnabled = true;
             }
+        }
+
+        private void TxtCustomMapUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+        }
+
+        private void BtnApplyCustomMapUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedProf = ParentWindow?.ViewModel?.Selected;
+            if (selectedProf == null)
+            {
+                MessageBox.Show(ParentWindow, "No active server profile selected.", "Custom Map URL", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string url = TxtCustomMapUrl.Text.Trim();
+            if (!string.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                MessageBox.Show(ParentWindow, "Please enter a valid absolute HTTP or HTTPS URL (e.g. https://example.com/rust_map.png).", "Invalid URL", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            selectedProf.CustomMapUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+            ParentWindow?.ViewModel?.Save();
+
+            if (!string.IsNullOrWhiteSpace(selectedProf.CustomMapUrl))
+            {
+                string host = selectedProf.Host;
+                int port = selectedProf.Port;
+                foreach (var c in System.IO.Path.GetInvalidFileNameChars()) host = host.Replace(c, '_');
+                string key = $"{host}_{port}";
+                MainWindow.DeleteCustomMapCache(key);
+
+                TxtCustomMapStatus.Text = "Custom HD Map URL updated. Reloading map image...";
+            }
+            else
+            {
+                TxtCustomMapStatus.Text = "Custom HD Map URL cleared. Reverting to standard server map...";
+            }
+
+            _ = ParentWindow?.ReloadMapAsync();
+        }
+
+        private void BtnClearCustomMapUrl_Click(object sender, RoutedEventArgs e)
+        {
+            TxtCustomMapUrl.Text = "";
+            BtnApplyCustomMapUrl_Click(sender, e);
         }
     }
 }

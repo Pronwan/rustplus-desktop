@@ -35,7 +35,7 @@
                     Visibility="Collapsed"
                     IsHitTestVisible="False">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Clock24" FontSize="12" Margin="0,0,4,0" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" Margin="0,0,4,0" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
