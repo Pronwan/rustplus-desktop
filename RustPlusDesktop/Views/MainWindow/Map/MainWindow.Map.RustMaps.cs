@@ -698,6 +698,25 @@ namespace RustPlusDesk.Views
             ImgMap.Visibility = Visibility.Visible;
             _isMap3DActive = false;
             UpdateRustMapsUi();
+
+            ReclaimMap3DProcessMemory();
+        }
+
+        // Opening the 3D view briefly allocates large map textures and asset buffers on the main
+        // process's managed heap (and any served FileStreams awaiting finalization). The Large
+        // Object Heap is not returned to the OS on a normal collection, so after tearing the view
+        // down we force a compacting collection to drop the main process footprint back down.
+        // Deferred to Background priority so it never stalls the close interaction.
+        private void ReclaimMap3DProcessMemory()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+                GC.WaitForPendingFinalizers();
+                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+            }), System.Windows.Threading.DispatcherPriority.Background);
         }
 
         private async void Map3DWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
