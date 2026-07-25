@@ -809,50 +809,54 @@ namespace RustPlusDesk.Views
         private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
         {
             string runtimeRoot = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Map3DViewer");
-            Directory.CreateDirectory(runtimeRoot);
-            Directory.CreateDirectory(Path.Combine(runtimeRoot, "maps", "current"));
-
-            // Proactively clean up any legacy/unwanted directories in the viewer folder to avoid issues
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".git"));
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".agents"));
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, ".claude"));
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, "node_modules"));
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, "bin"));
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, "obj"));
-            SafeDeleteDirectory(Path.Combine(runtimeRoot, "modules"));
-            SafeDeleteFile(Path.Combine(runtimeRoot, "app.js"));
-            SafeDeleteFile(Path.Combine(runtimeRoot, "build-client.mjs"));
-            SafeDeleteFile(Path.Combine(runtimeRoot, "package.json"));
-            SafeDeleteFile(Path.Combine(runtimeRoot, "package-lock.json"));
-            SafeDeleteFile(Path.Combine(runtimeRoot, "Program.cs"));
-            SafeDeleteFile(Path.Combine(runtimeRoot, "MapParser.csproj"));
-
-            string? viewerRoot = ResolveMap3DViewerSourceRoot();
-            if (viewerRoot != null) CopyDirectoryIfExists(viewerRoot, runtimeRoot);
-
-            string? iconsRoot = ResolveIconsSourceRoot();
-            if (iconsRoot != null) CopyDirectoryIfExists(iconsRoot, Path.Combine(runtimeRoot, "Icons"));
-
             string currentDir = Path.Combine(runtimeRoot, "maps", "current");
-            CopyFileIfExists(Path.Combine(result.FolderPath, "map_resolved.json"), Path.Combine(currentDir, "map_resolved.json"));
 
-            string targetTexturePath = Path.Combine(currentDir, "map_texture.png");
-            string sourceTexturePath = Path.Combine(result.FolderPath, "map_texture.png");
-            if (File.Exists(sourceTexturePath))
+            // The static viewer runtime (index.html, bundled JS, style.css and the ~265 MB of
+            // Rust_Assets) plus the per-map files are all plain file IO. Offload it to a background
+            // thread so the first-time copy never freezes the UI, and rely on the incremental copy
+            // in CopyDirectoryIfExists to make every subsequent open a cheap timestamp scan.
+            await Task.Run(() =>
             {
-                File.Copy(sourceTexturePath, targetTexturePath, true);
-            }
-            else
-            {
-                if (File.Exists(targetTexturePath))
+                Directory.CreateDirectory(runtimeRoot);
+                Directory.CreateDirectory(currentDir);
+
+                // Proactively clean up any legacy/unwanted directories in the viewer folder to avoid issues
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, ".git"));
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, ".agents"));
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, ".claude"));
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, "node_modules"));
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, "bin"));
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, "obj"));
+                SafeDeleteDirectory(Path.Combine(runtimeRoot, "modules"));
+                SafeDeleteFile(Path.Combine(runtimeRoot, "app.js"));
+                SafeDeleteFile(Path.Combine(runtimeRoot, "build-client.mjs"));
+                SafeDeleteFile(Path.Combine(runtimeRoot, "package.json"));
+                SafeDeleteFile(Path.Combine(runtimeRoot, "package-lock.json"));
+                SafeDeleteFile(Path.Combine(runtimeRoot, "Program.cs"));
+                SafeDeleteFile(Path.Combine(runtimeRoot, "MapParser.csproj"));
+
+                string? viewerRoot = ResolveMap3DViewerSourceRoot();
+                if (viewerRoot != null) CopyDirectoryIfExists(viewerRoot, runtimeRoot);
+
+                string? iconsRoot = ResolveIconsSourceRoot();
+                if (iconsRoot != null) CopyDirectoryIfExists(iconsRoot, Path.Combine(runtimeRoot, "Icons"));
+
+                CopyFileIfExists(Path.Combine(result.FolderPath, "map_resolved.json"), Path.Combine(currentDir, "map_resolved.json"));
+
+                string targetTexturePath = Path.Combine(currentDir, "map_texture.png");
+                string sourceTexturePath = Path.Combine(result.FolderPath, "map_texture.png");
+                if (File.Exists(sourceTexturePath))
+                {
+                    File.Copy(sourceTexturePath, targetTexturePath, true);
+                }
+                else if (File.Exists(targetTexturePath))
                 {
                     try { File.Delete(targetTexturePath); } catch { }
                 }
-            }
 
-            CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
-
-            CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
+                CopyFileIfExists(Path.Combine(result.FolderPath, "map_buildings.json"), Path.Combine(currentDir, "map_buildings.json"));
+                CopyFileIfExists(Path.Combine(result.FolderPath, "building_blocked.json"), Path.Combine(currentDir, "building_blocked.json"));
+            }).ConfigureAwait(true);
 
             double imgW = 0, imgH = 0;
             if (ImgMap?.Source is BitmapSource bmp)
@@ -1270,9 +1274,22 @@ namespace RustPlusDesk.Views
                 if (IsIgnoredRuntimePath(relative)) continue;
 
                 string target = Path.Combine(targetDir, relative);
+                if (!RuntimeFileNeedsCopy(sourceFile, target)) continue;
                 Directory.CreateDirectory(Path.GetDirectoryName(target)!);
                 File.Copy(sourceFile, target, overwrite: true);
             }
+        }
+
+        // File.Copy preserves the source last-write time, so once a static viewer asset has been
+        // copied its target matches on both length and timestamp and is skipped on later opens.
+        // This turns the recurring ~265 MB Rust_Assets copy into a quick metadata scan.
+        private static bool RuntimeFileNeedsCopy(string sourceFile, string targetFile)
+        {
+            var target = new FileInfo(targetFile);
+            if (!target.Exists) return true;
+            var source = new FileInfo(sourceFile);
+            return source.Length != target.Length
+                || source.LastWriteTimeUtc != target.LastWriteTimeUtc;
         }
         private async void BtnRefetchRustMaps_Click(object sender, RoutedEventArgs e)
         {
