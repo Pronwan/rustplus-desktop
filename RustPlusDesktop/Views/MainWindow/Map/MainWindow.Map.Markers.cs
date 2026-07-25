@@ -1761,7 +1761,7 @@ public partial class MainWindow
                     }
 
                     Overlay.Children.Add(el);
-                    Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 950 : 920));
+                    Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 10000 : 920));
 
                     if (el.Tag is PlayerMarkerTag pmtNew)
                     {

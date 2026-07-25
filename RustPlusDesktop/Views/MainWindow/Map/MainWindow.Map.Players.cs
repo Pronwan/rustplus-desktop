@@ -52,10 +52,10 @@ public partial class MainWindow
     private readonly Dictionary<ulong, DateTime> _avatarNextTry = new();
     private static readonly TimeSpan AvatarRetryInterval = TimeSpan.FromSeconds(30);
 
-    private const double PinW = 40;
-    private const double PinH = 56;
-    private const double Circle = 24;
-    private const double CircleTop = 6;
+    private const double PinW = 26;
+    private const double PinH = 36;
+    private const double Circle = 16;
+    private const double CircleTop = 4;
 
     private const double SHOP_SIZE_EXP = 0.8;
 
@@ -164,7 +164,7 @@ public partial class MainWindow
             ScaleCenterY = 14.0
         };
 
-        Panel.SetZIndex(host, 905);
+        Panel.SetZIndex(host, 10000);
         ApplyCurrentOverlayScale(host);
         return host;
     }
@@ -249,7 +249,7 @@ public partial class MainWindow
                 ScaleCenterX = 14.0,
                 ScaleCenterY = 14.0,
             };
-            Panel.SetZIndex(host, 905);
+            Panel.SetZIndex(host, 10000);
             ToolTipService.SetToolTip(host, name);
             ApplyCurrentOverlayScale(host);
             return host;
@@ -327,7 +327,7 @@ public partial class MainWindow
                 ScaleCenterX = 14.0,
                 ScaleCenterY = 14.0,
             };
-            Panel.SetZIndex(host, 905);
+            Panel.SetZIndex(host, 10000);
             ToolTipService.SetToolTip(host, name);
             ApplyCurrentOverlayScale(host);
 
@@ -353,7 +353,7 @@ public partial class MainWindow
             Margin = new Thickness(0, 0, 4, 0),
         };
         ToolTipService.SetToolTip(dot, tooltip);
-        Panel.SetZIndex(dot, 905);
+        Panel.SetZIndex(dot, 10000);
         return dot;
     }
 
@@ -374,7 +374,7 @@ public partial class MainWindow
                 if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
                 else Overlay.Children.Add(newEl);
                 _dynEls[key] = newEl; el = newEl;
-                Panel.SetZIndex(newEl, 905);
+                Panel.SetZIndex(newEl, 10000);
             }
             else
             {
@@ -590,7 +590,7 @@ public partial class MainWindow
                 Name = label,
                 IsDeathPin = true,
                 ScaleExp = 0.8,
-                ScaleBaseMult = 0.72,
+                ScaleBaseMult = 0.58,
                 ScaleTarget = null,
                 ScaleCenterX = PinW * 0.5,
                 ScaleCenterY = PinH
@@ -608,7 +608,7 @@ public partial class MainWindow
             Data = pinPath,
             Fill = fill,
             Stroke = Brushes.Black,
-            StrokeThickness = 2,
+            StrokeThickness = 1.5,
             Stretch = Stretch.Fill,
             Width = PinW,
             Height = PinH
@@ -616,14 +616,14 @@ public partial class MainWindow
 
         root.Children.Add(new Ellipse
         {
-            Width = Circle + 6,
-            Height = Circle + 6,
+            Width = Circle + 4,
+            Height = Circle + 4,
             Stroke = Brushes.Black,
-            StrokeThickness = 2,
+            StrokeThickness = 1.5,
             Fill = Brushes.Transparent,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness((PinW - (Circle + 6)) / 2.0, CircleTop - 3, 0, 0)
+            Margin = new Thickness((PinW - (Circle + 4)) / 2.0, CircleTop - 2, 0, 0)
         });
 
         FrameworkElement avatarEl;
@@ -700,7 +700,7 @@ public partial class MainWindow
                 var el = BuildDeathPin(m.Id, m.SteamId, label);
                 _deathPins[m.Id] = el;
                 Overlay.Children.Add(el);
-                Panel.SetZIndex(el, 805);
+                Panel.SetZIndex(el, 9980);
                 ApplyCurrentOverlayScale(el);
                 var cx = px.X - (PinW / 2.0);
                 var cy = px.Y - PinH;
@@ -1179,19 +1179,19 @@ public partial class MainWindow
             HorizontalAlignment = HorizontalAlignment.Center,
             Tag = new PlayerMarkerTag
             {
-                Radius = 14.0,
+                Radius = 9.0,
                 ScaleExp = 0.85,
-                ScaleBaseMult = 1.0,
+                ScaleBaseMult = 0.68,
                 ScaleTarget = null,
                 ScaleCenterX = 100.0,
-                ScaleCenterY = 14.0
+                ScaleCenterY = 9.0
             }
         };
 
         var grid = new Grid
         {
-            Width = 28,
-            Height = 28,
+            Width = 18,
+            Height = 18,
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
@@ -1202,8 +1202,8 @@ public partial class MainWindow
                 var bgBrush = GetNoteColorBrush(colorIndex);
                 var pinBg = new Border
                 {
-                    Width = 28,
-                    Height = 28,
+                    Width = 18,
+                    Height = 18,
                     Background = bgBrush,
                     OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png")))
                     {
@@ -1219,7 +1219,7 @@ public partial class MainWindow
                 : "pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinfg.png";
             try
             {
-                var fg = MakeIcon(fgUri, 28);
+                var fg = MakeIcon(fgUri, 18);
                 grid.Children.Add(fg);
             }
             catch { }
@@ -1231,8 +1231,8 @@ public partial class MainWindow
                 var bgBrush = GetNoteDarkColorBrush(colorIndex);
                 var ellipse = new Ellipse
                 {
-                    Width = 24,
-                    Height = 24,
+                    Width = 15,
+                    Height = 15,
                     Fill = bgBrush,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center
@@ -1244,7 +1244,7 @@ public partial class MainWindow
             string iconUri = GetMapNoteIcon(iconType);
             try
             {
-                var icon = MakeIcon(iconUri, 28);
+                var icon = MakeIcon(iconUri, 18);
                 grid.Children.Add(icon);
             }
             catch { }
@@ -1257,8 +1257,8 @@ public partial class MainWindow
                 var fgBrush = GetNoteColorBrush(colorIndex);
                 var fg = new Border
                 {
-                    Width = 28,
-                    Height = 28,
+                    Width = 18,
+                    Height = 18,
                     Background = fgBrush,
                     OpacityMask = new ImageBrush(new BitmapImage(new Uri(fgUri)))
                     {
@@ -1278,18 +1278,18 @@ public partial class MainWindow
             {
                 var avatarGrid = new Grid
                 {
-                    Width = 14,
-                    Height = 14,
+                    Width = 10,
+                    Height = 10,
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Bottom,
-                    Margin = new Thickness(0, 0, -3, -3)
+                    Margin = new Thickness(0, 0, -2, -2)
                 };
 
                 var bgEllipse = new Ellipse
                 {
                     Fill = Brushes.Black,
-                    Width = 14,
-                    Height = 14
+                    Width = 10,
+                    Height = 10
                 };
                 avatarGrid.Children.Add(bgEllipse);
 
@@ -1300,8 +1300,8 @@ public partial class MainWindow
 
                 var avatarEllipse = new Ellipse
                 {
-                    Width = 12,
-                    Height = 12,
+                    Width = 8,
+                    Height = 8,
                     Fill = imgBrush,
                     Stroke = Brushes.White,
                     StrokeThickness = 1,
@@ -1376,11 +1376,11 @@ public partial class MainWindow
                 var key = $"leader_{i}";
                 _teamNotesEls[key] = el;
                 Overlay.Children.Add(el);
-                Panel.SetZIndex(el, 908);
+                Panel.SetZIndex(el, 9991);
 
                 var p = WorldToImagePx(note.X, note.Y);
                 Canvas.SetLeft(el, p.X - 100.0);
-                Canvas.SetTop(el, p.Y - 14.0);
+                Canvas.SetTop(el, p.Y - 9.0);
             }
         }
 
@@ -1396,11 +1396,11 @@ public partial class MainWindow
                 var key = $"member_{i}";
                 _teamNotesEls[key] = el;
                 Overlay.Children.Add(el);
-                Panel.SetZIndex(el, 907);
+                Panel.SetZIndex(el, 9990);
 
                 var p = WorldToImagePx(note.X, note.Y);
                 Canvas.SetLeft(el, p.X - 100.0);
-                Canvas.SetTop(el, p.Y - 14.0);
+                Canvas.SetTop(el, p.Y - 9.0);
             }
         }
     }
