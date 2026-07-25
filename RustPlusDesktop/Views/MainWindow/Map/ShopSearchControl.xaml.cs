@@ -268,6 +268,15 @@ namespace RustPlusDesk.Views
                                 }
                             }
                         }
+                        // Add Keycard mappings to Misc category
+                        _shortNameToCategory["keycard_green"] = "Misc";
+                        _shortNameToCategory["keycard_blue"] = "Misc";
+                        _shortNameToCategory["keycard_red"] = "Misc";
+                        _itemIdToCategory[37122747] = "Misc";
+                        _itemIdToCategory[-484206264] = "Misc";
+                        _itemIdToCategory[-1880870149] = "Misc";
+                        catSet.Add("Misc");
+
                         var orderedKeys = _categoryRepresentativeIcons.Keys.ToList();
                         _allCategoriesList.Clear();
                         _allCategoriesList.AddRange(catSet.OrderBy(c =>
@@ -295,11 +304,27 @@ namespace RustPlusDesk.Views
                 return catByShort;
             }
 
-            if (itemId != 0 && MainWindow.sItemsById.TryGetValue(itemId, out var info) && !string.IsNullOrEmpty(info.ShortName))
+            if (!string.IsNullOrEmpty(itemShortName) && itemShortName.Contains("keycard", StringComparison.OrdinalIgnoreCase))
             {
-                if (_shortNameToCategory.TryGetValue(info.ShortName, out var catByResolvedShort))
+                return "Misc";
+            }
+
+            if (itemId != 0 && MainWindow.sItemsById.TryGetValue(itemId, out var info))
+            {
+                if (!string.IsNullOrEmpty(info.ShortName))
                 {
-                    return catByResolvedShort;
+                    if (_shortNameToCategory.TryGetValue(info.ShortName, out var catByResolvedShort))
+                    {
+                        return catByResolvedShort;
+                    }
+                    if (info.ShortName.Contains("keycard", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "Misc";
+                    }
+                }
+                if (!string.IsNullOrEmpty(info.Display) && info.Display.Contains("keycard", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Misc";
                 }
             }
 
