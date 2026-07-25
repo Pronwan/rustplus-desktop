@@ -884,8 +884,13 @@ namespace RustPlusDesk.Views
                 string root = Path.GetFullPath(runtimeRoot);
                 if (diskPath.StartsWith(root, StringComparison.OrdinalIgnoreCase) && File.Exists(diskPath))
                 {
-                    byte[] bytes = File.ReadAllBytes(diskPath);
-                    args.Response = CreateMap3DResponse(bytes, GetMap3DContentType(diskPath));
+                    // Stream the file straight to WebView2 instead of buffering it into a managed
+                    // byte[]/MemoryStream. Serving the ~265 MB of Rust_Assets (meshes/textures) as
+                    // byte arrays pushed hundreds of MB onto the Large Object Heap of THIS (main)
+                    // process, which the runtime never returns to the OS after the WebView closes.
+                    var fileStream = new FileStream(diskPath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                        81920, FileOptions.SequentialScan | FileOptions.Asynchronous);
+                    args.Response = CreateMap3DResponse(fileStream, GetMap3DContentType(diskPath), IsCacheableStaticAsset(diskPath));
                     return;
                 }
 
@@ -926,14 +931,41 @@ namespace RustPlusDesk.Views
                 "Content-Type: text/plain; charset=utf-8\r\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0");
         }
 
-        private CoreWebView2WebResourceResponse CreateMap3DResponse(byte[] bytes, string contentType)
+        private CoreWebView2WebResourceResponse CreateMap3DResponse(byte[] bytes, string contentType, bool cacheable = false)
         {
-            var stream = new MemoryStream(bytes);
+            return CreateMap3DResponse(new MemoryStream(bytes), contentType, cacheable);
+        }
+
+        private CoreWebView2WebResourceResponse CreateMap3DResponse(Stream content, string contentType, bool cacheable = false)
+        {
+            // Large static binary assets never change within a session (and are content-stable
+            // across builds), so let WebView2 cache them in its own process. That stops the main
+            // process from re-serving/re-allocating them on repeated requests. Dynamic per-map
+            // JSON and markup stay no-store so they always reflect the current server/map.
+            string cacheControl = cacheable
+                ? "Cache-Control: private, max-age=86400"
+                : "Cache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0";
             return _map3DWebView!.CoreWebView2.Environment.CreateWebResourceResponse(
-                stream,
+                content,
                 200,
                 "OK",
-                $"Content-Type: {contentType}\r\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\r\nPragma: no-cache\r\nExpires: 0");
+                $"Content-Type: {contentType}\r\n{cacheControl}");
+        }
+
+        private static bool IsCacheableStaticAsset(string path)
+        {
+            // Only the heavy, content-stable binary assets (monument meshes, textures, decoder
+            // wasm) are cached. Never cache anything under maps/current — that is per-map data.
+            if (path.Replace('\\', '/').Contains("/maps/current/", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return Path.GetExtension(path).ToLowerInvariant() switch
+            {
+                ".png" or ".jpg" or ".jpeg" or ".webp" => true,
+                ".obj" or ".mtl" or ".glb" or ".gltf" => true,
+                ".wasm" => true,
+                _ => false
+            };
         }
 
         private static byte[]? ReadEmbeddedResourceBytes(string logicalName)
