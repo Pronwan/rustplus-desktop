@@ -346,6 +346,11 @@ public partial class MainWindow
         return _lastShops;
     }
 
+    internal List<(double X, double Y, string Name)> GetMapMonumentsList()
+    {
+        return _monData ?? new List<(double X, double Y, string Name)>();
+    }
+
     internal List<ShopAlertRule> GetAlertRulesList()
     {
         return _alertRules;
