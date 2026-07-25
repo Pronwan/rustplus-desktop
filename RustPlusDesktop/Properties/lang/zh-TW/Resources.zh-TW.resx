@@ -390,17 +390,26 @@
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>選擇一個已擷取的類別或清除活動覆蓋層。</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>在生成一次 3D 地圖並登錄伺服器後，此功能才可用。</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>熱力圖如何運作</value>
+    <value>地圖解析與 3D 地圖前置要求</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>熱力圖總結可能出現的區域;他們不保證現場實體存在。</value>
+    <value>熱力圖、Godrocks、冰山及禁止建造區域需要進行一次性 3D 地圖生成。你必須在遊戲內至少登錄過該伺服器一次，以便在本地生成可供解析的 .map 檔案。</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>生成或開放3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>應用程式會在本地解析地圖資料，並在可能時重用快取。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>建立帳號</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>生成 3D 地圖需要 RustPlusDesktop 帳號（連結 Discord 或電子郵件登入）。解析地圖資料還會同時解鎖 2D 地圖上的額外功能（如熱力圖、冰山、洞穴及 Godrocks）。</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D Viewport</value>
@@ -534,11 +543,41 @@
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>設定機器人、公會、頻道、指令和權限，但不使用日誌 ID。</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord安全</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>高級 Discord 整合</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>教學從不發布訊息或日誌公會、頻道或使用者識別碼。</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>高級 Discord 整合需要 Supporter 帳號。支援 Discord 指令、雙向 Discord 整合以及透過 Webhook 傳送離線抄家提醒。</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>基礎 Discord 整合與聊天提醒</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>基礎 Discord 整合透過 Webhook 運作，無需 Supporter 帳號。所有聊天提醒都會傳送至 Discord，可選擇同時在遊戲內與 Discord 傳送，或僅獨家傳送至 Discord。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>離線雲端提醒</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>當 RustPlusDesktop 關閉時，離線雲端提醒會將 FCM 抄家、事件和死亡通知轉發至 Discord Webhook 或自訂 Webhook（如 Google Home、IFTTT、Make.com）。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>同步雲端連線</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>設定 Webhook URL 後，點擊「Sync Cloud Connection」即可將設定上傳並儲存至雲端服務。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Telegram 電話通知 (CallMeBot)</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>輸入 Telegram 用戶名（如 @name）和自訂訊息，然後點擊「Test Call」。瀏覽器會打開授權 CallMeBot 的說明。授權完成後，離線 FCM 提醒將自動向你的手機發起電話呼叫。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Alexa 智慧家居整合</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>在 Alexa Skill 中透過「Generate Login PIN」連結帳號，選擇伺服器並點擊「Link Selected Server」。Smart Alerts 將作為運動感測器用於觸發例程，智慧裝置則作為開關匯入，即使桌面 App 關閉也能正常運作。</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>開放邏輯引擎</value>

@@ -4956,6 +4956,12 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>Проверьте обновления приложений и найдите диагностический журнал без начала обновления.</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>Офлайн-оповещения &amp; Smart Home</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>Узнайте, как настроить офлайн-уведомления в облаке, звонки Telegram CallMeBot и интеграцию с Amazon Alexa Smart Home.</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>Главная навигация</value>
   </data>
@@ -5106,17 +5112,26 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>Выберите одну извлечённую категорию или очистите активный оверлей.</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>Эта функция доступна после однократного создания 3D-карты и входа на сервер.</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>Как работают тепловые карты</value>
+    <value>Парсинг карты &amp; Требования к 3D-карте</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>Тепловые карты суммируют вероятные зоны появления; Они не гарантируют наличие действующего субъекта в определённом месте.</value>
+    <value>Для тепловых карт, Godrocks, айсбергов и зон запрета строительства требуется разовое создание 3D-карты. Вы должны хотя бы раз зайти на сервер в игре, чтобы .map-файл был доступен локально.</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>Генерировать или открыть 3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>приложение локально анализирует данные карты и при возможности повторно использует кэш.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>Создать аккаунт</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>Для генерации 3D-карты требуется аккаунт RustPlusDesktop (через Discord или email). Парсинг карты также открывает дополнительные функции на 2D-карте (Heatmaps, айсберги, пещеры и Godrocks).</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D Viewport</value>
@@ -5250,11 +5265,41 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>Настройка бота, гильдии, каналов, команд и разрешений без идентификаторов логирования.</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord Безопасность</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>Расширенная интеграция с Discord</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>В обучающих материалах никогда не публикуются сообщения и не ведут идентификаторы гильдий, каналов или пользователей.</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>Расширенная интеграция с Discord требует аккаунт Supporter. Включает команды Discord, двустороннюю интеграцию и офлайн-уведомления о рейдах через webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>Базовая интеграция Discord &amp; оповещения чата</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>Базовая интеграция Discord работает через webhook без аккаунта Supporter. Все оповещения чата отправляются в Discord, одновременно в игре или только в Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>Офлайн-оповещения в облаке</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>Офлайн-уведомления перенаправляют FCM-оповещения о рейдах, событиях и смерти на Discord Webhook или сторонние сервисы (Google Home, IFTTT, Make.com), когда приложение закрыто.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>Синхронизация с облаком</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>После настройки Webhook URL нажмите "Sync Cloud Connection", чтобы сохранить настройки на облачном сервере.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Звонок Telegram через CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>Введите имя пользователя Telegram (@name) и сообщение, затем нажмите "Test Call". Откроется браузер для авторизации CallMeBot. После авторизации офлайн-оповещения будут вызывать звонок на ваш телефон.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Интеграция с Alexa Smart Home</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>Свяжите аккаунт в навыке Alexa через "Generate Login PIN", выберите сервер и нажмите "Link Selected Server". Smart Alerts станут датчиками движения для рутин, а устройства — умными переключателями даже при закрытом приложении.</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>Открытый логический движок</value>

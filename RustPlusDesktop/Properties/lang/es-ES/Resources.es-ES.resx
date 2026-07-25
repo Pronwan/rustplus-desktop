@@ -4956,6 +4956,12 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>Verifique las actualizaciones de la aplicación y localice el registro de diagnóstico sin iniciar una actualización.</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>Alertas offline &amp; Smart Home</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>Aprende a configurar alertas cloud offline, llamadas de Telegram CallMeBot e integración con Amazon Alexa Smart Home.</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>Navegación principal</value>
   </data>
@@ -5106,17 +5112,26 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>seleccione una categoría extraída o borre la superposición activa.</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>Esta función está disponible tras generar el mapa 3D una vez e iniciar sesión en el servidor.</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>Cómo funcionan los mapas de calor</value>
+    <value>Análisis de mapa &amp; Requisito de Mapa 3D</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>Los mapas de calor resumen las áreas probables de desove; no garantizan una entidad viva en una ubicación.</value>
+    <value>Las Heatmaps, Godrocks, Icebergs y zonas de no-construcción requieren generar el mapa 3D una vez. Debes haber entrado al servidor en el juego al menos una vez para tener el archivo .map local.</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>Generar o abrir 3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>La aplicación analiza los datos del mapa localmente y reutiliza su caché cuando es posible.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>Crear cuenta</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>Generar un mapa 3D requiere una cuenta de RustPlusDesktop (mediante enlace de Discord o email). El análisis del mapa también desbloquea funciones adicionales en el mapa 2D (como Heatmaps, Icebergs, Caves y Godrocks).</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D Ventana gráfica</value>
@@ -5250,11 +5265,41 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>Configurar bot, gremio, canales, comandos y permisos sin registrar ID.</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord Seguridad</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>Integración avanzada de Discord</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>Los tutoriales nunca publican mensajes ni registran identificadores de gremio, canal o usuario.</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>La integración avanzada de Discord requiere una cuenta Supporter. Permite comandos de Discord, integración en dos vías y alertas de raid offline por webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>Integración básica de Discord &amp; alertas de chat</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>La integración básica de Discord funciona mediante webhook sin cuenta Supporter. Todas las alertas de chat se envían a Discord, opcionalmente en el juego y en Discord o solo en Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>Alertas cloud offline</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>Las alertas cloud offline dirigen notificaciones FCM de raids, eventos y muerte a un webhook de Discord o webhooks personalizados (Google Home, IFTTT, Make.com) cuando la app está cerrada.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>Sincronizar conexión Cloud</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>Tras configurar las URL de webhook, haz clic en "Sync Cloud Connection" para guardar tus ajustes en el servicio cloud.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Llamada de Telegram por CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>Introduce tu usuario de Telegram (@nombre) y mensaje, y haz clic en "Test Call". Se abrirá el navegador para autorizar CallMeBot. Una vez autorizado, las alertas FCM offline llamarán a tu teléfono.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Integración con Alexa Smart Home</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>Vicula tu cuenta en la Skill de Alexa con "Generate Login PIN", selecciona tu servidor y haz clic en "Link Selected Server". Las Smart Alerts actuarán como sensores de movimiento y los dispositivos como interruptores inteligentes incluso con la app cerrada.</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>Motor lógico abierto</value>

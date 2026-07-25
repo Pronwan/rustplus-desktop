@@ -18,12 +18,35 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
     public TutorialOverlay()
     {
         InitializeComponent();
-        SizeChanged += (_, _) => RenderPresentation();
+        SizeChanged += (_, _) => 
+        {
+            RenderPresentation();
+            UpdatePopupPosition();
+        };
+        Loaded += (_, _) =>
+        {
+            var window = Window.GetWindow(this);
+            if (window != null)
+            {
+                window.LocationChanged += (s, e) => UpdatePopupPosition();
+                window.SizeChanged += (s, e) => UpdatePopupPosition();
+            }
+        };
         PreviewKeyDown += OnPreviewKeyDown;
         SystemParameters.StaticPropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(SystemParameters.HighContrast)) ApplyContrast();
         };
+    }
+
+    private void UpdatePopupPosition()
+    {
+        if (OverlayPopup.IsOpen)
+        {
+            var offset = OverlayPopup.HorizontalOffset;
+            OverlayPopup.HorizontalOffset = offset + 1;
+            OverlayPopup.HorizontalOffset = offset;
+        }
     }
 
     public event EventHandler? NextRequested;
@@ -56,6 +79,7 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             !Tutorial.GetAllowInteraction(presentation.Target.Element)
             ? Visibility.Visible : Visibility.Collapsed;
         Visibility = Visibility.Visible;
+        OverlayPopup.IsOpen = true;
         FlowDirection = FlowDirection.LeftToRight;
         Popover.FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -85,6 +109,7 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         SpotlightBorder.Visibility = Visibility.Collapsed;
         TargetBlocker.Visibility = Visibility.Collapsed;
         Visibility = Visibility.Visible;
+        OverlayPopup.IsOpen = true;
         FlowDirection = FlowDirection.LeftToRight;
         Popover.FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -95,6 +120,7 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
     public void Hide()
     {
         Visibility = Visibility.Collapsed;
+        OverlayPopup.IsOpen = false;
         _presentation = null;
         if (_previousFocus is not null) Keyboard.Focus(_previousFocus);
         _previousFocus = null;

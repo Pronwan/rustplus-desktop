@@ -4956,6 +4956,12 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>Vérifiez les mises à jour de l'application et localisez le journal de diagnostic sans lancer de mise à jour.</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>Alertes hors ligne &amp; Smart Home</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>Découvrez comment configurer les alertes cloud hors ligne, les appels Telegram CallMeBot et l'intégration Amazon Alexa Smart Home.</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>Navigation principale</value>
   </data>
@@ -5106,17 +5112,26 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>Sélectionnez une catégorie extraite ou effacez la superposition active.</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>Cette fonctionnalité est disponible après avoir généré la carte 3D une fois et vous être connecté au serveur.</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>Comment fonctionnent les cartes thermiques</value>
+    <value>Analyse de carte &amp; Prérequis Map 3D</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>les cartes thermiques résument les zones d'apparition probables ; ils ne garantissent pas une entité active sur un emplacement.</value>
+    <value>Les Heatmaps, Godrocks, Icebergs et zones sans construction nécessitent une génération unique de la carte 3D. Vous devez vous être connecté au serveur au moins une fois en jeu pour disposer du fichier .map local.</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>Générer ou ouvrir 3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>l'application analyse les données cartographiques localement et réutilise son cache lorsque cela est possible.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>Créer un compte</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>La génération d'une carte 3D nécessite un compte RustPlusDesktop (lien Discord ou email). L'analyse de la carte débloque également des infos supplémentaires sur la carte 2D (Heatmaps, Icebergs, Caves &amp; Godrocks).</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>fenêtre 3D</value>
@@ -5250,11 +5265,41 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>configurez le bot, la guilde, les canaux, les commandes et les autorisations sans enregistrer les ID.</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord Sécurité</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>Intégration Discord avancée</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>Les didacticiels ne publient jamais de messages et n'enregistrent jamais les identifiants de guilde, de canal ou d'utilisateur.</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>L'intégration Discord avancée nécessite un compte Supporter. Cela active les commandes Discord, l'intégration bidirectionnelle et les alertes de raid hors ligne via webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>Intégration Discord de base &amp; alertes chat</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>L'intégration Discord de base fonctionne via webhook sans compte Supporter. Toutes les alertes de chat sont envoyées à Discord, au choix en jeu et sur Discord ou exclusivement sur Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>Alertes cloud hors ligne</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>Les alertes cloud hors ligne acheminent les notifications FCM de raid, d'événement et de mort vers un webhook Discord ou des webhooks personnalisés (Google Home, IFTTT, Make.com) lorsque l'application est fermée.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>Synchroniser la connexion Cloud</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>Après avoir configuré vos URL de webhook, cliquez sur "Sync Cloud Connection" pour enregistrer vos paramètres dans le service cloud.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Appel Telegram via CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>Entrez votre nom d'utilisateur Telegram (@nom) et votre message, puis cliquez sur "Test Call". Un navigateur s'ouvre pour autoriser CallMeBot. Une fois autorisé, les alertes FCM déclenchent des appels sur votre téléphone.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Intégration Alexa Smart Home</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>Associez votre compte dans le Skill Alexa via "Generate Login PIN", sélectionnez votre serveur et cliquez sur "Link Selected Server". Les Smart Alerts deviennent des détecteurs de mouvement et les appareils des commutateurs intelligentes, même application fermée.</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>Moteur logique ouvert</value>

@@ -452,7 +452,7 @@
                 <!-- Auth status line -->
                 <ui:TextBlock x:Name="TxtAuthStatus" FontSize="11" Foreground="#888" TextWrapping="Wrap" Margin="0,4,0,10" Text="{DynamicResource UiNotConnected}" />
 
-                <ui:CardExpander Header="{DynamicResource UiBasicDiscordIntegration}" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" IsEnabled="{Binding IsCloudConnected}" ContentPadding="12,8">
+                <ui:CardExpander Header="{DynamicResource UiBasicDiscordIntegration}" tutorials:Tutorial.TargetId="Settings.DiscordBasic" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" IsEnabled="{Binding IsCloudConnected}" ContentPadding="12,8">
                     <StackPanel Margin="0,8,0,0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                             <ui:TextBlock Text="{DynamicResource UiDiscordWebhookChatAlerts}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="0,0,8,0" />
@@ -476,7 +476,7 @@
                         <ui:TextBlock Text="{DynamicResource SupporterDescription}" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontStyle="Italic" Margin="0,0,0,12" TextWrapping="Wrap" />
 
                         <!-- Offline Alarms Sync -->
-                        <ui:CardExpander Header="{DynamicResource UiOfflineCloudAlertsDiscordWebhookTelegramCalls}" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                        <ui:CardExpander Header="{DynamicResource UiOfflineCloudAlertsDiscordWebhookTelegramCalls}" tutorials:Tutorial.TargetId="Settings.OfflineAlerts" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
                             <StackPanel Margin="0,8,0,0">
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -550,7 +550,7 @@
                             </StackPanel>
                         </ui:CardExpander>
 
-                        <ui:CardExpander Header="{DynamicResource UiAdvancedDiscordBotIntegration}" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                        <ui:CardExpander Header="{DynamicResource UiAdvancedDiscordBotIntegration}" tutorials:Tutorial.TargetId="Settings.DiscordAdvanced" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
                             <StackPanel Margin="0,8,0,0">
                                 <ui:Button x:Name="BtnInviteDiscordBot" tutorials:Tutorial.TargetId="Settings.Discord" Content="{DynamicResource UiInviteDiscordBotToServer}" Icon="{ui:SymbolIcon Symbol=Add24}" Margin="0,0,0,8" PreviewMouseDown="PremiumFeature_PreviewMouseDown" Click="BtnInviteDiscordBot_Click" />
                                 
@@ -638,7 +638,7 @@
                                 <ui:Button x:Name="BtnSaveChannels" Content="{DynamicResource UiSaveChannelsConfig}" Appearance="Primary" HorizontalAlignment="Stretch" Height="30" Click="BtnSaveChannels_Click" />
                             </StackPanel>
                         </ui:CardExpander>
-                        <ui:CardExpander Header="{DynamicResource UiAlexaSmartHome}" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                        <ui:CardExpander Header="{DynamicResource UiAlexaSmartHome}" tutorials:Tutorial.TargetId="Settings.Alexa" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
                             <StackPanel Margin="0,8,0,0">
                                 <Grid Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>

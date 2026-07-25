@@ -1119,6 +1119,7 @@ namespace RustPlusDesk.Views
             BtnEmailConnect.IsEnabled = true;
             LoadSettings();
             ParentWindow?.UpdateCloudSyncUI();
+            _ = ParentWindow?.DismissTutorialIfRunningAsync();
         }
 
         private void BtnEmailConnect_Click(object sender, RoutedEventArgs e)
@@ -1149,6 +1150,7 @@ namespace RustPlusDesk.Views
                 ParentWindow?.AppendLog("[Cloud] Email login successful.");
                 LoadSettings();
                 ParentWindow?.UpdateCloudSyncUI();
+                _ = ParentWindow?.DismissTutorialIfRunningAsync();
             }
         }
 

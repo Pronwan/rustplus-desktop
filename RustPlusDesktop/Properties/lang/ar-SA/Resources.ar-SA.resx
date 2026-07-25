@@ -4953,6 +4953,12 @@
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>تحقق من تحديثات التطبيق وحدد موقع سجل التشخيص دون بدء التحديث.</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>التنبيهات دون اتصال &amp; المنزل الذكي</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>تعرف على كيفية تكوين التنبيهات السحابية دون اتصال، ومكالمات Telegram CallMeBot، وتكامل Amazon Alexa Smart Home.</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>التنقل الرئيسي</value>
   </data>
@@ -5103,17 +5109,26 @@
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>حدد فئة واحدة مستخرجة أو قم بمسح التراكب النشط.</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>تتوفر هذه الميزة بعد إنشاء الخريطة ثلاثية الأبعاد مرة واحدة وتسجيل الدخول إلى الخادم.</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>كيف تعمل الخرائط الحرارية</value>
+    <value>تحليل الخريطة ومتطلبات الخريطة ثلاثية الأبعاد</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>تلخص الخرائط الحرارية مناطق الانتشار المحتملة؛ إنهم لا يضمنون وجود كيان حي في مكان ما.</value>
+    <value>تتطلب الخرائط الحرارية وGodrocks والجبال الجليدية ومناطق حظر البناء إنشاء خريطة ثلاثية الأبعاد لمرة واحدة. يجب أن تكون قد سجلت الدخول إلى الخادم في اللعبة مرة واحدة على الأقل ليتوفر ملف .map محلياً.</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>إنشاء أو فتح 3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>يقوم التطبيق بتحليل بيانات الخريطة محليًا وإعادة استخدام ذاكرة التخزين المؤقت الخاصة به عندما يكون ذلك ممكنًا.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>إنشاء حساب</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>يتطلب إنشاء خريطة ثلاثية الأبعاد حساب RustPlusDesktop (عبر رابط Discord أو البريد الإلكتروني). يفتح تحليل الخريطة أيضاً ميزات إضافية على الخريطة ثنائية الأبعاد (مثل الخرائط الحرارية والجبال الجليدية والكهوف وGodrocks).</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D إطار العرض</value>
@@ -5247,11 +5262,41 @@
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>قم بتكوين الروبوت والجماعة والقنوات والأوامر والأذونات دون تسجيل المعرفات.</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord السلامة</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>تكامل Discord المتقدم</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>لا تنشر البرامج التعليمية مطلقًا رسائل أو تسجل النقابة أو القناة أو معرفات المستخدم.</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>يتطلب تكامل Discord المتقدم حساب Supporter. يتيح أوامر Discord والتكامل ثنائي الاتجاه وتنبيهات الغارات دون اتصال عبر Webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>تكامل Discord الأساسي وتنبيهات الدردشة</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>يعمل تكامل Discord الأساسي عبر Webhook بدون حساب Supporter. يتم إرسال جميع تنبيهات الدردشة إلى Discord، إما داخل اللعبة وDiscord معاً أو حكراً على Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>التنبيهات السحابية دون اتصال</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>تقوم التنبيهات السحابية دون اتصال بتوجيه إشعارات FCM للغارات والأحداث والموت إلى Discord Webhook أو Webhooks مخصصة (مثل Google Home وIFTTT وMake.com) عند إغلاق التطبيق.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>مزامنة الاتصال السحابي</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>بعد تكوين عناوين URL لـ Webhook، انقر فوق "Sync Cloud Connection" لتحميل إعداداتك وحفظها في الخدمة السحابية.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>مكالمة Telegram عبر CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>أدخل اسم مستخدم Telegram (@name) والرسالة، ثم انقر فوق "Test Call". تفتح نافذة متصفح لتفويض CallMeBot. بمجرد التفويض، تطلق تنبيهات FCM دون اتصال مكالمات هاتفية إلى جهازك المحمول.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>تكامل Alexa Smart Home</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>اربط الحسابات عبر مهارة Alexa باستخدام "Generate Login PIN"، وحدد خادمك وانقر على "Link Selected Server". تصبح Smart Alerts أجهزة استشعار الحركة للروتينات وتعمل الأجهزة كمفاتيح ذكية حتى عند إغلاق التطبيق.</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>افتح محرك المنطق</value>
