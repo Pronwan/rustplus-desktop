@@ -349,6 +349,9 @@ public partial class MainWindow
             ? (string.IsNullOrWhiteSpace(state!.MasterName) ? state.MasterSteamId ?? "" : state.MasterName)
             : "";
 
+        var teamSteamIds = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
+        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds);
+
         var currentMasterId = hasActiveMaster ? state!.MasterSteamId : null;
         if (_isChatFeatureMaster && (!previousIsMaster || _lastKnownTeamFeatureMasterId != currentMasterId))
         {
@@ -365,10 +368,6 @@ public partial class MainWindow
         {
             RequestTeamFeatureMasterSync();
         }
-
-        // Update Discord Bot Listener subscription state
-        var teamSteamIds = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
-        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds);
 
         if (_chatFeaturesBlockedByMaster && !previousBlocked)
         {

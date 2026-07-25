@@ -137,6 +137,7 @@ public partial class App : Application
                 // invisible while WPF performs its full layout + render pass.
                 // ContentRendered fires after that first pass — the true "ready" signal.
                 _main = new MainWindow();
+                MainWindow = _main;
                 _main.Closed += (s, ev) => _main = null;
                 _main.ContentRendered += (_, _) => mainReadyTcs.TrySetResult(true);
 
