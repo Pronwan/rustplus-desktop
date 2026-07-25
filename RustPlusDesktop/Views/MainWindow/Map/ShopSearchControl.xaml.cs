@@ -487,7 +487,7 @@ namespace RustPlusDesk.Views
             // Search both categories and items db on a background thread to prevent UI thread lock
             var matches = await System.Threading.Tasks.Task.Run(() =>
             {
-                var result = new List<AutocompleteItem>();
+                var rawList = new List<AutocompleteItem>();
 
                 // 1. Categories matching query (or all categories if query is empty)
                 var matchedCategories = string.IsNullOrWhiteSpace(lowercaseQuery)
@@ -496,7 +496,7 @@ namespace RustPlusDesk.Views
 
                 foreach (var cat in matchedCategories)
                 {
-                    result.Add(new AutocompleteItem
+                    rawList.Add(new AutocompleteItem
                     {
                         Id = 0,
                         Display = cat,
@@ -514,7 +514,6 @@ namespace RustPlusDesk.Views
                         .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
                                      (ii.Display.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase) || 
                                       (ii.ShortName != null && ii.ShortName.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase))))
-                        .Take(20)
                         .Select(ii => new AutocompleteItem
                         {
                             Id = ii.Id,
@@ -523,13 +522,49 @@ namespace RustPlusDesk.Views
                             Icon = MainWindow.ResolveItemIcon(ii.Id, ii.ShortName, 32),
                             IsCategory = false,
                             CategoryName = string.Empty
-                        })
-                        .ToList();
+                        });
 
-                    result.AddRange(itemMatches);
+                    rawList.AddRange(itemMatches);
                 }
 
-                return result;
+                if (string.IsNullOrWhiteSpace(lowercaseQuery))
+                {
+                    return rawList;
+                }
+
+                // 3. Match Priority Ranking: Rank 1 = Exact match, Rank 2 = Starts with, Rank 3 = Contains
+                int GetRank(AutocompleteItem item)
+                {
+                    string disp = item.Display;
+                    string sn = item.ShortName;
+
+                    // Rank 1: Exact match (Display or ShortName)
+                    if (disp.Equals(lowercaseQuery, StringComparison.OrdinalIgnoreCase) ||
+                        sn.Equals(lowercaseQuery, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return 1;
+                    }
+
+                    // Rank 2: Starts with match
+                    if (disp.StartsWith(lowercaseQuery, StringComparison.OrdinalIgnoreCase) ||
+                        sn.StartsWith(lowercaseQuery, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return 2;
+                    }
+
+                    // Rank 3: Partial contains match
+                    return 3;
+                }
+
+                var ordered = rawList
+                    .OrderBy(item => GetRank(item))
+                    .ThenBy(item => item.IsCategory ? 0 : 1) // Prefer category if equal rank
+                    .ThenBy(item => item.Display.Length)     // Prefer shorter display names
+                    .ThenBy(item => item.Display)
+                    .Take(60)
+                    .ToList();
+
+                return ordered;
             });
 
             if (token.IsCancellationRequested) return;

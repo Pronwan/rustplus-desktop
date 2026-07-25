@@ -237,7 +237,7 @@
                         IsOpen="False"
                         StaysOpen="False"
                         MinWidth="240"
-                        MaxHeight="200"
+                        MaxHeight="300"
                         PopupAnimation="Fade">
                         <Border
                             Background="#16191E"
@@ -248,7 +248,7 @@
                                 x:Name="LstAutocomplete"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                MaxHeight="190"
+                                MaxHeight="290"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 SelectionChanged="LstAutocomplete_SelectionChanged">
                                 <ListBox.ItemTemplate>
