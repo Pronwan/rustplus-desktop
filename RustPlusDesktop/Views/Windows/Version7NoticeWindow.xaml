@@ -4,7 +4,7 @@
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{DynamicResource Update700Title}"
-        Width="500" SizeToContent="{DynamicResource UiHeight}"
+        Width="500" SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#0F1215"
