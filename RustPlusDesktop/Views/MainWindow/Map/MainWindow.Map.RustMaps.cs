@@ -26,6 +26,7 @@ namespace RustPlusDesk.Views
         private bool _isMap3DPreparing;
         private bool _isMap3DActive;
         private WebView2? _map3DWebView;
+        private static CoreWebView2Environment? _map3DWebViewEnvironment;
         private string? _currentMapFolderPath;
         private EventHandler<CoreWebView2WebResourceRequestedEventArgs>? _map3DResourceRequestHandler;
         private static readonly Lazy<IReadOnlyDictionary<string, string>> Map3DResourceNameMap = new(() =>
@@ -577,8 +578,10 @@ namespace RustPlusDesk.Views
                 "RustPlusDesk",
                 "WebView2");
             Directory.CreateDirectory(webViewDataFolder);
-            var webViewEnvironment = await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
-            await _map3DWebView.EnsureCoreWebView2Async(webViewEnvironment);
+            // The CoreWebView2 environment (fixed user-data folder) is identical across opens, so
+            // create it once and reuse it to avoid the per-open initialization cost.
+            _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
+            await _map3DWebView.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
