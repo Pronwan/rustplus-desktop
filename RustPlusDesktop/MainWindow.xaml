@@ -5193,6 +5193,7 @@
 
                             <ui:Button
                                 x:Name="BtnToggleOverlayTools"
+                                tutorials:Tutorial.TargetId="Map.Drawing"
                                 Width="32"
                                 Height="32"
                                 Margin="4,0,0,0"

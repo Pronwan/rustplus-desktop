@@ -65,6 +65,7 @@ public sealed class TutorialService(
     private int _index;
     private CancellationTokenSource? _runCts;
     private ITutorialStateSnapshot _snapshot = EmptyTutorialStateSnapshot.Instance;
+    private string? _lastFailedStepId;
 
     public bool IsRunning => ActiveTutorial is not null;
     public TutorialDefinition? ActiveTutorial { get; private set; }
@@ -202,7 +203,11 @@ public sealed class TutorialService(
             bool unavailable = target is null;
             if (unavailable)
             {
-                TargetResolutionFailed?.Invoke(this, new(ActiveTutorial.Id, step.Id, "target-unavailable"));
+                if (_lastFailedStepId != step.Id)
+                {
+                    _lastFailedStepId = step.Id;
+                    TargetResolutionFailed?.Invoke(this, new(ActiveTutorial.Id, step.Id, "target-unavailable"));
+                }
                 if (step.IsOptional)
                 {
                     StepSkipped?.Invoke(this, new(ActiveTutorial.Id, step.Id, "optional-target-unavailable"));
@@ -212,10 +217,18 @@ public sealed class TutorialService(
                 }
                 target = new TutorialTarget(Rect.Empty);
             }
+            else
+            {
+                _lastFailedStepId = null;
+            }
+
+            string stepDescription = unavailable
+                ? (HasText($"Tutorials.Step.{step.Id}.Unavailable") ? Text($"Tutorials.Step.{step.Id}.Unavailable") : Text("Tutorials.Common.TargetUnavailable"))
+                : Text(step.DescriptionKey);
 
             presenter.Show(new(
                 Text(ActiveTutorial.TitleKey), Text(step.TitleKey),
-                unavailable ? Text("Tutorials.Common.TargetUnavailable") : Text(step.DescriptionKey),
+                stepDescription,
                 HasText(step.TipKey) ? Text(step.TipKey!) : null,
                 _index + 1, _steps.Count, unavailable ? TutorialPlacement.Center : step.Placement,
                 target!, _index > 0, _index == _steps.Count - 1, unavailable, step.AllowTargetInteraction));
@@ -224,8 +237,13 @@ public sealed class TutorialService(
         catch (OperationCanceledException) { }
         catch (Exception ex)
         {
-            TargetResolutionFailed?.Invoke(this, new(ActiveTutorial.Id, step.Id, ex.GetType().Name));
-            presenter.Show(new(Text(ActiveTutorial.TitleKey), Text(step.TitleKey), Text("Tutorials.Common.TargetUnavailable"), null,
+            if (_lastFailedStepId != step.Id)
+            {
+                _lastFailedStepId = step.Id;
+                TargetResolutionFailed?.Invoke(this, new(ActiveTutorial.Id, step.Id, ex.GetType().Name));
+            }
+            string errDescription = HasText($"Tutorials.Step.{step.Id}.Unavailable") ? Text($"Tutorials.Step.{step.Id}.Unavailable") : Text("Tutorials.Common.TargetUnavailable");
+            presenter.Show(new(Text(ActiveTutorial.TitleKey), Text(step.TitleKey), errDescription, null,
                 _index + 1, _steps.Count, TutorialPlacement.Center, new TutorialTarget(Rect.Empty), _index > 0, _index == _steps.Count - 1, true, false));
         }
     }

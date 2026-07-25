@@ -5016,6 +5016,12 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>Überprüfen Sie Anwendungsupdates und suchen Sie das Diagnoseprotokoll, ohne ein Update zu starten.</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>Offline-Alerts &amp; Smart Home</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>Erfahre, wie du Offline Cloud-Alerts, Telegram CallMeBot-Anrufe und die Amazon Alexa Smart Home Integration konfigurierst.</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>Hauptnavigation</value>
   </data>
@@ -5166,17 +5172,26 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>Wählen Sie eine extrahierte Kategorie aus oder löschen Sie das aktive Overlay.</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>Diese Funktion ist erst verfügbar, nachdem einmalig eine 3D-Map generiert wurde und du auf dem Server eingeloggt bist.</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>Funktionsweise von Heatmaps</value>
+    <value>Map-Parsing &amp; 3D-Map Voraussetzung</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>Heatmaps fassen wahrscheinliche Spawn-Bereiche zusammen; Sie garantieren keine lebendige Entität an einem Standort.</value>
+    <value>Für Heatmaps, Godrocks, Icebergs oder No-Building-Zones muss die 3D-Map einmalig generiert werden. Dazu musst du mindestens einmal auf dem Server eingeloggt gewesen sein, damit die .map-Datei lokal vorliegt.</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>3D generieren oder öffnen</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>Die App analysiert Kartendaten lokal und verwendet ihren Cache nach Möglichkeit wieder.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>Account erstellen</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>Für die Generierung der 3D-Map ist ein RustPlusDesktop-Account erforderlich (per Discord-Link oder E-Mail). Das Parsing der Map schaltet zudem Zusatzinfos auf der 2D-Karte frei (wie Heatmaps, Icebergs, Caves &amp; Godrocks).</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D Ansichtsfenster</value>
@@ -5310,11 +5325,41 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>Konfigurieren Sie Bot, Gilde, Kanäle, Befehle und Berechtigungen ohne Protokollierungs-IDs.</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord Sicherheit</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>Erweiterte Discord-Integration</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>Tutorials veröffentlichen niemals Nachrichten oder protokollieren Gilden-, Kanal- oder Benutzerkennungen.</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>Die erweiterte Discord-Integration erfordert einen Supporter-Account. Sie ermöglicht Discord-Commands, Zwei-Wege-Integration sowie Offline-Raid-Alerts per Discord Webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>Basis Discord-Integration &amp; Chat-Alerts</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>Die Basis-Discord-Integration funktioniert per Webhook auch ohne Supporter-Account. Alle Chat-Alerts werden an Discord gesendet, wahlweise gleichzeitig in-game oder nur exklusiv an Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>Offline Cloud Alerts</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>Offline Cloud-Alerts leiten FCM Smart-Alerts bei Raids, Events oder Tod an einen Discord-Webhook oder benutzerdefinierte Webhooks (z.B. Google Home, IFTTT, Make.com) weiter, auch wenn die App geschlossen ist.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>Cloud-Verbindung synchronisieren</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>Klicke nach der Eingabe deiner Webhook-URLs auf "Sync Cloud Connection", um deine Einstellungen an den Cloud-Dienst zu übertragen und zu speichern.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Telegram-Anruf via CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>Gib deinen Telegram-Namen (@name) und eine Nachricht ein und klicke auf "Test Call". Ein Browserfenster erklärt, wie du CallMeBot berechtigst. Danach lösen Offline-FCM-Alerts einen Anruf auf deinem Smartphone aus.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Alexa Smart Home Integration</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>Verknüpfe das Konto im Alexa Skill per "Generate Login PIN", wähle den Server aus und klicke auf "Link Selected Server". Smart Alerts werden als Bewegungsmelder für Routinen und Geräte als Smart Switches importiert – vollautomatisch auch bei geschlossener App.</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>Logik-Engine öffnen</value>

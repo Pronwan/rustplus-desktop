@@ -4960,6 +4960,12 @@ You can find more information on the server's official website:
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>Check application updates and locate the diagnostic log without starting an update.</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>Offline Alerts &amp; Smart Home</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>Learn how to configure offline cloud alerts, Telegram CallMeBot calls, and Amazon Alexa Smart Home integration.</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>Main Navigation</value>
   </data>
@@ -5110,17 +5116,26 @@ You can find more information on the server's official website:
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>Select one extracted category or clear the active overlay.</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>This feature is available after generating the 3D map once and logging into the server.</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>How Heatmaps Work</value>
+    <value>Map Parsing &amp; 3D Map Requirement</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>Heatmaps summarize likely spawn areas; they do not guarantee a live entity at a location.</value>
+    <value>Heatmaps, Godrocks, Icebergs, and No-Building Zones require a one-time 3D map generation. You must have logged into the server in-game at least once so the local .map file is available for parsing.</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>Generate or Open 3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>The app parses map data locally and reuses its cache when possible.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>Create Account</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>Generating the 3D map requires a RustPlusDesktop account (link Discord or sign in via email). Parsing the local map data also unlocks extra features on the 2D map (like Heatmaps, Icebergs, Caves &amp; Godrocks).</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D Viewport</value>
@@ -5254,11 +5269,41 @@ You can find more information on the server's official website:
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>Configure bot, guild, channels, commands, and permissions without logging IDs.</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord Safety</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>Advanced Discord Integration</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>Tutorials never post messages or log guild, channel, or user identifiers.</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>Advanced Discord integration requires a Supporter account. This enables Discord bot commands, two-way integration, and offline raid alerts via Discord webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>Basic Discord Integration &amp; Chat Alerts</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>Basic Discord integration works via webhooks without a Supporter account. All chat alerts are sent to Discord, optionally both in-game and on Discord, or exclusively to Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>Offline Cloud Alerts</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>Offline cloud alerts route FCM smart raid, event, and death notifications to a Discord webhook or custom webhooks (e.g. Google Home, IFTTT, Make.com) when RustPlusDesktop is closed.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>Sync Cloud Connection</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>After configuring your webhook URLs, click "Sync Cloud Connection" to upload and save your settings to the cloud service.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Telegram Call via CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>Enter your Telegram username (@name) and message, then click "Test Call". A browser window opens to authorize CallMeBot. Once authorized, offline FCM alerts trigger phone calls to your mobile device.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Alexa Smart Home Integration</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>Link accounts via the Alexa Skill using "Generate Login PIN", select your server, and click "Link Selected Server". Smart Alerts become motion sensors for routines and devices act as smart switches—even when the desktop app is closed.</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>Open Logic Engine</value>

@@ -110,15 +110,16 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("map.layers", "Map.Layers", "map", TutorialPlacement.Bottom),
             Step("map.heatmaps", "Map.Heatmaps", "map", TutorialPlacement.Left, optional: true),
             Step("map.open3d", "Map.Open3D", "map", TutorialPlacement.Left),
-            Step("map.drawing", "Map.Toolbar", "map", TutorialPlacement.Bottom)),
+            Step("map.drawing", "Map.Drawing", "map", TutorialPlacement.Bottom)),
 
         Def("heatmaps", 50, "Maps", false,
             Step("heatmaps.open", "Map.ServerHud", "map", TutorialPlacement.Right),
-            Step("heatmaps.selector", "Map.Heatmaps", "map", TutorialPlacement.Right, condition: c => c.IsFullConnected),
+            Step("heatmaps.selector", "Map.Heatmaps", "map", TutorialPlacement.Right),
             Step("heatmaps.meaning", placement: TutorialPlacement.Center)),
 
         Def("map-3d", 60, "Maps", false,
             Step("map3d.open", "Map.Open3D", "map", TutorialPlacement.Left, allowInteraction: true),
+            Step("map3d.account", "Settings.Cloud", "settings", TutorialPlacement.Right, allowInteraction: true),
             Step("map3d.viewport", page: "map", webTarget: "threeD.viewport", condition: c => c.HasMap),
             Step("map3d.toolbar", page: "map", webTarget: "threeD.toolbar", condition: c => c.HasMap),
             Step("map3d.build", page: "map", webTarget: "threeD.buildMode", condition: c => c.HasMap),
@@ -149,7 +150,8 @@ public sealed class TutorialRegistry : ITutorialRegistry
         Def("discord", 100, "Team and Communication", false,
             Step("discord.entry", "Settings.Cloud", "settings", TutorialPlacement.Right),
             Step("discord.settings", "Settings.Cloud", "settings", TutorialPlacement.Right),
-            Step("discord.privacy", placement: TutorialPlacement.Center)),
+            Step("discord.advanced", "Settings.DiscordAdvanced", "settings", TutorialPlacement.Right),
+            Step("discord.basic", "Settings.DiscordBasic", "settings", TutorialPlacement.Right)),
 
         Def("automation", 110, "Automation", false,
             Step("automation.open", "Automation.Open", "devices", TutorialPlacement.Top),
@@ -211,6 +213,12 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("deviceautomation.open", "DeviceAutomation.Open", "devices", TutorialPlacement.Top),
             Step("deviceautomation.actions", "DeviceAutomation.Actions", "device-automation", TutorialPlacement.Right),
             Step("deviceautomation.rules", "DeviceAutomation.Rules", "device-automation", TutorialPlacement.Right),
-            Step("deviceautomation.safety", placement: TutorialPlacement.Center))
+            Step("deviceautomation.safety", placement: TutorialPlacement.Center)),
+
+        Def("offline-alerts-smarthome", 230, "Automation", false, true,
+            Step("offlinealerts.overview", "Settings.OfflineAlerts", "settings", TutorialPlacement.Right),
+            Step("offlinealerts.sync", "Settings.OfflineAlerts", "settings", TutorialPlacement.Right),
+            Step("offlinealerts.telegram", "Settings.OfflineAlerts", "settings", TutorialPlacement.Right),
+            Step("offlinealerts.alexa", "Settings.Alexa", "settings", TutorialPlacement.Right))
     ];
 }

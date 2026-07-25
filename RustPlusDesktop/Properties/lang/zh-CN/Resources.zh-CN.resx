@@ -4956,6 +4956,12 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
     <value>检查应用更新并找到诊断日志，但不启动更新。</value>
   </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>离线提醒与智能家居</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>了解如何配置离线云端提醒、Telegram CallMeBot 电话通知以及 Amazon Alexa 智能家居集成。</value>
+  </data>
   <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
     <value>主导航</value>
   </data>
@@ -5106,17 +5112,26 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
     <value>选择一个已提取的类别或清除活动覆盖层。</value>
   </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>在生成一次 3D 地图并登录服务器后，此功能才可用。</value>
+  </data>
   <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
-    <value>热力图的工作原理</value>
+    <value>地图解析与 3D 地图前置要求</value>
   </data>
   <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
-    <value>热力图总结了可能生成的区域;他们不保证某地有实体存在。</value>
+    <value>热力图、Godrocks、冰山及禁止建造区域需要进行一次性 3D 地图生成。你必须在游戏内至少登录过该服务器一次，以便在本地生成可供解析的 .map 文件。</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
     <value>生成或开放3D</value>
   </data>
   <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
     <value>应用会在本地解析地图数据，并在可能的情况下重用缓存。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>创建账号</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>生成 3D 地图需要 RustPlusDesktop 账号（关联 Discord 或邮箱登录）。解析地图数据还会同时解锁 2D 地图上的额外功能（如热力图、冰山、洞穴及 Godrocks）。</value>
   </data>
   <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
     <value>3D视口</value>
@@ -5250,11 +5265,41 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
     <value>配置机器人、公会、频道、命令和权限，但不记录 ID。</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
-    <value>Discord安全</value>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>高级 Discord 集成</value>
   </data>
-  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
-    <value>教程绝不会发布消息或日志，提供公会、频道或用户标识。</value>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>高级 Discord 集成需要 Supporter 账号。支持 Discord 指令、双向 Discord 集成以及通过 Webhook 发送离线抄家提醒。</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>基础 Discord 集成与聊天提醒</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>基础 Discord 集成通过 Webhook 工作，无需 Supporter 账号。所有聊天提醒都会发送至 Discord，可选择同时在游戏内和 Discord 发送，或仅独家发送至 Discord。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>离线云端提醒</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>当 RustPlusDesktop 关闭时，离线云端提醒会将 FCM 抄家、事件和死亡通知转发至 Discord Webhook 或自定义 Webhook（如 Google Home、IFTTT、Make.com）。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>同步云端连接</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>配置 Webhook URL 后，点击“Sync Cloud Connection”即可将设置上传并保存至云端服务。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Telegram 电话通知 (CallMeBot)</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>输入 Telegram 用户名（如 @name）和自定义消息，然后点击“Test Call”。浏览器会打开授权 CallMeBot 的说明。授权完成后，离线 FCM 提醒将自动向你的手机发起电话呼叫。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Alexa 智能家居集成</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>在 Alexa Skill 中通过“Generate Login PIN”关联账号，选择服务器并点击“Link Selected Server”。Smart Alerts 将作为运动传感器用于触发例程，智能设备则作为开关导入，即使桌面 App 关闭也能正常运作。</value>
   </data>
   <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
     <value>开放逻辑引擎</value>

@@ -190,7 +190,7 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
                     AppSettingsPanel.Visibility = Visibility.Visible;
                     AppSettingsPanel.OpenCategory(step.TargetId switch
                     {
-                        "Settings.Cloud" => "connected",
+                        "Settings.Cloud" or "Settings.DiscordBasic" or "Settings.DiscordAdvanced" or "Settings.OfflineAlerts" or "Settings.Alexa" => "connected",
                         "Settings.ChatCommands" => "chat-commands",
                         "Settings.Map" => "map",
                         "Settings.Maintenance" => "system",
@@ -215,6 +215,14 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
         }
         await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Loaded, cancellationToken);
         await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render, cancellationToken);
+    }
+
+    public async Task DismissTutorialIfRunningAsync()
+    {
+        if (_tutorialService?.IsRunning == true)
+        {
+            await _tutorialService.FinishAsync();
+        }
     }
 
     ITutorialStateSnapshot ITutorialNavigationCoordinator.CaptureState() => new WindowTutorialSnapshot(
