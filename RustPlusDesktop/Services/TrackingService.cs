@@ -137,7 +137,7 @@ public class TrackingSettings
     public bool ChatMasterOfferSoundEnabled { get; set; } = true;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
-    public bool SuppressVersion7Notice { get; set; } = false;
+    public bool SuppressVersion8Notice { get; set; } = false;
     public DateTime? FcmIssuedAt { get; set; }
     public DateTime? FcmExpiresAt { get; set; }
     public bool AnnounceTracking { get; set; } = false;
@@ -1008,10 +1008,10 @@ public static class TrackingService
         get => _settings.LastSeenVersion;
         set { _settings.LastSeenVersion = value; SaveDB(); }
     }
-    public static bool SuppressVersion7Notice
+    public static bool SuppressVersion8Notice
     {
-        get => _settings.SuppressVersion7Notice;
-        set { _settings.SuppressVersion7Notice = value; SaveDB(); }
+        get => _settings.SuppressVersion8Notice;
+        set { _settings.SuppressVersion8Notice = value; SaveDB(); }
     }
     public static int GetLearnedCargoFullLife(string host)
     {

@@ -5565,4 +5565,79 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>Aucun didacticiel n'exécute une règle ou ne fait basculer un véritable appareil intelligent.</value>
   </data>
+  <data name="Tutorials.mini-map.Title" xml:space="preserve">
+    <value>Mini Map</value>
+  </data>
+  <data name="Tutorials.mini-map.Description" xml:space="preserve">
+    <value>Un miroir entièrement personnalisable de la carte principale.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Title" xml:space="preserve">
+    <value>Connexion au serveur requise</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Description" xml:space="preserve">
+    <value>Veuillez d'abord vous connecter à un serveur pour accéder à la mini map.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Title" xml:space="preserve">
+    <value>Ouvrir la Mini Map</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
+    <value>Cliquez ici pour ouvrir la fenêtre de la mini map.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
+    <value>Paramètres de la carte</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>Survolez la mini map et cliquez sur l'engrenage pour personnaliser sa forme, sa taille et son opacité.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
+    <value>Heure et population</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Description" xml:space="preserve">
+    <value>Vous pouvez optionnellement afficher l'heure actuelle en jeu et la population du serveur directement sur la mini map.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Title" xml:space="preserve">
+    <value>Contrôles de la carte</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Description" xml:space="preserve">
+    <value>Tout comme la carte principale, faites un clic droit et glissez pour faire un panoramique, utilisez la molette pour zoomer et double-cliquez pour réinitialiser la vue.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Title" xml:space="preserve">
+    <value>Suivre le joueur</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Description" xml:space="preserve">
+    <value>Cliquez sur l'icône 'Suivre le joueur' dans la barre d'outils de la carte (ou faites un clic droit sur un coéquipier dans la liste) pour garder la mini map centrée sur lui automatiquement. Notez que les paramètres et le statut de suivi sont sauvegardés par serveur !</value>
+  </data>
+  <data name="Update800Title" xml:space="preserve">
+    <value>Rust+ Desktop v8.0.0 Update</value>
+  </data>
+  <data name="Update800DontShowAgain" xml:space="preserve">
+    <value>Ne plus afficher</value>
+  </data>
+  <data name="Update800Title1" xml:space="preserve">
+    <value>Tutoriels guidés</value>
+  </data>
+  <data name="Update800Desc1" xml:space="preserve">
+    <value>Découvrez facilement les fonctionnalités avec des guides étape par étape localisés.</value>
+  </data>
+  <data name="Update800Title2" xml:space="preserve">
+    <value>Optimisation de la carte 3D</value>
+  </data>
+  <data name="Update800Desc2" xml:space="preserve">
+    <value>Temps de chargement plus rapides, consommation de RAM réduite et fermeture propre.</value>
+  </data>
+  <data name="Update800Title3" xml:space="preserve">
+    <value>Recherche en boutique améliorée</value>
+  </data>
+  <data name="Update800Desc3" xml:space="preserve">
+    <value>Catégories d'articles, filtres de monuments et meilleures correspondances.</value>
+  </data>
+  <data name="Update800Title4" xml:space="preserve">
+    <value>Moteur logique &amp; interface</value>
+  </data>
+  <data name="Update800Desc4" xml:space="preserve">
+    <value>Nouveau calculateur de raid, barre latérale repensée et codes PIN Alexa.</value>
+  </data>
+  <data name="Update800PatchNotesBtn" xml:space="preserve">
+    <value>Notes de mise à jour</value>
+  </data>
 </root>

@@ -33,6 +33,97 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v8.0.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v8.0.0 | Smart Home, Automation &amp; QoL" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                Version 8.0.0 is one of the biggest Rust+ Desktop updates so far, bringing a redesigned interface, new calculators, improved integrations, guided tutorials, major 3D map optimisations, and many stability fixes.
+                            </TextBlock>
+
+                            <TextBlock Text="🎓 New guided tutorial system" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Localised Tutorials:</Run>
+                                A new fully localised tutorial system helps new users discover the application and understand its main features, with support for multiple languages and improved overlay positioning for RTL languages.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Comprehensive Guides:</Run>
+                                Step-by-step tutorials across key pages, including inside the 3D map, plus a dedicated tutorial page for restarting individual guides.
+                            </TextBlock>
+
+                            <TextBlock Text="🗺️ Map improvements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; 3D Map Performance:</Run>
+                                The 3D map now opens faster, uses considerably less memory, and cleans up after closing. Map asset initialisation and streaming has been completely rewritten.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Reduced Memory Usage:</Run>
+                                Drastically reduced initial memory allocation of the map and map images.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Custom HD Maps:</Run>
+                                Added support for custom HD map URLs.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Markers &amp; Indicators:</Run>
+                                Improved player-marker size and visibility, custom markers now correctly appear above monument icons, and fixed the day and night indicator.
+                            </TextBlock>
+
+                            <TextBlock Text="🛒 Shop and Vending Machine improvements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Advanced Search &amp; Filters:</Run>
+                                Added item-category filtering (with custom icons), monument-shop filtering, custom ordering (cheapest first, closest first), and improved exact item matches.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; UI Improvements:</Run>
+                                Improved the layout of the shop window and vendor markers.
+                            </TextBlock>
+
+                            <TextBlock Text="💻 Logic engine and calculators" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Raid Calculator:</Run>
+                                Brand new Raid Calculator workspace with detailed item breakdown.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Integrations:</Run>
+                                Refined Discord &amp; Telegram logic engine triggers, actions and formatting. Generate and manage Alexa PINs for voice-controlled device automation. Support for the new Server Events features.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Recycler Calculator:</Run>
+                                Recycler calculator improvements.
+                            </TextBlock>
+
+                            <TextBlock Text="🔔 App, Privacy &amp; Smart Home" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Smart Home &amp; Alexa:</Run>
+                                Control your smart devices and receive Smart Alerts even when the app is offline with the new official Rust+ Desktop Alexa Skill.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Offline Cloud Alerts:</Run>
+                                Receive Raid Alerts via Discord or Telegram calls even while Rust+ Desktop is closed! Improved cloud notification efficiency and added Discord-only webhooks.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Redesigned UI &amp; Settings:</Run>
+                                Modernised the left sidebar and general UI, added an animated startup splash screen, and completely redesigned the settings menu and structure with a new search bar and dedicated Alarms settings.
+                            </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/tutorials.png" Description="New fully localised guided tutorial system"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-ui.png" Description="Redesigned left sidebar workspace and modernized UI"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Raid-calculator.png" Description="Brand new Raid Calculator workspace"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/shop-categories-hide-monuments.png" Description="Completely improved shop search with category and monument filtering"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/device-automation.png" Description="Redesigned device automation cards"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Alexa.png" Description="Generate Alexa PINs for voice-controlled smart devices"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/logic-engine-loops-rules-as-trigger.png" Description="Logic Engine improvements with refined triggers"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-settings-menu.png" Description="Refactored settings navigation and search"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/supporters-offline-cloud-alerts-alexa.png" Description="Cloud privacy improvements and Discord Only webhooks"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v7.3.3 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

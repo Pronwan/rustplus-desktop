@@ -5565,4 +5565,79 @@ You can find more information on the server&apos;s official website:
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>No tutorial executes a rule or toggles a real smart device.</value>
   </data>
+  <data name="Tutorials.mini-map.Title" xml:space="preserve">
+    <value>Mini Map</value>
+  </data>
+  <data name="Tutorials.mini-map.Description" xml:space="preserve">
+    <value>A fully customizable mirror of the main map.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Title" xml:space="preserve">
+    <value>Server Connection Required</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Description" xml:space="preserve">
+    <value>Please connect to a server first to access the mini map.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Title" xml:space="preserve">
+    <value>Open Mini Map</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
+    <value>Click here to open the mini map window.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
+    <value>Map Settings</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>Hover over the mini map and click the settings gear to customize its shape, size, and opacity.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
+    <value>Server Time &amp; Population</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Description" xml:space="preserve">
+    <value>You can optionally display the current in-game time and server population directly on the mini map.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Title" xml:space="preserve">
+    <value>Map Controls</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Description" xml:space="preserve">
+    <value>Just like the main map, right-click and drag to pan, use the scroll wheel to zoom, and double right-click to reset the view.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Title" xml:space="preserve">
+    <value>Follow Player</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Description" xml:space="preserve">
+    <value>Click the 'Follow Player' icon on the map toolbar (or right-click a teammate in the list) to keep the mini map centered on them automatically. Note that the mini map settings and follow status are saved per server!</value>
+  </data>
+  <data name="Update800Title" xml:space="preserve">
+    <value>Rust+ Desktop v8.0.0 Update</value>
+  </data>
+  <data name="Update800DontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
+  <data name="Update800Title1" xml:space="preserve">
+    <value>Guided Tutorials</value>
+  </data>
+  <data name="Update800Desc1" xml:space="preserve">
+    <value>Discover features easily with localized step-by-step guides.</value>
+  </data>
+  <data name="Update800Title2" xml:space="preserve">
+    <value>3D Map Optimization</value>
+  </data>
+  <data name="Update800Desc2" xml:space="preserve">
+    <value>Faster load times, much less RAM usage, and cleaner closing.</value>
+  </data>
+  <data name="Update800Title3" xml:space="preserve">
+    <value>Improved Shop Search</value>
+  </data>
+  <data name="Update800Desc3" xml:space="preserve">
+    <value>Item categories, monument filtering, and better matching.</value>
+  </data>
+  <data name="Update800Title4" xml:space="preserve">
+    <value>Logic Engine &amp; UI</value>
+  </data>
+  <data name="Update800Desc4" xml:space="preserve">
+    <value>New Raid Calculator workspace, redesigned sidebar, and Alexa PINs.</value>
+  </data>
+  <data name="Update800PatchNotesBtn" xml:space="preserve">
+    <value>Patch Notes</value>
+  </data>
 </root>

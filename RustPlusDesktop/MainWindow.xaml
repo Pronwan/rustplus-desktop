@@ -4938,6 +4938,7 @@
                                         x:Name="BtnMiniMap"
                                         Width="46"
                                         Click="BtnToggleMiniMap_Click"
+                                        tutorials:Tutorial.TargetId="Map.MiniMap"
                                         ToolTip="{DynamicResource UiToggleMiniMap}"
                                         AutomationProperties.Name="{DynamicResource UiToggleMiniMap}"
                                         Content="{DynamicResource MiniMap}" />

@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using RustPlusDesk.Views;
+using RustPlusDesk.Views.Windows;
 
 namespace RustPlusDesk.Features.Tutorials;
 
@@ -48,7 +53,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
     private static TutorialStep Step(string id, string? target = null, string? page = null,
         TutorialPlacement placement = TutorialPlacement.Auto, bool optional = false,
         Func<ITutorialContext, bool>? condition = null, string? webTarget = null,
-        bool allowInteraction = false) => new()
+        bool allowInteraction = false, Func<ITutorialContext, CancellationToken, Task>? BeforeShowAsync = null) => new()
     {
         Id = id,
         TitleKey = $"Tutorials.Step.{id}.Title",
@@ -60,7 +65,8 @@ public sealed class TutorialRegistry : ITutorialRegistry
         Placement = target is null && webTarget is null ? TutorialPlacement.Center : placement,
         IsOptional = optional,
         AllowTargetInteraction = allowInteraction,
-        CanShow = condition
+        CanShow = condition,
+        BeforeShowAsync = BeforeShowAsync
     };
 
     private static TutorialDefinition Def(string id, int order, string category, bool recommended, params TutorialStep[] steps) =>
@@ -116,6 +122,35 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("heatmaps.open", "Map.ServerHud", "map", TutorialPlacement.Right),
             Step("heatmaps.selector", "Map.Heatmaps", "map", TutorialPlacement.Right),
             Step("heatmaps.meaning", placement: TutorialPlacement.Center)),
+
+        Def("mini-map", 55, "Maps", false,
+
+            Step("minimap.open", "Map.MiniMap", "map", TutorialPlacement.Bottom, condition: c => c.IsFullConnected),
+            Step("minimap.settings", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected, 
+                 BeforeShowAsync: async (c, ct) => { 
+                     Application.Current.Dispatcher.Invoke(() => {
+                         if (Application.Current.MainWindow is MainWindow mw)
+                         {
+                             mw.EnsureMiniMapOpen();
+                         }
+                     }); 
+                     await Task.Delay(150, ct); 
+                 }),
+            Step("minimap.timepop", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected,
+                 BeforeShowAsync: async (c, ct) => { 
+                     Application.Current.Dispatcher.Invoke(() => {
+                         // Find MiniMapWindow from opened windows
+                         var mmw = Application.Current.Windows.OfType<MiniMapWindow>().FirstOrDefault();
+                         if (mmw != null)
+                         {
+                             mmw.SettingsOverlay.Visibility = Visibility.Visible;
+                             mmw.SettingsHoverBorder.Visibility = Visibility.Collapsed;
+                         }
+                     }); 
+                     await Task.Delay(150, ct); 
+                 }),
+            Step("minimap.controls", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected),
+            Step("minimap.follow", "BtnFollowPlayer", "map", TutorialPlacement.Bottom, condition: c => c.IsFullConnected)),
 
         Def("map-3d", 60, "Maps", false,
             Step("map3d.open", "Map.Open3D", "map", TutorialPlacement.Left, allowInteraction: true),

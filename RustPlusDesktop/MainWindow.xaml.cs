@@ -672,15 +672,15 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        if (!TrackingService.SuppressVersion7Notice)
+        if (!TrackingService.SuppressVersion8Notice)
         {
             Dispatcher.InvokeAsync(() =>
             {
-                var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
-                dlg7.ShowDialog();
-                if (dlg7.DontShowAgain)
+                var dlg8 = new Views.Windows.Version8NoticeWindow { Owner = this };
+                dlg8.ShowDialog();
+                if (dlg8.DontShowAgain)
                 {
-                    TrackingService.SuppressVersion7Notice = true;
+                    TrackingService.SuppressVersion8Notice = true;
                 }
             }, System.Windows.Threading.DispatcherPriority.Loaded);
         }

@@ -250,6 +250,7 @@
 	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
 	  <None Remove="Assets\Screenshots\v7.1.5\*.png" />
 	  <None Remove="Assets\Screenshots\7.1.8\*.png" />
+	  <None Remove="Assets\Screenshots\8.0\*.png" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -553,6 +554,7 @@
     <Resource Include="Assets\Screenshots\Tracking5.jpg" />
     <Resource Include="Assets\Screenshots\v7.1.5\*.png" />
     <Resource Include="Assets\Screenshots\7.1.8\*.png" />
+    <Resource Include="Assets\Screenshots\8.0\*.png" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">

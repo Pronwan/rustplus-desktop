@@ -4,6 +4,8 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:views="clr-namespace:RustPlusDesk.Views"
+        xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
+        xmlns:tutorialControls="clr-namespace:RustPlusDesk.Features.Tutorials.Controls"
         Title="{DynamicResource MiniMap}"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -89,6 +91,7 @@
                            Background="#88000000"
                            Foreground="White"
                            Click="BtnSettings_Click"
+                           tutorials:Tutorial.TargetId="MiniMap.Settings"
                            Icon="{ui:SymbolIcon Symbol=Settings24}"
                            Panel.ZIndex="10"/>
             </Border>

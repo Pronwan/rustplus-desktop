@@ -5565,4 +5565,79 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>Ни один туториал не выполняет правило и не переключает настоящее умное устройство.</value>
   </data>
+  <data name="Tutorials.mini-map.Title" xml:space="preserve">
+    <value>Мини-карта</value>
+  </data>
+  <data name="Tutorials.mini-map.Description" xml:space="preserve">
+    <value>Полностью настраиваемое зеркало основной карты.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Title" xml:space="preserve">
+    <value>Требуется подключение к серверу</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Description" xml:space="preserve">
+    <value>Пожалуйста, сначала подключитесь к серверу, чтобы получить доступ к мини-карте.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Title" xml:space="preserve">
+    <value>Открыть мини-карту</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
+    <value>Нажмите здесь, чтобы открыть окно мини-карты.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
+    <value>Настройки карты</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>Наведите курсор на мини-карту и нажмите на шестеренку, чтобы настроить ее форму, размер и прозрачность.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
+    <value>Время и популяция</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Description" xml:space="preserve">
+    <value>Вы можете дополнительно отображать текущее игровое время и популяцию сервера прямо на мини-карте.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Title" xml:space="preserve">
+    <value>Управление картой</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Description" xml:space="preserve">
+    <value>Как и на основной карте, щелкните правой кнопкой мыши и перетащите для панорамирования, используйте колесико мыши для масштабирования и дважды щелкните правой кнопкой мыши для сброса вида.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Title" xml:space="preserve">
+    <value>Следить за игроком</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Description" xml:space="preserve">
+    <value>Нажмите на значок 'Следить за игроком' на панели инструментов карты (или щелкните правой кнопкой мыши товарища по команде в списке), чтобы мини-карта автоматически центрировалась на нем. Обратите внимание, что настройки мини-карты и статус отслеживания сохраняются для каждого сервера!</value>
+  </data>
+  <data name="Update800Title" xml:space="preserve">
+    <value>Rust+ Desktop v8.0.0 Update</value>
+  </data>
+  <data name="Update800DontShowAgain" xml:space="preserve">
+    <value>Больше не показывать</value>
+  </data>
+  <data name="Update800Title1" xml:space="preserve">
+    <value>Пошаговые руководства</value>
+  </data>
+  <data name="Update800Desc1" xml:space="preserve">
+    <value>Легко осваивайте функции с помощью локализованных пошаговых руководств.</value>
+  </data>
+  <data name="Update800Title2" xml:space="preserve">
+    <value>Оптимизация 3D-карты</value>
+  </data>
+  <data name="Update800Desc2" xml:space="preserve">
+    <value>Ускоренная загрузка, снижение потребления ОЗУ и корректное закрытие.</value>
+  </data>
+  <data name="Update800Title3" xml:space="preserve">
+    <value>Улучшенный поиск в магазине</value>
+  </data>
+  <data name="Update800Desc3" xml:space="preserve">
+    <value>Категории предметов, фильтры монументов и более точные совпадения.</value>
+  </data>
+  <data name="Update800Title4" xml:space="preserve">
+    <value>Логический движок и интерфейс</value>
+  </data>
+  <data name="Update800Desc4" xml:space="preserve">
+    <value>Новый калькулятор рейдов, обновленная боковая панель и PIN-коды Alexa.</value>
+  </data>
+  <data name="Update800PatchNotesBtn" xml:space="preserve">
+    <value>Список изменений</value>
+  </data>
 </root>

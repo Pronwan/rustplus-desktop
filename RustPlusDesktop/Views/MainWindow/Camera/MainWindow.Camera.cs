@@ -136,8 +136,31 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     private MiniMapWindow? _miniMap;
     private VisualBrush? _miniMapBrush;
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
-    private void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
+    public void EnsureMiniMapOpen()
     {
+        if (_miniMap == null || !_miniMap.IsVisible)
+        {
+            BtnToggleMiniMap_Click(null, null);
+        }
+    }
+
+    private async void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected?.IsFullConnected != true)
+        {
+            var prompt = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = Properties.Resources.GetString("Tutorials.Step.minimap.intro.Title") ?? "Serververbindung erforderlich",
+                Content = Properties.Resources.GetString("Tutorials.Step.minimap.intro.Description") ?? "Bitte verbinde dich zuerst mit einem Server, um die Mini-Map zu nutzen.",
+                CloseButtonText = "OK",
+                ShowTitle = true,
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            await prompt.ShowDialogAsync();
+            return;
+        }
+
         if (_isMap3DActive)
             CloseMap3DView();
 
@@ -189,10 +212,30 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             _miniMap.Show();
             CenterMiniMapOnPlayer();
             UpdateMapViewSelector();
+
+            // Auto-start tutorial if not seen and connected
+            if (e != null)
+            {
+                _ = AutoStartMiniMapTutorialAsync();
+            }
         }
         else
         {
             _miniMap.Close();
+        }
+    }
+
+    private async System.Threading.Tasks.Task AutoStartMiniMapTutorialAsync()
+    {
+        var mapTutDef = _tutorialRegistry?.Find("mini-map");
+        if (mapTutDef != null && _tutorialProgressStore != null && _tutorialService != null)
+        {
+            var progress = await _tutorialProgressStore.GetAsync(mapTutDef);
+            if (progress.Status != RustPlusDesk.Features.Tutorials.TutorialStatus.Completed && 
+                progress.Status != RustPlusDesk.Features.Tutorials.TutorialStatus.Skipped)
+            {
+                await _tutorialService.StartAsync("mini-map");
+            }
         }
     }
 
