@@ -405,7 +405,7 @@ public partial class MainWindow
     {
         if (_worldSizeS > 0)
         {
-            CenterMapOnWorldAnimated(_worldSizeS / 2, _worldSizeS / 2, allowDip: false, fast: false, targetZoom: MAP_DEFAULT_ZOOM);
+            CenterMapOnWorldAnimated(_worldSizeS / 2, _worldSizeS / 2, allowDip: false, fast: false, keepTracking: true, targetZoom: MAP_DEFAULT_ZOOM);
         }
         else
         {

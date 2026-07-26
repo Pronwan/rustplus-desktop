@@ -234,6 +234,9 @@ namespace RustPlusDesk
             if (TimeOverlayBorder != null)
                 TimeOverlayBorder.Visibility = settings.ShowTime ? Visibility.Visible : Visibility.Collapsed;
 
+            if (PopOverlayBorder != null)
+                PopOverlayBorder.Visibility = settings.ShowPop ? Visibility.Visible : Visibility.Collapsed;
+
             UpdateSize(settings.Size, updateSlider: false);
         }
 
@@ -252,13 +255,17 @@ namespace RustPlusDesk
                 {
                     // Keep the center stationary on the screen during resize
                     double oldCenterX = Left + Width / 2.0;
-                    double oldCenterY = Top + Height / 2.0;
+                    double oldMapCenterY = Top + (MapContainer != null && MapContainer.Height > 0 ? MapContainer.Height : Height) / 2.0;
 
                     Width = targetWindowSize;
                     Height = targetWindowSize;
 
+                    double newMapHeight = newSize;
+                    var shapeIdx = SettingsOverlay?.CmbShape?.SelectedIndex ?? 0;
+                    if (shapeIdx == 1) newMapHeight = newSize * 0.75;
+
                     Left = oldCenterX - targetWindowSize / 2.0;
-                    Top = oldCenterY - targetWindowSize / 2.0;
+                    Top = oldMapCenterY - newMapHeight / 2.0;
                 }
                 else
                 {

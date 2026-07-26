@@ -162,6 +162,7 @@ public class TrackingSettings
     public int NotificationsRetentionDays { get; set; } = 30;
     public List<string> MutedNotificationServers { get; set; } = new();
     public Dictionary<string, string> MutedNotificationServerNames { get; set; } = new();
+    public Dictionary<string, ulong> ServerFollowingSteamId { get; set; } = new();
 
     /// <summary>Extra monument type names (e.g. "Cave", "God Rock") that the user has chosen to hide on the map.</summary>
     public List<string> HiddenExtraMonumentTypes { get; set; } = new();
@@ -300,6 +301,7 @@ public static class TrackingService
     private static readonly object _dbLock = new();
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
+    public static TrackingSettings Settings => _settings;
     private static Timer? _trackingTimer;
     private static string? _lastServerHost;
     private static int _lastServerPort;

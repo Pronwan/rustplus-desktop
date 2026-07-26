@@ -117,12 +117,28 @@ public partial class MainWindow : WpfUi.FluentWindow
         _vm.FollowingSteamId = null;
         _vm.FollowingPlayerName = "";
         _vm.FollowingPlayerAvatar = null;
+        
+        string serverKey = GetServerKey();
+        if (!string.IsNullOrEmpty(serverKey))
+        {
+            if (Services.TrackingService.Settings.ServerFollowingSteamId.ContainsKey(serverKey))
+            {
+                Services.TrackingService.Settings.ServerFollowingSteamId.Remove(serverKey);
+                Services.TrackingService.SaveDB();
+            }
+        }
     }
 
     private void BtnFollowPlayer_Click(object sender, RoutedEventArgs e)
     {
         if (_vm.IsFollowing)
         {
+            var serverKey = GetServerKey();
+            if (!string.IsNullOrEmpty(serverKey))
+            {
+                Services.TrackingService.Settings.ServerFollowingSteamId.Remove(serverKey);
+                Services.TrackingService.SaveDB();
+            }
             StopTracking();
             return;
         }
@@ -7132,7 +7148,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void BtnLanguageSettings_Click(object sender, RoutedEventArgs e)
     {
-        BtnSettings_Click(sender, e);
+        OpenSettingsCategory("general");
     }
 
     public void UpdateLanguageFlag()
@@ -7157,9 +7173,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 string imageUri = $"pack://application:,,,/Assets/Flags/{candidate}.png";
                 try
                 {
-                    ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
-                    loaded = true;
-                    break;
+                    var streamInfo = System.Windows.Application.GetResourceStream(new Uri(imageUri));
+                    if (streamInfo != null)
+                    {
+                        ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
+                        loaded = true;
+                        break;
+                    }
                 }
                 catch { }
             }

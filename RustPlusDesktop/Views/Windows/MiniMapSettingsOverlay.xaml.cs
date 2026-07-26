@@ -27,6 +27,7 @@ namespace RustPlusDesk.Views
                     CmbShape.SelectedIndex = settings.ShapeIndex;
                     SliOpacity.Value = settings.Opacity;
                     ChkShowTime.IsChecked = settings.ShowTime;
+                    ChkShowPop.IsChecked = settings.ShowPop;
                     SliSize.Value = settings.Size;
                     ParentWindow?.ApplyLoadedSettings(settings);
                 }
@@ -35,8 +36,9 @@ namespace RustPlusDesk.Views
                     CmbShape.SelectedIndex = 0; // Default Circle
                     SliOpacity.Value = 1.0;
                     ChkShowTime.IsChecked = false;
+                    ChkShowPop.IsChecked = false;
                     SliSize.Value = 260.0;
-                    ParentWindow?.ApplyLoadedSettings(new MiniMapSettings(0, 260.0, 1.0, false));
+                    ParentWindow?.ApplyLoadedSettings(new MiniMapSettings(0, 260.0, 1.0, false, false));
                 }
 
                 // Apply current labels
@@ -117,6 +119,18 @@ namespace RustPlusDesk.Views
             SaveSettings();
         }
 
+        private void ChkShowPop_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing) return;
+
+            if (ParentWindow != null && ParentWindow.PopOverlayBorder != null)
+            {
+                ParentWindow.PopOverlayBorder.Visibility = (ChkShowPop.IsChecked == true) ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            SaveSettings();
+        }
+
         private void UpdateOpacityLabel(double opacityValue)
         {
             int pct = (int)Math.Round(opacityValue * 100);
@@ -143,7 +157,8 @@ namespace RustPlusDesk.Views
                 CmbShape.SelectedIndex,
                 SliSize.Value,
                 SliOpacity.Value,
-                ChkShowTime.IsChecked == true
+                ChkShowTime.IsChecked == true,
+                ChkShowPop.IsChecked == true
             );
 
             StorageService.SaveCache("minimap_settings", settings);

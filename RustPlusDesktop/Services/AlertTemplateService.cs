@@ -70,7 +70,7 @@ namespace RustPlusDesk.Services
 
         public static string GetAlertTemplate(string key)
         {
-            string culture = Thread.CurrentThread.CurrentUICulture.Name;
+            string culture = Properties.Resources.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
             lock (_lock)
             {
                 if (_overrides.TryGetValue(culture, out var cultureOverrides) && cultureOverrides.TryGetValue(key, out string? customTemplate))
@@ -80,7 +80,7 @@ namespace RustPlusDesk.Services
             }
 
             // Fallback to resource manager
-            return Properties.Resources.ResourceManager.GetString(key) ?? string.Empty;
+            return Properties.Resources.ResourceManager.GetString(key, Properties.Resources.Culture) ?? string.Empty;
         }
 
         public static string GetFormattedAlert(string key, params object[] args)
@@ -98,7 +98,7 @@ namespace RustPlusDesk.Services
             catch (FormatException)
             {
                 // If the template is malformed (e.g. invalid placeholders), fall back to the default translation
-                string fallbackTemplate = Properties.Resources.ResourceManager.GetString(key) ?? string.Empty;
+                string fallbackTemplate = Properties.Resources.ResourceManager.GetString(key, Properties.Resources.Culture) ?? string.Empty;
                 try
                 {
                     return string.Format(fallbackTemplate, args);
@@ -112,7 +112,7 @@ namespace RustPlusDesk.Services
 
         public static void SetOverride(string key, string template)
         {
-            string culture = Thread.CurrentThread.CurrentUICulture.Name;
+            string culture = Properties.Resources.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
             lock (_lock)
             {
                 if (!_overrides.TryGetValue(culture, out var cultureOverrides))
@@ -127,7 +127,7 @@ namespace RustPlusDesk.Services
 
         public static void RemoveOverride(string key)
         {
-            string culture = Thread.CurrentThread.CurrentUICulture.Name;
+            string culture = Properties.Resources.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
             lock (_lock)
             {
                 if (_overrides.TryGetValue(culture, out var cultureOverrides))
@@ -144,7 +144,7 @@ namespace RustPlusDesk.Services
 
         public static bool HasOverride(string key)
         {
-            string culture = Thread.CurrentThread.CurrentUICulture.Name;
+            string culture = Properties.Resources.Culture?.Name ?? Thread.CurrentThread.CurrentUICulture.Name;
             lock (_lock)
             {
                 return _overrides.TryGetValue(culture, out var cultureOverrides) && cultureOverrides.ContainsKey(key);

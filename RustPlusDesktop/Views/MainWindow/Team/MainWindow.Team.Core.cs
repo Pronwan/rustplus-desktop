@@ -413,6 +413,22 @@ public partial class MainWindow
                     _hasCriticalPresenceChange = true;
                 }
 
+            if (_vm.FollowingSteamId.HasValue && !TeamMembers.Any(t => t.SteamId == _vm.FollowingSteamId.Value))
+            {
+                Dispatcher.Invoke(() => StopTracking());
+            }
+            else if (!_vm.FollowingSteamId.HasValue && !string.IsNullOrEmpty(GetServerKey()) && 
+                     Services.TrackingService.Settings.ServerFollowingSteamId.TryGetValue(GetServerKey(), out var savedSteamId))
+            {
+                var member = TeamMembers.FirstOrDefault(t => t.SteamId == savedSteamId);
+                if (member != null)
+                {
+                    _vm.FollowingSteamId = savedSteamId;
+                    _vm.FollowingPlayerName = member.Name;
+                    _vm.FollowingPlayerAvatar = member.Avatar;
+                }
+            }
+
             // Cleanup subscriptions of players who left the team on the UI thread
             var currentTeamIds = TeamMembers.Select(tm => tm.SteamId).ToHashSet();
             await Dispatcher.InvokeAsync(() =>
@@ -705,6 +721,12 @@ public partial class MainWindow
 
     private void StartFollowing(ulong steamId, string name)
     {
+        if (_vm.FollowingSteamId == steamId)
+        {
+            StopTracking();
+            return;
+        }
+
         _vm.FollowingSteamId = steamId;
         _vm.FollowingPlayerName = name;
         
@@ -712,6 +734,12 @@ public partial class MainWindow
         _vm.FollowingPlayerAvatar = member?.Avatar;
 
         AppendLog($"Following {name} on map.");
+        
+        if (!string.IsNullOrEmpty(GetServerKey()))
+        {
+            Services.TrackingService.Settings.ServerFollowingSteamId[GetServerKey()] = steamId;
+            Services.TrackingService.SaveDB();
+        }
         
         // Immediate center
         if (TryResolvePosFromDynMarkers(steamId, out var x, out var y))
@@ -831,6 +859,14 @@ public partial class MainWindow
     {
         if (e.PropertyName == nameof(TeamMemberVM.ShowMarkers) || e.PropertyName == nameof(TeamMemberVM.Avatar))
         {
+            if (e.PropertyName == nameof(TeamMemberVM.Avatar) && sender is TeamMemberVM vm)
+            {
+                if (_vm.FollowingSteamId == vm.SteamId)
+                {
+                    _vm.FollowingPlayerAvatar = vm.Avatar;
+                }
+            }
+
             if (_lastTeamInfo != null)
             {
                 Dispatcher.Invoke(() => RedrawTeamMapNotes(_lastTeamInfo));

@@ -47,7 +47,10 @@
             <Slider x:Name="SliSize" Minimum="160" Maximum="800" Value="260" ValueChanged="SliSize_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="10"/>
 
             <!-- Show Server Time CheckBox -->
-            <CheckBox x:Name="ChkShowTime" Content="{DynamicResource ShowServerTime}" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Style="{StaticResource DotCheckBox}" Margin="0,4,0,0"/>
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                <CheckBox x:Name="ChkShowTime" Content="Server Time" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,16,0"/>
+                <CheckBox x:Name="ChkShowPop" Content="Pop" Checked="ChkShowPop_Changed" Unchecked="ChkShowPop_Changed" Style="{StaticResource DotCheckBox}"/>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>

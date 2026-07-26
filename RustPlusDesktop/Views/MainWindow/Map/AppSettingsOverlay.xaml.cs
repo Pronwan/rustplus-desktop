@@ -437,10 +437,13 @@ namespace RustPlusDesk.Views
 
         public void OpenCategory(string category)
         {
-            _isShowingSearchResults = false;
-            _returnToCategoryPageAfterSearch = false;
-            SettingsSearchBox.Clear();
-            ShowSettingsCategory(category);
+            Dispatcher.InvokeAsync(() =>
+            {
+                _isShowingSearchResults = false;
+                _returnToCategoryPageAfterSearch = false;
+                SettingsSearchBox.Clear();
+                ShowSettingsCategory(category);
+            });
         }
 
         private void SettingsSearchBox_TextChanged(object sender, TextChangedEventArgs e)
