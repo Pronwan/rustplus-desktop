@@ -11,6 +11,7 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _isShowingDeepSeaMap = false;
+    private bool _myPlayerWasInDeepSea = false;
     private readonly List<FrameworkElement> _deepSeaOverlayElements = new();
 
     private void SetShowingDeepSeaMap(bool show)

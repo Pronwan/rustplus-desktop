@@ -89,6 +89,10 @@ public partial class MainWindow
         ImgHeatmap.Source = null;
         GridLayer.Children.Clear();
 
+        _myPlayerWasInDeepSea = false;
+        _isShowingDeepSeaMap = false;
+        if (BtnDeepSeaToggle != null) BtnDeepSeaToggle.Visibility = Visibility.Collapsed;
+
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;
         if (_mapView != null) _mapView.Visibility = Visibility.Collapsed;
 

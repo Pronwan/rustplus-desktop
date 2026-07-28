@@ -1558,14 +1558,10 @@ public partial class MainWindow
             if (myMarker.Id != 0 || myMarker.SteamId != 0)
             {
                 bool inDeepSea = myMarker.X < -1000;
-                if (inDeepSea && !_isShowingDeepSeaMap)
+                if (inDeepSea != _myPlayerWasInDeepSea)
                 {
-                    SetShowingDeepSeaMap(true);
-                    return;
-                }
-                else if (!inDeepSea && _isShowingDeepSeaMap && myMarker.X > -200)
-                {
-                    SetShowingDeepSeaMap(false);
+                    _myPlayerWasInDeepSea = inDeepSea;
+                    SetShowingDeepSeaMap(inDeepSea);
                     return;
                 }
             }
