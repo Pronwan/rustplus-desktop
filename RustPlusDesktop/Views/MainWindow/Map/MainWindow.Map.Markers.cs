@@ -749,12 +749,6 @@ public partial class MainWindow
                     if (best.Ts != default && (DateTime.UtcNow - best.Ts).TotalMinutes > 4)
                     {
                         TrackingService.SetCargoTriggerPoint(host, harbor.Name, best.X, best.Y);
-                        // Auto-enable arrival warning now that this harbor's route is known
-                        if (!TrackingService.AnnounceCargoArrival && TrackingService.AnnounceSpawnsMaster)
-                        {
-                            TrackingService.AnnounceCargoArrival = true;
-                            _ = Dispatcher.InvokeAsync(SyncAlertMenuItems);
-                        }
                     }
                 }
 
