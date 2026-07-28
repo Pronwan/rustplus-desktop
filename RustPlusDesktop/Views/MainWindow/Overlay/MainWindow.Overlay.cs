@@ -958,6 +958,12 @@ private bool _overlayToolsVisible = false;
 
     private void RegisterElementForOwner(ulong owner, FrameworkElement fe)
     {
+        if (_isShowingDeepSeaMap)
+        {
+            _deepSeaOverlayElements.Add(fe);
+            return;
+        }
+
         if (!_playerOverlayElements.TryGetValue(owner, out var list))
         {
             list = new List<FrameworkElement>();
@@ -1083,6 +1089,16 @@ private bool _overlayToolsVisible = false;
 
     private void ToolTrashButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_isShowingDeepSeaMap)
+        {
+            foreach (var el in _deepSeaOverlayElements)
+            {
+                Overlay.Children.Remove(el);
+            }
+            _deepSeaOverlayElements.Clear();
+            return;
+        }
+
         // 1. Alle meine Elemente vom Overlay entfernen
         if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
         {
@@ -2363,6 +2379,7 @@ private bool _overlayToolsVisible = false;
 
     private void SaveOwnOverlayToJson()
     {
+        if (_isShowingDeepSeaMap) return;
         try
         {
             // 1) aktuelles Overlay aus dem Canvas bauen

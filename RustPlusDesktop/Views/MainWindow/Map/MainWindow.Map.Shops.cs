@@ -67,6 +67,13 @@ public partial class MainWindow
                 }
             }
             _deepSeaActive = true;
+            Dispatcher.Invoke(() =>
+            {
+                if (BtnDeepSeaToggle != null && BtnDeepSeaToggle.Visibility != Visibility.Visible)
+                {
+                    BtnDeepSeaToggle.Visibility = Visibility.Visible;
+                }
+            });
         }
         else if (_deepSeaActive) // State change: active → inactive
         {
@@ -84,6 +91,11 @@ public partial class MainWindow
             }
             _deepSeaActive = false;
             _deepSeaMidEvent = false;
+            Dispatcher.Invoke(() =>
+            {
+                if (BtnDeepSeaToggle != null) BtnDeepSeaToggle.Visibility = Visibility.Collapsed;
+                SetShowingDeepSeaMap(false);
+            });
         }
     }
 
@@ -473,6 +485,7 @@ public partial class MainWindow
                 _shopEls[clusterId] = grid;
                 Overlay.Children.Add(grid);
                 Panel.SetZIndex(grid, 910);
+                grid.Visibility = (_isShowingDeepSeaMap == (avgX < 0)) ? Visibility.Visible : Visibility.Collapsed;
                 el = grid;
                 _shopIconSet.Add(grid);
                 ApplyCurrentOverlayScale(el);
@@ -512,6 +525,8 @@ public partial class MainWindow
 
                     var tb = g.Children.OfType<TextBlock>().FirstOrDefault();
                     if (tb != null) tb.Text = cluster.Count > 1 ? cluster.Count.ToString() : "";
+
+                    g.Visibility = (_isShowingDeepSeaMap == (avgX < 0)) ? Visibility.Visible : Visibility.Collapsed;
                 }
                 if (el is FrameworkElement fe2) _shopIconSet.Add(fe2);
             }

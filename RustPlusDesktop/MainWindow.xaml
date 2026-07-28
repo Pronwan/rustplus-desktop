@@ -4859,7 +4859,22 @@
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                            <Border
+                                <!-- Deep Sea Toggle Button -->
+                                <ui:Button
+                                    x:Name="BtnDeepSeaToggle"
+                                    Width="32"
+                                    Height="32"
+                                    Padding="4"
+                                    CornerRadius="6"
+                                    Margin="0,0,0,0"
+                                    Click="BtnDeepSeaToggle_Click"
+                                    ToolTip="Deep Sea Map"
+                                    Visibility="Collapsed">
+                                    <ContentControl x:Name="ContentDeepSeaToggle">
+                                        <Image Source="pack://application:,,,/Assets/icons/ds_event.png" Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </ContentControl>
+                                </ui:Button>
+                                <Border
                                 Height="32"
                                 Margin="8,0,0,0"
                                 Padding="2"

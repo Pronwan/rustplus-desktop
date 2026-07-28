@@ -120,6 +120,8 @@ public partial class MainWindow
         }
         _buildingBlockedZoneEls.Clear();
 
+        if (_isShowingDeepSeaMap) return;
+
         if (ChkNoBuildZones?.IsChecked != true || _buildingBlockedData == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0)
             return;
 

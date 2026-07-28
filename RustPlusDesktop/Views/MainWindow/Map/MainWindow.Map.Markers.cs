@@ -127,7 +127,7 @@ public partial class MainWindow
             double h = fe.DesiredSize.Height > 0 ? fe.DesiredSize.Height : 28;
             Canvas.SetLeft(fe, p.X - w / 2);
             Canvas.SetTop(fe, p.Y - h / 2);
-            fe.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+            fe.Visibility = (_showMonuments && !_isShowingDeepSeaMap) ? Visibility.Visible : Visibility.Collapsed;
         }
         PopulateMonumentList();
     }
@@ -175,17 +175,19 @@ public partial class MainWindow
         double eff = GetEffectiveZoom();
         double scale;
 
+        bool visible = _showMonuments && !_isShowingDeepSeaMap;
+
         if (TrackingService.MapUseMonumentText)
         {
             // Inverse scaling to make text labels appear larger/compensation on zoom outs!
             scale = CalcOverlayScale(eff, 0.45, 0.95) * TrackingService.MapMonumentScale;
-            el.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+            el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
         else
         {
             // Standard icon mode: also respects custom scaling slider
             scale = CalcOverlayScale(eff, MON_SIZE_EXP, MON_BASE_MULT) * TrackingService.MapMonumentScale;
-            el.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+            el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         el.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -1550,6 +1552,25 @@ public partial class MainWindow
         _lastMarkers = markers;
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
+        if (_mySteamId != 0)
+        {
+            var myMarker = System.Linq.Enumerable.FirstOrDefault(markers, m => m.Type == 1 && m.SteamId == _mySteamId);
+            if (myMarker.Id != 0 || myMarker.SteamId != 0)
+            {
+                bool inDeepSea = myMarker.X < -1000;
+                if (inDeepSea && !_isShowingDeepSeaMap)
+                {
+                    SetShowingDeepSeaMap(true);
+                    return;
+                }
+                else if (!inDeepSea && _isShowingDeepSeaMap && myMarker.X > -200)
+                {
+                    SetShowingDeepSeaMap(false);
+                    return;
+                }
+            }
+        }
+
         var incoming = new HashSet<uint>();
 
         foreach (var m in markers)
@@ -1864,6 +1885,15 @@ public partial class MainWindow
             if (m.Type == 150 || m.Type != 150) // All dynamic types
             {
                 var p = WorldToImagePx(m.X, m.Y);
+                if (_isShowingDeepSeaMap)
+                {
+                    el.Visibility = isPlayer ? Visibility.Visible : Visibility.Collapsed;
+                }
+                else
+                {
+                    el.Visibility = Visibility.Visible;
+                }
+
                 if (!(el.Tag is PlayerMarkerTag tag && tag.IsDeathPin))
                 {
                     double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
