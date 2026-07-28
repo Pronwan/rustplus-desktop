@@ -472,7 +472,7 @@ public partial class MainWindow
 
                 _shopEls[clusterId] = grid;
                 Overlay.Children.Add(grid);
-                Panel.SetZIndex(grid, 850);
+                Panel.SetZIndex(grid, 910);
                 el = grid;
                 _shopIconSet.Add(grid);
                 ApplyCurrentOverlayScale(el);

@@ -307,7 +307,7 @@ public partial class MainWindow
                 if (_monEls.TryGetValue(monKey, out var el))
                 {
                     ApplyMonumentScale(el);
-                    Panel.SetZIndex(el, 800); // Reset ZIndex
+                    Panel.SetZIndex(el, 900); // Reset ZIndex
                 }
             };
 
