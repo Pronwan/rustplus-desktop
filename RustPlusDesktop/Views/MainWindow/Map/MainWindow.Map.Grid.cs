@@ -90,24 +90,22 @@ public partial class MainWindow
             return;
         }
 
-        int cells = Math.Max(1, (int)Math.Round(_worldSizeS / 150.0));
-
-        double ox = _worldRectPx.X, oy = _worldRectPx.Y;
-        double ow = _worldRectPx.Width, oh = _worldRectPx.Height;
-        double step = ow / cells;
+        int cells = Math.Max(1, (int)Math.Ceiling(_worldSizeS / 150.0));
 
         var stroke = Brushes.Black;
         double thin = 1.0;
 
         for (int i = 0; i <= cells; i++)
         {
-            double x = ox + i * step;
+            var pTop = WorldToImagePx(i * 150, cells * 150);
+            var pBottom = WorldToImagePx(i * 150, 0);
+
             var line = new System.Windows.Shapes.Line
             {
-                X1 = x,
-                Y1 = oy,
-                X2 = x,
-                Y2 = oy + oh,
+                X1 = pTop.X,
+                Y1 = pTop.Y,
+                X2 = pBottom.X,
+                Y2 = pBottom.Y,
                 Stroke = stroke,
                 StrokeThickness = thin
             };
@@ -116,13 +114,15 @@ public partial class MainWindow
 
         for (int j = 0; j <= cells; j++)
         {
-            double y = oy + j * step;
+            var pLeft = WorldToImagePx(0, (cells - j) * 150);
+            var pRight = WorldToImagePx(cells * 150, (cells - j) * 150);
+
             var line = new System.Windows.Shapes.Line
             {
-                X1 = ox,
-                Y1 = y,
-                X2 = ox + ow,
-                Y2 = y,
+                X1 = pLeft.X,
+                Y1 = pLeft.Y,
+                X2 = pRight.X,
+                Y2 = pRight.Y,
                 Stroke = stroke,
                 StrokeThickness = thin
             };
@@ -144,12 +144,11 @@ public partial class MainWindow
                     Padding = new Thickness(0)
                 };
 
-                double x = ox + i * step + 1;
-                double y = oy + j * step + 1;
+                var p = WorldToImagePx(i * 150, (cells - j) * 150);
 
                 GridLayer.Children.Add(tb);
-                Canvas.SetLeft(tb, x);
-                Canvas.SetTop(tb, y);
+                Canvas.SetLeft(tb, p.X);
+                Canvas.SetTop(tb, p.Y);
             }
         }
         RefreshGridLineThickness();
