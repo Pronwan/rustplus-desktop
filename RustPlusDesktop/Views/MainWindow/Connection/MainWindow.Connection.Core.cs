@@ -205,8 +205,12 @@ public partial class MainWindow
                 real.ConnectionLost += OnConnectionLost;
                 real.TeamChatReceived -= Real_TeamChatReceived;
                 real.TeamChatReceived += Real_TeamChatReceived;
+                real.ClanChatReceived -= Real_ClanChatReceived;
+                real.ClanChatReceived += Real_ClanChatReceived;
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                try { await real.PrimeClanChatAsync(); }
+                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
 
                 // Discord interactions depend on team-master state, even during soft connect.
                 await LoadTeamAsync();
@@ -469,6 +473,8 @@ public partial class MainWindow
                 // Add global chat subscription for background bot commands
                 real.TeamChatReceived -= Real_TeamChatReceived;
                 real.TeamChatReceived += Real_TeamChatReceived;
+                real.ClanChatReceived -= Real_ClanChatReceived;
+                real.ClanChatReceived += Real_ClanChatReceived;
 
                 real.EnsureEventsHooked();
             }
@@ -479,6 +485,8 @@ public partial class MainWindow
             {
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                try { await real.PrimeClanChatAsync(); }
+                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
             }
 
             if (showBusy)
