@@ -159,7 +159,7 @@ public partial class MainWindow
 
     private void UpdateTeamFeatureMasterWatch()
     {
-        if (TeamMembers.Count <= 1)
+        if (TeamMembers.Count == 0)
         {
             StopTeamFeatureMasterWatch();
             return;
