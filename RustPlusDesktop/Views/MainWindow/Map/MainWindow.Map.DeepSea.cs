@@ -85,6 +85,9 @@ public partial class MainWindow
             {
                 UpdateDynUI(_lastMarkers);
             }
+
+            // 7. Redraw death markers for the current map view
+            RedrawDeathPins();
         });
     }
 

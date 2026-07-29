@@ -25,16 +25,17 @@ public partial class MainWindow
             var dsStroke = Brushes.Black;
             double dsThin = 1.0;
 
-            double minX = -5250;
-            double maxX = -2250;
-            double minY = 500;
-            double maxY = 3500;
+            double minX = -5975;
+            double maxX = -1925;
+            double minY = -300;
+            double maxY = 3750;
 
-            double startX = -6075;
-            for (double worldX = startX; worldX <= maxX + 150; worldX += 150)
+            int dsCells = 27;
+
+            // Draw vertical grid lines (columns A to AA, i.e., 27 cells)
+            for (int col = 0; col <= dsCells; col++)
             {
-                if (worldX < minX - 75 || worldX > maxX + 75) continue;
-
+                double worldX = minX + col * 150.0;
                 var pTop = WorldToImagePx(worldX, maxY);
                 var pBottom = WorldToImagePx(worldX, minY);
 
@@ -50,11 +51,10 @@ public partial class MainWindow
                 GridLayer.Children.Add(line);
             }
 
-            double startY = _worldSizeS + 75;
-            for (double worldY = startY; worldY >= minY - 150; worldY -= 150)
+            // Draw horizontal grid lines (rows 0 to 26)
+            for (int row = 0; row <= dsCells; row++)
             {
-                if (worldY < minY - 75 || worldY > maxY + 75) continue;
-
+                double worldY = maxY - row * 150.0;
                 var pLeft = WorldToImagePx(minX, worldY);
                 var pRight = WorldToImagePx(maxX, worldY);
 
@@ -70,19 +70,15 @@ public partial class MainWindow
                 GridLayer.Children.Add(line);
             }
 
-            int minCol = (int)Math.Floor((minX - startX) / 150.0);
-            int maxCol = (int)Math.Floor((maxX - startX) / 150.0);
-            int minRow = (int)Math.Floor((startY - maxY) / 150.0);
-            int maxRow = (int)Math.Floor((startY - minY) / 150.0);
-
-            for (int col = minCol; col <= maxCol; col++)
+            // Draw cell labels (A0 to AA26)
+            for (int col = 0; col < dsCells; col++)
             {
                 string colStr = ColumnLabel(col);
-                double cellX = startX + col * 150;
+                double cellX = minX + col * 150.0;
 
-                for (int row = minRow; row <= maxRow; row++)
+                for (int row = 0; row < dsCells; row++)
                 {
-                    double cellY = startY - row * 150;
+                    double cellY = maxY - row * 150.0;
 
                     var tb = new TextBlock
                     {
@@ -202,10 +198,10 @@ public partial class MainWindow
         label = "";
         if (_worldSizeS <= 0) return false;
 
-        if (_isShowingDeepSeaMap)
+        if (x < -1000)
         {
-            int col = (int)Math.Floor((x - (-6075)) / 150.0);
-            int row = (int)Math.Floor((_worldSizeS + 75 - y) / 150.0);
+            int col = (int)Math.Floor((x - (-5975)) / 150.0);
+            int row = (int)Math.Floor((3750 - y) / 150.0);
             label = $"DS-{ColumnLabel(col)}{row}";
             return true;
         }

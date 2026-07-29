@@ -55,6 +55,10 @@
 
                             <TextBlock Text="🗺️ Map improvements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Virtual Deep Sea Map:</Run>
+                                Full support for the virtual Deep Sea map overlay. Automatically switches views when entering or leaving the Deep Sea coordinates, allowing you to correctly track the Floating City shops and team members in the Deep Sea zone.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; 3D Map Performance:</Run>
                                 The 3D map now opens faster, uses considerably less memory, and cleans up after closing. Map asset initialisation and streaming has been completely rewritten.
                             </TextBlock>
@@ -110,6 +114,7 @@
                             </TextBlock>
 
                             <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/DeepSea.png" Description="Full virtual Deep Sea map support with automatic view toggling, Floating City tracking, and precise grid coordinate mapping"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/tutorials.png" Description="New fully localised guided tutorial system"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-ui.png" Description="Redesigned left sidebar workspace and modernized UI"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Raid-calculator.png" Description="Brand new Raid Calculator workspace"/>
