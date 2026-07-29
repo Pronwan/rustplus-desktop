@@ -23,25 +23,25 @@ public partial class MainWindow
         if (_isShowingDeepSeaMap)
         {
             int dsCells = 20; // 3000m / 150m grid size
-
-            double dsOx = _worldRectPx.X;
-            double dsOy = _worldRectPx.Y;
-            double dsOw = _worldRectPx.Width;
-            double dsOh = _worldRectPx.Height;
-            double dsStep = dsOw / dsCells;
-
             var dsStroke = Brushes.Black;
             double dsThin = 1.0;
 
+            double minX = -5250;
+            double minY = 500;
+            double maxY = 3500;
+
             for (int i = 0; i <= dsCells; i++)
             {
-                double x = dsOx + i * dsStep;
+                double worldX = minX + i * 150;
+                var pTop = WorldToImagePx(worldX, maxY);
+                var pBottom = WorldToImagePx(worldX, minY);
+
                 var line = new System.Windows.Shapes.Line
                 {
-                    X1 = x,
-                    Y1 = dsOy,
-                    X2 = x,
-                    Y2 = dsOy + dsOh,
+                    X1 = pTop.X,
+                    Y1 = pTop.Y,
+                    X2 = pBottom.X,
+                    Y2 = pBottom.Y,
                     Stroke = dsStroke,
                     StrokeThickness = dsThin
                 };
@@ -50,13 +50,16 @@ public partial class MainWindow
 
             for (int j = 0; j <= dsCells; j++)
             {
-                double y = dsOy + j * dsStep;
+                double worldY = maxY - j * 150;
+                var pLeft = WorldToImagePx(minX, worldY);
+                var pRight = WorldToImagePx(minX + dsCells * 150, worldY);
+
                 var line = new System.Windows.Shapes.Line
                 {
-                    X1 = dsOx,
-                    Y1 = y,
-                    X2 = dsOx + dsOw,
-                    Y2 = y,
+                    X1 = pLeft.X,
+                    Y1 = pLeft.Y,
+                    X2 = pRight.X,
+                    Y2 = pRight.Y,
                     Stroke = dsStroke,
                     StrokeThickness = dsThin
                 };
@@ -65,12 +68,18 @@ public partial class MainWindow
 
             for (int i = 0; i < dsCells; i++)
             {
-                string col = "DS-" + ColumnLabel(i);
+                string col = ColumnLabel(i);
                 for (int j = 0; j < dsCells; j++)
                 {
+                    double worldX = minX + i * 150;
+                    double worldY = maxY - j * 150;
+
+                    double centerY = worldY - 75;
+                    int row = (int)Math.Floor((_worldSizeS - centerY) / 150.0);
+
                     var tb = new TextBlock
                     {
-                        Text = $"{col}{j}",
+                        Text = $"{col}{row}",
                         Foreground = Brushes.LightBlue,
                         FontSize = 9,
                         Margin = new Thickness(6, 4, 0, 0),
@@ -78,12 +87,11 @@ public partial class MainWindow
                         Padding = new Thickness(0)
                     };
 
-                    double x = dsOx + i * dsStep + 1;
-                    double y = dsOy + j * dsStep + 1;
+                    var p = WorldToImagePx(worldX, worldY);
 
                     GridLayer.Children.Add(tb);
-                    Canvas.SetLeft(tb, x);
-                    Canvas.SetTop(tb, y);
+                    Canvas.SetLeft(tb, p.X);
+                    Canvas.SetTop(tb, p.Y);
                 }
             }
             RefreshGridLineThickness();
@@ -187,13 +195,19 @@ public partial class MainWindow
         label = "";
         if (_worldSizeS <= 0) return false;
 
-        int cells = Math.Max(1, (int)Math.Round(_worldSizeS / 150.0));
-        double cell = _worldSizeS / (double)cells;
+        if (_isShowingDeepSeaMap)
+        {
+            int col = (int)Math.Floor((x - (-5250)) / 150.0);
+            int row = (int)Math.Floor((_worldSizeS - y) / 150.0);
+            label = $"DS-{ColumnLabel(col)}{row}";
+            return true;
+        }
 
-        int col = Math.Clamp((int)Math.Floor(x / cell), 0, cells - 1);
-        int row = Math.Clamp((int)Math.Floor((_worldSizeS - y) / cell), 0, cells - 1);
+        int cells = Math.Max(1, (int)Math.Ceiling(_worldSizeS / 150.0));
+        int colNormal = Math.Clamp((int)Math.Floor(x / 150.0), 0, cells - 1);
+        int rowNormal = Math.Clamp((int)Math.Floor((_worldSizeS - y) / 150.0), 0, cells - 1);
 
-        label = $"{ColumnLabel(col)}{row}";
+        label = $"{ColumnLabel(colNormal)}{rowNormal}";
         return true;
     }
 
