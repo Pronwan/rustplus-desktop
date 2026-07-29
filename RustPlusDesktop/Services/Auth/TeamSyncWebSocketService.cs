@@ -259,7 +259,17 @@ namespace RustPlusDesk.Services.Auth
                             string? ovData = payload["overlay_data"]?.ToString();
                             string? mkData = payload["marker_data"]?.ToString();
                             string? dvData = payload["device_data"]?.ToString();
-                            long ovUpdatedAt = payload["updated_at"]?.Value<long>() ?? 0;
+                            long ovUpdatedAt = 0;
+                            var updatedAtToken = payload["updated_at"];
+                            if (updatedAtToken != null)
+                            {
+                                if (updatedAtToken.Type == JTokenType.Integer)
+                                    ovUpdatedAt = updatedAtToken.Value<long>();
+                                else if (updatedAtToken.Type == JTokenType.Date)
+                                    ovUpdatedAt = new DateTimeOffset(updatedAtToken.Value<DateTime>()).ToUnixTimeMilliseconds();
+                                else if (long.TryParse(updatedAtToken.ToString(), out long parsed))
+                                    ovUpdatedAt = parsed;
+                            }
 
                             AppendLog($"[TeamSyncWS] overlay_data inline event for teammate: {ovSid}");
                             _ = ApplyInlineOverlayAsync(ovSid, ovServerKey, ovData, mkData, dvData, ovUpdatedAt);

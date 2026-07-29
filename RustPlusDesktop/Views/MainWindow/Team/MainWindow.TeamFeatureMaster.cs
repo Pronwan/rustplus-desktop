@@ -392,17 +392,22 @@ public partial class MainWindow
         if (ChatAnnounce != null)
         {
             ChatAnnounce.IsEnabled = !blocked;
-            ChatAnnounce.ToolTip = blocked ? message : FindResource(RustPlusDesk.Properties.Resources.GetString("Alerts"));
+            var alertsKey = RustPlusDesk.Properties.Resources.GetString("Alerts") ?? "Alerts";
+            ChatAnnounce.ToolTip = blocked ? message : (TryFindResource(alertsKey) ?? alertsKey);
         }
 
         if (ChatAlertsConfigureButton != null)
         {
             ChatAlertsConfigureButton.IsEnabled = !blocked;
-            ChatAlertsConfigureButton.ToolTip = blocked ? message : FindResource(RustPlusDesk.Properties.Resources.GetString("Configure"));
+            var configKey = RustPlusDesk.Properties.Resources.GetString("Configure") ?? "Configure";
+            ChatAlertsConfigureButton.ToolTip = blocked ? message : (TryFindResource(configKey) ?? configKey);
         }
 
         if (BtnOpenChatCommands != null)
-            BtnOpenChatCommands.ToolTip = blocked ? message : FindResource(RustPlusDesk.Properties.Resources.GetString("ChatCommandsSettings"));
+        {
+            var chatCmdKey = RustPlusDesk.Properties.Resources.GetString("ChatCommandsSettings") ?? "Chat Commands Settings";
+            BtnOpenChatCommands.ToolTip = blocked ? message : (TryFindResource(chatCmdKey) ?? chatCmdKey);
+        }
 
         if (ChatFeatureMasterWarningBadge != null)
             ChatFeatureMasterWarningBadge.Visibility = blocked ? Visibility.Visible : Visibility.Collapsed;
