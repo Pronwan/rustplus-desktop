@@ -68,7 +68,6 @@ public partial class MainWindow
 
             for (int i = 0; i < dsCells; i++)
             {
-                string col = ColumnLabel(i);
                 for (int j = 0; j < dsCells; j++)
                 {
                     double worldX = minX + i * 150;
@@ -76,10 +75,12 @@ public partial class MainWindow
 
                     double centerY = worldY - 75;
                     int row = (int)Math.Floor((_worldSizeS - centerY) / 150.0);
+                    int colIdx = (int)Math.Floor((worldX - (-6000)) / 150.0);
+                    string colStr = ColumnLabel(colIdx);
 
                     var tb = new TextBlock
                     {
-                        Text = $"{col}{row}",
+                        Text = $"{colStr}{row}",
                         Foreground = Brushes.LightBlue,
                         FontSize = 9,
                         Margin = new Thickness(6, 4, 0, 0),
