@@ -212,6 +212,13 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 var v = p.GetValue(src);
                 if (v is T tv) return tv;
 
+                // Numeric type mismatch fallback (e.g. UInt64 → UInt32, Int64 → Int32)
+                if (v != null && typeof(T).IsPrimitive && v.GetType().IsPrimitive)
+                {
+                    try { return (T)Convert.ChangeType(v, typeof(T)); }
+                    catch { /* overflow or incompatible – fall through */ }
+                }
+
                 // z.B. Items ist IEnumerable → Count nehmen
                 if (typeof(T) == typeof(int) && v is System.Collections.IEnumerable en)
                 {
