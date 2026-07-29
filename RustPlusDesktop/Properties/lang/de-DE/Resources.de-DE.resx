@@ -5700,4 +5700,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Update800PatchNotesBtn" xml:space="preserve">
     <value>Patch-Notizen</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>Verfolge Clanmitglieder, ihren Status, ihre Rollen und Notizen</value>
+  </data>
 </root>

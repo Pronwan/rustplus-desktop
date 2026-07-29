@@ -795,6 +795,9 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   <data name="TeamChatTitle" xml:space="preserve">
     <value>TEAM CHAT</value>
   </data>
+  <data name="ClanChatTitle" xml:space="preserve">
+    <value>CLAN CHAT</value>
+  </data>
   <data name="CloseChat" xml:space="preserve">
     <value>Close Chat</value>
   </data>
@@ -5639,5 +5642,11 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="Update800PatchNotesBtn" xml:space="preserve">
     <value>Patch Notes</value>
+  </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>Track clan members, their status, roles and notes</value>
   </data>
 </root>

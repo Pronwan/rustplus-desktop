@@ -5640,4 +5640,10 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Update800PatchNotesBtn" xml:space="preserve">
     <value>Notes de mise à jour</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>Suivez les membres du clan, leur statut, leurs rôles et leurs notes</value>
+  </data>
 </root>

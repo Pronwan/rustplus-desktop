@@ -5640,4 +5640,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Update800PatchNotesBtn" xml:space="preserve">
     <value>Список изменений</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>Клан</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>Отслеживайте участников клана, их статус, роли и заметки</value>
+  </data>
 </root>

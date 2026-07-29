@@ -5637,4 +5637,10 @@
   <data name="Update800PatchNotesBtn" xml:space="preserve">
     <value>ملاحظات التصحيح</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>العشيرة</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>تتبع أعضاء العشيرة وحالتهم وأدوارهم وملاحظاتهم</value>
+  </data>
 </root>

@@ -918,4 +918,10 @@
   <data name="Update800PatchNotesBtn" xml:space="preserve">
     <value>更新说明</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>战队</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>追踪战队成员、他们的在线状态、角色和备注</value>
+  </data>
 </root>

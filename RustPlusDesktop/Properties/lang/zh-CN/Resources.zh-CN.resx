@@ -5565,4 +5565,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>没有教程执行规则或切换真实智能设备。</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>战队</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>追踪战队成员、他们的在线状态、角色和备注</value>
+  </data>
 </root>

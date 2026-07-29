@@ -18,12 +18,24 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    // ====== STATE ======
+    public enum ChatChannel { Team, Clan }
+
+    // ====== STATE (Team) ======
     private readonly List<TeamChatMessage> _chatHistoryLog = new();
     private DateTime? _lastChatTsForCurrentServer = null;
     private readonly HashSet<string> _pendingChatConfirms = new();
     private DateTime _lastChatDate = DateTime.MinValue;
     private int _displayedMessagesCount = 20;
+
+    // ====== STATE (Clan) ======
+    private readonly List<TeamChatMessage> _clanChatHistoryLog = new();
+    private DateTime? _lastClanChatTsForCurrentServer = null;
+    private readonly HashSet<string> _clanPendingChatConfirms = new();
+    private DateTime _lastClanChatDate = DateTime.MinValue;
+    private int _clanDisplayedMessagesCount = 20;
+
+    // ====== SHARED UI STATE ======
+    private ChatChannel _activeChatChannel = ChatChannel.Team;
     private bool _isLoadingMoreChat = false;
     private ScrollViewer? _chatScrollViewer;
 
@@ -47,16 +59,19 @@ public partial class MainWindow
     {
         if (string.IsNullOrWhiteSpace(text)) return;
         var time = ts ?? DateTime.Now;
+        bool isClanActive = _activeChatChannel == ChatChannel.Clan;
+        var lastDate = isClanActive ? _lastClanChatDate : _lastChatDate;
 
         bool showSep = false;
         string? sepText = null;
 
-        if (time.Date != _lastChatDate.Date)
+        if (time.Date != lastDate.Date)
         {
             showSep = true;
             // Localize the date using the current selected UI culture
             sepText = time.ToString("D", System.Globalization.CultureInfo.CurrentUICulture);
-            _lastChatDate = time.Date;
+            if (isClanActive) _lastClanChatDate = time.Date;
+            else _lastChatDate = time.Date;
         }
 
         var vm = new ChatMessageVM
@@ -75,7 +90,9 @@ public partial class MainWindow
         // Auto-Scroll if chat overlay is visible
         if (autoScroll)
         {
-            _displayedMessagesCount++;
+            if (_activeChatChannel == ChatChannel.Clan) _clanDisplayedMessagesCount++;
+            else _displayedMessagesCount++;
+
             if (ChatOverlayPanel.Visibility == Visibility.Visible)
             {
                 ScrollChatToBottom();
@@ -123,7 +140,7 @@ public partial class MainWindow
         // Thread-safe wrapper für Hintergrund-Alerts
         try
         {
-            await SendTeamChatReliableAsync(text);
+            await SendChatReliableAsync(text, ChatChannel.Team);
         }
         catch { /* ignore background errors */ }
     }
@@ -154,34 +171,46 @@ public partial class MainWindow
         }
     }
 
-    private async Task<bool> SendTeamChatReliableAsync(string text)
+    private async Task<bool> SendChatReliableAsync(string text, ChatChannel channel)
     {
         if (_rust is not RustPlusClientReal real) return false;
-        
+
         if (text == null)
         {
             AppendLog("[Chat] Fail to send: text is null");
             return false;
         }
 
-        AppendLog($"[Chat] Sending: {text}");
-        
+        var pending = channel == ChatChannel.Clan ? _clanPendingChatConfirms : _pendingChatConfirms;
+        string tag = channel == ChatChannel.Clan ? "ClanChat" : "Chat";
+
+        AppendLog($"[{tag}] Sending: {text}");
+
         // Füge die Nachricht zu unseren ausstehenden Bestätigungen hinzu
         string trackKey = $"{text.Trim()}_{DateTime.UtcNow:HHmmss}";
-        lock (_pendingChatConfirms) { _pendingChatConfirms.Add(trackKey); }
+        lock (pending) { pending.Add(trackKey); }
+
+        async Task<bool> SendOnceAsync()
+        {
+            if (channel == ChatChannel.Clan)
+                await real.SendClanMessageAsync(text);
+            else
+                await real.SendTeamMessageAsync(text);
+            return true;
+        }
 
         try
         {
-            await real.SendTeamMessageAsync(text);
+            await SendOnceAsync();
         }
         catch (Exception ex)
         {
-            AppendLog($"[Chat] Fail to send: {ex.Message}");
+            AppendLog($"[{tag}] Fail to send: {ex.Message}");
             return false;
         }
 
-        // Wir warten passiv darauf, dass die WebSocket-Event-Schleife (Real_TeamChatReceived)
-        // die Nachricht als Echo zurückbekomnt. Wenn sie ankommt, entfernt die Schleife den trackKey.
+        // Wir warten passiv darauf, dass die WebSocket-Event-Schleife (Real_TeamChatReceived/Real_ClanChatReceived)
+        // die Nachricht als Echo zurückbekommt. Wenn sie ankommt, entfernt die Schleife den trackKey.
         int waitMs = 0;
         int intervalMs = 150;
         int timeoutMs = 4000; // max 4 Sekunden warten pro Versuch
@@ -191,9 +220,9 @@ public partial class MainWindow
             await Task.Delay(intervalMs);
             waitMs += intervalMs;
 
-            lock (_pendingChatConfirms)
+            lock (pending)
             {
-                if (!_pendingChatConfirms.Contains(trackKey))
+                if (!pending.Contains(trackKey))
                 {
                     return true; // Bestätigt!
                 }
@@ -201,14 +230,14 @@ public partial class MainWindow
         }
 
         // --- RETRY LOGIC (Sanfter Ansatz, max 2 Versuche um Lags nicht zu verschlimmern) ---
-        AppendLog($"[Chat] Send unconfirmed (Attempt 2), retrying once...");
+        AppendLog($"[{tag}] Send unconfirmed (Attempt 2), retrying once...");
         try
         {
-            await real.SendTeamMessageAsync(text);
+            await SendOnceAsync();
         }
         catch (Exception ex)
         {
-            AppendLog($"[Chat] Fail to send on retry: {ex.Message}");
+            AppendLog($"[{tag}] Fail to send on retry: {ex.Message}");
             return false;
         }
 
@@ -218,17 +247,17 @@ public partial class MainWindow
             await Task.Delay(intervalMs);
             waitMs += intervalMs;
 
-            lock (_pendingChatConfirms)
+            lock (pending)
             {
-                if (!_pendingChatConfirms.Contains(trackKey))
+                if (!pending.Contains(trackKey))
                 {
                     return true; // Bestätigt beim zweiten Versuch!
                 }
             }
         }
 
-        AppendLog($"[Chat] Failed to verify message delivery after 2 attempts: \"{text}\"");
-        lock (_pendingChatConfirms) { _pendingChatConfirms.Remove(trackKey); }
+        AppendLog($"[{tag}] Failed to verify message delivery after 2 attempts: \"{text}\"");
+        lock (pending) { pending.Remove(trackKey); }
         return false;
     }
 
@@ -246,19 +275,36 @@ public partial class MainWindow
             }
         }
         
-        AppendChatIfNew(m, isHistorical: false);
+        AppendChatIfNew(m, ChatChannel.Team, isHistorical: false);
     }
 
-    private bool AppendChatIfNew(TeamChatMessage m, bool isHistorical = false)
+    private void Real_ClanChatReceived(object? sender, TeamChatMessage m)
     {
+        lock (_clanPendingChatConfirms)
+        {
+            var match = _clanPendingChatConfirms.FirstOrDefault(k => k.StartsWith(m.Text.Trim() + "_"));
+            if (match != null)
+            {
+                _clanPendingChatConfirms.Remove(match);
+            }
+        }
+
+        AppendChatIfNew(m, ChatChannel.Clan, isHistorical: false);
+    }
+
+    private bool AppendChatIfNew(TeamChatMessage m, ChatChannel channel, bool isHistorical = false)
+    {
+        var log = channel == ChatChannel.Clan ? _clanChatHistoryLog : _chatHistoryLog;
+
         var profile = _vm?.Selected;
         string prefix = profile?.ChatCommandPrefix ?? "!";
-        bool isCommand = m.Text.TrimStart().StartsWith(prefix);
+        // Bot commands are only recognised on Team chat for now.
+        bool isCommand = channel == ChatChannel.Team && m.Text.TrimStart().StartsWith(prefix);
 
-        lock (_chatHistoryLog)
+        lock (log)
         {
             bool isDuplicate = false;
-            foreach (var ext in _chatHistoryLog.AsEnumerable().Reverse().Take(10))
+            foreach (var ext in log.AsEnumerable().Reverse().Take(10))
             {
                 if (ext.SteamId == m.SteamId && ext.Text == m.Text && Math.Abs((ext.Timestamp - m.Timestamp).TotalSeconds) < 2)
                 {
@@ -268,22 +314,22 @@ public partial class MainWindow
             }
             if (!isDuplicate)
             {
-                _chatHistoryLog.Add(m);
+                log.Add(m);
             }
             else
             {
                 return false;
             }
 
-            if (_chatHistoryLog.Count > 1000)
+            if (log.Count > 1000)
             {
-                _chatHistoryLog.RemoveRange(0, 200);
+                log.RemoveRange(0, 200);
             }
         }
 
         if (isCommand)
         {
-            if (!isHistorical && _rust is RustPlusClientReal real)
+            if (!isHistorical && _rust is RustPlusClientReal)
             {
                 _ = ProcessChatCommands(m);
             }
@@ -294,7 +340,10 @@ public partial class MainWindow
 
         if (!isHistorical)
         {
-            Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+            if (channel == _activeChatChannel)
+            {
+                Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+            }
             if (!isCommand)
             {
                 bool isAutomated;
@@ -305,14 +354,23 @@ public partial class MainWindow
 
                 if (!isAutomated)
                 {
-                    _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"\uD83D\uDCAC **{m.Author}**: {m.Text}");
+                    string emoji = channel == ChatChannel.Clan ? "🏰" : "💬";
+                    _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"{emoji} **{m.Author}**: {m.Text}");
                 }
             }
         }
         
         // Timestamp für History-Anfragen aktuell halten
-        if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-            _lastChatTsForCurrentServer = m.Timestamp;
+        if (channel == ChatChannel.Clan)
+        {
+            if (!_lastClanChatTsForCurrentServer.HasValue || m.Timestamp > _lastClanChatTsForCurrentServer.Value)
+                _lastClanChatTsForCurrentServer = m.Timestamp;
+        }
+        else
+        {
+            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
+                _lastChatTsForCurrentServer = m.Timestamp;
+        }
 
         return true;
     }
@@ -330,14 +388,20 @@ public partial class MainWindow
     private void RebuildChatMessages()
     {
         ChatMessages.Clear();
-        _lastChatDate = DateTime.MinValue;
+
+        bool isClan = _activeChatChannel == ChatChannel.Clan;
+        var log = isClan ? _clanChatHistoryLog : _chatHistoryLog;
+        int displayCount = isClan ? _clanDisplayedMessagesCount : _displayedMessagesCount;
+
+        if (isClan) _lastClanChatDate = DateTime.MinValue;
+        else _lastChatDate = DateTime.MinValue;
 
         List<TeamChatMessage> toDisplay;
-        lock (_chatHistoryLog)
+        lock (log)
         {
-            toDisplay = _chatHistoryLog
+            toDisplay = log
                 .OrderBy(x => x.Timestamp)
-                .Skip(Math.Max(0, _chatHistoryLog.Count - _displayedMessagesCount))
+                .Skip(Math.Max(0, log.Count - displayCount))
                 .ToList();
         }
 
@@ -358,6 +422,71 @@ public partial class MainWindow
         }
 
         await OpenChatOverlayAsync();
+    }
+
+    private async void ChatTab_Checked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || rb.Tag is not string tag) return;
+        var channel = tag == "Clan" ? ChatChannel.Clan : ChatChannel.Team;
+        if (channel == _activeChatChannel) return;
+
+        _activeChatChannel = channel;
+        TxtChatInput.Clear();
+        ChatErrorBox.Visibility = Visibility.Collapsed;
+
+        RebuildChatMessages();
+        ScrollChatToBottom();
+
+        // Make sure the newly-selected channel is primed and has its history loaded,
+        // in case the panel was opened before the tab switch (or the clan tab is being
+        // visited for the first time this session).
+        if (_rust is RustPlusClientReal real && (_vm.Selected?.IsConnected ?? false))
+        {
+            try
+            {
+                if (channel == ChatChannel.Clan)
+                {
+                    await PrimeClanChatIfNeededAsync(real);
+                }
+                else
+                {
+                    real.TeamChatReceived -= Real_TeamChatReceived;
+                    real.TeamChatReceived += Real_TeamChatReceived;
+                    await real.PrimeTeamChatAsync();
+                }
+            }
+            catch { /* tolerant: chat starts empty, user can still try to send */ }
+        }
+    }
+
+    private async Task PrimeClanChatIfNeededAsync(RustPlusClientReal real)
+    {
+        real.ClanChatReceived -= Real_ClanChatReceived;
+        real.ClanChatReceived += Real_ClanChatReceived;
+        await real.PrimeClanChatAsync();
+
+        try
+        {
+            var history = await real.GetClanChatHistoryAsync(_lastClanChatTsForCurrentServer, limit: 120);
+            if (history != null && history.Count > 0)
+            {
+                history.Reverse();
+                foreach (var m in history)
+                {
+                    AppendChatIfNew(m, ChatChannel.Clan, isHistorical: true);
+                }
+
+                if (_activeChatChannel == ChatChannel.Clan)
+                {
+                    RebuildChatMessages();
+                    ScrollChatToBottom();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("GetClanChatHistory Error: " + ex.Message);
+        }
     }
 
     public async Task OpenChatOverlayAsync()
@@ -392,8 +521,16 @@ public partial class MainWindow
             return;
         }
 
+        // Clan chat priming happens in the background — it's best-effort (not every
+        // server has an active clan) and must never block opening the team chat panel.
+        _ = PrimeClanChatIfNeededAsync(real).ContinueWith(t =>
+        {
+            if (t.Exception != null) AppendLog("PrimeClanChat failed: " + t.Exception.InnerException?.Message);
+        }, TaskScheduler.Default);
+
         // Initialize displayed messages count and rebuild messages from log
         _displayedMessagesCount = 20;
+        _clanDisplayedMessagesCount = 20;
         RebuildChatMessages();
 
         // Overlay einblenden
@@ -411,7 +548,7 @@ public partial class MainWindow
         TxtChatInput.Focus();
         ScrollChatToBottom();
 
-        // Fehlende History vom Server nachladen
+        // Fehlende History vom Server nachladen (Team)
         try
         {
             var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
@@ -420,12 +557,15 @@ public partial class MainWindow
                 history.Reverse(); // Älteste zuerst
                 foreach (var m in history)
                 {
-                    AppendChatIfNew(m, isHistorical: true);
+                    AppendChatIfNew(m, ChatChannel.Team, isHistorical: true);
                 }
                 
                 // Refresh list with any new historical items
-                RebuildChatMessages();
-                ScrollChatToBottom();
+                if (_activeChatChannel == ChatChannel.Team)
+                {
+                    RebuildChatMessages();
+                    ScrollChatToBottom();
+                }
             }
         }
         catch (Exception ex)
@@ -471,7 +611,7 @@ public partial class MainWindow
             var oldContent = BtnSendChat.Content;
             BtnSendChat.Content = "...";
 
-            bool confirmed = await SendTeamChatReliableAsync(text);
+            bool confirmed = await SendChatReliableAsync(text, _activeChatChannel);
 
             if (confirmed)
             {
@@ -550,13 +690,17 @@ public partial class MainWindow
 
     private void LoadMoreChatMessages()
     {
+        bool isClan = _activeChatChannel == ChatChannel.Clan;
+        var log = isClan ? _clanChatHistoryLog : _chatHistoryLog;
+
         int totalAvailable;
-        lock (_chatHistoryLog)
+        lock (log)
         {
-            totalAvailable = _chatHistoryLog.Count;
+            totalAvailable = log.Count;
         }
 
-        if (_displayedMessagesCount >= totalAvailable)
+        int displayCount = isClan ? _clanDisplayedMessagesCount : _displayedMessagesCount;
+        if (displayCount >= totalAvailable)
         {
             // No more older messages to load
             return;
@@ -572,7 +716,8 @@ public partial class MainWindow
                 double oldHeight = scrollViewer.ExtentHeight;
 
                 // Load 20 more messages
-                _displayedMessagesCount += 20;
+                if (isClan) _clanDisplayedMessagesCount += 20;
+                else _displayedMessagesCount += 20;
 
                 // Rebuild the chat list
                 RebuildChatMessages();

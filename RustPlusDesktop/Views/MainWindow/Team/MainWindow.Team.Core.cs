@@ -285,6 +285,12 @@ public partial class MainWindow
         {
             await LoadTeamAsync();
             await EvaluateDeviceAutomationAsync();
+
+            if (DateTime.UtcNow - _lastClanPoll > TimeSpan.FromSeconds(15))
+            {
+                _lastClanPoll = DateTime.UtcNow;
+                await LoadClanAsync();
+            }
         }
         finally { System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0); }
         CenterMiniMapOnPlayer();

@@ -3043,6 +3043,131 @@
                             </Grid>
                         </TabItem>
 
+                        <!--  ===== CLAN =====  -->
+                        <TabItem
+                            x:Name="TabClan"
+                            Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Shield24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ClanTab}" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid Background="#181A1E">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.Resources>
+                                        <conv:BoolToVisibilityConverter x:Key="Vis" />
+                                        <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
+                                        <Style x:Key="ClanCard" TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="10" />
+                                            <Setter Property="Background" Value="#FF141F2D" />
+                                            <Setter Property="Padding" Value="8" />
+                                            <Setter Property="Margin" Value="6" />
+                                        </Style>
+                                    </Grid.Resources>
+
+                                    <!--  ListBox of Clan Members  -->
+                                    <ListBox
+                                        x:Name="ClanList"
+                                        Grid.Row="0"
+                                        HorizontalContentAlignment="Stretch"
+                                        ItemsSource="{Binding ClanMembers, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <!--  Context Menu  -->
+                                        <ListBox.Resources>
+                                            <ContextMenu x:Key="ClanContextMenu" Style="{StaticResource DarkContextMenu}">
+                                                <MenuItem Click="Clan_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}" />
+                                                <MenuItem Click="Clan_CopySteamId_Click" Header="Copy Steam ID" />
+                                            </ContextMenu>
+                                        </ListBox.Resources>
+
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Width" Value="210" />
+                                                <Setter Property="Margin" Value="6" />
+                                                <Setter Property="ContextMenu" Value="{StaticResource ClanContextMenu}" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource ClanCard}">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="56" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <!--  Avatar + Status  -->
+                                                        <Grid Grid.Column="0" Width="44" Height="44">
+                                                            <Image
+                                                                ClipToBounds="True"
+                                                                RenderOptions.BitmapScalingMode="HighQuality"
+                                                                Source="{Binding Avatar}"
+                                                                Stretch="UniformToFill" />
+
+                                                            <!--  Online (grün)  -->
+                                                            <Ellipse
+                                                                Width="12"
+                                                                Height="12"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Bottom"
+                                                                Fill="#4CAF50"
+                                                                Stroke="Black"
+                                                                Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+
+                                                            <!--  Offline (grau)  -->
+                                                            <Ellipse
+                                                                Width="12"
+                                                                Height="12"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Bottom"
+                                                                Fill="#666"
+                                                                Stroke="Black"
+                                                                Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
+                                                        </Grid>
+
+                                                        <!--  Name + Role + Notes  -->
+                                                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                            <TextBlock
+                                                                Text="{Binding Name}"
+                                                                Foreground="White"
+                                                                FontWeight="SemiBold"
+                                                                FontSize="12"
+                                                                TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock
+                                                                Text="{Binding RoleName}"
+                                                                Foreground="#FF9BA4B5"
+                                                                FontSize="10"
+                                                                TextTrimming="CharacterEllipsis"
+                                                                Margin="0,2,0,0" />
+                                                            <TextBlock
+                                                                Text="{Binding Notes}"
+                                                                Foreground="#6C7A89"
+                                                                FontSize="9"
+                                                                FontStyle="Italic"
+                                                                TextTrimming="CharacterEllipsis"
+                                                                Visibility="{Binding HasNotes, Converter={StaticResource Vis}}"
+                                                                Margin="0,2,0,0" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Grid>
+                        </TabItem>
+
                         <!--  ===== CAMERAS =====  -->
                         <TabItem x:Name="CamerasTabItem" Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
@@ -3446,6 +3571,12 @@
                                 <ui:Button x:Name="RailTeamButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource TeamTab}" AutomationProperties.HelpText="{DynamicResource UiTrackTeammatesAndSharedActivity}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=People24}" Tag="{Binding ElementName=TabTeam}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailTeamButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailTeamButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailTeamButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailClanButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource ClanTab}" AutomationProperties.HelpText="{DynamicResource UiTrackClanMembers}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Shield24}" Tag="{Binding ElementName=TabClan}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailClanButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailClanButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailClanButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
@@ -7077,15 +7208,55 @@
 
                                         <!--  Header / Drag / Close Area  -->
                                         <Grid Grid.Row="0" Background="#1B1E24">
+                                            <Grid.Resources>
+                                                <Style x:Key="ChatTabPillStyle" TargetType="RadioButton">
+                                                    <Setter Property="Padding" Value="9,4" />
+                                                    <Setter Property="FontSize" Value="10" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="RadioButton">
+                                                                <Border
+                                                                    x:Name="PillBorder"
+                                                                    Background="Transparent"
+                                                                    CornerRadius="10"
+                                                                    Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsChecked" Value="True">
+                                                                        <Setter TargetName="PillBorder" Property="Background" Value="#26FFFFFF" />
+                                                                        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter TargetName="PillBorder" Property="Background" Value="#16FFFFFF" />
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Grid.Resources>
                                             <StackPanel Margin="12,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
                                                 <ui:SymbolIcon Symbol="Chat24" Margin="0,0,8,0" FontSize="16" Foreground="{DynamicResource Accent}" />
-                                                <TextBlock
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="11"
-                                                    FontWeight="SemiBold"
-                                                    Foreground="{DynamicResource TextPrimary}"
-                                                    Text="{DynamicResource TeamChatTitle}" />
+                                                <RadioButton
+                                                    x:Name="TabTeamChat"
+                                                    GroupName="ChatTabsGroup"
+                                                    IsChecked="True"
+                                                    Tag="Team"
+                                                    Style="{StaticResource ChatTabPillStyle}"
+                                                    Checked="ChatTab_Checked"
+                                                    Content="{DynamicResource TeamChatTitle}" />
+                                                <RadioButton
+                                                    x:Name="TabClanChat"
+                                                    GroupName="ChatTabsGroup"
+                                                    Margin="4,0,0,0"
+                                                    Tag="Clan"
+                                                    Style="{StaticResource ChatTabPillStyle}"
+                                                    Checked="ChatTab_Checked"
+                                                    Content="{DynamicResource ClanChatTitle}" />
                                             </StackPanel>
                                             <ui:Button
                                                 x:Name="BtnCloseChatOverlay"

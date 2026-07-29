@@ -364,6 +364,8 @@ public partial class MainWindow
                 StopDynPolling();
                 StopTeamPolling();
                 TeamMembers.Clear();
+                ClanMembers.Clear();
+                _lastClanPoll = DateTime.MinValue;
 
                 _avatarCache.Clear();
                 _lastPresence.Clear();
@@ -388,6 +390,8 @@ public partial class MainWindow
                 StopDynPolling();
                 StopTeamPolling();
                 TeamMembers.Clear();
+                ClanMembers.Clear();
+                _lastClanPoll = DateTime.MinValue;
 
                 _avatarCache.Clear();
                 _lastPresence.Clear();

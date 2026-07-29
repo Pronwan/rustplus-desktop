@@ -1551,6 +1551,57 @@ public partial class MainWindow : WpfUi.FluentWindow
         catch (Exception ex) { AppendLog($"[CHAT-LOAD] {ex.Message}"); }
     }
 
+    private void SaveClanChatHistory(ServerProfile? p)
+    {
+        if (p == null) return;
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var path = GetChatCachePath(serverKey);
+            lock (_clanChatHistoryLog)
+            {
+                while (_clanChatHistoryLog.Count > 500) _clanChatHistoryLog.RemoveAt(0);
+
+                var json = JsonSerializer.Serialize(_clanChatHistoryLog);
+                System.IO.File.WriteAllText(path, json);
+            }
+        }
+        catch (Exception ex) { AppendLog($"[CLAN-CHAT-SAVE] {ex.Message}"); }
+    }
+
+    private void LoadClanChatHistory(ServerProfile? p)
+    {
+        lock (_clanChatHistoryLog) { _clanChatHistoryLog.Clear(); }
+        _lastClanChatTsForCurrentServer = null;
+
+        if (p == null) return;
+
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var path = GetChatCachePath(serverKey);
+            if (System.IO.File.Exists(path))
+            {
+                var json = System.IO.File.ReadAllText(path);
+                var loaded = JsonSerializer.Deserialize<List<TeamChatMessage>>(json);
+                if (loaded != null)
+                {
+                    lock (_clanChatHistoryLog)
+                    {
+                        foreach (var m in loaded)
+                        {
+                            _clanChatHistoryLog.Add(m);
+                            if (!_lastClanChatTsForCurrentServer.HasValue || m.Timestamp > _lastClanChatTsForCurrentServer.Value)
+                                _lastClanChatTsForCurrentServer = m.Timestamp;
+                        }
+                    }
+                }
+            }
+            AppendLog($"[CLAN-CHAT-LOAD] Loaded {_clanChatHistoryLog.Count} entries for {serverKey}");
+        }
+        catch (Exception ex) { AppendLog($"[CLAN-CHAT-LOAD] {ex.Message}"); }
+    }
+
     // Ersetzt deine bestehende SwitchCameraSourceTo Logic z.T.
     private void SwitchCameraSourceTo(ServerProfile? srv)
     {
@@ -1559,6 +1610,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             // If srv is null, we are effectively disconnecting from a server.
             // Save chat for the last profile, then clear camera IDs.
             SaveChatHistory(_lastChatProfile);
+            SaveClanChatHistory(_lastChatProfile);
             _lastChatProfile = null; // No current server
             _cameraIds = new ObservableCollection<string>();
             RebuildCameraTiles();
@@ -1567,9 +1619,11 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         // 1. Chat speichern (alter Server)
         SaveChatHistory(_lastChatProfile);
+        SaveClanChatHistory(_lastChatProfile);
         
         // 2. Chat laden (neuer Server)
         LoadChatHistory(srv);
+        LoadClanChatHistory(srv);
         
         _lastChatProfile = srv;
 
@@ -2744,7 +2798,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Also add it to the chat UI if the server is current!
         if (_vm.Selected != null && _vm.Selected.Host == c.Ip && _vm.Selected.Port == c.Port)
         {
-            AppendChatIfNew(c, isHistorical: false);
+            AppendChatIfNew(c, ChatChannel.Team, isHistorical: false);
         }
     }
 

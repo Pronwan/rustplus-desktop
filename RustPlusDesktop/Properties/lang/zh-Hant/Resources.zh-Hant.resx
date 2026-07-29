@@ -843,4 +843,10 @@
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>沒有任何教學會執行規則或切換真正的智慧裝置。</value>
   </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>戰隊</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>追蹤戰隊成員、他們的在線狀態、角色和備註</value>
+  </data>
 </root>
