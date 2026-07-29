@@ -22,17 +22,19 @@ public partial class MainWindow
 
         if (_isShowingDeepSeaMap)
         {
-            int dsCells = 20; // 3000m / 150m grid size
             var dsStroke = Brushes.Black;
             double dsThin = 1.0;
 
             double minX = -5250;
+            double maxX = -2250;
             double minY = 500;
             double maxY = 3500;
 
-            for (int i = 0; i <= dsCells; i++)
+            double startX = -6075;
+            for (double worldX = startX; worldX <= maxX + 150; worldX += 150)
             {
-                double worldX = minX + i * 150;
+                if (worldX < minX - 75 || worldX > maxX + 75) continue;
+
                 var pTop = WorldToImagePx(worldX, maxY);
                 var pBottom = WorldToImagePx(worldX, minY);
 
@@ -48,11 +50,13 @@ public partial class MainWindow
                 GridLayer.Children.Add(line);
             }
 
-            for (int j = 0; j <= dsCells; j++)
+            double startY = _worldSizeS + 75;
+            for (double worldY = startY; worldY >= minY - 150; worldY -= 150)
             {
-                double worldY = maxY - j * 150;
+                if (worldY < minY - 75 || worldY > maxY + 75) continue;
+
                 var pLeft = WorldToImagePx(minX, worldY);
-                var pRight = WorldToImagePx(minX + dsCells * 150, worldY);
+                var pRight = WorldToImagePx(maxX, worldY);
 
                 var line = new System.Windows.Shapes.Line
                 {
@@ -66,17 +70,19 @@ public partial class MainWindow
                 GridLayer.Children.Add(line);
             }
 
-            for (int i = 0; i < dsCells; i++)
-            {
-                for (int j = 0; j < dsCells; j++)
-                {
-                    double worldX = minX + i * 150;
-                    double worldY = maxY - j * 150;
+            int minCol = (int)Math.Floor((minX - startX) / 150.0);
+            int maxCol = (int)Math.Floor((maxX - startX) / 150.0);
+            int minRow = (int)Math.Floor((startY - maxY) / 150.0);
+            int maxRow = (int)Math.Floor((startY - minY) / 150.0);
 
-                    double centerY = worldY - 75;
-                    int row = (int)Math.Floor((_worldSizeS - centerY) / 150.0);
-                    int colIdx = (int)Math.Floor((worldX - (-6000)) / 150.0);
-                    string colStr = ColumnLabel(colIdx);
+            for (int col = minCol; col <= maxCol; col++)
+            {
+                string colStr = ColumnLabel(col);
+                double cellX = startX + col * 150;
+
+                for (int row = minRow; row <= maxRow; row++)
+                {
+                    double cellY = startY - row * 150;
 
                     var tb = new TextBlock
                     {
@@ -88,7 +94,7 @@ public partial class MainWindow
                         Padding = new Thickness(0)
                     };
 
-                    var p = WorldToImagePx(worldX, worldY);
+                    var p = WorldToImagePx(cellX, cellY);
 
                     GridLayer.Children.Add(tb);
                     Canvas.SetLeft(tb, p.X);
@@ -198,8 +204,8 @@ public partial class MainWindow
 
         if (_isShowingDeepSeaMap)
         {
-            int col = (int)Math.Floor((x - (-5250)) / 150.0);
-            int row = (int)Math.Floor((_worldSizeS - y) / 150.0);
+            int col = (int)Math.Floor((x - (-6075)) / 150.0);
+            int row = (int)Math.Floor((_worldSizeS + 75 - y) / 150.0);
             label = $"DS-{ColumnLabel(col)}{row}";
             return true;
         }
