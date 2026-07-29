@@ -26,11 +26,10 @@ public partial class MainWindow
             double dsThin = 1.0;
 
             double minX = -5975;
-            double maxX = -1925;
-            double minY = -300;
-            double maxY = 3750;
-
             int dsCells = 27;
+            double maxX = minX + dsCells * 150.0;
+            double maxY = _worldSizeS + 75;
+            double minY = maxY - dsCells * 150.0;
 
             // Draw vertical grid lines (columns A to AA, i.e., 27 cells)
             for (int col = 0; col <= dsCells; col++)
@@ -200,8 +199,9 @@ public partial class MainWindow
 
         if (x < -1000)
         {
+            double dsMaxY = _worldSizeS + 75;
             int col = (int)Math.Floor((x - (-5975)) / 150.0);
-            int row = (int)Math.Floor((3750 - y) / 150.0);
+            int row = (int)Math.Floor((dsMaxY - y) / 150.0);
             label = $"DS-{ColumnLabel(col)}{row}";
             return true;
         }
