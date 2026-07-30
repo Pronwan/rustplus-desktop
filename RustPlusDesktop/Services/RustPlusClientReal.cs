@@ -2874,7 +2874,13 @@ rp.connect();
             {
                 ClanId = Read<long>(root, "ClanId"),
                 Name = Read<string>(root, "Name") ?? "",
-                Motd = Read<string>(root, "Motd") ?? ""
+                Motd = Read<string>(root, "Motd") ?? "",
+                Created = Read<DateTime>(root, "Created"),
+                Creator = Read<ulong>(root, "Creator"),
+                MotdTimestamp = Read<DateTime?>(root, "MotdTimestamp"),
+                MotdAuthor = Read<ulong?>(root, "MotdAuthor"),
+                MaxMemberCount = Read<int?>(root, "MaxMemberCount"),
+                Score = Read<long?>(root, "Score")
             };
 
             // Roles Mapping

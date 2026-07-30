@@ -527,6 +527,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         DataContext = _vm;
         _vm.Load();
         InitializeTutorials();
+        TeamMembers.CollectionChanged += (s, e) => UpdateClanMembersTeamStatus();
         // NEU: einmalig auf die aktuell ausgewÃƒÂ¤hlte Server-Instanz Ã¢â‚¬Å¾umsteckenÃ¢â‚¬Å“
         SwitchCameraSourceTo(_vm.Selected);
 

@@ -2737,7 +2737,7 @@
                                 <Grid Background="#181A1E">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
+                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
                                     <Grid.Resources>
@@ -2746,8 +2746,8 @@
                                         <Style x:Key="Card" TargetType="Border">
                                             <Setter Property="CornerRadius" Value="10" />
                                             <Setter Property="Background" Value="#FF141F2D" />
-                                            <Setter Property="Padding" Value="8" />
-                                            <Setter Property="Margin" Value="6" />
+                                            <Setter Property="Padding" Value="6" />
+                                            <Setter Property="Margin" Value="4" />
                                         </Style>
                                     </Grid.Resources>
 
@@ -2761,7 +2761,7 @@
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListBox.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <WrapPanel />
+                                                <UniformGrid Columns="2" VerticalAlignment="Top" />
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
                                         <!--  KontextmenÃ¼  -->
@@ -2776,71 +2776,82 @@
                                         </ListBox.Resources>
 
                                         <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Width" Value="210" />
-                                                <!--  an deine Fensterbreite anpassen  -->
-                                                <Setter Property="Margin" Value="6" />
+                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="Margin" Value="4" />
+                                                <Setter Property="Padding" Value="0" />
                                                 <EventSetter Event="MouseLeftButtonUp" Handler="TeamItem_MouseLeftButtonUp" />
                                                 <Setter Property="ContextMenu" Value="{StaticResource TeamContextMenu}" />
                                             </Style>
                                         </ListBox.ItemContainerStyle>
 
                                         <ListBox.ItemTemplate>
-                                            <DataTemplate>
+                                                                            <DataTemplate>
                                                 <Border Style="{StaticResource Card}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="56" />
+                                                            <ColumnDefinition Width="32" />
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <CheckBox Grid.Column="0" IsChecked="{Binding ShowMarkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewMouseLeftButtonDown="TeamCheckBox_PreviewMouseLeftButtonDown" VerticalAlignment="Center" Margin="4,0,8,0" Cursor="Hand" ToolTip="{DynamicResource UiShowMarkersOnMap}" />
+                                                        <CheckBox Grid.Column="0" 
+                                                                  Style="{StaticResource DotCheckBox}"
+                                                                  IsChecked="{Binding ShowMarkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                                  PreviewMouseLeftButtonDown="TeamCheckBox_PreviewMouseLeftButtonDown" 
+                                                                  VerticalAlignment="Center" Margin="0" Cursor="Hand" 
+                                                                  ToolTip="{DynamicResource UiShowMarkersOnMap}" />
 
                                                         <!--  Avatar + Status  -->
-                                                        <Grid Grid.Column="1" Width="44" Height="44">
-                                                            <Image
-                                                                ClipToBounds="True"
-                                                                RenderOptions.BitmapScalingMode="HighQuality"
-                                                                Source="{Binding Avatar}"
-                                                                Stretch="UniformToFill" />
+                                                        <Grid Grid.Column="1" Width="32" Height="32" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                            <Border CornerRadius="4" ClipToBounds="True">
+                                                                <Image
+                                                                    ClipToBounds="True"
+                                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                                    Source="{Binding Avatar}"
+                                                                    Stretch="UniformToFill" />
+                                                            </Border>
 
                                                             <!--  Online (grÃ¼n)  -->
                                                             <Ellipse
-                                                                Width="12"
-                                                                Height="12"
+                                                                Width="10"
+                                                                Height="10"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Bottom"
+                                                                Margin="0,0,-2,-2"
                                                                 Fill="#4CAF50"
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
 
                                                             <!--  Offline (grau)  -->
                                                             <Ellipse
-                                                                Width="12"
-                                                                Height="12"
+                                                                Width="10"
+                                                                Height="10"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Bottom"
+                                                                Margin="0,0,-2,-2"
                                                                 Fill="#666"
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
 
                                                             <!--  Leader-Stern  -->
                                                             <Path
-                                                                Width="20"
-                                                                Height="20"
+                                                                Width="14"
+                                                                Height="14"
+                                                                Stretch="Uniform"
                                                                 HorizontalAlignment="Left"
                                                                 VerticalAlignment="Top"
+                                                                Margin="-3,-3,0,0"
                                                                 Data="M 10,1 12,7 19,7 13,11 15,18 10,14 5,18 7,11 1,7 8,7 z"
                                                                 Fill="Gold"
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
                                                             <TextBlock
                                                                 Text="{DynamicResource UiÐŸ}"
-                                                                FontSize="16"
+                                                                FontSize="12"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Top"
-                                                                Margin="0,-8,-8,0"
+                                                                Margin="0,-5,-5,0"
                                                                 RenderTransformOrigin="0.5,0.5"
                                                                 Visibility="{Binding IsAfk, Converter={StaticResource Vis}}">
                                                                 <TextBlock.RenderTransform>
@@ -2850,9 +2861,9 @@
                                                         </Grid>
 
                                                         <!--  Textseite  -->
-                                                        <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                                        <StackPanel Grid.Column="2" Margin="4,0,0,0" VerticalAlignment="Center">
                                                             <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
-                                                            <TextBlock FontSize="14" FontWeight="SemiBold">
+                                                            <TextBlock FontSize="11" FontWeight="SemiBold" TextTrimming="CharacterEllipsis">
                                                                 <TextBlock.Text>
                                                                     <Binding Path="DisplayName" />
                                                                 </TextBlock.Text>
@@ -2875,22 +2886,21 @@
                                                             </TextBlock>
 
                                                             <TextBlock
-                                                                FontSize="11"
+                                                                FontSize="9"
                                                                 Foreground="White"
                                                                 Opacity="0.65"
-                                                                Text="{Binding DisplaySteamId}" />
+                                                                Text="{Binding DisplaySteamId}"
+                                                                TextTrimming="CharacterEllipsis" />
                                                             <TextBlock
-                                                                FontSize="10"
+                                                                FontSize="8"
                                                                 Foreground="#FF8C00"
                                                                 FontWeight="SemiBold"
                                                                 Text="{Binding AfkText}"
-                                                                Visibility="{Binding IsAfk, Converter={StaticResource Vis}}" />
+                                                                Visibility="{Binding IsAfk, Converter={StaticResource Vis}}"
+                                                                TextTrimming="CharacterEllipsis" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
-
-
-
 
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
@@ -3056,7 +3066,9 @@
                             <Grid>
                                 <Grid Background="#181A1E">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" /> <!-- Header (Clan name, announcement) -->
+                                        <RowDefinition Height="*" />    <!-- List of members -->
+                                        <RowDefinition Height="Auto" /> <!-- Footer (Last pull, Refresh button, view switcher) -->
                                     </Grid.RowDefinitions>
 
                                     <Grid.Resources>
@@ -3070,18 +3082,95 @@
                                         </Style>
                                     </Grid.Resources>
 
+                                    <!-- Header Hover Details -->
+                                    <Grid Grid.Row="0" Margin="10,10,10,5">
+                                        <Border x:Name="ClanHeaderBorder" 
+                                                Background="#FF1A2737" 
+                                                CornerRadius="8" 
+                                                Padding="10,8" 
+                                                Cursor="Hand"
+                                                Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                                                ToolTipService.InitialShowDelay="0"
+                                                ToolTipService.ShowDuration="60000">
+                                            <Border.ToolTip>
+                                                <ToolTip Background="#FF141F2D" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="15"
+                                                         DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                    <StackPanel Width="250">
+                                                        <TextBlock Text="{Binding ClanName}" 
+                                                                   FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,0,0,10" />
+                                                        
+                                                        <!-- MOTD Card -->
+                                                        <Border Background="#FF1E2D42" CornerRadius="6" Padding="10" Margin="0,0,0,12">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding ClanMotd}" 
+                                                                           Foreground="White" FontSize="12" TextWrapping="Wrap" FontStyle="Italic" />
+                                                                <TextBlock Text="{Binding ClanMotdAuthorText}" 
+                                                                           Foreground="#FF8E9AA7" FontSize="10" Margin="0,6,0,0" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                        
+                                                        <!-- Details Grid -->
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            
+                                                            <!-- Score -->
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Score" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
+                                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ClanScoreText}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                            
+                                                            <!-- Members -->
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Members" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
+                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ClanMembersRatio}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                            
+                                                            <!-- Created -->
+                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Created" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
+                                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ClanCreatedText}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                            
+                                                            <!-- Founder -->
+                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Founder" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
+                                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ClanCreatorText}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                        </Grid>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Border.ToolTip>
+                                            
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ui:SymbolIcon Grid.Column="0" Symbol="Shield24" Foreground="{DynamicResource SystemAccentBrush}" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="18" />
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding ClanName, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='Clan Loading...'}" 
+                                                               Foreground="White" FontWeight="Bold" FontSize="14" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding ClanMotd, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='No Announcement'}" 
+                                                               Foreground="#FF8E9AA7" FontSize="11" FontStyle="Italic" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                                </StackPanel>
+                                                <ui:SymbolIcon Grid.Column="2" Symbol="Info24" Foreground="#FF8E9AA7" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
                                     <!--  ListBox of Clan Members  -->
                                     <ListBox
                                         x:Name="ClanList"
-                                        Grid.Row="0"
+                                        Grid.Row="1"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding ClanMembers, RelativeSource={RelativeSource AncestorType=Window}}"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel />
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
                                         <!--  Context Menu  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="ClanContextMenu" Style="{StaticResource DarkContextMenu}">
@@ -3090,80 +3179,215 @@
                                             </ContextMenu>
                                         </ListBox.Resources>
 
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Width" Value="210" />
-                                                <Setter Property="Margin" Value="6" />
-                                                <Setter Property="ContextMenu" Value="{StaticResource ClanContextMenu}" />
+                                        <ListBox.Style>
+                                            <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                                <!-- Default to Grid/Tile View (2 columns) -->
+                                                <Setter Property="ItemsPanel">
+                                                    <Setter.Value>
+                                                        <ItemsPanelTemplate>
+                                                            <UniformGrid Columns="2" VerticalAlignment="Top" />
+                                                        </ItemsPanelTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="ItemContainerStyle">
+                                                    <Setter.Value>
+                                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                            <Setter Property="Margin" Value="4" />
+                                                            <Setter Property="Padding" Value="0" />
+                                                            <Setter Property="ContextMenu" Value="{StaticResource ClanContextMenu}" />
+                                                        </Style>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="ItemTemplate">
+                                                    <Setter.Value>
+                                                        <!-- Grid/Tile View Item Template -->
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource ClanCard}" Padding="6">
+                                                                <!-- ToolTip for full info on hover -->
+                                                                <Border.ToolTip>
+                                                                    <ToolTip Background="#FF141F2D" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="12">
+                                                                        <StackPanel Width="220">
+                                                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Foreground="White" />
+                                                                            <TextBlock Text="{Binding RoleName, StringFormat='Role: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" />
+                                                                            <TextBlock Text="{Binding SteamId, StringFormat='Steam ID: {0}'}" Foreground="#FF8E9AA7" FontSize="10" Margin="0,2,0,0" />
+                                                                            <TextBlock Text="{Binding Notes, StringFormat='Note: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap" FontStyle="Italic" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}" />
+                                                                            <TextBlock Text="{Binding LastSeenText, StringFormat='Last Seen: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" />
+                                                                        </StackPanel>
+                                                                    </ToolTip>
+                                                                </Border.ToolTip>
+                                                                
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="38" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <!-- Avatar + Status -->
+                                                                    <Grid Grid.Column="0" Width="32" Height="32" VerticalAlignment="Top">
+                                                                        <Border CornerRadius="4" ClipToBounds="True">
+                                                                            <Image ClipToBounds="True" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Avatar}" Stretch="UniformToFill" />
+                                                                        </Border>
+                                                                        
+                                                                        <!-- Online dot -->
+                                                                        <Ellipse Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,-2" Fill="#4CAF50" Stroke="Black" Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+                                                                        <!-- Offline dot -->
+                                                                        <Ellipse Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,-2" Fill="#666" Stroke="Black" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
+                                                                    </Grid>
+
+                                                                    <!-- Details (Compacted) -->
+                                                                    <StackPanel Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                                        <!-- Name & Team Icon -->
+                                                                        <StackPanel Orientation="Horizontal" MaxWidth="120">
+                                                                            <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="11" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                                            <ui:SymbolIcon Symbol="People20" FontSize="10" Foreground="{DynamicResource SystemAccentBrush}" Margin="4,0,0,0" VerticalAlignment="Center" ToolTip="In your team" Visibility="{Binding IsInTeam, Converter={StaticResource Vis}}" />
+                                                                        </StackPanel>
+                                                                        
+                                                                        <!-- Role (Trimmed) -->
+                                                                        <TextBlock Text="{Binding RoleName}" Foreground="#FF9BA4B5" FontSize="9" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" MaxWidth="120" />
+                                                                        
+                                                                        <!-- Notes (Trimmed) -->
+                                                                        <TextBlock Text="{Binding Notes}" Foreground="#6C7A89" FontSize="8" FontStyle="Italic" TextTrimming="CharacterEllipsis" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}" Margin="0,1,0,0" MaxWidth="120" />
+                                                                        
+                                                                        <!-- Last Seen -->
+                                                                        <TextBlock Text="{Binding LastSeenText, StringFormat='seen: {0}'}" Foreground="#FF6C7A89" FontSize="8" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" MaxWidth="120" />
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                
+                                                <Style.Triggers>
+                                                    <!-- Switch to Compact List View -->
+                                                    <DataTrigger Binding="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                        <Setter Property="ItemsPanel">
+                                                            <Setter.Value>
+                                                                <ItemsPanelTemplate>
+                                                                    <VirtualizingStackPanel />
+                                                                </ItemsPanelTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="ItemContainerStyle">
+                                                            <Setter.Value>
+                                                                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                                    <Setter Property="Margin" Value="2,1" />
+                                                                    <Setter Property="Padding" Value="0" />
+                                                                    <Setter Property="ContextMenu" Value="{StaticResource ClanContextMenu}" />
+                                                                    <Setter Property="Background" Value="Transparent" />
+                                                                </Style>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="ItemTemplate">
+                                                            <Setter.Value>
+                                                                <DataTemplate>
+                                                                    <Border Style="{StaticResource ClanCard}" Background="#FF111924" Margin="2" Padding="8,6">
+                                                                        <StackPanel>
+                                                                            <!-- Header Row -->
+                                                                            <Grid Background="Transparent">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto" /> <!-- Status dot -->
+                                                                                    <ColumnDefinition Width="Auto" /> <!-- Rank Icon -->
+                                                                                    <ColumnDefinition Width="*" />    <!-- Name -->
+                                                                                    <ColumnDefinition Width="Auto" /> <!-- Role/Rank -->
+                                                                                </Grid.ColumnDefinitions>
+                                                                                
+                                                                                <!-- Status Dot -->
+                                                                                <Ellipse Grid.Column="0" Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0" Fill="#4CAF50" Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+                                                                                <Ellipse Grid.Column="0" Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0" Fill="#666" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
+                                                                                
+                                                                                <!-- Rank Icon (shield) -->
+                                                                                <ui:SymbolIcon Grid.Column="1" Symbol="Shield20" FontSize="11" Foreground="#FF9BA4B5" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                                                
+                                                                                <!-- Name & Team Icon -->
+                                                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                    <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
+                                                                                    <ui:SymbolIcon Symbol="People20" FontSize="10" Foreground="{DynamicResource SystemAccentBrush}" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="In your team" Visibility="{Binding IsInTeam, Converter={StaticResource Vis}}" />
+                                                                                </StackPanel>
+                                                                                
+                                                                                <!-- Role -->
+                                                                                <TextBlock Grid.Column="3" Text="{Binding RoleName}" Foreground="#FF6C7A89" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                                                            </Grid>
+                                                                            
+                                                                            <!-- Expanded Detail Section (visible on Selection) -->
+                                                                            <Border Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource Vis}}"
+                                                                                    BorderBrush="#FF1D2B3D" BorderThickness="0,1,0,0" Margin="0,6,0,0" Padding="0,6,0,0">
+                                                                                <StackPanel>
+                                                                                    <!-- Steam ID -->
+                                                                                    <Grid Margin="0,2,0,2">
+                                                                                        <TextBlock Text="Steam ID:" Foreground="#FF6C7A89" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding SteamId}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                    </Grid>
+                                                                                    <!-- Last Seen -->
+                                                                                    <Grid Margin="0,2,0,2" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}">
+                                                                                        <TextBlock Text="Last Seen:" Foreground="#FF6C7A89" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding LastSeenText}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                    </Grid>
+                                                                                    <!-- Notes -->
+                                                                                    <Grid Margin="0,2,0,2" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}">
+                                                                                        <TextBlock Text="Note:" Foreground="#FF6C7A89" FontSize="9" VerticalAlignment="Top" />
+                                                                                        <TextBlock Text="{Binding Notes}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" TextWrapping="Wrap" MaxWidth="180" FontStyle="Italic" />
+                                                                                    </Grid>
+                                                                                </StackPanel>
+                                                                            </Border>
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
                                             </Style>
-                                        </ListBox.ItemContainerStyle>
-
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Style="{StaticResource ClanCard}">
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="56" />
-                                                            <ColumnDefinition Width="*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <!--  Avatar + Status  -->
-                                                        <Grid Grid.Column="0" Width="44" Height="44">
-                                                            <Image
-                                                                ClipToBounds="True"
-                                                                RenderOptions.BitmapScalingMode="HighQuality"
-                                                                Source="{Binding Avatar}"
-                                                                Stretch="UniformToFill" />
-
-                                                            <!--  Online (grün)  -->
-                                                            <Ellipse
-                                                                Width="12"
-                                                                Height="12"
-                                                                HorizontalAlignment="Right"
-                                                                VerticalAlignment="Bottom"
-                                                                Fill="#4CAF50"
-                                                                Stroke="Black"
-                                                                Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
-
-                                                            <!--  Offline (grau)  -->
-                                                            <Ellipse
-                                                                Width="12"
-                                                                Height="12"
-                                                                HorizontalAlignment="Right"
-                                                                VerticalAlignment="Bottom"
-                                                                Fill="#666"
-                                                                Stroke="Black"
-                                                                Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
-                                                        </Grid>
-
-                                                        <!--  Name + Role + Notes  -->
-                                                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                                            <TextBlock
-                                                                Text="{Binding Name}"
-                                                                Foreground="White"
-                                                                FontWeight="SemiBold"
-                                                                FontSize="12"
-                                                                TextTrimming="CharacterEllipsis" />
-                                                            <TextBlock
-                                                                Text="{Binding RoleName}"
-                                                                Foreground="#FF9BA4B5"
-                                                                FontSize="10"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                Margin="0,2,0,0" />
-                                                            <TextBlock
-                                                                Text="{Binding Notes}"
-                                                                Foreground="#6C7A89"
-                                                                FontSize="9"
-                                                                FontStyle="Italic"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                Visibility="{Binding HasNotes, Converter={StaticResource Vis}}"
-                                                                Margin="0,2,0,0" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
+                                        </ListBox.Style>
                                     </ListBox>
+
+                                    <!-- Footer (Refresh & Mode Toggle) -->
+                                    <Grid Grid.Row="2" Margin="10,5,10,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <!-- Last pull timestamp -->
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="10" Foreground="#FF6C7A89">
+                                            <Run Text="Last pull: " />
+                                            <Run Text="{Binding LastClanPullTime, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='-'}" />
+                                        </TextBlock>
+                                        
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <!-- Toggle view button -->
+                                            <ui:Button Click="BtnToggleClanView_Click" 
+                                                       Width="28" Height="28" Padding="0" Margin="0,0,6,0" 
+                                                       Appearance="Secondary"
+                                                       ToolTip="Toggle List/Tile View">
+                                                <ui:Button.Content>
+                                                    <Grid>
+                                                        <!-- Grid icon -->
+                                                        <ui:SymbolIcon Symbol="Grid24" FontSize="14" Visibility="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}" />
+                                                        <!-- List icon -->
+                                                        <ui:SymbolIcon Symbol="List24" FontSize="14" Visibility="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisInv}}" />
+                                                    </Grid>
+                                                </ui:Button.Content>
+                                            </ui:Button>
+                                            
+                                            <!-- Refresh button -->
+                                            <ui:Button Click="BtnRefreshClan_Click" 
+                                                       Width="28" Height="28" Padding="0" Margin="0,0,6,0"
+                                                       Appearance="Secondary"
+                                                       ToolTip="Refresh Clan Info">
+                                                <ui:SymbolIcon Symbol="ArrowCounterclockwise24" FontSize="14" />
+                                            </ui:Button>
+                                            
+                                            <!-- Chat button -->
+                                            <ui:Button Click="BtnOpenClanChat_Click" 
+                                                       Width="28" Height="28" Padding="0"
+                                                       Appearance="Secondary"
+                                                       ToolTip="Open Clan Chat">
+                                                <ui:SymbolIcon Symbol="Chat24" FontSize="14" />
+                                            </ui:Button>
+                                        </StackPanel>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </TabItem>

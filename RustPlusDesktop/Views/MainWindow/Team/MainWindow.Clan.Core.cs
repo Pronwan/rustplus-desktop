@@ -13,11 +13,126 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views
 {
-    public partial class MainWindow
+    public partial class MainWindow : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // --- Clan Info Properties ---
+        private string _clanName = "";
+        public string ClanName
+        {
+            get => _clanName;
+            set { if (_clanName == value) return; _clanName = value; OnPropertyChanged(nameof(ClanName)); }
+        }
+
+        private string _clanMotd = "";
+        public string ClanMotd
+        {
+            get => _clanMotd;
+            set { if (_clanMotd == value) return; _clanMotd = value; OnPropertyChanged(nameof(ClanMotd)); }
+        }
+
+        private string _clanCreatedText = "";
+        public string ClanCreatedText
+        {
+            get => _clanCreatedText;
+            set { if (_clanCreatedText == value) return; _clanCreatedText = value; OnPropertyChanged(nameof(ClanCreatedText)); }
+        }
+
+        private string _clanCreatorText = "";
+        public string ClanCreatorText
+        {
+            get => _clanCreatorText;
+            set { if (_clanCreatorText == value) return; _clanCreatorText = value; OnPropertyChanged(nameof(ClanCreatorText)); }
+        }
+
+        private string _clanMotdAuthorText = "";
+        public string ClanMotdAuthorText
+        {
+            get => _clanMotdAuthorText;
+            set { if (_clanMotdAuthorText == value) return; _clanMotdAuthorText = value; OnPropertyChanged(nameof(ClanMotdAuthorText)); }
+        }
+
+        private int _clanMaxMemberCount;
+        public int ClanMaxMemberCount
+        {
+            get => _clanMaxMemberCount;
+            set { if (_clanMaxMemberCount == value) return; _clanMaxMemberCount = value; OnPropertyChanged(nameof(ClanMaxMemberCount)); }
+        }
+
+        private int _clanMemberCount;
+        public int ClanMemberCount
+        {
+            get => _clanMemberCount;
+            set { if (_clanMemberCount == value) return; _clanMemberCount = value; OnPropertyChanged(nameof(ClanMemberCount)); }
+        }
+
+        private string _clanMembersRatio = "";
+        public string ClanMembersRatio
+        {
+            get => _clanMembersRatio;
+            set { if (_clanMembersRatio == value) return; _clanMembersRatio = value; OnPropertyChanged(nameof(ClanMembersRatio)); }
+        }
+
+        private string _clanScoreText = "";
+        public string ClanScoreText
+        {
+            get => _clanScoreText;
+            set { if (_clanScoreText == value) return; _clanScoreText = value; OnPropertyChanged(nameof(ClanScoreText)); }
+        }
+
+        private string _lastClanPullTime = "";
+        public string LastClanPullTime
+        {
+            get => _lastClanPullTime;
+            set { if (_lastClanPullTime == value) return; _lastClanPullTime = value; OnPropertyChanged(nameof(LastClanPullTime)); }
+        }
+
+        private bool _hasClanInfo;
+        public bool HasClanInfo
+        {
+            get => _hasClanInfo;
+            set { if (_hasClanInfo == value) return; _hasClanInfo = value; OnPropertyChanged(nameof(HasClanInfo)); }
+        }
+
+        private bool _isClanListView;
+        public bool IsClanListView
+        {
+            get => _isClanListView;
+            set { if (_isClanListView == value) return; _isClanListView = value; OnPropertyChanged(nameof(IsClanListView)); }
+        }
+
         public ObservableCollection<ClanMemberVM> ClanMembers { get; } = new();
 
         private DateTime _lastClanPoll = DateTime.MinValue;
+
+        private async Task<string> GetSteamNameAsync(ulong steamId)
+        {
+            if (steamId == 0) return "";
+            if (_steamNames.TryGetValue(steamId, out var name)) return name;
+
+            try
+            {
+                using var http = new HttpClient();
+                var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
+                var mName = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]></steamID>", RegexOptions.IgnoreCase);
+                if (mName.Success)
+                {
+                    var fetchedName = mName.Groups[1].Value;
+                    _steamNames[steamId] = fetchedName;
+                    return fetchedName;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[clan-steam-name] {steamId}: {ex.Message}");
+            }
+            return steamId.ToString();
+        }
 
         public async Task LoadClanAsync()
         {
@@ -27,6 +142,38 @@ namespace RustPlusDesk.Views
             {
                 var clan = await _real.GetClanInfoAsync();
                 if (clan is null) return;
+
+                ClanName = clan.Name;
+                ClanMotd = clan.Motd;
+                ClanCreatedText = clan.Created != default ? clan.Created.ToString("dd/MM/yyyy") : "-";
+                ClanMaxMemberCount = clan.MaxMemberCount ?? 100;
+                ClanMemberCount = clan.Members.Count;
+                ClanMembersRatio = $"{ClanMemberCount} / {ClanMaxMemberCount}";
+                ClanScoreText = clan.Score?.ToString() ?? "-";
+                LastClanPullTime = DateTime.Now.ToString("HH:mm:ss");
+                HasClanInfo = true;
+
+                // Load Creator / Founder Name
+                _ = Task.Run(async () =>
+                {
+                    var founder = await GetSteamNameAsync(clan.Creator);
+                    App.Current.Dispatcher.Invoke(() => ClanCreatorText = founder);
+                });
+
+                // Load MOTD Author Name
+                if (clan.MotdAuthor.HasValue && clan.MotdAuthor.Value != 0)
+                {
+                    _ = Task.Run(async () =>
+                    {
+                        var author = await GetSteamNameAsync(clan.MotdAuthor.Value);
+                        var dateStr = clan.MotdTimestamp?.ToString("dd/MM/yyyy") ?? "";
+                        App.Current.Dispatcher.Invoke(() => ClanMotdAuthorText = $"Set by {author} on {dateStr}");
+                    });
+                }
+                else
+                {
+                    ClanMotdAuthorText = "";
+                }
 
                 // Sync: remove members that are no longer in the clan
                 var currentClanIds = clan.Members.Select(m => m.SteamId).ToHashSet();
@@ -59,6 +206,7 @@ namespace RustPlusDesk.Views
                     vm.LastSeen = m.LastSeen;
                     vm.Notes = m.Notes;
                     vm.IsOnline = m.IsOnline;
+                    vm.IsInTeam = TeamMembers.Any(tm => tm.SteamId == sid);
 
                     // Fetch avatar and SteamID name in the background
                     if (vm.Avatar == null || vm.Name == "(player)")
@@ -158,6 +306,31 @@ namespace RustPlusDesk.Views
                 catch { }
             }
         }
+
+        private async void BtnRefreshClan_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await LoadClanAsync();
+        }
+
+        private void BtnToggleClanView_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            IsClanListView = !IsClanListView;
+        }
+
+        private async void BtnOpenClanChat_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            TabClanChat.IsChecked = true;
+            await OpenChatOverlayAsync();
+        }
+
+        private void UpdateClanMembersTeamStatus()
+        {
+            var teamIds = TeamMembers.Select(tm => tm.SteamId).ToHashSet();
+            foreach (var vm in ClanMembers)
+            {
+                vm.IsInTeam = teamIds.Contains(vm.SteamId);
+            }
+        }
     }
 
     public sealed class ClanMemberVM : INotifyPropertyChanged
@@ -166,6 +339,13 @@ namespace RustPlusDesk.Views
         private void OnChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public ulong SteamId { get; init; }
+
+        private bool _isInTeam;
+        public bool IsInTeam
+        {
+            get => _isInTeam;
+            set { if (_isInTeam == value) return; _isInTeam = value; OnChanged(nameof(IsInTeam)); }
+        }
 
         private string _name = "(player)";
         public string Name
@@ -213,8 +393,16 @@ namespace RustPlusDesk.Views
         public DateTime LastSeen
         {
             get => _lastSeen;
-            set { if (_lastSeen == value) return; _lastSeen = value; OnChanged(nameof(LastSeen)); }
+            set 
+            { 
+                if (_lastSeen == value) return; 
+                _lastSeen = value; 
+                OnChanged(nameof(LastSeen)); 
+                OnChanged(nameof(LastSeenText)); 
+            }
         }
+
+        public string LastSeenText => (LastSeen == default || LastSeen == DateTime.MinValue) ? "Never" : LastSeen.ToString("g");
 
         private string _notes = "";
         public string Notes
