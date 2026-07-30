@@ -113,7 +113,26 @@
                                 Modernised the left sidebar and general UI, added an animated startup splash screen, and completely redesigned the settings menu and structure with a new search bar and dedicated Alarms settings.
                             </TextBlock>
 
+                            <TextBlock Text="🛡️ Clan Integration" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Redesigned Clan Sidebar:</Run>
+                                A redesigned sidebar for clan details, announcements, score, founder, member count, and list/tile switcher.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Detailed Member Cards:</Run>
+                                View clan member details, including roles, online/offline status, last seen timestamps, Steam IDs, and custom notes.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Clan Chat Integration:</Run>
+                                Full support for reading and writing messages in the Clan Chat directly inside the application.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Discord Forwarding:</Run>
+                                Automatic transmission of clan chat messages to your Discord team-chat channel via the Advanced Discord Bot.
+                            </TextBlock>
+
                             <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/clan_chat.jpg" Description="Redesigned Clan sidebar with a list/tile view switcher, roles, online status, last seen stats, Steam IDs, notes, full Clan Chat integration, and Discord forwarding"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/DeepSea.png" Description="Full virtual Deep Sea map support with automatic view toggling, Floating City tracking, and precise grid coordinate mapping"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/tutorials.png" Description="New fully localised guided tutorial system"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-ui.png" Description="Redesigned left sidebar workspace and modernized UI"/>

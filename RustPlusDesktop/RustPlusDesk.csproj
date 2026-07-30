@@ -555,6 +555,7 @@
     <Resource Include="Assets\Screenshots\v7.1.5\*.png" />
     <Resource Include="Assets\Screenshots\7.1.8\*.png" />
     <Resource Include="Assets\Screenshots\8.0\*.png" />
+    <Resource Include="Assets\Screenshots\8.0\clan_chat.jpg" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">
