@@ -1157,7 +1157,7 @@
                             Margin="0,4,0,4"
                             Background="#12FFFFFF" />
 
-                        <Grid Margin="0,2,0,0">
+                        <Grid Margin="0,2,0,0" Visibility="{Binding IsSelected, ElementName=PlayersTabItem, Converter={StaticResource BoolToVisibility}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -1215,7 +1215,8 @@
                         <Border
                             Height="1"
                             Margin="0,8,0,8"
-                            Background="#12FFFFFF" />
+                            Background="#12FFFFFF"
+                            Visibility="{Binding IsSelected, ElementName=PlayersTabItem, Converter={StaticResource BoolToVisibility}}" />
                     </StackPanel>
 
                     <!--  BOTTOM: Footer (Support + Serverdaten) andocken  -->
