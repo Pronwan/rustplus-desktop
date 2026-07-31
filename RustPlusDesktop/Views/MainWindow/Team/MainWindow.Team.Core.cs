@@ -31,6 +31,9 @@ public partial class MainWindow
 
         public int MissingCount { get; set; }
         public ulong SteamId { get; init; }
+        private bool _afkAlertSent;
+        public bool HasReturnedFromAfk { get; set; }
+        public TimeSpan ReturnedAfkDuration { get; set; }
 
         private string _name = "(player)";
         public string Name
@@ -149,6 +152,12 @@ public partial class MainWindow
                 double dist = Math.Sqrt(dx * dx + dy * dy);
                 if (dist > 0.05)
                 {
+                    if (_afkAlertSent)
+                    {
+                        HasReturnedFromAfk = true;
+                        ReturnedAfkDuration = DateTime.UtcNow - _lastMoveTime;
+                        _afkAlertSent = false;
+                    }
                     _lastMoveTime = DateTime.UtcNow;
                 }
             }
@@ -160,33 +169,47 @@ public partial class MainWindow
             Y = y;
         }
 
-        public bool UpdateAfkState(DateTime now)
+        public bool UpdateAfkState(DateTime now, int alertThresholdMinutes)
         {
             if (!IsOnline || IsDead)
             {
                 _lastMoveTime = now;
                 IsAfk = false;
                 AfkText = string.Empty;
+                _afkAlertSent = false;
+                HasReturnedFromAfk = false;
                 return false;
             }
 
             var elapsed = now - _lastMoveTime;
             if (elapsed.TotalMinutes >= 5)
             {
-                bool becameAfk = !_isAfk;
                 IsAfk = true;
                 int totalSecs = (int)elapsed.TotalSeconds;
                 int mins = totalSecs / 60;
                 int secs = totalSecs % 60;
                 AfkText = $"AFK: {mins}:{secs:D2}";
-                return becameAfk;
             }
             else
             {
                 IsAfk = false;
                 AfkText = string.Empty;
-                return false;
             }
+
+            if (elapsed.TotalMinutes >= alertThresholdMinutes)
+            {
+                if (!_afkAlertSent)
+                {
+                    _afkAlertSent = true;
+                    return true;
+                }
+            }
+            else
+            {
+                _afkAlertSent = false;
+            }
+
+            return false;
         }
 
         private ImageSource? _avatar;
@@ -216,6 +239,7 @@ public partial class MainWindow
 
     private void StartTeamPolling()
     {
+        _teamConnectionSessionId++;
         if (_teamTimer != null) return;
         _teamTimer = new System.Windows.Threading.DispatcherTimer
         {
@@ -235,7 +259,7 @@ public partial class MainWindow
 
     private void StopTeamPolling()
     {
-        NotifyTeamFeatureServerDisconnected();
+        NotifyTeamFeatureServerDisconnected(_teamConnectionSessionId);
 
         var t = _teamTimer;
         if (t != null)
@@ -263,13 +287,26 @@ public partial class MainWindow
         var now = DateTime.UtcNow;
         foreach (var m in TeamMembers)
         {
-            if (m.UpdateAfkState(now))
+            if (m.UpdateAfkState(now, TrackingService.AfkAlertMinutes))
             {
                 if (_announceSpawns && TrackingService.AnnouncePlayerAfk)
                 {
                     string dispName = GetDisplayPlayerName(m.Name);
-                    string chatText = $"{dispName} AFK: 5:00";
-                    string discordText = $"💤 {dispName} AFK: 5:00";
+                    string chatText = AlertTemplateService.GetFormattedAlert("AlertPlayerAfk", dispName, TrackingService.AfkAlertMinutes);
+                    string discordText = $"💤 {chatText}";
+                    _ = SendTeamChatSafeAsync(chatText, discordText: discordText);
+                }
+            }
+
+            if (m.HasReturnedFromAfk)
+            {
+                m.HasReturnedFromAfk = false;
+                if (_announceSpawns && TrackingService.AnnouncePlayerAfkReturn)
+                {
+                    string dispName = GetDisplayPlayerName(m.Name);
+                    string durationStr = $"{(int)m.ReturnedAfkDuration.TotalHours:D2}:{m.ReturnedAfkDuration.Minutes:D2}";
+                    string chatText = AlertTemplateService.GetFormattedAlert("AlertPlayerAfkReturn", dispName, durationStr);
+                    string discordText = $"🏃 {chatText}";
                     _ = SendTeamChatSafeAsync(chatText, discordText: discordText);
                 }
             }

@@ -1529,6 +1529,12 @@
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>اللاعب {0} خرج من السيرفر (أوفلاين)</value>
   </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} غائب (AFK): {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} لم يعد غائبًا (AFK) الآن. كان غائبًا لمدة {1}</value>
+  </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>مات اللاعب {0} عند الإحداثية {1}</value>
   </data>
@@ -2495,6 +2501,24 @@
   <data name="AlertPlayerOfflineVars" xml:space="preserve">
     <value>{0}: Player Name</value>
   </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>اللاعب غائب (AFK)</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>يتم إرساله عندما يصبح عضو الفريق المتعقب غائبًا (غير نشط).</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: اسم اللاعب، {1}: حد التنبيه (بالدقائق)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>عودة اللاعب من الغياب (AFK)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>يتم إرساله عندما يعود عضو الفريق المتعقب من الغياب (يصبح نشطًا مرة أخرى).</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: اسم اللاعب، {1}: مدة الغياب (ساعة:دقيقة)</value>
+  </data>
   <data name="AlertPlayerDiedName" xml:space="preserve">
     <value>Player Died</value>
   </data>
@@ -2548,15 +2572,6 @@
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
     <value>لا أحد AFK.</value>
-  </data>
-  <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>اللاعب AFK</value>
-  </data>
-  <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>يتم إرساله عندما يكون أحد أعضاء الفريق AFK لفترة طويلة.</value>
-  </data>
-  <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: اسم اللاعب، {1}: الوقت</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>ابحث عن أيقونة عنصر لهذا الجهاز وحددها.</value>
@@ -2794,6 +2809,9 @@
   </data>
   <data name="UiText5MinAFK" xml:space="preserve">
     <value>5 دقائق AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>حد الغياب (AFK)</value>
   </data>
   <data name="UiText50Fastest" xml:space="preserve">
     <value>50% (الأسرع)</value>

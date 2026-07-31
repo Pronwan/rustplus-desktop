@@ -100,6 +100,8 @@ public class TrackingSettings
     public bool AnnouncePlayerOnline { get; set; } = false;
     public bool AnnouncePlayerOffline { get; set; } = false;
     public bool AnnouncePlayerAfk { get; set; } = false;
+    public bool AnnouncePlayerAfkReturn { get; set; } = false;
+    public int AfkAlertMinutes { get; set; } = 5;
     public bool AnnouncePlayerDeathSelf { get; set; } = false;
     public bool AnnouncePlayerDeathTeam { get; set; } = false;
     public bool AnnouncePlayerRespawnSelf { get; set; } = false;
@@ -682,6 +684,16 @@ public static class TrackingService
     {
         get => _settings.AnnouncePlayerAfk;
         set { _settings.AnnouncePlayerAfk = value; SaveDB(); }
+    }
+    public static bool AnnouncePlayerAfkReturn
+    {
+        get => _settings.AnnouncePlayerAfkReturn;
+        set { _settings.AnnouncePlayerAfkReturn = value; SaveDB(); }
+    }
+    public static int AfkAlertMinutes
+    {
+        get => _settings.AfkAlertMinutes;
+        set { _settings.AfkAlertMinutes = value; SaveDB(); }
     }
     public static bool AnnouncePlayerDeathSelf
     {

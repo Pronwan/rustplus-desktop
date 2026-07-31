@@ -2092,18 +2092,19 @@ rp.connect();
         }
     }
 
-    private void Api_OnClanChatReceived(object? sender, object e)
+    private void Api_OnClanChatReceived(object? sender, ClanMessageEventArg e)
     {
         try
         {
-            string author = TryGetStringProp(e, "Username", "Name", "User") ?? "Unbekannt";
-            string text = TryGetStringProp(e, "Message", "Body", "Text") ?? string.Empty;
-            long? unix = TryGetLongishProp(e, "Time", "Timestamp");
-            ulong steamId = (ulong)(TryGetLongishProp(e, "SteamId", "UserId", "PlayerId") ?? 0);
+            string author = e.Name ?? "Unbekannt";
+            string text = e.Message ?? string.Empty;
+            ulong steamId = e.SteamId;
 
-            var tsUtc = unix.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).UtcDateTime
-                : DateTime.UtcNow;
+            // e.Time is a DateTime; convert to UTC if it isn't already
+            var tsUtc = e.Time.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(e.Time, DateTimeKind.Utc)
+                : e.Time.ToUniversalTime();
+            if (tsUtc == default) tsUtc = DateTime.UtcNow;
 
             ClanChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
         }
@@ -2760,18 +2761,9 @@ rp.connect();
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
         if (_isClanChatPrimed) return;
 
-        try
-        {
-            var clanChatEvent = _api.GetType().GetEvent("OnClanChatReceived");
-            if (clanChatEvent != null && clanChatEvent.EventHandlerType != null)
-            {
-                var d = Delegate.CreateDelegate(clanChatEvent.EventHandlerType, this,
-                    GetType().GetMethod(nameof(Api_OnClanChatReceived), BindingFlags.NonPublic | BindingFlags.Instance)!);
-                clanChatEvent.RemoveEventHandler(_api, d);
-                clanChatEvent.AddEventHandler(_api, d);
-            }
-        }
-        catch { }
+        // Wire the strongly-typed event directly (no reflection needed).
+        _api.OnClanChatReceived -= Api_OnClanChatReceived;
+        _api.OnClanChatReceived += Api_OnClanChatReceived;
 
         try
         {

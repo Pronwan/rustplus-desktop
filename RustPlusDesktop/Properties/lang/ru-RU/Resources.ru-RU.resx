@@ -1530,6 +1530,12 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} ушла в оффлайн</value>
   </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} отошел (AFK): {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} больше не AFK. Был AFK в течение {1}</value>
+  </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} умер {1}</value>
   </data>
@@ -2408,6 +2414,24 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AlertPlayerOfflineVars" xml:space="preserve">
     <value>{0}: Player Name</value>
   </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Игрок AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Отправляется, когда отслеживаемый участник команды отходит (становится неактивным).</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Имя игрока, {1}: Порог оповещения (минуты)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>Игрок вернулся из AFK</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>Отправляется, когда отслеживаемый участник команды возвращается из AFK (снова становится активным).</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: Имя игрока, {1}: Длительность AFK (ЧЧ:ММ)</value>
+  </data>
   <data name="AlertPlayerDiedName" xml:space="preserve">
     <value>Player Died</value>
   </data>
@@ -2461,15 +2485,6 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
     <value>Никто не AFK.</value>
-  </data>
-  <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>Игрок AFK</value>
-  </data>
-  <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>Отправляется, когда член команды слишком долго находится в AFK.</value>
-  </data>
-  <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: Имя игрока, {1}: Время</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>Найдите и выберите значок предмета для этого устройства.</value>
@@ -2797,6 +2812,9 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="UiText5MinAFK" xml:space="preserve">
     <value>5 минут АФК</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>Порог AFK</value>
   </data>
   <data name="UiText50Fastest" xml:space="preserve">
     <value>50% (самый быстрый)</value>

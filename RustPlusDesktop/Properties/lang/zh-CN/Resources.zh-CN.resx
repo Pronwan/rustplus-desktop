@@ -1530,6 +1530,12 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} 下线</value>
   </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} 挂机 (AFK): {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} 已结束挂机。挂机时长 {1}</value>
+  </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} 死于 {1}</value>
   </data>
@@ -2576,6 +2582,15 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: 玩家名称, {1}: 时间</value>
   </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>玩家结束挂机</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>当被追踪的队友结束挂机（重新开始活动）时发送。</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: 玩家名字, {1}: 挂机时长 (小时:分钟)</value>
+  </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>搜索并选择此设备的物品图标。</value>
   </data>
@@ -2797,6 +2812,9 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="UiText5MinAFK" xml:space="preserve">
     <value>5 分钟 AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>AFK 阈值</value>
   </data>
   <data name="UiText50Fastest" xml:space="preserve">
     <value>50%（最快）</value>

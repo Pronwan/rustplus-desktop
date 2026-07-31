@@ -2848,7 +2848,7 @@
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsLeader, Converter={StaticResource Vis}}" />
                                                             <TextBlock
-                                                                Text="{DynamicResource UiÐŸ}"
+                                                                Text="&#x1F4A4;"
                                                                 FontSize="12"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Top"
@@ -3410,7 +3410,7 @@
                                     Orientation="Horizontal">
                                     <Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add" Style="{StaticResource PrimaryButton}">
                                         <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource UiÐŸ2}" />
+                                            <TextBlock VerticalAlignment="Center" Text="&#x1F4F7;" />
                                             <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
                                         </StackPanel>
                                     </Button>                                </StackPanel>
@@ -4888,12 +4888,64 @@
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="PlayerOffline" />
                                                          <MenuItem
-                                                             Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource UiText5MinAFK}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
+                                                             Header="{DynamicResource AlertPlayerAfkName}"
                                                              Style="{StaticResource DarkMenuItem}"
-                                                             Tag="PlayerAfk" />
+                                                             Tag="PlayerAfkParent">
+                                                             <MenuItem
+                                                                 Click="Alert_MenuItem_Click"
+                                                                 Header="{DynamicResource CodeUiEnabled}"
+                                                                 IsCheckable="True"
+                                                                 StaysOpenOnClick="True"
+                                                                 Style="{StaticResource DarkMenuItem}"
+                                                                 Tag="PlayerAfk" />
+                                                             <MenuItem
+                                                                 Click="Alert_MenuItem_Click"
+                                                                 Header="{DynamicResource AlertPlayerAfkReturnName}"
+                                                                 IsCheckable="True"
+                                                                 StaysOpenOnClick="True"
+                                                                 Style="{StaticResource DarkMenuItem}"
+                                                                 Tag="PlayerAfkReturn" />
+                                                             <Separator Style="{StaticResource DarkSeparator}" />
+                                                             <MenuItem
+                                                                 Header="{DynamicResource UiTextAfkThreshold}"
+                                                                 Style="{StaticResource DarkMenuItem}">
+                                                                 <MenuItem
+                                                                     Click="AfkMinutes_Click"
+                                                                     Header="5 min"
+                                                                     IsCheckable="True"
+                                                                     StaysOpenOnClick="True"
+                                                                     Style="{StaticResource DarkMenuItem}"
+                                                                     Tag="Afk_5" />
+                                                                 <MenuItem
+                                                                     Click="AfkMinutes_Click"
+                                                                     Header="10 min"
+                                                                     IsCheckable="True"
+                                                                     StaysOpenOnClick="True"
+                                                                     Style="{StaticResource DarkMenuItem}"
+                                                                     Tag="Afk_10" />
+                                                                 <MenuItem
+                                                                     Click="AfkMinutes_Click"
+                                                                     Header="15 min"
+                                                                     IsCheckable="True"
+                                                                     StaysOpenOnClick="True"
+                                                                     Style="{StaticResource DarkMenuItem}"
+                                                                     Tag="Afk_15" />
+                                                                 <MenuItem
+                                                                     Click="AfkMinutes_Click"
+                                                                     Header="20 min"
+                                                                     IsCheckable="True"
+                                                                     StaysOpenOnClick="True"
+                                                                     Style="{StaticResource DarkMenuItem}"
+                                                                     Tag="Afk_20" />
+                                                                 <MenuItem
+                                                                     Click="AfkMinutes_Click"
+                                                                     Header="30 min"
+                                                                     IsCheckable="True"
+                                                                     StaysOpenOnClick="True"
+                                                                     Style="{StaticResource DarkMenuItem}"
+                                                                     Tag="Afk_30" />
+                                                             </MenuItem>
+                                                         </MenuItem>
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource AnnounceTracking}"

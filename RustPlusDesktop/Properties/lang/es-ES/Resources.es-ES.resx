@@ -1530,6 +1530,12 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} se desconectó</value>
   </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} está AFK: {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} ya no está AFK. Estuvo AFK por {1}</value>
+  </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} murió en {1}</value>
   </data>
@@ -2360,6 +2366,15 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: Nombre del jugador, {1}: Tiempo</value>
   </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>Jugador volvió de AFK</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>Enviado cuando un miembro del equipo vuelve de estar AFK (comienza a moverse).</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: Nombre del jugador, {1}: Duración AFK (HH:MM)</value>
+  </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>Busca y selecciona un icono de objeto para este dispositivo.</value>
   </data>
@@ -2797,6 +2812,9 @@ Primero empareje este servidor.</value>
   </data>
   <data name="UiText5MinAFK" xml:space="preserve">
     <value>5 min AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>Umbral de AFK</value>
   </data>
   <data name="UiText50Fastest" xml:space="preserve">
     <value>50% (más rápido)</value>

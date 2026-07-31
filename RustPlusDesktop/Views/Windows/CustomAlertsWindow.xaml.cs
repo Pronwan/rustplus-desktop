@@ -40,6 +40,8 @@ namespace RustPlusDesk.Views.Windows
                 "AlertHeliShotDown",
                 "AlertPlayerOnlineWithPos",
                 "AlertPlayerOffline",
+                "AlertPlayerAfk",
+                "AlertPlayerAfkReturn",
                 "AlertPlayerDied",
                 "AlertPlayerRespawned",
                 "AlertTrackingOnline",

@@ -1590,6 +1590,12 @@ Rust+ Desktop registriert deine lokale App bei FCM, damit sie dieselben Rust+-Be
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} offline gegangen</value>
   </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} ist AFK: {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} ist nicht mehr AFK. War AFK für {1}</value>
+  </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} gestorben @ {1}</value>
   </data>
@@ -2573,6 +2579,24 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="AlertPlayerOfflineVars" xml:space="preserve">
     <value>{0}: Spielername</value>
   </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Spieler AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Wird gesendet, wenn ein verfolgtes Teammitglied AFK (inaktiv) wird.</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Spielername, {1}: Alarm-Schwellenwert (Minuten)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>Spieler zurück von AFK</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>Wird gesendet, wenn ein verfolgtes Teammitglied von AFK zurückkehrt (wieder aktiv wird).</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: Spielername, {1}: AFK-Dauer (HH:MM)</value>
+  </data>
   <data name="AlertPlayerDiedName" xml:space="preserve">
     <value>Spieler gestorben</value>
   </data>
@@ -2626,15 +2650,6 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
     <value>Niemand ist AFK.</value>
-  </data>
-  <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>Spieler AFK</value>
-  </data>
-  <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>Wird gesendet, wenn ein Teammitglied zu lange AFK ist.</value>
-  </data>
-  <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: Spielername, {1}: Zeit</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>Suchen und wählen Sie ein Gegenstandssymbol für dieses Gerät aus.</value>
@@ -2857,6 +2872,9 @@ Bitte koppeln Sie diesen Server zuerst.</value>
   </data>
   <data name="UiText5MinAFK" xml:space="preserve">
     <value>5 Minuten AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>AFK-Schwellenwert</value>
   </data>
   <data name="UiText50Fastest" xml:space="preserve">
     <value>50 % (am schnellsten)</value>

@@ -5109,6 +5109,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnouncePlayerOnline = val;
         TrackingService.AnnouncePlayerOffline = val;
         TrackingService.AnnouncePlayerAfk = val;
+        TrackingService.AnnouncePlayerAfkReturn = val;
         TrackingService.AnnouncePlayerDeathSelf = val;
         TrackingService.AnnouncePlayerDeathTeam = val;
         TrackingService.AnnouncePlayerRespawnSelf = val;
@@ -5138,7 +5139,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnounceCargoEgress && !TrackingService.AnnounceCargoArrival &&
                !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
                !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
-               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline && !TrackingService.AnnouncePlayerAfk &&
+               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
+               !TrackingService.AnnouncePlayerAfk && !TrackingService.AnnouncePlayerAfkReturn &&
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
@@ -5187,6 +5189,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
                 case "PlayerAfk": TrackingService.AnnouncePlayerAfk = val; break;
+                case "PlayerAfkReturn": TrackingService.AnnouncePlayerAfkReturn = val; break;
                 case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
                 case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
@@ -5220,6 +5223,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private void AfkMinutes_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag && tag.StartsWith("Afk_"))
+        {
+            if (int.TryParse(tag.Substring(4), out int minutes))
+            {
+                TrackingService.AfkAlertMinutes = minutes;
+                SyncAlertMenuItems();
+            }
+        }
+    }
+
     private void GenericAlarmSetting_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
@@ -5244,6 +5259,57 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             "Audio" => TrackingService.GenericAlarmAudioEnabled,
             _ => false
         };
+    }
+
+    private void CmbAfkMinutes_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is ComboBox cmb)
+        {
+            cmb.Text = TrackingService.AfkAlertMinutes.ToString();
+        }
+    }
+
+    private void CmbAfkMinutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox cmb && cmb.SelectedItem is ComboBoxItem item && int.TryParse(item.Content?.ToString(), out int val))
+        {
+            if (val > 0)
+            {
+                TrackingService.AfkAlertMinutes = val;
+            }
+        }
+    }
+
+    private void CmbAfkMinutes_LostFocus(object sender, RoutedEventArgs e)
+    {
+        SaveAfkMinutesFromText(sender as ComboBox);
+    }
+
+    private void CmbAfkMinutes_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            SaveAfkMinutesFromText(sender as ComboBox);
+            e.Handled = true;
+        }
+    }
+
+    private void SaveAfkMinutesFromText(ComboBox? cmb)
+    {
+        if (cmb == null) return;
+        if (int.TryParse(cmb.Text, out int val) && val > 0)
+        {
+            TrackingService.AfkAlertMinutes = val;
+        }
+        else
+        {
+            cmb.Text = TrackingService.AfkAlertMinutes.ToString();
+        }
+    }
+
+    private void ComboBox_MouseDownPreventClose(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
     }
 
     private void GenericAlarmAudioMenu_Click(object sender, RoutedEventArgs e)
@@ -5286,6 +5352,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             TrackingService.AnnouncePlayerOnline,
             TrackingService.AnnouncePlayerOffline,
             TrackingService.AnnouncePlayerAfk,
+            TrackingService.AnnouncePlayerAfkReturn,
             TrackingService.AnnouncePlayerDeathSelf,
             TrackingService.AnnouncePlayerDeathTeam,
             TrackingService.AnnouncePlayerRespawnSelf,
@@ -5329,15 +5396,36 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             bool isSelected = false;
             switch (tag)
             {
-                case "Cargo": 
+                case "Cargo":
+                case "PlayerAfkParent":
                 case "Partial":
-                    bool cs = TrackingService.AnnounceCargo;
-                    bool cd = TrackingService.AnnounceCargoDocking;
-                    bool ce = TrackingService.AnnounceCargoEgress;
-                    bool ca = TrackingService.AnnounceCargoArrival;
-                    if (cs && cd && ce && ca) { isSelected = true; mi.Tag = "Cargo"; }
-                    else if (cs || cd || ce || ca) { isSelected = true; mi.Tag = "Partial"; }
-                    else { isSelected = false; mi.Tag = "Cargo"; }
+                    bool isCargo = false;
+                    foreach (var item in mi.Items)
+                    {
+                        if (item is MenuItem sub && sub.Tag is string subTag && subTag.StartsWith("Cargo"))
+                        {
+                            isCargo = true;
+                            break;
+                        }
+                    }
+                    if (isCargo || tag == "Cargo")
+                    {
+                        bool cs = TrackingService.AnnounceCargo;
+                        bool cd = TrackingService.AnnounceCargoDocking;
+                        bool ce = TrackingService.AnnounceCargoEgress;
+                        bool ca = TrackingService.AnnounceCargoArrival;
+                        if (cs && cd && ce && ca) { isSelected = true; mi.Tag = "Cargo"; }
+                        else if (cs || cd || ce || ca) { isSelected = true; mi.Tag = "Partial"; }
+                        else { isSelected = false; mi.Tag = "Cargo"; }
+                    }
+                    else
+                    {
+                        bool afk = TrackingService.AnnouncePlayerAfk;
+                        bool ret = TrackingService.AnnouncePlayerAfkReturn;
+                        if (afk && ret) { isSelected = true; mi.Tag = "PlayerAfkParent"; }
+                        else if (afk || ret) { isSelected = true; mi.Tag = "Partial"; }
+                        else { isSelected = false; mi.Tag = "PlayerAfkParent"; }
+                    }
                     break;
                 case "CargoSpawn": isSelected = TrackingService.AnnounceCargo; break;
                 case "CargoDock": isSelected = TrackingService.AnnounceCargoDocking; break;
@@ -5356,6 +5444,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
                 case "PlayerAfk": isSelected = TrackingService.AnnouncePlayerAfk; break;
+                case "PlayerAfkReturn": isSelected = TrackingService.AnnouncePlayerAfkReturn; break;
+                case "Afk_5": isSelected = TrackingService.AfkAlertMinutes == 5; break;
+                case "Afk_10": isSelected = TrackingService.AfkAlertMinutes == 10; break;
+                case "Afk_15": isSelected = TrackingService.AfkAlertMinutes == 15; break;
+                case "Afk_20": isSelected = TrackingService.AfkAlertMinutes == 20; break;
+                case "Afk_30": isSelected = TrackingService.AfkAlertMinutes == 30; break;
                 case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
                 case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;

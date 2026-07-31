@@ -1551,6 +1551,12 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} went offline</value>
   </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} is AFK: {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} is not AFK anymore. Was AFK for {1}</value>
+  </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} died @ {1}</value>
   </data>
@@ -2604,6 +2610,24 @@ Please pair this server first.</value>
   <data name="AlertPlayerOfflineVars" xml:space="preserve">
     <value>{0}: Player Name</value>
   </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>Player AFK</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>Sent when a tracked team member goes AFK (inactive).</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: Alert Threshold (Minutes)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>Player Return from AFK</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>Sent when a tracked team member returns from AFK (becomes active again).</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: Player Name, {1}: AFK Duration (HH:MM)</value>
+  </data>
   <data name="AlertPlayerDiedName" xml:space="preserve">
     <value>Player Died</value>
   </data>
@@ -2657,15 +2681,6 @@ Please pair this server first.</value>
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
     <value>No one is AFK.</value>
-  </data>
-  <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>Player AFK</value>
-  </data>
-  <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>Sent when a team member is AFK for too long.</value>
-  </data>
-  <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: Player Name, {1}: Time</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>Search and select an item icon for this device.</value>
@@ -2800,6 +2815,9 @@ Please pair this server first.</value>
   </data>
   <data name="UiText5MinAFK" xml:space="preserve">
     <value>5 min AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>AFK Threshold</value>
   </data>
   <data name="UiText50Fastest" xml:space="preserve">
     <value>50% (Fastest)</value>
