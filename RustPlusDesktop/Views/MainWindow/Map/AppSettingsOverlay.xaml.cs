@@ -84,7 +84,9 @@ namespace RustPlusDesk.Views
                 new() { Name = "Afrikaans",          Code = "af-ZA",  ImagePath = "pack://application:,,,/Assets/Flags/af.png" },
             };
 
-            CmbLanguage.ItemsSource = langs.OrderBy(l => l.Code == "" ? 1 : 0).ThenBy(l => l.Name).ToList();
+            CmbLanguage.ItemsSource = langs
+                .Where(l => l.Code is "en-US" or "de-DE" or "ru-RU")
+                .ToList();
         }
 
         public void LoadSettings()

@@ -268,16 +268,13 @@ public partial class App : Application
         try
         {
             string lang = TrackingService.SelectedLanguage;
-            CultureInfo culture;
+            if (lang is not "ru-RU" and not "en-US" and not "de-DE")
+            {
+                lang = "en-US";
+                TrackingService.SelectedLanguage = lang;
+            }
 
-            if (string.IsNullOrEmpty(lang))
-            {
-                culture = CultureInfo.InstalledUICulture;
-            }
-            else
-            {
-                culture = new CultureInfo(lang);
-            }
+            var culture = new CultureInfo(lang);
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
@@ -335,19 +332,12 @@ public partial class App : Application
         var rm = RustPlusDesk.Properties.Resources.ResourceManager;
         var values = new Dictionary<string, string>(StringComparer.Ordinal);
 
-        var neutralSet = rm.GetResourceSet(CultureInfo.InvariantCulture, true, false);
-        if (neutralSet != null)
+        foreach (var fallbackCulture in GetResourceFallbacks(culture))
         {
-            foreach (System.Collections.DictionaryEntry entry in neutralSet)
-            {
-                if (entry.Key is string key && entry.Value is string value && !string.IsNullOrWhiteSpace(value))
-                    values[key] = value;
-            }
-        }
+            var resourceSet = rm.GetResourceSet(fallbackCulture, true, false);
+            if (resourceSet == null)
+                continue;
 
-        var resourceSet = rm.GetResourceSet(culture, true, true);
-        if (resourceSet != null)
-        {
             foreach (System.Collections.DictionaryEntry entry in resourceSet)
             {
                 if (entry.Key is string key && entry.Value is string value && !string.IsNullOrWhiteSpace(value))
@@ -356,6 +346,16 @@ public partial class App : Application
         }
 
         return values;
+    }
+
+    private static IEnumerable<CultureInfo> GetResourceFallbacks(CultureInfo culture)
+    {
+        // Later sets override earlier ones: Russian → English → German fallback.
+        yield return new CultureInfo("de-DE");
+        if (!string.Equals(culture.Name, "de-DE", StringComparison.OrdinalIgnoreCase))
+            yield return new CultureInfo("en-US");
+        if (string.Equals(culture.Name, "ru-RU", StringComparison.OrdinalIgnoreCase))
+            yield return new CultureInfo("ru-RU");
     }
 
     private void ApplyDynamicResources(IReadOnlyDictionary<string, string> resourceMap)
