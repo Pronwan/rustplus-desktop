@@ -133,9 +133,9 @@ public partial class MainWindow
 
         if (_isShowingDeepSeaMap)
         {
-            double minX = -6075;
+            double minX = -6055.0;
             double maxX = minX + 27 * 150.0;
-            double maxY = 3900;
+            double maxY = 3913.0;
             double minY = maxY - 27 * 150.0;
 
             double xx = Math.Clamp(x, minX, maxX);

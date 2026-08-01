@@ -25,16 +25,17 @@ public partial class MainWindow
             var dsStroke = Brushes.Black;
             double dsThin = 1.0;
 
-            double minX = -6075;
+            double minX = -6055.0;
             int dsCells = 27;
-            double maxX = minX + dsCells * 150.0;
-            double maxY = 3900;
-            double minY = maxY - dsCells * 150.0;
+            double cellSize = 150.0;
+            double maxX = minX + dsCells * cellSize;
+            double maxY = 3913.0;
+            double minY = maxY - dsCells * cellSize;
 
             // Draw vertical grid lines (columns A to AA, i.e., 27 cells)
             for (int col = 0; col <= dsCells; col++)
             {
-                double worldX = minX + col * 150.0;
+                double worldX = minX + col * cellSize;
                 var pTop = WorldToImagePx(worldX, maxY);
                 var pBottom = WorldToImagePx(worldX, minY);
 
@@ -53,7 +54,7 @@ public partial class MainWindow
             // Draw horizontal grid lines (rows 0 to 26)
             for (int row = 0; row <= dsCells; row++)
             {
-                double worldY = maxY - row * 150.0;
+                double worldY = maxY - row * cellSize;
                 var pLeft = WorldToImagePx(minX, worldY);
                 var pRight = WorldToImagePx(maxX, worldY);
 
@@ -73,11 +74,11 @@ public partial class MainWindow
             for (int col = 0; col < dsCells; col++)
             {
                 string colStr = ColumnLabel(col);
-                double cellX = minX + col * 150.0;
+                double cellX = minX + col * cellSize;
 
                 for (int row = 0; row < dsCells; row++)
                 {
-                    double cellY = maxY - row * 150.0;
+                    double cellY = maxY - row * cellSize;
 
                     var tb = new TextBlock
                     {
@@ -199,8 +200,9 @@ public partial class MainWindow
 
         if (x < -1000)
         {
-            double dsMaxY = 3900;
-            int col = (int)Math.Floor((x - (-6075)) / 150.0);
+            double dsMinX = -6055.0;
+            double dsMaxY = 3913.0;
+            int col = (int)Math.Floor((x - dsMinX) / 150.0);
             int row = (int)Math.Floor((dsMaxY - y) / 150.0);
             label = $"DS-{ColumnLabel(col)}{row}";
             return true;
