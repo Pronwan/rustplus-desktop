@@ -25,12 +25,9 @@ public partial class MainWindow
             var dsStroke = Brushes.Black;
             double dsThin = 1.0;
 
-            double minX = -6055.0;
-            int dsCells = 27;
-            double cellSize = 150.0;
-            double maxX = minX + dsCells * cellSize;
-            double maxY = 3913.0;
-            double minY = maxY - dsCells * cellSize;
+            int dsCells = DeepSeaCells;
+            double cellSize = DeepSeaCellSize;
+            var (minX, maxX, minY, maxY) = GetDeepSeaWorldBox();
 
             // Draw vertical grid lines (columns A to AA, i.e., 27 cells)
             for (int col = 0; col <= dsCells; col++)
@@ -200,10 +197,9 @@ public partial class MainWindow
 
         if (x < -1000)
         {
-            double dsMinX = -6055.0;
-            double dsMaxY = 3913.0;
-            int col = (int)Math.Floor((x - dsMinX) / 150.0);
-            int row = (int)Math.Floor((dsMaxY - y) / 150.0);
+            var (dsMinX, _, _, dsMaxY) = GetDeepSeaWorldBox();
+            int col = (int)Math.Floor((x - dsMinX) / DeepSeaCellSize);
+            int row = (int)Math.Floor((dsMaxY - y) / DeepSeaCellSize);
             label = $"DS-{ColumnLabel(col)}{row}";
             return true;
         }

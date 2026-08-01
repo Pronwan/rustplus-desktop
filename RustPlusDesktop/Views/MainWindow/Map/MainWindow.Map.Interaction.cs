@@ -133,10 +133,7 @@ public partial class MainWindow
 
         if (_isShowingDeepSeaMap)
         {
-            double minX = -6055.0;
-            double maxX = minX + 27 * 150.0;
-            double maxY = 3913.0;
-            double minY = maxY - 27 * 150.0;
+            var (minX, maxX, minY, maxY) = GetDeepSeaWorldBox();
 
             double xx = Math.Clamp(x, minX, maxX);
             double yy = Math.Clamp(y, minY, maxY);

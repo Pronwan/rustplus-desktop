@@ -14,6 +14,36 @@ public partial class MainWindow
     private bool _myPlayerWasInDeepSea = false;
     private readonly List<FrameworkElement> _deepSeaOverlayElements = new();
 
+    // The Deep Sea is a FIXED instance (same for every server): always 27x27 cells,
+    // and it sits at a FIXED position in Unity/world space. It is NOT scaled by the
+    // main map size. What changes per map is only the on-screen offset, because
+    // Rust+ reports coordinates relative to the map center (serverCoord = Unity + S/2).
+    // So the box is anchored to S/2 while its cell size and extent stay constant.
+    //
+    // Cell size and anchor from cross-map least-squares fits of on-grid-line points
+    // in Unity coords (fixed box => single line across all maps). serverCoord = Unity + S/2.
+    // Widest clean baseline: 3500 col 24 (-4344.12) <-> col 1 (-7751.9), 23 cells => 148.16 m.
+    // X points (col, Unity X): 3750 c19 -5082.80 / -5085.00 ; 3500 c24 -4344.12, c4 -7307.87,
+    //                          c3 -7455.86, c1 -7751.90
+    // Y points (row, Unity Z): 3750 r8 814.62, r21 -1111.81, r23 -1409.49 ;
+    //                          3500 r7 962.93, r6 1111.43
+    //   => cell ~= 148.20 m (both axes), minX_unity = -7900.5, maxY_unity = 2000.4.
+    // Residuals are sub-meter, i.e. at the limit of how precisely one can stand on a cross
+    // + read printpos (the same col-19 line read twice differs by 2.2 m).
+    public const int DeepSeaCells = 27;
+    public const double DeepSeaCellSize = 148.20;
+    private const double DeepSeaBoxSize = DeepSeaCells * DeepSeaCellSize; // ~4001.4
+
+    private (double minX, double maxX, double minY, double maxY) GetDeepSeaWorldBox()
+    {
+        double half = _worldSizeS / 2.0;
+        double minX = half - 7900.5;
+        double maxX = minX + DeepSeaBoxSize;
+        double maxY = half + 2000.4;
+        double minY = maxY - DeepSeaBoxSize;
+        return (minX, maxX, minY, maxY);
+    }
+
     private void SetShowingDeepSeaMap(bool show)
     {
         if (_isShowingDeepSeaMap == show) return;
