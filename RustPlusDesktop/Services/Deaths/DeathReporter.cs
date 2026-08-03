@@ -2,50 +2,21 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using RustPlusDesk.Services.Auth;
-using RustPlusDesk.Services.Cloud;
 
 namespace RustPlusDesk.Services.Deaths
 {
     /// <summary>
-    /// Persists a detected death. Every account keeps a local JSON-lines log
-    /// (the free tier); premium accounts on the platform backend also push it to
-    /// the shared team death log. Cloud failures are swallowed — the local record
-    /// is the source of truth and a later sync/backfill can reconcile.
+    /// Persists a detected death to a local JSON-lines log.
     /// </summary>
     public static class DeathReporter
     {
         public static async Task ReportAsync(DeathRecord death, string serverKey)
         {
             AppendLocal(death, serverKey);
-
-            if (!CloudBackend.UsePlatform || !SupabaseAuthManager.IsPremium)
-                return;
-
-            try
-            {
-                await CloudApiClient.TryCallApiAsync("sync/deaths", HttpMethod.Post, payload: new
-                {
-                    server_key = serverKey,
-                    victim_steam_id = death.SteamId.ToString(CultureInfo.InvariantCulture),
-                    victim_name = death.Name,
-                    pos_x = death.X,
-                    pos_y = death.Y,
-                    grid = death.Grid,
-                    location_type = death.LocationType,
-                    location_name = death.LocationName,
-                    died_at = ToIso(death.DeathTime),
-                    spawn_at = death.SpawnTime.HasValue ? ToIso(death.SpawnTime.Value) : null,
-                });
-            }
-            catch
-            {
-                // Best-effort: the local log already has it.
-            }
+            await Task.CompletedTask;
         }
 
         /// <summary>Directory holding the per-server local death logs.</summary>
