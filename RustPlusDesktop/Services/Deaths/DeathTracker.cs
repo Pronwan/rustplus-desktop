@@ -16,6 +16,7 @@ namespace RustPlusDesk.Services.Deaths
     public sealed class DeathTracker
     {
         private readonly Dictionary<ulong, long> _lastDeathTime = new();
+        private readonly Dictionary<ulong, long> _spawnObserved = new();
         private readonly Dictionary<ulong, bool> _wasDead = new();
         private bool _baselineEstablished;
 
@@ -23,6 +24,7 @@ namespace RustPlusDesk.Services.Deaths
         public void Reset()
         {
             _lastDeathTime.Clear();
+            _spawnObserved.Clear();
             _wasDead.Clear();
             _baselineEstablished = false;
         }
@@ -31,12 +33,20 @@ namespace RustPlusDesk.Services.Deaths
         {
             var deaths = new List<DeathRecord>();
 
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
             foreach (var member in team.Members)
             {
                 if (member.SteamId == 0)
                     continue;
 
                 bool wasDead = _wasDead.TryGetValue(member.SteamId, out var wd) && wd;
+
+                // A dead→alive edge is a respawn — remember when, so the next death's
+                // survival time can be derived even when the proto omits SpawnTime.
+                if (wasDead && !member.Dead)
+                    _spawnObserved[member.SteamId] = member.SpawnTime is > 0 ? member.SpawnTime.Value : now;
+
                 _wasDead[member.SteamId] = member.Dead;
 
                 bool isNewDeath;
@@ -52,7 +62,7 @@ namespace RustPlusDesk.Services.Deaths
                 {
                     // No authoritative timestamp — treat the alive→dead edge as the death.
                     isNewDeath = member.Dead && !wasDead;
-                    deathTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    deathTime = now;
                 }
 
                 if (!isNewDeath)
@@ -64,12 +74,17 @@ namespace RustPlusDesk.Services.Deaths
                 if (!_baselineEstablished)
                     continue;
 
+                // Prefer the proto's spawn time; otherwise the last respawn we saw.
+                long? spawnTime = member.SpawnTime is > 0
+                    ? member.SpawnTime.Value
+                    : (_spawnObserved.TryGetValue(member.SteamId, out var so) ? so : (long?)null);
+
                 var (type, name) = classifier.Classify(member.X, member.Y);
                 deaths.Add(new DeathRecord(
                     member.SteamId,
                     member.Name,
                     deathTime,
-                    member.SpawnTime,
+                    spawnTime,
                     member.X,
                     member.Y,
                     classifier.Grid(member.X, member.Y),

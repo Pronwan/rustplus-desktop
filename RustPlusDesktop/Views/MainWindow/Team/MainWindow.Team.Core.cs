@@ -400,9 +400,10 @@ public partial class MainWindow
             _deathTrackerServerKey = serverKey;
         }
 
-        // Reuse the app's shared grid math so death grids match chat/marker output.
+        // Monuments compare in world space; bases are resolved in overlay-pixel
+        // space (ResolveBaseAt); grid reuses the app's shared math.
         var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
-            BuildBaseZones(), BuildMonumentZones(), (x, y) => GetGridLabel(x, y));
+            BuildMonumentZones(), (x, y) => ResolveBaseAt(x, y), (x, y) => GetGridLabel(x, y));
 
         foreach (var death in _deathTracker.Observe(team, classifier))
         {
@@ -417,13 +418,48 @@ public partial class MainWindow
         }
     }
 
-    // Base classification is deferred: base markers are overlay icons stored in
-    // image-pixel space (SavedIcon.X/Y), so matching them against a death's world
-    // position needs the inverse of the padded/deep-sea-aware WorldToImagePx
-    // transform. Until that's wired, a death at a base near a monument classifies
-    // as "monument", otherwise "open".
-    private IReadOnlyList<RustPlusDesk.Services.Deaths.DeathZone> BuildBaseZones()
-        => System.Array.Empty<RustPlusDesk.Services.Deaths.DeathZone>();
+    // Radius (world units) around a base marker that still counts as "at base".
+    private const double BaseRadiusWorld = 75.0;
+
+    // Resolve whether a death happened at one of my base markers. Base icons are
+    // overlay elements in pixel space, so instead of inverting the map transform
+    // we project the death's world position into pixels with WorldToImagePx and
+    // compare there. Returns the base's note/label, or null when not at a base.
+    private string? ResolveBaseAt(double worldX, double worldY)
+    {
+        var data = BuildCurrentOverlaySaveDataForMe();
+        if (data.Icons.Count == 0)
+            return null;
+
+        var deathPx = WorldToImagePx(worldX, worldY);
+        // Convert the world radius to pixels at the current map scale.
+        var edgePx = WorldToImagePx(worldX + BaseRadiusWorld, worldY);
+        double radiusPx = Math.Abs(edgePx.X - deathPx.X);
+        if (radiusPx <= 0)
+            return null;
+
+        string? best = null;
+        double bestDistance = double.MaxValue;
+
+        foreach (var icon in data.Icons)
+        {
+            if (!RustPlusDesk.Services.Data.OverlayDataModule.IsBaseIconPath(icon.IconPath))
+                continue;
+
+            double cx = icon.X + (icon.Width / 2.0);
+            double cy = icon.Y + (icon.Height / 2.0);
+            double dx = deathPx.X - cx;
+            double dy = deathPx.Y - cy;
+            double distance = Math.Sqrt((dx * dx) + (dy * dy));
+            if (distance <= radiusPx && distance < bestDistance)
+            {
+                bestDistance = distance;
+                best = string.IsNullOrWhiteSpace(icon.Note) ? "Base" : icon.Note;
+            }
+        }
+
+        return best;
+    }
 
     // Monuments come from the map (GetMapWithMonumentsAsync) in world coordinates,
     // the same space as death positions, so they compare directly. The radius is

@@ -6,27 +6,29 @@ namespace RustPlusDesk.Services.Deaths
     /// <summary>
     /// Classifies a death's map position into base / monument / open. A base
     /// always wins over a monument (a base built at a monument is still "your
-    /// base"); otherwise the nearest zone whose radius contains the point wins.
-    /// The monument radius is what makes "died approaching the monument" count as
-    /// a monument death.
+    /// base"); otherwise the nearest monument whose radius contains the point
+    /// wins. The monument radius is what makes "died approaching the monument"
+    /// count as a monument death.
     ///
-    /// The grid label is delegated to the app's shared coordinate→grid math
-    /// (the same GetGridLabel the chat notifications and map markers use), so the
-    /// death log matches what the client already shows for a death/spawn.
+    /// Monuments compare in world coordinates. Bases live in the overlay's pixel
+    /// space, so their check is delegated to the app (it converts the death's
+    /// world position with the map transform and compares there). The grid label
+    /// is likewise delegated to the app's shared GetGridLabel so the death log
+    /// matches the chat/marker output.
     /// </summary>
     public sealed class DeathLocationClassifier
     {
-        private readonly IReadOnlyList<DeathZone> _bases;
         private readonly IReadOnlyList<DeathZone> _monuments;
+        private readonly Func<double, double, string?> _baseResolver;
         private readonly Func<double, double, string?> _gridResolver;
 
         public DeathLocationClassifier(
-            IReadOnlyList<DeathZone> bases,
             IReadOnlyList<DeathZone> monuments,
+            Func<double, double, string?> baseResolver,
             Func<double, double, string?> gridResolver)
         {
-            _bases = bases;
             _monuments = monuments;
+            _baseResolver = baseResolver;
             _gridResolver = gridResolver;
         }
 
@@ -35,9 +37,9 @@ namespace RustPlusDesk.Services.Deaths
             if (x is null || y is null)
                 return ("open", null);
 
-            var baseHit = Nearest(_bases, x.Value, y.Value);
-            if (baseHit is not null)
-                return ("base", baseHit.Value.Name);
+            var baseName = _baseResolver(x.Value, y.Value);
+            if (!string.IsNullOrEmpty(baseName))
+                return ("base", baseName);
 
             var monHit = Nearest(_monuments, x.Value, y.Value);
             if (monHit is not null)
