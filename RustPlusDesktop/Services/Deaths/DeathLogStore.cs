@@ -24,6 +24,12 @@ namespace RustPlusDesk.Services.Deaths
         public IReadOnlyList<VictimStat> ByVictim { get; init; } = Array.Empty<VictimStat>();
         public IReadOnlyList<LocationStat> ByLocation { get; init; } = Array.Empty<LocationStat>();
         public IReadOnlyList<RecentDeath> Recent { get; init; } = Array.Empty<RecentDeath>();
+
+        public bool HasData => Total > 0;
+
+        public string Headline => Total == 0
+            ? "No deaths logged yet for this server."
+            : $"{Total} death(s) across {Victims} player(s).";
     }
 
     /// <summary>
