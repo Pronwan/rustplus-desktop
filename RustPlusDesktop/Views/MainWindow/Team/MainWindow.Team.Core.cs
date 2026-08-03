@@ -404,7 +404,8 @@ public partial class MainWindow
         var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
             BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y));
 
-        foreach (var death in _deathTracker.Observe(team, classifier))
+        var deaths = _deathTracker.Observe(team, classifier);
+        foreach (var death in deaths)
         {
             try
             {
@@ -415,6 +416,10 @@ public partial class MainWindow
                 // Reporting must never break the team refresh.
             }
         }
+
+        // Refresh the map heatmap so a new death shows up live.
+        if (deaths.Count > 0 && _showDeathHeatmap)
+            RedrawDeathHeatmap();
     }
 
     // Open the in-app death stats window (reads the local death log for this server).

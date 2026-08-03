@@ -6648,6 +6648,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _showDeathMarkers = TrackingService.MapShowDeathTags;
         if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
 
+        _showDeathHeatmap = TrackingService.MapShowDeathHeatmap;
+        if (ChkDeathHeatmap != null) ChkDeathHeatmap.IsChecked = _showDeathHeatmap;
+
         _abbreviateNames = TrackingService.MapAbbreviateNames;
         if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
 

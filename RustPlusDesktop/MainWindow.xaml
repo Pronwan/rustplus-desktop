@@ -4238,6 +4238,13 @@
                                             Tag="Middle"
                                             Unchecked="ChkShops_Checked" />
                                         <CheckBox
+                                            x:Name="ChkDeathHeatmap"
+                                            Checked="ChkDeathHeatmap_Checked"
+                                            Content="Deaths"
+                                            Style="{StaticResource PillToggleButton}"
+                                            Tag="Middle"
+                                            Unchecked="ChkDeathHeatmap_Checked" />
+                                        <CheckBox
                                             x:Name="ChkNoBuildZones"
                                             IsEnabled="False"
                                             Checked="ChkNoBuildZones_Checked"

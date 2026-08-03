@@ -67,6 +67,7 @@ public class TrackingSettings
     public bool MapShowSteamMarkers { get; set; } = true;
     public bool MapShowPlayerArrows { get; set; } = true;
     public bool MapShowDeathTags { get; set; } = false;
+    public bool MapShowDeathHeatmap { get; set; } = false;
     public int MaxSelfDeathMarkers { get; set; } = 3;
     public int MaxTeamDeathMarkers { get; set; } = 3;
     public bool MapAbbreviateNames { get; set; } = false;
@@ -923,6 +924,11 @@ public static class TrackingService
     {
         get => _settings.MapShowDeathTags;
         set { _settings.MapShowDeathTags = value; SaveDB(); }
+    }
+    public static bool MapShowDeathHeatmap
+    {
+        get => _settings.MapShowDeathHeatmap;
+        set { _settings.MapShowDeathHeatmap = value; SaveDB(); }
     }
     public static int MaxSelfDeathMarkers
     {

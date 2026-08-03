@@ -51,9 +51,20 @@ namespace RustPlusDesk.Services.Deaths
             public string? name { get; set; }
             public long died_at { get; set; }
             public long? spawn_at { get; set; }
+            public double? x { get; set; }
+            public double? y { get; set; }
             public string? grid { get; set; }
             public string? location_type { get; set; }
             public string? location_name { get; set; }
+        }
+
+        /// <summary>World positions of every logged death for a server, for the heatmap.</summary>
+        public static List<(double X, double Y)> LoadPositions(string? serverKey)
+        {
+            return ReadEntries(serverKey)
+                .Where(e => e.x.HasValue && e.y.HasValue)
+                .Select(e => (e.x!.Value, e.y!.Value))
+                .ToList();
         }
 
         /// <summary>Delete the local death log for a server.</summary>
