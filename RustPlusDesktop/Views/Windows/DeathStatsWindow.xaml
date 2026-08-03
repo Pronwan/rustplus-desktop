@@ -102,18 +102,22 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="SearchBox" Grid.Column="0" Height="30" Margin="0,0,8,0"
                              VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged"
                              ToolTip="Search by victim, location or grid" />
-                    <ComboBox x:Name="TypeFilter" Grid.Column="1" Width="130" Height="30" Margin="0,0,8,0"
+                    <!-- Populated in code from the team players in the log. -->
+                    <ComboBox x:Name="PlayerFilter" Grid.Column="1" Width="150" Height="30" Margin="0,0,8,0"
+                              Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed" />
+                    <ComboBox x:Name="TypeFilter" Grid.Column="2" Width="130" Height="30" Margin="0,0,8,0"
                               Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed">
                         <ComboBoxItem Content="All places" Tag="all" IsSelected="True" />
                         <ComboBoxItem Content="Monument" Tag="monument" />
                         <ComboBoxItem Content="Base" Tag="base" />
                         <ComboBoxItem Content="Open" Tag="open" />
                     </ComboBox>
-                    <ComboBox x:Name="RangeFilter" Grid.Column="2" Width="120" Height="30"
+                    <ComboBox x:Name="RangeFilter" Grid.Column="3" Width="120" Height="30"
                               Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed">
                         <ComboBoxItem Content="All time" Tag="all" IsSelected="True" />
                         <ComboBoxItem Content="Last 24h" Tag="24h" />
@@ -184,6 +188,13 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <!-- Deaths-per-day sparkline (built in code from DeathsPerDay) -->
+                    <TextBlock Text="Deaths per day (last 14 days)" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel x:Name="SparklineHost" Orientation="Horizontal" Height="48"
+                                    Margin="6,4,6,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                    </Border>
 
                     <!-- By location -->
                     <TextBlock Text="By location" Style="{StaticResource SectionTitle}" />

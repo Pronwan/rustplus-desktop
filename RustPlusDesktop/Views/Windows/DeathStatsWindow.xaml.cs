@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using RustPlusDesk.Services.Deaths;
 
 namespace RustPlusDesk.Views.Windows
@@ -25,11 +26,38 @@ namespace RustPlusDesk.Views.Windows
             Reload();
         }
 
+        private static readonly Brush SparkBrush = MakeFrozen(Color.FromRgb(0xEF, 0x6C, 0x33));
+        private static readonly Brush SparkZeroBrush = MakeFrozen(Color.FromArgb(0x55, 0x9D, 0x9D, 0x9D));
+
+        private static Brush MakeFrozen(Color c)
+        {
+            var b = new SolidColorBrush(c);
+            b.Freeze();
+            return b;
+        }
+
         private void Reload()
         {
             _allEntries = DeathLogStore.LoadEntries(_serverKey);
+            _ready = false; // suppress filter events while the player list repopulates
+            PopulatePlayerFilter();
             _ready = true;
             ApplyFilters();
+        }
+
+        // Rebuild the player dropdown from the team players in the log, keeping the
+        // current selection if that player is still present.
+        private void PopulatePlayerFilter()
+        {
+            var previous = (PlayerFilter.SelectedItem as ComboBoxItem)?.Tag as string ?? "all";
+
+            PlayerFilter.Items.Clear();
+            PlayerFilter.Items.Add(new ComboBoxItem { Content = "All players", Tag = "all" });
+            foreach (var name in _allEntries.Select(e => e.Victim).Distinct().OrderBy(n => n, StringComparer.OrdinalIgnoreCase))
+                PlayerFilter.Items.Add(new ComboBoxItem { Content = name, Tag = name });
+
+            PlayerFilter.SelectedItem = PlayerFilter.Items.Cast<ComboBoxItem>()
+                .FirstOrDefault(i => (i.Tag as string) == previous) ?? PlayerFilter.Items[0];
         }
 
         private void ApplyFilters()
@@ -48,6 +76,10 @@ namespace RustPlusDesk.Views.Windows
                     (e.Grid ?? string.Empty).Contains(search, StringComparison.OrdinalIgnoreCase));
             }
 
+            var player = (PlayerFilter?.SelectedItem as ComboBoxItem)?.Tag as string ?? "all";
+            if (player != "all")
+                query = query.Where(e => e.Victim == player);
+
             var type = (TypeFilter?.SelectedItem as ComboBoxItem)?.Tag as string ?? "all";
             if (type != "all")
                 query = query.Where(e => e.Type == type);
@@ -59,7 +91,35 @@ namespace RustPlusDesk.Views.Windows
                 query = query.Where(e => e.DiedAt >= cutoff);
             }
 
-            DataContext = DeathLogStore.Summarize(query.ToList());
+            var summary = DeathLogStore.Summarize(query.ToList());
+            DataContext = summary;
+            BuildSparkline(summary.DeathsPerDay);
+        }
+
+        // Tiny bar sparkline of deaths per day (bars grow from the bottom).
+        private void BuildSparkline(IReadOnlyList<DayCount> days)
+        {
+            SparklineHost.Children.Clear();
+            if (days.Count == 0)
+                return;
+
+            int max = Math.Max(1, days.Max(d => d.Count));
+            const double fullHeight = 42.0;
+
+            foreach (var d in days)
+            {
+                double barHeight = d.Count == 0 ? 2.0 : Math.Max(4.0, d.Count / (double)max * fullHeight);
+                SparklineHost.Children.Add(new Border
+                {
+                    Width = 10,
+                    Height = barHeight,
+                    Background = d.Count == 0 ? SparkZeroBrush : SparkBrush,
+                    CornerRadius = new CornerRadius(2),
+                    Margin = new Thickness(2, 0, 2, 0),
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    ToolTip = $"{d.Day:ddd, MMM d}: {d.Count} death(s)",
+                });
+            }
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilters();

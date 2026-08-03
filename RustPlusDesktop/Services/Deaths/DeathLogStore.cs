@@ -19,6 +19,9 @@ namespace RustPlusDesk.Services.Deaths
     /// <summary>A recent death, formatted for display.</summary>
     public sealed record RecentDeath(string Victim, string Type, string Location, string Grid, string Died);
 
+    /// <summary>Death count for a single day, for the sparkline.</summary>
+    public sealed record DayCount(DateTime Day, int Count);
+
     /// <summary>One normalized death, used for filtering + aggregation in the stats view.</summary>
     public sealed record DeathEntry(
         string Victim,
@@ -42,6 +45,7 @@ namespace RustPlusDesk.Services.Deaths
         public IReadOnlyList<VictimStat> ByVictim { get; init; } = Array.Empty<VictimStat>();
         public IReadOnlyList<LocationStat> ByLocation { get; init; } = Array.Empty<LocationStat>();
         public IReadOnlyList<RecentDeath> Recent { get; init; } = Array.Empty<RecentDeath>();
+        public IReadOnlyList<DayCount> DeathsPerDay { get; init; } = Array.Empty<DayCount>();
 
         public bool HasData => Total > 0;
 
@@ -159,6 +163,16 @@ namespace RustPlusDesk.Services.Deaths
                 .DefaultIfEmpty(0)
                 .Max();
 
+            // Deaths per day for the last 14 days (gaps filled with 0), oldest → today.
+            var perDay = entries
+                .GroupBy(e => DateTimeOffset.FromUnixTimeSeconds(e.DiedAt).LocalDateTime.Date)
+                .ToDictionary(g => g.Key, g => g.Count());
+            var today = DateTime.Now.Date;
+            var deathsPerDay = Enumerable.Range(0, 14)
+                .Select(i => today.AddDays(-13 + i))
+                .Select(day => new DayCount(day, perDay.TryGetValue(day, out var c) ? c : 0))
+                .ToList();
+
             var recent = entries
                 .OrderByDescending(e => e.DiedAt)
                 .Take(100)
@@ -183,6 +197,7 @@ namespace RustPlusDesk.Services.Deaths
                 ByVictim = byVictim,
                 ByLocation = byLocation,
                 Recent = recent,
+                DeathsPerDay = deathsPerDay,
             };
         }
 
