@@ -3,13 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Death Stats"
-        Width="700" Height="620"
+        Width="720" Height="660"
         Background="{DynamicResource AppBg}"
         Foreground="{DynamicResource TextPrimary}"
         WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
-        <!-- Shared cell/section styling. -->
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Location-type colours. -->
+        <SolidColorBrush x:Key="MonumentBrush" Color="#EF6C33" />
+        <SolidColorBrush x:Key="BaseBrush" Color="#4ADE80" />
+        <SolidColorBrush x:Key="OpenBrush" Color="#9D9D9D" />
+        <SolidColorBrush x:Key="MonumentBg" Color="#33EF6C33" />
+        <SolidColorBrush x:Key="BaseBg" Color="#334ADE80" />
+        <SolidColorBrush x:Key="OpenBg" Color="#339D9D9D" />
+
         <Style x:Key="ColHeader" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
             <Setter Property="FontSize" Value="12" />
@@ -18,11 +27,12 @@
         <Style x:Key="Cell" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SectionTitle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource Accent}" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,14,0,6" />
+            <Setter Property="Margin" Value="0,16,0,6" />
         </Style>
         <Style x:Key="Card" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
@@ -30,6 +40,48 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="6" />
             <Setter Property="Padding" Value="6" />
+        </Style>
+
+        <!-- Stat tile -->
+        <Style x:Key="Tile" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Padding" Value="14,10" />
+        </Style>
+
+        <!-- Coloured dot keyed by the row's Type. -->
+        <Style x:Key="TypeDot" TargetType="Ellipse">
+            <Setter Property="Width" Value="9" />
+            <Setter Property="Height" Value="9" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Fill" Value="{StaticResource OpenBrush}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="monument">
+                    <Setter Property="Fill" Value="{StaticResource MonumentBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="base">
+                    <Setter Property="Fill" Value="{StaticResource BaseBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Coloured area chip keyed by Type. -->
+        <Style x:Key="AreaChip" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{StaticResource OpenBg}" />
+            <Setter Property="BorderBrush" Value="{StaticResource OpenBrush}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="monument">
+                    <Setter Property="Background" Value="{StaticResource MonumentBg}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource MonumentBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="base">
+                    <Setter Property="Background" Value="{StaticResource BaseBg}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource BaseBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -40,109 +92,157 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Padding="18">
-        <StackPanel>
-            <TextBlock Text="{Binding Headline}" FontSize="16" FontWeight="SemiBold"
-                       Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
+            <StackPanel>
+                <TextBlock Text="{Binding Headline}" FontSize="16" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" Margin="0,0,0,12" />
 
-            <!-- By player -->
-            <TextBlock Text="By player" Style="{StaticResource SectionTitle}" />
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <Grid Margin="8,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="90" />
-                            <ColumnDefinition Width="140" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
-                        <TextBlock Grid.Column="1" Text="Deaths" Style="{StaticResource ColHeader}" />
-                        <TextBlock Grid.Column="2" Text="Avg survival" Style="{StaticResource ColHeader}" />
-                    </Grid>
-                    <ItemsControl ItemsSource="{Binding ByVictim}">
+                <StackPanel Visibility="{Binding HasData, Converter={StaticResource BoolToVis}}">
+
+                    <!-- Stat tiles -->
+                    <UniformGrid Columns="4">
+                        <Border Style="{StaticResource Tile}">
+                            <StackPanel>
+                                <TextBlock Text="TOTAL DEATHS" Style="{StaticResource ColHeader}" />
+                                <TextBlock Text="{Binding Total}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Tile}">
+                            <StackPanel>
+                                <TextBlock Text="AVG SURVIVAL" Style="{StaticResource ColHeader}" />
+                                <TextBlock Text="{Binding AvgSurvival}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Tile}">
+                            <StackPanel>
+                                <TextBlock Text="DEADLIEST PLACE" Style="{StaticResource ColHeader}" />
+                                <TextBlock Text="{Binding DeadliestPlace}" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextPrimary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Tile}" Margin="0">
+                            <StackPanel>
+                                <TextBlock Text="DEADLIEST GRID" Style="{StaticResource ColHeader}" />
+                                <TextBlock Text="{Binding DeadliestGrid}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+
+                    <!-- By area chips -->
+                    <TextBlock Text="Where you die" Style="{StaticResource SectionTitle}" />
+                    <ItemsControl ItemsSource="{Binding ByArea}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="8,3">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="90" />
-                                        <ColumnDefinition Width="140" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Deaths}" Style="{StaticResource Cell}" />
-                                    <TextBlock Grid.Column="2" Text="{Binding AvgSurvival}" Style="{StaticResource Cell}" />
-                                </Grid>
+                                <Border Style="{StaticResource AreaChip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontWeight="SemiBold" />
+                                        <TextBlock Foreground="{DynamicResource TextSubtle}" Margin="8,0,0,0">
+                                            <Run Text="{Binding Deaths, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding Percent, Mode=OneWay}" /><Run Text="%" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                </StackPanel>
-            </Border>
 
-            <!-- By location -->
-            <TextBlock Text="By location" Style="{StaticResource SectionTitle}" />
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <Grid Margin="8,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="90" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Location" Style="{StaticResource ColHeader}" />
-                        <TextBlock Grid.Column="1" Text="Deaths" Style="{StaticResource ColHeader}" />
-                    </Grid>
-                    <ItemsControl ItemsSource="{Binding ByLocation}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="8,3">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="90" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Location}" Style="{StaticResource Cell}" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Deaths}" Style="{StaticResource Cell}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                    <!-- By location -->
+                    <TextBlock Text="By location" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}">
+                        <ItemsControl ItemsSource="{Binding ByLocation}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="8,3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="18" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="60" />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.Column="0" Style="{StaticResource TypeDot}" HorizontalAlignment="Left" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Location}" Style="{StaticResource Cell}" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Deaths}" Style="{StaticResource Cell}" TextAlignment="Right" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
 
-            <!-- Recent -->
-            <TextBlock Text="Recent" Style="{StaticResource SectionTitle}" />
-            <Border Style="{StaticResource Card}">
-                <StackPanel>
-                    <Grid Margin="8,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="150" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
-                        <TextBlock Grid.Column="1" Text="Location" Style="{StaticResource ColHeader}" />
-                        <TextBlock Grid.Column="2" Text="Grid" Style="{StaticResource ColHeader}" />
-                        <TextBlock Grid.Column="3" Text="Died" Style="{StaticResource ColHeader}" />
-                    </Grid>
-                    <ItemsControl ItemsSource="{Binding Recent}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="8,3">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="60" />
-                                        <ColumnDefinition Width="150" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Location}" Style="{StaticResource Cell}" />
-                                    <TextBlock Grid.Column="2" Text="{Binding Grid}" Style="{StaticResource Cell}" />
-                                    <TextBlock Grid.Column="3" Text="{Binding Died}" Style="{StaticResource Cell}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <!-- By player -->
+                    <TextBlock Text="By player" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <Grid Margin="8,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="140" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
+                                <TextBlock Grid.Column="1" Text="Deaths" Style="{StaticResource ColHeader}" />
+                                <TextBlock Grid.Column="2" Text="Avg survival" Style="{StaticResource ColHeader}" />
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding ByVictim}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="8,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="90" />
+                                                <ColumnDefinition Width="140" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Deaths}" Style="{StaticResource Cell}" />
+                                            <TextBlock Grid.Column="2" Text="{Binding AvgSurvival}" Style="{StaticResource Cell}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Recent -->
+                    <TextBlock Text="Recent" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <Grid Margin="8,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="18" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="55" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
+                                <TextBlock Grid.Column="2" Text="Location" Style="{StaticResource ColHeader}" />
+                                <TextBlock Grid.Column="3" Text="Grid" Style="{StaticResource ColHeader}" />
+                                <TextBlock Grid.Column="4" Text="Died" Style="{StaticResource ColHeader}" />
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Recent}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="8,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="140" />
+                                                <ColumnDefinition Width="18" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="55" />
+                                                <ColumnDefinition Width="150" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" />
+                                            <Ellipse Grid.Column="1" Style="{StaticResource TypeDot}" HorizontalAlignment="Left" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Location}" Style="{StaticResource Cell}" />
+                                            <TextBlock Grid.Column="3" Text="{Binding Grid}" Style="{StaticResource Cell}" />
+                                            <TextBlock Grid.Column="4" Text="{Binding Died}" Style="{StaticResource Cell}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-            </Border>
-        </StackPanel>
+            </StackPanel>
         </ScrollViewer>
 
         <Border Grid.Row="1" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
