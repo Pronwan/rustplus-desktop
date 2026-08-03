@@ -494,21 +494,23 @@ public partial class MainWindow
         var zones = new List<RustPlusDesk.Services.Deaths.DeathZone>(_monData.Count);
         foreach (var (x, y, name) in _monData)
         {
-            // Canon strips the raw i18n token (e.g. "fishing_village_display_name")
-            // down to a clean lowercase name; title-case it for display.
-            var canon = Canon(name);
-            if (string.IsNullOrWhiteSpace(canon))
+            // Resolve names exactly like the map does: NormalizeMonName for the
+            // canonical key, Beautify for the human display name (turns
+            // "fishing_village_display_name" into "Fishing Village").
+            var key = NormalizeMonName(name, out var variant);
+            if (string.IsNullOrWhiteSpace(key))
                 continue;
 
             // Train tunnels are scattered all over the map and are tiny, so their
             // marker would win the nearest-monument check over the real monument
             // they sit next to (e.g. a tunnel entrance at Harbor). Skip them — but
             // keep real "tunnel" monuments like Military Tunnels.
-            if (canon.Contains("train tunnel") || canon.Contains("tunnel entrance"))
+            if (key.Contains("train tunnel") || key.Contains("tunnel entrance"))
                 continue;
 
-            var display = System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(canon);
-            zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(canon), display));
+            var nice = Beautify(name);
+            var display = string.IsNullOrEmpty(variant) ? nice : $"{nice} ({variant})";
+            zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(key), display));
         }
 
         return zones;
