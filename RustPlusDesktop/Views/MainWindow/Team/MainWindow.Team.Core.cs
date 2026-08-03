@@ -469,10 +469,14 @@ public partial class MainWindow
         var zones = new List<RustPlusDesk.Services.Deaths.DeathZone>(_monData.Count);
         foreach (var (x, y, name) in _monData)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            // Canon strips the raw i18n token (e.g. "fishing_village_display_name")
+            // down to a clean lowercase name; title-case it for display.
+            var canon = Canon(name);
+            if (string.IsNullOrWhiteSpace(canon))
                 continue;
 
-            zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(name), name));
+            var display = System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(canon);
+            zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(canon), display));
         }
 
         return zones;
