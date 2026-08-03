@@ -19,12 +19,23 @@ namespace RustPlusDesk.Services.Deaths
     /// <summary>A recent death, formatted for display.</summary>
     public sealed record RecentDeath(string Victim, string Type, string Location, string Grid, string Died);
 
+    /// <summary>One normalized death, used for filtering + aggregation in the stats view.</summary>
+    public sealed record DeathEntry(
+        string Victim,
+        long DiedAt,
+        long? SpawnAt,
+        string? Grid,
+        string Type,        // monument | base | open
+        string Location);   // display label
+
     /// <summary>Aggregated view of the local death log for one server.</summary>
     public sealed class DeathStatsSummary
     {
         public int Total { get; init; }
         public int Victims { get; init; }
         public string AvgSurvival { get; init; } = "—";
+        public string LongestSurvival { get; init; } = "—";
+        public string PeakHour { get; init; } = "—";
         public string DeadliestPlace { get; init; } = "—";
         public string DeadliestGrid { get; init; } = "—";
         public IReadOnlyList<AreaStat> ByArea { get; init; } = Array.Empty<AreaStat>();
@@ -35,7 +46,7 @@ namespace RustPlusDesk.Services.Deaths
         public bool HasData => Total > 0;
 
         public string Headline => Total == 0
-            ? "No deaths logged yet for this server."
+            ? "No deaths match the current filters."
             : $"{Total} death(s) across {Victims} player(s).";
     }
 
@@ -85,48 +96,78 @@ namespace RustPlusDesk.Services.Deaths
             }
         }
 
-        public static DeathStatsSummary LoadForServer(string? serverKey)
+        /// <summary>Normalized death entries for a server, for the filterable stats view.</summary>
+        public static List<DeathEntry> LoadEntries(string? serverKey)
         {
-            var entries = ReadEntries(serverKey);
+            return ReadEntries(serverKey)
+                .Select(e => new DeathEntry(
+                    e.name ?? "Unknown",
+                    e.died_at,
+                    e.spawn_at,
+                    e.grid,
+                    NormalizeType(e.location_type),
+                    LocationLabel(e.location_type, e.location_name)))
+                .ToList();
+        }
+
+        public static DeathStatsSummary LoadForServer(string? serverKey)
+            => Summarize(LoadEntries(serverKey));
+
+        /// <summary>Aggregate a (possibly filtered) set of entries into the view model.</summary>
+        public static DeathStatsSummary Summarize(IReadOnlyList<DeathEntry> entries)
+        {
             if (entries.Count == 0)
                 return new DeathStatsSummary();
 
             int total = entries.Count;
 
             var byVictim = entries
-                .GroupBy(e => e.name ?? "Unknown")
+                .GroupBy(e => e.Victim)
                 .Select(g => new VictimStat(g.Key, g.Count(), AverageSurvival(g)))
                 .OrderByDescending(v => v.Deaths)
                 .ToList();
 
             var byLocation = entries
-                .GroupBy(e => LocationLabel(e.location_type, e.location_name))
-                .Select(g => new LocationStat(g.Key, NormalizeType(g.First().location_type), g.Count()))
+                .GroupBy(e => e.Location)
+                .Select(g => new LocationStat(g.Key, g.First().Type, g.Count()))
                 .OrderByDescending(l => l.Deaths)
                 .ToList();
 
             var byArea = entries
-                .GroupBy(e => NormalizeType(e.location_type))
+                .GroupBy(e => e.Type)
                 .Select(g => new AreaStat(AreaName(g.Key), g.Key, g.Count(), (int)Math.Round(100.0 * g.Count() / total)))
                 .OrderByDescending(a => a.Deaths)
                 .ToList();
 
             var deadliestGrid = entries
-                .Where(e => !string.IsNullOrEmpty(e.grid) && e.grid != "off-grid")
-                .GroupBy(e => e.grid!)
+                .Where(e => !string.IsNullOrEmpty(e.Grid) && e.Grid != "off-grid")
+                .GroupBy(e => e.Grid!)
                 .OrderByDescending(g => g.Count())
                 .Select(g => $"{g.Key} ({g.Count()})")
                 .FirstOrDefault() ?? "—";
 
+            var peakHour = entries
+                .GroupBy(e => DateTimeOffset.FromUnixTimeSeconds(e.DiedAt).LocalDateTime.Hour)
+                .OrderByDescending(g => g.Count())
+                .ThenBy(g => g.Key)
+                .Select(g => $"{g.Key:00}:00 ({g.Count()})")
+                .FirstOrDefault() ?? "—";
+
+            long longest = entries
+                .Where(e => e.SpawnAt is > 0 && e.DiedAt > e.SpawnAt!.Value)
+                .Select(e => e.DiedAt - e.SpawnAt!.Value)
+                .DefaultIfEmpty(0)
+                .Max();
+
             var recent = entries
-                .OrderByDescending(e => e.died_at)
-                .Take(50)
+                .OrderByDescending(e => e.DiedAt)
+                .Take(100)
                 .Select(e => new RecentDeath(
-                    e.name ?? "Unknown",
-                    NormalizeType(e.location_type),
-                    LocationLabel(e.location_type, e.location_name),
-                    e.grid ?? "—",
-                    DateTimeOffset.FromUnixTimeSeconds(e.died_at).LocalDateTime.ToString("g", CultureInfo.CurrentCulture)))
+                    e.Victim,
+                    e.Type,
+                    e.Location,
+                    e.Grid ?? "—",
+                    DateTimeOffset.FromUnixTimeSeconds(e.DiedAt).LocalDateTime.ToString("g", CultureInfo.CurrentCulture)))
                 .ToList();
 
             return new DeathStatsSummary
@@ -134,6 +175,8 @@ namespace RustPlusDesk.Services.Deaths
                 Total = total,
                 Victims = byVictim.Count,
                 AvgSurvival = AverageSurvival(entries),
+                LongestSurvival = longest > 0 ? FormatDuration(longest) : "—",
+                PeakHour = peakHour,
                 DeadliestPlace = byLocation.FirstOrDefault()?.Location ?? "—",
                 DeadliestGrid = deadliestGrid,
                 ByArea = byArea,
@@ -173,11 +216,11 @@ namespace RustPlusDesk.Services.Deaths
             return entries;
         }
 
-        private static string AverageSurvival(IEnumerable<RawDeath> deaths)
+        private static string AverageSurvival(IEnumerable<DeathEntry> deaths)
         {
             var survivals = deaths
-                .Where(e => e.spawn_at is > 0 && e.died_at > e.spawn_at!.Value)
-                .Select(e => e.died_at - e.spawn_at!.Value)
+                .Where(e => e.SpawnAt is > 0 && e.DiedAt > e.SpawnAt!.Value)
+                .Select(e => e.DiedAt - e.SpawnAt!.Value)
                 .ToList();
             return survivals.Count > 0 ? FormatDuration((long)survivals.Average()) : "—";
         }

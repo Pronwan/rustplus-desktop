@@ -44,7 +44,7 @@
 
         <!-- Stat tile -->
         <Style x:Key="Tile" TargetType="Border" BasedOn="{StaticResource Card}">
-            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Margin" Value="0,0,10,10" />
             <Setter Property="Padding" Value="14,10" />
         </Style>
 
@@ -96,10 +96,35 @@
                 <TextBlock Text="{Binding Headline}" FontSize="16" FontWeight="SemiBold"
                            Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" Margin="0,0,0,12" />
 
+                <!-- Filters (always visible so you can widen a search that matched nothing) -->
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SearchBox" Grid.Column="0" Height="30" Margin="0,0,8,0"
+                             VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged"
+                             ToolTip="Search by victim, location or grid" />
+                    <ComboBox x:Name="TypeFilter" Grid.Column="1" Width="130" Height="30" Margin="0,0,8,0"
+                              Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed">
+                        <ComboBoxItem Content="All places" Tag="all" IsSelected="True" />
+                        <ComboBoxItem Content="Monument" Tag="monument" />
+                        <ComboBoxItem Content="Base" Tag="base" />
+                        <ComboBoxItem Content="Open" Tag="open" />
+                    </ComboBox>
+                    <ComboBox x:Name="RangeFilter" Grid.Column="2" Width="120" Height="30"
+                              Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed">
+                        <ComboBoxItem Content="All time" Tag="all" IsSelected="True" />
+                        <ComboBoxItem Content="Last 24h" Tag="24h" />
+                        <ComboBoxItem Content="Last 7 days" Tag="7d" />
+                    </ComboBox>
+                </Grid>
+
                 <StackPanel Visibility="{Binding HasData, Converter={StaticResource BoolToVis}}">
 
                     <!-- Stat tiles -->
-                    <UniformGrid Columns="4">
+                    <UniformGrid Columns="3">
                         <Border Style="{StaticResource Tile}">
                             <StackPanel>
                                 <TextBlock Text="TOTAL DEATHS" Style="{StaticResource ColHeader}" />
@@ -114,14 +139,26 @@
                         </Border>
                         <Border Style="{StaticResource Tile}">
                             <StackPanel>
+                                <TextBlock Text="LONGEST SURVIVAL" Style="{StaticResource ColHeader}" />
+                                <TextBlock Text="{Binding LongestSurvival}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Tile}">
+                            <StackPanel>
                                 <TextBlock Text="DEADLIEST PLACE" Style="{StaticResource ColHeader}" />
                                 <TextBlock Text="{Binding DeadliestPlace}" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextPrimary}" />
                             </StackPanel>
                         </Border>
-                        <Border Style="{StaticResource Tile}" Margin="0">
+                        <Border Style="{StaticResource Tile}">
                             <StackPanel>
                                 <TextBlock Text="DEADLIEST GRID" Style="{StaticResource ColHeader}" />
                                 <TextBlock Text="{Binding DeadliestGrid}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Tile}">
+                            <StackPanel>
+                                <TextBlock Text="PEAK HOUR" Style="{StaticResource ColHeader}" />
+                                <TextBlock Text="{Binding PeakHour}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
                             </StackPanel>
                         </Border>
                     </UniformGrid>
