@@ -31,6 +31,12 @@ public partial class MainWindow
         _shopTimer?.Stop();
         _shopTimer = null;
 
+        // The "Shops" toggle button and the shop-search overlay it opens.
+        if (BtnShopToggleBorder != null)
+            BtnShopToggleBorder.Visibility = Visibility.Collapsed;
+        if (ShopSearchPanel != null)
+            ShopSearchPanel.Visibility = Visibility.Collapsed;
+
         // Events: hide the events dock, the alerts "Events" column, and the
         // trade/vending alerts item.
         if (EventDock != null)
