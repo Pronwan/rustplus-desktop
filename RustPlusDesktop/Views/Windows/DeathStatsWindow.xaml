@@ -284,8 +284,12 @@
 
         <Border Grid.Row="1" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
                 BorderThickness="0,1,0,0" Padding="14,10">
-            <ui:Button x:Name="BtnClear" Content="Clear log" Appearance="Danger"
-                       HorizontalAlignment="Right" Click="BtnClear_Click" />
+            <Grid>
+                <ui:Button x:Name="BtnRefresh" Content="Refresh" Appearance="Secondary"
+                           HorizontalAlignment="Left" Click="BtnRefresh_Click" />
+                <ui:Button x:Name="BtnClear" Content="Clear log" Appearance="Danger"
+                           HorizontalAlignment="Right" Click="BtnClear_Click" />
+            </Grid>
         </Border>
     </Grid>
 </Window>

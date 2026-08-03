@@ -66,6 +66,9 @@ namespace RustPlusDesk.Views.Windows
 
         private void Filter_Changed(object sender, SelectionChangedEventArgs e) => ApplyFilters();
 
+        // Re-read the log so deaths recorded since the window opened show up.
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e) => Reload();
+
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
             var confirm = MessageBox.Show(
