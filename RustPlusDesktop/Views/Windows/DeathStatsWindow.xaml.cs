@@ -9,10 +9,33 @@ namespace RustPlusDesk.Views.Windows
     /// </summary>
     public partial class DeathStatsWindow : Window
     {
+        private readonly string? _serverKey;
+
         public DeathStatsWindow(string? serverKey)
         {
             InitializeComponent();
-            DataContext = DeathLogStore.LoadForServer(serverKey);
+            _serverKey = serverKey;
+            Reload();
+        }
+
+        private void Reload()
+        {
+            DataContext = DeathLogStore.LoadForServer(_serverKey);
+        }
+
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show(
+                "Clear the local death log for this server? This cannot be undone.",
+                "Clear death log",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes)
+                return;
+
+            DeathLogStore.Clear(_serverKey);
+            Reload();
         }
     }
 }

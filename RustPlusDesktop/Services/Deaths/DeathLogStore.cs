@@ -49,6 +49,24 @@ namespace RustPlusDesk.Services.Deaths
             public string? location_name { get; set; }
         }
 
+        /// <summary>Delete the local death log for a server.</summary>
+        public static void Clear(string? serverKey)
+        {
+            if (string.IsNullOrEmpty(serverKey))
+                return;
+
+            try
+            {
+                var path = DeathReporter.LogPathFor(serverKey);
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
+            catch
+            {
+                // A failed delete must not crash the stats view.
+            }
+        }
+
         public static DeathStatsSummary LoadForServer(string? serverKey)
         {
             var entries = ReadEntries(serverKey);
