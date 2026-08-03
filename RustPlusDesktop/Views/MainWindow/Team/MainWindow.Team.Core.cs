@@ -22,6 +22,11 @@ public partial class MainWindow
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
     private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
+
+    // Death log: detects team-member deaths across successive team-info snapshots.
+    private readonly RustPlusDesk.Services.Deaths.DeathTracker _deathTracker = new();
+    private string? _deathTrackerServerKey;
+
     private RustPlusClientReal? _real => _rust as RustPlusClientReal;
 
     public sealed class TeamMemberVM : INotifyPropertyChanged
@@ -380,6 +385,47 @@ public partial class MainWindow
         }
     }
 
+    // Feed each team-info snapshot to the death tracker and record what it finds:
+    // always to the local log, and to the shared cloud log for premium accounts.
+    private async Task ProcessDeathsAsync(RustPlusClientReal.TeamInfo team)
+    {
+        var serverKey = GetServerKey();
+        if (string.IsNullOrEmpty(serverKey))
+            return;
+
+        // Switching servers starts a fresh baseline so old state can't leak across.
+        if (serverKey != _deathTrackerServerKey)
+        {
+            _deathTracker.Reset();
+            _deathTrackerServerKey = serverKey;
+        }
+
+        var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
+            BuildBaseZones(), BuildMonumentZones(), _worldSizeS);
+
+        foreach (var death in _deathTracker.Observe(team, classifier))
+        {
+            try
+            {
+                await RustPlusDesk.Services.Deaths.DeathReporter.ReportAsync(death, serverKey);
+            }
+            catch
+            {
+                // Reporting must never break the team refresh.
+            }
+        }
+    }
+
+    // TODO: populate from the map's base markers (centre + radius + name) so
+    // deaths inside a base classify as "base".
+    private IReadOnlyList<RustPlusDesk.Services.Deaths.DeathZone> BuildBaseZones()
+        => System.Array.Empty<RustPlusDesk.Services.Deaths.DeathZone>();
+
+    // TODO: populate from the map's monument markers so deaths at/near a monument
+    // classify as "monument". Until then everything outside a base is "open".
+    private IReadOnlyList<RustPlusDesk.Services.Deaths.DeathZone> BuildMonumentZones()
+        => System.Array.Empty<RustPlusDesk.Services.Deaths.DeathZone>();
+
     private async Task LoadTeamAsync()
     {
         if (_real is null) return;
@@ -390,6 +436,9 @@ public partial class MainWindow
             if (team is null) return;
 
             _lastTeamInfo = team;
+
+            // Detect + record any team-member deaths in this snapshot (fire-and-forget).
+            _ = ProcessDeathsAsync(team);
 
             var leaderId = team.LeaderSteamId;
             foreach (var m in TeamMembers) m.MissingCount++;
