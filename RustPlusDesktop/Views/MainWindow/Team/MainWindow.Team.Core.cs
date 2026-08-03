@@ -417,15 +417,45 @@ public partial class MainWindow
         }
     }
 
-    // TODO: populate from the map's base markers (centre + radius + name) so
-    // deaths inside a base classify as "base".
+    // Base classification is deferred: base markers are overlay icons stored in
+    // image-pixel space (SavedIcon.X/Y), so matching them against a death's world
+    // position needs the inverse of the padded/deep-sea-aware WorldToImagePx
+    // transform. Until that's wired, a death at a base near a monument classifies
+    // as "monument", otherwise "open".
     private IReadOnlyList<RustPlusDesk.Services.Deaths.DeathZone> BuildBaseZones()
         => System.Array.Empty<RustPlusDesk.Services.Deaths.DeathZone>();
 
-    // TODO: populate from the map's monument markers so deaths at/near a monument
-    // classify as "monument". Until then everything outside a base is "open".
+    // Monuments come from the map (GetMapWithMonumentsAsync) in world coordinates,
+    // the same space as death positions, so they compare directly. The radius is
+    // generous per monument so "died approaching the monument" still counts.
     private IReadOnlyList<RustPlusDesk.Services.Deaths.DeathZone> BuildMonumentZones()
-        => System.Array.Empty<RustPlusDesk.Services.Deaths.DeathZone>();
+    {
+        var zones = new List<RustPlusDesk.Services.Deaths.DeathZone>(_monData.Count);
+        foreach (var (x, y, name) in _monData)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(name), name));
+        }
+
+        return zones;
+    }
+
+    // Approximate monument footprints (world units). Big monuments get a wider
+    // radius; everything else uses a generous default of ~one grid cell.
+    private static double MonumentRadiusFor(string name)
+    {
+        var n = name.ToLowerInvariant();
+        if (n.Contains("launch")) return 250.0;
+        if (n.Contains("airfield")) return 200.0;
+        if (n.Contains("power plant") || n.Contains("water treatment") ||
+            n.Contains("train yard") || n.Contains("military base") || n.Contains("arctic"))
+            return 180.0;
+        if (n.Contains("harbor") || n.Contains("harbour")) return 160.0;
+        if (n.Contains("oil rig")) return 120.0;
+        return 130.0;
+    }
 
     private async Task LoadTeamAsync()
     {
