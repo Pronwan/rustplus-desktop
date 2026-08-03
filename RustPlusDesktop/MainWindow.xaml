@@ -330,6 +330,16 @@
                         Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
                         ToolTip="{DynamicResource PatchNotes}" />
                     <ui:Button
+                        x:Name="BtnDeaths"
+                        Width="36"
+                        Height="36"
+                        Margin="2,6"
+                        Padding="0"
+                        Appearance="Transparent"
+                        Click="BtnDeaths_Click"
+                        Icon="{ui:SymbolIcon Symbol=DataHistogram24}"
+                        ToolTip="Death stats" />
+                    <ui:Button
                         x:Name="BtnSettings"
                         tutorials:Tutorial.TargetId="Navigation.Settings"
                         Width="36"

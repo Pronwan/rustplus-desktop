@@ -418,6 +418,20 @@ public partial class MainWindow
         }
     }
 
+    // Open the in-app death stats window (reads the local death log for this server).
+    private void BtnDeaths_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var window = new RustPlusDesk.Views.Windows.DeathStatsWindow(GetServerKey()) { Owner = this };
+            window.Show();
+        }
+        catch
+        {
+            // Opening the stats view must never crash the app.
+        }
+    }
+
     // Radius (world units) around a base marker that still counts as "at base".
     private const double BaseRadiusWorld = 75.0;
 

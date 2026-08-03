@@ -48,6 +48,15 @@ namespace RustPlusDesk.Services.Deaths
             }
         }
 
+        /// <summary>Directory holding the per-server local death logs.</summary>
+        public static string LogDirectory => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RustPlusDesktop", "deaths");
+
+        /// <summary>Local JSON-lines death log for a server (shared with the reader).</summary>
+        public static string LogPathFor(string serverKey) =>
+            Path.Combine(LogDirectory, SafeFileName(serverKey) + ".jsonl");
+
         private static string ToIso(long unixSeconds) =>
             DateTimeOffset.FromUnixTimeSeconds(unixSeconds).UtcDateTime.ToString("o", CultureInfo.InvariantCulture);
 
@@ -55,12 +64,9 @@ namespace RustPlusDesk.Services.Deaths
         {
             try
             {
-                var dir = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "RustPlusDesktop", "deaths");
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(LogDirectory);
 
-                var file = Path.Combine(dir, SafeFileName(serverKey) + ".jsonl");
+                var file = LogPathFor(serverKey);
                 var line = JsonSerializer.Serialize(new
                 {
                     steam_id = death.SteamId.ToString(CultureInfo.InvariantCulture),
