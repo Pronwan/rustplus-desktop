@@ -400,8 +400,9 @@ public partial class MainWindow
             _deathTrackerServerKey = serverKey;
         }
 
+        // Reuse the app's shared grid math so death grids match chat/marker output.
         var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
-            BuildBaseZones(), BuildMonumentZones(), _worldSizeS);
+            BuildBaseZones(), BuildMonumentZones(), (x, y) => GetGridLabel(x, y));
 
         foreach (var death in _deathTracker.Observe(team, classifier))
         {

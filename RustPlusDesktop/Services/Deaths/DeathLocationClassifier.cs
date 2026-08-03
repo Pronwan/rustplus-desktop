@@ -4,29 +4,30 @@ using System.Collections.Generic;
 namespace RustPlusDesk.Services.Deaths
 {
     /// <summary>
-    /// Classifies a death's map position into base / monument / open, plus a grid
-    /// label. A base always wins over a monument (a base built at a monument is
-    /// still "your base"); otherwise the nearest zone whose radius contains the
-    /// point wins. The monument radius is what makes "died approaching the
-    /// monument" count as a monument death.
+    /// Classifies a death's map position into base / monument / open. A base
+    /// always wins over a monument (a base built at a monument is still "your
+    /// base"); otherwise the nearest zone whose radius contains the point wins.
+    /// The monument radius is what makes "died approaching the monument" count as
+    /// a monument death.
+    ///
+    /// The grid label is delegated to the app's shared coordinate→grid math
+    /// (the same GetGridLabel the chat notifications and map markers use), so the
+    /// death log matches what the client already shows for a death/spawn.
     /// </summary>
     public sealed class DeathLocationClassifier
     {
         private readonly IReadOnlyList<DeathZone> _bases;
         private readonly IReadOnlyList<DeathZone> _monuments;
-        private readonly double _mapSize;
-
-        // Rust's companion-map grid cell size (world units per grid square).
-        private const double GridCell = 146.28;
+        private readonly Func<double, double, string?> _gridResolver;
 
         public DeathLocationClassifier(
             IReadOnlyList<DeathZone> bases,
             IReadOnlyList<DeathZone> monuments,
-            double mapSize)
+            Func<double, double, string?> gridResolver)
         {
             _bases = bases;
             _monuments = monuments;
-            _mapSize = mapSize;
+            _gridResolver = gridResolver;
         }
 
         public (string Type, string? Name) Classify(double? x, double? y)
@@ -45,20 +46,9 @@ namespace RustPlusDesk.Services.Deaths
             return ("open", null);
         }
 
-        /// <summary>Rust grid label (e.g. "D7"), or null when position/size is unknown.</summary>
+        /// <summary>Grid label via the app's shared math; null when position is unknown.</summary>
         public string? Grid(double? x, double? y)
-        {
-            if (x is null || y is null || _mapSize <= 0)
-                return null;
-
-            int col = (int)Math.Floor(x.Value / GridCell);
-            // Row 0 is the north (top) edge; y increases northward.
-            int row = (int)Math.Floor((_mapSize - y.Value) / GridCell);
-            if (col < 0 || row < 0)
-                return null;
-
-            return ColumnLabel(col) + row.ToString();
-        }
+            => (x is null || y is null) ? null : _gridResolver(x.Value, y.Value);
 
         private static DeathZone? Nearest(IReadOnlyList<DeathZone> zones, double x, double y)
         {
@@ -78,21 +68,6 @@ namespace RustPlusDesk.Services.Deaths
             }
 
             return best;
-        }
-
-        /// <summary>0 => A, 25 => Z, 26 => AA, matching Rust's grid columns.</summary>
-        private static string ColumnLabel(int col)
-        {
-            string label = string.Empty;
-            col++; // 1-based for the base-26 conversion.
-            while (col > 0)
-            {
-                int remainder = (col - 1) % 26;
-                label = (char)('A' + remainder) + label;
-                col = (col - 1) / 26;
-            }
-
-            return label;
         }
     }
 }
