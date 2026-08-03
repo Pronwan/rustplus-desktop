@@ -489,6 +489,13 @@ public partial class MainWindow
             if (string.IsNullOrWhiteSpace(canon))
                 continue;
 
+            // Train tunnels are scattered all over the map and are tiny, so their
+            // marker would win the nearest-monument check over the real monument
+            // they sit next to (e.g. a tunnel entrance at Harbor). Skip them — but
+            // keep real "tunnel" monuments like Military Tunnels.
+            if (canon.Contains("train tunnel") || canon.Contains("tunnel entrance"))
+                continue;
+
             var display = System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(canon);
             zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(canon), display));
         }
