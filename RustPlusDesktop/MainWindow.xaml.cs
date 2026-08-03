@@ -6657,6 +6657,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         BuildMonumentOverlays();
         UpdateCloudSyncUI();
         ApplyMapPerformanceSettings();
+        ApplyRustApiFeatureFlags();
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)

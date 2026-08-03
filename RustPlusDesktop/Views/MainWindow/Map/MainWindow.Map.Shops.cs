@@ -146,6 +146,14 @@ public partial class MainWindow
 
     private async void ChkShops_Checked(object sender, RoutedEventArgs e)
     {
+        // Shops removed from the Rust+ feed — never poll for them.
+        if (Services.RustApiFeatures.EventsAndShopsRemoved)
+        {
+            _shopTimer?.Stop();
+            _shopTimer = null;
+            return;
+        }
+
         if (ChkShops.IsChecked == true && _worldSizeS > 0 && _worldRectPx.Width > 0)
         {
             _shopTimer?.Stop();

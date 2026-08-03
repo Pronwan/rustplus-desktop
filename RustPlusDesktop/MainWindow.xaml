@@ -4741,7 +4741,7 @@
                                                      </ContextMenu.Style>
 
                                                      <!-- Column 1: Events -->
-                                                     <MenuItem Header="{DynamicResource Events}" BorderThickness="0,0,1,0">
+                                                     <MenuItem x:Name="AlertsEventsColumn" Header="{DynamicResource Events}" BorderThickness="0,0,1,0">
                                                          <MenuItem.Style>
                                                              <Style TargetType="MenuItem">
                                                                  <Setter Property="Template">
