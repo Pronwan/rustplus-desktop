@@ -10,11 +10,10 @@ namespace RustPlusDesk.Services.Deaths
     /// wins. The monument radius is what makes "died approaching the monument"
     /// count as a monument death.
     ///
-    /// Monuments compare in world coordinates. Bases live in the overlay's pixel
-    /// space, so their check is delegated to the app (it converts the death's
-    /// world position with the map transform and compares there). The grid label
-    /// is likewise delegated to the app's shared GetGridLabel so the death log
-    /// matches the chat/marker output.
+    /// Monuments compare in world coordinates directly. Bases are delegated to the
+    /// app (which matches the death against the team's in-game base map notes, also
+    /// in world coordinates). The grid label is likewise delegated to the app's
+    /// shared GetGridLabel so the death log matches the chat/marker output.
     /// </summary>
     public sealed class DeathLocationClassifier
     {

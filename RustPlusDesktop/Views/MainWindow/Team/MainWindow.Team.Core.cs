@@ -400,10 +400,9 @@ public partial class MainWindow
             _deathTrackerServerKey = serverKey;
         }
 
-        // Monuments compare in world space; bases are resolved in overlay-pixel
-        // space (ResolveBaseAt); grid reuses the app's shared math.
+        // Monuments + bases both compare in world space; grid reuses the app's math.
         var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
-            BuildMonumentZones(), (x, y) => ResolveBaseAt(x, y), (x, y) => GetGridLabel(x, y));
+            BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y));
 
         foreach (var death in _deathTracker.Observe(team, classifier))
         {
@@ -432,47 +431,59 @@ public partial class MainWindow
         }
     }
 
-    // Radius (world units) around a base marker that still counts as "at base".
-    private const double BaseRadiusWorld = 75.0;
+    // Radius (world units) around a base map note that still counts as "at base".
+    private const double BaseRadiusWorld = 90.0;
 
-    // Resolve whether a death happened at one of my base markers. Base icons are
-    // overlay elements in pixel space, so instead of inverting the map transform
-    // we project the death's world position into pixels with WorldToImagePx and
-    // compare there. Returns the base's note/label, or null when not at a base.
-    private string? ResolveBaseAt(double worldX, double worldY)
+    // Rust+ map-note icon index for the Home/base marker (see GetMapNoteIcon).
+    private const int HomeNoteIcon = 2;
+
+    // Resolve whether a death happened at a team base marker. Those markers are
+    // in-game team map notes (placed by the leader/players), which come through
+    // in world coordinates — the same space as the death — so we compare directly,
+    // no map transform needed. Returns the note label, or null when not at a base.
+    private string? ResolveBaseAt(RustPlusClientReal.TeamInfo team, double worldX, double worldY)
     {
-        var data = BuildCurrentOverlaySaveDataForMe();
-        if (data.Icons.Count == 0)
-            return null;
-
-        var deathPx = WorldToImagePx(worldX, worldY);
-        // Convert the world radius to pixels at the current map scale.
-        var edgePx = WorldToImagePx(worldX + BaseRadiusWorld, worldY);
-        double radiusPx = Math.Abs(edgePx.X - deathPx.X);
-        if (radiusPx <= 0)
+        if (team == null)
             return null;
 
         string? best = null;
         double bestDistance = double.MaxValue;
 
-        foreach (var icon in data.Icons)
+        foreach (var note in EnumerateBaseNotes(team))
         {
-            if (!RustPlusDesk.Services.Data.OverlayDataModule.IsBaseIconPath(icon.IconPath))
-                continue;
-
-            double cx = icon.X + (icon.Width / 2.0);
-            double cy = icon.Y + (icon.Height / 2.0);
-            double dx = deathPx.X - cx;
-            double dy = deathPx.Y - cy;
+            double dx = worldX - note.X;
+            double dy = worldY - note.Y;
             double distance = Math.Sqrt((dx * dx) + (dy * dy));
-            if (distance <= radiusPx && distance < bestDistance)
+            if (distance <= BaseRadiusWorld && distance < bestDistance)
             {
                 bestDistance = distance;
-                best = string.IsNullOrWhiteSpace(icon.Note) ? "Base" : icon.Note;
+                best = string.IsNullOrWhiteSpace(note.Label) ? "Base" : note.Label;
             }
         }
 
         return best;
+    }
+
+    /// <summary>Team map notes that mark a base (Home icon), leader + members.</summary>
+    private static IEnumerable<RustPlusClientReal.TeamInfo.MapNote> EnumerateBaseNotes(RustPlusClientReal.TeamInfo team)
+    {
+        if (team.LeaderMapNotes != null)
+        {
+            foreach (var note in team.LeaderMapNotes)
+            {
+                if (note.Icon == HomeNoteIcon)
+                    yield return note;
+            }
+        }
+
+        if (team.MapNotes != null)
+        {
+            foreach (var note in team.MapNotes)
+            {
+                if (note.Icon == HomeNoteIcon)
+                    yield return note;
+            }
+        }
     }
 
     // Monuments come from the map (GetMapWithMonumentsAsync) in world coordinates,
