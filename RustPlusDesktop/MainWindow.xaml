@@ -5001,7 +5001,7 @@
                                                      </MenuItem>
 
                                                       <!-- Column 3: Shops & Actions -->
-                                                      <MenuItem Header="{DynamicResource Shops}" BorderThickness="0,0,1,0">
+                                                      <MenuItem x:Name="AlertsShopsColumn" Header="{DynamicResource Shops}" BorderThickness="0,0,1,0">
                                                           <MenuItem.Style>
                                                               <Style TargetType="MenuItem">
                                                                   <Setter Property="Template">

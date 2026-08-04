@@ -93,7 +93,8 @@ public partial class MainWindow
         if (++_emptyShopPolls < EmptyPollsBeforeHiding) return;
 
         _shopDataAvailable = false;
-        AppendLog($"[shops] No vending data in {_emptyShopPolls} polls — hiding the shops + events UI.");
+        AppendLog($"[shops] No vending data in {_emptyShopPolls} polls — hiding the shops UI, " +
+                  "events now come from audio detection.");
         Dispatcher.Invoke(ApplyShopDataAvailability);
     }
 
@@ -115,12 +116,20 @@ public partial class MainWindow
 
         Visibility vis = show ? Visibility.Visible : Visibility.Collapsed;
 
+        // Shop-only UI: nothing can fill it, so it goes away entirely.
         if (ChkShops != null) ChkShops.Visibility = vis;
         if (ChkLayerAutoLoadShops != null) ChkLayerAutoLoadShops.Visibility = vis;
         if (BtnShopToggleBorder != null) BtnShopToggleBorder.Visibility = vis;
-        if (EventDock != null) EventDock.Visibility = vis;
-        if (AlertsEventsColumn != null) AlertsEventsColumn.Visibility = vis;
+        if (AlertsShopsColumn != null) AlertsShopsColumn.Visibility = vis;
         if (TradeAlertsMenuItem != null) TradeAlertsMenuItem.Visibility = vis;
+
+        // The event dock and the alerts "Events" column deliberately stay. They no longer
+        // carry Patrol Heli, Chinook or Travelling Vendor, but Cargo, Deep Sea and Oil Rig
+        // still arrive through audio detection — and the alert checkboxes must remain
+        // configurable even before anything has been detected, otherwise a player cannot
+        // decide in advance what they want to hear about.
+        if (EventDock != null) EventDock.Visibility = Visibility.Visible;
+        if (AlertsEventsColumn != null) AlertsEventsColumn.Visibility = Visibility.Visible;
 
         // Once a server is known not to deliver shops, stop asking altogether. Polling a dead
         // endpoint forever costs the server requests for nothing, and a server that starts
