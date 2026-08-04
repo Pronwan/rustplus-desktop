@@ -41,6 +41,17 @@ public sealed class GameAudioListener : IDisposable
     private const double MatchIntervalSeconds = 0.5;
     private const double WindowSlackSeconds = 1.5;
 
+    // Minimum gap between two reports of the same event from this client.
+    //
+    // The ring buffer alone is not enough. A cue stays matchable for as long as it sits in the
+    // buffer, and the score can peak late — measured in the field, one Oil Rig cue fired twice
+    // 19 seconds apart while the hold was 18.3 seconds. Suppression therefore has to be on the
+    // scale of the events, not of the buffer.
+    //
+    // Five minutes is safe for all three: the two Oil Rigs announce themselves ~27 minutes
+    // apart, Cargo runs 75 minutes and Deep Sea three hours. Nothing real can recur inside it.
+    private const double MinReportIntervalSeconds = 300;
+
     // Floor under every calibrated threshold, measured rather than derived. Calibration scores
     // clean clips against white noise, but real game audio produces *structured* peaks, so the
     // live collision floor sits higher than the synthetic one. Over one night every false
@@ -396,8 +407,9 @@ public sealed class GameAudioListener : IDisposable
 
                 lock (_gate)
                 {
+                    double hold = Math.Max(_windowSeconds + WindowSlackSeconds, MinReportIntervalSeconds);
                     if (_lastHit.TryGetValue(top.Ref.EventType, out var when) &&
-                        (DateTime.UtcNow - when).TotalSeconds < _windowSeconds + WindowSlackSeconds)
+                        (DateTime.UtcNow - when).TotalSeconds < hold)
                         continue;
                     _lastHit[top.Ref.EventType] = DateTime.UtcNow;
                 }

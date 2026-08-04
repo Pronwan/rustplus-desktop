@@ -116,10 +116,16 @@ public partial class MainWindow
 
         // Unknown servers fall back on purpose: showing events that can never arrive is worse
         // than briefly hiding ones that will.
-        EventCapabilities.SetSource(
-            string.Equals(remembered, "RustApi", StringComparison.OrdinalIgnoreCase)
-                ? ServerEventSource.RustApi
-                : ServerEventSource.Cloud);
+        bool wasApi = string.Equals(remembered, "RustApi", StringComparison.OrdinalIgnoreCase);
+
+        // Seed the detector's own state, not just the capability flag. ApplyShopDataAvailability
+        // recomputes the source from _shopDataAvailable, so leaving that at its optimistic
+        // default made the next ApplySettings pass overwrite the remembered mode — which is why
+        // a reconnect still showed the full view until the probe had run again.
+        _shopDataAvailable = wasApi;
+
+        EventCapabilities.SetSource(wasApi ? ServerEventSource.RustApi : ServerEventSource.Cloud);
+        ApplyShopDataAvailability();
     }
 
     /// <summary>Persists what the shop poll actually found, for the next connect.</summary>
