@@ -5641,10 +5641,10 @@
     <value>أوقات تحميل أسرع، استخدام أقل بكثير لذاكرة الوصول العشوائي (RAM)، وإغلاق نظيف.</value>
   </data>
   <data name="Update800Title3" xml:space="preserve">
-    <value>تحسين البحث في المتجر</value>
+    <value>تنبيهات الأحداث الجديدة</value>
   </data>
   <data name="Update800Desc3" xml:space="preserve">
-    <value>فئات العناصر، وتصفية المعالم، ومطابقة أفضل.</value>
+    <value>عند الاتصال بخادم، يتم تتبع ظهور منصة النفط والبحر العميق وسفينة الشحن فقط.</value>
   </data>
   <data name="Update800Title4" xml:space="preserve">
     <value>المحرك المنطقي وواجهة المستخدم</value>
@@ -5660,5 +5660,14 @@
   </data>
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>تتبع أعضاء العشيرة وحالتهم وأدوارهم وملاحظاتهم</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>حالة صناديق منصة النفط</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>الاستماع إلى أحداث الخادم</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>يكتشف منصة النفط وسفينة الشحن والبحر العميق من صوت اللعبة على الخوادم التي لم تعد ترسل الأحداث. يعمل فقط أثناء تشغيل Rust.</value>
   </data>
 </root>

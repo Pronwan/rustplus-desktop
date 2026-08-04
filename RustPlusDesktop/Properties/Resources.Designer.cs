@@ -737,6 +737,9 @@ namespace RustPlusDesk.Properties {
         public static string PurgeOrphanedCloudDataSuccessMessage => GetString("PurgeOrphanedCloudDataSuccessMessage");
         public static string UiDiscordWebhookExclusive => GetString("UiDiscordWebhookExclusive");
         public static string UiDiscordWebhookExclusiveTooltip => GetString("UiDiscordWebhookExclusiveTooltip");
+        public static string OilRigCrateStatus => GetString("OilRigCrateStatus");
+        public static string ListenForServerEvents => GetString("ListenForServerEvents");
+        public static string ListenForServerEventsDesc => GetString("ListenForServerEventsDesc");
     }
 }
 

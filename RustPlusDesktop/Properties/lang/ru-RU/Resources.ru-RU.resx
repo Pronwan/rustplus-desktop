@@ -5644,10 +5644,10 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Ускоренная загрузка, снижение потребления ОЗУ и корректное закрытие.</value>
   </data>
   <data name="Update800Title3" xml:space="preserve">
-    <value>Улучшенный поиск в магазине</value>
+    <value>Новые оповещения о событиях</value>
   </data>
   <data name="Update800Desc3" xml:space="preserve">
-    <value>Категории предметов, фильтры монументов и более точные совпадения.</value>
+    <value>При подключении к серверу отслеживаются только появления Oil Rig, Deep Sea и Cargo.</value>
   </data>
   <data name="Update800Title4" xml:space="preserve">
     <value>Логический движок и интерфейс</value>
@@ -5663,5 +5663,14 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>Отслеживайте участников клана, их статус, роли и заметки</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>Статус ящиков Oil Rig</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>Слушать события сервера</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>Определяет Oil Rig, Cargo и Deep Sea по звуку игры на серверах, которые больше не присылают события. Работает только пока запущен Rust.</value>
   </data>
 </root>

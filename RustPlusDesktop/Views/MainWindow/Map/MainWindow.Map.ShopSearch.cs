@@ -230,8 +230,9 @@ public partial class MainWindow
 
     private void ToggleShopSearch()
     {
-        // Shops removed from the Rust+ feed — never open the shop search.
-        if (Services.RustApiFeatures.EventsAndShopsRemoved)
+        // Shops removed from the Rust+ feed, or this server stopped delivering them —
+        // never open the shop search (it is also reachable via shortcut and tutorial).
+        if (Services.RustApiFeatures.EventsAndShopsRemoved || !_shopDataAvailable)
             return;
 
         if (ShopSearchContent.Visibility == Visibility.Collapsed)

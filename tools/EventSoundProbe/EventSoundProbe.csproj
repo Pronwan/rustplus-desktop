@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Throwaway measurement tool. NOT part of RustPlusDesk.sln; build and run it on its own
+    (see README.md next to this file for the commands).
+
+    It answers one question: are the server-wide event sounds reliably recognisable while
+    the game is actually being played (gunfire, music, ambience in the mix)? If the answer
+    is no, the whole crowd-sourced event idea is dead and nothing else needs building.
+
+    Captures the system mix on purpose — process loopback would need Windows build 20348+
+    and hand-written P/Invoke, and it would not change the answer: Rust's own mix is just
+    as full of gunfire.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>EventSoundProbe</RootNamespace>
+    <AssemblyName>EventSoundProbe</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+</Project>

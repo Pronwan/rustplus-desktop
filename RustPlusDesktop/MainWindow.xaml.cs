@@ -1632,6 +1632,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         _monumentWatcher.Reset();
         _deepSeaActive = false;
         _firstShopPollDone = false;
+        ResetShopDataAvailability();
         _deepSeaSpawnTime = null;
         _deepSeaDespawnTime = null;
         _deepSeaMidEvent = false;
@@ -6661,6 +6662,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         UpdateCloudSyncUI();
         ApplyMapPerformanceSettings();
         ApplyRustApiFeatureFlags();
+        ApplyShopDataAvailability();
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)

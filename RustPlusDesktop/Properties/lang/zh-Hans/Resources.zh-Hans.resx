@@ -904,10 +904,10 @@
     <value>加载时间更快，内存使用量大幅减少，关闭更彻底。</value>
   </data>
   <data name="Update800Title3" xml:space="preserve">
-    <value>商店搜索改进</value>
+    <value>全新事件提醒</value>
   </data>
   <data name="Update800Desc3" xml:space="preserve">
-    <value>物品分类、纪念碑过滤和更准确的匹配。</value>
+    <value>连接服务器后仅追踪石油钻井平台、深海事件与货轮的刷新。</value>
   </data>
   <data name="Update800Title4" xml:space="preserve">
     <value>逻辑引擎与界面</value>
@@ -923,5 +923,14 @@
   </data>
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>追踪战队成员、他们的在线状态、角色和备注</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>石油钻井平台补给箱状态</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>监听服务器事件</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>在不再发送事件的服务器上，通过游戏音频识别石油钻井平台、货轮与深海事件。仅在 Rust 运行时生效。</value>
   </data>
 </root>

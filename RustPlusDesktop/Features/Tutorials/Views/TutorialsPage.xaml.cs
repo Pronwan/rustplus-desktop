@@ -53,7 +53,13 @@ public partial class TutorialsPage : UserControl
         AutoBasicToggle.IsChecked = preferences.AutoStartBasicTutorial;
         AutoFeaturesToggle.IsChecked = preferences.AutoStartNewFeatureTutorials;
         _cards.Clear();
-        foreach (var definition in _registry.Tutorials.OrderBy(x => x.DisplayOrder))
+
+        // Hide chapters that would walk the user through features this server cannot offer.
+        // A tutorial highlighting a hidden button is worse than no tutorial: it looks broken
+        // and the guided step can never complete.
+        foreach (var definition in _registry.Tutorials
+                     .Where(x => Services.EventCapabilities.IsTutorialAvailable(x.Id))
+                     .OrderBy(x => x.DisplayOrder))
         {
             var progress = await _store.GetAsync(definition);
             _cards.Add(new TutorialCardViewModel(definition, progress));
@@ -92,7 +98,9 @@ public partial class TutorialsPage : UserControl
         foreach (string tutorialId in _cards.Where(x => x.IsRecommended && x.Status != TutorialStatus.Completed).Select(x => x.Id))
             _recommendedQueue.Enqueue(tutorialId);
         if (_recommendedQueue.Count == 0)
-            foreach (string tutorialId in _registry.Tutorials.Where(x => x.IsRecommended).Select(x => x.Id)) _recommendedQueue.Enqueue(tutorialId);
+            foreach (string tutorialId in _registry.Tutorials
+                         .Where(x => x.IsRecommended && Services.EventCapabilities.IsTutorialAvailable(x.Id))
+                         .Select(x => x.Id)) _recommendedQueue.Enqueue(tutorialId);
         Visibility = Visibility.Collapsed;
         await _service.ContinueAsync(_recommendedQueue.Dequeue());
     }

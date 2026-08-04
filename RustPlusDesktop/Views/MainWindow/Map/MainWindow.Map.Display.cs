@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -91,7 +92,21 @@ public partial class MainWindow
 
         _myPlayerWasInDeepSea = false;
         _isShowingDeepSeaMap = false;
-        if (BtnDeepSeaToggle != null) BtnDeepSeaToggle.Visibility = Visibility.Collapsed;
+
+        // The reset can happen while the Deep Sea view is active. Put the main-map visuals
+        // back by hand — SetShowingDeepSeaMap would early-out on the flag we just cleared,
+        // and the toggle stays visible, so it must start from a consistent state.
+        if (ImgMap != null) ImgMap.Visibility = Visibility.Visible;
+        if (_scene != null) _scene.Background = null;
+        if (ContentDeepSeaToggle != null)
+        {
+            ContentDeepSeaToggle.Content = new Image
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/ds_event.png")),
+                Width = 20,
+                Height = 20
+            };
+        }
 
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;
         if (_mapView != null) _mapView.Visibility = Visibility.Collapsed;

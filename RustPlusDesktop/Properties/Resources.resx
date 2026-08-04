@@ -5647,10 +5647,10 @@ You can find more information on the server&apos;s official website:
     <value>Faster load times, much less RAM usage, and cleaner closing.</value>
   </data>
   <data name="Update800Title3" xml:space="preserve">
-    <value>Improved Shop Search</value>
+    <value>New Event Alerts</value>
   </data>
   <data name="Update800Desc3" xml:space="preserve">
-    <value>Item categories, monument filtering, and better matching.</value>
+    <value>Only Oil Rig, Deep Sea and Cargo spawns will be tracked if connected to a server.</value>
   </data>
   <data name="Update800Title4" xml:space="preserve">
     <value>Logic Engine &amp; UI</value>
@@ -5666,5 +5666,14 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>Track clan members, their status, roles and notes</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>Oil Rig Crate Status</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>Listen for Server Events</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>Detects Oil Rig, Cargo and Deep Sea from the game audio on servers that no longer send events. Only active while Rust is running.</value>
   </data>
 </root>

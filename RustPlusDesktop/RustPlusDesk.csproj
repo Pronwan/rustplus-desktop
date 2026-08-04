@@ -337,6 +337,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="RustPlusApi" Version="2.0.0-beta.6" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
     <PackageReference Include="Velopack" Version="1.2.0" />
@@ -487,6 +488,9 @@
     <Resource Include="Assets\icons\watertreatment.png" />
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
+    <!--  Reference cues for the audio event listener. Embedded rather than copied so a
+          user cannot break detection by deleting or replacing a file on disk.  -->
+    <EmbeddedResource Include="Assets\audio-alerts\*.wav" />
     <EmbeddedResource Include="Assets\Data\recycler-items.json" />
     <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
     <EmbeddedResource Include="Assets\Data\raid-data.json" />

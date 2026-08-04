@@ -4833,7 +4833,7 @@
                                                              Tag="Vendor" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource OilRig}"
+                                                             Header="{DynamicResource OilRigCrateStatus}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
@@ -5284,7 +5284,10 @@
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                                <!-- Deep Sea Toggle Button -->
+                                <!--  Deep Sea Toggle Button — always visible. It used to be revealed by the
+                                      Casino Bar Shopkeeper shop marker, but vending data is going away from
+                                      the Rust+ feed; without the button players auto-switched into the Deep
+                                      Sea view on entry and had no way back to the main map.  -->
                                 <ui:Button
                                     x:Name="BtnDeepSeaToggle"
                                     Width="32"
@@ -5293,8 +5296,7 @@
                                     CornerRadius="6"
                                     Margin="0,0,0,0"
                                     Click="BtnDeepSeaToggle_Click"
-                                    ToolTip="Deep Sea Map"
-                                    Visibility="Collapsed">
+                                    ToolTip="Deep Sea Map">
                                     <ContentControl x:Name="ContentDeepSeaToggle">
                                         <Image Source="pack://application:,,,/Assets/icons/ds_event.png" Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </ContentControl>

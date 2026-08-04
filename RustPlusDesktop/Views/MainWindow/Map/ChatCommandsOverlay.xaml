@@ -126,15 +126,16 @@
                              <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
                              <ui:TextBox Grid.Row="5" Grid.Column="2" Text="{Binding CmdOilRig}" Margin="0,4" VerticalAlignment="Center" />
 
-                             <!-- Heli -->
-                             <TextBlock Grid.Row="6" Text="{DynamicResource PatrolHeliCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                             <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox Grid.Row="6" Grid.Column="2" Text="{Binding CmdHeli}" Margin="0,4" VerticalAlignment="Center" />
+                             <!--  Heli — hidden on servers without event markers; the row is Auto-sized,
+                                   so collapsing all three cells removes it without leaving a gap.  -->
+                             <TextBlock x:Name="CmdRowHeliLabel" Grid.Row="6" Text="{DynamicResource PatrolHeliCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock x:Name="CmdRowHeliPrefix" Grid.Row="6" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox x:Name="CmdRowHeliBox" Grid.Row="6" Grid.Column="2" Text="{Binding CmdHeli}" Margin="0,4" VerticalAlignment="Center" />
 
-                             <!-- Vendor -->
-                             <TextBlock Grid.Row="7" Text="{DynamicResource TravellingVendorCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                             <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox Grid.Row="7" Grid.Column="2" Text="{Binding CmdVendor}" Margin="0,4" VerticalAlignment="Center" />
+                             <!--  Vendor  -->
+                             <TextBlock x:Name="CmdRowVendorLabel" Grid.Row="7" Text="{DynamicResource TravellingVendorCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock x:Name="CmdRowVendorPrefix" Grid.Row="7" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox x:Name="CmdRowVendorBox" Grid.Row="7" Grid.Column="2" Text="{Binding CmdVendor}" Margin="0,4" VerticalAlignment="Center" />
 
                              <!-- Upkeep Detail -->
                              <TextBlock Grid.Row="8" Text="{DynamicResource UpkeepDetails}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />

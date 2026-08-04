@@ -61,6 +61,8 @@ public partial class MainWindow
         try { _shopLifetimes.Clear(); } catch { }
         try { _knownShopIds.Clear(); } catch { }
         _firstShopPollDone = false;
+        try { ResetShopDataAvailability(); } catch { }
+        try { StopServerEventTracking(); } catch { }
         _initialShopSnapshotTimeUtc = DateTime.MinValue;
         _alertsNeedRebaseline = true;
         _lastChatSendUtc = DateTime.MinValue;

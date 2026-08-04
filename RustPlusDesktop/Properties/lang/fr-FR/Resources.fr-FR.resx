@@ -5644,10 +5644,10 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Temps de chargement plus rapides, consommation de RAM réduite et fermeture propre.</value>
   </data>
   <data name="Update800Title3" xml:space="preserve">
-    <value>Recherche en boutique améliorée</value>
+    <value>Nouvelles alertes d'événements</value>
   </data>
   <data name="Update800Desc3" xml:space="preserve">
-    <value>Catégories d'articles, filtres de monuments et meilleures correspondances.</value>
+    <value>Sur un serveur connecté, seules les apparitions d'Oil Rig, de Deep Sea et du Cargo sont suivies.</value>
   </data>
   <data name="Update800Title4" xml:space="preserve">
     <value>Moteur logique &amp; interface</value>
@@ -5663,5 +5663,14 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   </data>
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>Suivez les membres du clan, leur statut, leurs rôles et leurs notes</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>État des caisses Oil Rig</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>Écouter les événements du serveur</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>Détecte Oil Rig, Cargo et Deep Sea via le son du jeu sur les serveurs qui n'envoient plus d'événements. Actif uniquement lorsque Rust est lancé.</value>
   </data>
 </root>

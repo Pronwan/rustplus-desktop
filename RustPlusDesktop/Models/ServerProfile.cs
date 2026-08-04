@@ -85,6 +85,17 @@ public class ServerProfile : INotifyPropertyChanged
 
     public bool UseFacepunchProxy { get; set; } = false;
 
+    /// <summary>
+    /// Which event source this server used last time — "RustApi" or "Cloud".
+    ///
+    /// Remembered so a reconnect starts in the right mode instead of guessing. Without it the
+    /// UI has to pick a default and correct itself once the first shop poll answers, which
+    /// means every connect to a working server briefly shows the reduced fallback view. Empty
+    /// on a server never connected to before; the fallback is assumed then, because promising
+    /// events that never arrive is worse than briefly hiding ones that do.
+    /// </summary>
+    public string LastEventSource { get; set; } = "";
+
     public ServerProfile()
     {
         _devices.CollectionChanged += Devices_CollectionChanged;

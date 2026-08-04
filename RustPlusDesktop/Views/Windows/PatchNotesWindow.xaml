@@ -75,14 +75,14 @@
                                 Improved player-marker size and visibility, custom markers now correctly appear above monument icons, and fixed the day and night indicator.
                             </TextBlock>
 
-                            <TextBlock Text="🛒 Shop and Vending Machine improvements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="📡 New Event Trackers" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Advanced Search &amp; Filters:</Run>
-                                Added item-category filtering (with custom icons), monument-shop filtering, custom ordering (cheapest first, closest first), and improved exact item matches.
+                                <Run FontWeight="Bold">&#x2022; Event tracking without the API:</Run>
+                                The new Rust+ API no longer supports shop polling or event tracking. When connected to a server you can still send event notifications to team chat and Discord for Oil Rig heartbeats, Cargo spawns and Deep Sea spawns.
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; UI Improvements:</Run>
-                                Improved the layout of the shop window and vendor markers.
+                                <Run FontWeight="Bold">&#x2022; Adjusted interface:</Run>
+                                Event dock, chat alerts and chat commands have been adjusted accordingly to align with these changes.
                             </TextBlock>
 
                             <TextBlock Text="💻 Logic engine and calculators" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
