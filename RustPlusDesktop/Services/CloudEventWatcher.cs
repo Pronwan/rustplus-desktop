@@ -252,6 +252,18 @@ public sealed class CloudEventWatcher
             // refuse. Worth logging, not worth alarming anyone.
             Log($"[cloud-events] Reported {detection.EventType} (score {detection.Score:F0}) → {result}");
 
+            // These two say *why* a report was refused, and neither is guessable afterwards.
+            // current_server_key only moves when a presence upload happens, and that rides on
+            // the team poll — so it can sit on a previous server while user-profile/touch keeps
+            // last_active_at fresh, which is exactly the combination that produces
+            // rejected_wrong_server without anything else looking wrong.
+            if (result == "rejected_wrong_server")
+                Log($"[cloud-events] Client reported server_key '{serverKey}'. Compare it with " +
+                    "user_profiles.current_server_key — presence rides on the team poll and may be stale.");
+            else if (result == "rejected_not_in_game")
+                Log("[cloud-events] The backend does not see this account as in-game on that server. " +
+                    "Check that cloud sync is on: with it off the app uploads an empty team list.");
+
             if (result.StartsWith("accepted") || result.StartsWith("corroborated"))
                 await RefreshAsync();
         }
