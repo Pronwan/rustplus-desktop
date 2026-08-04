@@ -7,7 +7,18 @@ using NAudio.Wave;
 
 namespace RustPlusDesk.Services.Audio;
 
-public sealed record GameAudioDetection(string EventType, double Score, DateTime DetectedAtUtc, string CaptureMode);
+/// <param name="CueStartedAtUtc">
+/// When the sound itself began, derived from where the match sits in the analysis window —
+/// not when this client happened to notice it.
+///
+/// This is what lets the backend tell corroboration from a second occurrence. Two clients
+/// hearing the same cue compute nearly the same start time however far apart they cross their
+/// detection thresholds; two different cues eight seconds apart compute start times eight
+/// seconds apart. Arrival time cannot separate those cases, because the spread between clients
+/// and the gap between cues are the same order of magnitude.
+/// </param>
+public sealed record GameAudioDetection(
+    string EventType, double Score, DateTime DetectedAtUtc, string CaptureMode, DateTime CueStartedAtUtc);
 
 /// <summary>
 /// Listens for Rust's server-wide monument cues and raises <see cref="Detected"/> when one is
@@ -444,8 +455,15 @@ public sealed class GameAudioListener : IDisposable
                     _lastHit[top.Ref.EventType] = (now, top.Offset);
                 }
 
-                Log($"[audio] {top.Ref.EventType} detected (score {top.Score:F0}, threshold {top.Ref.Threshold:F0}).");
-                Detected?.Invoke(new GameAudioDetection(top.Ref.EventType, top.Score, DateTime.UtcNow, CaptureMode));
+                // Window frame 0 is the oldest sample in the ring, so the cue begins
+                // `offset` hops after that.
+                double hopSeconds = (double)EventSoundFingerprint.HopSize / EventSoundFingerprint.SampleRate;
+                DateTime cueStart = now.AddSeconds(-_windowSeconds + top.Offset * hopSeconds);
+
+                Log($"[audio] {top.Ref.EventType} detected (score {top.Score:F0}, threshold {top.Ref.Threshold:F0}, " +
+                    $"cue began {(now - cueStart).TotalSeconds:F1}s ago).");
+                Detected?.Invoke(new GameAudioDetection(
+                    top.Ref.EventType, top.Score, now, CaptureMode, cueStart));
             }
         }
         catch

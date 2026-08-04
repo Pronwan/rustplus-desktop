@@ -237,6 +237,11 @@ public sealed class CloudEventWatcher
                     event_type = detection.EventType,
                     capture_mode = detection.CaptureMode,
                     score = detection.Score,
+                    // When the sound began, not when we noticed it. The backend corroborates
+                    // on this rather than on arrival time — otherwise two cues eight seconds
+                    // apart merge into one, while two clients hearing the same cue fall
+                    // outside any window narrow enough to prevent that.
+                    cue_started_at = detection.CueStartedAtUtc.ToString("o"),
                 });
 
             using var doc = JsonDocument.Parse(json);
