@@ -30,9 +30,12 @@ public sealed class GameAudioListener : IDisposable
 
     public bool IsRunning { get; private set; }
 
-    /// <summary>Reported to the backend so it can weigh the source. "process" once the
-    /// per-process capture path exists.</summary>
-    public string CaptureMode => "system";
+    /// <summary>
+    /// Reported to the backend so it can weigh the source. A "process" client cannot pick a
+    /// cue up from a video in another window, so the backend accepts its report on its own;
+    /// a "system" client needs corroboration.
+    /// </summary>
+    public string CaptureMode { get; private set; } = "system";
 
     private const string GameProcessName = "RustClient";
     private const double MatchIntervalSeconds = 0.5;
@@ -59,6 +62,7 @@ public sealed class GameAudioListener : IDisposable
 
     private List<EventSoundFingerprint.Reference>? _references;
     private WasapiLoopbackCapture? _capture;
+    private ProcessLoopbackCapture? _processCapture;
     private Timer? _processWatchdog;
 
     private float[] _ring = Array.Empty<float>();
@@ -228,15 +232,63 @@ public sealed class GameAudioListener : IDisposable
     {
         if (!IsRunning) return;
 
-        bool gameRunning;
-        try { gameRunning = Process.GetProcessesByName(GameProcessName).Length > 0; }
-        catch { gameRunning = false; }
+        int pid = 0;
+        try
+        {
+            var processes = Process.GetProcessesByName(GameProcessName);
+            if (processes.Length > 0) pid = processes[0].Id;
+        }
+        catch { pid = 0; }
 
-        if (gameRunning && _capture == null) StartCapture();
-        else if (!gameRunning && _capture != null) StopCapture();
+        bool running = pid != 0;
+        bool capturing = _capture != null || _processCapture != null;
+
+        if (running && !capturing) StartCapture(pid);
+        else if (!running && capturing) StopCapture();
     }
 
-    private void StartCapture()
+    private void StartCapture(int processId)
+    {
+        // Per-process capture first: it hears only Rust, so a stream or video playing in
+        // another window cannot trigger a detection. Falls back to the system mix when the
+        // Windows build is too old or activation fails for any reason — a working detector on
+        // the system mix is worth far more than none at all.
+        if (ProcessLoopbackCapture.IsSupported && TryStartProcessCapture(processId)) return;
+
+        StartSystemMixCapture();
+    }
+
+    private bool TryStartProcessCapture(int processId)
+    {
+        try
+        {
+            var capture = new ProcessLoopbackCapture();
+
+            _ring = new float[(int)(_windowSeconds * EventSoundFingerprint.SampleRate)];
+            _ringPos = 0;
+            _ringFilled = false;
+            _samplesSinceMatch = 0;
+
+            capture.DataAvailable += (samples, count) =>
+                OnSamples(samples, count, capture.SampleRate, capture.Channels);
+
+            capture.Start(processId);
+
+            _processCapture = capture;
+            CaptureMode = "process";
+            Log($"[audio] Capturing {GameProcessName} directly ({capture.SampleRate} Hz, {capture.Channels} ch) — " +
+                "detections from this client stand on their own.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _processCapture = null;
+            Log($"[audio] Per-process capture unavailable ({ex.Message}) — falling back to the system mix.");
+            return false;
+        }
+    }
+
+    private void StartSystemMixCapture()
     {
         try
         {
@@ -254,7 +306,9 @@ public sealed class GameAudioListener : IDisposable
             capture.StartRecording();
 
             _capture = capture;
-            Log($"[audio] Capturing system mix ({rate} Hz, {channels} ch) while {GameProcessName} runs.");
+            CaptureMode = "system";
+            Log($"[audio] Capturing system mix ({rate} Hz, {channels} ch) while {GameProcessName} runs — " +
+                "detections need a second client to confirm them.");
         }
         catch (Exception ex)
         {
@@ -265,28 +319,49 @@ public sealed class GameAudioListener : IDisposable
 
     private void StopCapture()
     {
-        var capture = _capture;
+        var systemCapture = _capture;
         _capture = null;
-        if (capture == null) return;
+        if (systemCapture != null)
+            try { systemCapture.StopRecording(); systemCapture.Dispose(); } catch { }
 
-        try { capture.StopRecording(); capture.Dispose(); } catch { }
+        var processCapture = _processCapture;
+        _processCapture = null;
+        if (processCapture != null)
+            try { processCapture.Dispose(); } catch { }
+
+        CaptureMode = "system";
         lock (_gate) _lastHit.Clear();
     }
 
+    /// <summary>Byte buffer from WASAPI loopback — 32-bit float, interleaved.</summary>
     private void OnAudio(WaveInEventArgs e, int captureRate, int channels)
+    {
+        if (channels <= 0) return;
+
+        int frames = e.BytesRecorded / 4 / channels;
+        var interleaved = new float[frames * channels];
+        Buffer.BlockCopy(e.Buffer, 0, interleaved, 0, frames * channels * 4);
+        OnSamples(interleaved, frames * channels, captureRate, channels);
+    }
+
+    /// <summary>
+    /// Shared analysis path. Both capture sources hand over interleaved 32-bit float samples,
+    /// so everything downstream — mixdown, resampling, matching — stays identical and the two
+    /// paths cannot drift apart in behaviour.
+    /// </summary>
+    private void OnSamples(float[] interleaved, int sampleCount, int captureRate, int channels)
     {
         var references = _references;
         if (references == null || references.Count == 0 || channels <= 0) return;
 
         try
         {
-            int frames = e.BytesRecorded / 4 / channels;
+            int frames = sampleCount / channels;
             var mono = new float[frames];
             for (int f = 0; f < frames; f++)
             {
                 float sum = 0;
-                for (int c = 0; c < channels; c++)
-                    sum += BitConverter.ToSingle(e.Buffer, (f * channels + c) * 4);
+                for (int c = 0; c < channels; c++) sum += interleaved[f * channels + c];
                 mono[f] = sum / channels;
             }
 
