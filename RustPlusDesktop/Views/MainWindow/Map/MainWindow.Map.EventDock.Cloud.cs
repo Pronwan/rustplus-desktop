@@ -113,7 +113,10 @@ public partial class MainWindow
 
             items.Add(new EventDockItem
             {
-                Name = Properties.Resources.OilRig,
+                // Not Resources.OilRig — that reads "Oil Rig Trigger", which described a player
+                // calling the rig via the API. Here it is a recurring "a crate is up" cue, and
+                // the wording matches the alert menu so both call it the same thing.
+                Name = Properties.Resources.OilRigCrateStatus,
                 Icon = "pack://application:,,,/Assets/icons/crate.png",
                 Active = oilRig?.IsActive == true,
                 Id = 0, X = 0, Y = 0, Trackable = false, Type = 0,
