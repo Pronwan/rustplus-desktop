@@ -1815,7 +1815,7 @@ const useProxy = process.argv[8] === "true";
 // the server also sends proportionally more rays per packet — so measure it instead of
 // assuming. Coverage below ~100% means each rendered frame is only partly filled.
 const DIAG_WINDOW = 10;
-let diagW = 0, diagH = 0, diagSeen = 0;
+let diagW = 0, diagH = 0, diagSeen = 0, diagLast = null;
 const diagRays = [], diagBytes = [];
 
 // One iteration of this loop consumes exactly one ray, mirroring the decoder in
@@ -1842,17 +1842,23 @@ function noteRays(rayData){
   if (diagRays.length > DIAG_WINDOW) { diagRays.shift(); diagBytes.shift(); }
   diagSeen++;
 
-  // Once the window is full, then sparsely — enough to spot a change, not enough to
-  // drown the log during a long session.
   if (diagRays.length < DIAG_WINDOW) return;
-  if (diagSeen !== DIAG_WINDOW && diagSeen % 50 !== 0) return;
 
   const px = diagW * diagH;
   const rays = diagRays.reduce((a, b) => a + b, 0);
   const bytes = diagBytes.reduce((a, b) => a + b, 0);
-  const cover = px ? ((100 * rays / px).toFixed(1) + "%") : "?";
+  const pct = px ? (100 * rays / px) : 0;
+
+  // Say it once per camera, then only when the answer actually changes. Repeating an
+  // unchanged measurement every few seconds buries everything else in the log, and this
+  // number is near-constant by nature — the server chunks by ray count, so it only moves
+  // when the resolution or the chunk size does. Which is exactly the event worth catching.
+  if (diagLast !== null && Math.abs(pct - diagLast) < 5) return;
+  diagLast = pct;
+
   console.error("DIAG res=" + diagW + "x" + diagH + " px=" + px
-              + " pkts=" + diagRays.length + " rays=" + rays + " coverage=" + cover
+              + " pkts=" + diagRays.length + " rays=" + rays
+              + " coverage=" + pct.toFixed(1) + "%"
               + " bytes/pkt=" + Math.round(bytes / diagBytes.length));
 }
 // rustplus.js rejects sendRequestAsync with the server's AppError protobuf, not an Error.
@@ -1989,7 +1995,7 @@ rp.on("connected", async () => {
           const cf = info.controlFlags || 0;
           if (w !== diagW || h !== diagH) {
             console.error("DIAG resolution now " + w + "x" + h);
-            diagW = w; diagH = h; diagSeen = 0;
+            diagW = w; diagH = h; diagSeen = 0; diagLast = null;
             diagRays.length = 0; diagBytes.length = 0;
           }
           process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h, cf }), "utf8").toString("base64") + "\n");
