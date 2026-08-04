@@ -1478,6 +1478,13 @@ public partial class MainWindow
                 if (isClickable) itemRow.MouseLeftButtonDown += EventItem_Click;
             }
 
+            // Drop rows the list no longer has. The loop above overwrites existing rows in
+            // place and only appends when it runs out, so a shrinking list left the surplus
+            // behind showing whatever it held before — switching from the API's five events to
+            // the fallback's three kept a stale Travelling Vendor and a second Deep Sea.
+            while (stack.Children.Count > activeEvents.Count)
+                stack.Children.RemoveAt(stack.Children.Count - 1);
+
             // Sync events to 3D map if it is active
             if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
             {
