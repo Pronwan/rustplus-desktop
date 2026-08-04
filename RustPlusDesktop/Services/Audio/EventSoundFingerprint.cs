@@ -285,7 +285,13 @@ internal static class EventSoundFingerprint
     /// clip and itself from ~23x to ~1.3x, because a genuine match also fills neighbouring
     /// offsets, so the "background" rises along with the peak.
     /// </summary>
-    public static double Match(Reference reference, List<(int T, int F)> livePeaks)
+    /// <summary>
+    /// Returns the peak height and the time offset it agreed on. The offset says where inside
+    /// the analysis window the cue sits, which is what makes one occurrence distinguishable
+    /// from the next: as the ring buffer advances, the same sound's offset shrinks by exactly
+    /// the elapsed time, while a genuinely new sound appears at a fresh offset near the end.
+    /// </summary>
+    public static (double Score, int Offset) Match(Reference reference, List<(int T, int F)> livePeaks)
     {
         var live = Hashes(livePeaks);
         var histogram = new Dictionary<int, int>();
@@ -301,10 +307,11 @@ internal static class EventSoundFingerprint
                 }
         }
 
-        int peak = 0;
-        foreach (int count in histogram.Values)
-            if (count > peak) peak = count;
-        return peak;
+        int peak = 0, peakOffset = 0;
+        foreach (var (offset, count) in histogram)
+            if (count > peak) { peak = count; peakOffset = offset; }
+
+        return (peak, peakOffset);
     }
 
     // ---------------------------------------------------------------- fft

@@ -15,11 +15,12 @@ public sealed record GameAudioDetection(string EventType, double Score, DateTime
 /// servers the audio is the only remaining signal that Cargo, Deep Sea or an Oil Rig crate is
 /// up.
 ///
-/// Captures the system mix, not rust.exe specifically. Process loopback would need Windows
-/// build 20348 and hand-written P/Invoke, and it would not improve detection — Rust's own mix
-/// is just as full of gunfire. What it *would* fix is a Rust video playing in another window,
-/// which is why the report carries <see cref="CaptureMode"/> and the backend trusts a
-/// process-capture client on its own while a system-mix client needs corroboration.
+/// Prefers capturing RustClient.exe directly (see <see cref="ProcessLoopbackCapture"/>) and
+/// falls back to the system mix where Windows is too old for it. The difference is not
+/// detection quality — Rust's own mix is just as full of gunfire — but provenance: a
+/// per-process client cannot pick a cue up from a Rust video playing in another window. That is
+/// why the report carries <see cref="CaptureMode"/> and the backend accepts a process client's
+/// word alone while a system-mix client needs corroboration.
 /// </summary>
 public sealed class GameAudioListener : IDisposable
 {
@@ -41,24 +42,24 @@ public sealed class GameAudioListener : IDisposable
     private const double MatchIntervalSeconds = 0.5;
     private const double WindowSlackSeconds = 1.5;
 
-    // Minimum gap between two reports of the same event from this client.
+    // Telling one occurrence from the next cannot be done with a timer.
     //
-    // Sized against the duplicate mechanism, not against the events. A cue stays matchable for
-    // as long as it sits in the ring buffer and its score can peak late — measured in the
-    // field, one Oil Rig cue fired twice 19 seconds apart while the hold was 18.3 seconds. The
-    // longest a single occurrence can echo is the buffer (16.8 s) plus the cue itself (~8 s),
-    // so roughly 25 seconds.
+    // A cue stays matchable for as long as it sits in the ring buffer — up to ~25 seconds after
+    // it began. But on a server where both Oil Rigs respawned together, the second announcement
+    // starts as soon as the first has finished, roughly 8-10 seconds in. The two intervals
+    // overlap, so any hold long enough to swallow the echo also swallows a real second cue.
     //
-    // Deliberately NOT minutes. The two Oil Rigs each announce themselves every ~65 minutes,
-    // but their phase depends on when each last respawned — it is arbitrary, and they can fall
-    // close together or even coincide. A minute-scale hold would silently swallow a genuine
-    // second rig. 45 seconds clears the echo with margin while keeping two rigs a minute apart
-    // reportable.
-    //
-    // Two rigs inside 45 seconds do collapse into one report. That is unavoidable: the cue is
-    // identical for both and carries no identity, so at that distance they are indistinguishable
-    // from one sound heard twice.
-    private const double MinReportIntervalSeconds = 45;
+    // The match offset separates them. It says where inside the analysis window the cue sits,
+    // and as the buffer advances the same sound's offset shrinks by exactly the elapsed time.
+    // A new sound instead shows up at a fresh offset near the end of the window. Predicting
+    // where the previous occurrence *would* now be and comparing is therefore exact, where a
+    // timer can only guess.
+    private const double SameOccurrenceMaxAgeSeconds = 30;   // beyond this the cue has left the buffer
+    private const int SameOccurrenceToleranceFrames = 30;    // ~0.5 s; two cues are ~500 frames apart
+
+    /// <summary>Guards against re-firing inside a single match interval. Far below the ~8 s
+    /// that separates two back-to-back announcements, so it cannot hide a real one.</summary>
+    private const double MinReportIntervalSeconds = 3;
 
     // Floor under every calibrated threshold, measured rather than derived. Calibration scores
     // clean clips against white noise, but real game audio produces *structured* peaks, so the
@@ -77,7 +78,9 @@ public sealed class GameAudioListener : IDisposable
     private static readonly HashSet<string> ExcludedClips = new(StringComparer.OrdinalIgnoreCase) { "horn_disant" };
 
     private readonly object _gate = new();
-    private readonly Dictionary<string, DateTime> _lastHit = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>Last reported occurrence per event: when it fired and where in the analysis
+    /// window it sat, which is what distinguishes an echo from a genuine second cue.</summary>
+    private readonly Dictionary<string, (DateTime At, int Offset)> _lastHit = new(StringComparer.OrdinalIgnoreCase);
 
     private List<EventSoundFingerprint.Reference>? _references;
     private WasapiLoopbackCapture? _capture;
@@ -181,13 +184,13 @@ public sealed class GameAudioListener : IDisposable
                 noisy[i] = (float)Math.Clamp(samples[i] + (rng.NextDouble() * 2 - 1) * 0.15, -1, 1);
 
             var peaks = EventSoundFingerprint.Peaks(noisy);
-            double self = EventSoundFingerprint.Match(reference, peaks);
+            double self = EventSoundFingerprint.Match(reference, peaks).Score;
 
             double worstCross = 0;
             foreach (var (_, _, other) in loaded)
             {
                 if (other.EventType == reference.EventType) continue;
-                worstCross = Math.Max(worstCross, EventSoundFingerprint.Match(other, peaks));
+                worstCross = Math.Max(worstCross, EventSoundFingerprint.Match(other, peaks).Score);
             }
 
             double floor = Math.Max(worstCross * 1.5, MinScore);
@@ -229,11 +232,11 @@ public sealed class GameAudioListener : IDisposable
                 noisy[i] = (float)Math.Clamp(trigger.Samples[i] + (rng.NextDouble() * 2 - 1) * 0.15, -1, 1);
 
             var peaks = EventSoundFingerprint.Peaks(noisy);
-            double triggerScore = EventSoundFingerprint.Match(trigger.Ref, peaks);
+            double triggerScore = EventSoundFingerprint.Match(trigger.Ref, peaks).Score;
 
             foreach (var ambience in group.Where(l => !l.Ref.IsTrigger).ToList())
             {
-                if (EventSoundFingerprint.Match(ambience.Ref, peaks) < triggerScore) continue;
+                if (EventSoundFingerprint.Match(ambience.Ref, peaks).Score < triggerScore) continue;
                 loaded.Remove(ambience);
                 Log($"[audio] Dropped '{ambience.Name}' — it outscores the {trigger.Ref.EventType} " +
                     "trigger on the trigger's own sound and would suppress real detections.");
@@ -403,7 +406,11 @@ public sealed class GameAudioListener : IDisposable
             foreach (var group in references.GroupBy(r => r.EventType))
             {
                 var scored = group
-                    .Select(r => (Ref: r, Score: EventSoundFingerprint.Match(r, peaks)))
+                    .Select(r =>
+                    {
+                        var (score, offset) = EventSoundFingerprint.Match(r, peaks);
+                        return (Ref: r, Score: score, Offset: offset);
+                    })
                     .OrderByDescending(x => x.Score)
                     .ToList();
 
@@ -413,13 +420,28 @@ public sealed class GameAudioListener : IDisposable
                 // Ambience beat the trigger: the event is already running, not starting.
                 if (!top.Ref.IsTrigger) continue;
 
+                var now = DateTime.UtcNow;
                 lock (_gate)
                 {
-                    double hold = Math.Max(_windowSeconds + WindowSlackSeconds, MinReportIntervalSeconds);
-                    if (_lastHit.TryGetValue(top.Ref.EventType, out var when) &&
-                        (DateTime.UtcNow - when).TotalSeconds < hold)
-                        continue;
-                    _lastHit[top.Ref.EventType] = DateTime.UtcNow;
+                    if (_lastHit.TryGetValue(top.Ref.EventType, out var previous))
+                    {
+                        double elapsed = (now - previous.At).TotalSeconds;
+
+                        if (elapsed < MinReportIntervalSeconds) continue;
+
+                        // Where the earlier occurrence would sit now, had the buffer simply
+                        // carried it along. A match at that position is the same sound again.
+                        if (elapsed < SameOccurrenceMaxAgeSeconds)
+                        {
+                            int framesElapsed = (int)Math.Round(
+                                elapsed * EventSoundFingerprint.SampleRate / EventSoundFingerprint.HopSize);
+                            int expected = previous.Offset - framesElapsed;
+
+                            if (Math.Abs(top.Offset - expected) <= SameOccurrenceToleranceFrames) continue;
+                        }
+                    }
+
+                    _lastHit[top.Ref.EventType] = (now, top.Offset);
                 }
 
                 Log($"[audio] {top.Ref.EventType} detected (score {top.Score:F0}, threshold {top.Ref.Threshold:F0}).");
