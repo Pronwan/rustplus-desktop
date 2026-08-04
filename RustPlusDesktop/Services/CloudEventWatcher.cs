@@ -257,7 +257,8 @@ public sealed class CloudEventWatcher
             // the team poll — so it can sit on a previous server while user-profile/touch keeps
             // last_active_at fresh, which is exactly the combination that produces
             // rejected_wrong_server without anything else looking wrong.
-            if (result == "rejected_wrong_server")
+            // StartsWith, not equality: the rejection may carry the compared values appended.
+            if (result.StartsWith("rejected_wrong_server", StringComparison.Ordinal))
                 Log($"[cloud-events] Client reported server_key '{serverKey}'. Compare it with " +
                     "user_profiles.current_server_key — presence rides on the team poll and may be stale.");
             else if (result == "rejected_not_in_game")
