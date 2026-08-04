@@ -864,6 +864,18 @@ const pid    = process.argv[4];
 const tok    = process.argv[5];
 const cam    = process.argv[6];
 const tmo    = parseInt(process.argv[7], 10) || 5000;
+// rustplus.js rejects sendRequestAsync with the server's AppError protobuf, not an Error.
+// That object carries .error ("not_found", "wrong_type", ...) and no .message, so the usual
+// String(e) turns the one piece of information we need into "[object Object]".
+function errText(e){
+  if (e === null || e === undefined) return "unknown";
+  if (typeof e === "string") return e;
+  if (e.error) return (typeof e.error === "string") ? e.error : JSON.stringify(e.error);
+  if (e.message) return String(e.message);
+  if (e.code) return String(e.code);
+  try { const j = JSON.stringify(e); if (j && j !== "{}") return j; } catch {}
+  return String(e);
+}
 const pkgDir = process.argv[8]; // ...\node_modules\@liamcottle\rustplus.js
 const useProxy = process.argv[9] === "true";
 // console.error("using pkg dir: " + pkgDir);
@@ -1041,15 +1053,14 @@ rp.on("connected", async () => {
     // Sicherheitsnetz
     timer = setTimeout(() => { console.error("TIMEOUT"); try { rp.disconnect(); } catch {} }, Math.max(1000, tmo));
   } catch (e) {
-    console.error("ERR:" + (e && e.message ? e.message : String(e)));
+    console.error("ERR:" + errText(e));
     try { rp.disconnect(); } catch {}
   }
 });
 
 rp.on("error", (e) => {
   try {
-    const msg = (e && (e.message || e.code)) ? `${e.message||e.code}` : JSON.stringify(e);
-    console.error("ERR:" + msg);
+    console.error("ERR:" + errText(e));
   } catch { console.error("ERR:unknown"); }
 });
 rp.connect();
@@ -1797,6 +1808,65 @@ const tok    = process.argv[5];
 const cam    = process.argv[6];
 const pkgDir = process.argv[7];
 const useProxy = process.argv[8] === "true";
+// --- resolution / coverage diagnostics -------------------------------------------
+// camera.js renders from a sliding window of exactly 10 ray packets, a number fixed
+// when cameras were 160x90. Facepunch is doubling that to 320x180, which is four times
+// the pixels for the same ten packets. Whether that matters depends entirely on whether
+// the server also sends proportionally more rays per packet — so measure it instead of
+// assuming. Coverage below ~100% means each rendered frame is only partly filled.
+const DIAG_WINDOW = 10;
+let diagW = 0, diagH = 0, diagSeen = 0;
+const diagRays = [], diagBytes = [];
+
+// One iteration of this loop consumes exactly one ray, mirroring the decoder in
+// camera.js — same break condition, same pointer advances per prefix.
+function countRays(rayData){
+  if (!rayData || !rayData.length) return 0;
+  let p = 0, n = 0;
+  while (p < rayData.length - 1) {
+    const b = rayData[p++];
+    if (b === 255) { p += 3; }
+    else {
+      const c = b & 192;
+      if (c === 64 || c === 128) p += 1;
+      else if (c === 192) p += 2;
+    }
+    n++;
+  }
+  return n;
+}
+
+function noteRays(rayData){
+  diagRays.push(countRays(rayData));
+  diagBytes.push(rayData.length);
+  if (diagRays.length > DIAG_WINDOW) { diagRays.shift(); diagBytes.shift(); }
+  diagSeen++;
+
+  // Once the window is full, then sparsely — enough to spot a change, not enough to
+  // drown the log during a long session.
+  if (diagRays.length < DIAG_WINDOW) return;
+  if (diagSeen !== DIAG_WINDOW && diagSeen % 50 !== 0) return;
+
+  const px = diagW * diagH;
+  const rays = diagRays.reduce((a, b) => a + b, 0);
+  const bytes = diagBytes.reduce((a, b) => a + b, 0);
+  const cover = px ? ((100 * rays / px).toFixed(1) + "%") : "?";
+  console.error("DIAG res=" + diagW + "x" + diagH + " px=" + px
+              + " pkts=" + diagRays.length + " rays=" + rays + " coverage=" + cover
+              + " bytes/pkt=" + Math.round(bytes / diagBytes.length));
+}
+// rustplus.js rejects sendRequestAsync with the server's AppError protobuf, not an Error.
+// That object carries .error ("not_found", "wrong_type", ...) and no .message, so the usual
+// String(e) turns the one piece of information we need into "[object Object]".
+function errText(e){
+  if (e === null || e === undefined) return "unknown";
+  if (typeof e === "string") return e;
+  if (e.error) return (typeof e.error === "string") ? e.error : JSON.stringify(e.error);
+  if (e.message) return String(e.message);
+  if (e.code) return String(e.code);
+  try { const j = JSON.stringify(e); if (j && j !== "{}") return j; } catch {}
+  return String(e);
+}
 
 function reqFrom(base, id){
   return require(require.resolve(id, { paths: [base] }));
@@ -1898,6 +1968,7 @@ rp.on("connected", async () => {
         const resp = (m && (m.response || m.appMessage || m.data)) || m || {};
         const broadcast = resp.broadcast || resp.appBroadcast || {};
         const rays = broadcast.cameraRays || broadcast.appCameraRays || resp.cameraRays || null;
+        if (rays && rays.rayData) noteRays(rays.rayData);
         if (rays && Array.isArray(rays.entities)) {
           const ents = rays.entities.map(e => ({
             id:  e.entityId || 0,
@@ -1916,6 +1987,11 @@ rp.on("connected", async () => {
         if (info && (info.width || info.height)) {
           const w = info.width || 0, h = info.height || 0;
           const cf = info.controlFlags || 0;
+          if (w !== diagW || h !== diagH) {
+            console.error("DIAG resolution now " + w + "x" + h);
+            diagW = w; diagH = h; diagSeen = 0;
+            diagRays.length = 0; diagBytes.length = 0;
+          }
           process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h, cf }), "utf8").toString("base64") + "\n");
         }
       } catch (ex) {
@@ -1953,14 +2029,13 @@ rp.on("connected", async () => {
     });
     process.stdin.resume();
   } catch (e) {
-    console.error("ERR:" + (e && e.message ? e.message : String(e)));
+    console.error("ERR:" + errText(e));
     process.exit(1);
   }
 });
 rp.on("error", (e) => {
   try {
-    const msg = (e && (e.message || e.code)) ? `${e.message||e.code}` : JSON.stringify(e);
-    console.error("ERR:" + msg);
+    console.error("ERR:" + errText(e));
   } catch { console.error("ERR:unknown"); }
 });
 rp.connect();

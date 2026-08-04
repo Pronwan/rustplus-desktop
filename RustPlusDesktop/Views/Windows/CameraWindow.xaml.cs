@@ -361,12 +361,17 @@ namespace RustPlusDesk.Views
 
         private void OnNodeErrorReceived(string line)
         {
-            System.Diagnostics.Debug.WriteLine($"[node-err] {line}");
+            // The stream reports its own health on stderr, which is where anything that is not
+            // a protocol line has to go. Labelling a measurement as an error would send anyone
+            // reading the log after the resolution change hunting for a fault that is not there.
+            string tag = line.StartsWith("DIAG", StringComparison.Ordinal) ? "cam-diag" : "node-err";
+
+            System.Diagnostics.Debug.WriteLine($"[{tag}] {line}");
             Dispatcher.Invoke(() =>
             {
                 if (Owner is MainWindow mw)
                 {
-                    mw.AppendLog($"[node-err] {line}");
+                    mw.AppendLog($"[{tag}] {line}");
                 }
             });
         }
