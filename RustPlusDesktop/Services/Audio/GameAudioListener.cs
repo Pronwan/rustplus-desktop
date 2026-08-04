@@ -43,14 +43,22 @@ public sealed class GameAudioListener : IDisposable
 
     // Minimum gap between two reports of the same event from this client.
     //
-    // The ring buffer alone is not enough. A cue stays matchable for as long as it sits in the
-    // buffer, and the score can peak late — measured in the field, one Oil Rig cue fired twice
-    // 19 seconds apart while the hold was 18.3 seconds. Suppression therefore has to be on the
-    // scale of the events, not of the buffer.
+    // Sized against the duplicate mechanism, not against the events. A cue stays matchable for
+    // as long as it sits in the ring buffer and its score can peak late — measured in the
+    // field, one Oil Rig cue fired twice 19 seconds apart while the hold was 18.3 seconds. The
+    // longest a single occurrence can echo is the buffer (16.8 s) plus the cue itself (~8 s),
+    // so roughly 25 seconds.
     //
-    // Five minutes is safe for all three: the two Oil Rigs announce themselves ~27 minutes
-    // apart, Cargo runs 75 minutes and Deep Sea three hours. Nothing real can recur inside it.
-    private const double MinReportIntervalSeconds = 300;
+    // Deliberately NOT minutes. The two Oil Rigs each announce themselves every ~65 minutes,
+    // but their phase depends on when each last respawned — it is arbitrary, and they can fall
+    // close together or even coincide. A minute-scale hold would silently swallow a genuine
+    // second rig. 45 seconds clears the echo with margin while keeping two rigs a minute apart
+    // reportable.
+    //
+    // Two rigs inside 45 seconds do collapse into one report. That is unavoidable: the cue is
+    // identical for both and carries no identity, so at that distance they are indistinguishable
+    // from one sound heard twice.
+    private const double MinReportIntervalSeconds = 45;
 
     // Floor under every calibrated threshold, measured rather than derived. Calibration scores
     // clean clips against white noise, but real game audio produces *structured* peaks, so the
