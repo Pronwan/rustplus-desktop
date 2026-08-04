@@ -50,6 +50,16 @@ public sealed class CloudEventWatcher
     /// <summary>Raised whenever the overall picture changed and views should refresh.</summary>
     public event Action? StateRefreshed;
 
+    /// <summary>
+    /// Pushes a fresh presence upload. Set by the window that owns the team poll.
+    ///
+    /// Needed because presence goes stale while a player is AFK — and an AFK player is exactly
+    /// the one most likely to have the game running and hear a cue. Without this the backend
+    /// refuses their report as rejected_stale_presence even though they are in-game on the
+    /// right server. Reports are rare enough that one extra round trip costs nothing.
+    /// </summary>
+    public Func<Task>? PresenceRefresh { get; set; }
+
     private readonly object _gate = new();
     private readonly Dictionary<RustEventKind, CloudEventState> _events = new();
     private readonly SemaphoreSlim _subscribeLock = new(1, 1);
@@ -229,6 +239,13 @@ public sealed class CloudEventWatcher
 
         try
         {
+            // Make the backend's freshness check pass before asking it anything.
+            if (PresenceRefresh != null)
+            {
+                try { await PresenceRefresh(); }
+                catch (Exception ex) { Log($"[cloud-events] Presence refresh failed: {ex.Message}"); }
+            }
+
             string json = await SupabaseAuthManager.CallEdgeFunctionAsync(
                 "server-events/report", HttpMethod.Post,
                 new

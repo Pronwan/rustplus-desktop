@@ -27,6 +27,27 @@ public partial class MainWindow
             ApplyRememberedEventSource();
             HookCloudEventAlerts();
 
+            // Force the next presence upload to go through with this server's key.
+            //
+            // Presence is pushed from the team poll and is both throttled and gated on a
+            // signature, and it fires roughly half a second BEFORE a connection finishes
+            // initialising — so the upload can still carry the previous server. Normally the
+            // next poll corrects that within seconds, but a player who goes AFK right after
+            // connecting produces no further uploads at all, and current_server_key then stays
+            // wrong for the whole session. Every report is refused as rejected_wrong_server
+            // while presence, key format and profile all look healthy.
+            _lastCloudPresenceSignature = null;
+            _hasCriticalPresenceChange = true;
+
+            // And let the watcher force one on demand, for the AFK case where no poll would
+            // otherwise refresh it.
+            CloudEventWatcher.Instance.PresenceRefresh = async () =>
+            {
+                _hasCriticalPresenceChange = true;
+                _lastCloudPresenceSignature = null;
+                await Dispatcher.InvokeAsync(async () => await LoadTeamAsync()).Task.Unwrap();
+            };
+
             await CloudEventWatcher.Instance.AttachAsync(serverKey);
             UpdateAudioListenerState();
 
