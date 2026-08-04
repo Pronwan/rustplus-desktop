@@ -740,6 +740,8 @@ namespace RustPlusDesk.Properties {
         public static string OilRigCrateStatus => GetString("OilRigCrateStatus");
         public static string ListenForServerEvents => GetString("ListenForServerEvents");
         public static string ListenForServerEventsDesc => GetString("ListenForServerEventsDesc");
+        public static string TrustOwnDetections => GetString("TrustOwnDetections");
+        public static string TrustOwnDetectionsDesc => GetString("TrustOwnDetectionsDesc");
         public static string ServerEventsSection => GetString("ServerEventsSection");
         public static string OilRigCrateSeen => GetString("OilRigCrateSeen");
         public static string EventNotDetected => GetString("EventNotDetected");

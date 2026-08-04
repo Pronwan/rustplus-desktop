@@ -106,6 +106,17 @@ public class TrackingSettings
     /// </summary>
     public bool ListenForServerEvents { get; set; } = true;
 
+    /// <summary>
+    /// Treat a cue this client heard itself as true, without waiting for another player to
+    /// corroborate it.
+    ///
+    /// On by default, because the alternative is refusing to show someone an event they
+    /// personally just heard. Corroboration exists to stop one client speaking for a whole
+    /// server; it was never meant to stop a client speaking for itself. Reporting is
+    /// unaffected — the backend still applies its own rules to what everyone else sees.
+    /// </summary>
+    public bool TrustOwnDetections { get; set; } = true;
+
     public bool AnnouncePlayerOnline { get; set; } = false;
     public bool AnnouncePlayerOffline { get; set; } = false;
     public bool AnnouncePlayerAfk { get; set; } = false;
@@ -653,6 +664,11 @@ public static class TrackingService
     {
         get => _settings.ListenForServerEvents;
         set { _settings.ListenForServerEvents = value; SaveDB(); }
+    }
+    public static bool TrustOwnDetections
+    {
+        get => _settings.TrustOwnDetections;
+        set { _settings.TrustOwnDetections = value; SaveDB(); }
     }
     public static bool AnnounceHeli
     {

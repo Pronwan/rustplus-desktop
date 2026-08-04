@@ -5733,6 +5733,12 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>Erkennt Oil Rig, Cargo und Deep Sea am Spielton, wenn ein Server keine Events mehr sendet. Nur aktiv, solange Rust läuft.</value>
   </data>
+  <data name="TrustOwnDetections" xml:space="preserve">
+    <value>Eigenen Erkennungen vertrauen</value>
+  </data>
+  <data name="TrustOwnDetectionsDesc" xml:space="preserve">
+    <value>Zeigt ein Event, sobald dieser PC es hört, ohne auf die Bestätigung eines anderen Spielers zu warten. Das Melden bleibt unverändert – was andere Spieler sehen, braucht weiterhin deren eigene Bestätigungen.</value>
+  </data>
   <data name="ServerEventsSection" xml:space="preserve">
     <value>Server-Events</value>
   </data>

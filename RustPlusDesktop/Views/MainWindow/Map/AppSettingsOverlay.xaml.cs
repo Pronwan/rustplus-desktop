@@ -715,6 +715,7 @@ namespace RustPlusDesk.Views
 
             // Server events (audio fallback)
             ChkListenForServerEvents.IsChecked = TrackingService.ListenForServerEvents;
+            ChkTrustOwnDetections.IsChecked = TrackingService.TrustOwnDetections;
 
             // Offline Death
             ChkOfflineDeathAlerts.IsChecked = TrackingService.OfflineDeathAlertsEnabled;
@@ -898,6 +899,7 @@ namespace RustPlusDesk.Views
             }
 
             TrackingService.ListenForServerEvents = ChkListenForServerEvents.IsChecked == true;
+            TrackingService.TrustOwnDetections = ChkTrustOwnDetections.IsChecked == true;
             TrackingService.OfflineDeathAlertsEnabled = ChkOfflineDeathAlerts.IsChecked == true;
             TrackingService.OfflineDeathSoundLoopEnabled = ChkOfflineDeathSoundLoop.IsChecked == true;
             TrackingService.OfflineDeathDiscordEnabled = ChkOfflineDeathDiscord.IsChecked == true;

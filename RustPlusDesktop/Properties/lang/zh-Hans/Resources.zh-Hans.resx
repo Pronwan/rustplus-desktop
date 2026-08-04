@@ -933,6 +933,12 @@
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>在不再发送事件的服务器上，通过游戏音频识别石油钻井平台、货轮与深海事件。仅在 Rust 运行时生效。</value>
   </data>
+  <data name="TrustOwnDetections" xml:space="preserve">
+    <value>信任本机的检测结果</value>
+  </data>
+  <data name="TrustOwnDetectionsDesc" xml:space="preserve">
+    <value>本机一听到事件就立即显示，无需等待其他玩家确认。上报机制不变：其他玩家看到的内容仍需他们各自的确认。</value>
+  </data>
   <data name="ServerEventsSection" xml:space="preserve">
     <value>服务器事件</value>
   </data>

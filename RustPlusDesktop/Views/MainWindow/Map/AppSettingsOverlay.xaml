@@ -231,7 +231,9 @@
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
                         <ui:ToggleSwitch x:Name="ChkListenForServerEvents" Content="{DynamicResource ListenForServerEvents}" Margin="0,0,0,6" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-                        <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                        <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,12" />
+                        <ui:ToggleSwitch x:Name="ChkTrustOwnDetections" Content="{DynamicResource TrustOwnDetections}" Margin="0,0,0,6" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        <ui:TextBlock Text="{DynamicResource TrustOwnDetectionsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>

@@ -153,6 +153,23 @@ public static class EventCapabilities
     public static bool IsAlertAvailable(string alertKey) =>
         !IsCloudSourced || !CloudUnavailableAlerts.Contains(alertKey);
 
+    /// <summary>
+    /// How long an event stays interesting once its cue has been heard.
+    ///
+    /// Mirrors the durations in report_server_event, and is only used when the backend has
+    /// said nothing — a report it refused, or one that never left the machine. Normally the
+    /// stored expiry wins, so the two agreeing matters less than it looks; keep them in step
+    /// anyway, because a client that outlives the server's own row would show a stale event
+    /// after everyone else has dropped it.
+    /// </summary>
+    public static TimeSpan NominalDuration(RustEventKind kind) => kind switch
+    {
+        RustEventKind.DeepSea => TimeSpan.FromHours(3),
+        RustEventKind.Cargo => TimeSpan.FromMinutes(75),
+        RustEventKind.OilRig => TimeSpan.FromMinutes(80),
+        _ => TimeSpan.FromMinutes(30),
+    };
+
     public static RustEventKind? FromBackendKey(string? key) => key switch
     {
         "cargo" => RustEventKind.Cargo,

@@ -5670,6 +5670,12 @@
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>يكتشف منصة النفط وسفينة الشحن والبحر العميق من صوت اللعبة على الخوادم التي لم تعد ترسل الأحداث. يعمل فقط أثناء تشغيل Rust.</value>
   </data>
+  <data name="TrustOwnDetections" xml:space="preserve">
+    <value>الوثوق باكتشافاتي الخاصة</value>
+  </data>
+  <data name="TrustOwnDetectionsDesc" xml:space="preserve">
+    <value>يعرض الحدث بمجرد سماعه على هذا الجهاز، دون انتظار تأكيد لاعب آخر. لا يتغير الإبلاغ: ما يراه اللاعبون الآخرون لا يزال يحتاج إلى تأكيداتهم الخاصة.</value>
+  </data>
   <data name="ServerEventsSection" xml:space="preserve">
     <value>أحداث الخادم</value>
   </data>

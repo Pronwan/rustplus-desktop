@@ -5673,6 +5673,12 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>Определяет Oil Rig, Cargo и Deep Sea по звуку игры на серверах, которые больше не присылают события. Работает только пока запущен Rust.</value>
   </data>
+  <data name="TrustOwnDetections" xml:space="preserve">
+    <value>Доверять собственным обнаружениям</value>
+  </data>
+  <data name="TrustOwnDetectionsDesc" xml:space="preserve">
+    <value>Показывает событие сразу, как только этот компьютер его услышал, не дожидаясь подтверждения от другого игрока. Отправка отчётов не меняется: то, что видят другие игроки, по-прежнему требует их собственных подтверждений.</value>
+  </data>
   <data name="ServerEventsSection" xml:space="preserve">
     <value>События сервера</value>
   </data>

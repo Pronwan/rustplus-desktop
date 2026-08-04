@@ -20,7 +20,8 @@ public sealed record CloudEventState(
     DateTime ExpiresAtUtc,
     int Confirmations,
     bool IsConfirmed,
-    IReadOnlyList<DateTime> RecentUtc)
+    IReadOnlyList<DateTime> RecentUtc,
+    bool LocalOnly = false)
 {
     public bool IsActive => DateTime.UtcNow < ExpiresAtUtc;
 
@@ -107,7 +108,11 @@ public sealed class CloudEventWatcher
         UnhookListener();
         UnsubscribeBroadcast();
         _serverKey = null;
-        lock (_gate) _events.Clear();
+        lock (_gate)
+        {
+            _events.Clear();
+            _heardLocally.Clear();
+        }
         StateRefreshed?.Invoke();
     }
 
@@ -158,22 +163,35 @@ public sealed class CloudEventWatcher
             var changed = new List<CloudEventState>();
             lock (_gate)
             {
-                foreach (var (kind, state) in parsed)
+                var before = new Dictionary<RustEventKind, CloudEventState>(_events);
+
+                _events.Clear();
+                foreach (var (kind, state) in parsed) _events[kind] = state;
+                ApplyLocalTrustLocked();
+
+                foreach (var (kind, state) in _events)
                 {
-                    bool known = _events.TryGetValue(kind, out var previous);
+                    bool known = before.TryGetValue(kind, out var previous);
+
+                    // The server's own row arriving for something we already trusted from our
+                    // own ears is the same occurrence, timed from when the report landed
+                    // rather than from when the sound began. Without this it would be
+                    // announced a second time, seconds after the first.
+                    bool supersedesLocal =
+                        known && previous!.LocalOnly
+                        && Math.Abs((state.StartedAtUtc - previous.StartedAtUtc).TotalSeconds)
+                           <= LocalTrustToleranceSeconds;
 
                     // A new occurrence (different start), or one that just crossed from a
                     // single unverified report to corroborated. Both are news; a mere
                     // confirmation count going up is not.
                     bool isNews = !known
-                                  || previous!.StartedAtUtc != state.StartedAtUtc
-                                  || (!previous.IsConfirmed && state.IsConfirmed);
+                                  || (!supersedesLocal
+                                      && (previous!.StartedAtUtc != state.StartedAtUtc
+                                          || (!previous.IsConfirmed && state.IsConfirmed)));
 
                     if (isNews) changed.Add(state);
                 }
-
-                _events.Clear();
-                foreach (var (kind, state) in parsed) _events[kind] = state;
             }
 
             // On the very first fetch after connecting, everything looks new — report it as a
@@ -229,7 +247,103 @@ public sealed class CloudEventWatcher
 
     private void OnAudioDetected(GameAudioDetection detection)
     {
+        NoteLocalDetection(detection);
         _ = ReportAsync(detection);
+    }
+
+    // ---------------------------------------------------------------- local trust
+
+    /// <summary>
+    /// How far apart the cue and the backend's own timestamp for the same occurrence may sit.
+    /// The backend stamps a report when it lands, which is up to a buffer length plus network
+    /// latency after the sound began, and another client may have got there slightly earlier.
+    /// </summary>
+    private const double LocalTrustToleranceSeconds = 120;
+
+    private readonly Dictionary<RustEventKind, DateTime> _heardLocally = new();
+
+    /// <summary>
+    /// Records a cue this client heard for itself, and shows it immediately.
+    ///
+    /// Quorum exists so that one client cannot speak for a whole server. It was never meant to
+    /// stop a client speaking for itself, and that distinction matters most for the people it
+    /// currently fails: someone alone with the listener on, or surrounded by players who have
+    /// it switched off, waits for corroboration that can never arrive. Reporting is untouched —
+    /// what everyone else sees still goes through the backend's rules unchanged.
+    /// </summary>
+    private void NoteLocalDetection(GameAudioDetection detection)
+    {
+        if (!TrackingService.TrustOwnDetections) return;
+
+        var kind = EventCapabilities.FromBackendKey(detection.EventType);
+        if (kind == null) return;
+
+        CloudEventState? announce = null;
+        lock (_gate)
+        {
+            _heardLocally[kind.Value] = detection.CueStartedAtUtc;
+
+            bool wasConfirmed = _events.TryGetValue(kind.Value, out var previous) && previous.IsConfirmed;
+            ApplyLocalTrustLocked();
+
+            // Announce now rather than waiting for a refresh. When the backend refuses the
+            // report there is no broadcast and no refresh to wait for, which is exactly the
+            // case this covers.
+            if (!wasConfirmed
+                && _events.TryGetValue(kind.Value, out var now)
+                && now.IsConfirmed && now.IsActive)
+                announce = now;
+        }
+
+        if (announce == null) return;
+
+        Log($"[cloud-events] Trusting our own {detection.EventType} detection without corroboration.");
+        EventChanged?.Invoke(announce);
+        StateRefreshed?.Invoke();
+    }
+
+    /// <summary>
+    /// Folds locally heard cues into the current picture. Caller holds <see cref="_gate"/>.
+    ///
+    /// Only ever upgrades, never rewrites. If the backend is holding an older occurrence it has
+    /// a reason to — "still active" is a legitimate answer — and replacing its start with ours
+    /// would move an expiry the rest of the server already agrees on.
+    /// </summary>
+    private void ApplyLocalTrustLocked()
+    {
+        if (!TrackingService.TrustOwnDetections)
+        {
+            _heardLocally.Clear();
+            return;
+        }
+
+        if (_heardLocally.Count == 0) return;
+
+        DateTime now = DateTime.UtcNow;
+        foreach (var kind in _heardLocally.Keys.ToList())
+        {
+            DateTime cue = _heardLocally[kind];
+            DateTime expires = cue + EventCapabilities.NominalDuration(kind);
+
+            if (now >= expires)
+            {
+                _heardLocally.Remove(kind);
+                continue;
+            }
+
+            if (_events.TryGetValue(kind, out var known))
+            {
+                if (!known.IsConfirmed
+                    && known.StartedAtUtc >= cue.AddSeconds(-LocalTrustToleranceSeconds))
+                    _events[kind] = known with { IsConfirmed = true };
+            }
+            else
+            {
+                // Nothing stored at all: the report was refused, or never left the machine.
+                _events[kind] = new CloudEventState(
+                    kind, cue, expires, 1, true, Array.Empty<DateTime>(), LocalOnly: true);
+            }
+        }
     }
 
     private async Task ReportAsync(GameAudioDetection detection)
