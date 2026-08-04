@@ -269,18 +269,38 @@ public sealed class CloudEventWatcher
             // refuse. Worth logging, not worth alarming anyone.
             Log($"[cloud-events] Reported {detection.EventType} (score {detection.Score:F0}) → {result}");
 
-            // These two say *why* a report was refused, and neither is guessable afterwards.
-            // current_server_key only moves when a presence upload happens, and that rides on
-            // the team poll — so it can sit on a previous server while user-profile/touch keeps
-            // last_active_at fresh, which is exactly the combination that produces
-            // rejected_wrong_server without anything else looking wrong.
-            // StartsWith, not equality: the rejection may carry the compared values appended.
-            if (result.StartsWith("rejected_wrong_server", StringComparison.Ordinal))
-                Log($"[cloud-events] Client reported server_key '{serverKey}'. Compare it with " +
-                    "user_profiles.current_server_key — presence rides on the team poll and may be stale.");
-            else if (result == "rejected_not_in_game")
-                Log("[cloud-events] The backend does not see this account as in-game on that server. " +
-                    "Check that cloud sync is on: with it off the app uploads an empty team list.");
+            // Raw codes are unreadable for anyone who did not write the backend, and every one
+            // of these took real investigation to identify. Say what actually happened.
+            //
+            // StartsWith on the first: that rejection carries the compared values appended.
+            string? explanation = result switch
+            {
+                _ when result.StartsWith("rejected_wrong_server", StringComparison.Ordinal) =>
+                    $"the account is registered on a different server than '{serverKey}'. " +
+                    "Presence is uploaded from the team poll and can lag behind a server switch.",
+
+                "rejected_stale_presence" =>
+                    "the account has not checked in recently enough. This happens while AFK, " +
+                    "because presence stops being refreshed.",
+
+                "rejected_cloud_sync_off" =>
+                    "cloud sync is switched off, so the app uploads no team data and the account " +
+                    "cannot vouch for being in-game. Detection still works, reporting does not.",
+
+                "rejected_not_in_game" =>
+                    "this account is online on a different server. Being connected here in the app " +
+                    "while playing elsewhere is exactly what this check exists to catch.",
+
+                "rejected_too_soon"     => "the same event was already reported moments ago.",
+                "rejected_still_active" => "that event is already running, so it cannot start again.",
+                "rejected_rate_limited" => "too many reports from this account within the last hour.",
+                "rejected_no_profile"   => "no cloud profile is linked to this account.",
+
+                _ => null,
+            };
+
+            if (explanation != null)
+                Log($"[cloud-events] Not recorded — {explanation}");
 
             if (result.StartsWith("accepted") || result.StartsWith("corroborated"))
                 await RefreshAsync();
