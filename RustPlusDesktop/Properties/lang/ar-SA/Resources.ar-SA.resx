@@ -5670,4 +5670,73 @@
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>يكتشف منصة النفط وسفينة الشحن والبحر العميق من صوت اللعبة على الخوادم التي لم تعد ترسل الأحداث. يعمل فقط أثناء تشغيل Rust.</value>
   </data>
+  <data name="ServerEventsSection" xml:space="preserve">
+    <value>أحداث الخادم</value>
+  </data>
+  <data name="OilRigCrateSeen" xml:space="preserve">
+    <value>شوهد الصندوق</value>
+  </data>
+  <data name="EventNotDetected" xml:space="preserve">
+    <value>لم يتم اكتشافه بعد</value>
+  </data>
+  <data name="EventUnconfirmed" xml:space="preserve">
+    <value>غير مؤكد</value>
+  </data>
+  <data name="AlertUnavailableOnServer" xml:space="preserve">
+    <value>غير متاح على هذا الخادم</value>
+  </data>
+  <data name="CargoSpawnedAgo" xml:space="preserve">
+    <value>ظهرت سفينة الشحن قبل {0}</value>
+  </data>
+  <data name="CargoGoneAgo" xml:space="preserve">
+    <value>اختفت سفينة الشحن منذ {0}</value>
+  </data>
+  <data name="DeepSeaUpFor" xml:space="preserve">
+    <value>البحر العميق مفتوح منذ {0}</value>
+  </data>
+  <data name="AlertCargoSpawnedAudio" xml:space="preserve">
+    <value>ظهرت سفينة الشحن (تم اكتشافها بالصوت)</value>
+  </data>
+  <data name="AlertOilRigCrateUp" xml:space="preserve">
+    <value>صندوق منصة النفط متاح (تم اكتشافه بالصوت)</value>
+  </data>
+  <data name="ChatCmdCargoCloudActive" xml:space="preserve">
+    <value>ظهرت سفينة الشحن قبل {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudGone" xml:space="preserve">
+    <value>اختفت سفينة الشحن منذ {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudUnknown" xml:space="preserve">
+    <value>لم يتم اكتشاف ظهور سفينة الشحن بعد</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudActive" xml:space="preserve">
+    <value>البحر العميق مفتوح — يغلق خلال {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudEnded" xml:space="preserve">
+    <value>أُغلق البحر العميق قبل {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudUnknown" xml:space="preserve">
+    <value>لم يتم اكتشاف ظهور البحر العميق بعد</value>
+  </data>
+  <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
+    <value>آخر صناديق منصة النفط المكتشفة: {0}</value>
+  </data>
+  <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
+    <value>لم يتم اكتشاف صناديق منصة النفط بعد</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioName" xml:space="preserve">
+    <value>ظهور سفينة الشحن (صوت)</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioDesc" xml:space="preserve">
+    <value>يُرسل عند سماع صوت ظهور سفينة الشحن على خادم بدون علامات أحداث.</value>
+  </data>
+  <data name="AlertOilRigCrateUpName" xml:space="preserve">
+    <value>صندوق منصة النفط (صوت)</value>
+  </data>
+  <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
+    <value>يُرسل عند سماع صوت صندوق منصة النفط. لا يمكن تحديد أي منصة.</value>
+  </data>
+  <data name="EventNotTrackableOnServer" xml:space="preserve">
+    <value>لم يعد من الممكن تتبع هذا الحدث على هذا الخادم.</value>
+  </data>
 </root>

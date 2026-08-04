@@ -225,6 +225,17 @@
                 </ui:Card>
                 </StackPanel>
 
+                <!-- Server Events Section -->
+                <StackPanel x:Name="SectionServerEvents">
+                <ui:TextBlock Text="{DynamicResource ServerEventsSection}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
+                <ui:Card Style="{StaticResource SettingsNativeCard}">
+                    <StackPanel>
+                        <ui:ToggleSwitch x:Name="ChkListenForServerEvents" Content="{DynamicResource ListenForServerEvents}" Margin="0,0,0,6" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:Card>
+                </StackPanel>
+
                 <!-- Offline Death Section -->
                 <StackPanel x:Name="SectionOfflineDeath">
                 <ui:TextBlock Text="{DynamicResource OfflineDeathNotifications}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
@@ -619,9 +630,10 @@
                                     <CheckBox x:Name="ChkChatTTS" Grid.Column="2" Content="{DynamicResource UiTTS}" Margin="8,0,0,0" VerticalAlignment="Center" />
                                 </Grid>
 
-                                <!-- Shop Alerts Channel -->
-                                <ui:TextBlock Text="{DynamicResource UiShopAlertsChannelID}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
-                                <Grid Margin="0,0,0,12">
+                                <!--  Shop Alerts Channel — disabled on servers that no longer deliver
+                                      vending data, so it is visibly dead rather than silently unused.  -->
+                                <ui:TextBlock x:Name="ShopChannelLabel" Text="{DynamicResource UiShopAlertsChannelID}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,4,0,2" />
+                                <Grid x:Name="ShopChannelRow" Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />

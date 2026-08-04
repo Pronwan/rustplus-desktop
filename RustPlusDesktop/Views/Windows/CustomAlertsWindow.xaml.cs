@@ -32,6 +32,10 @@ namespace RustPlusDesk.Views.Windows
                 "AlertSuspiciousShop",
                 "AlertShopMatch",
                 "AlertCargoSpawned",
+                // Audio-sourced variants: the API templates carry placeholders we cannot fill
+                // (ship position, rig name, crate unlock time), so the fallback needs its own.
+                "AlertCargoSpawnedAudio",
+                "AlertOilRigCrateUp",
                 "AlertCargoDocked",
                 "AlertCargoExpectedDock",
                 "AlertCargoDeparting",
@@ -151,6 +155,18 @@ namespace RustPlusDesk.Views.Windows
         public string Name { get; }
         public string Description { get; }
         public string Variables { get; }
+
+        /// <summary>
+        /// False when the connected server cannot produce this alert. The row is dimmed rather
+        /// than removed: the template is still stored and will work again on a server that
+        /// delivers events, so hiding it would make the setting look lost.
+        /// </summary>
+        public bool IsAvailable => Services.EventCapabilities.IsAlertAvailable(Key);
+
+        public double RowOpacity => IsAvailable ? 1.0 : 0.45;
+
+        public string? UnavailableHint =>
+            IsAvailable ? null : Properties.Resources.AlertUnavailableOnServer;
 
         private string _currentText = string.Empty;
         public string CurrentText

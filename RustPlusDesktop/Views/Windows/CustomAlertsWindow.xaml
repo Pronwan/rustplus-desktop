@@ -15,7 +15,9 @@
                                         BorderThickness="1"
                                         CornerRadius="10"
                                         Padding="14,12"
-                                        Margin="0,0,0,12">
+                                        Margin="0,0,0,12"
+                                        Opacity="{Binding RowOpacity}"
+                                        ToolTip="{Binding UnavailableHint}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />

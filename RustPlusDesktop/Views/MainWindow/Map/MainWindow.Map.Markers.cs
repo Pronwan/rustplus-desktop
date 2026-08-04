@@ -1192,6 +1192,13 @@ public partial class MainWindow
             dsTip = string.Format(Properties.Resources.DeepSeaEndedAgo, FormatAgo(dsInactive));
         }
         activeEvents.Add(new EventDockItem { Name = Properties.Resources.DeepSea, Icon = "pack://application:,,,/Assets/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
+
+        // On a server without event markers everything above was built from data that no
+        // longer arrives. Replace it wholesale rather than patching each entry: the two
+        // sources have nothing in common but the item shape.
+        if (Services.EventCapabilities.IsCloudSourced)
+            activeEvents = BuildCloudEventDockItems();
+
         Dispatcher.Invoke(() =>
         {
             // Try to find existing dock or create one

@@ -5673,4 +5673,73 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>Détecte Oil Rig, Cargo et Deep Sea via le son du jeu sur les serveurs qui n'envoient plus d'événements. Actif uniquement lorsque Rust est lancé.</value>
   </data>
+  <data name="ServerEventsSection" xml:space="preserve">
+    <value>Événements du serveur</value>
+  </data>
+  <data name="OilRigCrateSeen" xml:space="preserve">
+    <value>Caisse vue</value>
+  </data>
+  <data name="EventNotDetected" xml:space="preserve">
+    <value>Pas encore détecté</value>
+  </data>
+  <data name="EventUnconfirmed" xml:space="preserve">
+    <value>Non confirmé</value>
+  </data>
+  <data name="AlertUnavailableOnServer" xml:space="preserve">
+    <value>Non disponible sur ce serveur</value>
+  </data>
+  <data name="CargoSpawnedAgo" xml:space="preserve">
+    <value>Cargo apparu il y a {0}</value>
+  </data>
+  <data name="CargoGoneAgo" xml:space="preserve">
+    <value>Cargo parti depuis {0}</value>
+  </data>
+  <data name="DeepSeaUpFor" xml:space="preserve">
+    <value>Deep Sea ouvert depuis {0}</value>
+  </data>
+  <data name="AlertCargoSpawnedAudio" xml:space="preserve">
+    <value>Cargo apparu (détecté par le son)</value>
+  </data>
+  <data name="AlertOilRigCrateUp" xml:space="preserve">
+    <value>Une caisse d'Oil Rig est disponible (détectée par le son)</value>
+  </data>
+  <data name="ChatCmdCargoCloudActive" xml:space="preserve">
+    <value>Cargo apparu il y a {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudGone" xml:space="preserve">
+    <value>Cargo parti depuis {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudUnknown" xml:space="preserve">
+    <value>Aucune apparition de Cargo détectée pour l'instant</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudActive" xml:space="preserve">
+    <value>Deep Sea est ouvert — ferme dans {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudEnded" xml:space="preserve">
+    <value>Deep Sea fermé il y a {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudUnknown" xml:space="preserve">
+    <value>Aucune apparition de Deep Sea détectée pour l'instant</value>
+  </data>
+  <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
+    <value>Dernières caisses d'Oil Rig détectées : {0}</value>
+  </data>
+  <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
+    <value>Aucune caisse d'Oil Rig détectée pour l'instant</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioName" xml:space="preserve">
+    <value>Cargo apparu (audio)</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioDesc" xml:space="preserve">
+    <value>Envoyé lorsque le son d'apparition du Cargo est détecté sur un serveur sans marqueurs d'événements.</value>
+  </data>
+  <data name="AlertOilRigCrateUpName" xml:space="preserve">
+    <value>Caisse d'Oil Rig (audio)</value>
+  </data>
+  <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
+    <value>Envoyé lorsqu'un son de caisse d'Oil Rig est détecté. Impossible de savoir de quelle plateforme il s'agit.</value>
+  </data>
+  <data name="EventNotTrackableOnServer" xml:space="preserve">
+    <value>Cet événement ne peut plus être suivi sur ce serveur.</value>
+  </data>
 </root>

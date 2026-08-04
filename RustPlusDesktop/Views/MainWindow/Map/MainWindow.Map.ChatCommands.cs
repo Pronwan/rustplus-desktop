@@ -198,6 +198,15 @@ public partial class MainWindow
         // Command: Deep Sea
         if (cmd == profile.CmdDeepSea.ToLowerInvariant())
         {
+            // On a server without event markers the local Deep Sea state is never populated —
+            // it was fed by the shop poll. Answer from the shared audio detections instead.
+            if (Services.EventCapabilities.IsCloudSourced)
+            {
+                _ = SendChatCommandResponseAsync(BuildCloudDeepSeaAnswer());
+                AppendLog($"[ChatCommand] DeepSea (audio) executed by {m.Author}");
+                return;
+            }
+
             string msg;
             if (_deepSeaActive)
             {
@@ -228,6 +237,15 @@ public partial class MainWindow
         // Command: Cargo
         if (cmd == profile.CmdCargo.ToLowerInvariant())
         {
+            // Docking, harbour and departure all need the ship's position. Audio only ever
+            // tells us that a cargo spawned, so the fallback answer says exactly that.
+            if (Services.EventCapabilities.IsCloudSourced)
+            {
+                _ = SendChatCommandResponseAsync(BuildCloudCargoAnswer());
+                AppendLog($"[ChatCommand] Cargo (audio) executed by {m.Author}");
+                return;
+            }
+
             string msg = Properties.Resources.ChatCmdCargoNotActive;
             var activeCargo = _cargoDockStates.Values.FirstOrDefault();
             if (activeCargo != null)
@@ -285,6 +303,15 @@ public partial class MainWindow
         // Command: Oil Rig
         if (cmd == profile.CmdOilRig.ToLowerInvariant())
         {
+            // The audio cue cannot say which rig it was, and there is no unlock countdown
+            // without the API. Report when crates were last heard and nothing more.
+            if (Services.EventCapabilities.IsCloudSourced)
+            {
+                _ = SendChatCommandResponseAsync(BuildCloudOilRigAnswer());
+                AppendLog($"[ChatCommand] OilRig (audio) executed by {m.Author}");
+                return;
+            }
+
             var parts = new List<string>();
             foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
             {
@@ -803,6 +830,10 @@ public partial class MainWindow
 
     public string GetDeepSeaStatusForDiscord()
     {
+        // Same answer the in-game command gives — the Discord bot must not report a different
+        // state than team chat for the same server.
+        if (Services.EventCapabilities.IsCloudSourced) return BuildCloudDeepSeaAnswer();
+
         if (_deepSeaActive)
         {
             if (_deepSeaSpawnTime.HasValue)
@@ -822,6 +853,8 @@ public partial class MainWindow
 
     public string GetCargoStatusForDiscord()
     {
+        if (Services.EventCapabilities.IsCloudSourced) return BuildCloudCargoAnswer();
+
         var activeCargo = _cargoDockStates.Values.FirstOrDefault();
         if (activeCargo != null)
         {
@@ -862,6 +895,8 @@ public partial class MainWindow
 
     public string GetOilRigStatusForDiscord()
     {
+        if (Services.EventCapabilities.IsCloudSourced) return BuildCloudOilRigAnswer();
+
         var parts = new List<string>();
         foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
         {
@@ -890,6 +925,11 @@ public partial class MainWindow
 
     public string GetHeliStatusForDiscord()
     {
+        // No server-wide audio cue exists for the Patrol Heli, so on a fallback server the
+        // honest answer is that it cannot be tracked — not a stale "not active".
+        if (Services.EventCapabilities.IsCloudSourced)
+            return Properties.Resources.EventNotTrackableOnServer;
+
         bool isHeliActive = _dynStates.Values.Any(s => s.Type == 8);
         if (isHeliActive)
         {
@@ -911,6 +951,9 @@ public partial class MainWindow
 
     public string GetVendorStatusForDiscord()
     {
+        if (Services.EventCapabilities.IsCloudSourced)
+            return Properties.Resources.EventNotTrackableOnServer;
+
         bool isVendorActive = _dynStates.Values.Any(s => s.Type == 6);
         if (isVendorActive)
         {

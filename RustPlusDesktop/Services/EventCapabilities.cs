@@ -134,6 +134,25 @@ public static class EventCapabilities
     public static bool IsTutorialAvailable(string tutorialId) =>
         !IsCloudSourced || !CloudUnavailableTutorials.Contains(tutorialId);
 
+    /// <summary>
+    /// Alert templates that can never be sent on a server without event markers. Editing them
+    /// is not forbidden — a player may well be on another server tomorrow — but they are shown
+    /// greyed so nobody spends time wording a message that will not fire.
+    ///
+    /// The crate-unlock timers belong here too: the fifteen-minute countdown came from the
+    /// API, and audio only tells us a crate exists, never when it opens.
+    /// </summary>
+    private static readonly HashSet<string> CloudUnavailableAlerts = new(StringComparer.Ordinal)
+    {
+        "AlertNewShop", "AlertSuspiciousShop", "AlertShopMatch",
+        "AlertCargoDocked", "AlertCargoExpectedDock", "AlertCargoDeparting",
+        "AlertEventSpawned", "AlertHeliCrashFalseAlarm", "AlertHeliShotDown",
+        "AlertCrateUnlocksIn10Min", "AlertCrateUnlocksIn5Min",
+    };
+
+    public static bool IsAlertAvailable(string alertKey) =>
+        !IsCloudSourced || !CloudUnavailableAlerts.Contains(alertKey);
+
     public static RustEventKind? FromBackendKey(string? key) => key switch
     {
         "cargo" => RustEventKind.Cargo,

@@ -5673,4 +5673,73 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>Определяет Oil Rig, Cargo и Deep Sea по звуку игры на серверах, которые больше не присылают события. Работает только пока запущен Rust.</value>
   </data>
+  <data name="ServerEventsSection" xml:space="preserve">
+    <value>События сервера</value>
+  </data>
+  <data name="OilRigCrateSeen" xml:space="preserve">
+    <value>Ящик замечен</value>
+  </data>
+  <data name="EventNotDetected" xml:space="preserve">
+    <value>Пока не обнаружено</value>
+  </data>
+  <data name="EventUnconfirmed" xml:space="preserve">
+    <value>Не подтверждено</value>
+  </data>
+  <data name="AlertUnavailableOnServer" xml:space="preserve">
+    <value>Недоступно на этом сервере</value>
+  </data>
+  <data name="CargoSpawnedAgo" xml:space="preserve">
+    <value>Cargo появился {0} назад</value>
+  </data>
+  <data name="CargoGoneAgo" xml:space="preserve">
+    <value>Cargo отсутствует {0}</value>
+  </data>
+  <data name="DeepSeaUpFor" xml:space="preserve">
+    <value>Deep Sea открыт {0}</value>
+  </data>
+  <data name="AlertCargoSpawnedAudio" xml:space="preserve">
+    <value>Cargo появился (обнаружено по звуку)</value>
+  </data>
+  <data name="AlertOilRigCrateUp" xml:space="preserve">
+    <value>Ящик на Oil Rig доступен (обнаружено по звуку)</value>
+  </data>
+  <data name="ChatCmdCargoCloudActive" xml:space="preserve">
+    <value>Cargo появился {0} назад</value>
+  </data>
+  <data name="ChatCmdCargoCloudGone" xml:space="preserve">
+    <value>Cargo отсутствует {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudUnknown" xml:space="preserve">
+    <value>Появление Cargo пока не обнаружено</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudActive" xml:space="preserve">
+    <value>Deep Sea открыт — закроется через {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudEnded" xml:space="preserve">
+    <value>Deep Sea закрылся {0} назад</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudUnknown" xml:space="preserve">
+    <value>Появление Deep Sea пока не обнаружено</value>
+  </data>
+  <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
+    <value>Последние обнаруженные ящики Oil Rig: {0}</value>
+  </data>
+  <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
+    <value>Ящики Oil Rig пока не обнаружены</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioName" xml:space="preserve">
+    <value>Cargo появился (звук)</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioDesc" xml:space="preserve">
+    <value>Отправляется при обнаружении звука появления Cargo на сервере без маркеров событий.</value>
+  </data>
+  <data name="AlertOilRigCrateUpName" xml:space="preserve">
+    <value>Ящик Oil Rig (звук)</value>
+  </data>
+  <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
+    <value>Отправляется при обнаружении звука ящика Oil Rig. Определить, какая это вышка, невозможно.</value>
+  </data>
+  <data name="EventNotTrackableOnServer" xml:space="preserve">
+    <value>Это событие больше нельзя отслеживать на этом сервере.</value>
+  </data>
 </root>

@@ -933,4 +933,73 @@
   <data name="ListenForServerEventsDesc" xml:space="preserve">
     <value>在不再发送事件的服务器上，通过游戏音频识别石油钻井平台、货轮与深海事件。仅在 Rust 运行时生效。</value>
   </data>
+  <data name="ServerEventsSection" xml:space="preserve">
+    <value>服务器事件</value>
+  </data>
+  <data name="OilRigCrateSeen" xml:space="preserve">
+    <value>发现补给箱</value>
+  </data>
+  <data name="EventNotDetected" xml:space="preserve">
+    <value>尚未检测到</value>
+  </data>
+  <data name="EventUnconfirmed" xml:space="preserve">
+    <value>未确认</value>
+  </data>
+  <data name="AlertUnavailableOnServer" xml:space="preserve">
+    <value>此服务器不可用</value>
+  </data>
+  <data name="CargoSpawnedAgo" xml:space="preserve">
+    <value>货轮于 {0} 前刷新</value>
+  </data>
+  <data name="CargoGoneAgo" xml:space="preserve">
+    <value>货轮已离开 {0}</value>
+  </data>
+  <data name="DeepSeaUpFor" xml:space="preserve">
+    <value>深海事件已开启 {0}</value>
+  </data>
+  <data name="AlertCargoSpawnedAudio" xml:space="preserve">
+    <value>货轮已刷新（通过音频识别）</value>
+  </data>
+  <data name="AlertOilRigCrateUp" xml:space="preserve">
+    <value>石油钻井平台补给箱已出现（通过音频识别）</value>
+  </data>
+  <data name="ChatCmdCargoCloudActive" xml:space="preserve">
+    <value>货轮于 {0} 前刷新</value>
+  </data>
+  <data name="ChatCmdCargoCloudGone" xml:space="preserve">
+    <value>货轮已离开 {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudUnknown" xml:space="preserve">
+    <value>尚未检测到货轮刷新</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudActive" xml:space="preserve">
+    <value>深海事件进行中 — {0} 后关闭</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudEnded" xml:space="preserve">
+    <value>深海事件已于 {0} 前关闭</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudUnknown" xml:space="preserve">
+    <value>尚未检测到深海事件刷新</value>
+  </data>
+  <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
+    <value>最近检测到的石油钻井平台补给箱：{0}</value>
+  </data>
+  <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
+    <value>尚未检测到石油钻井平台补给箱</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioName" xml:space="preserve">
+    <value>货轮刷新（音频）</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioDesc" xml:space="preserve">
+    <value>在没有事件标记的服务器上检测到货轮刷新音效时发送。</value>
+  </data>
+  <data name="AlertOilRigCrateUpName" xml:space="preserve">
+    <value>石油钻井平台补给箱（音频）</value>
+  </data>
+  <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
+    <value>检测到石油钻井平台补给箱音效时发送。无法判断是哪一座平台。</value>
+  </data>
+  <data name="EventNotTrackableOnServer" xml:space="preserve">
+    <value>此服务器已无法追踪该事件。</value>
+  </data>
 </root>
