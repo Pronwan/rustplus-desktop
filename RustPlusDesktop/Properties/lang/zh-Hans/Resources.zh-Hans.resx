@@ -1008,4 +1008,40 @@
   <data name="EventNotTrackableOnServer" xml:space="preserve">
     <value>此服务器已无法追踪该事件。</value>
   </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] 箱子将在 15 分钟后解锁！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>箱子解锁（15分钟）</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>箱子解锁前 15 分钟发送警告。</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}：钻井平台名称</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}：箱子将在 {1} 分 {2} 秒后解锁</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>启动计时器</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>分钟</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>自定义名称</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>Large Oilrig 触发器</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>Small Oilrig 触发器</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>在地图上显示箱子</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>计时器名称</value>
+  </data>
 </root>

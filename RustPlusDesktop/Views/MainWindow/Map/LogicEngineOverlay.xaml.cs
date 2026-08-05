@@ -42,6 +42,15 @@ namespace RustPlusDesk.Views
         {
             Visibility = Visibility.Collapsed;
             _vm?.Save();
+
+            // Adding or removing an oil rig timer changes what the crate alerts and the crate
+            // countdown command can promise. Re-ask here so the menus match the rules the user
+            // just wrote, rather than only after the next connect.
+            if (Window.GetWindow(this) is MainWindow mw)
+            {
+                mw.RefreshOilRigTimerCapability();
+                mw.ApplyEventCapabilitiesToMenus();
+            }
         }
 
         private void BtnStopLogicEngine_Click(object sender, RoutedEventArgs e)

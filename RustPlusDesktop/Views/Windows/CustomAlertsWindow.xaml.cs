@@ -24,6 +24,7 @@ namespace RustPlusDesk.Views.Windows
             var keys = new[]
             {
                 "AlertOilRigTriggered",
+                "AlertCrateUnlocksIn15Min",
                 "AlertCrateUnlocksIn10Min",
                 "AlertCrateUnlocksIn5Min",
                 "AlertAlarmTriggered",

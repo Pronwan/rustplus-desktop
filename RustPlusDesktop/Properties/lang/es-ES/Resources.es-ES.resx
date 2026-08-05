@@ -5748,4 +5748,40 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="EventNotTrackableOnServer" xml:space="preserve">
     <value>Este evento ya no se puede rastrear en este servidor.</value>
   </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>¡[{0}] La caja se abre en 15 minutos!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>Caja se abre (15m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>Aviso enviado 15 minutos antes de que se abra la caja.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}: nombre del rig</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}: la caja se abre en {1}m {2}s</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>Iniciar temporizador</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>Nombre propio</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>Disparador Large Oilrig</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>Disparador Small Oilrig</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>Mostrar la caja en el mapa</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>Nombre del temporizador</value>
+  </data>
 </root>

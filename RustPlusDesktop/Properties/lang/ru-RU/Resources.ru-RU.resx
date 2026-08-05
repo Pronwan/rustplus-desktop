@@ -5748,4 +5748,40 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="EventNotTrackableOnServer" xml:space="preserve">
     <value>Это событие больше нельзя отслеживать на этом сервере.</value>
   </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] Ящик откроется через 15 минут!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>Ящик откроется (15м)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>Предупреждение за 15 минут до открытия ящика.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}: название вышки</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}: ящик откроется через {1}м {2}с</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>Запустить таймер</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>мин</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>Своё название</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>Триггер Large Oilrig</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>Триггер Small Oilrig</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>Показывать ящик на карте</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>Название таймера</value>
+  </data>
 </root>

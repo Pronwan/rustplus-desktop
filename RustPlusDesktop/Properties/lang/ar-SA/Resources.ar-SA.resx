@@ -5745,4 +5745,40 @@
   <data name="EventNotTrackableOnServer" xml:space="preserve">
     <value>لم يعد من الممكن تتبع هذا الحدث على هذا الخادم.</value>
   </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] سيُفتح الصندوق خلال 15 دقيقة!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>فتح الصندوق (15 د)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>تحذير يُرسل قبل 15 دقيقة من فتح الصندوق.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}: اسم المنصة</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}: سيُفتح الصندوق خلال {1} د {2} ث</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>بدء مؤقت</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>د</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>اسم مخصص</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>مُشغِّل Large Oilrig</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>مُشغِّل Small Oilrig</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>إظهار الصندوق على الخريطة</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>اسم المؤقت</value>
+  </data>
 </root>

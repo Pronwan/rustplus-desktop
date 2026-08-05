@@ -5808,4 +5808,40 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="EventNotTrackableOnServer" xml:space="preserve">
     <value>Dieses Event kann auf diesem Server nicht mehr verfolgt werden.</value>
   </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] Crate öffnet in 15 Minuten!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>Crate öffnet (15m)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>Warnung 15 Minuten vor dem Öffnen der Crate.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}: Rig-Name</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}: Crate öffnet in {1}m {2}s</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>Timer starten</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>Min</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>Eigener Name</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>Large-Oilrig-Trigger</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>Small-Oilrig-Trigger</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>Crate auf der Karte anzeigen</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>Timer-Name</value>
+  </data>
 </root>

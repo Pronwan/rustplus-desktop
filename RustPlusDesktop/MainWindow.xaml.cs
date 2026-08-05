@@ -842,7 +842,14 @@ public partial class MainWindow : WpfUi.FluentWindow
         _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
-            string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
+
+            // Was two hardcoded strings, which was fine while only Chinook tracking could start
+            // a timer and its two durations were known. A Logic Engine rule sets its own length,
+            // so anything but the real number would announce a time nobody is counting down to.
+            var span = TimeSpan.FromSeconds(data.Duration);
+            string timeStr = span.Seconds == 0
+                ? $"{(int)span.TotalMinutes}m"
+                : $"~{(int)span.TotalMinutes}:{span.Seconds:D2}m";
             string rigName = data.Name == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
                              data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                              data.Name;

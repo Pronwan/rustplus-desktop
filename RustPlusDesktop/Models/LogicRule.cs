@@ -154,12 +154,67 @@ namespace RustPlusDesk.Models
 
     public class LogicStep : INotifyPropertyChanged
     {
-        private string _stepType = "Wait"; // Wait, Toggle, CheckAvailability
+        private string _stepType = "Wait"; // Wait, Toggle, CheckAvailability, StartTimer
         public string StepType
         {
             get => _stepType;
             set { _stepType = value; OnProp(); }
         }
+
+        // ---- StartTimer -------------------------------------------------------------
+        // Lets a rule start a countdown when it fires. The intended use is an RF receiver
+        // tuned to an oil rig frequency wired to a Smart Alarm: Rust announces the hack,
+        // the alarm fires, and the timer stands in for the Chinook tracking that the API
+        // no longer supports.
+
+        private int _timerMinutes = 15;
+        public int TimerMinutes
+        {
+            get => _timerMinutes;
+            // A timer of zero or less would fire its own expiry immediately.
+            set { _timerMinutes = Math.Max(1, value); OnProp(); }
+        }
+
+        /// <summary>Custom, SmallOilRig or LargeOilRig.</summary>
+        private string _timerTarget = "Custom";
+        public string TimerTarget
+        {
+            get => _timerTarget;
+            set { _timerTarget = value; OnProp(); OnProp(nameof(IsOilRigTimer)); }
+        }
+
+        /// <summary>Only used when <see cref="TimerTarget"/> is Custom.</summary>
+        private string _timerName = "";
+        public string TimerName
+        {
+            get => _timerName;
+            set { _timerName = value; OnProp(); }
+        }
+
+        /// <summary>
+        /// Draws the locked crate on the rig with its countdown. Off still leaves the chat
+        /// alerts and the chat command intact — those follow from picking a rig, not from
+        /// wanting the marker.
+        /// </summary>
+        private bool _showCrateOnMap = true;
+        public bool ShowCrateOnMap
+        {
+            get => _showCrateOnMap;
+            set { _showCrateOnMap = value; OnProp(); }
+        }
+
+        [JsonIgnore]
+        public bool IsOilRigTimer =>
+            _timerTarget == "SmallOilRig" || _timerTarget == "LargeOilRig";
+
+        /// <summary>The name MonumentWatcher keys its events on, or null for a plain timer.</summary>
+        [JsonIgnore]
+        public string? OilRigName => _timerTarget switch
+        {
+            "SmallOilRig" => "Small Oil Rig",
+            "LargeOilRig" => "Large Oil Rig",
+            _ => null,
+        };
 
         private int _waitSeconds = 10;
         public int WaitSeconds

@@ -25,6 +25,7 @@ public partial class MainWindow
             // poll is unavoidable, but starting from the remembered answer means the correction
             // is usually a no-op instead of a visible switch on every single connect.
             ApplyRememberedEventSource();
+            RefreshOilRigTimerCapability();
             HookCloudEventAlerts();
 
             // Force the next presence upload to go through with this server's key.

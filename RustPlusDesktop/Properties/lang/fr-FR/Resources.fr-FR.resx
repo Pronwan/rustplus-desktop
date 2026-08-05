@@ -5748,4 +5748,40 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="EventNotTrackableOnServer" xml:space="preserve">
     <value>Cet événement ne peut plus être suivi sur ce serveur.</value>
   </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] La caisse s’ouvre dans 15 minutes !</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>Caisse ouverte (15 min)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>Avertissement envoyé 15 minutes avant l’ouverture de la caisse.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0} : nom du rig</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0} : caisse ouverte dans {1} min {2} s</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>Démarrer un minuteur</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>Nom personnalisé</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>Déclencheur Large Oilrig</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>Déclencheur Small Oilrig</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>Afficher la caisse sur la carte</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>Nom du minuteur</value>
+  </data>
 </root>

@@ -150,8 +150,34 @@ public static class EventCapabilities
         "AlertCrateUnlocksIn10Min", "AlertCrateUnlocksIn5Min",
     };
 
-    public static bool IsAlertAvailable(string alertKey) =>
-        !IsCloudSourced || !CloudUnavailableAlerts.Contains(alertKey);
+    /// <summary>
+    /// The crate countdowns came from the API and were dimmed with it. A Logic Engine rule
+    /// driven by an RF receiver can start the same countdown by hand, so where one exists
+    /// they are earned back — the timer is the player's own, and it is exact.
+    /// </summary>
+    private static readonly HashSet<string> OilRigTimerAlerts = new(StringComparer.Ordinal)
+    {
+        "AlertCrateUnlocksIn15Min", "AlertCrateUnlocksIn10Min", "AlertCrateUnlocksIn5Min",
+    };
+
+    private static bool _oilRigTimers;
+
+    /// <summary>True while at least one enabled rule can start an oil rig hack timer.</summary>
+    public static bool OilRigTimersConfigured => _oilRigTimers;
+
+    public static void SetOilRigTimers(bool configured)
+    {
+        if (_oilRigTimers == configured) return;
+        _oilRigTimers = configured;
+        Changed?.Invoke();
+    }
+
+    public static bool IsAlertAvailable(string alertKey)
+    {
+        if (!IsCloudSourced) return true;
+        if (_oilRigTimers && OilRigTimerAlerts.Contains(alertKey)) return true;
+        return !CloudUnavailableAlerts.Contains(alertKey);
+    }
 
     /// <summary>
     /// How long an event stays interesting once its cue has been heard.

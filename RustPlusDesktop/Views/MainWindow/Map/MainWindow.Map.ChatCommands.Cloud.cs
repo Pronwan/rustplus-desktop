@@ -40,6 +40,12 @@ public partial class MainWindow
 
     private string BuildCloudOilRigAnswer()
     {
+        // A hack timer started from an RF receiver beats the audio cue outright: it names the
+        // rig, and it counts down to the unlock rather than reporting how long ago something
+        // was heard. Only fall through when no rig has one running.
+        string? hacked = BuildOilRigTimerAnswer();
+        if (hacked != null) return hacked;
+
         var oilRig = CloudEventWatcher.Instance.Get(RustEventKind.OilRig);
         if (oilRig == null || oilRig.RecentUtc.Count == 0)
             return Properties.Resources.ChatCmdOilRigCloudNone;

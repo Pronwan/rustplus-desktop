@@ -273,6 +273,10 @@ namespace RustPlusDesk.Views
                 {
                     await ExecuteToggleStepAsync(step, cancellationToken);
                 }
+                else if (step.StepType == "StartTimer")
+                {
+                    await ExecuteStartTimerStepAsync(step);
+                }
                 else if (step.StepType == "CheckAvailability")
                 {
                     bool conditionMet = await ExecuteCheckAvailabilityStepAsync(step, rule, cancellationToken);
@@ -284,6 +288,78 @@ namespace RustPlusDesk.Views
                 }
             }
             AppendLog($"[LogicEngine] Completed execution of rule '{rule.Name}'.");
+        }
+
+        /// <summary>
+        /// Starts a countdown. Two quite different things behind one step, because to the
+        /// player they are the same act.
+        ///
+        /// Picking an oil rig hands the timer to MonumentWatcher, which already owns the
+        /// crate marker, the reminder schedule and the answer to the chat command — the same
+        /// path the Chinook tracking used before those markers stopped arriving. Anything
+        /// else becomes an ordinary custom timer, indistinguishable from one made by hand.
+        /// </summary>
+        private async Task ExecuteStartTimerStepAsync(LogicStep step)
+        {
+            var profile = _vm?.Selected;
+            if (profile == null) return;
+
+            int minutes = Math.Max(1, step.TimerMinutes);
+            string? rigName = step.OilRigName;
+
+            if (rigName != null)
+            {
+                bool started = _monumentWatcher.TriggerExternal(rigName, minutes * 60, step.ShowCrateOnMap);
+                AppendLog(started
+                    ? $"[LogicEngine] Started {minutes} min hack timer for {rigName}" +
+                      (step.ShowCrateOnMap ? " (crate shown on map)." : " (no map marker).")
+                    : $"[LogicEngine] {rigName} already has a running timer — left it alone.");
+                return;
+            }
+
+            // Plain timer. Same ceiling as the manual dialog, since they share the list.
+            string name = string.IsNullOrWhiteSpace(step.TimerName) ? "Timer" : step.TimerName.Trim();
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                if (profile.CustomTimers.Count >= 5)
+                {
+                    AppendLog($"[LogicEngine] Cannot start timer '{name}': the five-timer limit is reached.");
+                    return;
+                }
+
+                // Replace rather than stack: a rule that fires twice means the same countdown
+                // restarted, and two entries with one name cannot be told apart afterwards.
+                var existing = profile.CustomTimers.FirstOrDefault(
+                    t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase));
+                if (existing != null) profile.CustomTimers.Remove(existing);
+
+                string cmd = new string(name.ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());
+                if (cmd.Length == 0) cmd = "timer";
+
+                profile.CustomTimers.Add(new CustomTimer
+                {
+                    Name = name,
+                    Command = cmd,
+                    EndTimeUtc = DateTime.UtcNow.AddMinutes(minutes),
+                    CreatedNotified = false,
+                    // Suppress milestones the timer starts below, exactly as the manual path does.
+                    Notified60 = minutes <= 60,
+                    Notified30 = minutes <= 30,
+                    Notified10 = minutes <= 10,
+                    Notified3 = minutes <= 3,
+                });
+
+                AppendLog($"[LogicEngine] Started {minutes} min timer '{name}'.");
+
+                if (profile.AlertCustomTimer)
+                {
+                    var msg = string.Format(Properties.Resources.TimerCreated,
+                        profile.ChatCommandPrefix + cmd, 0, minutes, 0);
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
+                }
+            });
         }
 
         private async Task ExecuteToggleStepAsync(LogicStep step, CancellationToken cancellationToken)
@@ -467,6 +543,10 @@ namespace RustPlusDesk.Views
                     else if (condStep.StepType == "Toggle")
                     {
                         await ExecuteToggleStepAsync(condStep, cancellationToken);
+                    }
+                    else if (condStep.StepType == "StartTimer")
+                    {
+                        await ExecuteStartTimerStepAsync(condStep);
                     }
                 }
             }

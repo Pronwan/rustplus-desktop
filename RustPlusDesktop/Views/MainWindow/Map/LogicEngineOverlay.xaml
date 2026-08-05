@@ -399,7 +399,60 @@
                                                                     <ComboBoxItem Content="{DynamicResource UiWait}" Tag="Wait"/>
                                                                     <ComboBoxItem Content="{DynamicResource UiToggleDevice}" Tag="Toggle"/>
                                                                     <ComboBoxItem Content="{DynamicResource UiCheckAvailability}" Tag="CheckAvailability"/>
+                                                                    <ComboBoxItem Content="{DynamicResource UiStartTimer}" Tag="StartTimer"/>
                                                                 </ComboBox>
+
+                                                                <!-- Start Timer Config -->
+                                                                <StackPanel Orientation="Horizontal" Margin="0,0,8,4" x:Name="PanelStartTimer">
+                                                                    <StackPanel.Style>
+                                                                        <Style TargetType="StackPanel">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding StepType}" Value="StartTimer">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </StackPanel.Style>
+
+                                                                    <ui:TextBox Text="{Binding TimerMinutes, Mode=TwoWay}" Width="50"/>
+                                                                    <TextBlock Text="{DynamicResource UiMinutes}" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource TextSubtle}"/>
+
+                                                                    <ComboBox SelectedValue="{Binding TimerTarget, Mode=TwoWay}" SelectedValuePath="Tag" Width="150" Margin="0,0,4,0">
+                                                                        <ComboBoxItem Content="{DynamicResource UiTimerTargetCustom}" Tag="Custom"/>
+                                                                        <ComboBoxItem Content="{DynamicResource UiLargeOilRigTrigger}" Tag="LargeOilRig"/>
+                                                                        <ComboBoxItem Content="{DynamicResource UiSmallOilRigTrigger}" Tag="SmallOilRig"/>
+                                                                    </ComboBox>
+
+                                                                    <!-- Only one of the two is ever relevant: a rig names itself. -->
+                                                                    <ui:TextBox Text="{Binding TimerName, Mode=TwoWay}" Width="130" Margin="0,0,4,0"
+                                                                                PlaceholderText="{DynamicResource UiTimerNamePlaceholder}">
+                                                                        <ui:TextBox.Style>
+                                                                            <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding TimerTarget}" Value="Custom">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ui:TextBox.Style>
+                                                                    </ui:TextBox>
+
+                                                                    <CheckBox Content="{DynamicResource UiShowCrateOnMap}" IsChecked="{Binding ShowCrateOnMap, Mode=TwoWay}"
+                                                                              VerticalAlignment="Center" FontSize="11">
+                                                                        <CheckBox.Style>
+                                                                            <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsOilRigTimer}" Value="True">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </CheckBox.Style>
+                                                                    </CheckBox>
+                                                                </StackPanel>
 
                                                                 <!-- Wait Config -->
                                                                 <StackPanel Orientation="Horizontal" Margin="0,0,8,4" x:Name="PanelWait">
