@@ -61,7 +61,12 @@
                                           Checked="ToggleEngineActive_StateChanged" Unchecked="ToggleEngineActive_StateChanged"/>
                     </StackPanel>
 
-                    <ui:Button x:Name="BtnAddRule" tutorials:Tutorial.TargetId="Automation.CreateRule" Grid.Column="1" Click="BtnAddRule_Click" Appearance="Primary" Content="{DynamicResource UiAddRule}" Icon="{ui:SymbolIcon Symbol=Add24}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:Button x:Name="BtnAddOilRigRule" Click="BtnAddOilRigRule_Click" Appearance="Secondary" Margin="0,0,8,0" ToolTip="Add Oil Rig Trigger Template" Padding="5,3">
+                            <Image Source="pack://application:,,,/Assets/icons/oilrig.png" Width="26" Height="26" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </ui:Button>
+                        <ui:Button x:Name="BtnAddRule" tutorials:Tutorial.TargetId="Automation.CreateRule" Click="BtnAddRule_Click" Appearance="Primary" Content="{DynamicResource UiAddRule}" Icon="{ui:SymbolIcon Symbol=Add24}"/>
+                    </StackPanel>
                 </Grid>
             </Border>
 

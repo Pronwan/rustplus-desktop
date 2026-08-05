@@ -66,6 +66,60 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void BtnAddOilRigRule_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm?.Selected == null) return;
+
+            // Collapse existing rules so the new one is the focus
+            foreach (var rule in _vm.Selected.LogicRules)
+            {
+                rule.IsExpanded = false;
+            }
+
+            var newRule = new LogicRule
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Large/Small Oil Rig Chat/Timer ",
+                CustomIconId = -1768880890,
+                CustomIconShortName = "fish.smallshark",
+                IsEnabled = true,
+                IsLoopEnabled = false,
+                LoopCount = 1,
+                IsExpanded = true,
+                IsConfirmingDelete = false,
+                TriggerType = "SmartAlarm",
+                TriggerEntityId = 0,
+                TriggerCommand = "rulecommand",
+                TriggerRuleId = "",
+                TriggerState = true,
+                ConditionOperator = "NONE",
+                ConditionDeviceEntityId = 0,
+                ConditionDeviceState = true,
+                Steps = new ObservableCollection<LogicStep>
+                {
+                    new LogicStep
+                    {
+                        StepType = "StartTimer",
+                        TimerMinutes = 15,
+                        TimerTarget = "Custom",
+                        TimerName = "",
+                        ShowCrateOnMap = true,
+                        WaitSeconds = 10,
+                        TargetEntityId = 0,
+                        TargetGroupName = "",
+                        ToggleState = null,
+                        ConditionOperator = "ALL_OFFLINE",
+                        ConditionDeviceIdsCsv = "",
+                        ConditionalSteps = new ObservableCollection<LogicStep>()
+                    }
+                }
+            };
+
+            _vm.Selected.LogicRules.Add(newRule);
+            RefreshListBindings();
+            _vm.Save();
+        }
+
         private void BtnAddRule_Click(object sender, RoutedEventArgs e)
         {
             if (_vm?.Selected == null) return;
