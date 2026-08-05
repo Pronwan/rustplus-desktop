@@ -248,7 +248,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("oilrigcrate.intro", placement: TutorialPlacement.Center),
             Step("oilrigcrate.wiring", placement: TutorialPlacement.Center,
                  image: "pack://application:,,,/Assets/Screenshots/8.0/SmartAlarmOilrig.png"),
-            Step("oilrigcrate.rule", "Automation.Open", "devices", TutorialPlacement.Top),
+            Step("oilrigcrate.rule", "Automation.CreateOilRigRule", "logic", TutorialPlacement.Bottom),
             Step("oilrigcrate.silence", placement: TutorialPlacement.Center)),
 
         Def("bases-screenshots", 210, "Maps", false,
