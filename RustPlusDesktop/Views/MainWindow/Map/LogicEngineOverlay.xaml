@@ -402,8 +402,10 @@
                                                                     <ComboBoxItem Content="{DynamicResource UiStartTimer}" Tag="StartTimer"/>
                                                                 </ComboBox>
 
-                                                                <!-- Start Timer Config -->
-                                                                <StackPanel Orientation="Horizontal" Margin="0,0,8,4" x:Name="PanelStartTimer">
+                                                                <!-- Start Timer Config. Two rows, because the alarm text needs room:
+                                                                     its label runs long in most languages and was cut off beside
+                                                                     the other controls. -->
+                                                                <StackPanel Orientation="Vertical" Margin="0,0,8,4" x:Name="PanelStartTimer">
                                                                     <StackPanel.Style>
                                                                         <Style TargetType="StackPanel">
                                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -415,6 +417,7 @@
                                                                         </Style>
                                                                     </StackPanel.Style>
 
+                                                                    <StackPanel Orientation="Horizontal">
                                                                     <ui:TextBox Text="{Binding TimerMinutes, Mode=TwoWay}" Width="50"/>
                                                                     <TextBlock Text="{DynamicResource UiMinutes}" VerticalAlignment="Center" Margin="4,0,8,0" Foreground="{DynamicResource TextSubtle}"/>
 
@@ -439,22 +442,6 @@
                                                                         </ui:TextBox.Style>
                                                                     </ui:TextBox>
 
-                                                                    <!--  Optional: closes the gap for pushes that carry no entity ID.  -->
-                                                                    <ui:TextBox Text="{Binding AlarmTextHint, Mode=TwoWay}" Width="150" Margin="0,0,6,0"
-                                                                                PlaceholderText="{DynamicResource UiAlarmTextHint}"
-                                                                                ToolTip="{DynamicResource UiAlarmTextHintTooltip}">
-                                                                        <ui:TextBox.Style>
-                                                                            <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
-                                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding IsOilRigTimer}" Value="True">
-                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </ui:TextBox.Style>
-                                                                    </ui:TextBox>
-
                                                                     <CheckBox Content="{DynamicResource UiShowCrateOnMap}" IsChecked="{Binding ShowCrateOnMap, Mode=TwoWay}"
                                                                               VerticalAlignment="Center" FontSize="11">
                                                                         <CheckBox.Style>
@@ -468,6 +455,29 @@
                                                                             </Style>
                                                                         </CheckBox.Style>
                                                                     </CheckBox>
+                                                                    </StackPanel>
+
+                                                                    <!--  Own row: optional, and closes the gap for pushes carrying no entity ID.  -->
+                                                                    <ui:TextBox Text="{Binding AlarmTextHint, Mode=TwoWay}" Width="330" Margin="0,6,0,0"
+                                                                                HorizontalAlignment="Left"
+                                                                                PlaceholderText="{DynamicResource UiAlarmTextHint}">
+                                                                        <ui:TextBox.ToolTip>
+                                                                            <!--  Wrapped: the default tooltip is a single line and ran off screen.  -->
+                                                                            <ToolTip MaxWidth="420">
+                                                                                <TextBlock Text="{DynamicResource UiAlarmTextHintTooltip}" TextWrapping="Wrap" />
+                                                                            </ToolTip>
+                                                                        </ui:TextBox.ToolTip>
+                                                                        <ui:TextBox.Style>
+                                                                            <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsOilRigTimer}" Value="True">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ui:TextBox.Style>
+                                                                    </ui:TextBox>
                                                                 </StackPanel>
 
                                                                 <!-- Wait Config -->

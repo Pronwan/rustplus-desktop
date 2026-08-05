@@ -146,7 +146,8 @@ public class TrackingSettings
     public bool AnnounceCargoEgress { get; set; } = false;
     public bool AnnounceCargoArrival { get; set; } = false;
     public bool AnnounceSmartAlerts { get; set; } = false;
-    public bool GenericAlarmPopupEnabled { get; set; } = true;
+    /// <summary>Off by default: see SmartDevice.PopupEnabled. Same reasoning, same interruption.</summary>
+    public bool GenericAlarmPopupEnabled { get; set; } = false;
     public bool GenericAlarmOverlayEnabled { get; set; } = true;
     public bool GenericAlarmAudioEnabled { get; set; } = true;
     public string GenericAlarmAudioFilePath { get; set; } = string.Empty;

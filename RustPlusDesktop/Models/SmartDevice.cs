@@ -251,7 +251,10 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
-    private bool _popupEnabled = true;
+    // Off by default. The alarm window steals Windows focus, and during an actual raid that
+    // is the worst possible moment to have the game pulled out from under you. The in-app
+    // overlay and the sound still fire; this is for people who explicitly want the interruption.
+    private bool _popupEnabled = false;
     public bool PopupEnabled
     {
         get => _popupEnabled;
