@@ -1063,7 +1063,7 @@
     <value>在游戏中接线</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>放置一个 RF 接收器，并将频率设为目标平台：Large Oil Rig 为 4765，Small Oil Rig 为 4768。接通电源，并将其输出接到已与本应用配对的智能警报器上。黑客开始时，游戏会在该频率广播，接收器接通，警报器随即触发。</value>
+    <value>放置一个 RF 接收器，并将频率设为目标平台：Large Oil Rig 为 4768，Small Oil Rig 为 4765。接通电源，并将其输出接到已与本应用配对的智能警报器上。黑客开始时，游戏会在该频率广播，接收器接通，警报器随即触发。</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
     <value>添加 Logic Engine 规则</value>

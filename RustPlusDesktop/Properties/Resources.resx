@@ -5812,7 +5812,7 @@ You can find more information on the server&apos;s official website:
     <value>Wire it up in-game</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>Place an RF Receiver and set its frequency to the rig you want: 4765 for Large Oil Rig, 4768 for Small Oil Rig. Give it power, and wire its output into a Smart Alarm that is paired with this app. When the hack starts, Rust broadcasts on that frequency, the receiver switches on, and the alarm fires.</value>
+    <value>Place an RF Receiver and set its frequency to the rig you want: 4768 for Large Oil Rig, 4765 for Small Oil Rig. Give it power, and wire its output into a Smart Alarm that is paired with this app. When the hack starts, Rust broadcasts on that frequency, the receiver switches on, and the alarm fires.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
     <value>Add the Logic Engine rule</value>

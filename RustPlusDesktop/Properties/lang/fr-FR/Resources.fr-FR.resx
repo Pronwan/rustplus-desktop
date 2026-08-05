@@ -5803,7 +5803,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Câblage en jeu</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>Placez un récepteur RF et réglez sa fréquence sur le rig voulu : 4765 pour le Large Oil Rig, 4768 pour le Small Oil Rig. Alimentez-le et reliez sa sortie à une alarme intelligente appairée à cette application. Au début du piratage, Rust émet sur cette fréquence, le récepteur s’active et l’alarme se déclenche.</value>
+    <value>Placez un récepteur RF et réglez sa fréquence sur le rig voulu : 4768 pour le Large Oil Rig, 4765 pour le Small Oil Rig. Alimentez-le et reliez sa sortie à une alarme intelligente appairée à cette application. Au début du piratage, Rust émet sur cette fréquence, le récepteur s’active et l’alarme se déclenche.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
     <value>Ajouter la règle du Logic Engine</value>

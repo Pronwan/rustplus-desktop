@@ -5800,7 +5800,7 @@
     <value>التوصيل داخل اللعبة</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>ضع مستقبل RF واضبط تردده على المنصة التي تريدها: 4765 لمنصة Large Oil Rig و4768 لمنصة Small Oil Rig. زوّده بالطاقة وصِل مخرجه بإنذار ذكي مقترن بهذا التطبيق. عند بدء الاختراق تبثّ اللعبة على ذلك التردد، فيعمل المستقبل وينطلق الإنذار.</value>
+    <value>ضع مستقبل RF واضبط تردده على المنصة التي تريدها: 4768 لمنصة Large Oil Rig و4765 لمنصة Small Oil Rig. زوّده بالطاقة وصِل مخرجه بإنذار ذكي مقترن بهذا التطبيق. عند بدء الاختراق تبثّ اللعبة على ذلك التردد، فيعمل المستقبل وينطلق الإنذار.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
     <value>أضف قاعدة Logic Engine</value>

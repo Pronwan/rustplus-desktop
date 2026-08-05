@@ -5803,7 +5803,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Cablearlo en el juego</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>Coloca un receptor RF y ajusta su frecuencia al rig que quieras: 4765 para Large Oil Rig, 4768 para Small Oil Rig. Dale corriente y conecta su salida a una alarma inteligente emparejada con esta app. Cuando empieza el hackeo, Rust emite en esa frecuencia, el receptor se activa y la alarma salta.</value>
+    <value>Coloca un receptor RF y ajusta su frecuencia al rig que quieras: 4768 para Large Oil Rig, 4765 para Small Oil Rig. Dale corriente y conecta su salida a una alarma inteligente emparejada con esta app. Cuando empieza el hackeo, Rust emite en esa frecuencia, el receptor se activa y la alarma salta.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
     <value>Añadir la regla del Logic Engine</value>
