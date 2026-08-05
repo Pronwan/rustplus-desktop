@@ -5835,7 +5835,13 @@ You can find more information on the server&apos;s official website:
   <data name="UiSetAsSmallOilRigTrigger" xml:space="preserve">
     <value>Set as Small Oil Rig Trigger</value>
   </data>
+  <data name="UiRemoveAsSmallOilRigTrigger" xml:space="preserve">
+    <value>Remove as Small Oil Rig Trigger</value>
+  </data>
   <data name="UiSetAsLargeOilRigTrigger" xml:space="preserve">
     <value>Set as Large Oil Rig Trigger</value>
+  </data>
+  <data name="UiRemoveAsLargeOilRigTrigger" xml:space="preserve">
+    <value>Remove as Large Oil Rig Trigger</value>
   </data>
 </root>

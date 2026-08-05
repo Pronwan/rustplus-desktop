@@ -1300,26 +1300,101 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
             return;
         }
 
-        bool smallAssigned = IsOilRigAlarmAssigned("SmallOilRig");
-        bool largeAssigned = IsOilRigAlarmAssigned("LargeOilRig");
+        var profile = _vm?.Selected;
+        var ruleSmall = profile?.LogicRules?.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == "SmallOilRig"));
+
+        var ruleLarge = profile?.LogicRules?.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == "LargeOilRig"));
+
+        bool isThisSmall = ruleSmall != null && ruleSmall.TriggerEntityId == dev.EntityId && dev.EntityId != 0;
+        bool isThisLarge = ruleLarge != null && ruleLarge.TriggerEntityId == dev.EntityId && dev.EntityId != 0;
+
+        bool isAnySmall = ruleSmall != null && ruleSmall.TriggerEntityId != 0;
+        bool isAnyLarge = ruleLarge != null && ruleLarge.TriggerEntityId != 0;
 
         if (menuSmall != null)
-            menuSmall.Visibility = smallAssigned ? Visibility.Collapsed : Visibility.Visible;
+        {
+            if (isThisSmall)
+            {
+                menuSmall.Header = Properties.Resources.UiRemoveAsSmallOilRigTrigger;
+                menuSmall.Tag = "REMOVE";
+                menuSmall.Visibility = Visibility.Visible;
+            }
+            else if (isThisLarge || isAnySmall)
+            {
+                menuSmall.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                menuSmall.Header = Properties.Resources.UiSetAsSmallOilRigTrigger;
+                menuSmall.Tag = "SET";
+                menuSmall.Visibility = Visibility.Visible;
+            }
+        }
 
         if (menuLarge != null)
-            menuLarge.Visibility = largeAssigned ? Visibility.Collapsed : Visibility.Visible;
+        {
+            if (isThisLarge)
+            {
+                menuLarge.Header = Properties.Resources.UiRemoveAsLargeOilRigTrigger;
+                menuLarge.Tag = "REMOVE";
+                menuLarge.Visibility = Visibility.Visible;
+            }
+            else if (isThisSmall || isAnyLarge)
+            {
+                menuLarge.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                menuLarge.Header = Properties.Resources.UiSetAsLargeOilRigTrigger;
+                menuLarge.Tag = "SET";
+                menuLarge.Visibility = Visibility.Visible;
+            }
+        }
     }
 
     private void Device_SetSmallOilRig_Click(object sender, RoutedEventArgs e)
     {
-        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
-        SetDeviceAsOilRigTrigger(dev, "SmallOilRig");
+        if (sender is not MenuItem item || item.DataContext is not SmartDevice dev) return;
+
+        if (string.Equals(item.Tag as string, "REMOVE", StringComparison.OrdinalIgnoreCase))
+            RemoveDeviceAsOilRigTrigger(dev, "SmallOilRig");
+        else
+            SetDeviceAsOilRigTrigger(dev, "SmallOilRig");
     }
 
     private void Device_SetLargeOilRig_Click(object sender, RoutedEventArgs e)
     {
-        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
-        SetDeviceAsOilRigTrigger(dev, "LargeOilRig");
+        if (sender is not MenuItem item || item.DataContext is not SmartDevice dev) return;
+
+        if (string.Equals(item.Tag as string, "REMOVE", StringComparison.OrdinalIgnoreCase))
+            RemoveDeviceAsOilRigTrigger(dev, "LargeOilRig");
+        else
+            SetDeviceAsOilRigTrigger(dev, "LargeOilRig");
+    }
+
+    private void RemoveDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
+    {
+        var profile = _vm?.Selected;
+        if (profile?.LogicRules == null) return;
+
+        var rule = profile.LogicRules.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.TriggerEntityId == dev.EntityId &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget));
+
+        if (rule != null)
+        {
+            rule.TriggerEntityId = 0;
+        }
+
+        RefreshOilRigTimerCapability();
+        _vm?.NotifyDevicesChanged();
+        _vm?.Save();
+        AppendLog($"[Devices] Removed alarm #{dev.EntityId} ({dev.DisplayName}) from {rigTarget} trigger.");
     }
 
     private void SetDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
