@@ -101,9 +101,10 @@ namespace RustPlusDesk.Views
                     {
                         StepType = "StartTimer",
                         TimerMinutes = 15,
-                        TimerTarget = "Custom",
+                        TimerTarget = "LargeOilRig",
                         TimerName = "",
                         ShowCrateOnMap = true,
+                        AlarmTextHint = "",
                         WaitSeconds = 10,
                         TargetEntityId = 0,
                         TargetGroupName = "",
