@@ -439,6 +439,22 @@
                                                                         </ui:TextBox.Style>
                                                                     </ui:TextBox>
 
+                                                                    <!--  Optional: closes the gap for pushes that carry no entity ID.  -->
+                                                                    <ui:TextBox Text="{Binding AlarmTextHint, Mode=TwoWay}" Width="150" Margin="0,0,6,0"
+                                                                                PlaceholderText="{DynamicResource UiAlarmTextHint}"
+                                                                                ToolTip="{DynamicResource UiAlarmTextHintTooltip}">
+                                                                        <ui:TextBox.Style>
+                                                                            <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsOilRigTimer}" Value="True">
+                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ui:TextBox.Style>
+                                                                    </ui:TextBox>
+
                                                                     <CheckBox Content="{DynamicResource UiShowCrateOnMap}" IsChecked="{Binding ShowCrateOnMap, Mode=TwoWay}"
                                                                               VerticalAlignment="Center" FontSize="11">
                                                                         <CheckBox.Style>

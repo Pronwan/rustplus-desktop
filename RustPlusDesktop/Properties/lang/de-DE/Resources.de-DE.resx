@@ -5877,4 +5877,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
     <value>Ein so eingerichteter Alarm ist kein Raid, deshalb sind Popup, Ton und Raid-Alerts an Discord unterdrückt. Er meldet stattdessen als Oil-Rig-Event. In der Geräteliste erscheint ein kleines Abzeichen (Large Oil) bzw. (Small Oil), damit die Stille sichtbar und nicht rätselhaft ist. Nimmst du das Gerät aus der Regel, verhält es sich sofort wieder wie ein normaler Alarm. Der Oil-Rig-Schalter unter Chat Alerts schaltet weiterhin alles ab, wenn du Ruhe willst.</value>
   </data>
+  <data name="UiAlarmTextHint" xml:space="preserve">
+    <value>Alarm-Text im Spiel</value>
+  </data>
+  <data name="UiAlarmTextHintTooltip" xml:space="preserve">
+    <value>Optional. Der Text, den dieser Alarm sendet — genau so, wie er im Spiel eingestellt ist. Push-Benachrichtigungen enthalten keine Geräte-ID, deshalb ist das die einzige Möglichkeit, den Alarm zu erkennen, wenn die App nicht mit diesem Server verbunden ist — etwa beim Start. Lässt du das Feld leer, trägt die App es beim ersten Mal selbst ein, wenn sie den Alarm im verbundenen Zustand sieht. Ein unveränderter Standardtext wird ignoriert, weil ihn jeder nicht umbenannte Alarm hat.</value>
+  </data>
 </root>

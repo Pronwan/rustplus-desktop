@@ -5826,4 +5826,10 @@ You can find more information on the server&apos;s official website:
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
     <value>An alarm set up this way is not a raid, so its popup, sound and raid alerts to Discord are suppressed. It reports as an oil rig event instead. The device list shows a small (Large Oil) or (Small Oil) badge so the silence is visible rather than mysterious. Remove the device from the rule and it behaves like an ordinary alarm again, at once. The Oil Rig switch under Chat Alerts still turns all of it off whenever you want quiet.</value>
   </data>
+  <data name="UiAlarmTextHint" xml:space="preserve">
+    <value>In-game alarm text</value>
+  </data>
+  <data name="UiAlarmTextHintTooltip" xml:space="preserve">
+    <value>Optional. The text this alarm sends, exactly as set on it in-game. Push notifications carry no device ID, so this is the only way to recognise the alarm when the app is not connected to that server — at startup, for instance. Leave it empty and the app fills it in itself the first time it sees this alarm while connected. A text left at Rust’s default is ignored, because every unrenamed alarm shares it.</value>
+  </data>
 </root>

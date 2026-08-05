@@ -5817,4 +5817,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
     <value>Una alarma configurada así no es un raid, por lo que su ventana, su sonido y sus alertas de raid a Discord quedan suprimidos. Se informa como evento de oil rig. La lista de dispositivos muestra una pequeña insignia (Large Oil) o (Small Oil), para que el silencio sea visible y no misterioso. Quita el dispositivo de la regla y vuelve a comportarse como una alarma normal al instante. El interruptor de Oil Rig en las alertas de chat sigue apagándolo todo cuando quieras silencio.</value>
   </data>
+  <data name="UiAlarmTextHint" xml:space="preserve">
+    <value>Texto de la alarma en el juego</value>
+  </data>
+  <data name="UiAlarmTextHintTooltip" xml:space="preserve">
+    <value>Opcional. El texto que envía esta alarma, exactamente como está configurado en el juego. Las notificaciones push no llevan ID de dispositivo, así que esta es la única forma de reconocer la alarma cuando la app no está conectada a ese servidor, por ejemplo al arrancar. Déjalo vacío y la app lo rellenará sola la primera vez que vea la alarma estando conectada. Un texto que siga siendo el predeterminado se ignora, porque lo comparten todas las alarmas sin renombrar.</value>
+  </data>
 </root>

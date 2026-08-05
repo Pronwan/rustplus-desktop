@@ -1077,4 +1077,10 @@
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
     <value>这样配置的警报器不是团战，因此其弹窗、声音以及发往 Discord 的团战提醒都会被抑制，改为作为钻井平台事件上报。设备列表会显示一个小标记（Large Oil）或（Small Oil），让这份安静可见而非莫名其妙。把设备从规则中移除，它会立刻恢复成普通警报器。聊天提醒中的 Oil Rig 开关仍可在你需要安静时关闭全部内容。</value>
   </data>
+  <data name="UiAlarmTextHint" xml:space="preserve">
+    <value>游戏内警报文本</value>
+  </data>
+  <data name="UiAlarmTextHintTooltip" xml:space="preserve">
+    <value>可选。该警报器发送的文本，与游戏内设置的完全一致。推送通知不携带设备 ID，因此当应用未连接到该服务器时（例如启动时），这是识别警报器的唯一方式。留空即可，应用会在首次于连接状态下看到该警报时自行填写。保持游戏默认的文本将被忽略，因为所有未重命名的警报器都用它。</value>
+  </data>
 </root>

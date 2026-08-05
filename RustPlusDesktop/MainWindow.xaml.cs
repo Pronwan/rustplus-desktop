@@ -526,6 +526,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.Focusable = true;
         DataContext = _vm;
         _vm.Load();
+
+        // Before the push listener exists: a backlog of alarms can land within seconds of
+        // launch, and suppressing rig triggers must not wait for a server connection.
+        RebuildOilRigTriggerRegistry();
         InitializeTutorials();
         TeamMembers.CollectionChanged += (s, e) => UpdateClanMembersTeamStatus();
         // NEU: einmalig auf die aktuell ausgewÃƒÂ¤hlte Server-Instanz Ã¢â‚¬Å¾umsteckenÃ¢â‚¬Å“
@@ -2583,13 +2587,31 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // fire the popup, the raid sound and the raid webhook for a crate hack — the one
         // false alarm that costs a team an actual base defence. Dropped once the device is
         // identified, so it never reaches the notification centre either.
-        if (n.EntityId.HasValue && GetOilRigTriggerLabel(n.EntityId.Value) is string rigLabel)
+        // Learn what this alarm actually says, while we can still prove which device it is.
+        // Push notifications carry no entity ID of their own; the one we have here was
+        // recovered from a WebSocket event, which only happens on the connected server. That
+        // makes this the only reliable chance to record the text for the times there is no
+        // such event — a queued push at startup, or an alarm on another paired server.
+        if (n.EntityId.HasValue
+            && OilRigTriggerRegistry.LearnAlarmText(_vm.Servers, n.EntityId.Value, n.Title, n.Message))
+        {
+            AppendLog($"[alarm] Learned alarm text for entity {n.EntityId.Value}: " +
+                      $"\"{n.Title ?? n.Message}\".");
+            try { _vm.Save(); } catch { }
+            RebuildOilRigTriggerRegistry();
+        }
+
+        // Text matching is the fallback, never the first answer, and Lookup only reaches it
+        // when there is no entity ID. Texts left at Rust's default are refused outright: every
+        // unrenamed alarm shares them, and swallowing a real raid alert is far worse than
+        // letting one rig alarm through.
+        if (OilRigTriggerRegistry.Lookup(n.EntityId, n.Title, n.Message) is string rigLabel)
         {
             // The rule still has to run — this alarm is the sensor that starts the timer, and
             // for FCM the Logic Engine is triggered further down inside this very method. The
             // WebSocket path already fired before ShowAlarmPopup was called, so only FCM needs
             // it here; doing both would start the countdown twice.
-            if (source != "WS")
+            if (source != "WS" && n.EntityId.HasValue)
             {
                 TriggerLogicEngineOnDeviceEvent(n.EntityId.Value, true);
 
@@ -2608,7 +2630,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             AppendLog($"[alarm] Suppressed alarm from {rigLabel} trigger " +
-                      $"(entity {n.EntityId.Value}) — reported as an oil rig event instead.");
+                      $"(entity {n.EntityId?.ToString() ?? "unknown"}) — reported as an oil rig event instead.");
             return;
         }
 

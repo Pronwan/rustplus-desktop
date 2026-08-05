@@ -47,6 +47,10 @@ public partial class MainWindow
     /// </summary>
     internal void RefreshOilRigTimerCapability()
     {
+        // First, so that suppression is right even if one of the UI updates below throws.
+        try { RebuildOilRigTriggerRegistry(); }
+        catch { }
+
         try { EventCapabilities.SetOilRigTimers(HasOilRigTimerRule()); }
         catch { }
 
@@ -55,61 +59,10 @@ public partial class MainWindow
     }
 
     /// <summary>
-    /// Smart Alarms that a rule uses as an oil rig trigger, mapped to the rig they watch.
-    ///
-    /// Only enabled rules count, and only ones whose trigger really is a Smart Alarm — a rule
-    /// fired by a chat command has no device whose alarm should fall silent.
+    /// Rebuilds the cross-server trigger registry. Called once the saved profiles are loaded,
+    /// before the push listener is hooked, and again whenever rules change.
     /// </summary>
-    private Dictionary<uint, string> BuildOilRigTriggerMap()
-    {
-        var map = new Dictionary<uint, string>();
-
-        var profile = _vm?.Selected;
-        if (profile?.LogicRules == null) return map;
-
-        foreach (var rule in profile.LogicRules)
-        {
-            if (!rule.IsEnabled) continue;
-            if (rule.TriggerType != "SmartAlarm" || rule.TriggerEntityId == 0) continue;
-
-            var step = EnumerateSteps(rule)
-                .FirstOrDefault(s => s.StepType == "StartTimer" && s.IsOilRigTimer);
-            if (step == null) continue;
-
-            map[rule.TriggerEntityId] = step.TimerTarget == "SmallOilRig"
-                ? Properties.Resources.UiBadgeSmallOil
-                : Properties.Resources.UiBadgeLargeOil;
-        }
-
-        return map;
-    }
-
-    /// <summary>The rig label if this alarm is an oil rig trigger, else null.</summary>
-    private string? GetOilRigTriggerLabel(uint entityId)
-    {
-        // Every server's rules, not just the selected one: an alarm push can arrive for a
-        // server the user is not currently looking at, and it is just as much a rig trigger.
-        foreach (var profile in _vm.Servers)
-        {
-            if (profile?.LogicRules == null) continue;
-
-            foreach (var rule in profile.LogicRules)
-            {
-                if (!rule.IsEnabled) continue;
-                if (rule.TriggerType != "SmartAlarm" || rule.TriggerEntityId != entityId) continue;
-
-                var step = EnumerateSteps(rule)
-                    .FirstOrDefault(s => s.StepType == "StartTimer" && s.IsOilRigTimer);
-                if (step == null) continue;
-
-                return step.TimerTarget == "SmallOilRig"
-                    ? Properties.Resources.UiBadgeSmallOil
-                    : Properties.Resources.UiBadgeLargeOil;
-            }
-        }
-
-        return null;
-    }
+    internal void RebuildOilRigTriggerRegistry() => OilRigTriggerRegistry.Rebuild(_vm?.Servers);
 
     /// <summary>
     /// Stamps the badge onto the matching devices and clears it everywhere else. Clearing is
@@ -121,7 +74,7 @@ public partial class MainWindow
         var profile = _vm?.Selected;
         if (profile?.Devices == null) return;
 
-        var map = BuildOilRigTriggerMap();
+        var map = OilRigTriggerRegistry.ForProfile(profile);
 
         void Walk(IEnumerable<SmartDevice> devices)
         {

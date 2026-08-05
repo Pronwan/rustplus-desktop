@@ -203,6 +203,27 @@ namespace RustPlusDesk.Models
             set { _showCrateOnMap = value; OnProp(); }
         }
 
+        /// <summary>
+        /// The text this alarm sends, as set on the alarm in-game.
+        ///
+        /// Push notifications carry no entity ID. While connected the app recovers one from
+        /// the WebSocket event that arrives alongside, but a push from a server the app is not
+        /// connected to — or one still queued from before launch — has nothing to match on but
+        /// its text. Typing it here closes that gap immediately; leaving it empty is fine, as
+        /// the app overwrites this with the real text the first time it sees this alarm
+        /// identified by ID. What is learned that way is proven correct, so it wins over
+        /// anything typed.
+        ///
+        /// A text left at Rust's default is refused for matching, because every unrenamed
+        /// alarm would share it and real raid alerts would be swallowed.
+        /// </summary>
+        private string _alarmTextHint = "";
+        public string AlarmTextHint
+        {
+            get => _alarmTextHint;
+            set { _alarmTextHint = value ?? ""; OnProp(); }
+        }
+
         [JsonIgnore]
         public bool IsOilRigTimer =>
             _timerTarget == "SmallOilRig" || _timerTarget == "LargeOilRig";
