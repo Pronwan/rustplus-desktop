@@ -201,6 +201,7 @@
                                          <ComboBox x:Name="CmbTriggerDeviceAlarm" Width="200" Margin="0,0,8,4"
                                                    ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartAlarm}"
                                                    SelectedValue="{Binding TriggerEntityId, Mode=TwoWay}"
+                                                   SelectionChanged="CmbTriggerDeviceAlarm_SelectionChanged"
                                                    SelectedValuePath="EntityId" DisplayMemberPath="DisplayName">
                                              <ComboBox.Style>
                                                  <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
