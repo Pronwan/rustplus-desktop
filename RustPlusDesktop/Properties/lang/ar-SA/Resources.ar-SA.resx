@@ -5781,4 +5781,7 @@
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>اسم المؤقت</value>
   </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>يستخدمه Logic Engine كمُشغِّل لمنصة النفط. تم كتم نافذة الإنذار وصوتها وتنبيهات الغارة — يُبلَّغ عنه كحدث منصة نفط بدلاً من ذلك.</value>
+  </data>
 </root>

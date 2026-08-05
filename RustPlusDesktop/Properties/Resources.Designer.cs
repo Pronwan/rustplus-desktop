@@ -511,6 +511,9 @@ namespace RustPlusDesk.Properties {
         public static string AlertOilRigTriggered => GetString("AlertOilRigTriggered");
         public static string AlertAlarmTriggered => GetString("AlertAlarmTriggered");
         public static string AlertCrateUnlocksIn10Min => GetString("AlertCrateUnlocksIn10Min");
+        public static string UiBadgeSmallOil => GetString("UiBadgeSmallOil");
+        public static string UiBadgeLargeOil => GetString("UiBadgeLargeOil");
+        public static string UiBadgeOilRigTooltip => GetString("UiBadgeOilRigTooltip");
         public static string AlertCrateUnlocksIn15Min => GetString("AlertCrateUnlocksIn15Min");
         public static string AlertCrateUnlocksIn15MinName => GetString("AlertCrateUnlocksIn15MinName");
         public static string AlertCrateUnlocksIn15MinDesc => GetString("AlertCrateUnlocksIn15MinDesc");

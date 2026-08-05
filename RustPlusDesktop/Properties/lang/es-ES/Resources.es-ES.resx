@@ -5784,4 +5784,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>Nombre del temporizador</value>
   </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>Usado por el Logic Engine como disparador de oil rig. Su ventana de alarma, sonido y alertas de raid están suprimidos: se informa como evento de oil rig.</value>
+  </data>
 </root>

@@ -9,6 +9,28 @@ public class SmartDevice : INotifyPropertyChanged
 {
 
 
+    /// <summary>
+    /// "Small Oil" or "Large Oil" while a Logic Engine rule uses this alarm as an oil rig
+    /// trigger, otherwise null.
+    ///
+    /// Derived state, never persisted: the rules are the truth, and a badge left behind in
+    /// the save file would outlive the rule that earned it. Recomputed whenever rules change,
+    /// so pulling the device out of the Logic Engine restores normal alarm behaviour by
+    /// itself.
+    /// </summary>
+    [JsonIgnore]
+    private string? _oilRigBadge;
+
+    [JsonIgnore]
+    public string? OilRigBadge
+    {
+        get => _oilRigBadge;
+        set { if (_oilRigBadge != value) { _oilRigBadge = value; OnProp(); OnProp(nameof(HasOilRigBadge)); } }
+    }
+
+    [JsonIgnore]
+    public bool HasOilRigBadge => !string.IsNullOrEmpty(_oilRigBadge);
+
     private uint _entityId;
     public uint EntityId
     {

@@ -5787,4 +5787,13 @@ You can find more information on the server&apos;s official website:
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>Timer name</value>
   </data>
+  <data name="UiBadgeSmallOil" xml:space="preserve">
+    <value>Small Oil</value>
+  </data>
+  <data name="UiBadgeLargeOil" xml:space="preserve">
+    <value>Large Oil</value>
+  </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>Used by the Logic Engine as an oil rig trigger. Its alarm popup, sound and raid alerts are suppressed — it reports as an oil rig event instead.</value>
+  </data>
 </root>

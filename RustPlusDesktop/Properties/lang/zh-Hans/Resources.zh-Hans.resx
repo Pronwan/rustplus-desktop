@@ -1044,4 +1044,7 @@
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>计时器名称</value>
   </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>被 Logic Engine 用作石油钻井平台触发器。其警报弹窗、声音和团战提醒均已抑制 — 改为作为钻井平台事件上报。</value>
+  </data>
 </root>

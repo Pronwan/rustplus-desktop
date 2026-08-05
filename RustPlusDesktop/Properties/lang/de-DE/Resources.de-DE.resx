@@ -5844,4 +5844,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>Timer-Name</value>
   </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>Wird von der Logic Engine als Oil-Rig-Trigger genutzt. Alarm-Popup, Ton und Raid-Alerts sind unterdrückt — er meldet stattdessen als Oil-Rig-Event.</value>
+  </data>
 </root>

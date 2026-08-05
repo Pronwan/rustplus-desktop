@@ -5784,4 +5784,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>Nom du minuteur</value>
   </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>Utilisé par le Logic Engine comme déclencheur d’oil rig. Sa fenêtre d’alarme, son son et ses alertes de raid sont supprimés — il est signalé comme un événement oil rig.</value>
+  </data>
 </root>

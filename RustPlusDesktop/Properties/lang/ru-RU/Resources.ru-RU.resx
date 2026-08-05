@@ -5784,4 +5784,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiTimerNamePlaceholder" xml:space="preserve">
     <value>Название таймера</value>
   </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>Используется Logic Engine как триггер нефтяной вышки. Всплывающее окно тревоги, звук и рейд-оповещения подавлены — вместо этого приходит событие вышки.</value>
+  </data>
 </root>

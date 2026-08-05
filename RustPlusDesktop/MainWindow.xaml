@@ -1903,7 +1903,27 @@
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="Auto" />
                                                                         <ColumnDefinition Width="*" MinWidth="0" />
+                                                                        <ColumnDefinition Width="Auto" />
                                                                     </Grid.ColumnDefinitions>
+
+                                                                    <!--  Oil rig trigger: this alarm's own notifications are suppressed  -->
+                                                                    <Border
+                                                                        Grid.Column="2"
+                                                                        Margin="6,0,0,0"
+                                                                        Padding="5,1"
+                                                                        CornerRadius="3"
+                                                                        Background="#302E9BD6"
+                                                                        BorderBrush="#602E9BD6"
+                                                                        BorderThickness="1"
+                                                                        VerticalAlignment="Center"
+                                                                        ToolTip="{DynamicResource UiBadgeOilRigTooltip}"
+                                                                        Visibility="{Binding HasOilRigBadge, Converter={StaticResource Vis}}">
+                                                                        <TextBlock
+                                                                            Text="{Binding OilRigBadge}"
+                                                                            FontSize="10"
+                                                                            FontWeight="SemiBold"
+                                                                            Foreground="#7FD3FF" />
+                                                                    </Border>
                                                                     <ui:SymbolIcon
                                                                         Grid.Column="0"
                                                                         Symbol="Warning20"
