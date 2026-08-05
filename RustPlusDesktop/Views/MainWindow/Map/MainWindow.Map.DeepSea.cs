@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -44,10 +46,96 @@ public partial class MainWindow
         return (minX, maxX, minY, maxY);
     }
 
+    /// <summary>
+    /// A shop belonging to the Deep Sea event rather than to the world.
+    ///
+    /// Position, not name: the name list only covers the known NPC vendors, while a player
+    /// vending machine placed up there is just as much a Deep Sea shop. The playable grid
+    /// runs from zero, so anything at a negative X is outside it — the same test the marker
+    /// visibility already uses.
+    /// </summary>
+    private static bool IsDeepSeaShop(RustPlusClientReal.ShopMarker s) => s.X < 0;
+
+    /// <summary>Set once the shops have actually been drawn. They do not move afterwards.</summary>
+    private bool _deepSeaShopsDrawn;
+
+    /// <summary>
+    /// When we last asked. An empty answer must not be final — Deep Sea may simply not be up
+    /// yet, and it runs on a cycle, so the map will have something to show later in the same
+    /// session. Throttled rather than latched, so toggling the map back and forth does not
+    /// turn into a request per click.
+    /// </summary>
+    private DateTime _deepSeaShopsAskedAt = DateTime.MinValue;
+
+    private static readonly TimeSpan DeepSeaShopRetryInterval = TimeSpan.FromMinutes(1);
+
+    internal void ResetDeepSeaShopFetch()
+    {
+        _deepSeaShopsDrawn = false;
+        _deepSeaShopsAskedAt = DateTime.MinValue;
+    }
+
+    /// <summary>
+    /// Fetches the Deep Sea shops once when the map is opened.
+    ///
+    /// Only in fallback mode: where the vending feed still works the ordinary poll already
+    /// draws them, and running this as well would fight it. Once rather than on a timer,
+    /// because the Floating City does not move and its shops do not change — a single read is
+    /// enough to put it on an otherwise empty map, and continuous polling for one static
+    /// position would be waste.
+    /// </summary>
+    private async Task LoadDeepSeaShopsOnceAsync()
+    {
+        if (_deepSeaShopsDrawn) return;
+        if (DateTime.UtcNow - _deepSeaShopsAskedAt < DeepSeaShopRetryInterval) return;
+        if (!Services.EventCapabilities.IsCloudSourced) return;
+        if (_rust is not RustPlusClientReal real) return;
+
+        _deepSeaShopsAskedAt = DateTime.UtcNow;
+
+        List<RustPlusClientReal.ShopMarker>? shops;
+        try { shops = await real.GetVendingShopsAsync(_connectionPollingCts.Token); }
+        catch (Exception ex)
+        {
+            AppendLog($"[DEEPSEA] Could not read shops: {ex.Message}");
+            return;
+        }
+
+        if (shops == null) return;
+
+        var deepSeaShops = shops.Where(IsDeepSeaShop).ToList();
+        if (deepSeaShops.Count == 0)
+        {
+            // Not final: Deep Sea may not be up yet, and it comes round again.
+            AppendLog("[DEEPSEA] No shops in the feed right now — the map stays empty.");
+            return;
+        }
+
+        _deepSeaShopsDrawn = true;
+        AppendLog($"[DEEPSEA] {deepSeaShops.Count} shop(s) still delivered by the API — drawing them.");
+
+        // Only the Deep Sea ones: UpdateShopsUI removes whatever is not in the list it is
+        // given, and in fallback mode there is nothing else on the map to lose.
+        await Dispatcher.InvokeAsync(() =>
+        {
+            UpdateShopsUI(deepSeaShops);
+            RefreshShopIconScales();
+
+            // The markers are built in world coordinates and only then filtered and placed
+            // for whichever map is showing. Without these two they would be drawn, invisible,
+            // at their main-map position.
+            RefreshShopVisibility();
+            RefreshShopPositions();
+        });
+    }
+
     private void SetShowingDeepSeaMap(bool show)
     {
         if (_isShowingDeepSeaMap == show) return;
         _isShowingDeepSeaMap = show;
+
+        // Opening the map is the moment the data is worth having, and the only moment we ask.
+        if (show) _ = LoadDeepSeaShopsOnceAsync();
 
         Dispatcher.Invoke(() =>
         {

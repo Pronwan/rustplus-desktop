@@ -39,6 +39,7 @@ public partial class MainWindow
     {
         _shopDataAvailable = true;
         _emptyShopPolls = 0;
+        ResetDeepSeaShopFetch();
         Dispatcher.Invoke(ApplyShopDataAvailability);
     }
 
@@ -66,8 +67,26 @@ public partial class MainWindow
             // null is a technical failure, not an answer — retry without counting it.
             if (shops != null)
             {
-                TrackShopDataAvailability(shops.Count > 0);
-                if (shops.Count > 0) return;        // server delivers; verdict settled
+                // Deep Sea's NPC shops appear to still arrive after the API change — they
+                // belong to the event rather than to the vending feed, and look like an
+                // oversight. They must not count towards the verdict: while Deep Sea is up
+                // they would read as "this server delivers shops" and restore the entire
+                // shops + events UI on a server that delivers neither. The result would be a
+                // full interface for three hours and an empty one afterwards.
+                int usable = 0;
+                int deepSea = 0;
+                foreach (var shop in shops)
+                {
+                    if (IsDeepSeaShop(shop)) deepSea++;
+                    else usable++;
+                }
+
+                if (usable == 0 && deepSea > 0)
+                    AppendLog($"[shops] Only Deep Sea shops in the feed ({deepSea}) — " +
+                              "not counted as vending data.");
+
+                TrackShopDataAvailability(usable > 0);
+                if (usable > 0) return;             // server delivers; verdict settled
                 if (!_shopDataAvailable) return;    // enough empties; verdict settled
             }
 
