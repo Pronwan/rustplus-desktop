@@ -1489,7 +1489,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>[{0}] Откључавање сандука за 5 минута!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Дип Си је горе</value>
+    <value>Дип Си је горе (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Нова продавница {0} [{1}]: {2}</value>

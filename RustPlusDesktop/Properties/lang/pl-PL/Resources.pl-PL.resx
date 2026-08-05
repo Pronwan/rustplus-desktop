@@ -1489,7 +1489,7 @@ Rust+ Desktop rejestruje lokalna aplikacje w FCM, aby mogla odbierac te same pow
     <value>[{0}] Skrzynka zostanie odblokowana w 5 minut!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Deep Sea jest już dostępne</value>
+    <value>Deep Sea jest już dostępne (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Nowy sklep {0} [{1}]: {2}</value>

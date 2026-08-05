@@ -1488,7 +1488,7 @@
     <value>[{0}] الصندوق المشفر سيفتح بعد 5 دقائق!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>بدء حدث أعماق البحار في المحيط</value>
+    <value>بدء حدث أعماق البحار في المحيط (تم اكتشافها بالصوت)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>متجر جديد مضاف {0} في الإحداثية [{1}]: {2}</value>

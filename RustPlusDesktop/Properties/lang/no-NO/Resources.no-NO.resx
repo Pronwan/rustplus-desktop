@@ -1489,7 +1489,7 @@ Rust+ Desktop registrerer den lokale appen din hos FCM slik at den kan motta de 
     <value>[{0}] Kasse låser opp om 5 minutter!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Dypt Sjø er på vei opp</value>
+    <value>Dypt Sjø er på vei opp (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Ny butikk {0} [{1}]: {2}</value>

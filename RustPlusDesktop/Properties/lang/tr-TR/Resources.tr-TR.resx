@@ -1489,7 +1489,7 @@ Rust+ Desktop, ayni Rust+ bildirimlerini arka planda alabilmesi icin yerel uygul
     <value>[{0}] Sandık 5 dakika içinde açılıyor!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Derin Deniz çıktı</value>
+    <value>Derin Deniz çıktı (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Yeni mağaza {0} [{1}]: {2}</value>

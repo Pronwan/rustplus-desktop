@@ -1489,7 +1489,7 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
     <value>[{0}] Crate låses upp på 5 minuter!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Deep Sea är uppe</value>
+    <value>Deep Sea är uppe (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Ny butik {0} [{1}]: {2}</value>

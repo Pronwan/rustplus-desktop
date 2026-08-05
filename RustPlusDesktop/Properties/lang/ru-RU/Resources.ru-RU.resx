@@ -1489,7 +1489,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>[{0}] Крейт разблокируется за 5 минут!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Глубоководный запуск</value>
+    <value>Глубоководный запуск (обнаружено по звуку)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Новый магазин {0} [{1}]: {2}</value>

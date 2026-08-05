@@ -1489,7 +1489,7 @@ Rust+ Desktop inregistreaza aplicatia locala la FCM pentru a putea primi aceleas
     <value>[{0}] Lada se deblochează în 5 minute!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Deep Sea este sus</value>
+    <value>Deep Sea este sus (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Magazin nou {0} [{1}]: {2}</value>

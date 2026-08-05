@@ -1489,7 +1489,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>[{0}] 5 分钟后箱子解锁！</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>深海已启动</value>
+    <value>深海已启动 (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>新店 {0} [{1}]: {2}</value>

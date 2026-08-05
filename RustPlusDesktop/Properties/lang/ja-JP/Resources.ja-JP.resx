@@ -1489,7 +1489,7 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
     <value>[{0}] クレートは5分でアンロックされる！</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>深海がアップ</value>
+    <value>深海がアップ (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>新店舗 {0} [{1}]: {2}</value>
