@@ -1083,4 +1083,7 @@
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
     <value>可选。游戏内警报器两行中的上行 — 只有它会随通知一同发送，下行在此不可用。推送通知不携带设备 ID，因此当应用未连接到该服务器时（例如启动时），这段文本是识别警报器的唯一方式。留空即可，应用会在连接状态下首次触发时自行填写。保持默认的行将被忽略，因为所有未重命名的警报器都用它。</value>
   </data>
+  <data name="UiInGameAlarmTitle" xml:space="preserve">
+    <value>游戏内警报文本（上行）</value>
+  </data>
 </root>

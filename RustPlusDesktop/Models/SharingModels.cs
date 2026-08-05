@@ -26,6 +26,9 @@ namespace RustPlusDesk.Models
         public List<ExportedDeviceDto>? Children { get; set; }
         public int? CustomIconId { get; set; }
         public string? CustomIconShortName { get; set; }
+
+        /// <summary>In-game alarm text. The cloud worker matches pushes against this.</summary>
+        public string? InGameAlarmTitle { get; set; }
     }
 
     [JsonConverter(typeof(SavedStrokeJsonConverter))]

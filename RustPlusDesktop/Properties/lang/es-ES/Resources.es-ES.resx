@@ -5823,4 +5823,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
     <value>Opcional. La línea SUPERIOR de las dos de la alarma en el juego: es la que Rust envía con la notificación; la inferior no sirve para esto. Las notificaciones push no llevan ID de dispositivo, así que este texto es la única forma de reconocer la alarma cuando la app no está conectada a ese servidor, por ejemplo al arrancar. Déjalo vacío y la app lo rellenará sola la primera vez que salte estando conectada. Una línea que siga siendo la predeterminada se ignora, porque la comparten todas las alarmas sin renombrar.</value>
   </data>
+  <data name="UiInGameAlarmTitle" xml:space="preserve">
+    <value>Texto de la alarma en el juego (línea superior)</value>
+  </data>
 </root>

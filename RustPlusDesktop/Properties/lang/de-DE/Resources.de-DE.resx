@@ -5883,4 +5883,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
     <value>Optional. Die OBERE der beiden Zeilen am Alarm im Spiel — nur diese sendet Rust mit der Benachrichtigung mit; die untere Zeile ist dafür nicht verwendbar. Push-Benachrichtigungen enthalten keine Geräte-ID, deshalb ist dieser Text die einzige Möglichkeit, den Alarm zu erkennen, wenn die App nicht mit diesem Server verbunden ist — etwa beim Start. Lässt du das Feld leer, trägt die App es beim ersten Auslösen im verbundenen Zustand selbst ein. Eine unveränderte Standardzeile wird ignoriert, weil sie jeder nicht umbenannte Alarm hat.</value>
   </data>
+  <data name="UiInGameAlarmTitle" xml:space="preserve">
+    <value>Alarm-Text im Spiel (obere Zeile)</value>
+  </data>
 </root>

@@ -24,7 +24,8 @@ namespace RustPlusDesk.Services.Data
                 Alias = d.Alias,
                 IsGroup = d.IsGroup,
                 CustomIconId = d.CustomIconId,
-                CustomIconShortName = d.CustomIconShortName
+                CustomIconShortName = d.CustomIconShortName,
+                InGameAlarmTitle = d.InGameAlarmTitle
             };
 
             if (d.IsGroup && d.Children != null && d.Children.Count > 0)

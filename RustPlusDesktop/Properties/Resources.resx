@@ -5844,4 +5844,7 @@ You can find more information on the server&apos;s official website:
   <data name="UiRemoveAsLargeOilRigTrigger" xml:space="preserve">
     <value>Remove as Large Oil Rig Trigger</value>
   </data>
+  <data name="UiInGameAlarmTitle" xml:space="preserve">
+    <value>In-game alarm text (upper line)</value>
+  </data>
 </root>

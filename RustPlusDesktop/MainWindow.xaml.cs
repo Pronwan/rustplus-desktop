@@ -2587,6 +2587,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // fire the popup, the raid sound and the raid webhook for a crate hack — the one
         // false alarm that costs a team an actual base defence. Dropped once the device is
         // identified, so it never reaches the notification centre either.
+        // Record the alarm's in-game text on the device itself, while we can still prove which
+        // device it is. This is the only moment both halves exist at once: the push carries the
+        // title but no entity id, and pairing carries the id under the generic name "Smart
+        // Alarm". The cloud worker that drives Alexa only ever sees the push, so without this
+        // it cannot tell two alarms apart at all.
+        if (dev != null && !string.IsNullOrWhiteSpace(n.Title)
+            && !string.Equals(dev.InGameAlarmTitle, n.Title.Trim(), StringComparison.Ordinal))
+        {
+            dev.InGameAlarmTitle = n.Title.Trim();
+            AppendLog($"[alarm] Learned in-game title for {dev.PureName} (#{dev.EntityId}): \"{dev.InGameAlarmTitle}\".");
+
+            // Straight to the cloud: the worker is the consumer, and it is not running in this
+            // process. Waiting for the next routine sync would leave Alexa guessing meanwhile.
+            try { _vm.Save(); } catch { }
+            _ = UploadDevicesSnapshotForCurrentServerAsync();
+        }
+
         // Learn what this alarm actually says, while we can still prove which device it is.
         // Push notifications carry no entity ID of their own; the one we have here was
         // recovered from a WebSocket event, which only happens on the connected server. That

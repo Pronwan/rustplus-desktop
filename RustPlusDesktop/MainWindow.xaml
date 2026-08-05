@@ -1663,6 +1663,18 @@
                                                                 <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
                                                                 <MenuItem x:Name="MenuSetSmallOilRig" Click="Device_SetSmallOilRig_Click" Header="{DynamicResource UiSetAsSmallOilRigTrigger}" />
                                                                 <MenuItem x:Name="MenuSetLargeOilRig" Click="Device_SetLargeOilRig_Click" Header="{DynamicResource UiSetAsLargeOilRigTrigger}" />
+                                                                <MenuItem x:Name="MenuEditAlarmTitle" Click="Device_EditAlarmTitle_Click" Header="{DynamicResource UiInGameAlarmTitle}">
+                                                                    <MenuItem.Style>
+                                                                        <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartAlarm">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </MenuItem.Style>
+                                                                </MenuItem>
                                                                 <MenuItem Click="SwitchCommand_Edit_Click" Header="{DynamicResource UiChangeCommand}">
                                                                     <MenuItem.Style>
                                                                         <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">

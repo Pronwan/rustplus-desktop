@@ -1376,6 +1376,41 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
             SetDeviceAsOilRigTrigger(dev, "LargeOilRig");
     }
 
+    /// <summary>
+    /// Shows and edits the alarm's in-game text.
+    ///
+    /// The app fills this in by itself the first time an alarm fires while it is running, but
+    /// that means triggering every alarm once before Alexa can tell them apart. Typing it is
+    /// the shortcut, and seeing what is stored is the only way to check whether the automatic
+    /// route worked.
+    /// </summary>
+    private void Device_EditAlarmTitle_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem item || item.DataContext is not SmartDevice dev) return;
+
+        var dlg = new Views.Windows.PromptDialog(
+            Properties.Resources.UiInGameAlarmTitle, dev.InGameAlarmTitle ?? "")
+        {
+            Owner = this
+        };
+
+        if (dlg.ShowDialog() != true) return;
+
+        string entered = (dlg.InputText ?? "").Trim();
+        if (string.Equals(entered, dev.InGameAlarmTitle ?? "", StringComparison.Ordinal)) return;
+
+        dev.InGameAlarmTitle = entered;
+        AppendLog(string.IsNullOrEmpty(entered)
+            ? $"[alarm] Cleared in-game title for {dev.PureName} (#{dev.EntityId})."
+            : $"[alarm] In-game title for {dev.PureName} (#{dev.EntityId}) set to \"{entered}\".");
+
+        try { _vm.Save(); } catch { }
+
+        // The cloud worker is the consumer and runs elsewhere, so push it now rather than
+        // waiting for the next routine sync.
+        _ = UploadDevicesSnapshotForCurrentServerAsync();
+    }
+
     private void RemoveDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
     {
         var profile = _vm?.Selected;

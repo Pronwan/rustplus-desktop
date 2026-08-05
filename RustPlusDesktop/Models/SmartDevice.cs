@@ -31,6 +31,31 @@ public class SmartDevice : INotifyPropertyChanged
     [JsonIgnore]
     public bool HasOilRigBadge => !string.IsNullOrEmpty(_oilRigBadge);
 
+    /// <summary>
+    /// The upper line of the alarm's message as set in-game — the text Rust puts in the push
+    /// notification title.
+    ///
+    /// The only thing that identifies which alarm fired: an alarm push carries server details
+    /// and nothing else, no entity id and no entity name. Pairing is the mirror image, giving
+    /// the id with a generic "Smart Alarm" as its name. Neither is usable alone, so this is
+    /// learned when both arrive together — the WebSocket event names the entity while the push
+    /// carries the title.
+    ///
+    /// Persisted and synced to the cloud, because the worker that drives Alexa only ever sees
+    /// the push and has no other way to tell two alarms apart. Editable by hand for anyone who
+    /// would rather not trigger every alarm once to teach it.
+    /// </summary>
+    private string? _inGameAlarmTitle;
+    public string? InGameAlarmTitle
+    {
+        get => _inGameAlarmTitle;
+        set
+        {
+            var trimmed = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+            if (_inGameAlarmTitle != trimmed) { _inGameAlarmTitle = trimmed; OnProp(); }
+        }
+    }
+
     private uint _entityId;
     public uint EntityId
     {
