@@ -1381,20 +1381,21 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         var profile = _vm?.Selected;
         if (profile?.LogicRules == null) return;
 
-        var rule = profile.LogicRules.FirstOrDefault(r =>
+        var rulesToRemove = profile.LogicRules.Where(r =>
             r.TriggerType == "SmartAlarm" &&
-            r.TriggerEntityId == dev.EntityId &&
-            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget));
+            (r.TriggerEntityId == dev.EntityId || r.TriggerEntityId == 0) &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget)).ToList();
 
-        if (rule != null)
+        foreach (var rule in rulesToRemove)
         {
-            rule.TriggerEntityId = 0;
+            profile.LogicRules.Remove(rule);
         }
 
         RefreshOilRigTimerCapability();
+        LogicEnginePanel?.RefreshListBindings();
         _vm?.NotifyDevicesChanged();
         _vm?.Save();
-        AppendLog($"[Devices] Removed alarm #{dev.EntityId} ({dev.DisplayName}) from {rigTarget} trigger.");
+        AppendLog($"[Devices] Deleted {rigTarget} rule for alarm #{dev.EntityId} ({dev.DisplayName}).");
     }
 
     private void SetDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
@@ -1457,6 +1458,7 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         }
 
         RefreshOilRigTimerCapability();
+        LogicEnginePanel?.RefreshListBindings();
         _vm?.NotifyDevicesChanged();
         _vm?.Save();
         AppendLog($"[Devices] Set alarm #{dev.EntityId} ({dev.DisplayName}) as {rigTarget} trigger.");
