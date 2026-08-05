@@ -1265,6 +1265,128 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         dev.IsEditing = true;
     }
 
+    private bool IsOilRigAlarmAssigned(string rigTarget)
+    {
+        var profile = _vm?.Selected;
+        if (profile?.LogicRules == null) return false;
+
+        return profile.LogicRules.Any(rule =>
+            rule.TriggerType == "SmartAlarm" &&
+            rule.TriggerEntityId != 0 &&
+            rule.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget));
+    }
+
+    private void DeviceContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ContextMenu menu) return;
+        if (menu.DataContext is not SmartDevice dev) return;
+
+        bool isAlarm = string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(dev.Kind, "Smart Alarm", StringComparison.OrdinalIgnoreCase);
+
+        MenuItem? menuSmall = null;
+        MenuItem? menuLarge = null;
+
+        foreach (var item in menu.Items.OfType<MenuItem>())
+        {
+            if (item.Name == "MenuSetSmallOilRig") menuSmall = item;
+            else if (item.Name == "MenuSetLargeOilRig") menuLarge = item;
+        }
+
+        if (!isAlarm)
+        {
+            if (menuSmall != null) menuSmall.Visibility = Visibility.Collapsed;
+            if (menuLarge != null) menuLarge.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        bool smallAssigned = IsOilRigAlarmAssigned("SmallOilRig");
+        bool largeAssigned = IsOilRigAlarmAssigned("LargeOilRig");
+
+        if (menuSmall != null)
+            menuSmall.Visibility = smallAssigned ? Visibility.Collapsed : Visibility.Visible;
+
+        if (menuLarge != null)
+            menuLarge.Visibility = largeAssigned ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void Device_SetSmallOilRig_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
+        SetDeviceAsOilRigTrigger(dev, "SmallOilRig");
+    }
+
+    private void Device_SetLargeOilRig_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
+        SetDeviceAsOilRigTrigger(dev, "LargeOilRig");
+    }
+
+    private void SetDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
+    {
+        var profile = _vm?.Selected;
+        if (profile == null) return;
+
+        profile.LogicRules ??= new List<LogicRule>();
+
+        var rule = profile.LogicRules.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget));
+
+        if (rule != null)
+        {
+            rule.IsEnabled = true;
+            rule.TriggerEntityId = dev.EntityId;
+        }
+        else
+        {
+            rule = new LogicRule
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = rigTarget == "SmallOilRig" ? "Small Oil Rig Chat/Timer" : "Large Oil Rig Chat/Timer",
+                CustomIconId = -1768880890,
+                CustomIconShortName = "fish.smallshark",
+                IsEnabled = true,
+                IsLoopEnabled = false,
+                LoopCount = 1,
+                IsExpanded = true,
+                TriggerType = "SmartAlarm",
+                TriggerEntityId = dev.EntityId,
+                TriggerCommand = "rulecommand",
+                TriggerRuleId = "",
+                TriggerState = true,
+                ConditionOperator = "NONE",
+                ConditionDeviceEntityId = 0,
+                ConditionDeviceState = true,
+                Steps = new System.Collections.ObjectModel.ObservableCollection<LogicStep>
+                {
+                    new LogicStep
+                    {
+                        StepType = "StartTimer",
+                        TimerMinutes = 15,
+                        TimerTarget = rigTarget,
+                        TimerName = "",
+                        ShowCrateOnMap = true,
+                        AlarmTextHint = "",
+                        WaitSeconds = 10,
+                        TargetEntityId = 0,
+                        TargetGroupName = "",
+                        ToggleState = null,
+                        ConditionOperator = "ALL_OFFLINE",
+                        ConditionDeviceIdsCsv = "",
+                        ConditionalSteps = new System.Collections.ObjectModel.ObservableCollection<LogicStep>()
+                    }
+                }
+            };
+            profile.LogicRules.Add(rule);
+        }
+
+        RefreshOilRigTimerCapability();
+        _vm.NotifyDevicesChanged();
+        _vm.Save();
+        AppendLog($"[Devices] Set alarm #{dev.EntityId} ({dev.DisplayName}) as {rigTarget} trigger.");
+    }
+
     private void DeviceName_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2 && sender is TextBlock tb && tb.DataContext is SmartDevice dev)

@@ -1656,6 +1656,30 @@
                                                         Padding="8,7"
                                                         CornerRadius="8"
                                                         HorizontalAlignment="Left">
+                                                        <Border.ContextMenu>
+                                                            <ContextMenu Opened="DeviceContextMenu_Opened"
+                                                                         DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                                                         Style="{StaticResource DarkContextMenu}">
+                                                                <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
+                                                                <MenuItem x:Name="MenuSetSmallOilRig" Click="Device_SetSmallOilRig_Click" Header="{DynamicResource UiSetAsSmallOilRigTrigger}" />
+                                                                <MenuItem x:Name="MenuSetLargeOilRig" Click="Device_SetLargeOilRig_Click" Header="{DynamicResource UiSetAsLargeOilRigTrigger}" />
+                                                                <MenuItem Click="SwitchCommand_Edit_Click" Header="{DynamicResource UiChangeCommand}">
+                                                                    <MenuItem.Style>
+                                                                        <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </MenuItem.Style>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <Border.Width>
                                                             <MultiBinding Converter="{StaticResource DeviceTreeItemWidthConverter}" ConverterParameter="36,26,220">
                                                                 <Binding ElementName="ListDevices" Path="ActualWidth" />
@@ -1966,28 +1990,6 @@
                                                                                     </Style.Triggers>
                                                                                 </Style>
                                                                             </TextBlock.Style>
-                                                                            <TextBlock.ContextMenu>
-                                                                                <ContextMenu
-                                                                                    DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
-                                                                                    Style="{StaticResource DarkContextMenu}">
-                                                                                    <MenuItem Click="Device_Rename_Click" Header="{DynamicResource RenameDevice}" />
-                                                                                    <MenuItem Click="SwitchCommand_Edit_Click" Header="{DynamicResource UiChangeCommand}">
-                                                                                        <MenuItem.Style>
-                                                                                            <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
-                                                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                                                <Style.Triggers>
-                                                                                                    <DataTrigger Binding="{Binding Kind}" Value="SmartSwitch">
-                                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                                    </DataTrigger>
-                                                                                                    <DataTrigger Binding="{Binding Kind}" Value="Smart Switch">
-                                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                                    </DataTrigger>
-                                                                                                </Style.Triggers>
-                                                                                            </Style>
-                                                                                        </MenuItem.Style>
-                                                                                    </MenuItem>
-                                                                                </ContextMenu>
-                                                                            </TextBlock.ContextMenu>
                                                                         </TextBlock>
                                                                         
                                                                         <ui:TextBox

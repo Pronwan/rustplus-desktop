@@ -5832,4 +5832,10 @@ You can find more information on the server&apos;s official website:
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
     <value>Optional. The UPPER of the two lines on the alarm in-game — that is the one Rust sends with the notification; the lower line is not usable for this. Push notifications carry no device ID, so this text is the only way to recognise the alarm when the app is not connected to that server, at startup for instance. Leave it empty and the app fills it in itself the first time the alarm fires while connected. A line left at Rust’s default is ignored, because every unrenamed alarm shares it.</value>
   </data>
+  <data name="UiSetAsSmallOilRigTrigger" xml:space="preserve">
+    <value>Set as Small Oil Rig Trigger</value>
+  </data>
+  <data name="UiSetAsLargeOilRigTrigger" xml:space="preserve">
+    <value>Set as Large Oil Rig Trigger</value>
+  </data>
 </root>
