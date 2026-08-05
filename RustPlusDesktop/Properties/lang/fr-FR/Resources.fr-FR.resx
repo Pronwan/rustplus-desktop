@@ -5809,7 +5809,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Ajouter la règle du Logic Engine</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Ouvrez le Logic Engine, créez une règle ayant l’alarme intelligente pour déclencheur et ajoutez une étape Démarrer un minuteur. Réglez les minutes et choisissez Déclencheur Large Oilrig ou Small Oilrig. Laissez « Afficher la caisse sur la carte » coché pour dessiner la caisse et son compte à rebours ; les avertissements chat et Discord arrivent dans les deux cas.</value>
+    <value>Ouvrez le Logic Engine, créez une règle ayant l’alarme intelligente pour déclencheur et ajoutez une étape Démarrer un minuteur. Réglez les minutes et choisissez Déclencheur Large Oilrig ou Small Oilrig. Laissez « Afficher la caisse sur la carte » coché pour dessiner la caisse et son compte à rebours ; les avertissements chat et Discord arrivent dans les deux cas. Dans Texte de l’alarme, saisissez la ligne du HAUT des deux affichées sur l’alarme en jeu : les notifications push ne contiennent pas d’identifiant d’appareil, et c’est cette ligne qui permet à l’application de reconnaître l’alarme comme déclencheur de rig lorsqu’elle n’est pas connectée au serveur. Laissez vide et l’application l’apprend au premier déclenchement en étant connectée.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>Aucune alerte de raid depuis cette alarme</value>
@@ -5818,9 +5818,9 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Une alarme configurée ainsi n’est pas un raid : sa fenêtre, son son et ses alertes de raid vers Discord sont supprimés. Elle est signalée comme un événement oil rig. La liste des appareils affiche un petit badge (Large Oil) ou (Small Oil), pour que ce silence soit visible et non mystérieux. Retirez l’appareil de la règle et il redevient aussitôt une alarme ordinaire. Le commutateur Oil Rig des alertes de chat coupe toujours l’ensemble si vous voulez le calme.</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
-    <value>Texte de l’alarme en jeu</value>
+    <value>Texte de l’alarme (ligne du haut)</value>
   </data>
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
-    <value>Facultatif. Le texte envoyé par cette alarme, exactement tel qu’il est défini en jeu. Les notifications push ne contiennent pas d’identifiant d’appareil : c’est donc le seul moyen de reconnaître l’alarme lorsque l’application n’est pas connectée à ce serveur, au démarrage par exemple. Laissez vide et l’application le remplira elle-même la première fois qu’elle verra cette alarme en étant connectée. Un texte laissé par défaut est ignoré, car toutes les alarmes non renommées le partagent.</value>
+    <value>Facultatif. La ligne du HAUT des deux affichées sur l’alarme en jeu — c’est celle que Rust envoie avec la notification ; la ligne du bas est inutilisable ici. Les notifications push ne contiennent pas d’identifiant d’appareil : ce texte est donc le seul moyen de reconnaître l’alarme lorsque l’application n’est pas connectée à ce serveur, au démarrage par exemple. Laissez vide et l’application le remplira elle-même au premier déclenchement en étant connectée. Une ligne laissée par défaut est ignorée, car toutes les alarmes non renommées la partagent.</value>
   </data>
 </root>

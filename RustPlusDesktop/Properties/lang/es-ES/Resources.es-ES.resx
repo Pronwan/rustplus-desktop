@@ -5809,7 +5809,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Añadir la regla del Logic Engine</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Abre el Logic Engine, crea una regla con la alarma inteligente como disparador y añade un paso Iniciar temporizador. Ajusta los minutos y elige Disparador Large Oilrig o Small Oilrig. Deja marcado «Mostrar la caja en el mapa» para dibujar la caja con su cuenta atrás; los avisos de chat y Discord llegan igualmente.</value>
+    <value>Abre el Logic Engine, crea una regla con la alarma inteligente como disparador y añade un paso Iniciar temporizador. Ajusta los minutos y elige Disparador Large Oilrig o Small Oilrig. Deja marcado «Mostrar la caja en el mapa» para dibujar la caja con su cuenta atrás; los avisos de chat y Discord llegan igualmente. En Texto de la alarma escribe la línea SUPERIOR de las dos de la alarma en el juego: las notificaciones push no llevan ID de dispositivo, y es esa línea la que permite a la app reconocer la alarma como disparador de rig cuando no está conectada al servidor. Déjalo vacío y la app lo aprende la primera vez que salte estando conectada.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>Sin alerta de raid desde esa alarma</value>
@@ -5818,9 +5818,9 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Una alarma configurada así no es un raid, por lo que su ventana, su sonido y sus alertas de raid a Discord quedan suprimidos. Se informa como evento de oil rig. La lista de dispositivos muestra una pequeña insignia (Large Oil) o (Small Oil), para que el silencio sea visible y no misterioso. Quita el dispositivo de la regla y vuelve a comportarse como una alarma normal al instante. El interruptor de Oil Rig en las alertas de chat sigue apagándolo todo cuando quieras silencio.</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
-    <value>Texto de la alarma en el juego</value>
+    <value>Texto de la alarma (línea superior)</value>
   </data>
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
-    <value>Opcional. El texto que envía esta alarma, exactamente como está configurado en el juego. Las notificaciones push no llevan ID de dispositivo, así que esta es la única forma de reconocer la alarma cuando la app no está conectada a ese servidor, por ejemplo al arrancar. Déjalo vacío y la app lo rellenará sola la primera vez que vea la alarma estando conectada. Un texto que siga siendo el predeterminado se ignora, porque lo comparten todas las alarmas sin renombrar.</value>
+    <value>Opcional. La línea SUPERIOR de las dos de la alarma en el juego: es la que Rust envía con la notificación; la inferior no sirve para esto. Las notificaciones push no llevan ID de dispositivo, así que este texto es la única forma de reconocer la alarma cuando la app no está conectada a ese servidor, por ejemplo al arrancar. Déjalo vacío y la app lo rellenará sola la primera vez que salte estando conectada. Una línea que siga siendo la predeterminada se ignora, porque la comparten todas las alarmas sin renombrar.</value>
   </data>
 </root>

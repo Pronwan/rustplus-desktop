@@ -5818,7 +5818,7 @@ You can find more information on the server&apos;s official website:
     <value>Add the Logic Engine rule</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Open the Logic Engine, create a rule with the Smart Alarm as its trigger, and add a Start Timer step. Set the minutes and choose Large Oilrig Trigger or Small Oilrig Trigger. Leave Show Crate on map ticked to draw the crate with its countdown; the chat and Discord warnings arrive either way.</value>
+    <value>Open the Logic Engine, create a rule with the Smart Alarm as its trigger, and add a Start Timer step. Set the minutes and choose Large Oilrig Trigger or Small Oilrig Trigger. Leave Show Crate on map ticked to draw the crate with its countdown; the chat and Discord warnings arrive either way. Fill in Alarm text with the UPPER of the two lines on the alarm in-game: push notifications carry no device ID, and that line is what lets the app recognise this alarm as a rig trigger when it is not connected to the server. Leave it empty and the app learns it the first time the alarm fires while connected.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>No raid alert from that alarm</value>
@@ -5827,9 +5827,9 @@ You can find more information on the server&apos;s official website:
     <value>An alarm set up this way is not a raid, so its popup, sound and raid alerts to Discord are suppressed. It reports as an oil rig event instead. The device list shows a small (Large Oil) or (Small Oil) badge so the silence is visible rather than mysterious. Remove the device from the rule and it behaves like an ordinary alarm again, at once. The Oil Rig switch under Chat Alerts still turns all of it off whenever you want quiet.</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
-    <value>In-game alarm text</value>
+    <value>Alarm text (upper line)</value>
   </data>
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
-    <value>Optional. The text this alarm sends, exactly as set on it in-game. Push notifications carry no device ID, so this is the only way to recognise the alarm when the app is not connected to that server — at startup, for instance. Leave it empty and the app fills it in itself the first time it sees this alarm while connected. A text left at Rust’s default is ignored, because every unrenamed alarm shares it.</value>
+    <value>Optional. The UPPER of the two lines on the alarm in-game — that is the one Rust sends with the notification; the lower line is not usable for this. Push notifications carry no device ID, so this text is the only way to recognise the alarm when the app is not connected to that server, at startup for instance. Leave it empty and the app fills it in itself the first time the alarm fires while connected. A line left at Rust’s default is ignored, because every unrenamed alarm shares it.</value>
   </data>
 </root>

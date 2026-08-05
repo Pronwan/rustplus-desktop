@@ -2593,10 +2593,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // makes this the only reliable chance to record the text for the times there is no
         // such event — a queued push at startup, or an alarm on another paired server.
         if (n.EntityId.HasValue
-            && OilRigTriggerRegistry.LearnAlarmText(_vm.Servers, n.EntityId.Value, n.Title, n.Message))
+            && OilRigTriggerRegistry.LearnAlarmText(_vm.Servers, n.EntityId.Value, n.Title))
         {
-            AppendLog($"[alarm] Learned alarm text for entity {n.EntityId.Value}: " +
-                      $"\"{n.Title ?? n.Message}\".");
+            AppendLog($"[alarm] Learned alarm text for entity {n.EntityId.Value}: \"{n.Title}\".");
             try { _vm.Save(); } catch { }
             RebuildOilRigTriggerRegistry();
         }

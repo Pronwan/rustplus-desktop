@@ -1069,7 +1069,7 @@
     <value>添加 Logic Engine 规则</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>打开 Logic Engine，创建一条以该智能警报器为触发条件的规则，并添加「启动计时器」步骤。设置分钟数，选择 Large Oilrig 触发器或 Small Oilrig 触发器。保持勾选「在地图上显示箱子」即可绘制带倒计时的箱子；聊天和 Discord 提醒无论如何都会送达。</value>
+    <value>打开 Logic Engine，创建一条以该智能警报器为触发条件的规则，并添加「启动计时器」步骤。设置分钟数，选择 Large Oilrig 触发器或 Small Oilrig 触发器。保持勾选「在地图上显示箱子」即可绘制带倒计时的箱子；聊天和 Discord 提醒无论如何都会送达。在「警报文本」中填写游戏内警报器两行中的上行：推送通知不携带设备 ID，正是这一行让应用在未连接服务器时仍能将其识别为钻井平台触发器。留空则应用会在连接状态下首次触发时自行学习。</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>该警报器不再发出团战提醒</value>
@@ -1078,9 +1078,9 @@
     <value>这样配置的警报器不是团战，因此其弹窗、声音以及发往 Discord 的团战提醒都会被抑制，改为作为钻井平台事件上报。设备列表会显示一个小标记（Large Oil）或（Small Oil），让这份安静可见而非莫名其妙。把设备从规则中移除，它会立刻恢复成普通警报器。聊天提醒中的 Oil Rig 开关仍可在你需要安静时关闭全部内容。</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
-    <value>游戏内警报文本</value>
+    <value>警报文本（上行）</value>
   </data>
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
-    <value>可选。该警报器发送的文本，与游戏内设置的完全一致。推送通知不携带设备 ID，因此当应用未连接到该服务器时（例如启动时），这是识别警报器的唯一方式。留空即可，应用会在首次于连接状态下看到该警报时自行填写。保持游戏默认的文本将被忽略，因为所有未重命名的警报器都用它。</value>
+    <value>可选。游戏内警报器两行中的上行 — 只有它会随通知一同发送，下行在此不可用。推送通知不携带设备 ID，因此当应用未连接到该服务器时（例如启动时），这段文本是识别警报器的唯一方式。留空即可，应用会在连接状态下首次触发时自行填写。保持默认的行将被忽略，因为所有未重命名的警报器都用它。</value>
   </data>
 </root>

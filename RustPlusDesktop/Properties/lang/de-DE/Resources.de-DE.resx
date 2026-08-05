@@ -5869,7 +5869,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Regel in der Logic Engine anlegen</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Öffne die Logic Engine, lege eine Regel mit dem Smart Alarm als Trigger an und füge einen Start-Timer-Schritt hinzu. Stelle die Minuten ein und wähle Large-Oilrig-Trigger oder Small-Oilrig-Trigger. Lass „Crate auf der Karte anzeigen" aktiv, damit die Crate mit Countdown gezeichnet wird; die Chat- und Discord-Warnungen kommen so oder so.</value>
+    <value>Öffne die Logic Engine, lege eine Regel mit dem Smart Alarm als Trigger an und füge einen Start-Timer-Schritt hinzu. Stelle die Minuten ein und wähle Large-Oilrig-Trigger oder Small-Oilrig-Trigger. Lass „Crate auf der Karte anzeigen“ aktiv, damit die Crate mit Countdown gezeichnet wird; die Chat- und Discord-Warnungen kommen so oder so. Trage bei Alarm-Text die OBERE der beiden Zeilen am Alarm im Spiel ein: Push-Benachrichtigungen enthalten keine Geräte-ID, und genau diese Zeile lässt die App den Alarm als Rig-Trigger erkennen, wenn sie nicht mit dem Server verbunden ist. Lässt du das Feld leer, lernt die App es beim ersten Auslösen im verbundenen Zustand.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>Kein Raid-Alert von diesem Alarm</value>
@@ -5878,9 +5878,9 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Ein so eingerichteter Alarm ist kein Raid, deshalb sind Popup, Ton und Raid-Alerts an Discord unterdrückt. Er meldet stattdessen als Oil-Rig-Event. In der Geräteliste erscheint ein kleines Abzeichen (Large Oil) bzw. (Small Oil), damit die Stille sichtbar und nicht rätselhaft ist. Nimmst du das Gerät aus der Regel, verhält es sich sofort wieder wie ein normaler Alarm. Der Oil-Rig-Schalter unter Chat Alerts schaltet weiterhin alles ab, wenn du Ruhe willst.</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
-    <value>Alarm-Text im Spiel</value>
+    <value>Alarm-Text (obere Zeile)</value>
   </data>
   <data name="UiAlarmTextHintTooltip" xml:space="preserve">
-    <value>Optional. Der Text, den dieser Alarm sendet — genau so, wie er im Spiel eingestellt ist. Push-Benachrichtigungen enthalten keine Geräte-ID, deshalb ist das die einzige Möglichkeit, den Alarm zu erkennen, wenn die App nicht mit diesem Server verbunden ist — etwa beim Start. Lässt du das Feld leer, trägt die App es beim ersten Mal selbst ein, wenn sie den Alarm im verbundenen Zustand sieht. Ein unveränderter Standardtext wird ignoriert, weil ihn jeder nicht umbenannte Alarm hat.</value>
+    <value>Optional. Die OBERE der beiden Zeilen am Alarm im Spiel — nur diese sendet Rust mit der Benachrichtigung mit; die untere Zeile ist dafür nicht verwendbar. Push-Benachrichtigungen enthalten keine Geräte-ID, deshalb ist dieser Text die einzige Möglichkeit, den Alarm zu erkennen, wenn die App nicht mit diesem Server verbunden ist — etwa beim Start. Lässt du das Feld leer, trägt die App es beim ersten Auslösen im verbundenen Zustand selbst ein. Eine unveränderte Standardzeile wird ignoriert, weil sie jeder nicht umbenannte Alarm hat.</value>
   </data>
 </root>

@@ -148,11 +148,14 @@ public static class OilRigTriggerRegistry
     /// </summary>
     /// <returns>True when something changed and the profiles want saving.</returns>
     public static bool LearnAlarmText(IEnumerable<ServerProfile?>? profiles, uint entityId,
-                                      string? title, string? message)
+                                      string? title)
     {
-        string? learned = IsDistinctive(title) ? title!.Trim()
-                        : IsDistinctive(message) ? message!.Trim()
-                        : null;
+        // The title only, never the message. A Smart Alarm has two lines in-game and the push
+        // sends the upper one as its title; the WebSocket event carries no title at all, so
+        // accepting the message as a substitute meant the same alarm was learned twice with
+        // different values in one firing, and whichever arrived last won. The push always
+        // carries the title, so refusing the message costs nothing and removes the race.
+        string? learned = IsDistinctive(title) ? title!.Trim() : null;
         if (learned == null || profiles == null) return false;
 
         bool changed = false;
