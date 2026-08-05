@@ -69,6 +69,27 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         TutorialTitleText.Text = presentation.TutorialTitle;
         StepTitleText.Text = presentation.StepTitle;
         DescriptionText.Text = presentation.Description;
+        // A missing or unreadable image must not take the step down with it: the words carry
+        // the instruction, the picture only illustrates it.
+        StepImageBorder.Visibility = Visibility.Collapsed;
+        if (!string.IsNullOrWhiteSpace(presentation.ImagePath))
+        {
+            try
+            {
+                var bitmap = new System.Windows.Media.Imaging.BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(presentation.ImagePath, UriKind.RelativeOrAbsolute);
+                bitmap.EndInit();
+                StepImage.Source = bitmap;
+                StepImageBorder.Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                StepImage.Source = null;
+            }
+        }
+
         TipText.Text = presentation.Tip;
         TipBorder.Visibility = string.IsNullOrWhiteSpace(presentation.Tip) ? Visibility.Collapsed : Visibility.Visible;
         ProgressText.Text = string.Format(Properties.Resources.GetString("Tutorials.Common.Progress"), presentation.StepNumber, presentation.StepCount);

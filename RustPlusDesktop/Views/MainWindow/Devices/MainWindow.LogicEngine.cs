@@ -569,7 +569,7 @@ namespace RustPlusDesk.Views
             {
                 try
                 {
-                    await DiscordBotListenerService.Instance.SendNotificationAsync("event", $"[LogicEngine] {errorMsg}");
+                    await DiscordBotListenerService.Instance.SendNotificationAsync("events", $"[LogicEngine] {errorMsg}");
                 }
                 catch (Exception ex)
                 {

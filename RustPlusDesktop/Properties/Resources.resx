@@ -5796,4 +5796,34 @@ You can find more information on the server&apos;s official website:
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>Used by the Logic Engine as an oil rig trigger. Its alarm popup, sound and raid alerts are suppressed — it reports as an oil rig event instead.</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>Crate Alerts for Oil Rigs</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>Use an in-game RF receiver to get a live crate countdown on the map, plus warnings in team chat and Discord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>Why this exists</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>Crate countdowns used to be worked out from Chinook markers, which the Rust+ API no longer sends. Rust broadcasts the hack on a radio frequency instead, and that is something you can receive yourself. Three things are needed: a receiver in-game, a Smart Alarm paired to the app, and one Logic Engine rule.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>Wire it up in-game</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>Place an RF Receiver and set its frequency to the rig you want: 4765 for Large Oil Rig, 4768 for Small Oil Rig. Give it power, and wire its output into a Smart Alarm that is paired with this app. When the hack starts, Rust broadcasts on that frequency, the receiver switches on, and the alarm fires.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>Add the Logic Engine rule</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>Open the Logic Engine, create a rule with the Smart Alarm as its trigger, and add a Start Timer step. Set the minutes and choose Large Oilrig Trigger or Small Oilrig Trigger. Leave Show Crate on map ticked to draw the crate with its countdown; the chat and Discord warnings arrive either way.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>No raid alert from that alarm</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>An alarm set up this way is not a raid, so its popup, sound and raid alerts to Discord are suppressed. It reports as an oil rig event instead. The device list shows a small (Large Oil) or (Small Oil) badge so the silence is visible rather than mysterious. Remove the device from the rule and it behaves like an ordinary alarm again, at once. The Oil Rig switch under Chat Alerts still turns all of it off whenever you want quiet.</value>
+  </data>
 </root>

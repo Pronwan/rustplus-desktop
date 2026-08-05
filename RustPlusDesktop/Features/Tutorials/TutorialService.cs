@@ -16,7 +16,8 @@ public interface ITutorialNavigationCoordinator
 public sealed record TutorialPresentation(
     string TutorialTitle, string StepTitle, string Description, string? Tip,
     int StepNumber, int StepCount, TutorialPlacement Placement, TutorialTarget Target,
-    bool CanGoBack, bool IsLastStep, bool IsTargetUnavailable, bool AllowTargetInteraction);
+    bool CanGoBack, bool IsLastStep, bool IsTargetUnavailable, bool AllowTargetInteraction,
+    string? ImagePath = null);
 
 public interface ITutorialPresenter
 {
@@ -231,7 +232,8 @@ public sealed class TutorialService(
                 stepDescription,
                 HasText(step.TipKey) ? Text(step.TipKey!) : null,
                 _index + 1, _steps.Count, unavailable ? TutorialPlacement.Center : step.Placement,
-                target!, _index > 0, _index == _steps.Count - 1, unavailable, step.AllowTargetInteraction));
+                target!, _index > 0, _index == _steps.Count - 1, unavailable, step.AllowTargetInteraction,
+                unavailable ? null : step.ImagePath));
             StepShown?.Invoke(this, new(ActiveTutorial.Id, step.Id));
         }
         catch (OperationCanceledException) { }

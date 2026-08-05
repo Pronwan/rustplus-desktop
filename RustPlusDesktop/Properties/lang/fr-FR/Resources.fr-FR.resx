@@ -5787,4 +5787,34 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>Utilisé par le Logic Engine comme déclencheur d’oil rig. Sa fenêtre d’alarme, son son et ses alertes de raid sont supprimés — il est signalé comme un événement oil rig.</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>Alertes de caisse pour les Oil Rigs</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>Utilisez un récepteur RF en jeu pour obtenir un compte à rebours de caisse sur la carte, ainsi que des avertissements dans le chat d’équipe et sur Discord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>Pourquoi cela existe</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>Les comptes à rebours de caisse étaient déduits des marqueurs Chinook, que l’API Rust+ n’envoie plus. Rust diffuse le piratage sur une fréquence radio, que vous pouvez recevoir vous-même. Trois choses sont nécessaires : un récepteur en jeu, une alarme intelligente appairée à l’application et une règle du Logic Engine.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>Câblage en jeu</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>Placez un récepteur RF et réglez sa fréquence sur le rig voulu : 4765 pour le Large Oil Rig, 4768 pour le Small Oil Rig. Alimentez-le et reliez sa sortie à une alarme intelligente appairée à cette application. Au début du piratage, Rust émet sur cette fréquence, le récepteur s’active et l’alarme se déclenche.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>Ajouter la règle du Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>Ouvrez le Logic Engine, créez une règle ayant l’alarme intelligente pour déclencheur et ajoutez une étape Démarrer un minuteur. Réglez les minutes et choisissez Déclencheur Large Oilrig ou Small Oilrig. Laissez « Afficher la caisse sur la carte » coché pour dessiner la caisse et son compte à rebours ; les avertissements chat et Discord arrivent dans les deux cas.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>Aucune alerte de raid depuis cette alarme</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>Une alarme configurée ainsi n’est pas un raid : sa fenêtre, son son et ses alertes de raid vers Discord sont supprimés. Elle est signalée comme un événement oil rig. La liste des appareils affiche un petit badge (Large Oil) ou (Small Oil), pour que ce silence soit visible et non mystérieux. Retirez l’appareil de la règle et il redevient aussitôt une alarme ordinaire. Le commutateur Oil Rig des alertes de chat coupe toujours l’ensemble si vous voulez le calme.</value>
+  </data>
 </root>

@@ -53,12 +53,14 @@ public sealed class TutorialRegistry : ITutorialRegistry
     private static TutorialStep Step(string id, string? target = null, string? page = null,
         TutorialPlacement placement = TutorialPlacement.Auto, bool optional = false,
         Func<ITutorialContext, bool>? condition = null, string? webTarget = null,
-        bool allowInteraction = false, Func<ITutorialContext, CancellationToken, Task>? BeforeShowAsync = null) => new()
+        bool allowInteraction = false, Func<ITutorialContext, CancellationToken, Task>? BeforeShowAsync = null,
+        string? image = null) => new()
     {
         Id = id,
         TitleKey = $"Tutorials.Step.{id}.Title",
         DescriptionKey = $"Tutorials.Step.{id}.Description",
         TipKey = null,
+        ImagePath = image,
         TargetId = target,
         WebViewTargetId = webTarget,
         PageKey = page,
@@ -238,6 +240,16 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("events.dock", "Events.Dock", "map", TutorialPlacement.Left),
             Step("events.timer", "Events.Timer", "map", TutorialPlacement.Left),
             Step("events.stale", placement: TutorialPlacement.Center)),
+
+        // Deliberately centred with no targets except the Logic Engine button. Most of what
+        // this teaches happens inside Rust, not in the app, so pointing at controls would
+        // only be half the story — the wiring diagram is the important part.
+        Def("oilrig-crate-alerts", 205, "Monitoring", false, true,
+            Step("oilrigcrate.intro", placement: TutorialPlacement.Center),
+            Step("oilrigcrate.wiring", placement: TutorialPlacement.Center,
+                 image: "pack://application:,,,/Assets/Screenshots/8.0/SmartAlarmOilrig.png"),
+            Step("oilrigcrate.rule", "Automation.Open", "devices", TutorialPlacement.Top),
+            Step("oilrigcrate.silence", placement: TutorialPlacement.Center)),
 
         Def("bases-screenshots", 210, "Maps", false,
             Step("bases.map", "Map.Canvas", "map", TutorialPlacement.Right),

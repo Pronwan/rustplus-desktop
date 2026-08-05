@@ -1047,4 +1047,34 @@
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>被 Logic Engine 用作石油钻井平台触发器。其警报弹窗、声音和团战提醒均已抑制 — 改为作为钻井平台事件上报。</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>石油钻井平台箱子提醒</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>在游戏中使用 RF 接收器，即可在地图上获得箱子倒计时，并在队伍聊天和 Discord 中收到提醒。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>为什么需要这个</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>箱子倒计时过去是根据支奴干直升机标记推算的，而 Rust+ API 已不再发送这些标记。游戏改为通过无线电频率广播黑客进程，而这个频率你可以自己接收。需要三样东西：游戏内的接收器、与应用配对的智能警报器，以及一条 Logic Engine 规则。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>在游戏中接线</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>放置一个 RF 接收器，并将频率设为目标平台：Large Oil Rig 为 4765，Small Oil Rig 为 4768。接通电源，并将其输出接到已与本应用配对的智能警报器上。黑客开始时，游戏会在该频率广播，接收器接通，警报器随即触发。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>添加 Logic Engine 规则</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>打开 Logic Engine，创建一条以该智能警报器为触发条件的规则，并添加「启动计时器」步骤。设置分钟数，选择 Large Oilrig 触发器或 Small Oilrig 触发器。保持勾选「在地图上显示箱子」即可绘制带倒计时的箱子；聊天和 Discord 提醒无论如何都会送达。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>该警报器不再发出团战提醒</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>这样配置的警报器不是团战，因此其弹窗、声音以及发往 Discord 的团战提醒都会被抑制，改为作为钻井平台事件上报。设备列表会显示一个小标记（Large Oil）或（Small Oil），让这份安静可见而非莫名其妙。把设备从规则中移除，它会立刻恢复成普通警报器。聊天提醒中的 Oil Rig 开关仍可在你需要安静时关闭全部内容。</value>
+  </data>
 </root>

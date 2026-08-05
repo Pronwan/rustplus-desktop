@@ -26,6 +26,13 @@
                                TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
                     <TextBlock x:Name="DescriptionText" Margin="0,10,0,0" Foreground="#E6FFFFFF" FontSize="14"
                                LineHeight="20" TextWrapping="Wrap" />
+                    <!--  For steps that explain something outside the app, where there is no
+                          on-screen target to point at — in-game wiring, for instance.  -->
+                    <Border x:Name="StepImageBorder" Margin="0,12,0,0" CornerRadius="7" ClipToBounds="True"
+                            Background="#14000000" BorderBrush="#22FFFFFF" BorderThickness="1"
+                            Visibility="Collapsed">
+                        <Image x:Name="StepImage" MaxHeight="260" Stretch="Uniform" StretchDirection="DownOnly" />
+                    </Border>
                     <Border x:Name="TipBorder" Margin="0,12,0,0" Padding="10" Background="#1838A3DB" CornerRadius="7">
                         <TextBlock x:Name="TipText" Foreground="#FFDCEEFF" FontSize="12" TextWrapping="Wrap" />
                     </Border>

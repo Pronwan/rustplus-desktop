@@ -5787,4 +5787,34 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>Usado por el Logic Engine como disparador de oil rig. Su ventana de alarma, sonido y alertas de raid están suprimidos: se informa como evento de oil rig.</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>Alertas de caja para Oil Rigs</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>Usa un receptor RF en el juego para obtener una cuenta atrás de la caja en el mapa, más avisos en el chat de equipo y Discord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>Por qué existe</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>Las cuentas atrás de la caja se deducían de los marcadores de Chinook, que la API de Rust+ ya no envía. Rust emite el hackeo en una frecuencia de radio, y eso sí puedes recibirlo tú. Hacen falta tres cosas: un receptor en el juego, una alarma inteligente emparejada con la app y una regla del Logic Engine.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>Cablearlo en el juego</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>Coloca un receptor RF y ajusta su frecuencia al rig que quieras: 4765 para Large Oil Rig, 4768 para Small Oil Rig. Dale corriente y conecta su salida a una alarma inteligente emparejada con esta app. Cuando empieza el hackeo, Rust emite en esa frecuencia, el receptor se activa y la alarma salta.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>Añadir la regla del Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>Abre el Logic Engine, crea una regla con la alarma inteligente como disparador y añade un paso Iniciar temporizador. Ajusta los minutos y elige Disparador Large Oilrig o Small Oilrig. Deja marcado «Mostrar la caja en el mapa» para dibujar la caja con su cuenta atrás; los avisos de chat y Discord llegan igualmente.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>Sin alerta de raid desde esa alarma</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>Una alarma configurada así no es un raid, por lo que su ventana, su sonido y sus alertas de raid a Discord quedan suprimidos. Se informa como evento de oil rig. La lista de dispositivos muestra una pequeña insignia (Large Oil) o (Small Oil), para que el silencio sea visible y no misterioso. Quita el dispositivo de la regla y vuelve a comportarse como una alarma normal al instante. El interruptor de Oil Rig en las alertas de chat sigue apagándolo todo cuando quieras silencio.</value>
+  </data>
 </root>

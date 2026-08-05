@@ -5847,4 +5847,34 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>Wird von der Logic Engine als Oil-Rig-Trigger genutzt. Alarm-Popup, Ton und Raid-Alerts sind unterdrückt — er meldet stattdessen als Oil-Rig-Event.</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>Crate-Alerts für Oil Rigs</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>Mit einem RF-Receiver im Spiel einen laufenden Crate-Countdown auf der Karte bekommen, dazu Warnungen im Team-Chat und in Discord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>Warum es das gibt</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>Crate-Countdowns wurden früher aus Chinook-Markern abgeleitet, die die Rust+-API nicht mehr sendet. Rust funkt den Hack stattdessen über eine Frequenz — und die kannst du selbst empfangen. Drei Dinge sind nötig: ein Receiver im Spiel, ein mit der App gekoppelter Smart Alarm und eine Regel in der Logic Engine.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>Im Spiel verkabeln</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>Setze einen RF-Receiver und stelle die Frequenz des gewünschten Rigs ein: 4765 für Large Oil Rig, 4768 für Small Oil Rig. Gib ihm Strom und verkabele seinen Ausgang mit einem Smart Alarm, der mit dieser App gekoppelt ist. Startet der Hack, funkt Rust auf dieser Frequenz, der Receiver schaltet ein und der Alarm löst aus.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>Regel in der Logic Engine anlegen</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>Öffne die Logic Engine, lege eine Regel mit dem Smart Alarm als Trigger an und füge einen Start-Timer-Schritt hinzu. Stelle die Minuten ein und wähle Large-Oilrig-Trigger oder Small-Oilrig-Trigger. Lass „Crate auf der Karte anzeigen" aktiv, damit die Crate mit Countdown gezeichnet wird; die Chat- und Discord-Warnungen kommen so oder so.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>Kein Raid-Alert von diesem Alarm</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>Ein so eingerichteter Alarm ist kein Raid, deshalb sind Popup, Ton und Raid-Alerts an Discord unterdrückt. Er meldet stattdessen als Oil-Rig-Event. In der Geräteliste erscheint ein kleines Abzeichen (Large Oil) bzw. (Small Oil), damit die Stille sichtbar und nicht rätselhaft ist. Nimmst du das Gerät aus der Regel, verhält es sich sofort wieder wie ein normaler Alarm. Der Oil-Rig-Schalter unter Chat Alerts schaltet weiterhin alles ab, wenn du Ruhe willst.</value>
+  </data>
 </root>

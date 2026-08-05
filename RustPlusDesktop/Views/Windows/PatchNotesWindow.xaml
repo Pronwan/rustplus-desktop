@@ -81,6 +81,10 @@
                                 The new Rust+ API no longer supports shop polling or event tracking. When connected to a server you can still send event notifications to team chat and Discord for Oil Rig heartbeats, Cargo spawns and Deep Sea spawns.
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Your own Oil Rig crate timers:</Run>
+                                Tune an RF receiver to a rig's frequency in-game and wire it to a Smart Alarm, then add a <Run FontStyle="Italic">Start Timer</Run> step in the Logic Engine. The crate is drawn on the rig with a live countdown, and 15/10/5-minute warnings go to team chat and Discord exactly as they did over the API. Alarms used this way no longer raise raid alerts &#x2014; they are marked with a small badge in the device list instead. See the new <Run FontStyle="Italic">Crate Alerts for Oil Rigs</Run> tutorial for the wiring.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Adjusted interface:</Run>
                                 Event dock, chat alerts and chat commands have been adjusted accordingly to align with these changes.
                             </TextBlock>
@@ -134,6 +138,7 @@
                             <views:ImageGallery>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/clan_chat.jpg" Description="Redesigned Clan sidebar with a list/tile view switcher, roles, online status, last seen stats, Steam IDs, notes, full Clan Chat integration, and Discord forwarding"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/DeepSea.png" Description="Full virtual Deep Sea map support with automatic view toggling, Floating City tracking, and precise grid coordinate mapping"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Oilrig-Trigger.png" Description="Own Oil Rig crate timers: an RF receiver wired to a Smart Alarm starts a live countdown on the rig, with 15/10/5-minute warnings to team chat and Discord — and no raid alert from that alarm"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/tutorials.png" Description="New fully localised guided tutorial system"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-ui.png" Description="Redesigned left sidebar workspace and modernized UI"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Raid-calculator.png" Description="Brand new Raid Calculator workspace"/>

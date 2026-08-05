@@ -5784,4 +5784,34 @@
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>يستخدمه Logic Engine كمُشغِّل لمنصة النفط. تم كتم نافذة الإنذار وصوتها وتنبيهات الغارة — يُبلَّغ عنه كحدث منصة نفط بدلاً من ذلك.</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>تنبيهات الصندوق لمنصات النفط</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>استخدم مستقبل RF داخل اللعبة للحصول على عدّ تنازلي مباشر للصندوق على الخريطة، مع تحذيرات في دردشة الفريق وDiscord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>لماذا يوجد هذا</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>كان العدّ التنازلي للصندوق يُستنتج من علامات الشينوك، التي لم تعد واجهة Rust+ ترسلها. بدلاً من ذلك تبثّ اللعبة عملية الاختراق على تردد لاسلكي يمكنك استقباله بنفسك. تحتاج ثلاثة أشياء: مستقبل داخل اللعبة، وإنذار ذكي مقترن بالتطبيق، وقاعدة واحدة في Logic Engine.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>التوصيل داخل اللعبة</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>ضع مستقبل RF واضبط تردده على المنصة التي تريدها: 4765 لمنصة Large Oil Rig و4768 لمنصة Small Oil Rig. زوّده بالطاقة وصِل مخرجه بإنذار ذكي مقترن بهذا التطبيق. عند بدء الاختراق تبثّ اللعبة على ذلك التردد، فيعمل المستقبل وينطلق الإنذار.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>أضف قاعدة Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>افتح Logic Engine وأنشئ قاعدة يكون الإنذار الذكي مُشغِّلاً لها، ثم أضف خطوة «بدء مؤقت». اضبط الدقائق واختر مُشغِّل Large Oilrig أو Small Oilrig. اترك خيار «إظهار الصندوق على الخريطة» مفعّلاً لرسم الصندوق مع عدّه التنازلي؛ أما تحذيرات الدردشة وDiscord فتصل في الحالتين.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>لا تنبيه غارة من هذا الإنذار</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>الإنذار المُعدّ بهذه الطريقة ليس غارة، لذا تُكتم نافذته وصوته وتنبيهات الغارة إلى Discord. يُبلَّغ عنه كحدث منصة نفط بدلاً من ذلك. تعرض قائمة الأجهزة شارة صغيرة (Large Oil) أو (Small Oil) ليكون هذا الصمت مرئياً لا غامضاً. أزل الجهاز من القاعدة ليعود فوراً إنذاراً عادياً. ولا يزال مفتاح Oil Rig ضمن تنبيهات الدردشة يوقف كل ذلك متى أردت الهدوء.</value>
+  </data>
 </root>

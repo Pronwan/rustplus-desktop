@@ -5787,4 +5787,34 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
     <value>Используется Logic Engine как триггер нефтяной вышки. Всплывающее окно тревоги, звук и рейд-оповещения подавлены — вместо этого приходит событие вышки.</value>
   </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>Оповещения о ящиках на нефтяных вышках</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>С помощью радиоприёмника в игре получайте обратный отсчёт до ящика на карте и предупреждения в командном чате и Discord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>Зачем это нужно</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>Обратный отсчёт до ящика раньше вычислялся по маркерам «Чинука», которые Rust+ API больше не присылает. Вместо этого Rust передаёт взлом по радиочастоте — и её вы можете принять сами. Нужны три вещи: приёмник в игре, умная сигнализация, привязанная к приложению, и одно правило Logic Engine.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>Соберите схему в игре</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>Поставьте радиоприёмник и задайте частоту нужной вышки: 4765 для Large Oil Rig, 4768 для Small Oil Rig. Подведите питание и соедините его выход с умной сигнализацией, привязанной к приложению. С началом взлома Rust выходит в эфир на этой частоте, приёмник включается, и сигнализация срабатывает.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>Добавьте правило Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>Откройте Logic Engine, создайте правило с умной сигнализацией в качестве триггера и добавьте шаг «Запустить таймер». Задайте минуты и выберите триггер Large Oilrig или Small Oilrig. Оставьте галочку «Показывать ящик на карте», чтобы рисовать ящик с обратным отсчётом; предупреждения в чат и Discord придут в любом случае.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>Никаких рейд-оповещений от этой сигнализации</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>Настроенная так сигнализация — не рейд, поэтому её всплывающее окно, звук и рейд-оповещения в Discord подавляются. Вместо этого приходит событие нефтяной вышки. В списке устройств появляется небольшой значок (Large Oil) или (Small Oil), чтобы тишина была видимой, а не загадочной. Уберите устройство из правила — и оно тут же снова станет обычной сигнализацией. Переключатель Oil Rig в оповещениях чата по-прежнему отключает всё, когда нужна тишина.</value>
+  </data>
 </root>

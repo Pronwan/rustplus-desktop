@@ -29,6 +29,11 @@ public sealed class TutorialStep
     public required string TitleKey { get; init; }
     public required string DescriptionKey { get; init; }
     public string? TipKey { get; init; }
+
+    /// <summary>Pack URI of an illustration shown under the description. For steps that
+    /// explain something outside the app — in-game wiring, say — where no on-screen target
+    /// exists to point at.</summary>
+    public string? ImagePath { get; init; }
     public string? PageKey { get; init; }
     public string? TargetId { get; init; }
     public string? WebViewTargetId { get; init; }
