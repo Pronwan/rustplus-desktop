@@ -1382,8 +1382,8 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         }
 
         RefreshOilRigTimerCapability();
-        _vm.NotifyDevicesChanged();
-        _vm.Save();
+        _vm?.NotifyDevicesChanged();
+        _vm?.Save();
         AppendLog($"[Devices] Set alarm #{dev.EntityId} ({dev.DisplayName}) as {rigTarget} trigger.");
     }
 
