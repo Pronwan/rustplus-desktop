@@ -5818,7 +5818,7 @@ You can find more information on the server&apos;s official website:
     <value>Add the Logic Engine rule</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Open the Logic Engine, create a rule with the Smart Alarm as its trigger, and add a Start Timer step. Set the minutes and choose Large Oilrig Trigger or Small Oilrig Trigger. Leave Show Crate on map ticked to draw the crate with its countdown; the chat and Discord warnings arrive either way. Fill in Alarm text with the UPPER of the two lines on the alarm in-game: push notifications carry no device ID, and that line is what lets the app recognise this alarm as a rig trigger when it is not connected to the server. Leave it empty and the app learns it the first time the alarm fires while connected.</value>
+    <value>Open the Logic Engine and click the Oil Rig Template button to instantly add a pre-configured rule (or click + Add Rule). Select your paired Smart Alarm as the trigger, and choose either Large Oilrig Trigger or Small Oilrig Trigger as the timer target. Leave Show Crate on map ticked to draw the crate with its live countdown; chat and Discord warnings arrive automatically. Optionally fill in Alarm text with the UPPER line from the alarm in-game so push notifications match when offline.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>No raid alert from that alarm</value>
