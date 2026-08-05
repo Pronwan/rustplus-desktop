@@ -266,6 +266,12 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("offlinealerts.overview", "Settings.OfflineAlerts", "settings", TutorialPlacement.Right),
             Step("offlinealerts.sync", "Settings.OfflineAlerts", "settings", TutorialPlacement.Right),
             Step("offlinealerts.telegram", "Settings.OfflineAlerts", "settings", TutorialPlacement.Right),
-            Step("offlinealerts.alexa", "Settings.Alexa", "settings", TutorialPlacement.Right))
+            Step("offlinealerts.alexa", "Settings.Alexa", "settings", TutorialPlacement.Right),
+
+            // Two short steps rather than one long one: the first says what to do in Rust, the
+            // second what the app does with it. Both point at the device list, because that is
+            // where the result becomes visible.
+            Step("offlinealerts.alarmnames", "Devices.List", "devices", TutorialPlacement.Right),
+            Step("offlinealerts.alarmlearn", "Devices.Item.FirstAvailable", "devices", TutorialPlacement.Right))
     ];
 }

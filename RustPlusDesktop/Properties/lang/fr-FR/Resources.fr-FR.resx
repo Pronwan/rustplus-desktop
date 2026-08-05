@@ -5826,4 +5826,16 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>Texte de l’alarme en jeu (ligne du haut)</value>
   </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>Donnez un nom propre à chaque alarme dans Rust</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>La notification d’une alarme intelligente n’indique que le serveur — ni identifiant ni nom d’appareil. La seule chose qui distingue deux alarmes est le texte que vous définissez sur l’alarme en jeu, et seule la ligne du HAUT est envoyée. Si vous laissez partout la valeur par défaut, Alexa ne peut pas savoir laquelle s’est déclenchée et la routine s’exécutera pour n’importe laquelle.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>Déclenchez-la une fois pour que l’application l’apprenne</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>Après l’appairage, déclenchez l’alarme une fois pendant que l’application tourne. Elle voit la notification et l’événement de l’appareil au même instant et enregistre le nom toute seule. Vous préférez ne pas attendre ? Clic droit sur l’alarme dans cette liste et saisissez-le. Dans les deux cas, c’est indépendant du nom que vous donnez à l’appareil ici : celui-là est libre et sans effet sur Alexa.</value>
+  </data>
 </root>

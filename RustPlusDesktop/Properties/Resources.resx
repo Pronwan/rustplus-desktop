@@ -5847,4 +5847,16 @@ You can find more information on the server&apos;s official website:
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>In-game alarm text (upper line)</value>
   </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>Give each alarm its own name in Rust</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>A Smart Alarm push tells us the server and nothing else — no device id, no device name. The one thing that differs between two alarms is the text you set on the alarm in-game, and only the UPPER of its two lines is sent. Leave them all at the default and Alexa cannot tell which alarm went off; a routine will then run for whichever one happens to be first.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>Trigger it once so the app learns it</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>After pairing, set the alarm off once while the app is running. The app sees the notification and the device event at the same moment and records the name by itself. Prefer not to wait? Right-click the alarm in this list and type it in. Either way it is separate from the name you give the device here — that one is yours to choose freely and has no effect on Alexa.</value>
+  </data>
 </root>

@@ -5823,4 +5823,16 @@
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>نص الإنذار داخل اللعبة (السطر العلوي)</value>
   </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>أعطِ كل إنذار اسماً خاصاً به داخل Rust</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>إشعار الإنذار الذكي يذكر الخادم فقط — دون معرّف أو اسم جهاز. الشيء الوحيد الذي يفرّق بين إنذارين هو النص الذي تضبطه داخل اللعبة، ويُرسل السطر العلوي فقط. إذا تركتها جميعاً على الوضع الافتراضي فلن تعرف Alexa أيّها انطلق، وستعمل الروتين لأيّ واحد منها.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>شغّله مرة واحدة ليتعلّمه التطبيق</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>بعد الإقتران، شغّل الإنذار مرة واحدة والتطبيق يعمل. سيرى الإشعار وحدث الجهاز في اللحظة نفسها ويسجّل الاسم تلقائياً. لا تريد الانتظار؟ انقر بزر الفأرة الأيمن على الإنذار في هذه القائمة واكتبه. وفي الحالتين هو مستقل عن الاسم الذي تمنحه للجهاز هنا — فذلك اختيارك ولا يؤثر على Alexa.</value>
+  </data>
 </root>

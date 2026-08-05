@@ -5886,4 +5886,16 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>Alarm-Text im Spiel (obere Zeile)</value>
   </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>Jedem Alarm im Spiel einen eigenen Namen geben</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>Die Benachrichtigung eines Smart Alarms nennt nur den Server — keine Geräte-ID, keinen Gerätenamen. Das Einzige, worin sich zwei Alarme unterscheiden, ist der Text, den du dem Alarm im Spiel gibst, und gesendet wird nur die OBERE seiner beiden Zeilen. Lässt du überall den Standard stehen, kann Alexa nicht wissen, welcher Alarm ausgelöst hat — dann läuft die Routine für irgendeinen.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>Einmal auslösen, damit die App ihn lernt</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>Löse den Alarm nach dem Pairing einmal aus, während die App läuft. Sie sieht Benachrichtigung und Geräte-Event im selben Moment und trägt den Namen von selbst ein. Lieber nicht warten? Rechtsklick auf den Alarm in dieser Liste und eintippen. So oder so ist das unabhängig von dem Namen, den du dem Gerät hier gibst — den wählst du frei, und er hat keinen Einfluss auf Alexa.</value>
+  </data>
 </root>

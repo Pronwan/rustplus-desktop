@@ -5826,4 +5826,16 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>Текст тревоги в игре (верхняя строка)</value>
   </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>Дайте каждой сигнализации своё имя в Rust</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>Уведомление от умной сигнализации сообщает только сервер — ни ID, ни имени устройства. Единственное отличие двух сигнализаций — текст, заданный в игре, причём отправляется только ВЕРХНЯЯ из двух строк. Если везде оставить значение по умолчанию, Alexa не узнает, какая сработала, и сценарий выполнится для произвольной.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>Сработайте её один раз, чтобы приложение запомнило</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>После привязки один раз сработайте сигнализацией при запущенном приложении. Оно видит уведомление и событие устройства одновременно и запишет имя само. Не хотите ждать? Правый клик по сигнализации в этом списке и введите вручную. В любом случае это не связано с именем, которое вы даёте устройству здесь — оно ваше и на Alexa не влияет.</value>
+  </data>
 </root>

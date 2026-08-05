@@ -1086,4 +1086,16 @@
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>游戏内警报文本（上行）</value>
   </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>在 Rust 中为每个警报器起一个专属名称</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>智能警报器的推送只会告知服务器，不包含设备 ID 或设备名。两个警报器之间唯一的区别，就是你在游戏内为它设置的文本，而且只会发送两行中的上行。如果全部保持默认，Alexa 就无法分辨是哪个触发的，例程会对其中任意一个执行。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>触发一次，让应用学会它</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>配对后，在应用运行时触发一次警报器。应用会同时看到推送通知和设备事件，并自行记录名称。不想等？在此列表中右键单击该警报器并手动输入。无论哪种方式，它都与你在这里给设备起的名字无关 — 那个名字可以随意起，对 Alexa 没有影响。</value>
+  </data>
 </root>
