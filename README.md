@@ -52,6 +52,111 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## RustPlusDesk 8.0.0 — Smart Home, Automation & Server Events
+
+The largest release so far: a redesigned interface, new calculators, guided
+tutorials, major 3D map work — and a complete answer to Facepunch removing
+events and vending machines from the Rust+ API.
+
+### 📡 Event tracking without the API
+
+Facepunch removed dynamic events and vending-machine data from Rust+. Rust+ Desk
+now falls back to what the game still tells you: sound.
+
+- **Audio event detection.** The app listens for the server-wide monument cues
+  (Oil Rig, Cargo, Deep Sea) and shares detections through the cloud, so everyone
+  on the server benefits from anyone who heard it. Optional, on by default, and
+  only runs while Rust is running.
+- **Process Loopback capture** on Windows 20348+, which listens to Rust itself
+  rather than the whole system and therefore cannot be fooled by a video.
+- **Trust my own detections.** Shows an event as soon as your own machine hears
+  it, without waiting for another player to confirm.
+- **Your own Oil Rig crate timers.** Tune an RF receiver to a rig's frequency
+  in-game, wire it to a Smart Alarm, and add a *Start Timer* step in the Logic
+  Engine. The crate is drawn on the rig with a live countdown, and 15/10/5-minute
+  warnings reach team chat and Discord exactly as they did over the API. Alarms
+  used this way no longer raise raid alerts and are marked with a badge in the
+  device list. A new tutorial covers the wiring.
+- Event dock, chat alerts and chat commands adjusted so nothing promises data
+  that can no longer arrive.
+
+### ⚙️ Device Automations
+
+- **Player proximity rules.** Switch devices based on where your team actually
+  is. Pick a paired device as the anchor — its real in-game position is used —
+  set a radius, and choose who counts: anyone online, everyone online, a specific
+  team-mate, or the same conditions inverted.
+- **In-game time rules**, so devices follow the Rust day rather than yours.
+- Each rule defines what happens when the condition matches *and* when it stops,
+  so a rule can arm, disarm, or only ever do one of the two.
+- Positions are approximate — anchors use the pairing location and player
+  positions come from the team map. Leave a margin.
+
+### 💀 Death Stats
+
+- New window with total deaths, average and longest survival, deadliest place
+  and deadliest grid.
+- Deaths are matched to the monument they happened at using the map's own names;
+  base deaths are recognised from your in-game team map notes.
+- Live search, per-player filtering, location and time filters, deaths-per-day
+  sparkline.
+- **Death heatmap layer** puts the same data straight on the map.
+
+### 🎓 Guided tutorials
+
+- A fully localised tutorial system covering the key pages, including inside the
+  3D map, with a dedicated page for restarting individual guides.
+- Improved overlay positioning for right-to-left languages.
+
+### 🗺️ Map
+
+- **Virtual Deep Sea map** with automatic view switching when entering or leaving
+  Deep Sea coordinates, Floating City tracking and precise grid mapping.
+- **3D map performance:** opens faster, uses considerably less memory and cleans
+  up after closing. Asset initialisation and streaming rewritten.
+- Custom HD map URLs.
+- Better player-marker size and visibility, custom markers above monument icons,
+  fixed day/night indicator.
+
+### 🛡️ Clan integration
+
+- Redesigned clan sidebar with announcements, score, founder, member count and a
+  list/tile switcher.
+- Member cards with roles, online status, last seen, Steam IDs and notes.
+- Full Clan Chat reading and writing inside the app, with Discord forwarding.
+
+### 🔔 Smart Home, Alexa & offline alerts
+
+- Official Rust+ Desktop **Alexa Skill**: control devices and receive Smart
+  Alerts even when the app is closed.
+- **Offline cloud alerts** via Discord or Telegram calls while the app is shut
+  down, with Discord-only webhooks.
+- Alarms now record the in-game text of each Smart Alarm, so Alexa can tell two
+  alarms apart. It is learned automatically on the first trigger, or typed by
+  hand via right-click.
+- **The alarm popup window is now off by default.** It steals Windows focus, and
+  during a raid that is the worst possible moment. The in-app overlay and sound
+  still fire; the window remains available for anyone who wants it.
+
+### 🧮 Calculators & Logic Engine
+
+- Brand new **Raid Calculator** workspace with a detailed item breakdown.
+- Recycler calculator improvements.
+- Refined Discord and Telegram triggers, actions and formatting; Alexa PIN
+  generation.
+
+### 🖥️ Interface
+
+- Modernised left sidebar and general UI, animated startup splash.
+- Completely redesigned settings menu and structure with a search bar and
+  dedicated Alarms settings.
+
+---
+
+**Note for server admins and players:** on servers that no longer deliver
+vending or event data, the shop panel and the affected chat commands are hidden
+automatically. Nothing needs configuring — the app checks on connect and adapts.
+
 # 🛠️ Update v7.3.3 | Discord Soft Connect Hotfix
 
 - **Discord Interactions During Soft Connect:** Fixed Discord interactions only receiving a response after Full Connect. Configured Discord commands now work while the app is Soft Connected.
