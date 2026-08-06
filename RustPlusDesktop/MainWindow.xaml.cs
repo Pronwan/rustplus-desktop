@@ -7491,7 +7491,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (path == null)
             {
-                ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), Properties.Resources.GetString("DownloadFailed"), WpfUi.ControlAppearance.Danger);
+                // The reason, when there is one. A bare "Download failed" tells neither the
+                // user nor us whether it was the network, the disk or something else.
+                string reason = _updateService.LastDownloadError;
+                if (!string.IsNullOrWhiteSpace(reason))
+                    AppendLog("❌ Update download failed: " + reason);
+
+                ShowInfoSnackbar(
+                    Properties.Resources.GetString("UpdateTitle"),
+                    string.IsNullOrWhiteSpace(reason)
+                        ? Properties.Resources.GetString("DownloadFailed")
+                        : string.Format(Properties.Resources.GetString("FormatDownloadFailed"), reason),
+                    WpfUi.ControlAppearance.Danger);
                 return;
             }
 
