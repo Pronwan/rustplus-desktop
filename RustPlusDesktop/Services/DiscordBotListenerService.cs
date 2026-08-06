@@ -368,6 +368,12 @@ public class DiscordBotListenerService
                 channel.Unsubscribe();
             }
             catch { }
+
+            // And out of the client's registry. Channels are cached by topic there, so the
+            // next Channel(discord_queue_<guild>) would hand back this same object — and
+            // Register may only run on a channel once. Listening to the same guild twice in
+            // one session would throw and never recover.
+            try { SupabaseAuthManager.Client?.Realtime?.Remove(channel); } catch { }
         }
 
         _activeChannels.Clear();
