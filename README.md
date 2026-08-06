@@ -52,6 +52,45 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## RustPlusDesk 8.0.2 — Clan chat & server switching hotfix
+
+### Fixed
+
+- **Clan chat stopped arriving after switching servers.** Returning to a server
+  you had already connected to in the same session broke the live sync — in the
+  app and in Discord — until a restart. Realtime channels are cached by name
+  inside the Supabase client, so requesting the same channel again returned the
+  instance that was already registered, and registering it a second time throws.
+  Channels are now removed from the client rather than only unsubscribed,
+  including on the failure path — which is why one failed subscription used to
+  last for the rest of the session.
+
+- **Same pattern fixed in two more places:** the audio event watcher, which would
+  have failed on returning to a previous server, and the Discord bot listener, on
+  listening to the same guild twice.
+
+Thanks to **Makuko** for finding and diagnosing this one.
+
+- **Large updates could never finish downloading.** The updater used no timeout of
+  its own and fell back on the 100-second default, which covers the entire transfer
+  rather than just establishing the connection. With 8.0.0 at roughly 500 MB split
+  into four parallel chunks, each chunk had to move about 126 MB inside those 100
+  seconds — around 40 Mbit/s sustained. Anyone on a slower connection was cancelled
+  mid-download every time, however long they waited.
+
+- **A failed download now says why.** The timeout was reported as a
+  `TaskCanceledException`, which the code treated as though the user had pressed
+  cancel, so nothing reached the log. The message read only "Download failed" and
+  there was no way to tell a timeout from a network error or a full disk.
+  Cancellations and real failures are now separated, and the reason is shown and
+  logged.
+
+### Still on 7.x and unable to update?
+
+This fix ships *inside* the new version, so it cannot help an installation that is
+already stuck. Download **RustPlusDesk-Setup.exe** from this release and run it
+once — after that, updates work normally.
+
 ## RustPlusDesk 8.0.0 — Smart Home, Automation & Server Events
 
 The largest release so far: a redesigned interface, new calculators, guided
