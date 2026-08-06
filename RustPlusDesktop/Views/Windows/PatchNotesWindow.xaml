@@ -33,6 +33,27 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v8.0.2 HOTFIX PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v8.0.2 | Clan Chat &amp; Server Switching Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Clan chat stopped arriving after switching servers:</Run>
+                                Returning to a server you had already been connected to in the same session broke the live sync, in the app and in Discord, until the app was restarted. Realtime channels are cached by name inside the Supabase client, so asking for the same channel again handed back the one that was already registered &#x2014; and registering it a second time is not allowed. Channels are now removed from the client rather than only unsubscribed, including when a subscription fails, which is why a single failure used to last for the rest of the session.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Same fix applied to audio events and the Discord bot:</Run>
+                                Both used the identical pattern and would have failed the same way &#x2014; one on returning to a previous server, the other on listening to the same Discord guild twice.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" Foreground="#D0D0D0">
+                                Thanks to <Run FontWeight="Bold">Makuko</Run> for finding this one and sending in the analysis.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v8.0.1 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
