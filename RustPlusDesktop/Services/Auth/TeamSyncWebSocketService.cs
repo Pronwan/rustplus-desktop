@@ -188,9 +188,16 @@ namespace RustPlusDesk.Services.Auth
             catch (Exception ex)
             {
                 AppendLog($"[TeamSyncWS/Error] Failed to subscribe to broadcast: {ex.Message}");
+
+                // Drop it properly rather than only letting go of our reference. A channel left
+                // behind in the client's registry is handed back to the next attempt, which
+                // then fails the same way — which is how one failure turned into a dead clan
+                // chat for the rest of the session.
+                if (_broadcastChannel != null) DropChannel(_broadcastChannel);
                 _broadcastChannel = null;
                 _broadcast = null;
                 _broadcastSubscribed = false;
+                _subscribedBroadcastChannel = null;
             }
             finally
             {
@@ -206,7 +213,7 @@ namespace RustPlusDesk.Services.Auth
             _lastBroadcastMasterSteamId = null;
             if (_broadcastChannel != null)
             {
-                try { _broadcastChannel.Unsubscribe(); } catch { }
+                DropChannel(_broadcastChannel);
                 _broadcastChannel = null;
                 _broadcast = null;
             }
@@ -216,9 +223,25 @@ namespace RustPlusDesk.Services.Auth
         {
             if (_presenceChannel != null)
             {
-                try { _presenceChannel.Unsubscribe(); } catch { }
+                DropChannel(_presenceChannel);
                 _presenceChannel = null;
             }
+        }
+
+        /// <summary>
+        /// Unsubscribes and then takes the channel out of the Realtime client entirely.
+        ///
+        /// Unsubscribe alone is not enough: the client keeps channels in a registry keyed by
+        /// topic, so a later Channel(sameName) hands back the very same object — and Register
+        /// may only be called on a channel once. Reconnecting to a server already used in this
+        /// session then failed with "Register can only be called with broadcast options for a
+        /// channel once", and stayed broken until the app was restarted, because every retry
+        /// received the same stale channel.
+        /// </summary>
+        private static void DropChannel(RealtimeChannel channel)
+        {
+            try { channel.Unsubscribe(); } catch { }
+            try { SupabaseAuthManager.Client?.Realtime?.Remove(channel); } catch { }
         }
 
         private static void UnsubscribeAll()

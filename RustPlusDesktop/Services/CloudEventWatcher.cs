@@ -474,7 +474,18 @@ public sealed class CloudEventWatcher
 
     private void UnsubscribeBroadcast()
     {
-        try { _channel?.Unsubscribe(); } catch { }
+        if (_channel != null)
+        {
+            try { _channel.Unsubscribe(); } catch { }
+
+            // Remove it from the client too, not just from here. The Realtime client keeps
+            // channels in a registry keyed by topic, so Channel(sameName) later returns this
+            // very object — and Register may only be called on a channel once. Reconnecting to
+            // a server already visited this session would otherwise throw and stay broken
+            // until restart. Same failure that killed clan chat on a server switch.
+            try { SupabaseAuthManager.Client?.Realtime?.Remove(_channel); } catch { }
+        }
+
         _channel = null;
         _broadcast = null;
     }
