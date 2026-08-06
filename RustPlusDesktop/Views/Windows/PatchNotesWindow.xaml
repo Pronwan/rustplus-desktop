@@ -33,6 +33,24 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v8.0.1 HOTFIX PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v8.0.1 | Update Download Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Large updates could never finish downloading:</Run>
+                                The update download had no time limit of its own and fell back on the 100-second default, which covers the entire transfer rather than just the connection. With 8.0.0 at roughly 500&#xA0;MB split into four parts, that required about 40&#xA0;Mbit/s sustained just to avoid being cancelled mid-download &#x2014; anyone slower could never finish, however long they waited. The limit is gone; cancelling and pausing work exactly as before.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A failed download now says why:</Run>
+                                The timeout was reported as if you had pressed cancel, so nothing appeared in the log and the message read only &quot;Download failed&quot;. Real failures are now separated from cancellations and the reason is shown and logged.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v8.0.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

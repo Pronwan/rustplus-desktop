@@ -276,6 +276,10 @@ namespace RustPlusDesk.Services
         private CancellationTokenSource? _downloadCts = null;
         public string CurrentDownloadFile { get; private set; } = string.Empty;
 
+        /// <summary>Why the last download failed, or empty. "Download failed" alone is useless
+        /// to whoever has to work out whether it was the network, the disk or a timeout.</summary>
+        public string LastDownloadError { get; private set; } = string.Empty;
+
         public bool IsDownloadPaused => _isDownloadPaused;
 
         public void PauseDownload()
@@ -322,7 +326,15 @@ namespace RustPlusDesk.Services
 
             try
             {
-                using var http = new HttpClient();
+                using var http = new HttpClient
+                {
+                    // No wall-clock limit. The default is 100 seconds and it covers the whole
+                    // transfer, not just the connect — so a 500 MB installer split into four
+                    // chunks needed roughly 40 Mbit/s sustained just to avoid being cancelled
+                    // mid-download. Anyone slower could never finish, however long they waited.
+                    // Cancelling and pausing run through _downloadCts and are unaffected.
+                    Timeout = System.Threading.Timeout.InfiniteTimeSpan
+                };
                 http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
 
                 long totalBytes;
@@ -418,13 +430,18 @@ namespace RustPlusDesk.Services
                 PendingInstallerPath = target;
                 return target;
             }
-            catch (OperationCanceledException)
+            // Only when *we* cancelled. HttpClient reports its own timeout as a
+            // TaskCanceledException as well, and without this filter it was swallowed here as
+            // though the user had pressed cancel — which is why a failed download said nothing
+            // at all, in the log or anywhere else.
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
                 return _isDownloadPaused ? "PAUSED" : null;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Multi-part download failed: {ex.Message}");
+                LastDownloadError = ex.Message;
+                Debug.WriteLine($"Multi-part download failed: {ex}");
                 return null;
             }
         }
@@ -439,7 +456,8 @@ namespace RustPlusDesk.Services
                 return;
             }
 
-            using var http = new HttpClient();
+            // Same reasoning as above: this is the client that actually moves the bytes.
+            using var http = new HttpClient { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
             http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
