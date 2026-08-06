@@ -22,6 +22,11 @@ public partial class MainWindow
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
     private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
+
+    // Death log: detects team-member deaths across successive team-info snapshots.
+    private readonly RustPlusDesk.Services.Deaths.DeathTracker _deathTracker = new();
+    private string? _deathTrackerServerKey;
+
     private RustPlusClientReal? _real => _rust as RustPlusClientReal;
 
     public sealed class TeamMemberVM : INotifyPropertyChanged
@@ -31,6 +36,9 @@ public partial class MainWindow
 
         public int MissingCount { get; set; }
         public ulong SteamId { get; init; }
+        private bool _afkAlertSent;
+        public bool HasReturnedFromAfk { get; set; }
+        public TimeSpan ReturnedAfkDuration { get; set; }
 
         private string _name = "(player)";
         public string Name
@@ -149,6 +157,12 @@ public partial class MainWindow
                 double dist = Math.Sqrt(dx * dx + dy * dy);
                 if (dist > 0.05)
                 {
+                    if (_afkAlertSent)
+                    {
+                        HasReturnedFromAfk = true;
+                        ReturnedAfkDuration = DateTime.UtcNow - _lastMoveTime;
+                        _afkAlertSent = false;
+                    }
                     _lastMoveTime = DateTime.UtcNow;
                 }
             }
@@ -160,33 +174,47 @@ public partial class MainWindow
             Y = y;
         }
 
-        public bool UpdateAfkState(DateTime now)
+        public bool UpdateAfkState(DateTime now, int alertThresholdMinutes)
         {
             if (!IsOnline || IsDead)
             {
                 _lastMoveTime = now;
                 IsAfk = false;
                 AfkText = string.Empty;
+                _afkAlertSent = false;
+                HasReturnedFromAfk = false;
                 return false;
             }
 
             var elapsed = now - _lastMoveTime;
             if (elapsed.TotalMinutes >= 5)
             {
-                bool becameAfk = !_isAfk;
                 IsAfk = true;
                 int totalSecs = (int)elapsed.TotalSeconds;
                 int mins = totalSecs / 60;
                 int secs = totalSecs % 60;
                 AfkText = $"AFK: {mins}:{secs:D2}";
-                return becameAfk;
             }
             else
             {
                 IsAfk = false;
                 AfkText = string.Empty;
-                return false;
             }
+
+            if (elapsed.TotalMinutes >= alertThresholdMinutes)
+            {
+                if (!_afkAlertSent)
+                {
+                    _afkAlertSent = true;
+                    return true;
+                }
+            }
+            else
+            {
+                _afkAlertSent = false;
+            }
+
+            return false;
         }
 
         private ImageSource? _avatar;
@@ -216,6 +244,7 @@ public partial class MainWindow
 
     private void StartTeamPolling()
     {
+        _teamConnectionSessionId++;
         if (_teamTimer != null) return;
         _teamTimer = new System.Windows.Threading.DispatcherTimer
         {
@@ -235,7 +264,7 @@ public partial class MainWindow
 
     private void StopTeamPolling()
     {
-        NotifyTeamFeatureServerDisconnected();
+        NotifyTeamFeatureServerDisconnected(_teamConnectionSessionId);
 
         var t = _teamTimer;
         if (t != null)
@@ -263,13 +292,26 @@ public partial class MainWindow
         var now = DateTime.UtcNow;
         foreach (var m in TeamMembers)
         {
-            if (m.UpdateAfkState(now))
+            if (m.UpdateAfkState(now, TrackingService.AfkAlertMinutes))
             {
                 if (_announceSpawns && TrackingService.AnnouncePlayerAfk)
                 {
                     string dispName = GetDisplayPlayerName(m.Name);
-                    string chatText = $"{dispName} AFK: 5:00";
-                    string discordText = $"💤 {dispName} AFK: 5:00";
+                    string chatText = AlertTemplateService.GetFormattedAlert("AlertPlayerAfk", dispName, TrackingService.AfkAlertMinutes);
+                    string discordText = $"💤 {chatText}";
+                    _ = SendTeamChatSafeAsync(chatText, discordText: discordText);
+                }
+            }
+
+            if (m.HasReturnedFromAfk)
+            {
+                m.HasReturnedFromAfk = false;
+                if (_announceSpawns && TrackingService.AnnouncePlayerAfkReturn)
+                {
+                    string dispName = GetDisplayPlayerName(m.Name);
+                    string durationStr = $"{(int)m.ReturnedAfkDuration.TotalHours:D2}:{m.ReturnedAfkDuration.Minutes:D2}";
+                    string chatText = AlertTemplateService.GetFormattedAlert("AlertPlayerAfkReturn", dispName, durationStr);
+                    string discordText = $"🏃 {chatText}";
                     _ = SendTeamChatSafeAsync(chatText, discordText: discordText);
                 }
             }
@@ -281,7 +323,17 @@ public partial class MainWindow
     private async void TeamTimer_Tick(object? sender, EventArgs e)
     {
         if (System.Threading.Interlocked.Exchange(ref _teamPollBusy, 1) == 1) return;
-        try { await LoadTeamAsync(); }
+        try
+        {
+            await LoadTeamAsync();
+            await EvaluateDeviceAutomationAsync();
+
+            if (DateTime.UtcNow - _lastClanPoll > TimeSpan.FromSeconds(15))
+            {
+                _lastClanPoll = DateTime.UtcNow;
+                await LoadClanAsync();
+            }
+        }
         finally { System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0); }
         CenterMiniMapOnPlayer();
     }
@@ -333,6 +385,157 @@ public partial class MainWindow
         }
     }
 
+    // Feed each team-info snapshot to the death tracker and record what it finds:
+    // always to the local log, and to the shared cloud log for premium accounts.
+    private async Task ProcessDeathsAsync(RustPlusClientReal.TeamInfo team)
+    {
+        var serverKey = GetServerKey();
+        if (string.IsNullOrEmpty(serverKey))
+            return;
+
+        // Switching servers starts a fresh baseline so old state can't leak across.
+        if (serverKey != _deathTrackerServerKey)
+        {
+            _deathTracker.Reset();
+            _deathTrackerServerKey = serverKey;
+        }
+
+        // Monuments + bases both compare in world space; grid reuses the app's math.
+        var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
+            BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y));
+
+        var deaths = _deathTracker.Observe(team, classifier);
+        foreach (var death in deaths)
+        {
+            try
+            {
+                await RustPlusDesk.Services.Deaths.DeathReporter.ReportAsync(death, serverKey);
+            }
+            catch
+            {
+                // Reporting must never break the team refresh.
+            }
+        }
+
+        // Refresh the map heatmap so a new death shows up live.
+        if (deaths.Count > 0 && _showDeathHeatmap)
+            RedrawDeathHeatmap();
+    }
+
+    // Open the in-app death stats window (reads the local death log for this server).
+    private void BtnDeaths_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var window = new RustPlusDesk.Views.Windows.DeathStatsWindow(GetServerKey()) { Owner = this };
+            window.Show();
+        }
+        catch
+        {
+            // Opening the stats view must never crash the app.
+        }
+    }
+
+    // Radius (world units) around a base map note that still counts as "at base".
+    private const double BaseRadiusWorld = 90.0;
+
+    // Rust+ map-note icon index for the Home/base marker (see GetMapNoteIcon).
+    private const int HomeNoteIcon = 2;
+
+    // Resolve whether a death happened at a team base marker. Those markers are
+    // in-game team map notes (placed by the leader/players), which come through
+    // in world coordinates — the same space as the death — so we compare directly,
+    // no map transform needed. Returns the note label, or null when not at a base.
+    private string? ResolveBaseAt(RustPlusClientReal.TeamInfo team, double worldX, double worldY)
+    {
+        if (team == null)
+            return null;
+
+        string? best = null;
+        double bestDistance = double.MaxValue;
+
+        foreach (var note in EnumerateBaseNotes(team))
+        {
+            double dx = worldX - note.X;
+            double dy = worldY - note.Y;
+            double distance = Math.Sqrt((dx * dx) + (dy * dy));
+            if (distance <= BaseRadiusWorld && distance < bestDistance)
+            {
+                bestDistance = distance;
+                best = string.IsNullOrWhiteSpace(note.Label) ? "Base" : note.Label;
+            }
+        }
+
+        return best;
+    }
+
+    /// <summary>Team map notes that mark a base (Home icon), leader + members.</summary>
+    private static IEnumerable<RustPlusClientReal.TeamInfo.MapNote> EnumerateBaseNotes(RustPlusClientReal.TeamInfo team)
+    {
+        if (team.LeaderMapNotes != null)
+        {
+            foreach (var note in team.LeaderMapNotes)
+            {
+                if (note.Icon == HomeNoteIcon)
+                    yield return note;
+            }
+        }
+
+        if (team.MapNotes != null)
+        {
+            foreach (var note in team.MapNotes)
+            {
+                if (note.Icon == HomeNoteIcon)
+                    yield return note;
+            }
+        }
+    }
+
+    // Monuments come from the map (GetMapWithMonumentsAsync) in world coordinates,
+    // the same space as death positions, so they compare directly. The radius is
+    // generous per monument so "died approaching the monument" still counts.
+    private IReadOnlyList<RustPlusDesk.Services.Deaths.DeathZone> BuildMonumentZones()
+    {
+        var zones = new List<RustPlusDesk.Services.Deaths.DeathZone>(_monData.Count);
+        foreach (var (x, y, name) in _monData)
+        {
+            // Resolve names exactly like the map does: NormalizeMonName for the
+            // canonical key, Beautify for the human display name (turns
+            // "fishing_village_display_name" into "Fishing Village").
+            var key = NormalizeMonName(name, out var variant);
+            if (string.IsNullOrWhiteSpace(key))
+                continue;
+
+            // Train tunnels are scattered all over the map and are tiny, so their
+            // marker would win the nearest-monument check over the real monument
+            // they sit next to (e.g. a tunnel entrance at Harbor). Skip them — but
+            // keep real "tunnel" monuments like Military Tunnels.
+            if (key.Contains("train tunnel") || key.Contains("tunnel entrance"))
+                continue;
+
+            var nice = Beautify(name);
+            var display = string.IsNullOrEmpty(variant) ? nice : $"{nice} ({variant})";
+            zones.Add(new RustPlusDesk.Services.Deaths.DeathZone(x, y, MonumentRadiusFor(key), display));
+        }
+
+        return zones;
+    }
+
+    // Approximate monument footprints (world units). Big monuments get a wider
+    // radius; everything else uses a generous default of ~one grid cell.
+    private static double MonumentRadiusFor(string name)
+    {
+        var n = name.ToLowerInvariant();
+        if (n.Contains("launch")) return 250.0;
+        if (n.Contains("airfield")) return 200.0;
+        if (n.Contains("power plant") || n.Contains("water treatment") ||
+            n.Contains("train yard") || n.Contains("military base") || n.Contains("arctic"))
+            return 180.0;
+        if (n.Contains("harbor") || n.Contains("harbour")) return 160.0;
+        if (n.Contains("oil rig")) return 120.0;
+        return 130.0;
+    }
+
     private async Task LoadTeamAsync()
     {
         if (_real is null) return;
@@ -343,6 +546,9 @@ public partial class MainWindow
             if (team is null) return;
 
             _lastTeamInfo = team;
+
+            // Detect + record any team-member deaths in this snapshot (fire-and-forget).
+            _ = ProcessDeathsAsync(team);
 
             var leaderId = team.LeaderSteamId;
             foreach (var m in TeamMembers) m.MissingCount++;
@@ -409,6 +615,22 @@ public partial class MainWindow
                     _hasCriticalPresenceChange = true;
                 }
 
+            if (_vm.FollowingSteamId.HasValue && !TeamMembers.Any(t => t.SteamId == _vm.FollowingSteamId.Value))
+            {
+                Dispatcher.Invoke(() => StopTracking());
+            }
+            else if (!_vm.FollowingSteamId.HasValue && !string.IsNullOrEmpty(GetServerKey()) && 
+                     Services.TrackingService.Settings.ServerFollowingSteamId.TryGetValue(GetServerKey(), out var savedSteamId))
+            {
+                var member = TeamMembers.FirstOrDefault(t => t.SteamId == savedSteamId);
+                if (member != null)
+                {
+                    _vm.FollowingSteamId = savedSteamId;
+                    _vm.FollowingPlayerName = member.Name;
+                    _vm.FollowingPlayerAvatar = member.Avatar;
+                }
+            }
+
             // Cleanup subscriptions of players who left the team on the UI thread
             var currentTeamIds = TeamMembers.Select(tm => tm.SteamId).ToHashSet();
             await Dispatcher.InvokeAsync(() =>
@@ -446,7 +668,7 @@ public partial class MainWindow
             var serverName = _vm.Selected?.Name;
             var cloudPresenceSignature = BuildCloudPresenceSignature(serverKey, serverName, cloudTeamMembers);
             var timeSinceLast = DateTime.UtcNow - _lastPresenceUploadTime;
-            bool forcePeriodicUpload = timeSinceLast.TotalSeconds >= 290;
+            bool forcePeriodicUpload = timeSinceLast >= CloudTrafficPolicy.PresenceInterval(WindowState == WindowState.Minimized);
             if (cloudPresenceSignature != _lastCloudPresenceSignature || forcePeriodicUpload)
             {
                 if (_hasCriticalPresenceChange || forcePeriodicUpload || timeSinceLast.TotalSeconds >= 15)
@@ -701,6 +923,12 @@ public partial class MainWindow
 
     private void StartFollowing(ulong steamId, string name)
     {
+        if (_vm.FollowingSteamId == steamId)
+        {
+            StopTracking();
+            return;
+        }
+
         _vm.FollowingSteamId = steamId;
         _vm.FollowingPlayerName = name;
         
@@ -708,6 +936,12 @@ public partial class MainWindow
         _vm.FollowingPlayerAvatar = member?.Avatar;
 
         AppendLog($"Following {name} on map.");
+        
+        if (!string.IsNullOrEmpty(GetServerKey()))
+        {
+            Services.TrackingService.Settings.ServerFollowingSteamId[GetServerKey()] = steamId;
+            Services.TrackingService.SaveDB();
+        }
         
         // Immediate center
         if (TryResolvePosFromDynMarkers(steamId, out var x, out var y))
@@ -827,6 +1061,14 @@ public partial class MainWindow
     {
         if (e.PropertyName == nameof(TeamMemberVM.ShowMarkers) || e.PropertyName == nameof(TeamMemberVM.Avatar))
         {
+            if (e.PropertyName == nameof(TeamMemberVM.Avatar) && sender is TeamMemberVM vm)
+            {
+                if (_vm.FollowingSteamId == vm.SteamId)
+                {
+                    _vm.FollowingPlayerAvatar = vm.Avatar;
+                }
+            }
+
             if (_lastTeamInfo != null)
             {
                 Dispatcher.Invoke(() => RedrawTeamMapNotes(_lastTeamInfo));

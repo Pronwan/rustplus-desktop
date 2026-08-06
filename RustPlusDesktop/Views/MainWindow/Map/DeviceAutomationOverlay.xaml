@@ -1,0 +1,193 @@
+<UserControl x:Class="RustPlusDesk.Views.DeviceAutomationOverlay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
+             Background="{DynamicResource Surface}"
+             Foreground="{DynamicResource TextPrimary}">
+    <UserControl.Resources>
+        <conv:DeviceFilterConverter x:Key="DeviceFilterConverter" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid ClipToBounds="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0" Foreground="#22c55e"/>
+                    <TextBlock Text="{DynamicResource UiDeviceAutomation}" FontSize="13" FontWeight="SemiBold"/>
+                </StackPanel>
+                <Button Content="&#x2715;" Style="{StaticResource GhostButton}" Width="26" Height="26" HorizontalAlignment="Right" Click="BtnClose_Click"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,12,12,8" BorderBrush="#22c55e" BorderThickness="1,0,0,0" tutorials:Tutorial.TargetId="DeviceAutomation.Actions">
+            <DockPanel LastChildFill="False">
+                <ui:ToggleSwitch Content="{DynamicResource UiAutomationActive}"
+                                 DockPanel.Dock="Left"
+                                 Margin="0,0,8,0"
+                                 IsChecked="{Binding Selected.IsDeviceAutomationActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Checked="AutomationActive_Changed" Unchecked="AutomationActive_Changed"/>
+                <ui:Button Content="{DynamicResource UiAddAutomation}" Icon="{ui:SymbolIcon Symbol=Add24}" Appearance="Primary"
+                           DockPanel.Dock="Right" Click="BtnAddRule_Click"/>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="12,0,12,12">
+            <ItemsControl x:Name="RulesItemsControl" tutorials:Tutorial.TargetId="DeviceAutomation.Rules" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,10" Padding="12">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Width="26" Height="26" Margin="0,0,8,0">
+                                        <Image Source="pack://application:,,,/Assets/icons/smartswitch.png" RenderOptions.BitmapScalingMode="HighQuality">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectedItem.CustomIcon, ElementName=TargetDeviceComboBox}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <Image Source="{Binding SelectedItem.CustomIcon, ElementName=TargetDeviceComboBox}"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Grid>
+                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" ToolTip="{DynamicResource UiEnableAutomation}"/>
+                                    <ui:TextBox Grid.Column="2" Text="{Binding Name, Mode=TwoWay}" FontWeight="SemiBold"/>
+                                    <ui:Button Grid.Column="3" Appearance="Transparent" Width="30" Height="30" Padding="0"
+                                               ToolTip="{DynamicResource UiExpandOrCollapseAutomation}" Tag="{Binding}" Click="BtnToggleRuleExpand_Click">
+                                        <Grid>
+                                            <ui:SymbolIcon Symbol="ChevronRight24">
+                                                <ui:SymbolIcon.Style>
+                                                    <Style TargetType="ui:SymbolIcon">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsExpanded}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ui:SymbolIcon.Style>
+                                            </ui:SymbolIcon>
+                                            <ui:SymbolIcon Symbol="ChevronDown24" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        </Grid>
+                                    </ui:Button>
+                                    <ui:Button Grid.Column="4" Appearance="Transparent" Foreground="IndianRed" Margin="4,0,0,0"
+                                               Icon="{ui:SymbolIcon Symbol=Delete20}" Tag="{Binding}" Click="BtnDeleteRule_Click"/>
+                                </Grid>
+
+                                <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Separator Margin="0,10" Background="{DynamicResource CardBorder}"/>
+                                    <TextBlock Text="{DynamicResource UiWHEN}" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,0,0,5"/>
+                                    <ComboBox SelectedValue="{Binding ConditionType, Mode=TwoWay}" SelectedValuePath="Tag" Width="190" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                    <ComboBoxItem Content="{DynamicResource UiPlayerProximity}" Tag="PlayerProximity"/>
+                                    <ComboBoxItem Content="{DynamicResource UiInGameTime}" Tag="GameTime"/>
+                                    </ComboBox>
+
+                                <StackPanel>
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ConditionType}" Value="PlayerProximity"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <StackPanel>
+                                        <ComboBox Margin="0,0,0,6"
+                                                  ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedValue="{Binding LocationEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="AutomationDisplayName"
+                                                  ToolTip="{Binding SelectedItem.AutomationDisplayName, RelativeSource={RelativeSource Self}}"/>
+                                        <ComboBox Margin="0,0,0,6" SelectedValue="{Binding PlayerMatchMode, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="{DynamicResource UiAnyOnlineInRange}" Tag="AnyOnline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAllPlayersInRange}" Tag="AllOnline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiSpecificPlayerInRange}" Tag="Specific"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAnyPlayerOffline}" Tag="AnyOffline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAllPlayersOffline}" Tag="AllOffline"/>
+                                            <ComboBoxItem Content="{DynamicResource UiSpecificPlayerOffline}" Tag="SpecificOffline"/>
+                                        </ComboBox>
+                                        <ComboBox Margin="0,0,0,6"
+                                                  ItemsSource="{Binding ParentWindow.TeamMembers, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedValue="{Binding SpecificPlayerSteamId, Mode=TwoWay}" SelectedValuePath="SteamId" DisplayMemberPath="DisplayName"
+                                                  ToolTip="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource Self}}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding PlayerMatchMode}" Value="Specific"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                        <DataTrigger Binding="{Binding PlayerMatchMode}" Value="SpecificOffline"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+                                        <WrapPanel>
+                                            <ui:TextBox Width="75" Text="{Binding DistanceMeters, Mode=TwoWay}" PlaceholderText="{DynamicResource UiMeters}" Margin="0,0,5,6"/>
+                                            <TextBlock Text="{DynamicResource UiMeters}" VerticalAlignment="Center" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                    <TextBlock Text="{DynamicResource UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius}"
+                                               TextWrapping="Wrap" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8"/>
+                                </StackPanel>
+
+                                <WrapPanel Margin="0,0,0,8">
+                                    <WrapPanel.Style>
+                                        <Style TargetType="WrapPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers><DataTrigger Binding="{Binding ConditionType}" Value="GameTime"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers>
+                                        </Style>
+                                    </WrapPanel.Style>
+                                    <TextBlock Text="{DynamicResource UiFrom}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <ui:TextBox Width="75" Text="{Binding StartTime, Mode=TwoWay}" PlaceholderText="20:00" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{DynamicResource UiUntil}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <ui:TextBox Width="75" Text="{Binding EndTime, Mode=TwoWay}" PlaceholderText="08:00"/>
+                                </WrapPanel>
+
+                                <TextBlock Text="{DynamicResource UiTHEN}" FontSize="10" FontWeight="Bold" Foreground="#22c55e" Margin="0,2,0,5"/>
+                                <StackPanel>
+                                    <ComboBox x:Name="TargetDeviceComboBox" Margin="0,0,0,6"
+                                              ItemsSource="{Binding DataContext.Selected.FlatDevices, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource DeviceFilterConverter}, ConverterParameter=SmartSwitch}"
+                                              SelectedValue="{Binding TargetEntityId, Mode=TwoWay}" SelectedValuePath="EntityId" DisplayMemberPath="DisplayName"
+                                              ToolTip="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource Self}}"/>
+                                    <WrapPanel>
+                                        <TextBlock Text="{DynamicResource UiMatched}" VerticalAlignment="Center" Margin="0,0,5,6"/>
+                                        <ComboBox Width="80" Margin="0,0,12,6" SelectedValue="{Binding MatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="{DynamicResource On}"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource Off}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        </ComboBox>
+                                        <TextBlock Text="{DynamicResource UiOtherwise}" VerticalAlignment="Center" Margin="0,0,5,6"/>
+                                        <ComboBox Width="80" Margin="0,0,0,6" SelectedValue="{Binding UnmatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="{DynamicResource On}"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource Off}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        </ComboBox>
+                                    </WrapPanel>
+                                </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -63,7 +63,7 @@ private bool _overlayToolsVisible = false;
     private string? _lastDevicesCloudTooltip;
     private string? _lastOverlayCloudTooltip;
     private CancellationTokenSource? _overlaySyncCts;
-    private const int OverlaySyncDebounceMs = 800;
+    private const int OverlaySyncDebounceMs = 3000;
 
     private class TeammatePollState
     {
@@ -187,7 +187,7 @@ private bool _overlayToolsVisible = false;
             if (subCount >= 5)
             {
                 AppendLog("[overlay/subscription] Maximum of 5 active subscriptions reached. Please unsubscribe from another player first.");
-                MessageBox.Show("Maximum of 5 active teammate subscriptions reached. Please unsubscribe from someone else first.", "Subscription Limit", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52"), RustPlusDesk.Properties.Resources.GetString("CodeUiSubscriptionLimit"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
         }
@@ -551,6 +551,7 @@ private bool _overlayToolsVisible = false;
             Canvas.SetTop(tb, txt.Y);
 
             Overlay.Children.Add(tb);
+            Panel.SetZIndex(tb, 901);
             myList.Add(tb);
         }
 
@@ -957,6 +958,12 @@ private bool _overlayToolsVisible = false;
 
     private void RegisterElementForOwner(ulong owner, FrameworkElement fe)
     {
+        if (_isShowingDeepSeaMap)
+        {
+            _deepSeaOverlayElements.Add(fe);
+            return;
+        }
+
         if (!_playerOverlayElements.TryGetValue(owner, out var list))
         {
             list = new List<FrameworkElement>();
@@ -1082,6 +1089,16 @@ private bool _overlayToolsVisible = false;
 
     private void ToolTrashButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_isShowingDeepSeaMap)
+        {
+            foreach (var el in _deepSeaOverlayElements)
+            {
+                Overlay.Children.Remove(el);
+            }
+            _deepSeaOverlayElements.Clear();
+            return;
+        }
+
         // 1. Alle meine Elemente vom Overlay entfernen
         if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
         {
@@ -1182,7 +1199,15 @@ private bool _overlayToolsVisible = false;
 
     public void UpdateCloudSyncUI()
     {
-        _vm.IsCloudConnected = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated || Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
+        bool isEmail = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        _vm.IsCloudConnected = isDiscord || isEmail;
+        _vm.IsPremium = Services.Auth.SupabaseAuthManager.IsPremium;
+        _vm.CloudAccountActionText = _vm.IsCloudConnected ? "Manage" : "Sign in";
+        _vm.CloudAccountStatusText = _vm.IsCloudConnected
+            ? $"{(isDiscord ? "Discord" : "Email")} · {Services.Auth.SupabaseAuthManager.CurrentTier.Replace('_', ' ')} plan"
+            : "Not signed in · sync and backups unavailable";
+        UpdateAppTitle();
 
         bool deviceLimitExceeded = IsFreeDeviceSyncLimitExceeded();
         int overlaySizeBytes = GetCurrentOverlaySizeBytes();
@@ -1259,22 +1284,10 @@ private bool _overlayToolsVisible = false;
 
     public int GetCurrentBaseCount()
     {
-        int baseCount = 0;
-        foreach (var child in Overlay.Children)
-        {
-            if (child is Image img && img.Source is BitmapImage bi)
-            {
-                string path = bi.UriSource?.ToString() ?? "";
-                if (path.Contains("base1.png") || path.Contains("base2.png"))
-                {
-                    if (img.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
-                    {
-                        baseCount++;
-                    }
-                }
-            }
-        }
-        return baseCount;
+        return Overlay.Children.OfType<FrameworkElement>().Count(child =>
+            child.Tag is OverlayTag meta &&
+            meta.OwnerSteamId == _mySteamId &&
+            OverlayDataModule.IsBaseIconPath(meta.CustomIconPath));
     }
 
     private bool IsBaseLimitExceeded()
@@ -1285,20 +1298,15 @@ private bool _overlayToolsVisible = false;
     private bool IsScreenshotLimitExceeded()
     {
         int maxScreenshots = Services.Auth.SupabaseAuthManager.GetMaxScreenshotsPerBase();
-        foreach (var child in Overlay.Children)
+        foreach (var child in Overlay.Children.OfType<FrameworkElement>())
         {
-            if (child is Image img && img.Source is BitmapImage bi)
+            if (child.Tag is OverlayTag meta &&
+                meta.OwnerSteamId == _mySteamId &&
+                OverlayDataModule.IsBaseIconPath(meta.CustomIconPath))
             {
-                string path = bi.UriSource?.ToString() ?? "";
-                if (path.Contains("base1.png") || path.Contains("base2.png"))
+                if (meta.Screenshots != null && meta.Screenshots.Count > maxScreenshots)
                 {
-                    if (img.Tag is OverlayTag meta && meta.OwnerSteamId == _mySteamId)
-                    {
-                        if (meta.Screenshots != null && meta.Screenshots.Count > maxScreenshots)
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
         }
@@ -1546,17 +1554,17 @@ private bool _overlayToolsVisible = false;
         };
 
         // Farbe aendern (nur ein Beispiel)
-        var miRed = new MenuItem { Header = "Red" };
+        var miRed = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiRed") };
         miRed.Click += (_, __) => { _drawColor = Colors.Red; };
-        var miGreen = new MenuItem { Header = "Green" };
+        var miGreen = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiGreen") };
         miGreen.Click += (_, __) => { _drawColor = Colors.Lime; };
-        var miBlue = new MenuItem { Header = "Blue" };
+        var miBlue = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiBlue") };
         miBlue.Click += (_, __) => { _drawColor = Colors.DeepSkyBlue; };
 
         // Stiftdicke
-        var miThin = new MenuItem { Header = "Thickness: 3px" };
+        var miThin = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiThickness3px") };
         miThin.Click += (_, __) => { _drawThickness = 3.0; };
-        var miThick = new MenuItem { Header = "Thickness: 10px" };
+        var miThick = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiThickness10px") };
         miThick.Click += (_, __) => { _drawThickness = 10.0; };
 
         m.Items.Add(miRed);
@@ -1574,14 +1582,14 @@ private bool _overlayToolsVisible = false;
     {
         var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
 
-        var miWhite = new MenuItem { Header = "White" };
+        var miWhite = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiWhite") };
         miWhite.Click += (_, __) => { _textColor = Colors.White; };
-        var miYellow = new MenuItem { Header = "Red" };
+        var miYellow = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiRed") };
         miYellow.Click += (_, __) => { _textColor = Colors.Red; };
 
-        var miSmall = new MenuItem { Header = "Size: 14" };
+        var miSmall = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiSize14") };
         miSmall.Click += (_, __) => { _textSize = 14.0; };
-        var miBig = new MenuItem { Header = "Size: 40" };
+        var miBig = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiSize40") };
         miBig.Click += (_, __) => { _textSize = 40.0; };
 
         m.Items.Add(miWhite);
@@ -1623,9 +1631,9 @@ private bool _overlayToolsVisible = false;
     {
         var m = new ContextMenu() { Style = (Style)FindResource("DarkContextMenu") };
 
-        var miSmall = new MenuItem { Header = "Eraser small (5px)" };
+        var miSmall = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiEraserSmall5px") };
         miSmall.Click += (_, __) => { _eraserSize = 5.0; };
-        var miBig = new MenuItem { Header = "Eraser big (20px)" };
+        var miBig = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiEraserBig20px") };
         miBig.Click += (_, __) => { _eraserSize = 20.0; };
 
         m.Items.Add(miSmall);
@@ -1642,20 +1650,6 @@ private bool _overlayToolsVisible = false;
             if (!_ownCloudRestoreReady)
             {
                 AppendLog("[overlay/cloud] Upload skipped until cloud restore is complete.");
-                return;
-            }
-
-            if (IsBaseLimitExceeded())
-            {
-                AppendLog("[overlay/cloud] Upload skipped: base count limit reached.");
-                UpdateCloudSyncUI();
-                return;
-            }
-
-            if (IsScreenshotLimitExceeded())
-            {
-                AppendLog("[overlay/cloud] Upload skipped: screenshot limit per base exceeded.");
-                UpdateCloudSyncUI();
                 return;
             }
 
@@ -2385,6 +2379,7 @@ private bool _overlayToolsVisible = false;
 
     private void SaveOwnOverlayToJson()
     {
+        if (_isShowingDeepSeaMap) return;
         try
         {
             // 1) aktuelles Overlay aus dem Canvas bauen
@@ -3146,6 +3141,7 @@ private bool _overlayToolsVisible = false;
 
     private async Task FetchSteamIdsWithOverlaysAsync()
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
         if (SupabaseAuthManager.Client == null) return;
         try
         {
@@ -3886,7 +3882,7 @@ private bool _overlayToolsVisible = false;
             catch { }
 
             // Change Icon – opens inline picker
-            var miChangeIcon = new MenuItem { Header = "Change Icon" };
+            var miChangeIcon = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("UiChangeIcon") };
             miChangeIcon.Click += (s, e) =>
             {
                 menu.IsOpen = false;
@@ -3896,7 +3892,7 @@ private bool _overlayToolsVisible = false;
             menu.Items.Add(miChangeIcon);
 
             // Change Color – opens inline picker
-            var miChangeColor = new MenuItem { Header = "Change Color" };
+            var miChangeColor = new MenuItem { Header = RustPlusDesk.Properties.Resources.GetString("CodeUiChangeColor") };
             miChangeColor.Click += (s, e) =>
             {
                 menu.IsOpen = false;
@@ -4197,7 +4193,7 @@ private bool _overlayToolsVisible = false;
             FontSize = 13,
             Margin   = new Thickness(0, 0, 5, 0),
         });
-        saveBtnContent.Children.Add(new System.Windows.Controls.TextBlock { Text = "Save", VerticalAlignment = VerticalAlignment.Center });
+        saveBtnContent.Children.Add(new System.Windows.Controls.TextBlock { Text = Properties.Resources.Save, VerticalAlignment = VerticalAlignment.Center });
 
         var saveBtn = new Button
         {

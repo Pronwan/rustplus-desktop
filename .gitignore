@@ -95,3 +95,5 @@ env
 
 # Local build secrets
 build_secrets*.zip
+.gemini/
+Corel Auto-Preserve/

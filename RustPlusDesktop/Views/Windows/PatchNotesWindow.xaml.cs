@@ -62,7 +62,7 @@ namespace RustPlusDesk.Views
             }
 
             BtnTranslate.IsEnabled = false;
-            TxtTranslate.Text = "Translating...";
+            TxtTranslate.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiTranslating");
 
             try
             {
@@ -71,7 +71,7 @@ namespace RustPlusDesk.Views
 
                 if (textElements.Count == 0)
                 {
-                    TxtTranslate.Text = "No text found";
+                    TxtTranslate.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoTextFound");
                     BtnTranslate.IsEnabled = true;
                     return;
                 }
@@ -106,12 +106,12 @@ namespace RustPlusDesk.Views
                 }
 
                 await Task.WhenAll(tasks);
-                TxtTranslate.Text = "Translated";
+                TxtTranslate.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiTranslated");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Translation failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                TxtTranslate.Text = "Translate";
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiTranslationFailed") + ex.Message, RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                TxtTranslate.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiTranslate");
                 BtnTranslate.IsEnabled = true;
             }
         }

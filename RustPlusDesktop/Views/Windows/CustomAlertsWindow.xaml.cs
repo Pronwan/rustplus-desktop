@@ -4,28 +4,19 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class CustomAlertsWindow : Window
+    public partial class CustomAlertsEditor : UserControl
     {
         public List<AlertModel> Alerts { get; set; } = new();
 
-        public CustomAlertsWindow()
+        public CustomAlertsEditor()
         {
             InitializeComponent();
             LoadAlerts();
             AlertsItemsControl.ItemsSource = Alerts;
-        }
-
-        private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                DragMove();
-            }
         }
 
         private void LoadAlerts()
@@ -33,6 +24,7 @@ namespace RustPlusDesk.Views.Windows
             var keys = new[]
             {
                 "AlertOilRigTriggered",
+                "AlertCrateUnlocksIn15Min",
                 "AlertCrateUnlocksIn10Min",
                 "AlertCrateUnlocksIn5Min",
                 "AlertAlarmTriggered",
@@ -41,6 +33,10 @@ namespace RustPlusDesk.Views.Windows
                 "AlertSuspiciousShop",
                 "AlertShopMatch",
                 "AlertCargoSpawned",
+                // Audio-sourced variants: the API templates carry placeholders we cannot fill
+                // (ship position, rig name, crate unlock time), so the fallback needs its own.
+                "AlertCargoSpawnedAudio",
+                "AlertOilRigCrateUp",
                 "AlertCargoDocked",
                 "AlertCargoExpectedDock",
                 "AlertCargoDeparting",
@@ -49,6 +45,8 @@ namespace RustPlusDesk.Views.Windows
                 "AlertHeliShotDown",
                 "AlertPlayerOnlineWithPos",
                 "AlertPlayerOffline",
+                "AlertPlayerAfk",
+                "AlertPlayerAfkReturn",
                 "AlertPlayerDied",
                 "AlertPlayerRespawned",
                 "AlertTrackingOnline",
@@ -150,11 +148,6 @@ namespace RustPlusDesk.Views.Windows
             // Restore original background brush
             textBox.Background = originalBrush;
         }
-
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
     }
 
     public class AlertModel : INotifyPropertyChanged
@@ -163,6 +156,18 @@ namespace RustPlusDesk.Views.Windows
         public string Name { get; }
         public string Description { get; }
         public string Variables { get; }
+
+        /// <summary>
+        /// False when the connected server cannot produce this alert. The row is dimmed rather
+        /// than removed: the template is still stored and will work again on a server that
+        /// delivers events, so hiding it would make the setting look lost.
+        /// </summary>
+        public bool IsAvailable => Services.EventCapabilities.IsAlertAvailable(Key);
+
+        public double RowOpacity => IsAvailable ? 1.0 : 0.45;
+
+        public string? UnavailableHint =>
+            IsAvailable ? null : Properties.Resources.AlertUnavailableOnServer;
 
         private string _currentText = string.Empty;
         public string CurrentText

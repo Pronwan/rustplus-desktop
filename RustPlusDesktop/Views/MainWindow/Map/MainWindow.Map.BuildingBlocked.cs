@@ -28,7 +28,8 @@ public partial class MainWindow
         if (ChkNoBuildZones != null)
         {
             ChkNoBuildZones.IsChecked = false;
-            ChkNoBuildZones.Visibility = Visibility.Collapsed;
+            ChkNoBuildZones.IsEnabled = false;
+            ChkNoBuildZones.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
         }
 
         foreach (var shape in _buildingBlockedZoneEls)
@@ -67,8 +68,9 @@ public partial class MainWindow
         _buildingBlockedData = null;
         if (ChkNoBuildZones != null)
         {
-            ChkNoBuildZones.Visibility = Visibility.Collapsed;
+            ChkNoBuildZones.IsEnabled = false;
             ChkNoBuildZones.IsChecked = false;
+            ChkNoBuildZones.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
         }
 
         if (string.IsNullOrWhiteSpace(folderPath))
@@ -103,7 +105,8 @@ public partial class MainWindow
         bool hasData = (_buildingBlockedData?.Spheres?.Count ?? 0) > 0 || (_buildingBlockedData?.Boxes?.Count ?? 0) > 0;
         if (ChkNoBuildZones != null)
         {
-            ChkNoBuildZones.Visibility = hasData ? Visibility.Visible : Visibility.Collapsed;
+            ChkNoBuildZones.IsEnabled = hasData;
+            ChkNoBuildZones.ToolTip = hasData ? RustPlusDesk.Properties.Resources.GetString("CodeUiShowNoBuildZones") : RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
             ChkNoBuildZones.IsChecked = false;
         }
         RedrawGrid();
@@ -116,6 +119,8 @@ public partial class MainWindow
             GridLayer.Children.Remove(shape);
         }
         _buildingBlockedZoneEls.Clear();
+
+        if (_isShowingDeepSeaMap) return;
 
         if (ChkNoBuildZones?.IsChecked != true || _buildingBlockedData == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0)
             return;

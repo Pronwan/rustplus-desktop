@@ -13,7 +13,22 @@ namespace RustPlusDesk.Views
 {
     public partial class NotificationsTabContent : UserControl
     {
+        public static readonly DependencyProperty IsStreamerModeProperty = DependencyProperty.Register(
+            nameof(IsStreamerMode),
+            typeof(bool),
+            typeof(NotificationsTabContent),
+            new PropertyMetadata(false, OnIsStreamerModeChanged));
+
+        public bool IsStreamerMode
+        {
+            get => (bool)GetValue(IsStreamerModeProperty);
+            set => SetValue(IsStreamerModeProperty, value);
+        }
+
         private ICollectionView? _notificationsView;
+
+        private static void OnIsStreamerModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            ((NotificationsTabContent)d)._notificationsView?.Refresh();
 
         public NotificationsTabContent()
         {
@@ -46,7 +61,7 @@ namespace RustPlusDesk.Views
             {
                 bool titleMatch = notif.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
                 bool msgMatch = notif.Message?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
-                bool serverMatch = notif.ServerName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false;
+                bool serverMatch = !IsStreamerMode && (notif.ServerName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false);
                 if (!titleMatch && !msgMatch && !serverMatch)
                 {
                     return false;
@@ -125,6 +140,36 @@ namespace RustPlusDesk.Views
             {
                 NotificationCenterService.DeleteNotification(id);
             }
+        }
+
+        private void BtnMuteServer_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button { Tag: RustPlusNotification notif } ||
+                string.IsNullOrWhiteSpace(notif.ServerIp) ||
+                !notif.ServerPort.HasValue)
+            {
+                return;
+            }
+
+            var server = string.IsNullOrWhiteSpace(notif.ServerName)
+                ? $"{notif.ServerIp}:{notif.ServerPort.Value}"
+                : notif.ServerName;
+
+            if (MessageBox.Show(
+                    $"Mute all future Notification Center alerts from {server}?\n\nYou can unmute it in Settings > Alerts.",
+                    "Mute server notifications",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            TrackingService.MuteServer(notif.ServerIp, notif.ServerPort.Value, notif.ServerName);
+            MessageBox.Show(
+                $"Notifications from {server} are now muted.",
+                "Server muted",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
 
         private async void BtnServerTag_Click(object sender, RoutedEventArgs e)

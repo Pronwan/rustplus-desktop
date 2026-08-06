@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1489,7 +1489,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>[{0}] 5 分钟后箱子解锁！</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>深海已启动</value>
+    <value>深海已启动 (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>新店 {0} [{1}]: {2}</value>
@@ -1529,6 +1529,12 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>{0} 下线</value>
+  </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} 挂机 (AFK): {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} 已结束挂机。挂机时长 {1}</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>{0} 死于 {1}</value>
@@ -2576,6 +2582,15 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AlertPlayerAfkVars" xml:space="preserve">
     <value>{0}: 玩家名称, {1}: 时间</value>
   </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>玩家结束挂机</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>当被追踪的队友结束挂机（重新开始活动）时发送。</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: 玩家名字, {1}: 挂机时长 (小时:分钟)</value>
+  </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>搜索并选择此设备的物品图标。</value>
   </data>
@@ -2740,5 +2755,2838 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="ServerNotFoundTitle" xml:space="preserve">
     <value>找不到服务器</value>
+  </data>
+  <data name="UiOpensTheIncomingAlarmsWindow" xml:space="preserve">
+    <value>— 打开传入警报窗口。</value>
+  </data>
+  <data name="UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound" xml:space="preserve">
+    <value>— 播放警报声。使用...按钮选择自定义声音。</value>
+  </data>
+  <data name="UiShowsTheRedAlarmCardInsideTheApp" xml:space="preserve">
+    <value>— 显示应用程序内的红色警报卡。</value>
+  </data>
+  <data name="UiText2FpsRecommendedForAPIStability" xml:space="preserve">
+    <value>（为了 API 稳定性，建议使用 2 fps）</value>
+  </data>
+  <data name="UiLogicRule" xml:space="preserve">
+    <value>【逻辑规则】</value>
+  </data>
+  <data name="UiNameMinutes" xml:space="preserve">
+    <value>[姓名]，[分钟]</value>
+  </data>
+  <data name="UiEveryone" xml:space="preserve">
+    <value>@大家</value>
+  </data>
+  <data name="UiHere" xml:space="preserve">
+    <value>@这里</value>
+  </data>
+  <data name="UiJump" xml:space="preserve">
+    <value>▲ 跳跃</value>
+  </data>
+  <data name="UiDuck" xml:space="preserve">
+    <value>▼ 鸭子</value>
+  </data>
+  <data name="UiFire" xml:space="preserve">
+    <value>🎯 火</value>
+  </data>
+  <data name="UiReload" xml:space="preserve">
+    <value>🔄 重新加载</value>
+  </data>
+  <data name="UiText100Native" xml:space="preserve">
+    <value>100%（本地）</value>
+  </data>
+  <data name="UiText100YieldMonuments" xml:space="preserve">
+    <value>100% 产出（纪念碑）</value>
+  </data>
+  <data name="UiText125Sharp" xml:space="preserve">
+    <value>125%（锐利）</value>
+  </data>
+  <data name="UiText150HighResolution" xml:space="preserve">
+    <value>150%（高分辨率）</value>
+  </data>
+  <data name="UiText200UltraHighResolution" xml:space="preserve">
+    <value>200%（超高分辨率）</value>
+  </data>
+  <data name="UiText2D" xml:space="preserve">
+    <value>二维</value>
+  </data>
+  <data name="UiText5MinAFK" xml:space="preserve">
+    <value>5 分钟 AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>AFK 阈值</value>
+  </data>
+  <data name="UiText50Fastest" xml:space="preserve">
+    <value>50%（最快）</value>
+  </data>
+  <data name="UiText75Performance" xml:space="preserve">
+    <value>75%（表现）</value>
+  </data>
+  <data name="UiA" xml:space="preserve">
+    <value>一个...</value>
+  </data>
+  <data name="UiAcceptSync" xml:space="preserve">
+    <value>接受并同步</value>
+  </data>
+  <data name="UiAcceptAndRemember" xml:space="preserve">
+    <value>接受并记住</value>
+  </data>
+  <data name="UiACCOUNT" xml:space="preserve">
+    <value>帐户</value>
+  </data>
+  <data name="UiAccountMenu" xml:space="preserve">
+    <value>账户菜单</value>
+  </data>
+  <data name="UiActiveItemAlerts" xml:space="preserve">
+    <value>活动项目警报</value>
+  </data>
+  <data name="UiActiveRule" xml:space="preserve">
+    <value>活跃规则：</value>
+  </data>
+  <data name="UiActiveON" xml:space="preserve">
+    <value>有效/开启</value>
+  </data>
+  <data name="UiAddATargetToSeeRaidCosts" xml:space="preserve">
+    <value>添加目标以查看袭击成本。</value>
+  </data>
+  <data name="UiAddAutomation" xml:space="preserve">
+    <value>添加自动化</value>
+  </data>
+  <data name="UiAddExecutionStep" xml:space="preserve">
+    <value>添加执行步骤</value>
+  </data>
+  <data name="UiAddLogin" xml:space="preserve">
+    <value>添加登录</value>
+  </data>
+  <data name="UiAddNestedAction" xml:space="preserve">
+    <value>添加嵌套动作</value>
+  </data>
+  <data name="UiAddRule" xml:space="preserve">
+    <value>添加规则</value>
+  </data>
+  <data name="UiAdminPanel" xml:space="preserve">
+    <value>管理面板</value>
+  </data>
+  <data name="UiAdminPanelUserOverview" xml:space="preserve">
+    <value>管理面板 - 用户概述</value>
+  </data>
+  <data name="UiAdvancedDiscordBotIntegration" xml:space="preserve">
+    <value>高级 Discord 机器人集成</value>
+  </data>
+  <data name="UiAdvancedDiscordBotSettings" xml:space="preserve">
+    <value>高级 Discord 机器人设置</value>
+  </data>
+  <data name="UiÃƒâ" xml:space="preserve">
+    <value>??</value>
+  </data>
+  <data name="UiAgricultureFood" xml:space="preserve">
+    <value>农业与食品</value>
+  </data>
+  <data name="UiAlarm" xml:space="preserve">
+    <value>报警</value>
+  </data>
+  <data name="UiAlarmAusgeloest" xml:space="preserve">
+    <value>警报最响亮！</value>
+  </data>
+  <data name="UiAlert" xml:space="preserve">
+    <value>警报</value>
+  </data>
+  <data name="UiAlexaSetupInfo" xml:space="preserve">
+    <value>Alexa 设置信息</value>
+  </data>
+  <data name="UiAlexaSmartHome" xml:space="preserve">
+    <value>Alexa 智能家居</value>
+  </data>
+  <data name="UiAllPlayersInRange" xml:space="preserve">
+    <value>范围内的所有玩家</value>
+  </data>
+  <data name="UiAllPlayersOffline" xml:space="preserve">
+    <value>所有玩家离线</value>
+  </data>
+  <data name="UiAllowDiscordCommands" xml:space="preserve">
+    <value>允许 Discord 命令</value>
+  </data>
+  <data name="UiAllowedCommandRoleIDs" xml:space="preserve">
+    <value>允许的命令角色 ID</value>
+  </data>
+  <data name="UiAmazonAlexaLogin" xml:space="preserve">
+    <value>亚马逊 Alexa 登录</value>
+  </data>
+  <data name="UiAND" xml:space="preserve">
+    <value>和</value>
+  </data>
+  <data name="UiAnyOnlineInRange" xml:space="preserve">
+    <value>范围内任意在线</value>
+  </data>
+  <data name="UiAnyPlayerOffline" xml:space="preserve">
+    <value>任意玩家离线</value>
+  </data>
+  <data name="UiAutomationActive" xml:space="preserve">
+    <value>自动化活跃</value>
+  </data>
+  <data name="UiBackToSettingsCategories" xml:space="preserve">
+    <value>返回设置类别</value>
+  </data>
+  <data name="UiBalancedLinear" xml:space="preserve">
+    <value>平衡（线性）</value>
+  </data>
+  <data name="UiBaseDetails" xml:space="preserve">
+    <value>基地详情</value>
+  </data>
+  <data name="UiBasicDiscordIntegration" xml:space="preserve">
+    <value>基本 Discord 积分</value>
+  </data>
+  <data name="UiBasicDiscordWebhooks" xml:space="preserve">
+    <value>基本 Discord Webhooks</value>
+  </data>
+  <data name="UiBears" xml:space="preserve">
+    <value>熊</value>
+  </data>
+  <data name="UiBerries" xml:space="preserve">
+    <value>浆果</value>
+  </data>
+  <data name="UiBicycles" xml:space="preserve">
+    <value>自行车</value>
+  </data>
+  <data name="UiBlue" xml:space="preserve">
+    <value>蓝色</value>
+  </data>
+  <data name="UiBoars" xml:space="preserve">
+    <value>野猪</value>
+  </data>
+  <data name="UiBOOMREQUIRED" xml:space="preserve">
+    <value>需要动臂</value>
+  </data>
+  <data name="UiBrowseMonuments" xml:space="preserve">
+    <value>浏览古迹</value>
+  </data>
+  <data name="UiBrowseOnlinePlayersAndTrackedTargets" xml:space="preserve">
+    <value>浏览在线玩家和跟踪目标。</value>
+  </data>
+  <data name="UiBuild3DMap" xml:space="preserve">
+    <value>构建 3D 地图</value>
+  </data>
+  <data name="UiBuildLocal3DMap" xml:space="preserve">
+    <value>构建本地3D地图</value>
+  </data>
+  <data name="UiBuyX" xml:space="preserve">
+    <value>购买 X</value>
+  </data>
+  <data name="UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness" xml:space="preserve">
+    <value>在 GPU 上缓存地图渲染。极大地提高了平移和缩放的平滑度。</value>
+  </data>
+  <data name="UiCalculateComponentYieldsForWildAndSafeZoneRecyclers" xml:space="preserve">
+    <value>计算野生和安全区回收商的组件产量。</value>
+  </data>
+  <data name="UiCalculateRaidCostsAndRequiredMaterials" xml:space="preserve">
+    <value>计算袭击成本和所需材料。</value>
+  </data>
+  <data name="UiCancelDownload" xml:space="preserve">
+    <value>取消下载</value>
+  </data>
+  <data name="UiChance" xml:space="preserve">
+    <value>机会</value>
+  </data>
+  <data name="UiChange" xml:space="preserve">
+    <value>改变</value>
+  </data>
+  <data name="UiChangeCommand" xml:space="preserve">
+    <value>更改命令</value>
+  </data>
+  <data name="UiChangeIcon" xml:space="preserve">
+    <value>更改图标</value>
+  </data>
+  <data name="UiChannelID" xml:space="preserve">
+    <value>通道号</value>
+  </data>
+  <data name="UiChannelNotificationsConfig" xml:space="preserve">
+    <value>频道通知配置</value>
+  </data>
+  <data name="UiChatAlertsDiscord" xml:space="preserve">
+    <value>聊天提醒 -&gt; Discord</value>
+  </data>
+  <data name="UiChatAlertsChannelID" xml:space="preserve">
+    <value>聊天提醒频道 ID</value>
+  </data>
+  <data name="UiChatMasterSlaves" xml:space="preserve">
+    <value>聊天主从</value>
+  </data>
+  <data name="UiChatMessageAlerts" xml:space="preserve">
+    <value>聊天消息提醒</value>
+  </data>
+  <data name="UiCheckAvailability" xml:space="preserve">
+    <value>检查可用性</value>
+  </data>
+  <data name="UiChickens" xml:space="preserve">
+    <value>鸡</value>
+  </data>
+  <data name="UiChooseACategory" xml:space="preserve">
+    <value>选择一个类别</value>
+  </data>
+  <data name="UiChooseATargetFromTheCatalogue" xml:space="preserve">
+    <value>从目录中选择一个目标。</value>
+  </data>
+  <data name="UiClearAll" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="UiClearRaidPlan" xml:space="preserve">
+    <value>明确的突袭计划</value>
+  </data>
+  <data name="UiClearWebhookURL" xml:space="preserve">
+    <value>清除 Webhook URL</value>
+  </data>
+  <data name="UiCloseRaidCalculator" xml:space="preserve">
+    <value>关闭突袭计算器</value>
+  </data>
+  <data name="UiCloseShopsPanel" xml:space="preserve">
+    <value>关闭商店面板</value>
+  </data>
+  <data name="UiCloseTeamPanel" xml:space="preserve">
+    <value>关闭团队面板</value>
+  </data>
+  <data name="UiCloudAccountSync" xml:space="preserve">
+    <value>云帐户和同步</value>
+  </data>
+  <data name="UiCloudBaseScreenshots" xml:space="preserve">
+    <value>云基础截图</value>
+  </data>
+  <data name="UiCloudUserID" xml:space="preserve">
+    <value>云用户ID</value>
+  </data>
+  <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
+    <value>云、Discord、Alexa、聊天和 Steam</value>
+  </data>
+  <data name="UiCMD" xml:space="preserve">
+    <value>指令管理系统</value>
+  </data>
+  <data name="UiColor" xml:space="preserve">
+    <value>颜色：</value>
+  </data>
+  <data name="UiCommaSeparatedRoleIDs" xml:space="preserve">
+    <value>以逗号分隔的角色 ID</value>
+  </data>
+  <data name="UiCommandPermissions" xml:space="preserve">
+    <value>命令权限</value>
+  </data>
+  <data name="UiConfirmDelete" xml:space="preserve">
+    <value>确认删除</value>
+  </data>
+  <data name="UiConnectRustCompanion" xml:space="preserve">
+    <value>连接 Rust+ 同伴</value>
+  </data>
+  <data name="UiConnectedServices" xml:space="preserve">
+    <value>互联服务</value>
+  </data>
+  <data name="UiCONNECTIONSERVICES" xml:space="preserve">
+    <value>连接服务</value>
+  </data>
+  <data name="UiControlYourRustSmartSwitchesWithAmazonAlexaVoiceCommandsAn5B51481980" xml:space="preserve">
+    <value>使用 Amazon Alexa 语音命令控制您的 Rust 智能开关，并在智能警报响起时触发 Alexa 例程。</value>
+  </data>
+  <data name="UiControlsMapImageScalingFilteringMode" xml:space="preserve">
+    <value>控制地图图像缩放过滤模式。</value>
+  </data>
+  <data name="UiCopyADiscordReadySummary" xml:space="preserve">
+    <value>复制 Discord 准备好的摘要</value>
+  </data>
+  <data name="UiCopyIP" xml:space="preserve">
+    <value>复制IP</value>
+  </data>
+  <data name="UiCopyMapToServer" xml:space="preserve">
+    <value>将地图复制到服务器...</value>
+  </data>
+  <data name="UiCopyRaidSummary" xml:space="preserve">
+    <value>复制突袭总结</value>
+  </data>
+  <data name="UiCorn" xml:space="preserve">
+    <value>玉米</value>
+  </data>
+  <data name="UiCount" xml:space="preserve">
+    <value>计数</value>
+  </data>
+  <data name="UiCreateAShopAlert" xml:space="preserve">
+    <value>创建商店警报</value>
+  </data>
+  <data name="UiCrocodiles" xml:space="preserve">
+    <value>鳄鱼</value>
+  </data>
+  <data name="UiCurrency" xml:space="preserve">
+    <value>货币</value>
+  </data>
+  <data name="UiCurrentStep" xml:space="preserve">
+    <value>当前步骤：</value>
+  </data>
+  <data name="UiCustomAlarmName" xml:space="preserve">
+    <value>自定义警报名称</value>
+  </data>
+  <data name="UiCyan" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="UiDeDEStandardA" xml:space="preserve">
+    <value>去-DE-标准-A</value>
+  </data>
+  <data name="UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius" xml:space="preserve">
+    <value>死亡玩家算作离线。离线条件忽略半径。</value>
+  </data>
+  <data name="UiDeathMarkerSettings" xml:space="preserve">
+    <value>死亡标记设置</value>
+  </data>
+  <data name="UiDecreaseQuantity" xml:space="preserve">
+    <value>减少数量</value>
+  </data>
+  <data name="UiDecreaseTargetQuantity" xml:space="preserve">
+    <value>减少目标数量</value>
+  </data>
+  <data name="UiDeers" xml:space="preserve">
+    <value>鹿</value>
+  </data>
+  <data name="UiDefault" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="UiDeleteMissingDevice" xml:space="preserve">
+    <value>删除丢失的设备</value>
+  </data>
+  <data name="UiDeleteRule" xml:space="preserve">
+    <value>删除规则</value>
+  </data>
+  <data name="UiDeleteStep" xml:space="preserve">
+    <value>删除步骤</value>
+  </data>
+  <data name="UiDeleteTimer" xml:space="preserve">
+    <value>删除计时器</value>
+  </data>
+  <data name="UiDestructionMethod" xml:space="preserve">
+    <value>销毁方法</value>
+  </data>
+  <data name="UiDetailedMapLayerOptions" xml:space="preserve">
+    <value>详细的地图图层选项</value>
+  </data>
+  <data name="UiDetails" xml:space="preserve">
+    <value>详情</value>
+  </data>
+  <data name="UiDeviceAutomation" xml:space="preserve">
+    <value>设备自动化</value>
+  </data>
+  <data name="UiDeviceCloudSync" xml:space="preserve">
+    <value>设备云同步</value>
+  </data>
+  <data name="UiDisableGridAntiAliasingAliasedEdgeMode" xml:space="preserve">
+    <value>禁用网格抗锯齿（锯齿边缘模式）</value>
+  </data>
+  <data name="UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1" xml:space="preserve">
+    <value>禁用网格线和标记上的抗锯齿功能。提高低端系统上的渲染速度。</value>
+  </data>
+  <data name="UiDiscordName" xml:space="preserve">
+    <value>Discord 姓名</value>
+  </data>
+  <data name="UiDiscordServerIDGuildID" xml:space="preserve">
+    <value>Discord 服务器 ID（公会 ID）</value>
+  </data>
+  <data name="UiDiscordWebhook" xml:space="preserve">
+    <value>Discord Webhook</value>
+  </data>
+  <data name="UiDiscordWebhookChatAlerts" xml:space="preserve">
+    <value>Discord Webhook（聊天提醒）</value>
+  </data>
+  <data name="UiDiscordWebhookURL" xml:space="preserve">
+    <value>Discord Webhook URL</value>
+  </data>
+  <data name="UiDiscordWebhookURLOfflineAlerts" xml:space="preserve">
+    <value>Discord Webhook URL（离线警报）</value>
+  </data>
+  <data name="UiDiscordWebhooksGuide" xml:space="preserve">
+    <value>Discord Webhook 指南</value>
+  </data>
+  <data name="UiDismiss" xml:space="preserve">
+    <value>解雇</value>
+  </data>
+  <data name="UiDisplay" xml:space="preserve">
+    <value>显示</value>
+  </data>
+  <data name="UiDisplayName" xml:space="preserve">
+    <value>显示名称</value>
+  </data>
+  <data name="UiDollar" xml:space="preserve">
+    <value>美元</value>
+  </data>
+  <data name="UiDonTShowOffersWithoutStock" xml:space="preserve">
+    <value>不显示没有库存的报价</value>
+  </data>
+  <data name="UiDoubleClickToEditCommand" xml:space="preserve">
+    <value>双击编辑命令</value>
+  </data>
+  <data name="UiDuplicateTarget" xml:space="preserve">
+    <value>重复目标</value>
+  </data>
+  <data name="UiÐŸ" xml:space="preserve">
+    <value>ðŸ’¤</value>
+  </data>
+  <data name="UiÐŸ2" xml:space="preserve">
+    <value>ð“·</value>
+  </data>
+  <data name="UiEGNAME2" xml:space="preserve">
+    <value>例如姓名2</value>
+  </data>
+  <data name="UiEditCommand" xml:space="preserve">
+    <value>编辑命令</value>
+  </data>
+  <data name="UiEditSubscriptionsDrawingOverlay" xml:space="preserve">
+    <value>编辑订阅（绘图叠加）</value>
+  </data>
+  <data name="UiEmail" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="UiEmailAndPassword" xml:space="preserve">
+    <value>电子邮件和密码</value>
+  </data>
+  <data name="UiEnGBStandardA" xml:space="preserve">
+    <value>en-GB-标准-A</value>
+  </data>
+  <data name="UiEnUSStandardA" xml:space="preserve">
+    <value>en-US-标准-A</value>
+  </data>
+  <data name="UiEnableAutomation" xml:space="preserve">
+    <value>启用自动化</value>
+  </data>
+  <data name="UiEnableGPUBitmapCaching" xml:space="preserve">
+    <value>启用 GPU 位图缓存</value>
+  </data>
+  <data name="UiEnableRule" xml:space="preserve">
+    <value>启用规则</value>
+  </data>
+  <data name="UiEnemyBaseRed" xml:space="preserve">
+    <value>敌方基地（红色）</value>
+  </data>
+  <data name="UiEngineActivePlayStop" xml:space="preserve">
+    <value>引擎激活（播放/停止）</value>
+  </data>
+  <data name="UiEsESStandardA" xml:space="preserve">
+    <value>es-ES-标准-A</value>
+  </data>
+  <data name="UiEventsAlertsChannelID" xml:space="preserve">
+    <value>事件警报通道 ID</value>
+  </data>
+  <data name="UiExecutionSteps" xml:space="preserve">
+    <value>执行步骤</value>
+  </data>
+  <data name="UiExpand" xml:space="preserve">
+    <value>展开</value>
+  </data>
+  <data name="UiExpandOrCollapseAutomation" xml:space="preserve">
+    <value>展开或折叠自动化</value>
+  </data>
+  <data name="UiExpandOrCollapseGroup" xml:space="preserve">
+    <value>展开或折叠组</value>
+  </data>
+  <data name="UiExpandServerDetails" xml:space="preserve">
+    <value>展开服务器详细信息</value>
+  </data>
+  <data name="UiExpandCollapse" xml:space="preserve">
+    <value>展开/折叠</value>
+  </data>
+  <data name="UiEXTRAMONUMENTTYPES" xml:space="preserve">
+    <value>额外的纪念碑类型</value>
+  </data>
+  <data name="UiFaunaWildlife" xml:space="preserve">
+    <value>动物群与野生动物</value>
+  </data>
+  <data name="UiFillStacks" xml:space="preserve">
+    <value>填充堆栈</value>
+  </data>
+  <data name="UiFilterLogs" xml:space="preserve">
+    <value>过滤日志...</value>
+  </data>
+  <data name="UiFindProfitableShopTrades" xml:space="preserve">
+    <value>寻找有利可图的商店交易</value>
+  </data>
+  <data name="UiFindWhereToBuyAnItem" xml:space="preserve">
+    <value>查找购买商品的地点</value>
+  </data>
+  <data name="UiFitMapToView" xml:space="preserve">
+    <value>适合地图查看</value>
+  </data>
+  <data name="UiFlowers" xml:space="preserve">
+    <value>鲜花</value>
+  </data>
+  <data name="UiForceOFF" xml:space="preserve">
+    <value>强制关闭</value>
+  </data>
+  <data name="UiForceON" xml:space="preserve">
+    <value>强制开启</value>
+  </data>
+  <data name="UiForceRefetchMap" xml:space="preserve">
+    <value>强制重新获取地图</value>
+  </data>
+  <data name="UiForceRefreshAllSubscriptions" xml:space="preserve">
+    <value>强制刷新所有订阅</value>
+  </data>
+  <data name="UiForgotPassword" xml:space="preserve">
+    <value>忘记密码？</value>
+  </data>
+  <data name="UiFrFRStandardA" xml:space="preserve">
+    <value>fr-FR-标准-A</value>
+  </data>
+  <data name="UiFrom" xml:space="preserve">
+    <value>来自</value>
+  </data>
+  <data name="UiGatingConditionOptional" xml:space="preserve">
+    <value>选通条件（可选）</value>
+  </data>
+  <data name="UiGenerateSave" xml:space="preserve">
+    <value>生成并保存</value>
+  </data>
+  <data name="UiGenerateLoginPIN" xml:space="preserve">
+    <value>生成登录 PIN 码</value>
+  </data>
+  <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
+    <value>在使用热图之前生成 3D 地图。</value>
+  </data>
+  <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
+    <value>生成 3D 地图以启用禁止构建区域。</value>
+  </data>
+  <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
+    <value>通用警报音频选项</value>
+  </data>
+  <data name="UiGENERICALARMS" xml:space="preserve">
+    <value>通用警报</value>
+  </data>
+  <data name="UiGPURenderingScale" xml:space="preserve">
+    <value>GPU 渲染规模</value>
+  </data>
+  <data name="UiGreen" xml:space="preserve">
+    <value>绿色</value>
+  </data>
+  <data name="UiGuar" xml:space="preserve">
+    <value>瓜尔胶。</value>
+  </data>
+  <data name="UiGun" xml:space="preserve">
+    <value>枪</value>
+  </data>
+  <data name="UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D" xml:space="preserve">
+    <value>仅当数据集提供时才会显示火药、炸药、计时和熟/矿石转换。目前的数据已经扩展到原材料。</value>
+  </data>
+  <data name="UiHeatmaps" xml:space="preserve">
+    <value>热图</value>
+  </data>
+  <data name="UiHeatmapsUnavailable" xml:space="preserve">
+    <value>热图不可用</value>
+  </data>
+  <data name="UiHeight" xml:space="preserve">
+    <value>身高</value>
+  </data>
+  <data name="UiHide0Stock" xml:space="preserve">
+    <value>隐藏 0 库存</value>
+  </data>
+  <data name="UiHighQualityBicubic" xml:space="preserve">
+    <value>高品质（双三次）</value>
+  </data>
+  <data name="UiHome" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="UiHorses" xml:space="preserve">
+    <value>马匹</value>
+  </data>
+  <data name="UiHotAirBalloons" xml:space="preserve">
+    <value>热气球</value>
+  </data>
+  <data name="UiHotkeyTriggers" xml:space="preserve">
+    <value>热键触发器</value>
+  </data>
+  <data name="UiIcons" xml:space="preserve">
+    <value>图标</value>
+  </data>
+  <data name="UiIcons2" xml:space="preserve">
+    <value>图标：</value>
+  </data>
+  <data name="UiID" xml:space="preserve">
+    <value>身份证号：</value>
+  </data>
+  <data name="UiIDLE" xml:space="preserve">
+    <value>空闲</value>
+  </data>
+  <data name="UiImageScalingQuality" xml:space="preserve">
+    <value>图像缩放质量</value>
+  </data>
+  <data name="UiImageZoomView" xml:space="preserve">
+    <value>图像缩放视图</value>
+  </data>
+  <data name="UiInGameTime" xml:space="preserve">
+    <value>游戏内时间</value>
+  </data>
+  <data name="UiInactiveOFF" xml:space="preserve">
+    <value>无效/关闭</value>
+  </data>
+  <data name="UiIncludeMessageMessage" xml:space="preserve">
+    <value>包含消息 ({{message}})</value>
+  </data>
+  <data name="UiIncludeNameTitle" xml:space="preserve">
+    <value>包括姓名 ({{title}})</value>
+  </data>
+  <data name="UiIncludeTypeType" xml:space="preserve">
+    <value>包含类型 ({{type}})</value>
+  </data>
+  <data name="UiIncreaseQuantity" xml:space="preserve">
+    <value>增加数量</value>
+  </data>
+  <data name="UiIncreaseTargetQuantity" xml:space="preserve">
+    <value>增加目标数量</value>
+  </data>
+  <data name="UiInventoryInRecyclerYieldOut" xml:space="preserve">
+    <value>库存进来，回收商产出</value>
+  </data>
+  <data name="UiInviteDiscordBotToServer" xml:space="preserve">
+    <value>邀请 Discord 机器人到服务器</value>
+  </data>
+  <data name="UiISOFFLINE" xml:space="preserve">
+    <value>离线</value>
+  </data>
+  <data name="UiISONLINE" xml:space="preserve">
+    <value>在线</value>
+  </data>
+  <data name="UiITEMBAY" xml:space="preserve">
+    <value>物品湾</value>
+  </data>
+  <data name="UiJunkpiles" xml:space="preserve">
+    <value>垃圾堆</value>
+  </data>
+  <data name="UiKeepSidebarUnfolded" xml:space="preserve">
+    <value>保持侧边栏展开</value>
+  </data>
+  <data name="UiLanguageStartupAndAppBehavior" xml:space="preserve">
+    <value>语言、启动和应用行为</value>
+  </data>
+  <data name="UiLastActive" xml:space="preserve">
+    <value>最后活跃</value>
+  </data>
+  <data name="UiLayers" xml:space="preserve">
+    <value>层数</value>
+  </data>
+  <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
+    <value>留空以允许服务器上的每个人。</value>
+  </data>
+  <data name="UiLinkSelectedServer" xml:space="preserve">
+    <value>链接选定的服务器</value>
+  </data>
+  <data name="UiListenForRustPairingRequestsRightClickForRecoveryOptions" xml:space="preserve">
+    <value>监听 Rust+ 配对请求。右键单击恢复选项。</value>
+  </data>
+  <data name="UiListening" xml:space="preserve">
+    <value>听力</value>
+  </data>
+  <data name="UiLoadShopsAutomaticallyOnConnect" xml:space="preserve">
+    <value>连接时自动加载商店</value>
+  </data>
+  <data name="UiLoadingServerDetails" xml:space="preserve">
+    <value>正在加载服务器详细信息...</value>
+  </data>
+  <data name="UiLocalSetup" xml:space="preserve">
+    <value>本地设置</value>
+  </data>
+  <data name="UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps" xml:space="preserve">
+    <value>登录您的 Rust+ Desk 帐户以生成 3D 地图和热图。</value>
+  </data>
+  <data name="UiLogOut" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="UiLogPiles" xml:space="preserve">
+    <value>原木桩</value>
+  </data>
+  <data name="UiLogicEngine" xml:space="preserve">
+    <value>逻辑引擎</value>
+  </data>
+  <data name="UiLogicEngineRuntime" xml:space="preserve">
+    <value>逻辑引擎运行时</value>
+  </data>
+  <data name="UiLogicRules" xml:space="preserve">
+    <value>逻辑规则</value>
+  </data>
+  <data name="UiLoginRequired" xml:space="preserve">
+    <value>需要登录</value>
+  </data>
+  <data name="UiLoopAfterCompletion" xml:space="preserve">
+    <value>完成后循环</value>
+  </data>
+  <data name="UiLoot" xml:space="preserve">
+    <value>战利品</value>
+  </data>
+  <data name="UiLootTransport" xml:space="preserve">
+    <value>战利品与运输</value>
+  </data>
+  <data name="UiMaintenanceBackupResetAndCredits" xml:space="preserve">
+    <value>维护、备份、重置和积分</value>
+  </data>
+  <data name="UiManualPremium" xml:space="preserve">
+    <value>高级手册</value>
+  </data>
+  <data name="UiManualSince" xml:space="preserve">
+    <value>手动自</value>
+  </data>
+  <data name="UiMap" xml:space="preserve">
+    <value>地图</value>
+  </data>
+  <data name="UiMapLayers" xml:space="preserve">
+    <value>地图图层</value>
+  </data>
+  <data name="UiMapPerformanceQuality" xml:space="preserve">
+    <value>地图性能和质量</value>
+  </data>
+  <data name="UiMarker" xml:space="preserve">
+    <value>标记：</value>
+  </data>
+  <data name="UiMatched" xml:space="preserve">
+    <value>匹配：</value>
+  </data>
+  <data name="UiMeters" xml:space="preserve">
+    <value>米</value>
+  </data>
+  <data name="UiMethodComparisonMode" xml:space="preserve">
+    <value>方法比较模式</value>
+  </data>
+  <data name="UiMinProfit" xml:space="preserve">
+    <value>最小利润：</value>
+  </data>
+  <data name="UiModularCars" xml:space="preserve">
+    <value>模块化汽车</value>
+  </data>
+  <data name="UiMonitorAndControlPairedSmartDevices" xml:space="preserve">
+    <value>监视和控制配对的智能设备。</value>
+  </data>
+  <data name="UiMushrooms" xml:space="preserve">
+    <value>蘑菇</value>
+  </data>
+  <data name="UiMuteNotificationsFromThisServer" xml:space="preserve">
+    <value>静音来自该服务器的通知</value>
+  </data>
+  <data name="UiNames" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="UiNestedStepsIfConditionMet" xml:space="preserve">
+    <value>嵌套步骤（如果满足条件）</value>
+  </data>
+  <data name="UiNewPassword6Characters" xml:space="preserve">
+    <value>新密码（6+字符）</value>
+  </data>
+  <data name="UiNoBuild" xml:space="preserve">
+    <value>无构建</value>
+  </data>
+  <data name="UiNoDevicesMatchYourSearch" xml:space="preserve">
+    <value>没有与您的搜索匹配的设备。</value>
+  </data>
+  <data name="UiNoHeatmapActive" xml:space="preserve">
+    <value>没有活跃的热图</value>
+  </data>
+  <data name="UiNoMatchingTargets" xml:space="preserve">
+    <value>没有匹配的目标</value>
+  </data>
+  <data name="UiNoPendingRules" xml:space="preserve">
+    <value>没有待定规则</value>
+  </data>
+  <data name="UiNoTargetsSelected" xml:space="preserve">
+    <value>未选择目标</value>
+  </data>
+  <data name="UiNotConnected" xml:space="preserve">
+    <value>未连接</value>
+  </data>
+  <data name="UiNothingToTotalYet" xml:space="preserve">
+    <value>还没有什么可以总计的</value>
+  </data>
+  <data name="UiNotificationsSoundsAndOfflineDeath" xml:space="preserve">
+    <value>通知、声音和离线死亡</value>
+  </data>
+  <data name="UiOfflineAlertsSetup" xml:space="preserve">
+    <value>离线警报设置</value>
+  </data>
+  <data name="UiOfflineCloudAlertsDiscordWebhookTelegramCalls" xml:space="preserve">
+    <value>离线云提醒 | Discord、Webhook 和 Telegram 调用</value>
+  </data>
+  <data name="UiOpacity100" xml:space="preserve">
+    <value>不透明度：100%</value>
+  </data>
+  <data name="UiOpenCloudAccount" xml:space="preserve">
+    <value>开设云账户</value>
+  </data>
+  <data name="UiOpenInteractive3DMapOnRustMaps" xml:space="preserve">
+    <value>在 RustMaps 上打开交互式 3D 地图</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanel" xml:space="preserve">
+    <value>打开或关闭商店面板</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanelCtrlShiftS" xml:space="preserve">
+    <value>打开或关闭商店面板 (Ctrl+Shift+S)</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanel" xml:space="preserve">
+    <value>打开或关闭团队面板</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
+    <value>打开或关闭“团队”面板 (Ctrl+Shift+T)</value>
+  </data>
+  <data name="UiOpenShopFilters" xml:space="preserve">
+    <value>打开商店过滤器</value>
+  </data>
+  <data name="UiOpenSignInAndAccountManagement" xml:space="preserve">
+    <value>开放登录和账户管理</value>
+  </data>
+  <data name="UiOptimalMultiHopTradePathfinder" xml:space="preserve">
+    <value>最佳多跳贸易探路者</value>
+  </data>
+  <data name="UiOptionalPings" xml:space="preserve">
+    <value>可选 Ping</value>
+  </data>
+  <data name="UiOR" xml:space="preserve">
+    <value>或</value>
+  </data>
+  <data name="UiOrGroupName" xml:space="preserve">
+    <value>或群组名称</value>
+  </data>
+  <data name="UiOres" xml:space="preserve">
+    <value>矿石</value>
+  </data>
+  <data name="UiOtherwise" xml:space="preserve">
+    <value>否则：</value>
+  </data>
+  <data name="UiOUTPOST" xml:space="preserve">
+    <value>前哨站</value>
+  </data>
+  <data name="UiOutpostRecyclerTime" xml:space="preserve">
+    <value>前哨站回收时间</value>
+  </data>
+  <data name="UiOutpostSafezoneRecycler" xml:space="preserve">
+    <value>前哨站/安全区回收商</value>
+  </data>
+  <data name="UiOverlayStorage" xml:space="preserve">
+    <value>叠加存储</value>
+  </data>
+  <data name="UiOwnBaseBlack" xml:space="preserve">
+    <value>自有底座（黑色）</value>
+  </data>
+  <data name="UiParachute" xml:space="preserve">
+    <value>降落伞</value>
+  </data>
+  <data name="UiParse3DMapManually" xml:space="preserve">
+    <value>手动解析 3D 地图</value>
+  </data>
+  <data name="UiPayItemEGCloth" xml:space="preserve">
+    <value>付费物品（例如布料）...</value>
+  </data>
+  <data name="UiPaymentResource" xml:space="preserve">
+    <value>支付资源</value>
+  </data>
+  <data name="UiPendingQueue" xml:space="preserve">
+    <value>待处理队列</value>
+  </data>
+  <data name="UiPerformanceNearestNeighbor" xml:space="preserve">
+    <value>性能（最近邻）</value>
+  </data>
+  <data name="UiPerformanceMarkersAnd3DData" xml:space="preserve">
+    <value>性能、标记和 3D 数据</value>
+  </data>
+  <data name="UiPin" xml:space="preserve">
+    <value>销</value>
+  </data>
+  <data name="UiPinSidebar" xml:space="preserve">
+    <value>固定侧边栏</value>
+  </data>
+  <data name="UiPLANUSAGE" xml:space="preserve">
+    <value>计划使用</value>
+  </data>
+  <data name="UiPlay1minCountdownAudio" xml:space="preserve">
+    <value>播放 1 分钟倒计时音频</value>
+  </data>
+  <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
+    <value>00:00 播放响亮的闹钟</value>
+  </data>
+  <data name="UiPlayerProximity" xml:space="preserve">
+    <value>玩家接近度</value>
+  </data>
+  <data name="UiPotatoes" xml:space="preserve">
+    <value>土豆</value>
+  </data>
+  <data name="UiPressDesiredKeyCombination" xml:space="preserve">
+    <value>按所需的组合键...</value>
+  </data>
+  <data name="UiPressESCToCancelEnterToSave" xml:space="preserve">
+    <value>按 ESC 取消，按 Enter 保存</value>
+  </data>
+  <data name="UiPressHotkey" xml:space="preserve">
+    <value>按热键</value>
+  </data>
+  <data name="UiPriceHighToLow" xml:space="preserve">
+    <value>价格（从高到低）</value>
+  </data>
+  <data name="UiPriceLowToHigh" xml:space="preserve">
+    <value>价格（从低到高）</value>
+  </data>
+  <data name="UiProceduralHeatmaps" xml:space="preserve">
+    <value>程序热图</value>
+  </data>
+  <data name="UiProfit" xml:space="preserve">
+    <value>利润</value>
+  </data>
+  <data name="UiPumpkins" xml:space="preserve">
+    <value>南瓜</value>
+  </data>
+  <data name="UiPurple" xml:space="preserve">
+    <value>紫色</value>
+  </data>
+  <data name="UiRaidAlertsChannelID" xml:space="preserve">
+    <value>袭击警报频道 ID</value>
+  </data>
+  <data name="UiRaidCalculator" xml:space="preserve">
+    <value>突袭计算器</value>
+  </data>
+  <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
+    <value>突袭物品和原始制作原料</value>
+  </data>
+  <data name="UiRaidPlan" xml:space="preserve">
+    <value>突袭计划</value>
+  </data>
+  <data name="UiRaidSummary" xml:space="preserve">
+    <value>突袭总结</value>
+  </data>
+  <data name="UiRAWRESOURCES" xml:space="preserve">
+    <value>原材料</value>
+  </data>
+  <data name="UiReadAlertsAloudViaDiscordTTS" xml:space="preserve">
+    <value>通过 Discord TTS 大声朗读警报</value>
+  </data>
+  <data name="UiRed" xml:space="preserve">
+    <value>红色</value>
+  </data>
+  <data name="UiRefreshDeviceStates" xml:space="preserve">
+    <value>刷新设备状态</value>
+  </data>
+  <data name="UiRemoveTarget" xml:space="preserve">
+    <value>删除目标</value>
+  </data>
+  <data name="UiRepeats0Indefinitely" xml:space="preserve">
+    <value>重复（0 = 无限期）</value>
+  </data>
+  <data name="UiResetSoundsToDefault" xml:space="preserve">
+    <value>将声音重置为默认值</value>
+  </data>
+  <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
+    <value>缓存的 GPU 位图的分辨率比例。较低的比例可以提高较慢 GPU 的性能。</value>
+  </data>
+  <data name="UiResourcesForestry" xml:space="preserve">
+    <value>资源与林业</value>
+  </data>
+  <data name="UiRestoreLocalBackup" xml:space="preserve">
+    <value>恢复本地备份</value>
+  </data>
+  <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
+    <value>查看警报和最近的服务器事件。</value>
+  </data>
+  <data name="UiRevoke" xml:space="preserve">
+    <value>撤销</value>
+  </data>
+  <data name="UiRevokeAccess" xml:space="preserve">
+    <value>撤销访问权限</value>
+  </data>
+  <data name="UiRock" xml:space="preserve">
+    <value>摇滚</value>
+  </data>
+  <data name="UiRowboats" xml:space="preserve">
+    <value>划艇</value>
+  </data>
+  <data name="UiRuleCompleted" xml:space="preserve">
+    <value>规则已完成</value>
+  </data>
+  <data name="UiRuleName" xml:space="preserve">
+    <value>规则名称</value>
+  </data>
+  <data name="UiRuleTriggered" xml:space="preserve">
+    <value>规则触发</value>
+  </data>
+  <data name="UiRunThisRuleAgainAfterItCompletesAPositiveWaitStepIsRequired" xml:space="preserve">
+    <value>完成后再次运行此规则。需要一个积极的等待步骤。</value>
+  </data>
+  <data name="UiRUNNING" xml:space="preserve">
+    <value>跑步</value>
+  </data>
+  <data name="UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2" xml:space="preserve">
+    <value>Rust 有时会发送没有智能警报设备 ID 的袭击通知。 RustPlusDesk 无法判断哪个警报触发了它，因此使用下面的共享设置而不是设备自己的设置。</value>
+  </data>
+  <data name="UiRUSTCOMPANION" xml:space="preserve">
+    <value>铁锈+伴侣</value>
+  </data>
+  <data name="UiRustCompanionConnection" xml:space="preserve">
+    <value>Rust+ 同伴连接</value>
+  </data>
+  <data name="UiRustCompanionSession" xml:space="preserve">
+    <value>Rust+ 同伴会话</value>
+  </data>
+  <data name="UiRustDesktopV600Update" xml:space="preserve">
+    <value>Rust+ 桌面🛠️ v6.0.0 更新</value>
+  </data>
+  <data name="UiRustSteamAccount" xml:space="preserve">
+    <value>Rust+ Steam 帐户</value>
+  </data>
+  <data name="UiRustmapsCom" xml:space="preserve">
+    <value>rustmaps.com</value>
+  </data>
+  <data name="UiSAMSite" xml:space="preserve">
+    <value>山姆网站</value>
+  </data>
+  <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
+    <value>保存并关闭聊天命令设置</value>
+  </data>
+  <data name="UiSaveChannelsConfig" xml:space="preserve">
+    <value>保存通道配置</value>
+  </data>
+  <data name="UiSavedBases" xml:space="preserve">
+    <value>已保存的碱基</value>
+  </data>
+  <data name="UiScope" xml:space="preserve">
+    <value>适用范围</value>
+  </data>
+  <data name="UiScrollOrShiftClickChangesBy10" xml:space="preserve">
+    <value>滚动或 Shift+单击更改 10</value>
+  </data>
+  <data name="UiScrollToZoomDragToPanClickOrESCToCloseDoubleClickToReset" xml:space="preserve">
+    <value>滚动缩放 • 拖动平移 • 单击或 ESC 关闭 • 双击重置</value>
+  </data>
+  <data name="UiSearchComponents" xml:space="preserve">
+    <value>搜索组件...</value>
+  </data>
+  <data name="UiSearchDevicesByNameTypeOwnerID" xml:space="preserve">
+    <value>按名称、类型、所有者、ID 搜索设备...</value>
+  </data>
+  <data name="UiSearchDevices" xml:space="preserve">
+    <value>搜索设备...</value>
+  </data>
+  <data name="UiSearchItemsEGSulfur" xml:space="preserve">
+    <value>搜索项目（例如硫磺）...</value>
+  </data>
+  <data name="UiSearchItemsOrTypeFreely" xml:space="preserve">
+    <value>搜索项目或自由输入...</value>
+  </data>
+  <data name="UiSearchMonument" xml:space="preserve">
+    <value>搜索纪念碑...</value>
+  </data>
+  <data name="UiSearchRaidTargets" xml:space="preserve">
+    <value>搜索突袭目标</value>
+  </data>
+  <data name="UiSearchSettings" xml:space="preserve">
+    <value>搜索设置</value>
+  </data>
+  <data name="UiSearchTargets" xml:space="preserve">
+    <value>搜索目标...</value>
+  </data>
+  <data name="UiSearching" xml:space="preserve">
+    <value>正在寻找...</value>
+  </data>
+  <data name="UiSeconds" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="UiSecs" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="UiSelectALayerToViewSpawnDensity" xml:space="preserve">
+    <value>选择图层以查看生成密度</value>
+  </data>
+  <data name="UiSelectCustom1MinuteCountdownSound" xml:space="preserve">
+    <value>选择自定义 1 分钟倒计时声音</value>
+  </data>
+  <data name="UiSelectCustomAlarmSound0000" xml:space="preserve">
+    <value>选择自定义闹钟声音 (00:00)</value>
+  </data>
+  <data name="UiSelectMultipleRaidItemsForTheSmartCombinationSearch" xml:space="preserve">
+    <value>选择多个raid物品进行智能组合搜索</value>
+  </data>
+  <data name="UiSelectServerToSyncWithAlexa" xml:space="preserve">
+    <value>选择要同步的服务器 Alexa</value>
+  </data>
+  <data name="UiSelectSmartMixRaidItems" xml:space="preserve">
+    <value>选择智能混合突袭项目</value>
+  </data>
+  <data name="UiSelectTheSourceRuleForThisTrigger" xml:space="preserve">
+    <value>选择此触发器的源规则。</value>
+  </data>
+  <data name="UiSendCurrentMapViewToDiscordChannel" xml:space="preserve">
+    <value>将当前地图视图发送到 Discord 通道</value>
+  </data>
+  <data name="UiSendToDiscord" xml:space="preserve">
+    <value>发送至 Discord</value>
+  </data>
+  <data name="UiSERVERHIDDEN" xml:space="preserve">
+    <value>服务器隐藏</value>
+  </data>
+  <data name="UiServerName1430" xml:space="preserve">
+    <value>服务器名称 - 14:30</value>
+  </data>
+  <data name="UiSERVERS" xml:space="preserve">
+    <value>服务器</value>
+  </data>
+  <data name="UiSetShortcut" xml:space="preserve">
+    <value>设置快捷方式</value>
+  </data>
+  <data name="UiSettingsAreGroupedByWhatTheyControl" xml:space="preserve">
+    <value>设置按其控制的内容进行分组。</value>
+  </data>
+  <data name="UiShield" xml:space="preserve">
+    <value>盾牌</value>
+  </data>
+  <data name="UiShopAlertsChannelID" xml:space="preserve">
+    <value>商店提醒频道 ID</value>
+  </data>
+  <data name="UiShow2DMap" xml:space="preserve">
+    <value>显示二维地图</value>
+  </data>
+  <data name="UiShowAll" xml:space="preserve">
+    <value>显示全部</value>
+  </data>
+  <data name="UiShowDamageOverkillAndIngredientBreakdowns" xml:space="preserve">
+    <value>显示损坏、过度杀伤和成分分解</value>
+  </data>
+  <data name="UiShowLocal3DMap" xml:space="preserve">
+    <value>显示本地3D地图</value>
+  </data>
+  <data name="UiShowMarkersOnMap" xml:space="preserve">
+    <value>在地图上显示标记</value>
+  </data>
+  <data name="UiShowShopsThatBuyItem" xml:space="preserve">
+    <value>显示购买商品的商店</value>
+  </data>
+  <data name="UiShowShopsThatSellItem" xml:space="preserve">
+    <value>显示出售商品的商店</value>
+  </data>
+  <data name="UiShowThe2DMap" xml:space="preserve">
+    <value>显示二维地图</value>
+  </data>
+  <data name="UiSIGNINMETHODS" xml:space="preserve">
+    <value>登录方法</value>
+  </data>
+  <data name="UiSize" xml:space="preserve">
+    <value>尺寸：</value>
+  </data>
+  <data name="UiSize100SHIFTMousewheel" xml:space="preserve">
+    <value>大小：100%（SHIFT+鼠标滚轮）</value>
+  </data>
+  <data name="UiSkull" xml:space="preserve">
+    <value>头骨</value>
+  </data>
+  <data name="UiSleep" xml:space="preserve">
+    <value>睡眠</value>
+  </data>
+  <data name="UiSmartHomeWebhookURLEGIFTTTAlexaGoogle" xml:space="preserve">
+    <value>智能家居 Webhook URL（例如 IFTTT、Alexa、Google）</value>
+  </data>
+  <data name="UiSmartSwitch" xml:space="preserve">
+    <value>智能开关</value>
+  </data>
+  <data name="UiSnakes" xml:space="preserve">
+    <value>蛇</value>
+  </data>
+  <data name="UiSnooze" xml:space="preserve">
+    <value>贪睡</value>
+  </data>
+  <data name="UiSnoozeAlarm" xml:space="preserve">
+    <value>贪睡闹钟</value>
+  </data>
+  <data name="UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D" xml:space="preserve">
+    <value>一些选定的方法在数据集中没有制作成本；他们的资源被排除在外。</value>
+  </data>
+  <data name="UiSortBy" xml:space="preserve">
+    <value>排序依据</value>
+  </data>
+  <data name="UiSpecificPlayerInRange" xml:space="preserve">
+    <value>范围内的特定球员</value>
+  </data>
+  <data name="UiSpecificPlayerOffline" xml:space="preserve">
+    <value>特定玩家离线</value>
+  </data>
+  <data name="UiSteamID" xml:space="preserve">
+    <value>Steam ID</value>
+  </data>
+  <data name="UiStopAlarmSound" xml:space="preserve">
+    <value>停止警报声</value>
+  </data>
+  <data name="UiStorage" xml:space="preserve">
+    <value>存储</value>
+  </data>
+  <data name="UiSupportRustPlusDesk" xml:space="preserve">
+    <value>支持RustPlusDesk</value>
+  </data>
+  <data name="UiSwitch" xml:space="preserve">
+    <value>开关</value>
+  </data>
+  <data name="UiSyncCloudConnection" xml:space="preserve">
+    <value>同步云连接</value>
+  </data>
+  <data name="UiSyncOK" xml:space="preserve">
+    <value>同步正常</value>
+  </data>
+  <data name="UiSyncYourRustConnection" xml:space="preserve">
+    <value>同步您的 Rust+ 连接</value>
+  </data>
+  <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
+    <value>将您的 Rust+ 连接同步到云，以便在 Discord、Alexa 和 Google Home 上接收智能 Raid/事件警报，即使您的桌面应用程序已关闭。</value>
+  </data>
+  <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
+    <value>同步、备份、团队功能和支持者访问。此帐户独立于 Rust+ 同伴配对和 FCM。</value>
+  </data>
+  <data name="UiSyncedDevices" xml:space="preserve">
+    <value>同步设备</value>
+  </data>
+  <data name="UiSystem" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="UiTargetCategory" xml:space="preserve">
+    <value>目标类别</value>
+  </data>
+  <data name="UiTargetQuantity" xml:space="preserve">
+    <value>目标数量</value>
+  </data>
+  <data name="UiTeamPathsTracking" xml:space="preserve">
+    <value>团队路径跟踪</value>
+  </data>
+  <data name="UiTelegramCallViaCallMeBot" xml:space="preserve">
+    <value>Telegram 通过 CallMeBot 呼叫</value>
+  </data>
+  <data name="UiTestCall" xml:space="preserve">
+    <value>测试通话</value>
+  </data>
+  <data name="UiTextToSpeechForWebhook" xml:space="preserve">
+    <value>Webhook 的文本转语音</value>
+  </data>
+  <data name="UiTheCloudWorkerListensForIncomingAlarms" xml:space="preserve">
+    <value>云工作人员监听传入的警报。</value>
+  </data>
+  <data name="UiTHEN" xml:space="preserve">
+    <value>那么</value>
+  </data>
+  <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
+    <value>此连接用于 Rust 配套 API。它支持 FCM 配对、游戏内广播、警报和团队聊天。您的云帐户是独立的。</value>
+  </data>
+  <data name="UiTier" xml:space="preserve">
+    <value>等级</value>
+  </data>
+  <data name="UiTigers" xml:space="preserve">
+    <value>老虎队</value>
+  </data>
+  <data name="UiToggleDelay150ms" xml:space="preserve">
+    <value>切换延迟：150ms</value>
+  </data>
+  <data name="UiToggleDevice" xml:space="preserve">
+    <value>切换设备</value>
+  </data>
+  <data name="UiToggleMiniMap" xml:space="preserve">
+    <value>切换小地图</value>
+  </data>
+  <data name="UiToggleMonumentList" xml:space="preserve">
+    <value>切换纪念碑列表</value>
+  </data>
+  <data name="UiTrackTeammatesAndSharedActivity" xml:space="preserve">
+    <value>跟踪队友和共享活动。</value>
+  </data>
+  <data name="UiTriggerEvent" xml:space="preserve">
+    <value>触发事件</value>
+  </data>
+  <data name="UiTriggered" xml:space="preserve">
+    <value>已触发</value>
+  </data>
+  <data name="UiTryAnotherSearchOrCategory" xml:space="preserve">
+    <value>尝试其他搜索或类别。</value>
+  </data>
+  <data name="UiTTS" xml:space="preserve">
+    <value>语音合成</value>
+  </data>
+  <data name="UiTTSLanguage" xml:space="preserve">
+    <value>TTS 语言</value>
+  </data>
+  <data name="UiTurret" xml:space="preserve">
+    <value>炮塔</value>
+  </data>
+  <data name="UiUntil" xml:space="preserve">
+    <value>直到</value>
+  </data>
+  <data name="UiUpgradeToSupporter" xml:space="preserve">
+    <value>升级为支持者</value>
+  </data>
+  <data name="UiUsernameEGBrunhilde" xml:space="preserve">
+    <value>用户名（例如@Brunhilde）</value>
+  </data>
+  <data name="UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired" xml:space="preserve">
+    <value>使用您在浏览器中的 Rust+ / Steam 登录名。不需要云登录。</value>
+  </data>
+  <data name="UiViewAndControlPairedCCTVCameras" xml:space="preserve">
+    <value>查看和控制配对的闭路电视摄像机。</value>
+  </data>
+  <data name="UiViewPlayers" xml:space="preserve">
+    <value>查看球员</value>
+  </data>
+  <data name="UiVisitWebsite" xml:space="preserve">
+    <value>访问网站</value>
+  </data>
+  <data name="UiWait" xml:space="preserve">
+    <value>等等</value>
+  </data>
+  <data name="UiWantItemEGBlue" xml:space="preserve">
+    <value>想要物品（例如蓝色）...</value>
+  </data>
+  <data name="UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E" xml:space="preserve">
+    <value>我们可以自动在您的 Steam 安装文件夹中找到地图，将其提取，并构建具有热图和更丰富的纪念碑叠加层的 3D 地图。不会更改任何数据，也不会访问不相关的 Steam 文件夹数据。</value>
+  </data>
+  <data name="UiWebhookInfo" xml:space="preserve">
+    <value>网络钩子信息</value>
+  </data>
+  <data name="UiWhatHappensNext" xml:space="preserve">
+    <value>接下来会发生什么：</value>
+  </data>
+  <data name="UiWhatIsAGenericAlarm" xml:space="preserve">
+    <value>什么是通用警报？</value>
+  </data>
+  <data name="UiWheat" xml:space="preserve">
+    <value>小麦</value>
+  </data>
+  <data name="UiWHEN" xml:space="preserve">
+    <value>何时</value>
+  </data>
+  <data name="UiWILD" xml:space="preserve">
+    <value>狂野</value>
+  </data>
+  <data name="UiWildRecyclerTime" xml:space="preserve">
+    <value>狂野回收时间</value>
+  </data>
+  <data name="UiWipeCycle" xml:space="preserve">
+    <value>擦拭周期</value>
+  </data>
+  <data name="UiWolves" xml:space="preserve">
+    <value>狼队</value>
+  </data>
+  <data name="UiWoodPiles" xml:space="preserve">
+    <value>木桩</value>
+  </data>
+  <data name="UiX" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="UiYellow" xml:space="preserve">
+    <value>黄色</value>
+  </data>
+  <data name="UiYIELDBOARD" xml:space="preserve">
+    <value>收益委员会</value>
+  </data>
+  <data name="UiYouCanRevokeThisAccessAtAnyTime" xml:space="preserve">
+    <value>您可以随时撤销此访问权限。</value>
+  </data>
+  <data name="UiYourFCMConnectionTokenIsUploadedSecurely" xml:space="preserve">
+    <value>您的 FCM 连接令牌已安全上传。</value>
+  </data>
+  <data name="UiZZZ" xml:space="preserve">
+    <value>ZZZ</value>
+  </data>
+  <data name="CodeUi3DMapData" xml:space="preserve">
+    <value>3D地图数据</value>
+  </data>
+  <data name="CodeUiÃÂÂ" xml:space="preserve">
+    <value>……</value>
+  </data>
+  <data name="CodeUiAccessRevoked" xml:space="preserve">
+    <value>访问权限被撤销</value>
+  </data>
+  <data name="CodeUiAddAnEmailAndPasswordToThisAccount" xml:space="preserve">
+    <value>向此帐户添加电子邮件和密码</value>
+  </data>
+  <data name="CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole" xml:space="preserve">
+    <value>管理员访问权限需要 Discord 身份验证和开发人员/主要贡献者角色。</value>
+  </data>
+  <data name="CodeUiAlexaAccessRevokedSuccessfully" xml:space="preserve">
+    <value>Alexa 访问权限已成功撤销。</value>
+  </data>
+  <data name="CodeUiApplyingUpdate" xml:space="preserve">
+    <value>正在应用更新...</value>
+  </data>
+  <data name="CodeUiAreYouSureYouWantToClearTheOfflineDeathLog" xml:space="preserve">
+    <value>您确定要清除离线死亡日志吗？</value>
+  </data>
+  <data name="CodeUiArrivalWarningUnlearned" xml:space="preserve">
+    <value>到达警告（未学习）</value>
+  </data>
+  <data name="CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain" xml:space="preserve">
+    <value>缓存的 3D 地图数据已删除。当您再次打开 3D 地图时，它将重建。</value>
+  </data>
+  <data name="CodeUiChangeColor" xml:space="preserve">
+    <value>改变颜色</value>
+  </data>
+  <data name="CodeUiChannelsConfigurationSavedSuccessfully" xml:space="preserve">
+    <value>通道配置保存成功！</value>
+  </data>
+  <data name="CodeUiCheckingDevices" xml:space="preserve">
+    <value>检查设备...</value>
+  </data>
+  <data name="CodeUiCheckingForUpdates" xml:space="preserve">
+    <value>正在检查更新...</value>
+  </data>
+  <data name="CodeUiClearEveryTargetFromThisRaidPlan" xml:space="preserve">
+    <value>清除突袭计划中的所有目标？</value>
+  </data>
+  <data name="CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612" xml:space="preserve">
+    <value>云访问已被撤销，您的凭据已从云中删除。</value>
+  </data>
+  <data name="CodeUiCloudSyncFailed" xml:space="preserve">
+    <value>云同步失败</value>
+  </data>
+  <data name="CodeUiCloudUser" xml:space="preserve">
+    <value>云用户</value>
+  </data>
+  <data name="CodeUiCollapse" xml:space="preserve">
+    <value>崩溃</value>
+  </data>
+  <data name="CodeUiConfirmClear" xml:space="preserve">
+    <value>确认 清除</value>
+  </data>
+  <data name="CodeUiConnected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncEnabled" xml:space="preserve">
+    <value>已连接 · 启用云同步</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncPaused" xml:space="preserve">
+    <value>已连接 · 云同步已暂停</value>
+  </data>
+  <data name="CodeUiCopied" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="CodeUiCopyMap" xml:space="preserve">
+    <value>复制地图</value>
+  </data>
+  <data name="CodeUiCouldNotCheckForUpdates" xml:space="preserve">
+    <value>无法检查更新</value>
+  </data>
+  <data name="CodeUiCouldNotCopySummary" xml:space="preserve">
+    <value>无法复制摘要</value>
+  </data>
+  <data name="CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811" xml:space="preserve">
+    <value>无法从 Rust+ 连接检索详细信息。确保您已连接到服务器。</value>
+  </data>
+  <data name="CodeUiDeviceImportFailed" xml:space="preserve">
+    <value>设备导入失败：</value>
+  </data>
+  <data name="CodeUiDiscordServerLinkedSuccessfully" xml:space="preserve">
+    <value>Discord 服务器链接成功！</value>
+  </data>
+  <data name="CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E" xml:space="preserve">
+    <value>Discord 服务器已成功取消链接。该机器人将不再与您的服务器交互。</value>
+  </data>
+  <data name="CodeUiEmailLoginEnabled" xml:space="preserve">
+    <value>已启用电子邮件登录</value>
+  </data>
+  <data name="CodeUiEnabled" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="CodeUiEraserBig20px" xml:space="preserve">
+    <value>大橡皮擦（20px）</value>
+  </data>
+  <data name="CodeUiEraserSmall5px" xml:space="preserve">
+    <value>小橡皮擦（5px）</value>
+  </data>
+  <data name="CodeUiFailedToLinkDiscordServer" xml:space="preserve">
+    <value>无法链接 Discord 服务器。</value>
+  </data>
+  <data name="CodeUiFailedToRevokeFCMConnection" xml:space="preserve">
+    <value>无法撤销 FCM 连接。</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
+    <value>无法同步 FCM 连接。确保您已登录，具有活动的高级/支持者级别，并且您在 Rust+ Companion 中的连接处于活动状态。</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
+    <value>无法同步 FCM 连接。请确保您已登录。</value>
+  </data>
+  <data name="CodeUiFehler" xml:space="preserve">
+    <value>费勒</value>
+  </data>
+  <data name="CodeUiHotkeysActive" xml:space="preserve">
+    <value>热键激活</value>
+  </data>
+  <data name="CodeUiInvalidUsername" xml:space="preserve">
+    <value>用户名无效</value>
+  </data>
+  <data name="CodeUiJustNow" xml:space="preserve">
+    <value>刚才</value>
+  </data>
+  <data name="CodeUiLinkDiscord" xml:space="preserve">
+    <value>链接 Discord</value>
+  </data>
+  <data name="CodeUiLinked" xml:space="preserve">
+    <value>链接</value>
+  </data>
+  <data name="CodeUiLinkedToThisCloudAccount" xml:space="preserve">
+    <value>链接到此云帐户</value>
+  </data>
+  <data name="CodeUiLöschen" xml:space="preserve">
+    <value>洛申</value>
+  </data>
+  <data name="CodeUiManageEmailAccount" xml:space="preserve">
+    <value>管理电子邮件帐户</value>
+  </data>
+  <data name="CodeUiManagePlayerGroup" xml:space="preserve">
+    <value>管理玩家组</value>
+  </data>
+  <data name="CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52" xml:space="preserve">
+    <value>已达到最多 5 个活跃队友订阅。请先取消订阅其他人。</value>
+  </data>
+  <data name="CodeUiMaximumOf5CustomTimersAllowed" xml:space="preserve">
+    <value>最多允许 5 个自定义计时器。</value>
+  </data>
+  <data name="CodeUiMissingChannelConfig" xml:space="preserve">
+    <value>缺少通道配置</value>
+  </data>
+  <data name="CodeUiNoActiveConnectionToRetrieveServerInfo" xml:space="preserve">
+    <value>没有活动连接来检索服务器信息。</value>
+  </data>
+  <data name="CodeUiNoCompanionSession" xml:space="preserve">
+    <value>没有同伴会话</value>
+  </data>
+  <data name="CodeUiNoDeviceExportsFoundForYourTeamServer" xml:space="preserve">
+    <value>未找到适合您的团队/服务器的设备导出。</value>
+  </data>
+  <data name="CodeUiNoFrame" xml:space="preserve">
+    <value>无框架</value>
+  </data>
+  <data name="CodeUiNoMapFound" xml:space="preserve">
+    <value>未找到地图</value>
+  </data>
+  <data name="CodeUiNoOffersAvailable" xml:space="preserve">
+    <value>没有可用的优惠</value>
+  </data>
+  <data name="CodeUiNoResultsFoundMatchingFilter" xml:space="preserve">
+    <value>未找到匹配过滤器的结果。</value>
+  </data>
+  <data name="CodeUiNoTextFound" xml:space="preserve">
+    <value>没有找到文字</value>
+  </data>
+  <data name="CodeUiNoValidRouteBottlenecks" xml:space="preserve">
+    <value>没有有效的路线（瓶颈）。</value>
+  </data>
+  <data name="CodeUiNotLinked" xml:space="preserve">
+    <value>未链接</value>
+  </data>
+  <data name="CodeUiNotSignedInSyncAndBackupsUnavailable" xml:space="preserve">
+    <value>未登录 · 同步和备份不可用</value>
+  </data>
+  <data name="CodeUiOfflineMap" xml:space="preserve">
+    <value>离线地图</value>
+  </data>
+  <data name="CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers" xml:space="preserve">
+    <value>只能将手动解析的离线地图复制到其他服务器。</value>
+  </data>
+  <data name="CodeUiPINGeneratedValidFor15m" xml:space="preserve">
+    <value>生成的 PIN（15m 内有效）</value>
+  </data>
+  <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
+    <value>请先在“设置”中配置 Discord“聊天警报”或“事件警报”频道。</value>
+  </data>
+  <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
+    <value>请先连接您的云帐户。</value>
+  </data>
+  <data name="CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN" xml:space="preserve">
+    <value>请先启用云同步，然后再生成 Alexa PIN。</value>
+  </data>
+  <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
+    <value>请输入有效的 Telegram 用户名。</value>
+  </data>
+  <data name="CodeUiPleaseSaveADiscordServerIDFirst" xml:space="preserve">
+    <value>请先保存一个Discord服务器ID。</value>
+  </data>
+  <data name="CodeUiResumingUpdateDownload" xml:space="preserve">
+    <value>正在继续更新下载...</value>
+  </data>
+  <data name="CodeUiSaveAlert" xml:space="preserve">
+    <value>保存提醒</value>
+  </data>
+  <data name="CodeUiSavedClickToUnsave" xml:space="preserve">
+    <value>已保存（点击取消保存）</value>
+  </data>
+  <data name="CodeUiSearchResults" xml:space="preserve">
+    <value>搜索结果</value>
+  </data>
+  <data name="CodeUiSending" xml:space="preserve">
+    <value>正在发送...</value>
+  </data>
+  <data name="CodeUiServerAddressCopiedToClipboard" xml:space="preserve">
+    <value>服务器地址已复制到剪贴板！</value>
+  </data>
+  <data name="CodeUiShowNoBuildZones" xml:space="preserve">
+    <value>显示禁止建造区域</value>
+  </data>
+  <data name="CodeUiSize14" xml:space="preserve">
+    <value>尺寸：14</value>
+  </data>
+  <data name="CodeUiSize40" xml:space="preserve">
+    <value>尺寸：40</value>
+  </data>
+  <data name="CodeUiSteamIDNotFoundPleaseConnectToAServerFirst" xml:space="preserve">
+    <value>Steam ID 未找到。请先连接到服务器。</value>
+  </data>
+  <data name="CodeUiSubscriptionLimit" xml:space="preserve">
+    <value>认购限额</value>
+  </data>
+  <data name="CodeUiSuccess" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="CodeUiSynced" xml:space="preserve">
+    <value>已同步！</value>
+  </data>
+  <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
+    <value>Rust+ API 不提供此服务器的详细描述。</value>
+  </data>
+  <data name="CodeUiThickness10px" xml:space="preserve">
+    <value>厚度：10像素</value>
+  </data>
+  <data name="CodeUiThickness3px" xml:space="preserve">
+    <value>厚度：3 像素</value>
+  </data>
+  <data name="CodeUiTimer" xml:space="preserve">
+    <value>计时器</value>
+  </data>
+  <data name="CodeUiTranslate" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="CodeUiTranslated" xml:space="preserve">
+    <value>已翻译</value>
+  </data>
+  <data name="CodeUiTranslating" xml:space="preserve">
+    <value>翻译...</value>
+  </data>
+  <data name="CodeUiTranslationFailed" xml:space="preserve">
+    <value>翻译失败：</value>
+  </data>
+  <data name="CodeUiUmbenennen" xml:space="preserve">
+    <value>翁贝内宁</value>
+  </data>
+  <data name="CodeUiUnavailable" xml:space="preserve">
+    <value>不可用</value>
+  </data>
+  <data name="CodeUiUngültigeEingaben" xml:space="preserve">
+    <value>Ungültige Eingaben。</value>
+  </data>
+  <data name="CodeUiUnlimited" xml:space="preserve">
+    <value>无限</value>
+  </data>
+  <data name="CodeUiUpdate" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed" xml:space="preserve">
+    <value>更新检查失败</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed2" xml:space="preserve">
+    <value>更新检查失败。</value>
+  </data>
+  <data name="CodeUiUpdateDownloadCancelled" xml:space="preserve">
+    <value>更新下载已取消</value>
+  </data>
+  <data name="CodeUiUpdateDownloadFailed" xml:space="preserve">
+    <value>更新下载失败</value>
+  </data>
+  <data name="CodeUiUpdateDownloadPaused" xml:space="preserve">
+    <value>更新下载已暂停</value>
+  </data>
+  <data name="CodeUiUpdateReadyInstallsOnClose" xml:space="preserve">
+    <value>更新就绪 — 关闭时安装</value>
+  </data>
+  <data name="CodeUiWhite" xml:space="preserve">
+    <value>白色</value>
+  </data>
+  <data name="FormatOfflineMapImported" xml:space="preserve">
+    <value>离线地图已成功导入为“{0}”！</value>
+  </data>
+  <data name="MapImportedTitle" xml:space="preserve">
+    <value>地图导入</value>
+  </data>
+  <data name="FormatFailedImportMap" xml:space="preserve">
+    <value>导入地图失败：{0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="CopyMapStagedMessage" xml:space="preserve">
+    <value>请选择或连接到列表中的配对服务器。如果布局匹配，地图将被自动复制。</value>
+  </data>
+  <data name="CopyMapStagedTitle" xml:space="preserve">
+    <value>复制地图上演</value>
+  </data>
+  <data name="FormatUpdateAvailable" xml:space="preserve">
+    <value>更新 {0} 可用</value>
+  </data>
+  <data name="FormatDownloadingUpdate" xml:space="preserve">
+    <value>正在下载 {0}</value>
+  </data>
+  <data name="FormatUpdateReady" xml:space="preserve">
+    <value>更新 {0} 就绪 — 关闭时安装</value>
+  </data>
+  <data name="FormatPlayerStatusError" xml:space="preserve">
+    <value>错误：{0}</value>
+  </data>
+  <data name="FormatFailedOpenPlayers" xml:space="preserve">
+    <value>无法打开播放器窗口：
+
+{0}: {1}
+
+堆栈：
+{2}</value>
+  </data>
+  <data name="FormatOfflineMapNotParsed" xml:space="preserve">
+    <value>离线地图“{0}”尚未解析。打开其 3D 映射一次以解析它，然后再次尝试复制。</value>
+  </data>
+  <data name="CopyMapErrorTitle" xml:space="preserve">
+    <value>复制地图错误</value>
+  </data>
+  <data name="FormatMapMismatch" xml:space="preserve">
+    <value>地图布局不匹配。地图“{0}”似乎与连接的服务器“{1}”不是同一个地图。</value>
+  </data>
+  <data name="MapMismatchTitle" xml:space="preserve">
+    <value>地图不匹配</value>
+  </data>
+  <data name="FormatMapCopied" xml:space="preserve">
+    <value>已成功将 3D 地图和本地资源从“{0}”复制到“{1}”！</value>
+  </data>
+  <data name="MapCopiedTitle" xml:space="preserve">
+    <value>地图已复制</value>
+  </data>
+  <data name="FormatMapCopyError" xml:space="preserve">
+    <value>复制地图时出错：{0}</value>
+  </data>
+  <data name="FormatCloudLimits" xml:space="preserve">
+    <value>{0}
+计划用途：
+• 覆盖尺寸：{1} KB / {2}
+• 设备：{3} / {4}
+• 碱基：{5} / {6}</value>
+  </data>
+  <data name="FormatFailedUnlinkDiscord" xml:space="preserve">
+    <value>无法取消链接 Discord 服务器：{0}</value>
+  </data>
+  <data name="FormatFailedLinkDiscord" xml:space="preserve">
+    <value>无法链接 Discord 服务器：{0}</value>
+  </data>
+  <data name="FormatFailedSaveChannels" xml:space="preserve">
+    <value>保存频道失败：{0}</value>
+  </data>
+  <data name="FormatFailedOpenBrowser" xml:space="preserve">
+    <value>无法打开浏览器：{0}</value>
+  </data>
+  <data name="FormatFailedGeneratePin" xml:space="preserve">
+    <value>生成失败PIN:{0}</value>
+  </data>
+  <data name="FormatFailedRevokeAlexa" xml:space="preserve">
+    <value>无法撤销 Alexa 访问权限：{0}</value>
+  </data>
+  <data name="FormatPremiumPlan" xml:space="preserve">
+    <value>{0} · 溢价</value>
+  </data>
+  <data name="FormatFreePlan" xml:space="preserve">
+    <value>{0} · 免费</value>
+  </data>
+  <data name="FormatCouldNotLoadImage" xml:space="preserve">
+    <value>无法加载图像：{0}</value>
+  </data>
+  <data name="FormatErrorSavingCrosshair" xml:space="preserve">
+    <value>保存十字准线时出错：{0}</value>
+  </data>
+  <data name="FormatCheckingDevice" xml:space="preserve">
+    <value>正在检查设备 #{0} ({1})...</value>
+  </data>
+  <data name="FormatToggleDelay" xml:space="preserve">
+    <value>切换延迟：{0} ms</value>
+  </data>
+  <data name="FormatErrorLoadingUsers" xml:space="preserve">
+    <value>加载用户时出错：{0}</value>
+  </data>
+  <data name="FormatErrorUpdatingOverride" xml:space="preserve">
+    <value>更新覆盖时出错：{0}</value>
+  </data>
+  <data name="FormatServerDescriptionWebsite" xml:space="preserve">
+    <value>Rust+ API 不提供此服务器的详细描述。
+
+您可以在服务器的官方网站上找到更多信息：
+{0}</value>
+  </data>
+  <data name="FormatFailedLoadServerDetails" xml:space="preserve">
+    <value>无法加载服务器详细信息：{0}</value>
+  </data>
+  <data name="RaidLoadingData" xml:space="preserve">
+    <value>正在加载突袭数据...</value>
+  </data>
+  <data name="RaidNoTargetsAvailable" xml:space="preserve">
+    <value>没有可用的袭击目标。</value>
+  </data>
+  <data name="FormatRaidUnavailable" xml:space="preserve">
+    <value>Raid 计算器不可用：{0}</value>
+  </data>
+  <data name="FormatRaidSaveFailed" xml:space="preserve">
+    <value>无法保存袭击计划：{0}</value>
+  </data>
+  <data name="UpdateSuccessfulTitle" xml:space="preserve">
+    <value>更新成功</value>
+  </data>
+  <data name="FormatUpdateSuccessful" xml:space="preserve">
+    <value>Rust+ Desktop 已成功更新为 v{0}！</value>
+  </data>
+  <data name="UpdateDownloadedTitle" xml:space="preserve">
+    <value>更新已下载</value>
+  </data>
+  <data name="UpdateInstallsOnClose" xml:space="preserve">
+    <value>当您关闭应用程序时，将自动安装更新。</value>
+  </data>
+  <data name="FormatDownloadFailed" xml:space="preserve">
+    <value>下载失败：{0}</value>
+  </data>
+  <data name="UpdateAlreadyDownloaded" xml:space="preserve">
+    <value>更新已下载。当您关闭应用程序时，它将被安装。</value>
+  </data>
+  <data name="SelectRustMapFile" xml:space="preserve">
+    <value>选择 Rust .map 文件</value>
+  </data>
+  <data name="CloudFeaturesUpdateRequired" xml:space="preserve">
+    <value>要继续使用云功能，您必须更新应用程序。</value>
+  </data>
+  <data name="RenameCustomCrosshair" xml:space="preserve">
+    <value>重命名自定义十字线</value>
+  </data>
+  <data name="HowToTrackWindowTitle" xml:space="preserve">
+    <value>如何追踪玩家 — Rust+ Desk</value>
+  </data>
+  <data name="DiscordClientInitializing" xml:space="preserve">
+    <value>桌面客户端正在初始化或未完全加载。</value>
+  </data>
+  <data name="FormatCurrentServerTime" xml:space="preserve">
+    <value>🕒 当前服务器时间：{0}</value>
+  </data>
+  <data name="FormatServerPopulation" xml:space="preserve">
+    <value>👥 服务器人口：{0}</value>
+  </data>
+  <data name="DiscordInvalidCommandPayload" xml:space="preserve">
+    <value>❌ 无效命令：设备名称或 ID 丢失。</value>
+  </data>
+  <data name="DiscordRenderingMap" xml:space="preserve">
+    <value>⌛ 地图正在渲染。请稍等。</value>
+  </data>
+  <data name="DiscordRenderingFullMap" xml:space="preserve">
+    <value>⌛ 正在渲染完整地图。请稍等。</value>
+  </data>
+  <data name="FormatUnknownCommand" xml:space="preserve">
+    <value>未知或不支持的命令：{0}</value>
+  </data>
+  <data name="FormatCommandError" xml:space="preserve">
+    <value>执行命令时出错：{0}</value>
+  </data>
+  <data name="Existing3DMapReused" xml:space="preserve">
+    <value>现有的3D地图数据被重用；未检测到擦拭。</value>
+  </data>
+  <data name="ServerOfflineA2S" xml:space="preserve">
+    <value>服务器离线（A2S查询超时）</value>
+  </data>
+  <data name="AutoDiscoveringQueryPort" xml:space="preserve">
+    <value>通过Steam API查找查询端口...</value>
+  </data>
+  <data name="FetchingSteamPlayers" xml:space="preserve">
+    <value>正在通过 Steam 查询获取玩家...</value>
+  </data>
+  <data name="NoOnlinePlayersFound" xml:space="preserve">
+    <value>未找到在线玩家。</value>
+  </data>
+  <data name="AssignGroupTitle" xml:space="preserve">
+    <value>分配组</value>
+  </data>
+  <data name="OfflineCloudAlertsTitle" xml:space="preserve">
+    <value>离线云提醒</value>
+  </data>
+  <data name="AlexaSmartHomeTitle" xml:space="preserve">
+    <value>Alexa 智能家居</value>
+  </data>
+  <data name="SelectCustomDeathSound" xml:space="preserve">
+    <value>选择自定义死亡声音</value>
+  </data>
+  <data name="CountdownOneMinute" xml:space="preserve">
+    <value>倒计时1分钟...</value>
+  </data>
+  <data name="TimerExpiredTitle" xml:space="preserve">
+    <value>定时器已过期</value>
+  </data>
+  <data name="SelectTimerAlarmSound" xml:space="preserve">
+    <value>选择定时器警报声音</value>
+  </data>
+  <data name="SelectTimerCountdownSound" xml:space="preserve">
+    <value>选择计时器 1 分钟倒计时声音</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="UpdateRequiredTitle" xml:space="preserve">
+    <value>需要更新</value>
+  </data>
+  <data name="PauseUpdate" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="ResumeUpdate" xml:space="preserve">
+    <value>恢复</value>
+  </data>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>清理云端残留孤立数据</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>扫描 Supabase 数据库并删除已移除服务器的设备、图层和标记。</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>清理云端残留孤立数据</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>您确定要扫描 Supabase 并永久删除不再位于服务器列表中所有服务器的云端设备、地图图层和基地标记吗？</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>成功清理云端残留孤立数据：
+- 地图图层：{0}
+- 基地标记：{1}
+- 智能设备：{2}
+- 服务器注册：{3}</value>
+  </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>仅限 Discord</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>启用后，警报通知将直接发送至 Discord，而不会发布到 Rust 游戏内队伍聊天中。非常适合单人服务器或没有队伍聊天的服务器。</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>跳过教程</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>回来</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>下一个</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>结束</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>取消这个教程？</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>你的进度已保存。你可以随时从教程中心继续。</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>继续学习</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>取消教程</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>{0}{1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>该功能在当前应用状态下不可用。请安全继续，待所需服务器、账户或数据可用时返回。</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>重启</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0}{1}步骤</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>学习RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>为这个构建准备了重点课程。教程从不激活设备、发送消息、删除数据或运行自动化。</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>开始推荐教程</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>继续上次教程</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>重启所有教程</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>重置教程进度</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>为新用户开启基础</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>提供新功能教程</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>欢迎来到RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>简单介绍导航、服务器连接、地图和设备——或者只选择你需要的课程。</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>开始快速导览</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>选择教程</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>现在不行</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>未开始</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>跳过</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>新功能</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>入门</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>地图</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>团队与沟通</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>自动化</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>监控</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>设置与支持</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>应用基础</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>学习导航、服务器上下文、连接状态、通知以及重播课程的地点。</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>账户与云端</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>了解本地功能、云登录、同步和支持者访问。</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>配对与服务器管理</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>配对Rust+，选择服务器，了解软模式、全模式和断联模式。</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D 地图基础</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>学习地图导航、图层、热力图、绘图工具和3D入门点。</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>资源热力图</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>学习提取生成密度叠加图显示的内容，以及如何选择或清除它们。</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D地图</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>探索本地3D视口、工具栏、封装构建器、性能显示和关闭动作。</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>智能设备</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>查找、筛选、刷新、整理并安全地理解配对的智能设备。</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>团队与球员追踪</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>检查队友、标记、跟踪行为和共享要求。</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>团队聊天与指令</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>阅读团队聊天、生成消息和配置命令，无需发送任何内容。</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord整合</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>找到Discord入口点、配置、权限和隐私边界。</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>逻辑与自动化引擎</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>理解规则、触发器、条件、动作、运行状态和安全测试。</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>通知与警报</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>筛选、搜索、审核、标记并清除申请通知。</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>摄像头与监控</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>添加并审核已配对的摄像头，同时保持摄像头标识的私密。</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>突袭计算器</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>制定突袭计划，比较方法，并审查物资总量。</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>回收计算器</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>添加物品并比较野生区和安全区回收者的产量。</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>设定</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>查找语言、地图性能、连接服务和维护控制。</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>更新与诊断</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>检查应用更新并找到诊断日志，但不启动更新。</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>离线提醒与智能家居</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>了解如何配置离线云端提醒、Telegram CallMeBot 电话通知以及 Amazon Alexa 智能家居集成。</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>主导航</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>使用此侧边栏在设备、球队追踪、摄像头、球员、通知和计算器之间切换。</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>导航扩展</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>钉选或折叠侧边栏，以交换标签以获得更多地图工作空间。</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>当前服务器</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>该区域标识所选Rust服务器及其账户上下文。</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>连接状态</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>服务器卡显示服务器是断开连接、软连接还是完全连接。</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>连接问题、警报、死亡和自动化结果均在此收集。</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>教程中心</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>在这里重玩、继续、重启或发现更新的课程。</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>账户背景</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>云访问与Rust+配对是分开的。本地功能在云同步情况下依然可用。</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>云账户</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>请在此登录以获得支持的同步;教程从不显示私人账户数据。</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>支持者身份</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>支持者访问解锁了封闭功能。本地教程进度无需订阅。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>双Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>在实时服务器功能可用之前，将此应用与Rust Companion配对。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>开始配对</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>先听，然后用Rust游戏内的Rust+配对流程。证件从不被记录。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>配对服务器</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>在连接或更改服务器特定设置前，先选择本地配置的服务器。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>软连接</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect 加载有限的通信，但不会初始化所有在线功能。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>全面连接</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>完整连接会初始化地图数据、设备、球队数据和Rust+订阅。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>断开连接</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>断开连接会阻止实时交流。这个教训从未引发行动。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>重置配对</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>恢复命令在配对的右键菜单里。重置会移除局部配对配置。</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>地图画布</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>通过拖曳平移，用方向盘缩放，并与当前Rust地图上的标记互动。</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>地图工具栏</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>工具栏控制图层、聊天、叠加、计时器以及2D或3D模式。</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>重置视图</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>平移或缩放后，将地图重新放回工作区。</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>地图图层</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>在这里选择网格、球员、纪念碑、商店和高级视觉选项。</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>热力图</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>开放提取密度叠加图。它们显示的是可能的生成区域，而不是活体。</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>开放3D地图</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>生成或打开当前地图的本地3D表示。</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>绘图工具</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>在地图上绘制非破坏性规划笔记，完成后退出绘画模式。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>开放热力图</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>浏览当前解析地图的可用密度图层。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>热图选择器</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>选择一个已提取的类别或清除活动覆盖层。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>在生成一次 3D 地图并登录服务器后，此功能才可用。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>地图解析与 3D 地图前置要求</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>热力图、Godrocks、冰山及禁止建造区域需要进行一次性 3D 地图生成。你必须在游戏内至少登录过该服务器一次，以便在本地生成可供解析的 .map 文件。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>生成或开放3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>应用会在本地解析地图数据，并在可能的情况下重用缓存。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>创建账号</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>生成 3D 地图需要 RustPlusDesktop 账号（关联 Discord 或邮箱登录）。解析地图数据还会同时解锁 2D 地图上的额外功能（如热力图、冰山、洞穴及 Godrocks）。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D视口</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>绕圈、平移和缩放，围绕所选地图的互动展示。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D工具栏</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>控制图层、实时标记、全屏、设置和封装工具。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>基地覆盖地构建器</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>建造模式仅包含规划基础;它不会修改Rust服务器。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>绩效指标</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS和自适应分辨率在细节和流畅交互之间取得了平衡。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>关闭3D视图</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>回归2D，释放沉重的嵌入3D资源。</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>设备列表</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>配对开关、报警和存储监视器以组形式出现。</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>设备搜索</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>按设备名称或命令过滤，但不改变其状态。</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>设备类型过滤器</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>将列表限制为开关、报警、存储显示器或所有设备。</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>刷新状态</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>请求新的只读状态;可用性取决于连接。</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>设备工具</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>导入、云同步、自动化、快捷键、刷新和清理都在这里收集。</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>设备卡</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>卡片显示身份、连接状态、命令和设备特定的控制。</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>设备安全</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>教程从不切换开关、删除设备或运行快捷键。</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>球队列表</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>加载队友、在线状态、头像和上下文动作都在这里显示。</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>团队标记</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>选择地图上可见的队友标记样式。</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>关注玩家</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>以下中心会更新队友的地图，并需要当前的队伍数据。</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>团队共享</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>分享基础和截图可能需要账号并上传同意。</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>聊天记录</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>当连接提供聊天数据时，最近Rust团队的消息会显示在这里。</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>消息输入</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>请在这里撰写团队信息。教程从未插入或发送过。</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>发送消息</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>向Rust团队聊天发送帖子。该控制仅被高亮显示。</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>命令设置</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>配置前缀、设备绑定、延迟和命令可用性。</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord社区</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>这个捷径打开了社区;集成设置是分开的。</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord设置</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>配置机器人、公会、频道、命令和权限，但不记录 ID。</value>
+  </data>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>高级 Discord 集成</value>
+  </data>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>高级 Discord 集成需要 Supporter 账号。支持 Discord 指令、双向 Discord 集成以及通过 Webhook 发送离线抄家提醒。</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>基础 Discord 集成与聊天提醒</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>基础 Discord 集成通过 Webhook 工作，无需 Supporter 账号。所有聊天提醒都会发送至 Discord，可选择同时在游戏内和 Discord 发送，或仅独家发送至 Discord。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>离线云端提醒</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>当 RustPlusDesktop 关闭时，离线云端提醒会将 FCM 抄家、事件和死亡通知转发至 Discord Webhook 或自定义 Webhook（如 Google Home、IFTTT、Make.com）。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>同步云端连接</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>配置 Webhook URL 后，点击“Sync Cloud Connection”即可将设置上传并保存至云端服务。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Telegram 电话通知 (CallMeBot)</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>输入 Telegram 用户名（如 @name）和自定义消息，然后点击“Test Call”。浏览器会打开授权 CallMeBot 的说明。授权完成后，离线 FCM 提醒将自动向你的手机发起电话呼叫。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Alexa 智能家居集成</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>在 Alexa Skill 中通过“Generate Login PIN”关联账号，选择服务器并点击“Link Selected Server”。Smart Alerts 将作为运动传感器用于触发例程，智能设备则作为开关导入，即使桌面 App 关闭也能正常运作。</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>开放逻辑引擎</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>打开所选服务器的规则编辑器。</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>规则列表</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>规则及其触发条件、延迟和行动步骤在此列出。</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>发动机状态</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>启用或暂停规则执行。教程从未改变过这个开关。</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>规则工作流程</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>触发触发规则;条件门将后续行动;步骤按顺序进行。</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>自动化安全</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>教程不会持久化规则、切换设备、发送聊天或执行自动化。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>通知中心</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>在不依赖临时桌面通知的情况下审查提醒。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>通知过滤器</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>在所有通知、警报和死亡信息之间切换。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>搜索通知</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>按显示内容或服务器上下文查找通知。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>批量行动</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>标记所有已读或清除历史;教程从未执行过这些操作。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>相机列表</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>当选定的服务器和摄像头可用时，会显示配置好的预览。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>添加摄像机</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>添加带有 Rust 标识符的摄像头;教程从不捕捉摄像机代码。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>相机隐私</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>摄像头标识符和帧不包含在教程诊断中。</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>搜索目标</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>在捆绑数据集中找到墙壁、门、可部署物或其他目标。</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>突袭计划</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>审查目标、健康状况、数量、方法和计算成本。</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>比较方法</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>选择允许的爆炸物或工具，并比较其他选择。</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>明确计划</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>清除计划;教程会突出显示，但不更改条目。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>搜索物品</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>找一个可回收物品，加入计算器。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>物品类别</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>按类别缩小商品目录范围。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>输入项</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>调整数量或删除分录;教程不会改变计算器的状态。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>回收商成绩</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>比较野生回收者和安全区回收者的产量和时间。</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>开放设置</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>应用行为、集成、性能、备份和维护都在这里。</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>选择界面语言。教程文本使用相同的资源系统。</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>地图性能</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>调整图像缩放、GPU缓存、渲染缩放和边缘模式。</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>维护</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>备份、重置、清除和缓存控制可能具有破坏性，且从未被调用。</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>请关注最新动态</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>无需下载或安装即可请求更新可用性。</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>更新状态</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>版本和下载进度会显示在这个标题栏区域。</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>诊断日志</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>在仅分享非敏感信息前，先过滤本地诊断信息。</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>商店与自动售货</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>搜索自动售货机优惠，比较交易，了解刷新时间。</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>活动与服务器监控</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>读取实时事件指标并创建本地计时器。</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>基地与截图</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>创建地图基地标记，并安全地管理他们的笔记和截图。</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>设备自动化</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>将简单的设备状态自动化与逻辑引擎分开配置。</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>开放商店搜索</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>在不更改当前地图的情况下打开地图的自动售货搜索面板。</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>商店搜索</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>搜索物品，查看买卖数量，并在地图上打开结果。</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>刷新时机</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>商店优惠依赖服务器连接，且在Rust+刷新之间可能会显得过时。</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>现场活动码头</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>货物、直升机、支奴干、供应商及其他活跃事件指示器在可用时显示于此。</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>自定义计时器</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>创建本地提醒，但不更改服务器状态。</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>活动新鲜度</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>事件数据依赖于所选连接，一旦连接过时可能会消失。</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>基地标记</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>基地标记会放置在2D地图上并打开。</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>基础笔记与截图</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>使用地图上下文操作命名基地并附上截图;云共享需要同意。</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>删除安全</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>删除基地或截图绝不会通过教程完成，始终需要你的参与。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>开放设备自动化</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>为所选服务器开启轻量级设备状态自动化。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>自动化操作</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>暂停执行或添加自动化;教程从不改变发动机状态或生成数据。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>自动化规则</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>审查源设备、目标操作、时序和每个规则的启用状态。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>设备安全</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>没有教程执行规则或切换真实智能设备。</value>
+  </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>战队</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>追踪战队成员、他们的在线状态、角色和备注</value>
   </data>
 </root>

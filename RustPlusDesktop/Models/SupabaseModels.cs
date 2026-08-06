@@ -159,6 +159,16 @@ namespace RustPlusDesk.Models
         [JsonProperty("team_members_json")]
         [JsonPropertyName("team_members_json")]
         public string TeamMembersJson { get; set; } = string.Empty;
+
+        [Column("fcm_discord_webhook_url")]
+        [JsonProperty("fcm_discord_webhook_url")]
+        [JsonPropertyName("fcm_discord_webhook_url")]
+        public string FcmDiscordWebhookUrl { get; set; } = string.Empty;
+
+        [Column("fcm_discord_webhook_mention")]
+        [JsonProperty("fcm_discord_webhook_mention")]
+        [JsonPropertyName("fcm_discord_webhook_mention")]
+        public string FcmDiscordWebhookMention { get; set; } = string.Empty;
     }
 
     public class TeamFeatureMasterState
@@ -285,6 +295,11 @@ namespace RustPlusDesk.Models
         [JsonProperty("channel_id")]
         [JsonPropertyName("channel_id")]
         public string ChannelId { get; set; } = string.Empty;
+
+        [Column("mention_text")]
+        [JsonProperty("mention_text")]
+        [JsonPropertyName("mention_text")]
+        public string MentionText { get; set; } = string.Empty;
 
         [Column("tts_enabled")]
         [JsonProperty("tts_enabled")]
@@ -430,5 +445,91 @@ namespace RustPlusDesk.Models
         [JsonProperty("team_key")]
         [JsonPropertyName("team_key")]
         public string? TeamKey { get; set; }
+    }
+
+    [Table("user_fcm_credentials")]
+    public class UserFcmCredentialsModel : BaseModel
+    {
+        [PrimaryKey("user_id")]
+        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
+        public string? UserId { get; set; }
+
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string? SteamId { get; set; }
+
+        [Column("fcm_config")]
+        [JsonProperty("fcm_config")]
+        [JsonPropertyName("fcm_config")]
+        public Newtonsoft.Json.Linq.JObject? FcmConfig { get; set; }
+
+        [Column("updated_at")]
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime? UpdatedAt { get; set; }
+    }
+
+    [Table("user_servers")]
+    public class UserServerModel : BaseModel
+    {
+        [PrimaryKey("steam_id", false)]
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string SteamId { get; set; } = string.Empty;
+
+        [Column("user_id")]
+        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
+        public string? UserId { get; set; }
+
+        [PrimaryKey("server_ip", false)]
+        [Column("server_ip")]
+        [JsonProperty("server_ip")]
+        [JsonPropertyName("server_ip")]
+        public string ServerIp { get; set; } = string.Empty;
+
+        [PrimaryKey("server_port", false)]
+        [Column("server_port")]
+        [JsonProperty("server_port")]
+        [JsonPropertyName("server_port")]
+        public int ServerPort { get; set; }
+
+        [Column("player_token")]
+        [JsonProperty("player_token")]
+        [JsonPropertyName("player_token")]
+        public string PlayerToken { get; set; } = string.Empty;
+
+        [Column("updated_at")]
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    [Table("user_alexa_settings")]
+    public class UserAlexaSettingsModel : BaseModel
+    {
+        [PrimaryKey("user_id", false)]
+        [Column("user_id")]
+        [JsonProperty("user_id")]
+        [JsonPropertyName("user_id")]
+        public string UserId { get; set; } = string.Empty;
+
+        [Column("active_server_key")]
+        [JsonProperty("active_server_key")]
+        [JsonPropertyName("active_server_key")]
+        public string ActiveServerKey { get; set; } = string.Empty;
+
+        [Column("steam_id")]
+        [JsonProperty("steam_id")]
+        [JsonPropertyName("steam_id")]
+        public string SteamId { get; set; } = string.Empty;
+
+        [Column("updated_at")]
+        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

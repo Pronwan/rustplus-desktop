@@ -9,6 +9,53 @@ public class SmartDevice : INotifyPropertyChanged
 {
 
 
+    /// <summary>
+    /// "Small Oil" or "Large Oil" while a Logic Engine rule uses this alarm as an oil rig
+    /// trigger, otherwise null.
+    ///
+    /// Derived state, never persisted: the rules are the truth, and a badge left behind in
+    /// the save file would outlive the rule that earned it. Recomputed whenever rules change,
+    /// so pulling the device out of the Logic Engine restores normal alarm behaviour by
+    /// itself.
+    /// </summary>
+    [JsonIgnore]
+    private string? _oilRigBadge;
+
+    [JsonIgnore]
+    public string? OilRigBadge
+    {
+        get => _oilRigBadge;
+        set { if (_oilRigBadge != value) { _oilRigBadge = value; OnProp(); OnProp(nameof(HasOilRigBadge)); } }
+    }
+
+    [JsonIgnore]
+    public bool HasOilRigBadge => !string.IsNullOrEmpty(_oilRigBadge);
+
+    /// <summary>
+    /// The upper line of the alarm's message as set in-game — the text Rust puts in the push
+    /// notification title.
+    ///
+    /// The only thing that identifies which alarm fired: an alarm push carries server details
+    /// and nothing else, no entity id and no entity name. Pairing is the mirror image, giving
+    /// the id with a generic "Smart Alarm" as its name. Neither is usable alone, so this is
+    /// learned when both arrive together — the WebSocket event names the entity while the push
+    /// carries the title.
+    ///
+    /// Persisted and synced to the cloud, because the worker that drives Alexa only ever sees
+    /// the push and has no other way to tell two alarms apart. Editable by hand for anyone who
+    /// would rather not trigger every alarm once to teach it.
+    /// </summary>
+    private string? _inGameAlarmTitle;
+    public string? InGameAlarmTitle
+    {
+        get => _inGameAlarmTitle;
+        set
+        {
+            var trimmed = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+            if (_inGameAlarmTitle != trimmed) { _inGameAlarmTitle = trimmed; OnProp(); }
+        }
+    }
+
     private uint _entityId;
     public uint EntityId
     {
@@ -24,6 +71,28 @@ public class SmartDevice : INotifyPropertyChanged
     }
 
     public DateTime LastPolledAt { get; set; } = DateTime.MinValue;
+
+    private double? _pairedX;
+    public double? PairedX
+    {
+        get => _pairedX;
+        set { if (_pairedX != value) { _pairedX = value; OnProp(); OnProp(nameof(AutomationDisplayName)); } }
+    }
+
+    private double? _pairedY;
+    public double? PairedY
+    {
+        get => _pairedY;
+        set { if (_pairedY != value) { _pairedY = value; OnProp(); OnProp(nameof(AutomationDisplayName)); } }
+    }
+
+    public ulong? PairedBySteamId { get; set; }
+    public DateTime? PairedLocationCapturedAt { get; set; }
+
+    [JsonIgnore]
+    public string AutomationDisplayName => PairedX.HasValue && PairedY.HasValue
+        ? $"{DisplayName}  ({PairedX:0}, {PairedY:0})"
+        : $"{DisplayName}  (location unavailable)";
 
     private System.Collections.ObjectModel.ObservableCollection<SmartDevice> _children = new();
     public System.Collections.ObjectModel.ObservableCollection<SmartDevice> Children
@@ -109,14 +178,14 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Name
     {
         get => _name;
-        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_name != value) { _name = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private string? _kind;
     public string? Kind
     {
         get => _kind;
-        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private bool? _isOn;
@@ -189,7 +258,7 @@ public class SmartDevice : INotifyPropertyChanged
     public bool IsMissing
     {
         get => _isMissing;
-        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_isMissing != value) { _isMissing = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
     private bool _isToggleBusy;
@@ -204,10 +273,13 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Alias
     {
         get => _alias;
-        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); } }
+        set { if (_alias != value) { _alias = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
     }
 
-    private bool _popupEnabled = true;
+    // Off by default. The alarm window steals Windows focus, and during an actual raid that
+    // is the worst possible moment to have the game pulled out from under you. The in-app
+    // overlay and the sound still fire; this is for people who explicitly want the interruption.
+    private bool _popupEnabled = false;
     public bool PopupEnabled
     {
         get => _popupEnabled;

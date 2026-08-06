@@ -85,7 +85,7 @@ public class MainViewModel : INotifyPropertyChanged
         string newTime = $"{h:00}:{m:00}";
 
         // Update ServerTime string directly if it changed
-        if (_serverTime != newTime && _serverTime != "-" && _serverTime != "–")
+        if (_serverTime != newTime)
         {
             _serverTime = newTime;
             OnPropertyChanged(nameof(ServerTime));
@@ -231,6 +231,27 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isCloudConnected = value; OnPropertyChanged(); }
     }
 
+    private bool _isPremium;
+    public bool IsPremium
+    {
+        get => _isPremium;
+        set { if (_isPremium != value) { _isPremium = value; OnPropertyChanged(); } }
+    }
+
+    private string _cloudAccountStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiNotSignedInSyncAndBackupsUnavailable");
+    public string CloudAccountStatusText
+    {
+        get => _cloudAccountStatusText;
+        set { _cloudAccountStatusText = value; OnPropertyChanged(); }
+    }
+
+    private string _cloudAccountActionText = "Sign in";
+    public string CloudAccountActionText
+    {
+        get => _cloudAccountActionText;
+        set { _cloudAccountActionText = value; OnPropertyChanged(); }
+    }
+
     private bool _isInitializing;
     public bool IsInitializing
     {
@@ -262,7 +283,7 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsDownloadingUpdate
     {
         get => _isDownloadingUpdate;
-        set { _isDownloadingUpdate = value; OnPropertyChanged(); }
+        set { _isDownloadingUpdate = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanControlUpdateDownload)); }
     }
 
     private double _updateDownloadProgress;
@@ -348,6 +369,10 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsRustCompanionConnected =>
+        TrackingService.IsFcmConfigured() &&
+        (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+
     private bool _forceShowLoginOverlay;
     public bool ForceShowLoginOverlay
     {
@@ -384,6 +409,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         OnPropertyChanged(nameof(FcmExpiryText));
         OnPropertyChanged(nameof(FcmExpiryDays));
+        OnPropertyChanged(nameof(IsRustCompanionConnected));
         OnPropertyChanged(nameof(ShowLoginOverlay));
     }
 
@@ -448,6 +474,29 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    private string _updateStatusText = RustPlusDesk.Properties.Resources.GetString("CheckForUpdates");
+    public string UpdateStatusText
+    {
+        get => _updateStatusText;
+        set { _updateStatusText = value; OnPropertyChanged(); }
+    }
+
+    private bool _isUpdateStatusExpanded;
+    public bool IsUpdateStatusExpanded
+    {
+        get => _isUpdateStatusExpanded;
+        set { _isUpdateStatusExpanded = value; OnPropertyChanged(); }
+    }
+
+    private bool _isUpdateProcessing;
+    public bool IsUpdateProcessing
+    {
+        get => _isUpdateProcessing;
+        set { _isUpdateProcessing = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanControlUpdateDownload)); }
+    }
+
+    public bool CanControlUpdateDownload => IsDownloadingUpdate && !IsUpdateProcessing;
+
     private void SelectedProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ServerProfile.WipeTime))
@@ -491,8 +540,24 @@ public class MainViewModel : INotifyPropertyChanged
         } 
     }
 
-    private bool _isDay;
-    public bool IsDay { get => _isDay; set { _isDay = value; OnPropertyChanged(); } }
+    private bool _isDay = true;
+    public bool IsDay 
+    { 
+        get => _isDay; 
+        set 
+        { 
+            if (_isDay != value)
+            {
+                _isDay = value; 
+                OnPropertyChanged(); 
+                OnPropertyChanged(nameof(DayNightIcon));
+                OnPropertyChanged(nameof(DayNightColor));
+            }
+        } 
+    }
+
+    public string DayNightIcon => IsDay ? "\uE706" : "\uE708";
+    public string DayNightColor => IsDay ? "#FFD166" : "#90CAF9";
 
     private string _timeUntilNextPhase = "";
     public string TimeUntilNextPhase { get => _timeUntilNextPhase; set { _timeUntilNextPhase = value; OnPropertyChanged(); } }

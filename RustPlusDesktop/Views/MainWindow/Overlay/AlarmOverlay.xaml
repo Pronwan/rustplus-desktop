@@ -43,8 +43,8 @@
                 </StackPanel>
                 <ui:Button Grid.Column="3" Padding="4" Appearance="Transparent" Click="Close_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
             </Grid>
-            <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Server Name - 14:30" />
-            <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="Custom Alarm Name" TextWrapping="Wrap" />
+            <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource UiServerName1430}" />
+            <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="{DynamicResource UiCustomAlarmName}" TextWrapping="Wrap" />
             <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource AlarmActivated}" TextWrapping="Wrap" />
             <CheckBox x:Name="AlarmOverlayAutoHideChk" Grid.Row="4" Content="{DynamicResource AutoHideAfter3s}" FontSize="12" IsChecked="False" Checked="AutoHide_Changed" Unchecked="AutoHide_Changed" PreviewMouseLeftButtonDown="OnAutoHideCheckBoxClick" />
         </Grid>

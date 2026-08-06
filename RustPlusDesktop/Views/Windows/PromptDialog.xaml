@@ -24,8 +24,8 @@
         <ui:TextBox x:Name="TxtInput" Grid.Row="1" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" PlaceholderText="..." FontSize="14" />
         
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-            <ui:Button Content="Cancel" Appearance="Secondary" Margin="0,0,8,0" Click="BtnCancel_Click"/>
-            <ui:Button Content="Save" Appearance="Primary" Click="BtnSave_Click"/>
+            <ui:Button Content="{DynamicResource Cancel}" Appearance="Secondary" Margin="0,0,8,0" Click="BtnCancel_Click"/>
+            <ui:Button Content="{DynamicResource Save}" Appearance="Primary" Click="BtnSave_Click"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -45,6 +45,13 @@ public class ServerProfile : INotifyPropertyChanged
         set { _localMapImagePath = value; OnProp(); }
     }
 
+    private string? _customMapUrl;
+    public string? CustomMapUrl
+    {
+        get => _customMapUrl;
+        set { _customMapUrl = value; OnProp(); }
+    }
+
     private bool _isConnected;
     public bool IsConnected
     {
@@ -77,6 +84,17 @@ public class ServerProfile : INotifyPropertyChanged
     }
 
     public bool UseFacepunchProxy { get; set; } = false;
+
+    /// <summary>
+    /// Which event source this server used last time — "RustApi" or "Cloud".
+    ///
+    /// Remembered so a reconnect starts in the right mode instead of guessing. Without it the
+    /// UI has to pick a default and correct itself once the first shop poll answers, which
+    /// means every connect to a working server briefly shows the reduced fallback view. Empty
+    /// on a server never connected to before; the fallback is assumed then, because promising
+    /// events that never arrive is worse than briefly hiding ones that do.
+    /// </summary>
+    public string LastEventSource { get; set; } = "";
 
     public ServerProfile()
     {
@@ -346,6 +364,51 @@ public class ServerProfile : INotifyPropertyChanged
         }
     }
 
+    private string _discordWebhookChatAlertsMention = "";
+    public string DiscordWebhookChatAlertsMention
+    {
+        get => _discordWebhookChatAlertsMention;
+        set 
+        { 
+            _discordWebhookChatAlertsMention = value; 
+            OnProp(); 
+            OnProp(nameof(DiscordWebhookChatAlertsMentionEveryone));
+            OnProp(nameof(DiscordWebhookChatAlertsMentionHere));
+        }
+    }
+
+    public bool DiscordWebhookChatAlertsMentionEveryone
+    {
+        get => _discordWebhookChatAlertsMention.Contains("@everyone");
+        set
+        {
+            if (value && !_discordWebhookChatAlertsMention.Contains("@everyone"))
+            {
+                DiscordWebhookChatAlertsMention = string.Join(" ", new[] { _discordWebhookChatAlertsMention, "@everyone" }.Where(s => !string.IsNullOrWhiteSpace(s))).Trim();
+            }
+            else if (!value && _discordWebhookChatAlertsMention.Contains("@everyone"))
+            {
+                DiscordWebhookChatAlertsMention = _discordWebhookChatAlertsMention.Replace("@everyone", "").Replace("  ", " ").Trim();
+            }
+        }
+    }
+
+    public bool DiscordWebhookChatAlertsMentionHere
+    {
+        get => _discordWebhookChatAlertsMention.Contains("@here");
+        set
+        {
+            if (value && !_discordWebhookChatAlertsMention.Contains("@here"))
+            {
+                DiscordWebhookChatAlertsMention = string.Join(" ", new[] { _discordWebhookChatAlertsMention, "@here" }.Where(s => !string.IsNullOrWhiteSpace(s))).Trim();
+            }
+            else if (!value && _discordWebhookChatAlertsMention.Contains("@here"))
+            {
+                DiscordWebhookChatAlertsMention = _discordWebhookChatAlertsMention.Replace("@here", "").Replace("  ", " ").Trim();
+            }
+        }
+    }
+
     private bool _discordWebhookChatAlertsEnabled = false;
     public bool DiscordWebhookChatAlertsEnabled
     {
@@ -358,6 +421,13 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _discordWebhookChatAlertsTts;
         set { _discordWebhookChatAlertsTts = value; OnProp(); }
+    }
+
+    private bool _discordWebhookChatAlertsExclusive = false;
+    public bool DiscordWebhookChatAlertsExclusive
+    {
+        get => _discordWebhookChatAlertsExclusive;
+        set { _discordWebhookChatAlertsExclusive = value; OnProp(); }
     }
 
     private bool _timerAlarmEnabled = true;
@@ -514,6 +584,20 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _isLogicEngineActive;
         set { if (_isLogicEngineActive != value) { _isLogicEngineActive = value; OnProp(); } }
+    }
+
+    private List<DeviceAutomationRule> _deviceAutomationRules = new();
+    public List<DeviceAutomationRule> DeviceAutomationRules
+    {
+        get => _deviceAutomationRules;
+        set { _deviceAutomationRules = value ?? new(); OnProp(); }
+    }
+
+    private bool _isDeviceAutomationActive;
+    public bool IsDeviceAutomationActive
+    {
+        get => _isDeviceAutomationActive;
+        set { if (_isDeviceAutomationActive != value) { _isDeviceAutomationActive = value; OnProp(); } }
     }
 
     private List<ulong> _subscribedTeammateSteamIds = new();

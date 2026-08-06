@@ -4,6 +4,8 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:views="clr-namespace:RustPlusDesk.Views"
+        xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
+        xmlns:tutorialControls="clr-namespace:RustPlusDesk.Features.Tutorials.Controls"
         Title="{DynamicResource MiniMap}"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -14,7 +16,7 @@
         Width="260" Height="260">
     <Grid>
         <!-- Container that has the exact size of the Map shape -->
-        <Grid x:Name="MapContainer" Width="260" Height="260" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid x:Name="MapContainer" Width="260" Height="260" HorizontalAlignment="Center" VerticalAlignment="Top">
             <!-- Runde / Eckige Mini-Map -->
             <Border x:Name="MapShapeBorder" CornerRadius="130" BorderBrush="#66000000" BorderThickness="1" SnapsToDevicePixels="True">
                 <Border.Background>
@@ -24,21 +26,36 @@
                 </Border.Background>
             </Border>
 
-            <!-- Time Overlay -->
-            <Border x:Name="TimeOverlayBorder" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Bottom" 
-                    Margin="0,0,0,12" 
-                    Background="#AA000000" 
-                    CornerRadius="6" 
-                    Padding="6,4" 
-                    Visibility="Collapsed"
-                    IsHitTestVisible="False">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Clock24" FontSize="12" Margin="0,0,4,0" Foreground="White" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Border>
+            <!-- Overlays Container -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12">
+                
+                <!-- Time Overlay -->
+                <Border x:Name="TimeOverlayBorder" 
+                        Background="#AA000000" 
+                        CornerRadius="6" 
+                        Padding="6,4" 
+                        Margin="0,0,4,0"
+                        Visibility="Collapsed"
+                        IsHitTestVisible="False">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Pop Overlay -->
+                <Border x:Name="PopOverlayBorder" 
+                        Background="#AA000000" 
+                        CornerRadius="6" 
+                        Padding="6,4" 
+                        Visibility="Collapsed"
+                        IsHitTestVisible="False">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="&#xE716;" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtServerPop" Text="{Binding ServerPlayers}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
 
             <!-- Settings Hover Area -->
             <Border x:Name="SettingsHoverBorder" Background="Transparent" Opacity="0">
@@ -74,6 +91,7 @@
                            Background="#88000000"
                            Foreground="White"
                            Click="BtnSettings_Click"
+                           tutorials:Tutorial.TargetId="MiniMap.Settings"
                            Icon="{ui:SymbolIcon Symbol=Settings24}"
                            Panel.ZIndex="10"/>
             </Border>

@@ -59,9 +59,12 @@ public partial class MainWindow : WpfUi.FluentWindow
 {
     private readonly MainViewModel _vm = new();
     internal MainViewModel ViewModel => _vm;
-    private bool _chatOpenedForCommandsOnly = false;
+    internal string SteamDisplayName => !string.IsNullOrWhiteSpace(_steamDisplayName)
+        ? _steamDisplayName
+        : TxtSteamName?.Text ?? Properties.Resources.SteamAccount;
     private readonly UpdateService _updateService = new();
     private string? _fetchedSteamId64;
+    private string? _steamDisplayName;
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
@@ -114,12 +117,28 @@ public partial class MainWindow : WpfUi.FluentWindow
         _vm.FollowingSteamId = null;
         _vm.FollowingPlayerName = "";
         _vm.FollowingPlayerAvatar = null;
+        
+        string serverKey = GetServerKey();
+        if (!string.IsNullOrEmpty(serverKey))
+        {
+            if (Services.TrackingService.Settings.ServerFollowingSteamId.ContainsKey(serverKey))
+            {
+                Services.TrackingService.Settings.ServerFollowingSteamId.Remove(serverKey);
+                Services.TrackingService.SaveDB();
+            }
+        }
     }
 
     private void BtnFollowPlayer_Click(object sender, RoutedEventArgs e)
     {
         if (_vm.IsFollowing)
         {
+            var serverKey = GetServerKey();
+            if (!string.IsNullOrEmpty(serverKey))
+            {
+                Services.TrackingService.Settings.ServerFollowingSteamId.Remove(serverKey);
+                Services.TrackingService.SaveDB();
+            }
             StopTracking();
             return;
         }
@@ -222,16 +241,18 @@ public partial class MainWindow : WpfUi.FluentWindow
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     private bool _isShuttingDown = false;
-    private const double CompactSidebarWidth = 72;
-    private const double MinExpandedSidebarWidth = 400;
-    private const double MaxExpandedSidebarWidth = 600;
+    private const double CompactSidebarWidth = 64;
+    private const double MinExpandedSidebarWidth = 360;
+    private const double MaxExpandedSidebarWidth = 480;
     private const int SidebarAnimationDurationMs = 180;
-    private double _expandedSidebarWidth = 600;
+    private const int SidebarHoverExpandDelayMs = 200;
+    private double _expandedSidebarWidth = 420;
     private bool _isSidebarExpanded;
     private bool _isSidebarPinnedExpanded;
     private bool _isSidebarTemporarilyExpandedForOverlay;
     private bool _sidebarOverlayVisibilityUpdateQueued;
     private System.Windows.Threading.DispatcherTimer? _sidebarAnimationTimer;
+    private System.Windows.Threading.DispatcherTimer? _sidebarHoverExpandTimer;
     private DateTime _sidebarAnimationStartedAt;
     private double _sidebarAnimationStartWidth;
     private double _sidebarAnimationTargetWidth;
@@ -267,6 +288,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     private System.Windows.Threading.DispatcherTimer? _cloudSyncTimer;
     private volatile bool _ownCloudRestoreReady = false;
     private bool _premiumProfileRefreshBusy = false;
+    private bool _upgradeRequiredSnackbarShown;
+
+    internal void StopCloudTrafficForUpgrade()
+    {
+        _cloudSyncTimer?.Stop();
+        StopOverlayPollTimer();
+        StopTeamFeatureMasterWatch();
+    }
 
     private void StartCloudSyncTimer()
     {
@@ -381,6 +410,14 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        MainTabs.SelectedItem = DevicesTabItem;
+        Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
+        CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
+        StateChanged += (_, _) =>
+        {
+            CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
+            UpdateTeamFeatureMasterWatch();
+        };
         
         // Restore window dimensions and position
         double savedWidth = TrackingService.WindowWidth;
@@ -434,8 +471,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Ã¢â€â‚¬Ã¢â€â‚¬ Wpf.Ui: Apply Fluent dark theme to all controls Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
-        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
-        this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        UpdateAppTitle();
         this.LocationChanged += MainWindow_LocationChangedOrResized;
         this.SizeChanged += MainWindow_LocationChangedOrResized;
         if (FindName("TxtAppVersion") is TextBlock txt)
@@ -468,23 +504,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
 
         _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
-        AppendLog($"[items-new] baseDir={baseDir}");
-        EnsureNewItemDbLoaded();
-        AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
-        StartIconAutoDownload();
-
-        // NEU: Hintergrund-Update der Item-Liste von rusthelp.com
-        _ = Task.Run(async () =>
-        {
-            if (await TryUpdateItemDbAsync())
-            {
-                Dispatcher.Invoke(() => {
-                    EnsureNewItemDbLoaded(force: true);
-                    AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
-                    StartIconAutoDownload();
-                });
-            }
-        });
+        AppendLog($"[startup] baseDir={baseDir}");
         // GridLayer.RenderTransform = MapTransform;
         // Overlay.RenderTransform   = MapTransform;
         // bei Host-Resize: nur Markerpositionen neu berechnen
@@ -506,6 +526,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.Focusable = true;
         DataContext = _vm;
         _vm.Load();
+
+        // Before the push listener exists: a backlog of alarms can land within seconds of
+        // launch, and suppressing rig triggers must not wait for a server connection.
+        RebuildOilRigTriggerRegistry();
+        InitializeTutorials();
+        TeamMembers.CollectionChanged += (s, e) => UpdateClanMembersTeamStatus();
         // NEU: einmalig auf die aktuell ausgewÃƒÂ¤hlte Server-Instanz Ã¢â‚¬Å¾umsteckenÃ¢â‚¬Å“
         SwitchCameraSourceTo(_vm.Selected);
 
@@ -516,10 +542,9 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 SwitchCameraSourceTo(_vm.Selected);
                 LogicEnginePanel?.RefreshListBindings();
+                DeviceAutomationPanel?.RefreshListBindings();
                 RefreshCurrentHotkeyBindings();
             }
-            if (e.PropertyName == nameof(MainViewModel.IsDownloadingUpdate) && !_vm.IsDownloadingUpdate)
-                UpdateDownloadPopup.IsOpen = false;
         };
 
         // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
@@ -647,20 +672,20 @@ public partial class MainWindow : WpfUi.FluentWindow
                 
                 Dispatcher.InvokeAsync(() =>
                 {
-                    ShowInfoSnackbar("Update Successful", $"Rust+ Desktop has been successfully updated to v{appVersion}!", WpfUi.ControlAppearance.Success);
+                    ShowInfoSnackbar(Properties.Resources.GetString("UpdateSuccessfulTitle"), string.Format(Properties.Resources.GetString("FormatUpdateSuccessful"), appVersion), WpfUi.ControlAppearance.Success);
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
         }
 
-        if (!TrackingService.SuppressVersion7Notice)
+        if (!TrackingService.SuppressVersion8Notice)
         {
             Dispatcher.InvokeAsync(() =>
             {
-                var dlg7 = new Views.Windows.Version7NoticeWindow { Owner = this };
-                dlg7.ShowDialog();
-                if (dlg7.DontShowAgain)
+                var dlg8 = new Views.Windows.Version8NoticeWindow { Owner = this };
+                dlg8.ShowDialog();
+                if (dlg8.DontShowAgain)
                 {
-                    TrackingService.SuppressVersion7Notice = true;
+                    TrackingService.SuppressVersion8Notice = true;
                 }
             }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
@@ -685,6 +710,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
             pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
             pr.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
+            pr.ServerInfoReceived += (_, info) => Dispatcher.BeginInvoke(new Action(() => CaptureFcmServerDescription(info)));
         }
 
         NotificationCenterService.NotificationAdded -= OnNotificationAdded;
@@ -704,7 +730,11 @@ public partial class MainWindow : WpfUi.FluentWindow
             _vm.IsPairingBusy = false; // Update UI button state
             TxtPairingState.Text = Properties.Resources.PairingStopped;
         }));
-        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() => _vm.NotifyFcmChanged()));
+        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _vm.NotifyFcmChanged();
+            _ = StartTutorialOnboardingIfReadyAsync();
+        }));
         _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = false;
@@ -799,11 +829,11 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         this.Closing += MainWindow_Closing;
         Services.Auth.SupabaseAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
-        _ = EnsureWebView2Async();
+        ContentRendered += MainWindow_ContentRendered;
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
         this.Closed += MainWindow_Closed;
-        ChatCommandsOverlay.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
+        AppSettingsPanel.ChatCommandsEditor.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
     {
@@ -816,7 +846,14 @@ public partial class MainWindow : WpfUi.FluentWindow
         _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
             if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
-            string timeStr = data.Duration >= 800 ? "~15m" : "~12:30m";
+
+            // Was two hardcoded strings, which was fine while only Chinook tracking could start
+            // a timer and its two durations were known. A Logic Engine rule sets its own length,
+            // so anything but the real number would announce a time nobody is counting down to.
+            var span = TimeSpan.FromSeconds(data.Duration);
+            string timeStr = span.Seconds == 0
+                ? $"{(int)span.TotalMinutes}m"
+                : $"~{(int)span.TotalMinutes}:{span.Seconds:D2}m";
             string rigName = data.Name == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
                              data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                              data.Name;
@@ -853,8 +890,54 @@ public partial class MainWindow : WpfUi.FluentWindow
         };
     }
 
+    private async void MainWindow_ContentRendered(object? sender, EventArgs e)
+    {
+        ContentRendered -= MainWindow_ContentRendered;
+
+        // Let WPF present the first usable frame before initializing the embedded
+        // browser and parsing catalogs that are not required to construct the shell.
+        await Dispatcher.Yield(DispatcherPriority.ContextIdle);
+        _ = EnsureWebView2Async();
+
+        await Dispatcher.InvokeAsync(() =>
+        {
+            AppendLog("[items-new] loading deferred item catalog");
+            EnsureNewItemDbLoaded();
+            AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+            StartIconAutoDownload();
+        }, DispatcherPriority.ApplicationIdle);
+
+        _ = Task.Run(async () =>
+        {
+            if (!await TryUpdateItemDbAsync().ConfigureAwait(false)) return;
+            await Dispatcher.InvokeAsync(() =>
+            {
+                EnsureNewItemDbLoaded(force: true);
+                AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+                StartIconAutoDownload();
+            }, DispatcherPriority.ApplicationIdle);
+        });
+    }
+
     private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        if (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
+        {
+            if (e.Key == Key.T)
+            {
+                e.Handled = true;
+                BtnToggleChat_Click(BtnChatToggle, new RoutedEventArgs());
+                return;
+            }
+
+            if (e.Key == Key.S)
+            {
+                e.Handled = true;
+                BtnShopSearch_Click(BtnShopToggle, new RoutedEventArgs());
+                return;
+            }
+        }
+
         if (e.Key == Key.F11)
         {
             if (_isMap3DActive)
@@ -1378,12 +1461,32 @@ public partial class MainWindow : WpfUi.FluentWindow
         { }
     }
 
+    private void UpdateAppTitle()
+    {
+        bool signedIn = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
+                        Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        string plan = signedIn
+            ? Services.Auth.SupabaseAuthManager.IsPremium ? " - Premium" : " - Free"
+            : string.Empty;
+        string title = $"RUST+ DESKTOP{plan} v{_updateService.VersionRaw}";
+
+        if (AppTitleBar != null)
+            AppTitleBar.Title = title;
+        Title = title;
+    }
+
     private void SupabaseAuthManager_AuthenticationChanged()
     {
-        if (Dispatcher.CheckAccess())
+        void RefreshAccountUi()
+        {
             UpdateRustMapsUi();
+            UpdateCloudSyncUI();
+        }
+
+        if (Dispatcher.CheckAccess())
+            RefreshAccountUi();
         else
-            _ = Dispatcher.BeginInvoke(UpdateRustMapsUi);
+            _ = Dispatcher.BeginInvoke((Action)RefreshAccountUi);
     }
 
     // --- Chat Persistence & Switching ---
@@ -1460,6 +1563,57 @@ public partial class MainWindow : WpfUi.FluentWindow
         catch (Exception ex) { AppendLog($"[CHAT-LOAD] {ex.Message}"); }
     }
 
+    private void SaveClanChatHistory(ServerProfile? p)
+    {
+        if (p == null) return;
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var path = GetChatCachePath(serverKey);
+            lock (_clanChatHistoryLog)
+            {
+                while (_clanChatHistoryLog.Count > 500) _clanChatHistoryLog.RemoveAt(0);
+
+                var json = JsonSerializer.Serialize(_clanChatHistoryLog);
+                System.IO.File.WriteAllText(path, json);
+            }
+        }
+        catch (Exception ex) { AppendLog($"[CLAN-CHAT-SAVE] {ex.Message}"); }
+    }
+
+    private void LoadClanChatHistory(ServerProfile? p)
+    {
+        lock (_clanChatHistoryLog) { _clanChatHistoryLog.Clear(); }
+        _lastClanChatTsForCurrentServer = null;
+
+        if (p == null) return;
+
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var path = GetChatCachePath(serverKey);
+            if (System.IO.File.Exists(path))
+            {
+                var json = System.IO.File.ReadAllText(path);
+                var loaded = JsonSerializer.Deserialize<List<TeamChatMessage>>(json);
+                if (loaded != null)
+                {
+                    lock (_clanChatHistoryLog)
+                    {
+                        foreach (var m in loaded)
+                        {
+                            _clanChatHistoryLog.Add(m);
+                            if (!_lastClanChatTsForCurrentServer.HasValue || m.Timestamp > _lastClanChatTsForCurrentServer.Value)
+                                _lastClanChatTsForCurrentServer = m.Timestamp;
+                        }
+                    }
+                }
+            }
+            AppendLog($"[CLAN-CHAT-LOAD] Loaded {_clanChatHistoryLog.Count} entries for {serverKey}");
+        }
+        catch (Exception ex) { AppendLog($"[CLAN-CHAT-LOAD] {ex.Message}"); }
+    }
+
     // Ersetzt deine bestehende SwitchCameraSourceTo Logic z.T.
     private void SwitchCameraSourceTo(ServerProfile? srv)
     {
@@ -1468,6 +1622,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             // If srv is null, we are effectively disconnecting from a server.
             // Save chat for the last profile, then clear camera IDs.
             SaveChatHistory(_lastChatProfile);
+            SaveClanChatHistory(_lastChatProfile);
             _lastChatProfile = null; // No current server
             _cameraIds = new ObservableCollection<string>();
             RebuildCameraTiles();
@@ -1476,9 +1631,11 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         // 1. Chat speichern (alter Server)
         SaveChatHistory(_lastChatProfile);
+        SaveClanChatHistory(_lastChatProfile);
         
         // 2. Chat laden (neuer Server)
         LoadChatHistory(srv);
+        LoadClanChatHistory(srv);
         
         _lastChatProfile = srv;
 
@@ -1486,6 +1643,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         _monumentWatcher.Reset();
         _deepSeaActive = false;
         _firstShopPollDone = false;
+        ResetShopDataAvailability();
         _deepSeaSpawnTime = null;
         _deepSeaDespawnTime = null;
         _deepSeaMidEvent = false;
@@ -2424,11 +2582,79 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             n = n with { DeviceName = dev.PureName };
         }
 
+        // An alarm wired to an oil rig frequency is not a raid. It has already produced the
+        // event alert the player actually wants, and letting it through here as well would
+        // fire the popup, the raid sound and the raid webhook for a crate hack — the one
+        // false alarm that costs a team an actual base defence. Dropped once the device is
+        // identified, so it never reaches the notification centre either.
+        // Record the alarm's in-game text on the device itself, while we can still prove which
+        // device it is. This is the only moment both halves exist at once: the push carries the
+        // title but no entity id, and pairing carries the id under the generic name "Smart
+        // Alarm". The cloud worker that drives Alexa only ever sees the push, so without this
+        // it cannot tell two alarms apart at all.
+        if (dev != null && !string.IsNullOrWhiteSpace(n.Title)
+            && !string.Equals(dev.InGameAlarmTitle, n.Title.Trim(), StringComparison.Ordinal))
+        {
+            dev.InGameAlarmTitle = n.Title.Trim();
+            AppendLog($"[alarm] Learned in-game title for {dev.PureName} (#{dev.EntityId}): \"{dev.InGameAlarmTitle}\".");
+
+            // Straight to the cloud: the worker is the consumer, and it is not running in this
+            // process. Waiting for the next routine sync would leave Alexa guessing meanwhile.
+            try { _vm.Save(); } catch { }
+            _ = UploadDevicesSnapshotForCurrentServerAsync();
+        }
+
+        // Learn what this alarm actually says, while we can still prove which device it is.
+        // Push notifications carry no entity ID of their own; the one we have here was
+        // recovered from a WebSocket event, which only happens on the connected server. That
+        // makes this the only reliable chance to record the text for the times there is no
+        // such event — a queued push at startup, or an alarm on another paired server.
+        if (n.EntityId.HasValue
+            && OilRigTriggerRegistry.LearnAlarmText(_vm.Servers, n.EntityId.Value, n.Title))
+        {
+            AppendLog($"[alarm] Learned alarm text for entity {n.EntityId.Value}: \"{n.Title}\".");
+            try { _vm.Save(); } catch { }
+            RebuildOilRigTriggerRegistry();
+        }
+
+        // Text matching is the fallback, never the first answer, and Lookup only reaches it
+        // when there is no entity ID. Texts left at Rust's default are refused outright: every
+        // unrenamed alarm shares them, and swallowing a real raid alert is far worse than
+        // letting one rig alarm through.
+        if (OilRigTriggerRegistry.Lookup(n.EntityId, n.Title, n.Message) is string rigLabel)
+        {
+            // The rule still has to run — this alarm is the sensor that starts the timer, and
+            // for FCM the Logic Engine is triggered further down inside this very method. The
+            // WebSocket path already fired before ShowAlarmPopup was called, so only FCM needs
+            // it here; doing both would start the countdown twice.
+            if (source != "WS" && n.EntityId.HasValue)
+            {
+                TriggerLogicEngineOnDeviceEvent(n.EntityId.Value, true);
+
+                // Same ten-second pulse the normal path gives, so the device still visibly
+                // reacts in the list. Only the noise is suppressed, not the feedback.
+                if (dev != null)
+                {
+                    dev.IsOn = true;
+                    var pulsed = dev;
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(10000);
+                        await Dispatcher.InvokeAsync(() => pulsed.IsOn = false);
+                    });
+                }
+            }
+
+            AppendLog($"[alarm] Suppressed alarm from {rigLabel} trigger " +
+                      $"(entity {n.EntityId?.ToString() ?? "unknown"}) — reported as an oil rig event instead.");
+            return;
+        }
+
         // Add to Notification Center
         // Prefer the original FCM title (e.g. "HV Rockets Raid wake up") over the generic device name.
         var notif = new RustPlusNotification(
             type: "Alarm",
-            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? "Alarm" : n.DeviceName),
+            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? Properties.Resources.GetString("UiAlarm") : n.DeviceName),
             message: n.Message,
             serverIp: n.Ip,
             serverPort: n.Port,
@@ -2490,8 +2716,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _lastGenericAlarmPerServer[cleanSrv] = now;
         }
 
-        // 4) Play Audio (Respects settings if device is identified, otherwise plays default)
-        PlayAlarmAudio(dev);
+        // 4) Play Audio (per-device setting when identified, generic fallback otherwise)
+        if (dev != null || TrackingService.GenericAlarmAudioEnabled)
+        {
+            PlayAlarmAudio(dev);
+        }
+        else
+        {
+            AppendLog($"[alarm/debug] ({source}) Skipping audio because generic alarm audio is disabled.");
+        }
 
         // Send smart alert to Discord Bot
         alarmProfile ??= _vm.Servers.FirstOrDefault(p =>
@@ -2501,6 +2734,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
             ? _vm.SteamId64
             : alarmProfile?.SteamId64 ?? "";
+        string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
+        string alarmAlert = AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName);
+
+        _ = SendDiscordWebhookAsync(alarmProfile, alarmAlert);
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             raidServerKey,
             raidOwnerSteamId,
@@ -2511,8 +2748,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             && TrackingService.AnnounceSmartAlerts
             && _announceSpawns)
         {
-            string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
-            _ = SendTeamChatSafeAsync(AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName), false, true);
+            _ = SendTeamChatSafeAsync(alarmAlert, false, true, skipBasicWebhook: true);
         }
 
         if (dev != null)
@@ -2546,12 +2782,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         else
         {
             if (n.EntityId.HasValue)
-                AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Showing generic popup.");
+                AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Using generic alarm settings.");
             else
-                AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Showing generic popup.");
+                AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Using generic alarm settings.");
 
-            // Generic overlay fallback
-            AddAlarmToOverlay(null, n);
+            if (TrackingService.GenericAlarmOverlayEnabled)
+            {
+                AddAlarmToOverlay(null, n);
+            }
+
+            if (!TrackingService.GenericAlarmPopupEnabled)
+            {
+                AppendLog($"[alarm/debug] ({source}) Skipping popup window because generic alarm popups are disabled.");
+                return;
+            }
         }
 
         AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");
@@ -2635,17 +2879,34 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Also add it to the chat UI if the server is current!
         if (_vm.Selected != null && _vm.Selected.Host == c.Ip && _vm.Selected.Port == c.Port)
         {
-            AppendChatIfNew(c, isHistorical: false);
+            AppendChatIfNew(c, ChatChannel.Team, isHistorical: false);
         }
     }
 
+    private int _lastWorkspaceTabIndex;
+
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.Source == MainTabs && MainTabs.SelectedItem == NotificationsTab)
+        if (e.Source != MainTabs) return;
+
+        bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
+        bool recyclerSelected = MainTabs.SelectedItem == RecyclerCalculatorTab;
+        RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
+        if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
+        ServerContextPanel.Visibility = recyclerSelected ? Visibility.Collapsed : Visibility.Visible;
+        if (!raidSelected && !recyclerSelected)
+            _lastWorkspaceTabIndex = MainTabs.SelectedIndex;
+
+        if (MainTabs.SelectedItem == NotificationsTab)
         {
             NotificationCenterService.MarkAllAsRead();
         }
     }
+
+    private void RaidCalculator_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+
+    private void ReturnToLastWorkspace() =>
+        MainTabs.SelectedIndex = Math.Clamp(_lastWorkspaceTabIndex, 0, MainTabs.Items.Count - 1);
 
     private void HandleOfflineDeath(OfflineDeathNotification d)
     {
@@ -2862,7 +3123,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         
         string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
         AlarmOverlayServerTxt.Text = $"{srvName} - {current.Notification.Timestamp:HH:mm}";
-        AlarmOverlayNameTxt.Text = current.Device?.PureName ?? Properties.Resources.SmartAlarm;
+        // The title is what Rust actually sent for this alarm — the upper line the player set
+        // on it. Preferring it over a paired device name, and both over the word "Smart Alarm",
+        // means the overlay says which alarm went off instead of merely that one did.
+        AlarmOverlayNameTxt.Text =
+            !string.IsNullOrWhiteSpace(current.Notification.Title) ? current.Notification.Title!
+            : !string.IsNullOrWhiteSpace(current.Device?.PureName) ? current.Device!.PureName
+            : Properties.Resources.SmartAlarm;
         AlarmOverlayMsgTxt.Text = current.Notification.Message ?? Properties.Resources.AlarmActivated;
         
         AlarmOverlayPagingTxt.Text = $"{_overlayAlarmIndex + 1}/{_overlayAlarms.Count}";
@@ -2949,7 +3216,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 e.Handled = true;
                 var msgBox = new Wpf.Ui.Controls.MessageBox
                 {
-                    Title = "Smart Alarm",
+                    Title = Properties.Resources.SmartAlarm,
                     Content = Properties.Resources.LoopAudioPrompt,
                     PrimaryButtonText = Properties.Resources.TurnOffNow,
                     CloseButtonText = Properties.Resources.KeepActive
@@ -2975,7 +3242,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             e.Handled = true;
             var msgBox = new Wpf.Ui.Controls.MessageBox
             {
-                Title = "Smart Alarm",
+                Title = Properties.Resources.SmartAlarm,
                 Content = Properties.Resources.LoopAudioGlobalPrompt,
                 PrimaryButtonText = Properties.Resources.TurnOffNow,
                 CloseButtonText = Properties.Resources.KeepActive
@@ -3113,7 +3380,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Dispatcher.Invoke(() =>
                 {
                     _isShuttingDown = true;
-                    this.Close();
+                    try { this.Close(); } catch { }
+                    System.Windows.Application.Current.Shutdown();
                 });
             }
         });
@@ -3125,7 +3393,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             var picker = new Microsoft.Win32.OpenFileDialog
             {
-                Title = "Select Rust .map file",
+                Title = Properties.Resources.GetString("SelectRustMapFile"),
                 Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
                 InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
                 CheckFileExists = true,
@@ -3181,13 +3449,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.Save();
                 
                 AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
-                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), Properties.Resources.GetString("MapImportedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
         catch (Exception ex)
         {
             AppendLog($"[Offline Map] Manual import failed: {ex.Message}");
-            MessageBox.Show($"Failed to import map: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedImportMap"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -3197,13 +3465,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (string.IsNullOrEmpty(sourceProfile.LocalMapFilePath))
             {
-                MessageBox.Show("Only manually parsed offline maps can be copied to other servers.", "Copy Map", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers"), RustPlusDesk.Properties.Resources.GetString("CodeUiCopyMap"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _copyMapSourceProfile = sourceProfile;
             AppendLog($"[Offline Map] Staged source map for copy: {sourceProfile.Name} ({sourceProfile.LocalMapFilePath})");
-            MessageBox.Show($"Please select/connect to a paired server in the list. If its layout matches, the map will be copied automatically.", "Copy Map Staged", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(Properties.Resources.GetString("CopyMapStagedMessage"), Properties.Resources.GetString("CopyMapStagedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -3394,7 +3662,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.Save();
 
                 AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
-                MessageBox.Show($"Offline map successfully imported as '{prof.Name}'!", "Map Imported", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), Properties.Resources.GetString("MapImportedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Activate();
                 return;
             }
@@ -3480,6 +3748,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var name = q["name"];
         return (host, port, playerId, token, name);
     }
+    private void CaptureFcmServerDescription(PairingPayload info)
+    {
+        if (string.IsNullOrWhiteSpace(info.ServerDescription)) return;
+
+        var profile = !string.IsNullOrWhiteSpace(info.Host)
+            ? _vm.Servers.FirstOrDefault(server =>
+                server.Host.Equals(info.Host, StringComparison.OrdinalIgnoreCase) &&
+                (info.Port <= 0 || server.Port == info.Port))
+            : null;
+        profile ??= !string.IsNullOrWhiteSpace(info.ServerName)
+            ? _vm.Servers.FirstOrDefault(server => server.Name.Equals(info.ServerName, StringComparison.OrdinalIgnoreCase))
+            : null;
+
+        if (profile == null || !string.IsNullOrWhiteSpace(profile.Description)) return;
+        profile.Description = info.ServerDescription.Trim();
+        _vm.Save();
+        AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+    }
+
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
         // Key OHNE EntityId: dient nur fÃƒÂ¼r Ã¢â‚¬Å¾Server-keepaliveÃ¢â‚¬Å“-Erkennung
@@ -3605,6 +3892,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 prof.SteamId64 = keySteam;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
                 AppendLog($"Pairing updated Ã¢â€ â€™ {prof.Name}");
+            }
+
+            if (string.IsNullOrWhiteSpace(prof.Description) && !string.IsNullOrWhiteSpace(e.ServerDescription))
+            {
+                prof.Description = e.ServerDescription.Trim();
+                _vm.Save();
             }
 
             // >>> GerÃƒÂ¤te zuverlÃƒÂ¤ssig hinzufÃƒÂ¼gen/aktualisieren (Switch + Alarm + StorageMonitor)
@@ -3734,6 +4027,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     _vm.Selected = prof;
 
                 _vm.Save();
+                _ = CapturePairedDeviceLocationAsync(prof, dev, keySteam);
             }
 
 
@@ -3762,7 +4056,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _listenerStarting = true;
         _vm.IsPairingBusy = true; // Tell UI we are trying to start
-        TxtPairingState.Text = "Pairing: starting...";
+        TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingStarting");
         _ = Task.Run(async () =>
         {
             try { await _pairing.StartAsync(); }
@@ -3857,7 +4151,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         Dispatcher.Invoke(() =>
         {
             if (st == "starting") _vm.BusyText = Properties.Resources.StartingPairingListener;
-            else if (st == "listening") { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
+            else if (st == RustPlusDesk.Properties.Resources.GetString("UiListening")) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
             else if (st == "error") TxtPairingState.Text = Properties.Resources.PairingError;
         });
     }
@@ -3904,7 +4198,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
         
         _serverToDelete = prof;
-        TxtDeleteConfirmation.Text = $"Are you sure you want to delete Server \"{prof.Name}\"? This action cannot be undone.";
+        TxtDeleteConfirmation.Text = string.Format(Properties.Resources.DeleteServerConfirmFormatted, prof.Name);
         DeleteConfirmationOverlay.Visibility = Visibility.Visible;
     }
 
@@ -3914,7 +4208,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _serverToDelete = null;
     }
 
-    private void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    private async void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
     {
         if (_serverToDelete != null)
         {
@@ -3922,6 +4216,24 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.Servers.Remove(prof);
             _vm.Save();
             AppendLog($"Server deleted: {prof.Name}");
+
+            // Clean up cloud data (devices, overlays, base markers, server registration, and reset Alexa active server)
+            try
+            {
+                string steamIdStr = _mySteamId > 0 ? _mySteamId.ToString() : string.Empty;
+                if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
+                {
+                    bool cleaned = await Services.Auth.SupabaseCloudCleanupService.DeleteCloudDataForServerAsync(prof.Host, prof.Port, steamIdStr);
+                    if (cleaned)
+                    {
+                        AppendLog($"[Cloud] Purged cloud data for server {prof.Name} ({prof.Host}:{prof.Port}).");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud] Cloud cleanup error for deleted server {prof.Name}: {ex.Message}");
+            }
         }
 
         DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
@@ -4152,7 +4464,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _isLogExpanded = !_isLogExpanded;
         if (LogPanel != null) LogPanel.Height = _isLogExpanded ? ExpandedLogHeight : CollapsedLogHeight;
-        if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? "Collapse" : "Expand";
+        if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? RustPlusDesk.Properties.Resources.GetString("CodeUiCollapse") : RustPlusDesk.Properties.Resources.GetString("UiExpand");
         TxtLog?.ScrollToEnd();
     }
 
@@ -4225,17 +4537,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
         }
 
+        if (!string.IsNullOrWhiteSpace(_vm.SteamId64) && string.IsNullOrWhiteSpace(_steamDisplayName))
+        {
+            try
+            {
+                var nameCachePath = GetOwnNameCachePath(_vm.SteamId64);
+                if (File.Exists(nameCachePath))
+                    _steamDisplayName = File.ReadAllText(nameCachePath).Trim();
+            }
+            catch { }
+        }
+
         // Update UI Elements
         var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
         TxtSteamId.Text = sidText;
-        
-        string statusText = "Logged In";
-        var tier = Services.Auth.SupabaseAuthManager.CurrentTier;
-        if (tier != "free")
-        {
-            statusText = $"Logged In ({char.ToUpper(tier[0]) + tier[1..].Replace("_", " ")})";
-        }
-        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Steam Account" : statusText;
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? RustPlusDesk.Properties.Resources.GetString("UiNotConnected") : _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
         ImgSteam.ToolTip = TxtSteamName.Text;
         RefreshStreamerModeUI();
         UpdateAdminUi();
@@ -4251,16 +4567,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
                     Dispatcher.Invoke(() =>
                     {
-                        var updatedTier = Services.Auth.SupabaseAuthManager.CurrentTier;
-                        if (updatedTier != "free")
-                        {
-                            TxtSteamName.Text = $"Logged In ({char.ToUpper(updatedTier[0]) + updatedTier[1..].Replace("_", " ")})";
-                        }
-                        else
-                        {
-                            TxtSteamName.Text = "Logged In";
-                        }
-                        ImgSteam.ToolTip = TxtSteamName.Text;
                         UpdateAdminUi();
                     });
                 }
@@ -4284,19 +4590,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     public void RefreshStreamerModeUI()
     {
         if (TxtSteamId == null || TxtSteamName == null || _vm == null) return;
+        if (NotificationsTabControl != null) NotificationsTabControl.IsStreamerMode = _abbreviateNames;
         
         var sid = _vm.SteamId64;
         if (string.IsNullOrWhiteSpace(sid))
         {
-            TxtSteamId.Text = "(nicht angemeldet)";
-            TxtSteamName.Text = "Steam Account";
+            TxtSteamId.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoCompanionSession");
+            TxtSteamName.Text = RustPlusDesk.Properties.Resources.GetString("UiNotConnected");
             return;
         }
 
         TxtSteamId.Text = _abbreviateNames && sid.Length > 3 ? sid.Substring(0, 3) + "..." : sid;
         
-        var originalName = (ImgSteam.ToolTip as string) ?? "Logged In";
-        TxtSteamName.Text = _abbreviateNames ? "STREAMER MODE" : originalName;
+        var originalName = (ImgSteam.ToolTip as string) ?? Properties.Resources.GetString("CodeUiConnected");
+        TxtSteamName.Text = _abbreviateNames ? RustPlusDesk.Properties.Resources.GetString("StreamerMode") : originalName;
 
         if (_vm.IsFollowing && _vm.FollowingSteamId != _mySteamId)
         {
@@ -4312,7 +4619,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (PanelServerArea == null || IconToggleServerArea == null) return;
 
-        if (BtnToggleServerArea.IsChecked == true)
+        if (PanelServerArea.Visibility == Visibility.Visible)
         {
             PanelServerArea.Visibility = Visibility.Collapsed;
             IconToggleServerArea.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronDown20;
@@ -4334,6 +4641,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return System.IO.Path.Combine(dir, $"{steamId64}.png");
     }
 
+    private string GetOwnNameCachePath(string steamId64) =>
+        System.IO.Path.ChangeExtension(GetOwnAvatarCachePath(steamId64), ".name");
+
     private async Task TryLoadSteamAvatarAsync(string? steamId64)
     {
         if (string.IsNullOrWhiteSpace(steamId64))
@@ -4342,8 +4652,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        ImgSteam.ToolTip = "Logged In";
-        TxtSteamName.Text = "Logged In";
+        ImgSteam.ToolTip = _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
+        TxtSteamName.Text = _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
 
         var cachePath = GetOwnAvatarCachePath(steamId64);
 
@@ -4399,8 +4709,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
             if (nameMatch.Success)
             {
-                var originalName = nameMatch.Groups[1].Value;
-                ImgSteam.ToolTip = originalName;
+                _steamDisplayName = nameMatch.Groups[1].Value;
+                await File.WriteAllTextAsync(GetOwnNameCachePath(steamId64), _steamDisplayName);
+                ImgSteam.ToolTip = _steamDisplayName;
                 Dispatcher.Invoke(() => RefreshStreamerModeUI());
             }
         }
@@ -4429,32 +4740,39 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
             rusthelpUrl = ii2.IconUrl;
 
-        // Primär-URL (rusthelp optimized to 40px)
+        return ResolveRustHelpIcon(rusthelpUrl, decodePx);
+    }
+
+    public static System.Windows.Media.ImageSource? ResolveRustHelpIcon(string? rusthelpUrl, int decodePx = 32)
+    {
+        // Keep one high-resolution download on disk; decode-size variants stay in memory.
         string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
-            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=40&q=90"
+            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=256&q=90"
             : null;
 
         // 1) Versuche Optimierte URL
         if (optimizedUrl != null)
         {
-            if (sIconCache.TryGetValue(optimizedUrl, out var ready)) return ready;
+            string cacheKey = $"{optimizedUrl}|{decodePx}";
+            if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
             var path = GetIconCachePath(optimizedUrl);
             if (System.IO.File.Exists(path))
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
-                if (img != null) { sIconCache[optimizedUrl] = img; return img; }
+                if (img != null) { sIconCache[cacheKey] = img; return img; }
             }
         }
 
         // 2) Versuche Original URL (Fallback/DB)
         if (rusthelpUrl != null)
         {
-            if (sIconCache.TryGetValue(rusthelpUrl, out var ready)) return ready;
+            string cacheKey = $"{rusthelpUrl}|{decodePx}";
+            if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
             var path = GetIconCachePath(rusthelpUrl);
             if (System.IO.File.Exists(path))
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
-                if (img != null) { sIconCache[rusthelpUrl] = img; return img; }
+                if (img != null) { sIconCache[cacheKey] = img; return img; }
             }
         }
 
@@ -4805,7 +5123,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return h;
         }
     }
-    private void BtnDonate_Click(object sender, RoutedEventArgs e)
+    private void BtnSupport_Click(object sender, RoutedEventArgs e) => OpenSupporterPage();
+
+    internal void OpenSupporterPage()
     {
         try
         {
@@ -4817,7 +5137,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         catch (Exception ex)
         {
-            AppendLog("Couldn't open Donate Link: " + ex.Message);
+            AppendLog("Couldn't open supporter page: " + ex.Message);
         }
     }
     private bool _announceSpawns = false;
@@ -4858,30 +5178,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void EditAlertTemplates_Click(object sender, RoutedEventArgs e)
     {
-        var win = new Views.Windows.CustomAlertsWindow();
-        win.Owner = this;
-        _activeDialog = win;
-        ApplyWindowBlur();
-        if (Root != null)
-        {
-            Root.IsHitTestVisible = false;
-        }
-
-        win.Closed += (s, ev) =>
-        {
-            if (ReferenceEquals(_activeDialog, win))
-            {
-                _activeDialog = null;
-            }
-            RemoveWindowBlur();
-            if (Root != null)
-            {
-                Root.IsHitTestVisible = true;
-            }
-        };
-
-        win.Show();
-        CenterActiveDialog();
+        OpenSettingsCategory("alert-templates");
     }
 
     private void SetAllAlerts(bool val)
@@ -4898,6 +5195,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnouncePlayerOnline = val;
         TrackingService.AnnouncePlayerOffline = val;
         TrackingService.AnnouncePlayerAfk = val;
+        TrackingService.AnnouncePlayerAfkReturn = val;
         TrackingService.AnnouncePlayerDeathSelf = val;
         TrackingService.AnnouncePlayerDeathTeam = val;
         TrackingService.AnnouncePlayerRespawnSelf = val;
@@ -4908,6 +5206,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
         if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; _vm.Selected.DiscordWebhookChatAlertsEnabled = val; }
+        TrackingService.HotkeyTriggerChatAlertsEnabled = val;
+        if (HotkeyTriggersMenuItem != null)
+        {
+            string serverKey = CurrentServerKey();
+            foreach (var item in HotkeyTriggersMenuItem.Items.OfType<MenuItem>())
+            {
+                if (item.Tag is not long entityId) continue;
+                item.IsChecked = val;
+                TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, val);
+            }
+        }
     }
 
     private bool CheckIfAllOff()
@@ -4916,7 +5225,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnounceCargoEgress && !TrackingService.AnnounceCargoArrival &&
                !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
                !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
-               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline && !TrackingService.AnnouncePlayerAfk &&
+               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
+               !TrackingService.AnnouncePlayerAfk && !TrackingService.AnnouncePlayerAfkReturn &&
                !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
@@ -4965,6 +5275,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
                 case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
                 case "PlayerAfk": TrackingService.AnnouncePlayerAfk = val; break;
+                case "PlayerAfkReturn": TrackingService.AnnouncePlayerAfkReturn = val; break;
                 case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
                 case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
                 case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
@@ -4998,17 +5309,154 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private void AfkMinutes_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag && tag.StartsWith("Afk_"))
+        {
+            if (int.TryParse(tag.Substring(4), out int minutes))
+            {
+                TrackingService.AfkAlertMinutes = minutes;
+                SyncAlertMenuItems();
+            }
+        }
+    }
+
+    private void GenericAlarmSetting_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
+
+        bool enabled = toggle.IsChecked == true;
+        switch (setting)
+        {
+            case "Popup": TrackingService.GenericAlarmPopupEnabled = enabled; break;
+            case "Overlay": TrackingService.GenericAlarmOverlayEnabled = enabled; break;
+            case "Audio": TrackingService.GenericAlarmAudioEnabled = enabled; break;
+        }
+    }
+
+    private void GenericAlarmSetting_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
+
+        toggle.IsChecked = setting switch
+        {
+            "Popup" => TrackingService.GenericAlarmPopupEnabled,
+            "Overlay" => TrackingService.GenericAlarmOverlayEnabled,
+            "Audio" => TrackingService.GenericAlarmAudioEnabled,
+            _ => false
+        };
+    }
+
+    private void CmbAfkMinutes_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is ComboBox cmb)
+        {
+            cmb.Text = TrackingService.AfkAlertMinutes.ToString();
+        }
+    }
+
+    private void CmbAfkMinutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox cmb && cmb.SelectedItem is ComboBoxItem item && int.TryParse(item.Content?.ToString(), out int val))
+        {
+            if (val > 0)
+            {
+                TrackingService.AfkAlertMinutes = val;
+            }
+        }
+    }
+
+    private void CmbAfkMinutes_LostFocus(object sender, RoutedEventArgs e)
+    {
+        SaveAfkMinutesFromText(sender as ComboBox);
+    }
+
+    private void CmbAfkMinutes_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            SaveAfkMinutesFromText(sender as ComboBox);
+            e.Handled = true;
+        }
+    }
+
+    private void SaveAfkMinutesFromText(ComboBox? cmb)
+    {
+        if (cmb == null) return;
+        if (int.TryParse(cmb.Text, out int val) && val > 0)
+        {
+            TrackingService.AfkAlertMinutes = val;
+        }
+        else
+        {
+            cmb.Text = TrackingService.AfkAlertMinutes.ToString();
+        }
+    }
+
+    private void ComboBox_MouseDownPreventClose(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void GenericAlarmAudioMenu_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is not FrameworkElement button || button.ContextMenu is not ContextMenu menu) return;
+
+        menu.PlacementTarget = button;
+        menu.Placement = PlacementMode.Bottom;
+        menu.IsOpen = true;
+    }
+
     internal void SyncAlertMenuItems()
     {
         bool masterOn = TrackingService.AnnounceSpawnsMaster;
         PopulateTradeAlertsSubMenu(masterOn);
         PopulateHotkeyTriggersSubMenu();
+        UpdateAlertEnabledBadge(masterOn);
 
-        SyncContextMenu(ChatAnnounce.ContextMenu, masterOn);
         if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
         {
             SyncContextMenu(cm, masterOn);
         }
+    }
+
+    private void UpdateAlertEnabledBadge(bool? masterEnabled = null)
+    {
+        bool masterOn = masterEnabled ?? TrackingService.AnnounceSpawnsMaster;
+        int enabledCount = new[]
+        {
+            TrackingService.AnnounceCargo,
+            TrackingService.AnnounceCargoDocking,
+            TrackingService.AnnounceCargoEgress,
+            TrackingService.AnnounceCargoArrival,
+            TrackingService.AnnounceHeli,
+            TrackingService.AnnounceChinook,
+            TrackingService.AnnounceVendor,
+            TrackingService.AnnounceOilRig,
+            TrackingService.AnnounceDeepSea,
+            TrackingService.AnnouncePlayerOnline,
+            TrackingService.AnnouncePlayerOffline,
+            TrackingService.AnnouncePlayerAfk,
+            TrackingService.AnnouncePlayerAfkReturn,
+            TrackingService.AnnouncePlayerDeathSelf,
+            TrackingService.AnnouncePlayerDeathTeam,
+            TrackingService.AnnouncePlayerRespawnSelf,
+            TrackingService.AnnouncePlayerRespawnTeam,
+            TrackingService.AnnounceTracking,
+            TrackingService.AnnounceNewShops,
+            TrackingService.AnnounceSuspiciousShops,
+            TrackingService.AnnounceSmartAlerts,
+            TrackingService.AnnounceTradeAlerts,
+            _vm.Selected?.AlertCustomTimer == true,
+            _vm.Selected?.DiscordWebhookChatAlertsEnabled == true
+        }.Count(enabled => enabled);
+        if (TrackingService.HotkeyTriggerChatAlertsEnabled)
+            enabledCount += HotkeyTriggersMenuItem.Items.OfType<MenuItem>().Count(item => item.Tag is long && item.IsChecked);
+
+        AlertEnabledBadge.Visibility = masterOn && enabledCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        AlertEnabledDot.Visibility = masterOn && enabledCount == 0 ? Visibility.Visible : Visibility.Collapsed;
+        AlertEnabledCountText.Text = enabledCount > 99 ? "99+" : enabledCount.ToString(CultureInfo.InvariantCulture);
     }
 
     private void SyncContextMenu(ContextMenu menu, bool masterOn)
@@ -5034,22 +5482,43 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             bool isSelected = false;
             switch (tag)
             {
-                case "Cargo": 
+                case "Cargo":
+                case "PlayerAfkParent":
                 case "Partial":
-                    bool cs = TrackingService.AnnounceCargo;
-                    bool cd = TrackingService.AnnounceCargoDocking;
-                    bool ce = TrackingService.AnnounceCargoEgress;
-                    bool ca = TrackingService.AnnounceCargoArrival;
-                    if (cs && cd && ce && ca) { isSelected = true; mi.Tag = "Cargo"; }
-                    else if (cs || cd || ce || ca) { isSelected = true; mi.Tag = "Partial"; }
-                    else { isSelected = false; mi.Tag = "Cargo"; }
+                    bool isCargo = false;
+                    foreach (var item in mi.Items)
+                    {
+                        if (item is MenuItem sub && sub.Tag is string subTag && subTag.StartsWith("Cargo"))
+                        {
+                            isCargo = true;
+                            break;
+                        }
+                    }
+                    if (isCargo || tag == "Cargo")
+                    {
+                        bool cs = TrackingService.AnnounceCargo;
+                        bool cd = TrackingService.AnnounceCargoDocking;
+                        bool ce = TrackingService.AnnounceCargoEgress;
+                        bool ca = TrackingService.AnnounceCargoArrival;
+                        if (cs && cd && ce && ca) { isSelected = true; mi.Tag = "Cargo"; }
+                        else if (cs || cd || ce || ca) { isSelected = true; mi.Tag = "Partial"; }
+                        else { isSelected = false; mi.Tag = "Cargo"; }
+                    }
+                    else
+                    {
+                        bool afk = TrackingService.AnnouncePlayerAfk;
+                        bool ret = TrackingService.AnnouncePlayerAfkReturn;
+                        if (afk && ret) { isSelected = true; mi.Tag = "PlayerAfkParent"; }
+                        else if (afk || ret) { isSelected = true; mi.Tag = "Partial"; }
+                        else { isSelected = false; mi.Tag = "PlayerAfkParent"; }
+                    }
                     break;
                 case "CargoSpawn": isSelected = TrackingService.AnnounceCargo; break;
                 case "CargoDock": isSelected = TrackingService.AnnounceCargoDocking; break;
                 case "CargoEgress": isSelected = TrackingService.AnnounceCargoEgress; break;
                 case "CargoArrival": 
                     isSelected = TrackingService.AnnounceCargoArrival; 
-                    mi.Header = hasTravelData ? "Arrival Warning (5m before Dock)" : "Arrival Warning (Unlearned)";
+                    mi.Header = hasTravelData ? RustPlusDesk.Properties.Resources.GetString("CargoArrival") : RustPlusDesk.Properties.Resources.GetString("CodeUiArrivalWarningUnlearned");
                     mi.IsEnabled = masterOn && hasTravelData; 
                     break;
                 case "Heli": isSelected = TrackingService.AnnounceHeli; break;
@@ -5061,6 +5530,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
                 case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
                 case "PlayerAfk": isSelected = TrackingService.AnnouncePlayerAfk; break;
+                case "PlayerAfkReturn": isSelected = TrackingService.AnnouncePlayerAfkReturn; break;
+                case "Afk_5": isSelected = TrackingService.AfkAlertMinutes == 5; break;
+                case "Afk_10": isSelected = TrackingService.AfkAlertMinutes == 10; break;
+                case "Afk_15": isSelected = TrackingService.AfkAlertMinutes == 15; break;
+                case "Afk_20": isSelected = TrackingService.AfkAlertMinutes == 20; break;
+                case "Afk_30": isSelected = TrackingService.AfkAlertMinutes == 30; break;
                 case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
                 case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
                 case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
@@ -5187,11 +5662,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (uniqueDevices.Count == 0)
         {
-            HotkeyTriggersMenuItem.Header = "Hotkey Triggers (0)";
+            UpdateHotkeyTriggersMenuIndicator();
             return;
         }
 
-        HotkeyTriggersMenuItem.Header = "Hotkey Triggers";
+        var masterToggle = new MenuItem
+        {
+            Header = "Hotkey alerts enabled",
+            IsCheckable = true,
+            IsChecked = TrackingService.HotkeyTriggerChatAlertsEnabled,
+            StaysOpenOnClick = true,
+            Style = (Style)FindResource("DarkMenuItem")
+        };
+        masterToggle.Click += HotkeyTriggersMaster_Click;
+        HotkeyTriggersMenuItem.Items.Add(masterToggle);
+        HotkeyTriggersMenuItem.Items.Add(new Separator { Margin = new Thickness(8, 4, 8, 4) });
 
         foreach (var (gesture, entityId, dev) in uniqueDevices)
         {
@@ -5211,6 +5696,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             mi.Click += HotkeyTriggerSubItem_Click;
             HotkeyTriggersMenuItem.Items.Add(mi);
         }
+        UpdateHotkeyTriggersMenuIndicator();
+    }
+
+    private void HotkeyTriggersMaster_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem masterToggle) return;
+        TrackingService.HotkeyTriggerChatAlertsEnabled = masterToggle.IsChecked;
+        UpdateHotkeyTriggersMenuIndicator();
+        UpdateAlertEnabledBadge();
+    }
+
+    private void UpdateHotkeyTriggersMenuIndicator()
+    {
+        int selectedCount = HotkeyTriggersMenuItem.Items.OfType<MenuItem>().Count(item => item.Tag is long && item.IsChecked);
+        bool enabled = TrackingService.HotkeyTriggerChatAlertsEnabled && HotkeyTriggersMenuItem.IsEnabled;
+        HotkeyTriggersEnabledDot.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        HotkeyTriggersCountBadge.Visibility = selectedCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        HotkeyTriggersCountBadge.Background = enabled ? new SolidColorBrush(Color.FromRgb(0x45, 0xE3, 0x9A)) : new SolidColorBrush(Color.FromRgb(0x43, 0x49, 0x52));
+        HotkeyTriggersCountText.Foreground = enabled ? new SolidColorBrush(Color.FromRgb(0x07, 0x17, 0x11)) : new SolidColorBrush(Color.FromRgb(0xC0, 0xC6, 0xCF));
+        HotkeyTriggersCountText.Text = selectedCount > 99 ? "99+" : selectedCount.ToString(CultureInfo.InvariantCulture);
     }
 
     private void HotkeyTriggerSubItem_Click(object sender, RoutedEventArgs e)
@@ -5219,6 +5724,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             string serverKey = CurrentServerKey();
             TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, mi.IsChecked);
+            UpdateHotkeyTriggersMenuIndicator();
+            UpdateAlertEnabledBadge();
         }
     }
 
@@ -5284,7 +5791,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             content.Children.Add(BuildOfferRowUI(o));
             if (++shown >= 10)
             {
-                content.Children.Add(new TextBlock { Text = "Ã¢â‚¬Â¦", Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
+                content.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiÃÂÂ"), Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
                 break;
             }
         }
@@ -5504,14 +6011,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 // saved -> leicht grÃƒÂ¼n getÃƒÂ¶nt
                 btnSave.Background = new SolidColorBrush(Color.FromRgb(32, 48, 32));                // sehr dunkles GrÃƒÂ¼n
                 btnSave.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 160, 64));              // sattes GrÃƒÂ¼n
-                btnSave.ToolTip = "Saved (click to unsave)";
+                btnSave.ToolTip = RustPlusDesk.Properties.Resources.GetString("CodeUiSavedClickToUnsave");
             }
             else
             {
                 // nicht saved -> neutral dunkel
                 btnSave.Background = new SolidColorBrush(Color.FromRgb(40, 44, 48));                // dein Dark-UI
                 btnSave.BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));        // dezente helle Kontur
-                btnSave.ToolTip = "Save alert";
+                btnSave.ToolTip = RustPlusDesk.Properties.Resources.GetString("CodeUiSaveAlert");
             }
 
             // Icon-Farbe (Diskette):
@@ -5814,16 +6321,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
 
+                // 9) Zeitstempel für diese Kombo sofort updaten, um Duplikate im Update-Loop zu vermeiden
+                rule.LastAnnouncements[sig] = DateTime.UtcNow;
+
                 if (rule.NotifyChat)
-                    await SendTeamChatSafeAsync(msg, false, true);
+                    _ = SendTeamChatSafeAsync(msg, false, true);
                 
                 _ = DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **Trade Alert:** {msg}");
 
                 if (rule.NotifySound)
                     PlayShopAlertSound();
-
-                // 9) Zeitstempel fÃƒÂ¼r diese Kombo updaten
-                rule.LastAnnouncements[sig] = DateTime.UtcNow;
             }           // end foreach order
             }           // end foreach shop
 
@@ -6061,7 +6568,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             TrackingService.FcmExpiresAt = null;
             _vm.NotifyFcmChanged();
 
-            TxtPairingState.Text = "Pairing: config deleted";
+            TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingConfigDeleted");
             return true;
         }
         catch (Exception ex)
@@ -6138,6 +6645,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     _vm.IsUpdateAvailable = true;
                     _vm.UpdateTag = tag;
+                    _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
+                    _vm.IsUpdateStatusExpanded = true;
                     AppendLog($"Ã¢Å“Â¨ Update found: {tag}");
                     ShowUpdateSnackbar(tag, dlUrl);
                 });
@@ -6152,7 +6661,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         var snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
-            Title = "Update Available",
+            Title = Properties.Resources.UpdateAvailableHeader,
             Appearance = WpfUi.ControlAppearance.Success,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
             Timeout = TimeSpan.FromSeconds(7),
@@ -6225,6 +6734,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _showDeathMarkers = TrackingService.MapShowDeathTags;
         if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
 
+        _showDeathHeatmap = TrackingService.MapShowDeathHeatmap;
+        if (ChkDeathHeatmap != null) ChkDeathHeatmap.IsChecked = _showDeathHeatmap;
+
         _abbreviateNames = TrackingService.MapAbbreviateNames;
         if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
 
@@ -6234,6 +6746,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         BuildMonumentOverlays();
         UpdateCloudSyncUI();
         ApplyMapPerformanceSettings();
+        ApplyRustApiFeatureFlags();
+        ApplyShopDataAvailability();
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
@@ -6263,13 +6777,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (RootSnackbar == null) return;
         if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+        if (_upgradeRequiredSnackbarShown) return;
+        _upgradeRequiredSnackbarShown = true;
 
         var stack = new StackPanel { Orientation = Orientation.Vertical };
 
         string displayMessage = message;
         if (!string.IsNullOrEmpty(displayMessage) && !displayMessage.Contains("cloud features", StringComparison.OrdinalIgnoreCase))
         {
-            displayMessage = displayMessage.TrimEnd(' ', '.') + ". To continue using cloud features, you must update the application.";
+            displayMessage = displayMessage.TrimEnd(' ', '.') + ". " + Properties.Resources.GetString("CloudFeaturesUpdateRequired");
         }
 
         var textBlock = new TextBlock
@@ -6332,7 +6848,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         snackbar = new WpfUi.Snackbar(RootSnackbar)
         {
-            Title = "Update Required",
+            Title = Properties.Resources.GetString("UpdateRequiredTitle"),
             Content = stack,
             Appearance = WpfUi.ControlAppearance.Danger,
             Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
@@ -6454,19 +6970,36 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void LeftPanelBorder_MouseEnter(object sender, MouseEventArgs e)
     {
-        SetSidebarExpanded(true);
+        if (_isSidebarExpanded || _isSidebarPinnedExpanded)
+        {
+            return;
+        }
+
+        if (_sidebarHoverExpandTimer == null)
+        {
+            _sidebarHoverExpandTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(SidebarHoverExpandDelayMs)
+            };
+            _sidebarHoverExpandTimer.Tick += SidebarHoverExpandTimer_Tick;
+        }
+
+        if (!_sidebarHoverExpandTimer.IsEnabled)
+        {
+            _sidebarHoverExpandTimer.Start();
+        }
     }
 
     private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
     {
-        if (_isSidebarPinnedExpanded)
+        if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true)
         {
             return;
         }
 
         Dispatcher.BeginInvoke(() =>
         {
-            if (_isSidebarPinnedExpanded)
+            if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true)
             {
                 return;
             }
@@ -6476,16 +7009,36 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
+            _sidebarHoverExpandTimer?.Stop();
             SetSidebarExpanded(false);
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
+    private void SidebarHoverExpandTimer_Tick(object? sender, EventArgs e)
+    {
+        _sidebarHoverExpandTimer?.Stop();
+        if (!_isSidebarExpanded &&
+            (LeftPanelBorder?.IsMouseOver == true || SidebarSplitter?.IsMouseOver == true))
+        {
+            SetSidebarExpanded(true);
+        }
+    }
+
     private void CompactSidebarTab_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: string tag } && int.TryParse(tag, out int index))
+        if (sender is FrameworkElement { Tag: TabItem tab })
         {
-            MainTabs.SelectedIndex = index;
+            MainTabs.SelectedItem = tab;
             SetSidebarExpanded(true);
+        }
+    }
+
+    private void SidebarTabPopover_Opened(object? sender, EventArgs e)
+    {
+        if (sender is Popup { Child: DependencyObject child } &&
+            FindVisualChildByName<Image>(child, "RustPopoverIcon") is { } icon)
+        {
+            icon.GetBindingExpression(Image.SourceProperty)?.UpdateTarget();
         }
     }
 
@@ -6512,6 +7065,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void SetSidebarExpanded(bool isExpanded)
     {
+        _sidebarHoverExpandTimer?.Stop();
         // If FCM needs attention, force the sidebar to stay unfolded/expanded
         bool isFcmConfigured = TrackingService.IsFcmConfigured();
         bool needsFcmLogin = !isFcmConfigured ||
@@ -6533,9 +7087,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             double width = Math.Clamp(_expandedSidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
             ColSidebar.MinWidth = CompactSidebarWidth;
-            LeftPanelBorder.Padding = new Thickness(16);
+            LeftPanelBorder.Padding = new Thickness(0);
             LeftPanelContent.Visibility = Visibility.Visible;
-            CompactSidebarRail.Visibility = Visibility.Collapsed;
+            CompactSidebarRail.Visibility = Visibility.Visible;
             AnimateSidebarWidth(width, () =>
             {
                 if (_isSidebarExpanded)
@@ -6768,11 +7322,34 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         else
         {
             LogicEnginePanel.Visibility = Visibility.Collapsed;
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             AppSettingsPanel.LoadSettings();
             AppSettingsPanel.Visibility = Visibility.Visible;
         }
+    }
+
+    private void OpenSettingsCategory(string category)
+    {
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        AppSettingsPanel.LoadSettings();
+        AppSettingsPanel.Visibility = Visibility.Visible;
+        AppSettingsPanel.OpenCategory(category);
+    }
+
+    private void BtnCloudAccount_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_vm.IsCloudConnected)
+        {
+            new Views.Windows.CloudLoginPromptWindow(this).ShowDialog();
+            return;
+        }
+
+        new Views.Windows.CloudAccountWindow(this).ShowDialog();
     }
 
     private void BtnLogicEngine_Click(object sender, RoutedEventArgs e)
@@ -6786,13 +7363,33 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppSettingsPanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            LogicEnginePanel.RefreshListBindings();
             LogicEnginePanel.Visibility = Visibility.Visible;
         }
     }
 
+    private void BtnDeviceAutomation_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeviceAutomationPanel.Visibility == Visibility.Visible)
+        {
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            _vm.Save();
+            return;
+        }
+
+        AppSettingsPanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        DeviceAutomationPanel.RefreshListBindings();
+        DeviceAutomationPanel.Visibility = Visibility.Visible;
+        _ = OfferNewFeatureTutorialOnceAsync("device-automation");
+    }
+
     private void BtnLanguageSettings_Click(object sender, RoutedEventArgs e)
     {
-        BtnSettings_Click(sender, e);
+        OpenSettingsCategory("general");
     }
 
     public void UpdateLanguageFlag()
@@ -6817,9 +7414,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 string imageUri = $"pack://application:,,,/Assets/Flags/{candidate}.png";
                 try
                 {
-                    ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
-                    loaded = true;
-                    break;
+                    var streamInfo = System.Windows.Application.GetResourceStream(new Uri(imageUri));
+                    if (streamInfo != null)
+                    {
+                        ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
+                        loaded = true;
+                        break;
+                    }
                 }
                 catch { }
             }
@@ -6838,18 +7439,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             LogicEnginePanel.ParentWindow = this;
         }
-    }
-
-    public void OpenChatAlertsFromSettings()
-    {
-        Dispatcher.BeginInvoke(new Action(() => {
-            if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
-            {
-                cm.PlacementTarget = ChatAlertsConfigureButton;
-                cm.Placement = System.Windows.Controls.Primitives.PlacementMode.Custom;
-                cm.IsOpen = true;
-            }
-        }), System.Windows.Threading.DispatcherPriority.Input);
+        if (DeviceAutomationPanel != null)
+        {
+            DeviceAutomationPanel.ParentWindow = this;
+        }
     }
 
     public System.Windows.Controls.Primitives.CustomPopupPlacement[] CenterMegaMenu_Callback(Size popupSize, Size targetSize, Point offset)
@@ -6862,19 +7455,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
 
-    public async void OpenChatCommandsFromSettings()
-    {
-        if (ChatContentBorder.Visibility != Visibility.Visible)
-        {
-            _chatOpenedForCommandsOnly = true;
-            await OpenChatOverlayAsync();
-        }
-        else
-        {
-            _chatOpenedForCommandsOnly = false;
-        }
-        BtnOpenChatCommands_Click(null, null);
-    }    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
+    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
     {
         try
         {
@@ -6883,17 +7464,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             _vm.IsDownloadingUpdate = true;
             _vm.IsDownloadPaused = false;
-            _vm.PauseResumeButtonText = "Pause";
+            _vm.IsUpdateProcessing = false;
+            _vm.IsUpdateStatusExpanded = true;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatDownloadingUpdate"), tag);
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
             _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
 
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading update ... {r.Percentage}";
-                _vm.UpdateDownloadProgress = r.Progress * 100;
-                _vm.UpdateDownloadSpeed = r.Speed;
-                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
-                _vm.UpdateDownloadPercentage = r.Percentage;
-                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+                ApplyUpdateDownloadReport(r);
             });
 
             var path = await _updateService.DownloadInstallerAsync(dlUrl, prog);
@@ -6902,42 +7481,56 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsDownloadingUpdate = true;
                 _vm.IsDownloadPaused = true;
-                _vm.PauseResumeButtonText = "Resume";
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+                _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
                 return;
             }
 
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
 
             if (path == null)
             {
-                ShowInfoSnackbar("Update", "Download failed.", WpfUi.ControlAppearance.Danger);
+                ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), Properties.Resources.GetString("DownloadFailed"), WpfUi.ControlAppearance.Danger);
                 return;
             }
 
             _updateService.PendingInstallerPath = path;
-            ShowInfoSnackbar("Update Downloaded", "The update will be installed automatically when you close the app.", WpfUi.ControlAppearance.Success);
+            _vm.IsUpdateAvailable = false;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateReady"), tag);
+            _vm.IsUpdateStatusExpanded = true;
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateDownloadedTitle"), Properties.Resources.GetString("UpdateInstallsOnClose"), WpfUi.ControlAppearance.Success);
         }
         catch (Exception ex)
         {
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadFailed");
+            _vm.IsUpdateStatusExpanded = true;
             AppendLog("❌ Update download failed: " + ex.Message);
-            ShowInfoSnackbar("Update", "Download failed: " + ex.Message, WpfUi.ControlAppearance.Danger);
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), string.Format(Properties.Resources.GetString("FormatDownloadFailed"), ex.Message), WpfUi.ControlAppearance.Danger);
         }
     }    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         if (_listenerStarting || _vm.IsDownloadingUpdate) return;
         if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
         {
-            ShowInfoSnackbar("Update", "Update already downloaded. It will be installed when you close the app.", WpfUi.ControlAppearance.Info);
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
+            _vm.IsUpdateStatusExpanded = true;
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), Properties.Resources.GetString("UpdateAlreadyDownloaded"), WpfUi.ControlAppearance.Info);
             return;
         }
 
         try
         {
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCheckingForUpdates");
+            _vm.IsUpdateStatusExpanded = true;
             var curr = _updateService.VersionForCompare;
             var latestInfo = await _updateService.GetLatestReleaseAsync();
             if (latestInfo is null)
             {
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCouldNotCheckForUpdates");
+                _vm.IsUpdateStatusExpanded = true;
                 System.Windows.MessageBox.Show(
                     "Could not query latest release. Please try again or open Releases page.",
                     "Update", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -6959,12 +7552,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!updateAvailable)
             {
                 _vm.IsUpdateAvailable = false;
-                System.Windows.MessageBox.Show("You are up to date.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate");
+                _vm.IsUpdateStatusExpanded = false;
+                System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate"), RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _vm.IsUpdateAvailable = true;
             _vm.UpdateTag = tag;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
+            _vm.IsUpdateStatusExpanded = true;
 
             var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
 
@@ -6989,17 +7586,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             _vm.IsDownloadingUpdate = true;
             _vm.IsDownloadPaused = false;
-            _vm.PauseResumeButtonText = "Pause";
+            _vm.IsUpdateProcessing = false;
+            _vm.IsUpdateStatusExpanded = true;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatDownloadingUpdate"), tag);
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
             _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
 
             var prog = new Progress<DownloadReport>(r =>
             {
-                _vm.BusyText = $"Downloading update ... {r.Percentage}";
-                _vm.UpdateDownloadProgress = r.Progress * 100;
-                _vm.UpdateDownloadSpeed = r.Speed;
-                _vm.UpdateDownloadSize = $"{r.BytesReceived} / {r.TotalBytes}";
-                _vm.UpdateDownloadPercentage = r.Percentage;
-                _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+                ApplyUpdateDownloadReport(r);
             });
             var path = await _updateService.DownloadInstallerAsync(dlUrl!, prog);
 
@@ -7007,19 +7602,22 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.IsDownloadingUpdate = true;
                 _vm.IsDownloadPaused = true;
-                _vm.PauseResumeButtonText = "Resume";
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+                _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
                 return;
             }
 
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
 
             if (path == null)
             {
-                System.Windows.MessageBox.Show("Download failed.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("DownloadFailed"), RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             AppendLog("Applying update...");
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
             _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             await Task.Delay(500);
@@ -7029,56 +7627,26 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.IsUpdateAvailable = false;
             _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateCheckFailed");
+            _vm.IsUpdateStatusExpanded = true;
             AppendLog("❌ Update check failed: " + ex.Message);
-            System.Windows.MessageBox.Show("Update check failed.\n" + ex.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateCheckFailed2") + ex.Message, RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
-    }    private System.Windows.Threading.DispatcherTimer? _popupCloseTimer;
+    }
     private string? _lastDownloadUrl;
     private string? _lastDownloadTag;
 
-    private void BtnCheckUpdates_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    private void ApplyUpdateDownloadReport(DownloadReport report)
     {
-        if (_vm.IsDownloadingUpdate)
-        {
-            _popupCloseTimer?.Stop();
-            UpdateDownloadPopup.IsOpen = true;
-        }
-    }
-
-    private void BtnCheckUpdates_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        StartPopupCloseTimer();
-    }
-
-    private void UpdateDownloadPopup_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        _popupCloseTimer?.Stop();
-    }
-
-    private void UpdateDownloadPopup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        StartPopupCloseTimer();
-    }
-
-    private void StartPopupCloseTimer()
-    {
-        if (_popupCloseTimer == null)
-        {
-            _popupCloseTimer = new System.Windows.Threading.DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(500)
-            };
-            _popupCloseTimer.Tick += (s, ev) =>
-            {
-                _popupCloseTimer.Stop();
-                if (!BtnCheckUpdates.IsMouseOver && !UpdateDownloadPopup.IsMouseOver)
-                {
-                    UpdateDownloadPopup.IsOpen = false;
-                }
-            };
-        }
-        _popupCloseTimer.Stop();
-        _popupCloseTimer.Start();
+        _vm.BusyText = report.IsIndeterminate ? report.Status : $"{report.Status} {report.Percentage}";
+        _vm.UpdateStatusText = report.Status;
+        _vm.IsUpdateProcessing = report.IsIndeterminate;
+        _vm.UpdateDownloadProgress = report.Progress * 100;
+        _vm.UpdateDownloadSpeed = report.Speed;
+        _vm.UpdateDownloadSize = $"{report.BytesReceived} / {report.TotalBytes}";
+        _vm.UpdateDownloadPercentage = report.Percentage;
+        _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
     }
 
     public void PauseResumeDownload_Click(object sender, RoutedEventArgs e)
@@ -7087,7 +7655,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _updateService.ResumeDownload();
             _vm.IsDownloadPaused = false;
-            _vm.PauseResumeButtonText = "Pause";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiResumingUpdateDownload");
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
             if (!string.IsNullOrEmpty(_lastDownloadUrl))
             {
                 _ = PerformUpdateDownloadAsync(_lastDownloadTag ?? "Update", _lastDownloadUrl);
@@ -7097,7 +7666,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _updateService.PauseDownload();
             _vm.IsDownloadPaused = true;
-            _vm.PauseResumeButtonText = "Resume";
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
         }
     }
 
@@ -7106,6 +7676,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _updateService.CancelDownload();
         _vm.IsDownloadingUpdate = false;
         _vm.IsDownloadPaused = false;
+        _vm.IsUpdateProcessing = false;
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadCancelled");
+        _vm.IsUpdateStatusExpanded = false;
         _vm.UpdateDownloadProgress = 0;
         _vm.UpdateDownloadPercentage = "0%";
         _vm.UpdateDownloadSpeed = "";
@@ -7195,8 +7768,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         base.OnSourceInitialized(e);
 
         // SpÃƒÂ¤testens hier sollte Windows den Titel im Rahmen akzeptieren
-        if (AppTitleBar != null) AppTitleBar.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
-        this.Title = $"RUST+ DESKTOP v{_updateService.VersionRaw}";
+        UpdateAppTitle();
 
         var hwnd = new WindowInteropHelper(this).Handle;
         _hotkeyMgr = new GlobalHotkeyManager(hwnd);
@@ -7422,7 +7994,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // Send chat alerts for devices that had it enabled
             foreach (var (dev, desired, _) in toggleWork)
             {
-                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                if (TrackingService.HotkeyTriggerChatAlertsEnabled && TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
@@ -7440,7 +8012,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 await HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
 
                 // Send chat alert if enabled for this device
-                if (TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                if (TrackingService.HotkeyTriggerChatAlertsEnabled && TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
@@ -7518,7 +8090,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (!RustPlusDesk.Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
             (tier != "developer" && tier != "lead_contributor" && tier != "lead_developer"))
         {
-            MessageBox.Show("Admin access requires Discord auth and a developer/lead contributor role.", "Admin Panel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole"), RustPlusDesk.Properties.Resources.GetString("UiAdminPanel"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -7600,7 +8172,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (_hotkeysActive)
         {
-            TxtBtnHotkeys.Text = "Hotkeys active";
+            TxtBtnHotkeys.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiHotkeysActive");
             if (BtnHotkeys.IsMouseOver)
             {
                 BtnHotkeys.Background = Brushes.Transparent;
@@ -7616,7 +8188,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         else
         {
-            TxtBtnHotkeys.Text = "Hotkeys";
+            TxtBtnHotkeys.Text = RustPlusDesk.Properties.Resources.GetString("Hotkeys");
             BtnHotkeys.ClearValue(Button.BackgroundProperty);
             BtnHotkeys.ClearValue(Button.BorderBrushProperty);
             BtnHotkeys.ClearValue(Button.ForegroundProperty);
@@ -7706,7 +8278,7 @@ public class RenameDialog : Window
     public string InputText { get; private set; } = string.Empty;
     public RenameDialog(string defaultText)
     {
-        Title = "Rename Custom Crosshair";
+        Title = Properties.Resources.GetString("RenameCustomCrosshair");
         Width = 300; SizeToContent = SizeToContent.Height;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
         ResizeMode = ResizeMode.NoResize;

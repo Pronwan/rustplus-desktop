@@ -30,14 +30,22 @@ public partial class MainWindow
     private bool _teamFeatureMasterWatchBusy;
     private bool _teamFeatureShutdownSent;
     private string? _lastTeamFeatureDisconnectReleaseSignature;
+    private int _teamConnectionSessionId;
     private DateTime _lastHeartbeatTime = DateTime.MinValue;
     private bool? _lastWantsAlerts;
     private bool? _lastWantsCommands;
+
+    private TimeSpan TeamFeatureHeartbeatInterval =>
+        CloudTrafficPolicy.TeamHeartbeatInterval(WindowState == WindowState.Minimized);
 
     private static string TeamFeatureText(string key, string fallback)
         => Properties.Resources.ResourceManager.GetString(key) ?? fallback;
 
     private bool ChatFeaturesBlockedByMaster => _chatFeaturesBlockedByMaster;
+
+    /// <summary>Exposed for TeamSyncWebSocketService to check master status without reflection.</summary>
+    public bool IsChatFeatureMasterPublic => _isChatFeatureMaster;
+
 
     private void ResetTeamFeatureMasterSyncState()
     {
@@ -114,10 +122,10 @@ public partial class MainWindow
             TeamFeatureMasterState? state;
             if (SupabaseAuthManager.IsDiscordAuthenticated || SupabaseAuthManager.IsEmailAuthenticated)
             {
-                var isCriticalChange = wantsAlerts != _lastWantsAlerts || wantsCommands != _lastWantsCommands || (!wantsAlerts && !wantsCommands);
+                var isCriticalChange = wantsAlerts != _lastWantsAlerts || wantsCommands != _lastWantsCommands;
                 var timeSinceLast = DateTime.UtcNow - _lastHeartbeatTime;
 
-                if (!isCriticalChange && timeSinceLast.TotalSeconds < 15)
+                if (!isCriticalChange && timeSinceLast < TeamFeatureHeartbeatInterval)
                 {
                     return; // Skip heartbeat to save server bandwidth
                 }
@@ -156,7 +164,7 @@ public partial class MainWindow
 
     private void UpdateTeamFeatureMasterWatch()
     {
-        if (TeamMembers.Count <= 1)
+        if (TeamMembers.Count == 0)
         {
             StopTeamFeatureMasterWatch();
             return;
@@ -164,32 +172,20 @@ public partial class MainWindow
 
         if (_chatFeaturesBlockedByMaster || HasLocalChatFeatureIntent())
         {
-            int intervalSeconds;
-            if (SupabaseAuthManager.IsPremium)
-            {
-                intervalSeconds = 15;
-            }
-            else if (!string.IsNullOrEmpty(_lastKnownPremiumSponsorId))
-            {
-                intervalSeconds = 60;
-            }
-            else
-            {
-                intervalSeconds = 300;
-            }
+            var interval = TeamFeatureHeartbeatInterval;
 
             if (_teamFeatureMasterWatchTimer != null)
             {
-                if (_teamFeatureMasterWatchTimer.Interval.TotalSeconds != intervalSeconds)
+                if (_teamFeatureMasterWatchTimer.Interval != interval)
                 {
-                    _teamFeatureMasterWatchTimer.Interval = TimeSpan.FromSeconds(intervalSeconds);
+                    _teamFeatureMasterWatchTimer.Interval = interval;
                 }
                 return;
             }
 
             _teamFeatureMasterWatchTimer = new System.Windows.Threading.DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(intervalSeconds)
+                Interval = interval
             };
             _teamFeatureMasterWatchTimer.Tick += TeamFeatureMasterWatchTimer_Tick;
             _teamFeatureMasterWatchTimer.Start();
@@ -270,16 +266,18 @@ public partial class MainWindow
         }
     }
 
-    private void NotifyTeamFeatureServerDisconnected()
+    private void NotifyTeamFeatureServerDisconnected(int sessionId)
     {
-        _ = NotifyTeamFeatureServerDisconnectedAsync();
+        _ = NotifyTeamFeatureServerDisconnectedAsync(sessionId);
     }
 
-    private async Task NotifyTeamFeatureServerDisconnectedAsync()
+    private async Task NotifyTeamFeatureServerDisconnectedAsync(int sessionId)
     {
         try
         {
             StopTeamFeatureMasterWatch();
+
+            if (sessionId != _teamConnectionSessionId) return;
 
             if (_vm?.Selected == null || TeamMembers.Count == 0) return;
             if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated) return;
@@ -296,6 +294,8 @@ public partial class MainWindow
             var myName = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name
                 ?? _vm.Selected?.Name
                 ?? mySteamId;
+
+            if (sessionId != _teamConnectionSessionId) return;
 
             await SupabaseAuthManager.HeartbeatTeamFeaturePresenceAsync(
                 mySteamId,
@@ -358,6 +358,9 @@ public partial class MainWindow
             ? (string.IsNullOrWhiteSpace(state!.MasterName) ? state.MasterSteamId ?? "" : state.MasterName)
             : "";
 
+        var teamSteamIds = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
+        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds);
+
         var currentMasterId = hasActiveMaster ? state!.MasterSteamId : null;
         if (_isChatFeatureMaster && (!previousIsMaster || _lastKnownTeamFeatureMasterId != currentMasterId))
         {
@@ -374,10 +377,6 @@ public partial class MainWindow
         {
             RequestTeamFeatureMasterSync();
         }
-
-        // Update Discord Bot Listener subscription state
-        var teamSteamIds = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
-        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds);
 
         if (_chatFeaturesBlockedByMaster && !previousBlocked)
         {
@@ -402,17 +401,22 @@ public partial class MainWindow
         if (ChatAnnounce != null)
         {
             ChatAnnounce.IsEnabled = !blocked;
-            ChatAnnounce.ToolTip = blocked ? message : FindResource("RightClickConfigure");
+            var alertsKey = RustPlusDesk.Properties.Resources.GetString("Alerts") ?? "Alerts";
+            ChatAnnounce.ToolTip = blocked ? message : (TryFindResource(alertsKey) ?? alertsKey);
         }
 
         if (ChatAlertsConfigureButton != null)
         {
             ChatAlertsConfigureButton.IsEnabled = !blocked;
-            ChatAlertsConfigureButton.ToolTip = blocked ? message : FindResource("Configure");
+            var configKey = RustPlusDesk.Properties.Resources.GetString("Configure") ?? "Configure";
+            ChatAlertsConfigureButton.ToolTip = blocked ? message : (TryFindResource(configKey) ?? configKey);
         }
 
         if (BtnOpenChatCommands != null)
-            BtnOpenChatCommands.ToolTip = blocked ? message : FindResource("ChatCommandsSettings");
+        {
+            var chatCmdKey = RustPlusDesk.Properties.Resources.GetString("ChatCommandsSettings") ?? "Chat Commands Settings";
+            BtnOpenChatCommands.ToolTip = blocked ? message : (TryFindResource(chatCmdKey) ?? chatCmdKey);
+        }
 
         if (ChatFeatureMasterWarningBadge != null)
             ChatFeatureMasterWarningBadge.Visibility = blocked ? Visibility.Visible : Visibility.Collapsed;
@@ -422,7 +426,7 @@ public partial class MainWindow
                 ? TeamFeatureText("ChatFeatureMasterOnlineTitle", "Chat Master online")
                 : "";
 
-        ChatCommandsOverlay?.SetMasterBlocked(blocked, message);
+        AppSettingsPanel?.ChatCommandsEditor.SetMasterBlocked(blocked, message);
     }
 
     private bool HasLocalChatFeatureIntent()

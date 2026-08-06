@@ -74,7 +74,7 @@ public partial class MainWindow
         var head = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6) };
         
         // Shop Name
-        var shopTitle = CleanLabel(s.Label) ?? "Shop";
+        var shopTitle = CleanLabel(s.Label) ?? Properties.Resources.ShopWord;
         
         head.Children.Add(new TextBlock
         {
@@ -230,6 +230,11 @@ public partial class MainWindow
 
     private void ToggleShopSearch()
     {
+        // Shops removed from the Rust+ feed, or this server stopped delivering them —
+        // never open the shop search (it is also reachable via shortcut and tutorial).
+        if (Services.RustApiFeatures.EventsAndShopsRemoved || !_shopDataAvailable)
+            return;
+
         if (ShopSearchContent.Visibility == Visibility.Collapsed)
         {
             _ = InitEmbeddedShopSearchAsync();
@@ -344,6 +349,11 @@ public partial class MainWindow
     internal List<RustPlusClientReal.ShopMarker> GetLastShopsList()
     {
         return _lastShops;
+    }
+
+    internal List<(double X, double Y, string Name)> GetMapMonumentsList()
+    {
+        return _monData ?? new List<(double X, double Y, string Name)>();
     }
 
     internal List<ShopAlertRule> GetAlertRulesList()

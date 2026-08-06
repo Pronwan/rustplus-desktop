@@ -23,7 +23,7 @@ namespace RustPlusDesk.Properties {
             set => resourceCulture = value;
         }
 
-        private static string GetString(string key)
+        public static string GetString(string key)
         {
             var val = ResourceManager.GetString(key, resourceCulture);
             if (string.IsNullOrWhiteSpace(val))
@@ -511,6 +511,22 @@ namespace RustPlusDesk.Properties {
         public static string AlertOilRigTriggered => GetString("AlertOilRigTriggered");
         public static string AlertAlarmTriggered => GetString("AlertAlarmTriggered");
         public static string AlertCrateUnlocksIn10Min => GetString("AlertCrateUnlocksIn10Min");
+        public static string UiInGameAlarmTitle => GetString("UiInGameAlarmTitle");
+        public static string UiBadgeSmallOil => GetString("UiBadgeSmallOil");
+        public static string UiBadgeLargeOil => GetString("UiBadgeLargeOil");
+        public static string UiBadgeOilRigTooltip => GetString("UiBadgeOilRigTooltip");
+        public static string AlertCrateUnlocksIn15Min => GetString("AlertCrateUnlocksIn15Min");
+        public static string AlertCrateUnlocksIn15MinName => GetString("AlertCrateUnlocksIn15MinName");
+        public static string AlertCrateUnlocksIn15MinDesc => GetString("AlertCrateUnlocksIn15MinDesc");
+        public static string AlertCrateUnlocksIn15MinVars => GetString("AlertCrateUnlocksIn15MinVars");
+        public static string ChatCmdOilRigHackRunning => GetString("ChatCmdOilRigHackRunning");
+        public static string UiStartTimer => GetString("UiStartTimer");
+        public static string UiMinutes => GetString("UiMinutes");
+        public static string UiTimerTargetCustom => GetString("UiTimerTargetCustom");
+        public static string UiLargeOilRigTrigger => GetString("UiLargeOilRigTrigger");
+        public static string UiSmallOilRigTrigger => GetString("UiSmallOilRigTrigger");
+        public static string UiShowCrateOnMap => GetString("UiShowCrateOnMap");
+        public static string UiTimerNamePlaceholder => GetString("UiTimerNamePlaceholder");
         public static string AlertCrateUnlocksIn5Min => GetString("AlertCrateUnlocksIn5Min");
         public static string AlertDeepSeaUp => GetString("AlertDeepSeaUp");
         public static string AlertNewShop => GetString("AlertNewShop");
@@ -730,6 +746,37 @@ namespace RustPlusDesk.Properties {
         public static string SearchIconsPlaceholder => GetString("SearchIconsPlaceholder");
         public static string ResetToDefaultIcon => GetString("ResetToDefaultIcon");
         public static string Rule => GetString("Rule");
+        public static string PurgeOrphanedCloudData => GetString("PurgeOrphanedCloudData");
+        public static string PurgeOrphanedCloudDataTooltip => GetString("PurgeOrphanedCloudDataTooltip");
+        public static string PurgeOrphanedCloudDataConfirmTitle => GetString("PurgeOrphanedCloudDataConfirmTitle");
+        public static string PurgeOrphanedCloudDataConfirmMessage => GetString("PurgeOrphanedCloudDataConfirmMessage");
+        public static string PurgeOrphanedCloudDataSuccessMessage => GetString("PurgeOrphanedCloudDataSuccessMessage");
+        public static string UiDiscordWebhookExclusive => GetString("UiDiscordWebhookExclusive");
+        public static string UiDiscordWebhookExclusiveTooltip => GetString("UiDiscordWebhookExclusiveTooltip");
+        public static string OilRigCrateStatus => GetString("OilRigCrateStatus");
+        public static string ListenForServerEvents => GetString("ListenForServerEvents");
+        public static string ListenForServerEventsDesc => GetString("ListenForServerEventsDesc");
+        public static string TrustOwnDetections => GetString("TrustOwnDetections");
+        public static string TrustOwnDetectionsDesc => GetString("TrustOwnDetectionsDesc");
+        public static string ServerEventsSection => GetString("ServerEventsSection");
+        public static string OilRigCrateSeen => GetString("OilRigCrateSeen");
+        public static string EventNotDetected => GetString("EventNotDetected");
+        public static string EventUnconfirmed => GetString("EventUnconfirmed");
+        public static string AlertUnavailableOnServer => GetString("AlertUnavailableOnServer");
+        public static string CargoSpawnedAgo => GetString("CargoSpawnedAgo");
+        public static string CargoGoneAgo => GetString("CargoGoneAgo");
+        public static string DeepSeaUpFor => GetString("DeepSeaUpFor");
+        public static string AlertCargoSpawnedAudio => GetString("AlertCargoSpawnedAudio");
+        public static string AlertOilRigCrateUp => GetString("AlertOilRigCrateUp");
+        public static string ChatCmdCargoCloudActive => GetString("ChatCmdCargoCloudActive");
+        public static string ChatCmdCargoCloudGone => GetString("ChatCmdCargoCloudGone");
+        public static string ChatCmdCargoCloudUnknown => GetString("ChatCmdCargoCloudUnknown");
+        public static string ChatCmdDeepSeaCloudActive => GetString("ChatCmdDeepSeaCloudActive");
+        public static string ChatCmdDeepSeaCloudEnded => GetString("ChatCmdDeepSeaCloudEnded");
+        public static string ChatCmdDeepSeaCloudUnknown => GetString("ChatCmdDeepSeaCloudUnknown");
+        public static string ChatCmdOilRigCloudSeen => GetString("ChatCmdOilRigCloudSeen");
+        public static string ChatCmdOilRigCloudNone => GetString("ChatCmdOilRigCloudNone");
+        public static string EventNotTrackableOnServer => GetString("EventNotTrackableOnServer");
     }
 }
 

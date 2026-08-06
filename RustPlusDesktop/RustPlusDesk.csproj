@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -25,7 +25,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>7.3.3</Version>
+		<Version>8.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -108,6 +108,7 @@
 	  <None Remove="Assets\icons\largeoilrig.png" />
     <None Remove="Assets\icons\jungle_swamp.png" />
 	  <None Remove="Assets\icons\launchsite.png" />
+	  <None Remove="Assets\icons\raid-targets\**\*" />
 	  <None Remove="Assets\icons\lighthouse.png" />
 	  <None Remove="Assets\icons\map-icons\base1.png" />
 	  <None Remove="Assets\icons\map-icons\base2.png" />
@@ -147,6 +148,7 @@
 	  <None Remove="Assets\icons\pen.png" />
 	  <None Remove="Assets\icons\pencil.png" />
 	  <None Remove="Assets\icons\pin.png" />
+	  <None Remove="Assets\icons\recycler.png" />
 	  <None Remove="Assets\icons\PiP.png" />
 	  <None Remove="Assets\icons\Popup.png" />
 	  <None Remove="Assets\icons\powerplant.png" />
@@ -158,6 +160,7 @@
 	  <None Remove="Assets\icons\sewerbranch.png" />
 	  <None Remove="Assets\icons\smartalarm.png" />
 	  <None Remove="Assets\icons\smartswitch.png" />
+	  <None Remove="Assets\icons\automation.png" />
 	  <None Remove="Assets\icons\stable.png" />
 	  <None Remove="Assets\icons\stonequarry.png" />
 	  <None Remove="Assets\icons\storagemonitor.png" />
@@ -178,6 +181,7 @@
 	  <None Remove="Assets\icons\waterwell.png" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
 	  <None Remove="Assets\Data\recycler-items.json" />
+	  <None Remove="Assets\Data\raid-data.json" />
 
 	  <None Remove="Assets\icons\discord.png" />
 	  <None Remove="Assets\icq-message.wav" />
@@ -246,6 +250,7 @@
 	  <None Remove="Assets\Screenshots\Tracking5.jpg" />
 	  <None Remove="Assets\Screenshots\v7.1.5\*.png" />
 	  <None Remove="Assets\Screenshots\7.1.8\*.png" />
+	  <None Remove="Assets\Screenshots\8.0\*.png" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -300,8 +305,10 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  </Resource>
+	  <Resource Include="Assets\icons\recycler.png" />
 	  <Resource Include="Assets\icons\smartalarm.png" />
 	  <Resource Include="Assets\icons\smartswitch.png" />
+	  <Resource Include="Assets\icons\automation.png" />
 	  <Resource Include="Assets\icons\storagemonitor.png" />
 	  <Resource Include="Assets\icons\text.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -330,15 +337,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
-    <PackageReference Include="RustPlusApi" Version="1.3.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="RustPlusApi" Version="2.0.0-beta.6" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
     <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" />
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" Private="false" />
+    </ItemGroup>
 
   <PropertyGroup>
     <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
@@ -393,6 +401,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Include="Assets\Data\Recycling-Data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\raid-data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
@@ -451,6 +463,10 @@
     <Resource Include="Assets\icons\powerplant.png" />
     <Resource Include="Assets\icons\powerstation.png" />
     <Resource Include="Assets\icons\radtown.png" />
+    <Content Include="Assets\icons\raid-targets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Resource Include="Assets\icons\satellitedish.png" />
     <Resource Include="Assets\icons\sewerbranch.png" />
     <Resource Include="Assets\icons\stable.png" />
@@ -472,8 +488,12 @@
     <Resource Include="Assets\icons\watertreatment.png" />
     <Resource Include="Assets\icons\waterwell.png" />
     <Resource Include="Assets\Data\rust-item-list.json" />
+    <!--  Reference cues for the audio event listener. Embedded rather than copied so a
+          user cannot break detection by deleting or replacing a file on disk.  -->
+    <EmbeddedResource Include="Assets\audio-alerts\*.wav" />
     <EmbeddedResource Include="Assets\Data\recycler-items.json" />
     <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
+    <EmbeddedResource Include="Assets\Data\raid-data.json" />
     <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\icq-message.wav" />
     <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
@@ -538,6 +558,8 @@
     <Resource Include="Assets\Screenshots\Tracking5.jpg" />
     <Resource Include="Assets\Screenshots\v7.1.5\*.png" />
     <Resource Include="Assets\Screenshots\7.1.8\*.png" />
+    <Resource Include="Assets\Screenshots\8.0\*.png" />
+    <Resource Include="Assets\Screenshots\8.0\clan_chat.jpg" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
     <Resource Include="Assets\Screenshots\v4_5.png">

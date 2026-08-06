@@ -8,7 +8,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    private const double MAP_DEFAULT_ZOOM = 1.0;
+    private const double MAP_DEFAULT_ZOOM = 1.18;
     private const double MAP_FOCUS_ZOOM   = 6.0;
  
     private Point _panLastHost;
@@ -126,39 +126,60 @@ public partial class MainWindow
     }
 
     // Welt->Bild (Pixel im Bildkoordinatensystem - vor Zoom/Pan)
-    private const double PAD_WORLD = 2000.0;
-
     private Point WorldToImagePx(double x, double y)
     {
         if (_worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0)
             return new Point(0, 0);
 
-        double totalWorld = _worldSizeS + PAD_WORLD;
-        double halfPad = PAD_WORLD * 0.5;
+        if (_isShowingDeepSeaMap)
+        {
+            var (minX, maxX, minY, maxY) = GetDeepSeaWorldBox();
 
-        double xx = Math.Clamp(x, -halfPad, _worldSizeS + halfPad);
-        double yy = Math.Clamp(y, -halfPad, _worldSizeS + halfPad);
+            double xx = Math.Clamp(x, minX, maxX);
+            double yy = Math.Clamp(y, minY, maxY);
+
+            double u = _worldRectPx.X + ((xx - minX) / (maxX - minX)) * _worldRectPx.Width;
+            double v = _worldRectPx.Y + (1.0 - (yy - minY) / (maxY - minY)) * _worldRectPx.Height;
+
+            return new Point(u, v);
+        }
+
+        double padWorld = GetCurrentMapPaddingWorld();
+        double totalWorld = _worldSizeS + padWorld;
+        double halfPad = padWorld * 0.5;
+
+        double xxNormal = Math.Clamp(x, -halfPad, _worldSizeS + halfPad);
+        double yyNormal = Math.Clamp(y, -halfPad, _worldSizeS + halfPad);
 
         double fullSidePx = _worldRectPx.Width * (totalWorld / _worldSizeS);
 
-        double imgW = _scene?.Width > 0 ? _scene.Width : ImgMap.Width;
-        double imgH = _scene?.Height > 0 ? _scene.Height : ImgMap.Height;
-        double fullOx = (imgW - fullSidePx) / 2.0;
-        double fullOy = (imgH - fullSidePx) / 2.0;
+        double imgWNormal = _scene?.Width > 0 ? _scene.Width : ImgMap.Width;
+        double imgHNormal = _scene?.Height > 0 ? _scene.Height : ImgMap.Height;
+        double fullOx = (imgWNormal - fullSidePx) / 2.0;
+        double fullOy = (imgHNormal - fullSidePx) / 2.0;
 
-        double u = fullOx + ((xx + halfPad) / totalWorld) * fullSidePx;
-        double v = fullOy + (((_worldSizeS - yy) + halfPad) / totalWorld) * fullSidePx;
+        double uNormal = fullOx + ((xxNormal + halfPad) / totalWorld) * fullSidePx;
+        double vNormal = fullOy + (((_worldSizeS - yyNormal) + halfPad) / totalWorld) * fullSidePx;
 
-        return new Point(u, v);
+        return new Point(uNormal, vNormal);
     }
 
     private Point ImagePxToWorld(double u, double v)
     {
         if (_worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0) return new Point(0, 0);
 
-        double x = (u - _worldRectPx.X) / _worldRectPx.Width * _worldSizeS;
-        double y = _worldSizeS - (v - _worldRectPx.Y) / _worldRectPx.Height * _worldSizeS;
-        return new Point(x, y);
+        if (_isShowingDeepSeaMap)
+        {
+            var (minX, maxX, minY, maxY) = GetDeepSeaWorldBox();
+
+            double x = minX + ((u - _worldRectPx.X) / _worldRectPx.Width) * (maxX - minX);
+            double y = minY + (1.0 - (v - _worldRectPx.Y) / _worldRectPx.Height) * (maxY - minY);
+            return new Point(x, y);
+        }
+
+        double xNormal = (u - _worldRectPx.X) / _worldRectPx.Width * _worldSizeS;
+        double yNormal = _worldSizeS - (v - _worldRectPx.Y) / _worldRectPx.Height * _worldSizeS;
+        return new Point(xNormal, yNormal);
     }
 
     private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
@@ -406,7 +427,7 @@ public partial class MainWindow
     {
         if (_worldSizeS > 0)
         {
-            CenterMapOnWorldAnimated(_worldSizeS / 2, _worldSizeS / 2, allowDip: false, fast: false, targetZoom: MAP_DEFAULT_ZOOM);
+            CenterMapOnWorldAnimated(_worldSizeS / 2, _worldSizeS / 2, allowDip: false, fast: false, keepTracking: true, targetZoom: MAP_DEFAULT_ZOOM);
         }
         else
         {

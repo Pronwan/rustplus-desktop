@@ -136,8 +136,34 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     private MiniMapWindow? _miniMap;
     private VisualBrush? _miniMapBrush;
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
-    private void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
+    public void EnsureMiniMapOpen()
     {
+        if (_miniMap == null || !_miniMap.IsVisible)
+        {
+            BtnToggleMiniMap_Click(null, null);
+        }
+    }
+
+    private async void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected?.IsFullConnected != true)
+        {
+            var prompt = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = Properties.Resources.GetString("Tutorials.Step.minimap.intro.Title") ?? "Serververbindung erforderlich",
+                Content = Properties.Resources.GetString("Tutorials.Step.minimap.intro.Description") ?? "Bitte verbinde dich zuerst mit einem Server, um die Mini-Map zu nutzen.",
+                CloseButtonText = "OK",
+                ShowTitle = true,
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            await prompt.ShowDialogAsync();
+            return;
+        }
+
+        if (_isMap3DActive)
+            CloseMap3DView();
+
         if (_miniMap == null || !_miniMap.IsVisible)
 
         {
@@ -180,19 +206,36 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             _miniMap.Closed += (s, ev) =>
             {
                 _miniMap = null;
-                BtnMiniMap.ClearValue(Control.BackgroundProperty);
-                BtnMiniMap.ClearValue(Control.BorderBrushProperty);
+                UpdateMapViewSelector();
             };
 
             _miniMap.Show();
             CenterMiniMapOnPlayer();
+            UpdateMapViewSelector();
 
-            BtnMiniMap.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
-            BtnMiniMap.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+            // Auto-start tutorial if not seen and connected
+            if (e != null)
+            {
+                _ = AutoStartMiniMapTutorialAsync();
+            }
         }
         else
         {
             _miniMap.Close();
+        }
+    }
+
+    private async System.Threading.Tasks.Task AutoStartMiniMapTutorialAsync()
+    {
+        var mapTutDef = _tutorialRegistry?.Find("mini-map");
+        if (mapTutDef != null && _tutorialProgressStore != null && _tutorialService != null)
+        {
+            var progress = await _tutorialProgressStore.GetAsync(mapTutDef);
+            if (progress.Status != RustPlusDesk.Features.Tutorials.TutorialStatus.Completed && 
+                progress.Status != RustPlusDesk.Features.Tutorials.TutorialStatus.Skipped)
+            {
+                await _tutorialService.StartAsync("mini-map");
+            }
         }
     }
 
@@ -338,11 +381,11 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 using var ms = new MemoryStream(frame.Bytes);
                 bi.BeginInit(); bi.CacheOption = BitmapCacheOption.OnLoad; bi.StreamSource = ms; bi.EndInit(); bi.Freeze();
                 img.Source = bi;
-                if (status != null) status.Text = (frame.Width > 0 && frame.Height > 0) ? $"{frame.Width}×{frame.Height}" : "snapshot";
+                if (status != null) status.Text = (frame.Width > 0 && frame.Height > 0) ? $"{frame.Width}×{frame.Height}" : Properties.Resources.Snapshot.TrimEnd(':', ' ');
             }
             else
             {
-                if (status != null) status.Text = "no frame";
+                if (status != null) status.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoFrame");
             }
         }
         catch (Exception ex)

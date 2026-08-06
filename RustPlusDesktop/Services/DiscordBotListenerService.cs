@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -18,13 +19,24 @@ public class DiscordBotListenerService
     private readonly List<RealtimeChannel> _activeChannels = new();
     private readonly HashSet<string> _subscribedGuildIds = new();
     private bool _isListening;
+    private bool _isNotificationMaster;
     private List<string> _teamSteamIds = new();
+    private static readonly ConcurrentDictionary<string, DateTime> InvalidChannelUntilUtc = new();
 
     private DiscordBotListenerService() { }
 
     public async Task UpdateSubscriptionStateAsync(bool isMaster, List<string> teamSteamIds)
     {
-        if (!isMaster || teamSteamIds == null || teamSteamIds.Count == 0 || !SupabaseAuthManager.IsPremium)
+        _isNotificationMaster = isMaster;
+
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+        {
+            StopListening();
+            return;
+        }
+
+        // Command rows are claimed atomically; master status only gates outgoing notifications.
+        if (teamSteamIds == null || teamSteamIds.Count == 0 || !SupabaseAuthManager.IsPremium)
         {
             if (_isListening)
             {
@@ -76,6 +88,8 @@ public class DiscordBotListenerService
 
     private async Task SubscribeToGuildQueueAsync(string guildId)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
         try
         {
             var channel = SupabaseAuthManager.Client.Realtime
@@ -84,7 +98,8 @@ public class DiscordBotListenerService
             var options = new Supabase.Realtime.PostgresChanges.PostgresChangesOptions(
                 "public", 
                 "bot_commands_queue", 
-                Supabase.Realtime.PostgresChanges.PostgresChangesOptions.ListenType.Inserts);
+                Supabase.Realtime.PostgresChanges.PostgresChangesOptions.ListenType.Inserts,
+                $"guild_id=eq.{guildId}");
             channel.Register(options);
 
             // Listen to inserts in the command queue for this guild
@@ -99,7 +114,7 @@ public class DiscordBotListenerService
                         Log($"[DiscordBotListener] Record is null - make sure REPLICA IDENTITY FULL is set: ALTER TABLE public.bot_commands_queue REPLICA IDENTITY FULL;");
                         return;
                     }
-                    Log($"[DiscordBotListener] Received command: id={record.Id}, type={record.CommandType}, status={record.Status}");
+                    Log($"[DiscordBotListener] Received command: id={record.Id}, guild={record.GuildId}, type={record.CommandType}, status={record.Status}");
                     _ = ProcessIncomingCommandAsync(record);
                 }
                 catch (Exception ex)
@@ -108,19 +123,28 @@ public class DiscordBotListenerService
                 }
             });
 
+            lock (_subscribedGuildIds) { _subscribedGuildIds.Add(guildId); }
             await channel.Subscribe();
             _activeChannels.Add(channel);
-            lock (_subscribedGuildIds) { _subscribedGuildIds.Add(guildId); }
+            
             Log($"[DiscordBotListener] Subscribed to command queue for Guild: {guildId}");
+            await ProcessRecentPendingCommandsAsync(guildId);
         }
         catch (Exception ex)
         {
+            lock (_subscribedGuildIds) { _subscribedGuildIds.Remove(guildId); }
             Log($"[DiscordBotListener] Failed to subscribe to Guild {guildId}: {ex.Message}");
         }
     }
 
     private async Task ProcessIncomingCommandAsync(BotCommandsQueueModel record)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+        {
+            Log($"[DiscordBotListener] Ignoring command {record.Id}: application update is required.");
+            return;
+        }
+
         try
         {
             var id = record.Id;
@@ -128,12 +152,20 @@ public class DiscordBotListenerService
             var commandType = record.CommandType;
             var status = record.Status;
 
-            if (status != "pending" || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(guildId)) return;
+            if (status != "pending" || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(guildId))
+            {
+                Log($"[DiscordBotListener] Ignoring invalid command: id={id}, guild={guildId}, status={status}");
+                return;
+            }
 
             // Filter locally to ensure we only process commands for guilds we are subscribed to
             lock (_subscribedGuildIds)
             {
-                if (!_subscribedGuildIds.Contains(guildId)) return;
+                if (!_subscribedGuildIds.Contains(guildId))
+                {
+                    // Log($"[DiscordBotListener] Ignoring command {id}: Guild {guildId} is not active on this client.");
+                    // return;
+                }
             }
 
             // Try to acquire the command lock by changing status to 'processing'
@@ -147,6 +179,7 @@ public class DiscordBotListenerService
             if (updateResponse.Models == null || updateResponse.Models.Count == 0)
             {
                 // Lock acquisition failed (another client picked it up)
+                Log($"[DiscordBotListener] Command {id} was not claimed (already handled or rejected by RLS).");
                 return;
             }
 
@@ -190,7 +223,7 @@ public class DiscordBotListenerService
                 var mainWindow = System.Windows.Application.Current.MainWindow as RustPlusDesk.Views.MainWindow;
                 if (mainWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm)
                 {
-                    result.Message = "Desktop client is initializing or not fully loaded.";
+                    result.Message = Properties.Resources.GetString("DiscordClientInitializing");
                     return result;
                 }
 
@@ -201,7 +234,7 @@ public class DiscordBotListenerService
                         var timeStr = vm.ServerTime;
                         if (!string.IsNullOrWhiteSpace(vm.TimeUntilNextPhase))
                             timeStr += $" ({vm.TimeUntilNextPhase})";
-                        result.Message = $"🕒 Current Server Time: {timeStr}";
+                        result.Message = string.Format(Properties.Resources.GetString("FormatCurrentServerTime"), timeStr);
                         break;
 
                     case "pop":
@@ -209,7 +242,7 @@ public class DiscordBotListenerService
                         var popStr = $"Players: {vm.ServerPlayers}";
                         if (vm.ServerQueue != "0" && vm.ServerQueue != "-")
                             popStr += $" (Queue: {vm.ServerQueue})";
-                        result.Message = $"👥 Server Population: {popStr}";
+                        result.Message = string.Format(Properties.Resources.GetString("FormatServerPopulation"), popStr);
                         break;
 
                     case "toggle_switch":
@@ -225,7 +258,7 @@ public class DiscordBotListenerService
 
                             if (string.IsNullOrEmpty(deviceNameOrId))
                             {
-                                result.Message = "❌ Invalid command payload: missing device name or ID.";
+                                result.Message = Properties.Resources.GetString("DiscordInvalidCommandPayload");
                             }
                             else
                             {
@@ -278,7 +311,7 @@ public class DiscordBotListenerService
 
                     case "map":
                         result.Success = true;
-                        result.Message = "⌛ Die Map wird gerendert... bitte warten.";
+                        result.Message = Properties.Resources.GetString("DiscordRenderingMap");
                         // Start upload asynchronously so it doesn't block
                         _ = Task.Run(async () =>
                         {
@@ -291,7 +324,7 @@ public class DiscordBotListenerService
 
                     case "mapfull":
                         result.Success = true;
-                        result.Message = "⌛ Die gesamte Map wird gerendert... bitte warten.";
+                        result.Message = Properties.Resources.GetString("DiscordRenderingFullMap");
                         _ = Task.Run(async () =>
                         {
                             var base64 = await mainWindow.GetFullMapScreenshotBase64Async();
@@ -302,13 +335,13 @@ public class DiscordBotListenerService
                         break;
 
                     default:
-                        result.Message = $"Unknown or unsupported command: {commandType}";
+                        result.Message = string.Format(Properties.Resources.GetString("FormatUnknownCommand"), commandType);
                         break;
                 }
             }
             catch (Exception ex)
             {
-                result.Message = $"Error executing command: {ex.Message}";
+                result.Message = string.Format(Properties.Resources.GetString("FormatCommandError"), ex.Message);
             }
             return result;
         }).Task.Unwrap();
@@ -346,7 +379,7 @@ public class DiscordBotListenerService
 
     public async Task SendNotificationAsync(string notificationType, string message)
     {
-        if (!_isListening || _teamSteamIds.Count == 0) return;
+        if (!_isNotificationMaster || !_isListening || _teamSteamIds.Count == 0) return;
 
         await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
     }
@@ -355,10 +388,10 @@ public class DiscordBotListenerService
     {
         Log(
             $"[DiscordBotListener] Raid notification requested: serverKey='{serverKey}', "
-            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, "
+            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, isNotificationMaster={_isNotificationMaster}, "
             + $"teamCount={_teamSteamIds.Count}, IsPremium={SupabaseAuthManager.IsPremium}.");
 
-        if (_isListening && _teamSteamIds.Count > 0)
+        if (_isNotificationMaster && _isListening && _teamSteamIds.Count > 0)
         {
             await SendNotificationToOwnersAsync("raid", message, _teamSteamIds);
             return;
@@ -389,6 +422,8 @@ public class DiscordBotListenerService
         string message,
         List<string> ownerSteamIds)
     {
+        if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
         if (ownerSteamIds.Count == 0)
         {
             Log($"[DiscordBotListener] {notificationType} notification skipped: no owner Steam IDs.");
@@ -457,11 +492,13 @@ public class DiscordBotListenerService
             foreach (var config in configs)
             {
                 if (string.IsNullOrEmpty(config.ChannelId)) continue;
+                if (InvalidChannelUntilUtc.TryGetValue(config.ChannelId, out var invalidUntil) && invalidUntil > DateTime.UtcNow)
+                    continue;
 
                 var payload = new
                 {
                     channel_id = config.ChannelId,
-                    content = message,
+                    content = string.IsNullOrWhiteSpace(config.MentionText) ? message : $"{config.MentionText}\n{message}",
                     tts = config.TtsEnabled,
                     audio_alert = config.AudioAlertEnabled
                 };
@@ -491,6 +528,16 @@ public class DiscordBotListenerService
                     if (!responseMsg.IsSuccessStatusCode)
                     {
                         var responseContent = await responseMsg.Content.ReadAsStringAsync();
+                        if (SupabaseAuthManager.HandleUpgradeRequiredResponse(responseContent))
+                            return;
+
+                        if (responseContent.Contains("50013", StringComparison.OrdinalIgnoreCase) ||
+                            responseContent.Contains("Missing Permissions", StringComparison.OrdinalIgnoreCase))
+                        {
+                            InvalidChannelUntilUtc[config.ChannelId] = DateTime.UtcNow.AddHours(1);
+                            WarnMissingChannelPermission(config.ChannelId);
+                            continue;
+                        }
                         throw new Exception($"HTTP {responseMsg.StatusCode}: {responseContent}");
                     }
                 }
@@ -504,6 +551,44 @@ public class DiscordBotListenerService
         {
             Log($"[DiscordBotListener] Failed to send notification: {ex.Message}");
         }
+    }
+
+    private async Task ProcessRecentPendingCommandsAsync(string guildId)
+    {
+        try
+        {
+            var cutoff = DateTime.UtcNow.AddSeconds(-15);
+            var response = await SupabaseAuthManager.Client
+                .From<BotCommandsQueueModel>()
+                .Filter("guild_id", Operator.Equals, guildId)
+                .Filter("status", Operator.Equals, "pending")
+                .Get();
+
+            foreach (var command in response.Models.Where(x => x.CreatedAt >= cutoff))
+            {
+                Log($"[DiscordBotListener] Recovering pending command {command.Id} ({command.CommandType}).");
+                await ProcessIncomingCommandAsync(command);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"[DiscordBotListener] Failed to recover pending commands for Guild {guildId}: {ex.Message}");
+        }
+    }
+
+    private static void WarnMissingChannelPermission(string channelId)
+    {
+        Log($"[DiscordBotListener] Channel {channelId} disabled for one hour: Discord bot is missing permissions.");
+        System.Windows.Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (System.Windows.Application.Current.MainWindow is Views.MainWindow mainWindow)
+            {
+                mainWindow.ShowInfoSnackbar(
+                    "Discord permissions missing",
+                    "A configured Discord channel was disabled for one hour. Check the bot's channel permissions.",
+                    Wpf.Ui.Controls.ControlAppearance.Caution);
+            }
+        }));
     }
 
     private static bool IsPremiumBotOwner(UserProfileModel profile)

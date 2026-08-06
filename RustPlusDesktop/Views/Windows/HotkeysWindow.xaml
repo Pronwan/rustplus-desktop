@@ -180,7 +180,7 @@
 
                     <StackPanel x:Name="PanelDelay" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
                         <TextBlock x:Name="TxtDelayLabel" 
-                                   Text="Toggle Delay: 150ms" 
+                                   Text="{DynamicResource UiToggleDelay150ms}"
                                    Foreground="{DynamicResource TextSubtle}"
                                    VerticalAlignment="Center"
                                    Width="140"
@@ -272,7 +272,7 @@
                                             
                                             <!-- Sub-info: ID & Status -->
                                             <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                                <TextBlock Text="ID: " 
+                                                <TextBlock Text="{DynamicResource UiID}"
                                                            FontSize="11" 
                                                            Foreground="{DynamicResource TextSubtle}"/>
                                                 <TextBlock Text="{Binding EntityId}" 

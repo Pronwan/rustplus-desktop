@@ -127,7 +127,7 @@ public partial class MainWindow
             double h = fe.DesiredSize.Height > 0 ? fe.DesiredSize.Height : 28;
             Canvas.SetLeft(fe, p.X - w / 2);
             Canvas.SetTop(fe, p.Y - h / 2);
-            fe.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+            fe.Visibility = (_showMonuments && !_isShowingDeepSeaMap) ? Visibility.Visible : Visibility.Collapsed;
         }
         PopulateMonumentList();
     }
@@ -175,17 +175,19 @@ public partial class MainWindow
         double eff = GetEffectiveZoom();
         double scale;
 
+        bool visible = _showMonuments && !_isShowingDeepSeaMap;
+
         if (TrackingService.MapUseMonumentText)
         {
             // Inverse scaling to make text labels appear larger/compensation on zoom outs!
             scale = CalcOverlayScale(eff, 0.45, 0.95) * TrackingService.MapMonumentScale;
-            el.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+            el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
         else
         {
             // Standard icon mode: also respects custom scaling slider
             scale = CalcOverlayScale(eff, MON_SIZE_EXP, MON_BASE_MULT) * TrackingService.MapMonumentScale;
-            el.Visibility = _showMonuments ? Visibility.Visible : Visibility.Collapsed;
+            el.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         el.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -273,6 +275,80 @@ public partial class MainWindow
         try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + ".json")); } catch { }
     }
 
+    private bool IsCustomMapActive()
+    {
+        var profile = _vm?.Selected;
+        return profile != null && !string.IsNullOrWhiteSpace(profile.CustomMapUrl);
+    }
+
+    private double GetCurrentMapPaddingWorld()
+    {
+        return IsCustomMapActive() ? 1000.0 : 2000.0;
+    }
+
+
+
+    private static BitmapImage? TryLoadCustomMapCache(string key)
+    {
+        try
+        {
+            string imgPath = System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png");
+            if (!System.IO.File.Exists(imgPath)) return null;
+
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(imgPath));
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
+        }
+        catch { return null; }
+    }
+
+    private static void SaveCustomMapCache(string key, BitmapSource bitmap)
+    {
+        try
+        {
+            System.IO.Directory.CreateDirectory(s_mapCacheDir);
+            string imgPath = System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png");
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            using var ms = new System.IO.MemoryStream();
+            encoder.Save(ms);
+            System.IO.File.WriteAllBytes(imgPath, ms.ToArray());
+        }
+        catch { /* non-critical */ }
+    }
+
+    public static void DeleteCustomMapCache(string key)
+    {
+        try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png")); } catch { }
+    }
+
+    private static async Task<BitmapImage?> DownloadCustomImageFromUrlAsync(string url, CancellationToken ct = default)
+    {
+        try
+        {
+            using var client = new System.Net.Http.HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(20);
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+            byte[] bytes = await client.GetByteArrayAsync(url, ct).ConfigureAwait(false);
+            if (bytes == null || bytes.Length == 0) return null;
+
+            using var ms = new System.IO.MemoryStream(bytes);
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+            bi.StreamSource = ms;
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
+        }
+        catch { return null; }
+    }
+
     /// <summary>
     /// Returns true if current monument harbors indicate a server wipe vs what was previously saved.
     /// </summary>
@@ -306,6 +382,11 @@ public partial class MainWindow
     }
     // ──────────────────────────────────────────────────────────────────────────────────────────
 
+    public async Task ReloadMapAsync()
+    {
+        await LoadMapAsync();
+    }
+
     private async Task LoadMapAsync()
     {
         if (_rust is not RustPlusClientReal real) return;
@@ -317,25 +398,40 @@ public partial class MainWindow
 
         RustPlusClientReal.MapWithMonuments? map = null;
 
-        // ── Try disk cache first ──────────────────────────────────────────────────────────────
+        // ── Check wipe status on existing caches ─────────────────────────────────────────────
         var cached = TryLoadMapCache(cacheKey);
+        bool isWipe = false;
         if (cached != null)
         {
             if (IsNewerWipe(currentWipeTime, cached.WipeTime))
             {
                 AppendLog("[map-cache] New wipe detected from server WipeTime; invalidating map cache.");
-                DeleteMapCache(cacheKey);
+                isWipe = true;
             }
             else if (currentWipeTime == null && IsWipeDetected(host, cached.Monuments))
             {
                 AppendLog("[map-cache] Wipe detected from monument layout; invalidating map cache.");
-                DeleteMapCache(cacheKey);
+                isWipe = true;
             }
-            else
+        }
+
+        if (isWipe)
+        {
+            DeleteMapCache(cacheKey);
+            DeleteCustomMapCache(cacheKey);
+            cached = null;
+            if (_vm?.Selected != null && !string.IsNullOrEmpty(_vm.Selected.CustomMapUrl))
             {
-                AppendLog($"[map-cache] Loaded map from disk cache ({cacheKey}).");
-                map = cached;
+                AppendLog("[map-cache] Wipe detected; resetting Custom HD Map URL for current server profile.");
+                _vm.Selected.CustomMapUrl = null;
+                _vm.Save();
             }
+        }
+
+        if (cached != null)
+        {
+            AppendLog($"[map-cache] Loaded map from disk cache ({cacheKey}).");
+            map = cached;
         }
 
         // ── Fetch from server if no valid cache ───────────────────────────────────────────────
@@ -352,6 +448,44 @@ public partial class MainWindow
             await Task.Run(() => SaveMapCache(cacheKey, map));
         }
 
+        // ── Check Custom HD Map Image override ───────────────────────────────────────────────
+        string? customUrl = _vm?.Selected?.CustomMapUrl?.Trim();
+        if (!string.IsNullOrWhiteSpace(customUrl))
+        {
+            BitmapSource? customBmp = TryLoadCustomMapCache(cacheKey);
+            if (customBmp == null)
+            {
+                AppendLog($"[custom-map] Downloading custom HD map image from URL: {customUrl}");
+                customBmp = await DownloadCustomImageFromUrlAsync(customUrl);
+                if (customBmp != null)
+                {
+                    AppendLog($"[custom-map] Download successful. Caching custom map image ({cacheKey}).");
+                    await Task.Run(() => SaveCustomMapCache(cacheKey, customBmp));
+                }
+                else
+                {
+                    AppendLog("[custom-map] Failed to download image from URL. Falling back to server map.");
+                }
+            }
+            else
+            {
+                AppendLog($"[custom-map] Loaded custom HD map image from disk cache ({cacheKey}).");
+            }
+
+            if (customBmp != null)
+            {
+                map = new RustPlusClientReal.MapWithMonuments
+                {
+                    Bitmap = customBmp,
+                    PixelWidth = customBmp.PixelWidth,
+                    PixelHeight = customBmp.PixelHeight,
+                    WorldSize = map.WorldSize,
+                    WipeTime = map.WipeTime,
+                    Monuments = map.Monuments
+                };
+            }
+        }
+
         await Dispatcher.InvokeAsync(() =>
         {
             ShowMapBasic(map.Bitmap);
@@ -360,7 +494,7 @@ public partial class MainWindow
 
             double wDip = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
             double hDip = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
-            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, 2000);
+            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
             ResetMapZoom();
             RedrawGrid();
             Dispatcher.InvokeAsync(() =>
@@ -368,6 +502,7 @@ public partial class MainWindow
                 RefreshAllOverlayScales();
                 RefreshMonumentOverlayPositions();
                 RedrawDeathPins();
+                RedrawDeathHeatmap();
             }, DispatcherPriority.Loaded);
             if (!_monumentWatcher.HasAnyMonument)
             {
@@ -426,7 +561,7 @@ public partial class MainWindow
             {
                 CheckAndExecutePendingMapCopy(activeProfile);
             }
-            var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: 2000);
+            var worldRectPx = ComputeWorldRectFromWorldSize(wDip2, hDip2, s, padWorld: GetCurrentMapPaddingWorld());
             AppendLog($"worldRectDip(fromS)=[{(int)worldRectPx.X},{(int)worldRectPx.Y},{(int)worldRectPx.Width}x{(int)worldRectPx.Height}] dipSize={wDip2:F0}x{hDip2:F0} S={s}");
 
             var mons = map.Monuments.Where(m => !string.IsNullOrWhiteSpace(m.Name)).ToList();
@@ -615,12 +750,6 @@ public partial class MainWindow
                     if (best.Ts != default && (DateTime.UtcNow - best.Ts).TotalMinutes > 4)
                     {
                         TrackingService.SetCargoTriggerPoint(host, harbor.Name, best.X, best.Y);
-                        // Auto-enable arrival warning now that this harbor's route is known
-                        if (!TrackingService.AnnounceCargoArrival && TrackingService.AnnounceSpawnsMaster)
-                        {
-                            TrackingService.AnnounceCargoArrival = true;
-                            _ = Dispatcher.InvokeAsync(SyncAlertMenuItems);
-                        }
                     }
                 }
 
@@ -1063,6 +1192,13 @@ public partial class MainWindow
             dsTip = string.Format(Properties.Resources.DeepSeaEndedAgo, FormatAgo(dsInactive));
         }
         activeEvents.Add(new EventDockItem { Name = Properties.Resources.DeepSea, Icon = "pack://application:,,,/Assets/icons/ds_event.png", Active = _deepSeaActive, Id = 0, X = 0, Y = 0, Trackable = false, Type = 0, TimerText = dsTimer, ToolTip = dsTip });
+
+        // On a server without event markers everything above was built from data that no
+        // longer arrives. Replace it wholesale rather than patching each entry: the two
+        // sources have nothing in common but the item shape.
+        if (Services.EventCapabilities.IsCloudSourced)
+            activeEvents = BuildCloudEventDockItems();
+
         Dispatcher.Invoke(() =>
         {
             // Try to find existing dock or create one
@@ -1342,6 +1478,13 @@ public partial class MainWindow
                 if (isClickable) itemRow.MouseLeftButtonDown += EventItem_Click;
             }
 
+            // Drop rows the list no longer has. The loop above overwrites existing rows in
+            // place and only appends when it runs out, so a shrinking list left the surplus
+            // behind showing whatever it held before — switching from the API's five events to
+            // the fallback's three kept a stale Travelling Vendor and a second Deep Sea.
+            while (stack.Children.Count > activeEvents.Count)
+                stack.Children.RemoveAt(stack.Children.Count - 1);
+
             // Sync events to 3D map if it is active
             if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
             {
@@ -1417,6 +1560,21 @@ public partial class MainWindow
 
         _lastMarkers = markers;
         if (Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
+
+        if (_mySteamId != 0)
+        {
+            var myMarker = System.Linq.Enumerable.FirstOrDefault(markers, m => m.Type == 1 && m.SteamId == _mySteamId);
+            if (myMarker.Id != 0 || myMarker.SteamId != 0)
+            {
+                bool inDeepSea = myMarker.X < -1000;
+                if (inDeepSea != _myPlayerWasInDeepSea)
+                {
+                    _myPlayerWasInDeepSea = inDeepSea;
+                    SetShowingDeepSeaMap(inDeepSea);
+                    return;
+                }
+            }
+        }
 
         var incoming = new HashSet<uint>();
 
@@ -1629,7 +1787,7 @@ public partial class MainWindow
                     }
 
                     Overlay.Children.Add(el);
-                    Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 950 : 920));
+                    Panel.SetZIndex(el, m.Type == 150 ? 2000 : (isPlayer ? 10000 : 920));
 
                     if (el.Tag is PlayerMarkerTag pmtNew)
                     {
@@ -1732,6 +1890,15 @@ public partial class MainWindow
             if (m.Type == 150 || m.Type != 150) // All dynamic types
             {
                 var p = WorldToImagePx(m.X, m.Y);
+                if (_isShowingDeepSeaMap)
+                {
+                    el.Visibility = isPlayer ? Visibility.Visible : Visibility.Collapsed;
+                }
+                else
+                {
+                    el.Visibility = Visibility.Visible;
+                }
+
                 if (!(el.Tag is PlayerMarkerTag tag && tag.IsDeathPin))
                 {
                     double off = (el.Tag is PlayerMarkerTag t2 && t2.Radius > 0) ? t2.Radius : 5.0;
@@ -2030,7 +2197,7 @@ public partial class MainWindow
             if (cs.TimerLabel != null)
             {
                 int mins = (int)(DateTime.UtcNow - cs.CrashedAt).TotalMinutes;
-                cs.TimerLabel.Text = mins == 0 ? "just now" : $"{mins}m ago";
+                cs.TimerLabel.Text = mins == 0 ? RustPlusDesk.Properties.Resources.GetString("CodeUiJustNow") : $"{mins}m ago";
             }
         }
     }

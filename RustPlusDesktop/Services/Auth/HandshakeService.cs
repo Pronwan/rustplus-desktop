@@ -257,36 +257,8 @@ namespace RustPlusDesk.Services.Auth
 
             if (!response.IsSuccessStatusCode)
             {
-                try
-                {
-                    using var doc = JsonDocument.Parse(body);
-                    var root = doc.RootElement;
-                    if (root.TryGetProperty("error", out var errEl) && errEl.GetString() == "upgrade_required")
-                    {
-                        if (!SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
-                        {
-                            SupabaseAuthManager.IsUpgradeRequiredSnackbarShown = true;
-                            string message = root.TryGetProperty("message", out var msgEl)
-                                ? msgEl.GetString() ?? "An update is required to use cloud features."
-                                : "An update is required to use cloud features.";
-                            string upgradeUrl = root.TryGetProperty("upgrade_url", out var urlEl)
-                                ? urlEl.GetString() ?? "https://github.com/JawadYzbk/rustplus-desktop/releases/latest"
-                                : "https://github.com/JawadYzbk/rustplus-desktop/releases/latest";
-
-                            if (System.Windows.Application.Current != null)
-                            {
-                                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    if (System.Windows.Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
-                                    {
-                                        mainWin.ShowUpgradeRequiredSnackbar(message, upgradeUrl);
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
-                catch { /* Ignore JSON parse errors */ }
+                if (SupabaseAuthManager.HandleUpgradeRequiredResponse(body))
+                    return null;
             }
 
             return JsonSerializer.Deserialize<HandshakeResponse>(body);

@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.IO" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.4" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\RustPlusDesktop\Models\DeviceAutomationRule.cs" Link="Production\DeviceAutomationRule.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\DeviceAutomationEvaluator.cs" Link="Production\DeviceAutomationEvaluator.cs" />
+    <Compile Include="..\RustPlusDesktop\Models\Raid\RaidDataModels.cs" Link="Production\RaidDataModels.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\Raid\RaidCalculatorEngine.cs" Link="Production\RaidCalculatorEngine.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\Raid\RaidDataService.cs" Link="Production\RaidDataService.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\Raid\RaidPlanStore.cs" Link="Production\RaidPlanStore.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\CloudTrafficPolicy.cs" Link="Production\CloudTrafficPolicy.cs" />
+    <Compile Include="..\RustPlusDesktop\Views\MainWindow\Map\SettingsSearchMatcher.cs" Link="Production\SettingsSearchMatcher.cs" />
+    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialModels.cs" Link="Production\TutorialModels.cs" />
+    <Compile Include="..\RustPlusDesktop\Features\Tutorials\Tutorial.cs" Link="Production\Tutorial.cs" />
+    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialRegistry.cs" Link="Production\TutorialRegistry.cs" />
+    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialProgressStore.cs" Link="Production\TutorialProgressStore.cs" />
+    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialTargetResolver.cs" Link="Production\TutorialTargetResolver.cs" />
+    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialService.cs" Link="Production\TutorialService.cs" />
+    <Compile Include="..\RustPlusDesktop\Properties\Resources.Designer.cs" Link="Production\Resources.Designer.cs" />
+    <EmbeddedResource Include="..\RustPlusDesktop\Assets\Data\raid-data.json" Link="Assets\Data\raid-data.json" />
+    <EmbeddedResource Include="..\RustPlusDesktop\Properties\Resources.resx" Link="Properties\Resources.resx" LogicalName="RustPlusDesk.Properties.Resources.resources" />
+  </ItemGroup>
+</Project>

@@ -192,6 +192,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -214,7 +215,7 @@
                 <Grid>
                     <ui:TextBox
                         x:Name="TxtShopSearch"
-                        PlaceholderText="Search items or type freely..."
+                        PlaceholderText="{DynamicResource UiSearchItemsOrTypeFreely}"
                         TextChanged="TxtShopSearch_TextChanged"
                         PreviewKeyDown="TxtShopSearch_PreviewKeyDown"
                         GotFocus="TxtShopSearch_GotFocus"
@@ -236,7 +237,7 @@
                         IsOpen="False"
                         StaysOpen="False"
                         MinWidth="240"
-                        MaxHeight="200"
+                        MaxHeight="300"
                         PopupAnimation="Fade">
                         <Border
                             Background="#16191E"
@@ -247,16 +248,24 @@
                                 x:Name="LstAutocomplete"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                MaxHeight="190"
+                                MaxHeight="290"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 SelectionChanged="LstAutocomplete_SelectionChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border Padding="6,4" Background="Transparent">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
-                                            </StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0" Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
+                                                <Border Grid.Column="2" Margin="6,0,0,0" Padding="4,1" CornerRadius="3" Background="#3000ADEF" Visibility="{Binding CategoryBadgeVisibility}">
+                                                    <TextBlock Text="CATEGORY" Foreground="#00ADEF" FontSize="8.5" FontWeight="Bold" VerticalAlignment="Center" />
+                                                </Border>
+                                            </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
@@ -271,20 +280,24 @@
                 <Button
                     x:Name="BtnShopProfit"
                     Style="{StaticResource ActionToolbarButton}"
-                    Click="BtnShopProfit_Click">
+                    Click="BtnShopProfit_Click"
+                    ToolTip="{DynamicResource UiFindProfitableShopTrades}"
+                    AutomationProperties.Name="{DynamicResource UiFindProfitableShopTrades}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F4B0;" FontSize="14" VerticalAlignment="Center" />
-                        <TextBlock Text=" Profit" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
+                        <TextBlock Text="{DynamicResource UiProfit}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
 
                 <Button
                     x:Name="BtnShopBuyX"
                     Style="{StaticResource ActionToolbarButton}"
-                    Click="BtnShopBuyX_Click">
+                    Click="BtnShopBuyX_Click"
+                    ToolTip="{DynamicResource UiFindWhereToBuyAnItem}"
+                    AutomationProperties.Name="{DynamicResource UiFindWhereToBuyAnItem}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F50D;" FontSize="14" VerticalAlignment="Center" />
-                        <TextBlock Text=" Buy X" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
+                        <TextBlock Text="{DynamicResource UiBuyX}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
 
@@ -292,10 +305,12 @@
                     x:Name="BtnShopAddAlert"
                     Style="{StaticResource ActionToolbarButton}"
                     Margin="0"
-                    Click="BtnShopAddAlert_Click">
+                    Click="BtnShopAddAlert_Click"
+                    ToolTip="{DynamicResource UiCreateAShopAlert}"
+                    AutomationProperties.Name="{DynamicResource UiCreateAShopAlert}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#x1F514;" FontSize="14" VerticalAlignment="Center" />
-                        <TextBlock Text=" Alert" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
+                        <TextBlock Text="{DynamicResource UiAlert}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -308,10 +323,10 @@
                 Style="{StaticResource GlassyPillButton}"
                 Click="TglShopSells_Click"
                 Margin="0,0,6,6"
-                ToolTip="Show shops that sell item">
+                ToolTip="{DynamicResource UiShowShopsThatSellItem}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="💰 " FontSize="10.5" VerticalAlignment="Center" />
-                    <TextBlock Text="Sells" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource AlertShopSells}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -320,10 +335,10 @@
                 Style="{StaticResource GlassyPillButton}"
                 Click="TglShopBuys_Click"
                 Margin="0,0,6,6"
-                ToolTip="Show shops that buy item">
+                ToolTip="{DynamicResource UiShowShopsThatBuyItem}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="🛒 " FontSize="10.5" VerticalAlignment="Center" />
-                    <TextBlock Text="Buys" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource AlertShopBuys}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -331,35 +346,64 @@
                 x:Name="TglShopHideZero"
                 Style="{StaticResource GlassyPillButton}"
                 Click="TglShopHideZero_Click"
-                Margin="0,0,0,6"
-                ToolTip="Don't show offers without stock">
+                Margin="0,0,6,6"
+                ToolTip="{DynamicResource UiDonTShowOffersWithoutStock}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="👁 " FontSize="10.5" VerticalAlignment="Center" />
-                    <TextBlock Text="Hide 0-stock" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource UiHide0Stock}" FontSize="11" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Button
+                x:Name="TglShopHideMonuments"
+                Style="{StaticResource GlassyPillButton}"
+                Click="TglShopHideMonuments_Click"
+                Margin="0,0,0,6"
+                ToolTip="Hide shops inside Outpost, Bandit Town, Fishing Villages &amp; Monuments">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🏛 " FontSize="10.5" VerticalAlignment="Center" />
+                    <TextBlock Text="Hide Monuments" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
         </WrapPanel>
 
-        <!-- Row 2: Sorting and Grouping -->
-        <Grid Grid.Row="2" Margin="10,2,10,10">
+        <!-- Row 2: Sort By & Category Dropdowns (2 Equal Columns) -->
+        <Grid Grid.Row="2" Margin="10,2,10,6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                <TextBlock Text="Sort by" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiSortBy}" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbSort" SelectionChanged="CmbSort_SelectionChanged" Height="34">
-                    <ComboBoxItem Content="Default" Tag="default" IsSelected="True"/>
-                    <ComboBoxItem Content="Price (Low to High)" Tag="price_asc"/>
-                    <ComboBoxItem Content="Price (High to Low)" Tag="price_desc"/>
-                    <ComboBoxItem Content="Stock" Tag="stock"/>
-                    <ComboBoxItem Content="Currency" Tag="currency"/>
+                    <ComboBoxItem Content="{DynamicResource UiDefault}" Tag="default" IsSelected="True"/>
+                    <ComboBoxItem Content="{DynamicResource UiPriceLowToHigh}" Tag="price_asc"/>
+                    <ComboBoxItem Content="{DynamicResource UiPriceHighToLow}" Tag="price_desc"/>
+                    <ComboBoxItem Content="{DynamicResource Stock}" Tag="stock"/>
+                    <ComboBoxItem Content="{DynamicResource UiCurrency}" Tag="currency"/>
                 </ComboBox>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                <TextBlock Text="Payment Resource" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="Category" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <ComboBox x:Name="CmbCategory" SelectionChanged="CmbCategory_SelectionChanged" Height="34">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <TextBlock Text="{Binding Display}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <!-- Row 3: Payment Resource Filter -->
+        <Grid Grid.Row="3" Margin="10,0,10,10">
+            <StackPanel>
+                <TextBlock Text="{DynamicResource UiPaymentResource}" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbResource" SelectionChanged="CmbResource_SelectionChanged" Height="34">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -373,9 +417,9 @@
             </StackPanel>
         </Grid>
 
-        <!-- Row 3: Collapsible Active Item Alerts Widget Header -->
+        <!-- Row 4: Collapsible Active Item Alerts Widget Header -->
         <Border
-            Grid.Row="3"
+            Grid.Row="4"
             Margin="10,2,10,2"
             Background="#12151B"
             BorderBrush="#25FFFFFF"
@@ -403,7 +447,7 @@
                     <Grid>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🚨 " FontSize="12" VerticalAlignment="Center" />
-                            <TextBlock Text="Active Item Alerts" FontWeight="Bold" Foreground="#ECEFF1" FontSize="12.5" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource UiActiveItemAlerts}" FontWeight="Bold" Foreground="#ECEFF1" FontSize="12.5" VerticalAlignment="Center" />
                         </StackPanel>
                         <TextBlock
                             x:Name="TxtAlertArrow"
@@ -417,10 +461,10 @@
             </Grid>
         </Border>
 
-        <!-- Row 4: Collapsible Item Alerts List Panel -->
+        <!-- Row 5: Collapsible Item Alerts List Panel -->
         <Border
             x:Name="BrdAlertListContainer"
-            Grid.Row="4"
+            Grid.Row="5"
             Margin="10,0,10,4"
             Background="#0D1015"
             BorderBrush="#20FFFFFF"
@@ -438,9 +482,9 @@
             </ListBox>
         </Border>
 
-        <!-- Row 5: Redesigned Scrollable Shop Results -->
+        <!-- Row 6: Redesigned Scrollable Shop Results -->
         <ScrollViewer
-            Grid.Row="5"
+            Grid.Row="6"
             Margin="10,4,10,6"
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled">

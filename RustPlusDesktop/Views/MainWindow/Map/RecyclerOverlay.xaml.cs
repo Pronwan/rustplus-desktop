@@ -836,6 +836,7 @@ namespace RustPlusDesk.Views
     {
         public string id { get; set; } = string.Empty;
         public string shortName { get; set; } = string.Empty;
+        public int ingameId { get; set; }
         public string category { get; set; } = string.Empty;
         public string displayName { get; set; } = string.Empty;
         public int stackSize { get; set; }

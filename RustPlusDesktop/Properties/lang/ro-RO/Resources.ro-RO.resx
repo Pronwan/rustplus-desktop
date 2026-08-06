@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -1489,7 +1489,7 @@ Rust+ Desktop inregistreaza aplicatia locala la FCM pentru a putea primi aceleas
     <value>[{0}] Lada se deblochează în 5 minute!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>Deep Sea este sus</value>
+    <value>Deep Sea este sus (detected by audio)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>Magazin nou {0} [{1}]: {2}</value>
@@ -1793,28 +1793,28 @@ Sunteți sigur că doriți să continuați?</value>
   <data name="WipeLogComplete" xml:space="preserve">
     <value>[WIPE] Operațiunea de resetare selectivă s-a încheiat cu succes.</value>
   </data>
-<data name="DeleteDeathMarker" xml:space="preserve">
+  <data name="DeleteDeathMarker" xml:space="preserve">
     <value>Delete Death Marker</value>
   </data>
-<data name="WipeDeathMarkers" xml:space="preserve">
+  <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
-<data name="Accept" xml:space="preserve">
+  <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
-<data name="RenameDeathMarker" xml:space="preserve">
+  <data name="RenameDeathMarker" xml:space="preserve">
     <value>Rename Death Marker</value>
   </data>
-<data name="PlayerDirectionArrow" xml:space="preserve">
+  <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>Direcție</value>
 </data>
-<data name="Profile" xml:space="preserve">
+  <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-<data name="Death" xml:space="preserve">
+  <data name="Death" xml:space="preserve">
     <value>Death</value>
   </data>
-<data name="Markers" xml:space="preserve">
+  <data name="Markers" xml:space="preserve">
     <value>Markers:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
@@ -1850,7 +1850,6 @@ Sunteți sigur că doriți să continuați?</value>
   <data name="SearchIconsPlaceholder" xml:space="preserve">
     <value>Caută pictograme (ex. turn, comutator)...</value>
   </data>
-
   <data name="NotificationRetentionDays" xml:space="preserve">
     <value>{0} zile</value>
   </data>
@@ -2742,7 +2741,2764 @@ Vă rugăm mai întâi să asociați acest server.</value>
   <data name="GenericClose" xml:space="preserve">
     <value>Aproape</value>
   </data>
+  <data name="UiOpensTheIncomingAlarmsWindow" xml:space="preserve">
+    <value>— deschide fereastra Alarme primite.</value>
+  </data>
+  <data name="UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound" xml:space="preserve">
+    <value>— redă sunetul alarmei. Folosiți butonul … pentru a alege un sunet personalizat.</value>
+  </data>
+  <data name="UiShowsTheRedAlarmCardInsideTheApp" xml:space="preserve">
+    <value>— arată cardul roșu de alarmă în interiorul aplicației.</value>
+  </data>
+  <data name="UiText2FpsRecommendedForAPIStability" xml:space="preserve">
+    <value>(2 fps recomandat pentru stabilitatea API)</value>
+  </data>
+  <data name="UiLogicRule" xml:space="preserve">
+    <value>[Regulă logică]</value>
+  </data>
+  <data name="UiNameMinutes" xml:space="preserve">
+    <value>[nume],[minute]</value>
+  </data>
+  <data name="UiEveryone" xml:space="preserve">
+    <value>@toata lumea</value>
+  </data>
+  <data name="UiHere" xml:space="preserve">
+    <value>@aici</value>
+  </data>
+  <data name="UiJump" xml:space="preserve">
+    <value>▲ Sari</value>
+  </data>
+  <data name="UiDuck" xml:space="preserve">
+    <value>▼ Rață</value>
+  </data>
+  <data name="UiFire" xml:space="preserve">
+    <value>🎯 Foc</value>
+  </data>
+  <data name="UiReload" xml:space="preserve">
+    <value>🔄 Reîncărcați</value>
+  </data>
+  <data name="UiText100Native" xml:space="preserve">
+    <value>100% (nativ)</value>
+  </data>
+  <data name="UiText100YieldMonuments" xml:space="preserve">
+    <value>Randament 100% (monumente)</value>
+  </data>
+  <data name="UiText125Sharp" xml:space="preserve">
+    <value>125% (Sharp)</value>
+  </data>
+  <data name="UiText150HighResolution" xml:space="preserve">
+    <value>150% (rezoluție înaltă)</value>
+  </data>
+  <data name="UiText200UltraHighResolution" xml:space="preserve">
+    <value>200% (rezoluție ultra-înaltă)</value>
+  </data>
+  <data name="UiText2D" xml:space="preserve">
+    <value>2D</value>
+  </data>
+  <data name="UiText5MinAFK" xml:space="preserve">
+    <value>5 min AFK</value>
+  </data>
+  <data name="UiText50Fastest" xml:space="preserve">
+    <value>50% (cel mai rapid)</value>
+  </data>
+  <data name="UiText75Performance" xml:space="preserve">
+    <value>75% (performanță)</value>
+  </data>
+  <data name="UiA" xml:space="preserve">
+    <value>A...</value>
+  </data>
+  <data name="UiAcceptSync" xml:space="preserve">
+    <value>Acceptați și sincronizați</value>
+  </data>
+  <data name="UiAcceptAndRemember" xml:space="preserve">
+    <value>Acceptați și amintiți-vă</value>
+  </data>
+  <data name="UiACCOUNT" xml:space="preserve">
+    <value>CONT</value>
+  </data>
+  <data name="UiAccountMenu" xml:space="preserve">
+    <value>Meniul cont</value>
+  </data>
+  <data name="UiActiveItemAlerts" xml:space="preserve">
+    <value>Alerte de articole active</value>
+  </data>
+  <data name="UiActiveRule" xml:space="preserve">
+    <value>Regula activă:</value>
+  </data>
+  <data name="UiActiveON" xml:space="preserve">
+    <value>Activ/ACTIVAT</value>
+  </data>
+  <data name="UiAddATargetToSeeRaidCosts" xml:space="preserve">
+    <value>Adăugați o țintă pentru a vedea costurile raidului.</value>
+  </data>
+  <data name="UiAddAutomation" xml:space="preserve">
+    <value>Adăugați automatizare</value>
+  </data>
+  <data name="UiAddExecutionStep" xml:space="preserve">
+    <value>Adăugați pasul de execuție</value>
+  </data>
+  <data name="UiAddLogin" xml:space="preserve">
+    <value>Adăugați autentificare</value>
+  </data>
+  <data name="UiAddNestedAction" xml:space="preserve">
+    <value>Adăugați o acțiune imbricată</value>
+  </data>
+  <data name="UiAddRule" xml:space="preserve">
+    <value>Adăugați o regulă</value>
+  </data>
+  <data name="UiAdminPanel" xml:space="preserve">
+    <value>Panoul de administrare</value>
+  </data>
+  <data name="UiAdminPanelUserOverview" xml:space="preserve">
+    <value>Panoul de administrare - Prezentare generală a utilizatorului</value>
+  </data>
+  <data name="UiAdvancedDiscordBotIntegration" xml:space="preserve">
+    <value>Integrare avansată Discord Bot</value>
+  </data>
+  <data name="UiAdvancedDiscordBotSettings" xml:space="preserve">
+    <value>Avansate Discord Setări bot</value>
+  </data>
+  <data name="UiÃƒâ" xml:space="preserve">
+    <value>Ãƒâ€”</value>
+  </data>
+  <data name="UiAgricultureFood" xml:space="preserve">
+    <value>Agricultura și alimentația</value>
+  </data>
+  <data name="UiAlarm" xml:space="preserve">
+    <value>Alarmă</value>
+  </data>
+  <data name="UiAlarmAusgeloest" xml:space="preserve">
+    <value>Alarmă maximă!</value>
+  </data>
+  <data name="UiAlert" xml:space="preserve">
+    <value>Alertă</value>
+  </data>
+  <data name="UiAlexaSetupInfo" xml:space="preserve">
+    <value>Alexa Informații de configurare</value>
+  </data>
+  <data name="UiAlexaSmartHome" xml:space="preserve">
+    <value>Alexa Smart Home</value>
+  </data>
+  <data name="UiAllPlayersInRange" xml:space="preserve">
+    <value>Toți jucătorii din rază</value>
+  </data>
+  <data name="UiAllPlayersOffline" xml:space="preserve">
+    <value>Toți jucătorii offline</value>
+  </data>
+  <data name="UiAllowDiscordCommands" xml:space="preserve">
+    <value>Permite Discord comenzi</value>
+  </data>
+  <data name="UiAllowedCommandRoleIDs" xml:space="preserve">
+    <value>ID-uri de rol de comandă permise</value>
+  </data>
+  <data name="UiAmazonAlexaLogin" xml:space="preserve">
+    <value>Amazon Alexa Conectare</value>
+  </data>
+  <data name="UiAND" xml:space="preserve">
+    <value>ȘI</value>
+  </data>
+  <data name="UiAnyOnlineInRange" xml:space="preserve">
+    <value>Orice online în rază</value>
+  </data>
+  <data name="UiAnyPlayerOffline" xml:space="preserve">
+    <value>Orice jucător offline</value>
+  </data>
+  <data name="UiAutomationActive" xml:space="preserve">
+    <value>Automatizare activă</value>
+  </data>
+  <data name="UiBackToSettingsCategories" xml:space="preserve">
+    <value>Înapoi la categoriile de setări</value>
+  </data>
+  <data name="UiBalancedLinear" xml:space="preserve">
+    <value>Echilibrat (liniar)</value>
+  </data>
+  <data name="UiBaseDetails" xml:space="preserve">
+    <value>Detalii de bază</value>
+  </data>
+  <data name="UiBasicDiscordIntegration" xml:space="preserve">
+    <value>Integrare de bază Discord.</value>
+  </data>
+  <data name="UiBasicDiscordWebhooks" xml:space="preserve">
+    <value>Webhook-uri de bază Discord.</value>
+  </data>
+  <data name="UiBears" xml:space="preserve">
+    <value>Urși</value>
+  </data>
+  <data name="UiBerries" xml:space="preserve">
+    <value>Fructe de pădure</value>
+  </data>
+  <data name="UiBicycles" xml:space="preserve">
+    <value>Biciclete</value>
+  </data>
+  <data name="UiBlue" xml:space="preserve">
+    <value>Albastru</value>
+  </data>
+  <data name="UiBoars" xml:space="preserve">
+    <value>mistreți</value>
+  </data>
+  <data name="UiBOOMREQUIRED" xml:space="preserve">
+    <value>BOOM NECESAR</value>
+  </data>
+  <data name="UiBrowseMonuments" xml:space="preserve">
+    <value>Căutați monumente</value>
+  </data>
+  <data name="UiBrowseOnlinePlayersAndTrackedTargets" xml:space="preserve">
+    <value>Răsfoiți jucători online și ținte urmărite.</value>
+  </data>
+  <data name="UiBuild3DMap" xml:space="preserve">
+    <value>Construiește o hartă 3D</value>
+  </data>
+  <data name="UiBuildLocal3DMap" xml:space="preserve">
+    <value>Construiește o hartă 3D locală</value>
+  </data>
+  <data name="UiBuyX" xml:space="preserve">
+    <value>Cumpărați X</value>
+  </data>
+  <data name="UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness" xml:space="preserve">
+    <value>Memorează în cache redarea hărții pe GPU. Îmbunătățește extrem de netezimea panourilor și a zoomului.</value>
+  </data>
+  <data name="UiCalculateComponentYieldsForWildAndSafeZoneRecyclers" xml:space="preserve">
+    <value>Calculați randamentul componentelor pentru reciclatorii sălbatici și din zonele sigure.</value>
+  </data>
+  <data name="UiCalculateRaidCostsAndRequiredMaterials" xml:space="preserve">
+    <value>Calculați costurile raidului și materialele necesare.</value>
+  </data>
+  <data name="UiCancelDownload" xml:space="preserve">
+    <value>Anulați descărcarea</value>
+  </data>
+  <data name="UiChance" xml:space="preserve">
+    <value>Șansă</value>
+  </data>
+  <data name="UiChange" xml:space="preserve">
+    <value>Schimbare</value>
+  </data>
+  <data name="UiChangeCommand" xml:space="preserve">
+    <value>Schimbați comanda</value>
+  </data>
+  <data name="UiChangeIcon" xml:space="preserve">
+    <value>Schimbați pictograma</value>
+  </data>
+  <data name="UiChannelID" xml:space="preserve">
+    <value>ID canal</value>
+  </data>
+  <data name="UiChannelNotificationsConfig" xml:space="preserve">
+    <value>Configurare notificări canal</value>
+  </data>
+  <data name="UiChatAlertsDiscord" xml:space="preserve">
+    <value>Alerte prin chat -&gt; Discord</value>
+  </data>
+  <data name="UiChatAlertsChannelID" xml:space="preserve">
+    <value>ID canal de alerte de chat</value>
+  </data>
+  <data name="UiChatMasterSlaves" xml:space="preserve">
+    <value>Chat Master &amp; Slaves</value>
+  </data>
+  <data name="UiChatMessageAlerts" xml:space="preserve">
+    <value>Alerte de mesaje de chat</value>
+  </data>
+  <data name="UiCheckAvailability" xml:space="preserve">
+    <value>Verificați disponibilitatea</value>
+  </data>
+  <data name="UiChickens" xml:space="preserve">
+    <value>Pui</value>
+  </data>
+  <data name="UiChooseACategory" xml:space="preserve">
+    <value>Alegeți o categorie</value>
+  </data>
+  <data name="UiChooseATargetFromTheCatalogue" xml:space="preserve">
+    <value>Alegeți o țintă din catalog.</value>
+  </data>
+  <data name="UiClearAll" xml:space="preserve">
+    <value>Ștergeți tot</value>
+  </data>
+  <data name="UiClearRaidPlan" xml:space="preserve">
+    <value>Plan clar de raid</value>
+  </data>
+  <data name="UiClearWebhookURL" xml:space="preserve">
+    <value>Ștergeți URL-ul webhook</value>
+  </data>
+  <data name="UiCloseRaidCalculator" xml:space="preserve">
+    <value>Închideți calculatorul raid</value>
+  </data>
+  <data name="UiCloseShopsPanel" xml:space="preserve">
+    <value>Închideți panoul Magazine</value>
+  </data>
+  <data name="UiCloseTeamPanel" xml:space="preserve">
+    <value>Închideți panoul Echipa</value>
+  </data>
+  <data name="UiCloudAccountSync" xml:space="preserve">
+    <value>Cont în cloud și sincronizare</value>
+  </data>
+  <data name="UiCloudBaseScreenshots" xml:space="preserve">
+    <value>Capturi de ecran Cloud Base</value>
+  </data>
+  <data name="UiCloudUserID" xml:space="preserve">
+    <value>ID utilizator cloud</value>
+  </data>
+  <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
+    <value>Cloud, Discord, Alexa, chat și Steam</value>
+  </data>
+  <data name="UiCMD" xml:space="preserve">
+    <value>CMD</value>
+  </data>
+  <data name="UiColor" xml:space="preserve">
+    <value>Culoare:</value>
+  </data>
+  <data name="UiCommaSeparatedRoleIDs" xml:space="preserve">
+    <value>ID-uri de rol separate prin virgulă</value>
+  </data>
+  <data name="UiCommandPermissions" xml:space="preserve">
+    <value>Permisiuni de comandă</value>
+  </data>
+  <data name="UiConfirmDelete" xml:space="preserve">
+    <value>Confirmați ștergerea</value>
+  </data>
+  <data name="UiConnectRustCompanion" xml:space="preserve">
+    <value>Conectați Rust+ Companion</value>
+  </data>
+  <data name="UiConnectedServices" xml:space="preserve">
+    <value>Servicii conectate</value>
+  </data>
+  <data name="UiCONNECTIONSERVICES" xml:space="preserve">
+    <value>SERVICII DE CONEXIUNE</value>
+  </data>
+  <data name="UiControlYourRustSmartSwitchesWithAmazonAlexaVoiceCommandsAn5B51481980" xml:space="preserve">
+    <value>Controlați-vă comutatoarele inteligente Rust cu comenzile vocale Amazon Alexa și declanșați rutine Alexa când alarmele inteligente se declanșează.</value>
+  </data>
+  <data name="UiControlsMapImageScalingFilteringMode" xml:space="preserve">
+    <value>Controlează modul de filtrare pentru scalarea imaginii hărții.</value>
+  </data>
+  <data name="UiCopyADiscordReadySummary" xml:space="preserve">
+    <value>Copiați un rezumat Discord gata</value>
+  </data>
+  <data name="UiCopyIP" xml:space="preserve">
+    <value>Copiați IP-ul</value>
+  </data>
+  <data name="UiCopyMapToServer" xml:space="preserve">
+    <value>Copiați harta pe server...</value>
+  </data>
+  <data name="UiCopyRaidSummary" xml:space="preserve">
+    <value>Copiați rezumatul raidului</value>
+  </data>
+  <data name="UiCorn" xml:space="preserve">
+    <value>Porumb</value>
+  </data>
+  <data name="UiCount" xml:space="preserve">
+    <value>numără</value>
+  </data>
+  <data name="UiCreateAShopAlert" xml:space="preserve">
+    <value>Creați o alertă de magazin</value>
+  </data>
+  <data name="UiCrocodiles" xml:space="preserve">
+    <value>Crocodili</value>
+  </data>
+  <data name="UiCurrency" xml:space="preserve">
+    <value>Moneda</value>
+  </data>
+  <data name="UiCurrentStep" xml:space="preserve">
+    <value>Pasul curent:</value>
+  </data>
+  <data name="UiCustomAlarmName" xml:space="preserve">
+    <value>Nume personalizat al alarmei</value>
+  </data>
+  <data name="UiCyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="UiDeDEStandardA" xml:space="preserve">
+    <value>de-DE-Standard-A</value>
+  </data>
+  <data name="UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius" xml:space="preserve">
+    <value>Jucătorii morți sunt considerați offline. Condițiile offline ignoră raza.</value>
+  </data>
+  <data name="UiDeathMarkerSettings" xml:space="preserve">
+    <value>Setări pentru marcajul morții</value>
+  </data>
+  <data name="UiDecreaseQuantity" xml:space="preserve">
+    <value>Scade cantitatea</value>
+  </data>
+  <data name="UiDecreaseTargetQuantity" xml:space="preserve">
+    <value>Reduceți cantitatea țintă</value>
+  </data>
+  <data name="UiDeers" xml:space="preserve">
+    <value>Căprioare</value>
+  </data>
+  <data name="UiDefault" xml:space="preserve">
+    <value>Implicit</value>
+  </data>
+  <data name="UiDeleteMissingDevice" xml:space="preserve">
+    <value>Ștergeți dispozitivul lipsă</value>
+  </data>
+  <data name="UiDeleteRule" xml:space="preserve">
+    <value>Ștergeți regula</value>
+  </data>
+  <data name="UiDeleteStep" xml:space="preserve">
+    <value>Șterge pasul</value>
+  </data>
+  <data name="UiDeleteTimer" xml:space="preserve">
+    <value>Șterge cronometrul</value>
+  </data>
+  <data name="UiDestructionMethod" xml:space="preserve">
+    <value>Metoda de distrugere</value>
+  </data>
+  <data name="UiDetailedMapLayerOptions" xml:space="preserve">
+    <value>Opțiuni detaliate ale stratului de hartă</value>
+  </data>
+  <data name="UiDetails" xml:space="preserve">
+    <value>Detalii</value>
+  </data>
+  <data name="UiDeviceAutomation" xml:space="preserve">
+    <value>Automatizarea dispozitivului</value>
+  </data>
+  <data name="UiDeviceCloudSync" xml:space="preserve">
+    <value>Device Cloud Sync</value>
+  </data>
+  <data name="UiDisableGridAntiAliasingAliasedEdgeMode" xml:space="preserve">
+    <value>Dezactivați Grid Anti-Aliasing (modul Aliased Edge)</value>
+  </data>
+  <data name="UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1" xml:space="preserve">
+    <value>Dezactivează anti-aliasing-ul pe liniile de grilă și pe marcatori. Îmbunătățește viteza de redare pe sistemele low-end.</value>
+  </data>
+  <data name="UiDiscordName" xml:space="preserve">
+    <value>Discord Nume</value>
+  </data>
+  <data name="UiDiscordServerIDGuildID" xml:space="preserve">
+    <value>Discord ID server (ID Guild)</value>
+  </data>
+  <data name="UiDiscordWebhook" xml:space="preserve">
+    <value>Discord Webhook</value>
+  </data>
+  <data name="UiDiscordWebhookChatAlerts" xml:space="preserve">
+    <value>Discord Webhook (alerte prin chat)</value>
+  </data>
+  <data name="UiDiscordWebhookURL" xml:space="preserve">
+    <value>Discord URL webhook</value>
+  </data>
+  <data name="UiDiscordWebhookURLOfflineAlerts" xml:space="preserve">
+    <value>Discord URL webhook (alerte offline)</value>
+  </data>
+  <data name="UiDiscordWebhooksGuide" xml:space="preserve">
+    <value>Discord Ghid pentru webhooks</value>
+  </data>
+  <data name="UiDismiss" xml:space="preserve">
+    <value>Respingeți</value>
+  </data>
+  <data name="UiDisplay" xml:space="preserve">
+    <value>Afișare</value>
+  </data>
+  <data name="UiDisplayName" xml:space="preserve">
+    <value>Nume afișat</value>
+  </data>
+  <data name="UiDollar" xml:space="preserve">
+    <value>dolar</value>
+  </data>
+  <data name="UiDonTShowOffersWithoutStock" xml:space="preserve">
+    <value>Nu afișa oferte fără stoc</value>
+  </data>
+  <data name="UiDoubleClickToEditCommand" xml:space="preserve">
+    <value>Faceți dublu clic pentru a edita comanda</value>
+  </data>
+  <data name="UiDuplicateTarget" xml:space="preserve">
+    <value>Țintă duplicat</value>
+  </data>
+  <data name="UiÐŸ" xml:space="preserve">
+    <value>ðŸ’¤</value>
+  </data>
+  <data name="UiÐŸ2" xml:space="preserve">
+    <value>ðŸ“·</value>
+  </data>
+  <data name="UiEGNAME2" xml:space="preserve">
+    <value>de ex. NUME2</value>
+  </data>
+  <data name="UiEditCommand" xml:space="preserve">
+    <value>Comanda Editare</value>
+  </data>
+  <data name="UiEditSubscriptionsDrawingOverlay" xml:space="preserve">
+    <value>Editați abonamente (Suprapunere desen)</value>
+  </data>
+  <data name="UiEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="UiEmailAndPassword" xml:space="preserve">
+    <value>E-mail și parolă</value>
+  </data>
+  <data name="UiEnGBStandardA" xml:space="preserve">
+    <value>ro-GB-Standard-A</value>
+  </data>
+  <data name="UiEnUSStandardA" xml:space="preserve">
+    <value>en-US-Standard-A</value>
+  </data>
+  <data name="UiEnableAutomation" xml:space="preserve">
+    <value>Activați automatizarea</value>
+  </data>
+  <data name="UiEnableGPUBitmapCaching" xml:space="preserve">
+    <value>Activați GPU Bitmap Caching</value>
+  </data>
+  <data name="UiEnableRule" xml:space="preserve">
+    <value>Activați regula</value>
+  </data>
+  <data name="UiEnemyBaseRed" xml:space="preserve">
+    <value>Baza inamică (roșu)</value>
+  </data>
+  <data name="UiEngineActivePlayStop" xml:space="preserve">
+    <value>Motor activ (Play/Stop)</value>
+  </data>
+  <data name="UiEsESStandardA" xml:space="preserve">
+    <value>es-ES-Standard-A</value>
+  </data>
+  <data name="UiEventsAlertsChannelID" xml:space="preserve">
+    <value>ID canal de alerte de evenimente</value>
+  </data>
+  <data name="UiExecutionSteps" xml:space="preserve">
+    <value>Etapele de execuție</value>
+  </data>
+  <data name="UiExpand" xml:space="preserve">
+    <value>Extindeți</value>
+  </data>
+  <data name="UiExpandOrCollapseAutomation" xml:space="preserve">
+    <value>Extindeți sau restrângeți automatizarea</value>
+  </data>
+  <data name="UiExpandOrCollapseGroup" xml:space="preserve">
+    <value>Extindeți sau restrângeți grupul</value>
+  </data>
+  <data name="UiExpandServerDetails" xml:space="preserve">
+    <value>Extindeți detaliile serverului</value>
+  </data>
+  <data name="UiExpandCollapse" xml:space="preserve">
+    <value>Extinde/Restrânge</value>
+  </data>
+  <data name="UiEXTRAMONUMENTTYPES" xml:space="preserve">
+    <value>TIPURI DE MONUMENT EXTRA</value>
+  </data>
+  <data name="UiFaunaWildlife" xml:space="preserve">
+    <value>Fauna și fauna sălbatică</value>
+  </data>
+  <data name="UiFillStacks" xml:space="preserve">
+    <value>Umpleți stivele</value>
+  </data>
+  <data name="UiFilterLogs" xml:space="preserve">
+    <value>Filtrați jurnalele...</value>
+  </data>
+  <data name="UiFindProfitableShopTrades" xml:space="preserve">
+    <value>Găsiți comerțuri profitabile</value>
+  </data>
+  <data name="UiFindWhereToBuyAnItem" xml:space="preserve">
+    <value>Găsiți de unde să cumpărați un articol</value>
+  </data>
+  <data name="UiFitMapToView" xml:space="preserve">
+    <value>Potriviți harta pentru vizualizare</value>
+  </data>
+  <data name="UiFlowers" xml:space="preserve">
+    <value>Flori</value>
+  </data>
+  <data name="UiForceOFF" xml:space="preserve">
+    <value>Oprire forțată</value>
+  </data>
+  <data name="UiForceON" xml:space="preserve">
+    <value>Forțat ON</value>
+  </data>
+  <data name="UiForceRefetchMap" xml:space="preserve">
+    <value>Hartă de refacere forțată</value>
+  </data>
+  <data name="UiForceRefreshAllSubscriptions" xml:space="preserve">
+    <value>Forțați reîmprospătarea tuturor abonamentelor</value>
+  </data>
+  <data name="UiForgotPassword" xml:space="preserve">
+    <value>Ai uitat parola?</value>
+  </data>
+  <data name="UiFrFRStandardA" xml:space="preserve">
+    <value>fr-FR-Standard-A</value>
+  </data>
+  <data name="UiFrom" xml:space="preserve">
+    <value>De la</value>
+  </data>
+  <data name="UiGatingConditionOptional" xml:space="preserve">
+    <value>Condiție de acces (opțional)</value>
+  </data>
+  <data name="UiGenerateSave" xml:space="preserve">
+    <value>Generați și salvați</value>
+  </data>
+  <data name="UiGenerateLoginPIN" xml:space="preserve">
+    <value>Generați codul PIN de conectare</value>
+  </data>
+  <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
+    <value>Generați harta 3D înainte de a utiliza hărțile termice.</value>
+  </data>
+  <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
+    <value>Generați harta 3D pentru a activa zonele fără construcție.</value>
+  </data>
+  <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
+    <value>Opțiuni audio de alarmă generice</value>
+  </data>
+  <data name="UiGENERICALARMS" xml:space="preserve">
+    <value>ALARME GENERICE</value>
+  </data>
+  <data name="UiGPURenderingScale" xml:space="preserve">
+    <value>Scala de randare GPU</value>
+  </data>
+  <data name="UiGreen" xml:space="preserve">
+    <value>verde</value>
+  </data>
+  <data name="UiGuar" xml:space="preserve">
+    <value>Guar.</value>
+  </data>
+  <data name="UiGun" xml:space="preserve">
+    <value>Pistolă</value>
+  </data>
+  <data name="UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D" xml:space="preserve">
+    <value>Praful de pușcă, explozivii, sincronizarea și conversiile fierte/minereu sunt afișate numai atunci când sunt furnizate de setul de date. Datele actuale sunt deja extinse la materii prime.</value>
+  </data>
+  <data name="UiHeatmaps" xml:space="preserve">
+    <value>Hărți termice</value>
+  </data>
+  <data name="UiHeatmapsUnavailable" xml:space="preserve">
+    <value>Hărți termice indisponibile</value>
+  </data>
+  <data name="UiHeight" xml:space="preserve">
+    <value>Înălțime</value>
+  </data>
+  <data name="UiHide0Stock" xml:space="preserve">
+    <value>Ascunde 0-stoc</value>
+  </data>
+  <data name="UiHighQualityBicubic" xml:space="preserve">
+    <value>Calitate înaltă (bicubic)</value>
+  </data>
+  <data name="UiHome" xml:space="preserve">
+    <value>Acasă</value>
+  </data>
+  <data name="UiHorses" xml:space="preserve">
+    <value>cai</value>
+  </data>
+  <data name="UiHotAirBalloons" xml:space="preserve">
+    <value>Baloane cu aer cald</value>
+  </data>
+  <data name="UiHotkeyTriggers" xml:space="preserve">
+    <value>Declanșatoare de taste rapide</value>
+  </data>
+  <data name="UiIcons" xml:space="preserve">
+    <value>Pictograme</value>
+  </data>
+  <data name="UiIcons2" xml:space="preserve">
+    <value>Pictograme:</value>
+  </data>
+  <data name="UiID" xml:space="preserve">
+    <value>ID:</value>
+  </data>
+  <data name="UiIDLE" xml:space="preserve">
+    <value>IDLE</value>
+  </data>
+  <data name="UiImageScalingQuality" xml:space="preserve">
+    <value>Calitatea scalarii imaginii</value>
+  </data>
+  <data name="UiImageZoomView" xml:space="preserve">
+    <value>Imagine Zoom Vizualizare</value>
+  </data>
+  <data name="UiInGameTime" xml:space="preserve">
+    <value>Timp în joc</value>
+  </data>
+  <data name="UiInactiveOFF" xml:space="preserve">
+    <value>Inactiv/OPRIT</value>
+  </data>
+  <data name="UiIncludeMessageMessage" xml:space="preserve">
+    <value>Includeți mesajul ({{message}})</value>
+  </data>
+  <data name="UiIncludeNameTitle" xml:space="preserve">
+    <value>Includeți numele ({{title}})</value>
+  </data>
+  <data name="UiIncludeTypeType" xml:space="preserve">
+    <value>Includeți tipul ({{type}})</value>
+  </data>
+  <data name="UiIncreaseQuantity" xml:space="preserve">
+    <value>Măriți cantitatea</value>
+  </data>
+  <data name="UiIncreaseTargetQuantity" xml:space="preserve">
+    <value>Creșteți cantitatea țintă</value>
+  </data>
+  <data name="UiInventoryInRecyclerYieldOut" xml:space="preserve">
+    <value>Inventar, reciclare randament</value>
+  </data>
+  <data name="UiInviteDiscordBotToServer" xml:space="preserve">
+    <value>Invitați Discord bot pe server</value>
+  </data>
+  <data name="UiISOFFLINE" xml:space="preserve">
+    <value>ESTE OFFLINE</value>
+  </data>
+  <data name="UiISONLINE" xml:space="preserve">
+    <value>ESTE ONLINE</value>
+  </data>
+  <data name="UiITEMBAY" xml:space="preserve">
+    <value>ARTICOL BAY</value>
+  </data>
+  <data name="UiJunkpiles" xml:space="preserve">
+    <value>Junkpiles</value>
+  </data>
+  <data name="UiKeepSidebarUnfolded" xml:space="preserve">
+    <value>Păstrați bara laterală deschisă</value>
+  </data>
+  <data name="UiLanguageStartupAndAppBehavior" xml:space="preserve">
+    <value>Limbă, pornire și comportament al aplicației</value>
+  </data>
+  <data name="UiLastActive" xml:space="preserve">
+    <value>Ultima Activ</value>
+  </data>
+  <data name="UiLayers" xml:space="preserve">
+    <value>Straturi</value>
+  </data>
+  <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
+    <value>Lăsați gol pentru a permite tuturor pe server.</value>
+  </data>
+  <data name="UiLinkSelectedServer" xml:space="preserve">
+    <value>Conectați serverul selectat</value>
+  </data>
+  <data name="UiListenForRustPairingRequestsRightClickForRecoveryOptions" xml:space="preserve">
+    <value>Ascultați Rust+ solicitări de asociere. Faceți clic dreapta pentru opțiuni de recuperare.</value>
+  </data>
+  <data name="UiListening" xml:space="preserve">
+    <value>Ascultând</value>
+  </data>
+  <data name="UiLoadShopsAutomaticallyOnConnect" xml:space="preserve">
+    <value>Încărcați automat magazinele la conectare</value>
+  </data>
+  <data name="UiLoadingServerDetails" xml:space="preserve">
+    <value>Se încarcă detaliile serverului...</value>
+  </data>
+  <data name="UiLocalSetup" xml:space="preserve">
+    <value>Configurare locală</value>
+  </data>
+  <data name="UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps" xml:space="preserve">
+    <value>Conectați-vă la contul dvs. de birou (Rust+ pentru a genera hărți 3D și hărți termice.</value>
+  </data>
+  <data name="UiLogOut" xml:space="preserve">
+    <value>Deconectați-vă</value>
+  </data>
+  <data name="UiLogPiles" xml:space="preserve">
+    <value>Pile de bușteni</value>
+  </data>
+  <data name="UiLogicEngine" xml:space="preserve">
+    <value>Motor logic</value>
+  </data>
+  <data name="UiLogicEngineRuntime" xml:space="preserve">
+    <value>Timp de rulare a motorului logic</value>
+  </data>
+  <data name="UiLogicRules" xml:space="preserve">
+    <value>Reguli logice</value>
+  </data>
+  <data name="UiLoginRequired" xml:space="preserve">
+    <value>Este necesară autentificarea</value>
+  </data>
+  <data name="UiLoopAfterCompletion" xml:space="preserve">
+    <value>Buclă după finalizare</value>
+  </data>
+  <data name="UiLoot" xml:space="preserve">
+    <value>Pradă</value>
+  </data>
+  <data name="UiLootTransport" xml:space="preserve">
+    <value>Pradă și transport</value>
+  </data>
+  <data name="UiMaintenanceBackupResetAndCredits" xml:space="preserve">
+    <value>Întreținere, backup, resetare și credite</value>
+  </data>
+  <data name="UiManualPremium" xml:space="preserve">
+    <value>Manual Premium</value>
+  </data>
+  <data name="UiManualSince" xml:space="preserve">
+    <value>Manual De vreme ce</value>
+  </data>
+  <data name="UiMap" xml:space="preserve">
+    <value>Harta</value>
+  </data>
+  <data name="UiMapLayers" xml:space="preserve">
+    <value>Straturi de hartă</value>
+  </data>
+  <data name="UiMapPerformanceQuality" xml:space="preserve">
+    <value>Performanța și calitatea hărții</value>
+  </data>
+  <data name="UiMarker" xml:space="preserve">
+    <value>Marker:</value>
+  </data>
+  <data name="UiMatched" xml:space="preserve">
+    <value>Se potrivesc:</value>
+  </data>
+  <data name="UiMeters" xml:space="preserve">
+    <value>metri</value>
+  </data>
+  <data name="UiMethodComparisonMode" xml:space="preserve">
+    <value>Modul de comparare a metodei</value>
+  </data>
+  <data name="UiMinProfit" xml:space="preserve">
+    <value>Profit minim:</value>
+  </data>
+  <data name="UiModularCars" xml:space="preserve">
+    <value>Mașini modulare</value>
+  </data>
+  <data name="UiMonitorAndControlPairedSmartDevices" xml:space="preserve">
+    <value>Monitorizați și controlați dispozitivele inteligente asociate.</value>
+  </data>
+  <data name="UiMushrooms" xml:space="preserve">
+    <value>Ciuperci</value>
+  </data>
+  <data name="UiMuteNotificationsFromThisServer" xml:space="preserve">
+    <value>Dezactivați notificările de la acest server</value>
+  </data>
+  <data name="UiNames" xml:space="preserve">
+    <value>Nume</value>
+  </data>
+  <data name="UiNestedStepsIfConditionMet" xml:space="preserve">
+    <value>Pași imbricați (dacă condiția este îndeplinită)</value>
+  </data>
+  <data name="UiNewPassword6Characters" xml:space="preserve">
+    <value>Parolă nouă (+ 6 caractere)</value>
+  </data>
+  <data name="UiNoBuild" xml:space="preserve">
+    <value>Fără construcție</value>
+  </data>
+  <data name="UiNoDevicesMatchYourSearch" xml:space="preserve">
+    <value>Niciun dispozitiv nu corespunde căutării dvs.</value>
+  </data>
+  <data name="UiNoHeatmapActive" xml:space="preserve">
+    <value>Nicio hartă termică activă</value>
+  </data>
+  <data name="UiNoMatchingTargets" xml:space="preserve">
+    <value>Nu există ținte care se potrivesc</value>
+  </data>
+  <data name="UiNoPendingRules" xml:space="preserve">
+    <value>Fără reguli în așteptare</value>
+  </data>
+  <data name="UiNoTargetsSelected" xml:space="preserve">
+    <value>Nu au fost selectate obiective</value>
+  </data>
+  <data name="UiNotConnected" xml:space="preserve">
+    <value>Nu este conectat</value>
+  </data>
+  <data name="UiNothingToTotalYet" xml:space="preserve">
+    <value>Nimic de total încă</value>
+  </data>
+  <data name="UiNotificationsSoundsAndOfflineDeath" xml:space="preserve">
+    <value>Notificări, sunete și moarte offline</value>
+  </data>
+  <data name="UiOfflineAlertsSetup" xml:space="preserve">
+    <value>Configurare alerte offline</value>
+  </data>
+  <data name="UiOfflineCloudAlertsDiscordWebhookTelegramCalls" xml:space="preserve">
+    <value>Alerte cloud offline | Discord, Webhook și Telegram Apeluri</value>
+  </data>
+  <data name="UiOpacity100" xml:space="preserve">
+    <value>Opacitate: 100%</value>
+  </data>
+  <data name="UiOpenCloudAccount" xml:space="preserve">
+    <value>Deschideți un cont cloud</value>
+  </data>
+  <data name="UiOpenInteractive3DMapOnRustMaps" xml:space="preserve">
+    <value>Deschideți Harta interactivă 3D pe RustMaps</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanel" xml:space="preserve">
+    <value>Deschideți sau închideți panoul Magazine</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanelCtrlShiftS" xml:space="preserve">
+    <value>Deschideți sau închideți panoul Magazine (Ctrl+Shift+S)</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanel" xml:space="preserve">
+    <value>Deschideți sau închideți panoul Echipa</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
+    <value>Deschideți sau închideți panoul Echipa (Ctrl+Shift+T)</value>
+  </data>
+  <data name="UiOpenShopFilters" xml:space="preserve">
+    <value>Deschide filtrele magazinului</value>
+  </data>
+  <data name="UiOpenSignInAndAccountManagement" xml:space="preserve">
+    <value>Conectare deschisă și gestionarea contului</value>
+  </data>
+  <data name="UiOptimalMultiHopTradePathfinder" xml:space="preserve">
+    <value>Identificator optim pentru comerț multi-hop</value>
+  </data>
+  <data name="UiOptionalPings" xml:space="preserve">
+    <value>Pinguri opționale</value>
+  </data>
+  <data name="UiOR" xml:space="preserve">
+    <value>SAU</value>
+  </data>
+  <data name="UiOrGroupName" xml:space="preserve">
+    <value>sau Nume grup</value>
+  </data>
+  <data name="UiOres" xml:space="preserve">
+    <value>Minereuri</value>
+  </data>
+  <data name="UiOtherwise" xml:space="preserve">
+    <value>În caz contrar:</value>
+  </data>
+  <data name="UiOUTPOST" xml:space="preserve">
+    <value>AVANTPOST</value>
+  </data>
+  <data name="UiOutpostRecyclerTime" xml:space="preserve">
+    <value>Ora de reciclare a avanpostului</value>
+  </data>
+  <data name="UiOutpostSafezoneRecycler" xml:space="preserve">
+    <value>Avanpost/Safezone Recycler</value>
+  </data>
+  <data name="UiOverlayStorage" xml:space="preserve">
+    <value>Depozitare suprapusă</value>
+  </data>
+  <data name="UiOwnBaseBlack" xml:space="preserve">
+    <value>Baza proprie (negru)</value>
+  </data>
+  <data name="UiParachute" xml:space="preserve">
+    <value>Parașuta</value>
+  </data>
+  <data name="UiParse3DMapManually" xml:space="preserve">
+    <value>Analizați manual harta 3D</value>
+  </data>
+  <data name="UiPayItemEGCloth" xml:space="preserve">
+    <value>Plătiți articolul (de exemplu, cârpă)...</value>
+  </data>
+  <data name="UiPaymentResource" xml:space="preserve">
+    <value>Resursă de plată</value>
+  </data>
+  <data name="UiPendingQueue" xml:space="preserve">
+    <value>Coadă în așteptare</value>
+  </data>
+  <data name="UiPerformanceNearestNeighbor" xml:space="preserve">
+    <value>Performanță (cel mai apropiat vecin)</value>
+  </data>
+  <data name="UiPerformanceMarkersAnd3DData" xml:space="preserve">
+    <value>Performanță, markeri și date 3D</value>
+  </data>
+  <data name="UiPin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="UiPinSidebar" xml:space="preserve">
+    <value>Fixați bara laterală</value>
+  </data>
+  <data name="UiPLANUSAGE" xml:space="preserve">
+    <value>PLANIFICAȚI UTILIZARE</value>
+  </data>
+  <data name="UiPlay1minCountdownAudio" xml:space="preserve">
+    <value>Redați audio cu numărătoare inversă de 1 min</value>
+  </data>
+  <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
+    <value>Redați o alarmă puternică la ora 00:00</value>
+  </data>
+  <data name="UiPlayerProximity" xml:space="preserve">
+    <value>Apropierea jucătorului</value>
+  </data>
+  <data name="UiPotatoes" xml:space="preserve">
+    <value>Cartofi</value>
+  </data>
+  <data name="UiPressDesiredKeyCombination" xml:space="preserve">
+    <value>Apăsați combinația de taste dorită...</value>
+  </data>
+  <data name="UiPressESCToCancelEnterToSave" xml:space="preserve">
+    <value>Apăsați ESC pentru a anula, Enter pentru a salva</value>
+  </data>
+  <data name="UiPressHotkey" xml:space="preserve">
+    <value>Apăsați tasta rapidă</value>
+  </data>
+  <data name="UiPriceHighToLow" xml:space="preserve">
+    <value>Preț (de la mare la mic)</value>
+  </data>
+  <data name="UiPriceLowToHigh" xml:space="preserve">
+    <value>Preț (de mic la mare)</value>
+  </data>
+  <data name="UiProceduralHeatmaps" xml:space="preserve">
+    <value>Hărți de căldură procedurale</value>
+  </data>
+  <data name="UiProfit" xml:space="preserve">
+    <value>Profit</value>
+  </data>
+  <data name="UiPumpkins" xml:space="preserve">
+    <value>Dovlecei</value>
+  </data>
+  <data name="UiPurple" xml:space="preserve">
+    <value>violet</value>
+  </data>
+  <data name="UiRaidAlertsChannelID" xml:space="preserve">
+    <value>ID canal de alerte raid</value>
+  </data>
+  <data name="UiRaidCalculator" xml:space="preserve">
+    <value>Calculator raid</value>
+  </data>
+  <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
+    <value>Articole de raid și ingrediente de artizanat brute</value>
+  </data>
+  <data name="UiRaidPlan" xml:space="preserve">
+    <value>Planul de raid</value>
+  </data>
+  <data name="UiRaidSummary" xml:space="preserve">
+    <value>Rezumatul raidului</value>
+  </data>
+  <data name="UiRAWRESOURCES" xml:space="preserve">
+    <value>RESURSE PRIME</value>
+  </data>
+  <data name="UiReadAlertsAloudViaDiscordTTS" xml:space="preserve">
+    <value>Citiți alertele cu voce tare prin Discord TTS</value>
+  </data>
+  <data name="UiRed" xml:space="preserve">
+    <value>roșu</value>
+  </data>
+  <data name="UiRefreshDeviceStates" xml:space="preserve">
+    <value>Actualizează stările dispozitivului</value>
+  </data>
+  <data name="UiRemoveTarget" xml:space="preserve">
+    <value>Eliminați ținta</value>
+  </data>
+  <data name="UiRepeats0Indefinitely" xml:space="preserve">
+    <value>se repetă (0 = la nesfârșit)</value>
+  </data>
+  <data name="UiResetSoundsToDefault" xml:space="preserve">
+    <value>Resetați sunetele la valorile implicite</value>
+  </data>
+  <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
+    <value>Scala de rezoluție a bitmap-ului GPU din cache. Scale mai mici îmbunătățesc performanța pe GPU-uri mai lente.</value>
+  </data>
+  <data name="UiResourcesForestry" xml:space="preserve">
+    <value>Resurse și silvicultură</value>
+  </data>
+  <data name="UiRestoreLocalBackup" xml:space="preserve">
+    <value>Restaurați backupul local</value>
+  </data>
+  <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
+    <value>Examinați alertele și evenimentele recente ale serverului.</value>
+  </data>
+  <data name="UiRevoke" xml:space="preserve">
+    <value>Revocați</value>
+  </data>
+  <data name="UiRevokeAccess" xml:space="preserve">
+    <value>Revocați accesul</value>
+  </data>
+  <data name="UiRock" xml:space="preserve">
+    <value>stâncă</value>
+  </data>
+  <data name="UiRowboats" xml:space="preserve">
+    <value>Bărci cu vâsle</value>
+  </data>
+  <data name="UiRuleCompleted" xml:space="preserve">
+    <value>Regula finalizată</value>
+  </data>
+  <data name="UiRuleName" xml:space="preserve">
+    <value>Numele regulii</value>
+  </data>
+  <data name="UiRuleTriggered" xml:space="preserve">
+    <value>Regula declanșată</value>
+  </data>
+  <data name="UiRunThisRuleAgainAfterItCompletesAPositiveWaitStepIsRequired" xml:space="preserve">
+    <value>Rulați această regulă din nou după ce se finalizează. Este necesar un pas de așteptare pozitiv.</value>
+  </data>
+  <data name="UiRUNNING" xml:space="preserve">
+    <value>ALLERARE</value>
+  </data>
+  <data name="UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2" xml:space="preserve">
+    <value>Rust trimite uneori o notificare de raid fără ID-ul dispozitivului Smart Alarm. RustPlusDesk nu poate spune ce alarmă a declanșat-o, așa că setările partajate de mai jos sunt folosite în locul setărilor proprii ale dispozitivului.</value>
+  </data>
+  <data name="UiRUSTCOMPANION" xml:space="preserve">
+    <value>RUST+ COMPANION</value>
+  </data>
+  <data name="UiRustCompanionConnection" xml:space="preserve">
+    <value>Rust+ Conexiune însoțitoare</value>
+  </data>
+  <data name="UiRustCompanionSession" xml:space="preserve">
+    <value>Rust+ Sesiune însoțitoare</value>
+  </data>
+  <data name="UiRustDesktopV600Update" xml:space="preserve">
+    <value>Rust+ Desktop 🛠️ Actualizare v6.0.0</value>
+  </data>
+  <data name="UiRustSteamAccount" xml:space="preserve">
+    <value>Rust+ Steam cont</value>
+  </data>
+  <data name="UiRustmapsCom" xml:space="preserve">
+    <value>rustmaps.com</value>
+  </data>
+  <data name="UiSAMSite" xml:space="preserve">
+    <value>Site-ul SAM</value>
+  </data>
+  <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
+    <value>Salvați și închideți setările comenzii de chat</value>
+  </data>
+  <data name="UiSaveChannelsConfig" xml:space="preserve">
+    <value>Salvați configurația canalelor</value>
+  </data>
+  <data name="UiSavedBases" xml:space="preserve">
+    <value>Baze salvate</value>
+  </data>
+  <data name="UiScope" xml:space="preserve">
+    <value>Domeniul de aplicare</value>
+  </data>
+  <data name="UiScrollOrShiftClickChangesBy10" xml:space="preserve">
+    <value>Derulați sau Shift+Clic se modifică cu 10</value>
+  </data>
+  <data name="UiScrollToZoomDragToPanClickOrESCToCloseDoubleClickToReset" xml:space="preserve">
+    <value>Derulați la Zoom • Trageți pentru Panare • Faceți clic sau ESC pentru a închide • Faceți dublu clic pentru a reseta</value>
+  </data>
+  <data name="UiSearchComponents" xml:space="preserve">
+    <value>Căutați componente...</value>
+  </data>
+  <data name="UiSearchDevicesByNameTypeOwnerID" xml:space="preserve">
+    <value>Căutați dispozitive după nume, tip, proprietar, ID...</value>
+  </data>
+  <data name="UiSearchDevices" xml:space="preserve">
+    <value>Căutați dispozitive...</value>
+  </data>
+  <data name="UiSearchItemsEGSulfur" xml:space="preserve">
+    <value>Căutați articole (de exemplu, sulf)...</value>
+  </data>
+  <data name="UiSearchItemsOrTypeFreely" xml:space="preserve">
+    <value>Căutați articole sau introduceți liber...</value>
+  </data>
+  <data name="UiSearchMonument" xml:space="preserve">
+    <value>Căutați monument...</value>
+  </data>
+  <data name="UiSearchRaidTargets" xml:space="preserve">
+    <value>Căutați ținte de raid</value>
+  </data>
+  <data name="UiSearchSettings" xml:space="preserve">
+    <value>Setări de căutare</value>
+  </data>
+  <data name="UiSearchTargets" xml:space="preserve">
+    <value>Căutare ținte...</value>
+  </data>
+  <data name="UiSearching" xml:space="preserve">
+    <value>Se caută...</value>
+  </data>
+  <data name="UiSeconds" xml:space="preserve">
+    <value>secunde</value>
+  </data>
+  <data name="UiSecs" xml:space="preserve">
+    <value>Sec</value>
+  </data>
+  <data name="UiSelectALayerToViewSpawnDensity" xml:space="preserve">
+    <value>Selectați un strat pentru a vedea densitatea de apariție</value>
+  </data>
+  <data name="UiSelectCustom1MinuteCountdownSound" xml:space="preserve">
+    <value>Selectați sunet personalizat de numărătoare inversă de 1 minut</value>
+  </data>
+  <data name="UiSelectCustomAlarmSound0000" xml:space="preserve">
+    <value>Selectați sunetul de alarmă personalizat (00:00)</value>
+  </data>
+  <data name="UiSelectMultipleRaidItemsForTheSmartCombinationSearch" xml:space="preserve">
+    <value>Selectați mai multe articole de raid pentru căutarea combinată inteligentă</value>
+  </data>
+  <data name="UiSelectServerToSyncWithAlexa" xml:space="preserve">
+    <value>Selectați serverul cu care să vă sincronizați Alexa</value>
+  </data>
+  <data name="UiSelectSmartMixRaidItems" xml:space="preserve">
+    <value>Selectați articole raid mix inteligente</value>
+  </data>
+  <data name="UiSelectTheSourceRuleForThisTrigger" xml:space="preserve">
+    <value>Selectați regula sursă pentru acest declanșator.</value>
+  </data>
+  <data name="UiSendCurrentMapViewToDiscordChannel" xml:space="preserve">
+    <value>Trimiteți vizualizarea actuală a hărții către canalul Discord.</value>
+  </data>
+  <data name="UiSendToDiscord" xml:space="preserve">
+    <value>Trimite la Discord</value>
+  </data>
+  <data name="UiSERVERHIDDEN" xml:space="preserve">
+    <value>SERVERUL ASCUNS</value>
+  </data>
+  <data name="UiServerName1430" xml:space="preserve">
+    <value>Nume server - 14:30</value>
+  </data>
+  <data name="UiSERVERS" xml:space="preserve">
+    <value>SERVERE</value>
+  </data>
+  <data name="UiSetShortcut" xml:space="preserve">
+    <value>Setați comanda rapidă</value>
+  </data>
+  <data name="UiSettingsAreGroupedByWhatTheyControl" xml:space="preserve">
+    <value>Setările sunt grupate în funcție de ceea ce controlează.</value>
+  </data>
+  <data name="UiShield" xml:space="preserve">
+    <value>Scut</value>
+  </data>
+  <data name="UiShopAlertsChannelID" xml:space="preserve">
+    <value>ID canal de alerte de magazin</value>
+  </data>
+  <data name="UiShow2DMap" xml:space="preserve">
+    <value>Afișați harta 2D</value>
+  </data>
+  <data name="UiShowAll" xml:space="preserve">
+    <value>Arată toate</value>
+  </data>
+  <data name="UiShowDamageOverkillAndIngredientBreakdowns" xml:space="preserve">
+    <value>Afișați daune, exagerare și defecțiuni ale ingredientelor</value>
+  </data>
+  <data name="UiShowLocal3DMap" xml:space="preserve">
+    <value>Afișați harta 3D locală</value>
+  </data>
+  <data name="UiShowMarkersOnMap" xml:space="preserve">
+    <value>Afișați marcatorii pe hartă</value>
+  </data>
+  <data name="UiShowShopsThatBuyItem" xml:space="preserve">
+    <value>Afișați magazinele care cumpără articole</value>
+  </data>
+  <data name="UiShowShopsThatSellItem" xml:space="preserve">
+    <value>Afișați magazinele care vând articole</value>
+  </data>
+  <data name="UiShowThe2DMap" xml:space="preserve">
+    <value>Afișați harta 2D</value>
+  </data>
+  <data name="UiSIGNINMETHODS" xml:space="preserve">
+    <value>METODE DE CONECTARE</value>
+  </data>
+  <data name="UiSize" xml:space="preserve">
+    <value>Dimensiune:</value>
+  </data>
+  <data name="UiSize100SHIFTMousewheel" xml:space="preserve">
+    <value>Dimensiune: 100% (SHIFT+Rotiță mouse)</value>
+  </data>
+  <data name="UiSkull" xml:space="preserve">
+    <value>Craniu</value>
+  </data>
+  <data name="UiSleep" xml:space="preserve">
+    <value>Dormi</value>
+  </data>
+  <data name="UiSmartHomeWebhookURLEGIFTTTAlexaGoogle" xml:space="preserve">
+    <value>Adresa URL a Smart Home Webhook (de exemplu, IFTTT, Alexa, Google)</value>
+  </data>
+  <data name="UiSmartSwitch" xml:space="preserve">
+    <value>Comutator inteligent</value>
+  </data>
+  <data name="UiSnakes" xml:space="preserve">
+    <value>Șerpi</value>
+  </data>
+  <data name="UiSnooze" xml:space="preserve">
+    <value>Amână</value>
+  </data>
+  <data name="UiSnoozeAlarm" xml:space="preserve">
+    <value>Amânați alarma</value>
+  </data>
+  <data name="UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D" xml:space="preserve">
+    <value>Unele metode selectate nu au costuri de crafting în setul de date; resursele lor sunt excluse.</value>
+  </data>
+  <data name="UiSortBy" xml:space="preserve">
+    <value>Sortați după</value>
+  </data>
+  <data name="UiSpecificPlayerInRange" xml:space="preserve">
+    <value>Jucător specific în rază</value>
+  </data>
+  <data name="UiSpecificPlayerOffline" xml:space="preserve">
+    <value>Un anumit jucător offline</value>
+  </data>
+  <data name="UiSteamID" xml:space="preserve">
+    <value>Steam ID</value>
+  </data>
+  <data name="UiStopAlarmSound" xml:space="preserve">
+    <value>Opriți sunetul alarmei</value>
+  </data>
+  <data name="UiStorage" xml:space="preserve">
+    <value>Depozitare</value>
+  </data>
+  <data name="UiSupportRustPlusDesk" xml:space="preserve">
+    <value>Suport RustPlusDesk</value>
+  </data>
+  <data name="UiSwitch" xml:space="preserve">
+    <value>Comutator</value>
+  </data>
+  <data name="UiSyncCloudConnection" xml:space="preserve">
+    <value>Sincronizați conexiunea la cloud</value>
+  </data>
+  <data name="UiSyncOK" xml:space="preserve">
+    <value>Sincronizare OK</value>
+  </data>
+  <data name="UiSyncYourRustConnection" xml:space="preserve">
+    <value>Sincronizați-vă Rust+ conexiunea</value>
+  </data>
+  <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
+    <value>Sincronizați-vă Rust+ conexiunea la cloud pentru a primi alerte inteligente de raid/eveniment pe Discord, Alexa și Google Home chiar și atunci când aplicația desktop este închisă.</value>
+  </data>
+  <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
+    <value>Sincronizare, backup, funcții pentru echipă și acces pentru suporteri. Acest cont este separat de Rust+ Împerecherea însoțitoare și FCM.</value>
+  </data>
+  <data name="UiSyncedDevices" xml:space="preserve">
+    <value>Dispozitive sincronizate</value>
+  </data>
+  <data name="UiSystem" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="UiTargetCategory" xml:space="preserve">
+    <value>Categoria țintă</value>
+  </data>
+  <data name="UiTargetQuantity" xml:space="preserve">
+    <value>Cantitatea țintă</value>
+  </data>
+  <data name="UiTeamPathsTracking" xml:space="preserve">
+    <value>Urmărirea traseelor echipei</value>
+  </data>
+  <data name="UiTelegramCallViaCallMeBot" xml:space="preserve">
+    <value>Telegram Apelați prin CallMeBot</value>
+  </data>
+  <data name="UiTestCall" xml:space="preserve">
+    <value>Apel de testare</value>
+  </data>
+  <data name="UiTextToSpeechForWebhook" xml:space="preserve">
+    <value>Text-to-speech pentru Webhook</value>
+  </data>
+  <data name="UiTheCloudWorkerListensForIncomingAlarms" xml:space="preserve">
+    <value>Lucrătorul în cloud ascultă alarmele primite.</value>
+  </data>
+  <data name="UiTHEN" xml:space="preserve">
+    <value>Atunci</value>
+  </data>
+  <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
+    <value>Această conexiune este pentru API-ul însoțitor Rust. Permite FCM împerecherea, transmisiile în joc, alarmele și chatul în echipă. Contul dvs. Cloud este separat.</value>
+  </data>
+  <data name="UiTier" xml:space="preserve">
+    <value>Nivelul</value>
+  </data>
+  <data name="UiTigers" xml:space="preserve">
+    <value>Tigrii</value>
+  </data>
+  <data name="UiToggleDelay150ms" xml:space="preserve">
+    <value>Întârziere comutare: 150 ms</value>
+  </data>
+  <data name="UiToggleDevice" xml:space="preserve">
+    <value>Comutați dispozitivul</value>
+  </data>
+  <data name="UiToggleMiniMap" xml:space="preserve">
+    <value>Comută mini hartă</value>
+  </data>
+  <data name="UiToggleMonumentList" xml:space="preserve">
+    <value>Comutați Lista monumentelor</value>
+  </data>
+  <data name="UiTrackTeammatesAndSharedActivity" xml:space="preserve">
+    <value>Urmăriți colegii de echipă și activitatea comună.</value>
+  </data>
+  <data name="UiTriggerEvent" xml:space="preserve">
+    <value>Declanșează evenimentul</value>
+  </data>
+  <data name="UiTriggered" xml:space="preserve">
+    <value>Declanșat</value>
+  </data>
+  <data name="UiTryAnotherSearchOrCategory" xml:space="preserve">
+    <value>Încercați altă căutare sau categorie.</value>
+  </data>
+  <data name="UiTTS" xml:space="preserve">
+    <value>TTS</value>
+  </data>
+  <data name="UiTTSLanguage" xml:space="preserve">
+    <value>Limba TTS</value>
+  </data>
+  <data name="UiTurret" xml:space="preserve">
+    <value>turelă</value>
+  </data>
+  <data name="UiUntil" xml:space="preserve">
+    <value>până când</value>
+  </data>
+  <data name="UiUpgradeToSupporter" xml:space="preserve">
+    <value>Faceți upgrade la Supporter</value>
+  </data>
+  <data name="UiUsernameEGBrunhilde" xml:space="preserve">
+    <value>Nume de utilizator (de exemplu, @Brunhilde)</value>
+  </data>
+  <data name="UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired" xml:space="preserve">
+    <value>Utilizează datele dvs. de conectare Rust+ / Steam în browser. Conectarea la cloud nu este necesară.</value>
+  </data>
+  <data name="UiViewAndControlPairedCCTVCameras" xml:space="preserve">
+    <value>Vizualizați și controlați camerele CCTV asociate.</value>
+  </data>
+  <data name="UiViewPlayers" xml:space="preserve">
+    <value>Vedeți jucătorii</value>
+  </data>
+  <data name="UiVisitWebsite" xml:space="preserve">
+    <value>Vizitați site-ul web</value>
+  </data>
+  <data name="UiWait" xml:space="preserve">
+    <value>Așteaptă</value>
+  </data>
+  <data name="UiWantItemEGBlue" xml:space="preserve">
+    <value>Vrei articol (de exemplu, albastru)...</value>
+  </data>
+  <data name="UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E" xml:space="preserve">
+    <value>Putem localiza automat harta în folderul de instalare Steam, o putem extrage și construi o hartă 3D cu hărți termice și suprapuneri mai bogate pentru monumente. Nu vor fi modificate date și nu vor fi accesate date fără legătură cu folderul Steam.</value>
+  </data>
+  <data name="UiWebhookInfo" xml:space="preserve">
+    <value>Informații webhook</value>
+  </data>
+  <data name="UiWhatHappensNext" xml:space="preserve">
+    <value>Ce se întâmplă în continuare:</value>
+  </data>
+  <data name="UiWhatIsAGenericAlarm" xml:space="preserve">
+    <value>Ce este o alarmă generică?</value>
+  </data>
+  <data name="UiWheat" xml:space="preserve">
+    <value>grâu</value>
+  </data>
+  <data name="UiWHEN" xml:space="preserve">
+    <value>CÂND</value>
+  </data>
+  <data name="UiWILD" xml:space="preserve">
+    <value>SALBATICA</value>
+  </data>
+  <data name="UiWildRecyclerTime" xml:space="preserve">
+    <value>Timp sălbatic de reciclare</value>
+  </data>
+  <data name="UiWipeCycle" xml:space="preserve">
+    <value>Ciclul de ștergere</value>
+  </data>
+  <data name="UiWolves" xml:space="preserve">
+    <value>Lupii</value>
+  </data>
+  <data name="UiWoodPiles" xml:space="preserve">
+    <value>Piloți de lemn</value>
+  </data>
+  <data name="UiX" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="UiYellow" xml:space="preserve">
+    <value>Galben</value>
+  </data>
+  <data name="UiYIELDBOARD" xml:space="preserve">
+    <value>SALA DE RENDAMENT</value>
+  </data>
+  <data name="UiYouCanRevokeThisAccessAtAnyTime" xml:space="preserve">
+    <value>Puteți revoca oricând acest acces.</value>
+  </data>
+  <data name="UiYourFCMConnectionTokenIsUploadedSecurely" xml:space="preserve">
+    <value>Indicatorul dvs. de conexiune FCM este încărcat în siguranță.</value>
+  </data>
+  <data name="UiZZZ" xml:space="preserve">
+    <value>ZZZ</value>
+  </data>
+  <data name="CodeUi3DMapData" xml:space="preserve">
+    <value>Date de hartă 3D</value>
+  </data>
+  <data name="CodeUiÃÂÂ" xml:space="preserve">
+    <value>Ã¢â‚¬Â¦</value>
+  </data>
+  <data name="CodeUiAccessRevoked" xml:space="preserve">
+    <value>Acces revocat</value>
+  </data>
+  <data name="CodeUiAddAnEmailAndPasswordToThisAccount" xml:space="preserve">
+    <value>Adăugați un e-mail și o parolă la acest cont</value>
+  </data>
+  <data name="CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole" xml:space="preserve">
+    <value>Accesul de administrator necesită Discord autentificare și un rol de dezvoltator/contributor principal.</value>
+  </data>
+  <data name="CodeUiAlexaAccessRevokedSuccessfully" xml:space="preserve">
+    <value>Alexa acces revocat cu succes.</value>
+  </data>
+  <data name="CodeUiApplyingUpdate" xml:space="preserve">
+    <value>Se aplică actualizarea...</value>
+  </data>
+  <data name="CodeUiAreYouSureYouWantToClearTheOfflineDeathLog" xml:space="preserve">
+    <value>Sigur doriți să ștergeți jurnalul deceselor offline?</value>
+  </data>
+  <data name="CodeUiArrivalWarningUnlearned" xml:space="preserve">
+    <value>Avertisment de sosire (neînvățat)</value>
+  </data>
+  <data name="CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain" xml:space="preserve">
+    <value>Datele hărții 3D stocate în cache au fost șterse. Acesta va fi reconstruit când deschideți din nou o hartă 3D.</value>
+  </data>
+  <data name="CodeUiChangeColor" xml:space="preserve">
+    <value>Schimbați culoarea</value>
+  </data>
+  <data name="CodeUiChannelsConfigurationSavedSuccessfully" xml:space="preserve">
+    <value>Configurația canalelor a fost salvată cu succes!</value>
+  </data>
+  <data name="CodeUiCheckingDevices" xml:space="preserve">
+    <value>Se verifică dispozitivele...</value>
+  </data>
+  <data name="CodeUiCheckingForUpdates" xml:space="preserve">
+    <value>Se verifică actualizările...</value>
+  </data>
+  <data name="CodeUiClearEveryTargetFromThisRaidPlan" xml:space="preserve">
+    <value>Ștergeți fiecare țintă din acest plan de raid?</value>
+  </data>
+  <data name="CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612" xml:space="preserve">
+    <value>Accesul la cloud a fost revocat și acreditările dvs. au fost șterse din cloud.</value>
+  </data>
+  <data name="CodeUiCloudSyncFailed" xml:space="preserve">
+    <value>Sincronizarea cloud a eșuat</value>
+  </data>
+  <data name="CodeUiCloudUser" xml:space="preserve">
+    <value>Utilizator cloud</value>
+  </data>
+  <data name="CodeUiCollapse" xml:space="preserve">
+    <value>Colaps</value>
+  </data>
+  <data name="CodeUiConfirmClear" xml:space="preserve">
+    <value>Confirmați Ștergeți</value>
+  </data>
+  <data name="CodeUiConnected" xml:space="preserve">
+    <value>Conectat</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncEnabled" xml:space="preserve">
+    <value>Conectat · sincronizare în cloud activată</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncPaused" xml:space="preserve">
+    <value>Conectat · sincronizarea în cloud întreruptă</value>
+  </data>
+  <data name="CodeUiCopied" xml:space="preserve">
+    <value>Copiat</value>
+  </data>
+  <data name="CodeUiCopyMap" xml:space="preserve">
+    <value>Copiați harta</value>
+  </data>
+  <data name="CodeUiCouldNotCheckForUpdates" xml:space="preserve">
+    <value>Nu s-au putut verifica actualizări</value>
+  </data>
+  <data name="CodeUiCouldNotCopySummary" xml:space="preserve">
+    <value>Nu s-a putut copia rezumatul</value>
+  </data>
+  <data name="CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811" xml:space="preserve">
+    <value>Nu s-au putut prelua detaliile de la conexiunea Rust+. Asigurați-vă că sunteți conectat la server.</value>
+  </data>
+  <data name="CodeUiDeviceImportFailed" xml:space="preserve">
+    <value>Importul dispozitivului a eșuat:</value>
+  </data>
+  <data name="CodeUiDiscordServerLinkedSuccessfully" xml:space="preserve">
+    <value>Discord Server a fost conectat cu succes!</value>
+  </data>
+  <data name="CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E" xml:space="preserve">
+    <value>Discord Serverul a fost deconectat cu succes. Botul nu va mai interacționa cu serverul dvs.</value>
+  </data>
+  <data name="CodeUiEmailLoginEnabled" xml:space="preserve">
+    <value>Conectarea prin e-mail este activată</value>
+  </data>
+  <data name="CodeUiEnabled" xml:space="preserve">
+    <value>Activat</value>
+  </data>
+  <data name="CodeUiEraserBig20px" xml:space="preserve">
+    <value>Gumă mare (20px)</value>
+  </data>
+  <data name="CodeUiEraserSmall5px" xml:space="preserve">
+    <value>Gumă mică (5px)</value>
+  </data>
+  <data name="CodeUiFailedToLinkDiscordServer" xml:space="preserve">
+    <value>Nu s-a putut conecta Discord Server.</value>
+  </data>
+  <data name="CodeUiFailedToRevokeFCMConnection" xml:space="preserve">
+    <value>Conexiunea FCM nu a putut fi revocată.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
+    <value>Conexiunea FCM a eșuat. Asigurați-vă că sunteți autentificat, aveți un nivel Premium/Supporter activ și conexiunea în Rust+ Companion este activă.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
+    <value>Conexiunea FCM a eșuat. Vă rugăm să vă asigurați că sunteți autentificat.</value>
+  </data>
+  <data name="CodeUiFehler" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="CodeUiHotkeysActive" xml:space="preserve">
+    <value>Taste rapide active</value>
+  </data>
+  <data name="CodeUiInvalidUsername" xml:space="preserve">
+    <value>Nume de utilizator invalid</value>
+  </data>
+  <data name="CodeUiJustNow" xml:space="preserve">
+    <value>tocmai acum</value>
+  </data>
+  <data name="CodeUiLinkDiscord" xml:space="preserve">
+    <value>Link Discord</value>
+  </data>
+  <data name="CodeUiLinked" xml:space="preserve">
+    <value>Legat</value>
+  </data>
+  <data name="CodeUiLinkedToThisCloudAccount" xml:space="preserve">
+    <value>Conectat la acest cont cloud</value>
+  </data>
+  <data name="CodeUiLöschen" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="CodeUiManageEmailAccount" xml:space="preserve">
+    <value>Gestionați contul de e-mail</value>
+  </data>
+  <data name="CodeUiManagePlayerGroup" xml:space="preserve">
+    <value>Gestionați grupul de jucători</value>
+  </data>
+  <data name="CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52" xml:space="preserve">
+    <value>S-au atins maximum 5 abonamente active pentru coechipieri. Vă rugăm să vă dezabonați mai întâi de la altcineva.</value>
+  </data>
+  <data name="CodeUiMaximumOf5CustomTimersAllowed" xml:space="preserve">
+    <value>Sunt permise maximum 5 cronometre personalizate.</value>
+  </data>
+  <data name="CodeUiMissingChannelConfig" xml:space="preserve">
+    <value>Lipsește Configurarea canalului</value>
+  </data>
+  <data name="CodeUiNoActiveConnectionToRetrieveServerInfo" xml:space="preserve">
+    <value>Nicio conexiune activă pentru a prelua informațiile serverului.</value>
+  </data>
+  <data name="CodeUiNoCompanionSession" xml:space="preserve">
+    <value>Fără sesiune însoțitoare</value>
+  </data>
+  <data name="CodeUiNoDeviceExportsFoundForYourTeamServer" xml:space="preserve">
+    <value>Nu s-au găsit exporturi de dispozitiv pentru echipa/serverul dvs.</value>
+  </data>
+  <data name="CodeUiNoFrame" xml:space="preserve">
+    <value>nici un cadru</value>
+  </data>
+  <data name="CodeUiNoMapFound" xml:space="preserve">
+    <value>Nicio hartă găsită</value>
+  </data>
+  <data name="CodeUiNoOffersAvailable" xml:space="preserve">
+    <value>Nu există oferte disponibile</value>
+  </data>
+  <data name="CodeUiNoResultsFoundMatchingFilter" xml:space="preserve">
+    <value>Nu s-au găsit rezultate care să corespundă filtrului.</value>
+  </data>
+  <data name="CodeUiNoTextFound" xml:space="preserve">
+    <value>Nu a fost găsit niciun text</value>
+  </data>
+  <data name="CodeUiNoValidRouteBottlenecks" xml:space="preserve">
+    <value>Nicio rută validă (gâturi de sticlă).</value>
+  </data>
+  <data name="CodeUiNotLinked" xml:space="preserve">
+    <value>Nu este legat</value>
+  </data>
+  <data name="CodeUiNotSignedInSyncAndBackupsUnavailable" xml:space="preserve">
+    <value>Neconectat · sincronizare și backup-uri indisponibile</value>
+  </data>
+  <data name="CodeUiOfflineMap" xml:space="preserve">
+    <value>Hartă offline</value>
+  </data>
+  <data name="CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers" xml:space="preserve">
+    <value>Doar hărțile offline analizate manual pot fi copiate pe alte servere.</value>
+  </data>
+  <data name="CodeUiPINGeneratedValidFor15m" xml:space="preserve">
+    <value>PIN generat (valid pentru 15 m)</value>
+  </data>
+  <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
+    <value>Vă rugăm să configurați mai întâi un canal Discord „Alerte de chat” sau „Alerte de evenimente” în Setări.</value>
+  </data>
+  <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
+    <value>Vă rugăm să vă conectați mai întâi contul Cloud.</value>
+  </data>
+  <data name="CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN" xml:space="preserve">
+    <value>Vă rugăm să activați Cloud Sync înainte de a genera un PIN Alexa.</value>
+  </data>
+  <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
+    <value>Vă rugăm să introduceți un nume de utilizator valid (Telegram.</value>
+  </data>
+  <data name="CodeUiPleaseSaveADiscordServerIDFirst" xml:space="preserve">
+    <value>Salvați mai întâi un Discord ID server.</value>
+  </data>
+  <data name="CodeUiResumingUpdateDownload" xml:space="preserve">
+    <value>Se reia descărcarea actualizării...</value>
+  </data>
+  <data name="CodeUiSaveAlert" xml:space="preserve">
+    <value>Salvați alerta</value>
+  </data>
+  <data name="CodeUiSavedClickToUnsave" xml:space="preserve">
+    <value>Salvat (dați clic pentru a anula salvarea)</value>
+  </data>
+  <data name="CodeUiSearchResults" xml:space="preserve">
+    <value>Rezultatele căutării</value>
+  </data>
+  <data name="CodeUiSending" xml:space="preserve">
+    <value>Se trimite...</value>
+  </data>
+  <data name="CodeUiServerAddressCopiedToClipboard" xml:space="preserve">
+    <value>Adresa serverului a fost copiată în clipboard!</value>
+  </data>
+  <data name="CodeUiShowNoBuildZones" xml:space="preserve">
+    <value>Afișați zonele fără construcție</value>
+  </data>
+  <data name="CodeUiSize14" xml:space="preserve">
+    <value>Marime: 14</value>
+  </data>
+  <data name="CodeUiSize40" xml:space="preserve">
+    <value>Marime: 40</value>
+  </data>
+  <data name="CodeUiSteamIDNotFoundPleaseConnectToAServerFirst" xml:space="preserve">
+    <value>Steam ID nu a fost găsit. Vă rugăm să vă conectați mai întâi la un server.</value>
+  </data>
+  <data name="CodeUiSubscriptionLimit" xml:space="preserve">
+    <value>Limită de abonament</value>
+  </data>
+  <data name="CodeUiSuccess" xml:space="preserve">
+    <value>Succes</value>
+  </data>
+  <data name="CodeUiSynced" xml:space="preserve">
+    <value>Sincronizat!</value>
+  </data>
+  <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
+    <value>API-ul Rust+ nu oferă o descriere detaliată pentru acest server.</value>
+  </data>
+  <data name="CodeUiThickness10px" xml:space="preserve">
+    <value>Grosime: 10px</value>
+  </data>
+  <data name="CodeUiThickness3px" xml:space="preserve">
+    <value>Grosime: 3px</value>
+  </data>
+  <data name="CodeUiTimer" xml:space="preserve">
+    <value>Cronometru</value>
+  </data>
+  <data name="CodeUiTranslate" xml:space="preserve">
+    <value>Traduceți</value>
+  </data>
+  <data name="CodeUiTranslated" xml:space="preserve">
+    <value>Tradus</value>
+  </data>
+  <data name="CodeUiTranslating" xml:space="preserve">
+    <value>Se traduce...</value>
+  </data>
+  <data name="CodeUiTranslationFailed" xml:space="preserve">
+    <value>Traducerea a eșuat:</value>
+  </data>
+  <data name="CodeUiUmbenennen" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="CodeUiUnavailable" xml:space="preserve">
+    <value>Indisponibil</value>
+  </data>
+  <data name="CodeUiUngültigeEingaben" xml:space="preserve">
+    <value>Ungültige Eingaben.</value>
+  </data>
+  <data name="CodeUiUnlimited" xml:space="preserve">
+    <value>Nelimitat</value>
+  </data>
+  <data name="CodeUiUpdate" xml:space="preserve">
+    <value>Actualizare</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed" xml:space="preserve">
+    <value>Verificarea actualizării a eșuat</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed2" xml:space="preserve">
+    <value>Verificarea actualizării a eșuat.</value>
+  </data>
+  <data name="CodeUiUpdateDownloadCancelled" xml:space="preserve">
+    <value>Descărcarea actualizată a fost anulată</value>
+  </data>
+  <data name="CodeUiUpdateDownloadFailed" xml:space="preserve">
+    <value>Descărcarea actualizării a eșuat</value>
+  </data>
+  <data name="CodeUiUpdateDownloadPaused" xml:space="preserve">
+    <value>Descărcarea actualizării a fost întreruptă</value>
+  </data>
+  <data name="CodeUiUpdateReadyInstallsOnClose" xml:space="preserve">
+    <value>Actualizare gata — se instalează la închidere</value>
+  </data>
+  <data name="CodeUiWhite" xml:space="preserve">
+    <value>alb</value>
+  </data>
+  <data name="FormatOfflineMapImported" xml:space="preserve">
+    <value>Harta offline a fost importată cu succes ca „{0}”!</value>
+  </data>
+  <data name="MapImportedTitle" xml:space="preserve">
+    <value>Harta importată</value>
+  </data>
+  <data name="FormatFailedImportMap" xml:space="preserve">
+    <value>Nu s-a putut importa harta: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Eroare</value>
+  </data>
+  <data name="CopyMapStagedMessage" xml:space="preserve">
+    <value>Vă rugăm să selectați sau să vă conectați la un server asociat din listă. Dacă aspectul său se potrivește, harta va fi copiată automat.</value>
+  </data>
+  <data name="CopyMapStagedTitle" xml:space="preserve">
+    <value>Copiați harta în etape</value>
+  </data>
+  <data name="FormatUpdateAvailable" xml:space="preserve">
+    <value>Actualizare {0} disponibilă</value>
+  </data>
+  <data name="FormatDownloadingUpdate" xml:space="preserve">
+    <value>Se descarcă {0}</value>
+  </data>
+  <data name="FormatUpdateReady" xml:space="preserve">
+    <value>Actualizare {0} gata — se instalează la închidere</value>
+  </data>
+  <data name="FormatPlayerStatusError" xml:space="preserve">
+    <value>Eroare: {0}</value>
+  </data>
+  <data name="FormatFailedOpenPlayers" xml:space="preserve">
+    <value>Fereastra jucătorilor nu a putut fi deschisă:
+
+{0}: {1}
+
+Stiva:
+{2}</value>
+  </data>
+  <data name="FormatOfflineMapNotParsed" xml:space="preserve">
+    <value>Harta offline „{0}” nu a fost încă analizată. Deschideți harta 3D o dată pentru a o analiza, apoi încercați să copiați din nou.</value>
+  </data>
+  <data name="CopyMapErrorTitle" xml:space="preserve">
+    <value>Eroare de copiere a hărții</value>
+  </data>
+  <data name="FormatMapMismatch" xml:space="preserve">
+    <value>Aspectele hărții nu se potrivesc. Harta „{0}” nu pare a fi aceeași hartă cu serverul conectat „{1}”.</value>
+  </data>
+  <data name="MapMismatchTitle" xml:space="preserve">
+    <value>Hartă nepotrivită</value>
+  </data>
+  <data name="FormatMapCopied" xml:space="preserve">
+    <value>S-au copiat cu succes harta 3D și activele locale din „{0}” în „{1}”!</value>
+  </data>
+  <data name="MapCopiedTitle" xml:space="preserve">
+    <value>Harta a fost copiată</value>
+  </data>
+  <data name="FormatMapCopyError" xml:space="preserve">
+    <value>A apărut o eroare la copierea hărții: {0}</value>
+  </data>
+  <data name="FormatCloudLimits" xml:space="preserve">
+    <value>{0}
+Planificați utilizarea:
+• Dimensiunea suprapunerii: ({1} KB / {2}
+• Dispozitive: ({3} / {4}
+• Baze: ({5} / {6}</value>
+  </data>
+  <data name="FormatFailedUnlinkDiscord" xml:space="preserve">
+    <value>Nu s-a putut deconecta serverul Discord: {0}</value>
+  </data>
+  <data name="FormatFailedLinkDiscord" xml:space="preserve">
+    <value>Nu s-a putut conecta Discord server: ({0}</value>
+  </data>
+  <data name="FormatFailedSaveChannels" xml:space="preserve">
+    <value>Nu s-au salvat canalele: {0}</value>
+  </data>
+  <data name="FormatFailedOpenBrowser" xml:space="preserve">
+    <value>Nu s-a putut deschide browserul: ({0}</value>
+  </data>
+  <data name="FormatFailedGeneratePin" xml:space="preserve">
+    <value>Nu s-a putut genera PIN: {0}</value>
+  </data>
+  <data name="FormatFailedRevokeAlexa" xml:space="preserve">
+    <value>Nu s-a revocat accesul Alexa: {0}</value>
+  </data>
+  <data name="FormatPremiumPlan" xml:space="preserve">
+    <value>{0} · Premium</value>
+  </data>
+  <data name="FormatFreePlan" xml:space="preserve">
+    <value>{0} · Gratuit</value>
+  </data>
+  <data name="FormatCouldNotLoadImage" xml:space="preserve">
+    <value>Nu s-a putut încărca imaginea: {0}</value>
+  </data>
+  <data name="FormatErrorSavingCrosshair" xml:space="preserve">
+    <value>Eroare la salvarea încrucișării: ({0}</value>
+  </data>
+  <data name="FormatCheckingDevice" xml:space="preserve">
+    <value>Se verifică dispozitivul #{0} ({1})...</value>
+  </data>
+  <data name="FormatToggleDelay" xml:space="preserve">
+    <value>Întârziere comutare: ({0} ms</value>
+  </data>
+  <data name="FormatErrorLoadingUsers" xml:space="preserve">
+    <value>Eroare la încărcarea utilizatorilor: ({0}</value>
+  </data>
+  <data name="FormatErrorUpdatingOverride" xml:space="preserve">
+    <value>Eroare la actualizarea înlocuirii: {0}</value>
+  </data>
+  <data name="FormatServerDescriptionWebsite" xml:space="preserve">
+    <value>API-ul Rust+ nu oferă o descriere detaliată pentru acest server.
+
+Puteți găsi mai multe informații pe site-ul oficial al serverului:
+{0}</value>
+  </data>
+  <data name="FormatFailedLoadServerDetails" xml:space="preserve">
+    <value>Nu s-au încărcat detaliile serverului: {0}</value>
+  </data>
+  <data name="RaidLoadingData" xml:space="preserve">
+    <value>Se încarcă datele raid...</value>
+  </data>
+  <data name="RaidNoTargetsAvailable" xml:space="preserve">
+    <value>Nu sunt disponibile ținte de raid.</value>
+  </data>
+  <data name="FormatRaidUnavailable" xml:space="preserve">
+    <value>Calculatorul raid indisponibil: {0}</value>
+  </data>
+  <data name="FormatRaidSaveFailed" xml:space="preserve">
+    <value>Nu s-a putut salva planul de raid: {0}</value>
+  </data>
+  <data name="UpdateSuccessfulTitle" xml:space="preserve">
+    <value>Actualizare reușită</value>
+  </data>
+  <data name="FormatUpdateSuccessful" xml:space="preserve">
+    <value>Rust+ Desktop a fost actualizat cu succes la v{0}!</value>
+  </data>
+  <data name="UpdateDownloadedTitle" xml:space="preserve">
+    <value>Actualizare descărcată</value>
+  </data>
+  <data name="UpdateInstallsOnClose" xml:space="preserve">
+    <value>Actualizarea va fi instalată automat când închideți aplicația.</value>
+  </data>
+  <data name="FormatDownloadFailed" xml:space="preserve">
+    <value>Descărcarea eșuată: {0}</value>
+  </data>
+  <data name="UpdateAlreadyDownloaded" xml:space="preserve">
+    <value>Actualizarea este deja descărcată. Acesta va fi instalat când închideți aplicația.</value>
+  </data>
+  <data name="SelectRustMapFile" xml:space="preserve">
+    <value>Selectați fișierul Rust .map</value>
+  </data>
+  <data name="CloudFeaturesUpdateRequired" xml:space="preserve">
+    <value>Pentru a continua să utilizați funcțiile cloud, trebuie să actualizați aplicația.</value>
+  </data>
+  <data name="RenameCustomCrosshair" xml:space="preserve">
+    <value>Redenumiți Crosshair personalizat</value>
+  </data>
+  <data name="HowToTrackWindowTitle" xml:space="preserve">
+    <value>Cum să urmăriți jucătorii — (Rust+ Desk</value>
+  </data>
+  <data name="DiscordClientInitializing" xml:space="preserve">
+    <value>Clientul desktop se inițializează sau nu este încărcat complet.</value>
+  </data>
+  <data name="FormatCurrentServerTime" xml:space="preserve">
+    <value>🕒 Ora curentă a serverului: {0}</value>
+  </data>
+  <data name="FormatServerPopulation" xml:space="preserve">
+    <value>👥 Populația serverului: {0}</value>
+  </data>
+  <data name="DiscordInvalidCommandPayload" xml:space="preserve">
+    <value>❌ Comanda nevalidă: numele sau ID-ul dispozitivului lipsește.</value>
+  </data>
+  <data name="DiscordRenderingMap" xml:space="preserve">
+    <value>⌛ Harta este redată. Va rugam asteptati.</value>
+  </data>
+  <data name="DiscordRenderingFullMap" xml:space="preserve">
+    <value>⌛ Harta completă este redată. Va rugam asteptati.</value>
+  </data>
+  <data name="FormatUnknownCommand" xml:space="preserve">
+    <value>Comandă necunoscută sau neacceptată: {0}</value>
+  </data>
+  <data name="FormatCommandError" xml:space="preserve">
+    <value>Eroare la executarea comenzii: {0}</value>
+  </data>
+  <data name="Existing3DMapReused" xml:space="preserve">
+    <value>Datele de hartă existente 3D au fost reutilizate; nu a fost detectată nicio ștergere.</value>
+  </data>
+  <data name="ServerOfflineA2S" xml:space="preserve">
+    <value>Server offline (interogarea A2S a expirat)</value>
+  </data>
+  <data name="AutoDiscoveringQueryPort" xml:space="preserve">
+    <value>Găsirea portului de interogare prin API-ul Steam...</value>
+  </data>
+  <data name="FetchingSteamPlayers" xml:space="preserve">
+    <value>Se preiau jucători prin Steam Interogare...</value>
+  </data>
+  <data name="NoOnlinePlayersFound" xml:space="preserve">
+    <value>Nu s-au găsit jucători online.</value>
+  </data>
+  <data name="AssignGroupTitle" xml:space="preserve">
+    <value>Atribuiți grup</value>
+  </data>
+  <data name="OfflineCloudAlertsTitle" xml:space="preserve">
+    <value>Alerte cloud offline</value>
+  </data>
+  <data name="AlexaSmartHomeTitle" xml:space="preserve">
+    <value>Alexa Smart Home</value>
+  </data>
+  <data name="SelectCustomDeathSound" xml:space="preserve">
+    <value>Selectați Sunet de moarte personalizat</value>
+  </data>
+  <data name="CountdownOneMinute" xml:space="preserve">
+    <value>numărătoare inversă de 1 minut...</value>
+  </data>
+  <data name="TimerExpiredTitle" xml:space="preserve">
+    <value>Cronometrul a expirat</value>
+  </data>
+  <data name="SelectTimerAlarmSound" xml:space="preserve">
+    <value>Selectați Sunet alarmă temporizator</value>
+  </data>
+  <data name="SelectTimerCountdownSound" xml:space="preserve">
+    <value>Selectați Timer 1 min Countdown Sound</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Actualizare</value>
+  </data>
+  <data name="UpdateRequiredTitle" xml:space="preserve">
+    <value>Actualizare necesară</value>
+  </data>
+  <data name="PauseUpdate" xml:space="preserve">
+    <value>Pauză</value>
+  </data>
+  <data name="ResumeUpdate" xml:space="preserve">
+    <value>Reluați</value>
+  </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Discord only</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>If enabled, alert notifications are sent directly to Discord without posting them to Rust In-Game Team Chat. Ideal for solo servers or servers without team chat.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>Sari peste tutorial</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>Înapoi</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>Următorul</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>Finalizare</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>Să anulez acest tutorial?</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>Progresul tău este salvat. Poți continua din Centrul de Tutoriale oricând.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>Continuă să înveți</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>Anulează tutorialul</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>Pasul {0} al {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>Această funcție nu este disponibilă în starea actuală a aplicației. Continuați în siguranță și reveniți când serverul, contul sau datele necesare sunt disponibile.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>Resetare</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>Repornire</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>Continuă</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>Începeți</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} de {1} pași</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>Învață RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>Lecții concentrate pentru această construcție. Tutorialele nu activează niciodată dispozitive, nu trimit mesaje, nu șterg date și nu rulează automatizări.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>Începe tutorialele recomandate</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>Continuă ultimul tutorial</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>Repornește toate tutorialele</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>Resetarea progresului tutorialului</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>Începeți elementele de bază pentru utilizatorii noi</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>Oferă tutoriale pentru funcții noi</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>Bine ați venit la RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>Fă un tur scurt al navigației, conexiunii serverelor, hărților și dispozitivelor — sau alege doar lecțiile de care ai nevoie.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>Începe turul rapid</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>Alege tutorialele</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>Nu acum</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>Neîncepută</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>În desfășurare</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>Finalizat</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>Am sărit peste</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>Actualizat</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>Funcționalitate nouă</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>Începutul</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>Hărți</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>Dispozitive</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>Echipă și Comunicare</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>Automatizare</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>Monitorizare</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>Unelte</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>Setări și suport</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>Elementele de bază ale aplicației</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>Învață navigarea, contextul serverului, starea conexiunii, notificările și unde să redai lecțiile.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>Cont și Cloud</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>Înțelege funcționalitățile locale, autentificarea în cloud, sincronizarea și accesul Supporter.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>Împerechere și gestionare a serverelor</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>Asociază Rust+, alege un server și înțelege modurile soft, full și deconectat.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D Elementele de bază ale hărții</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>Învață navigarea pe hartă, straturile, hărțile termice, instrumentele de desen și punctul 3D de intrare.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>Hărți termice ale resurselor</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>Află ce arată overlay-urile extrase de densitate de spawn și cum să le selectezi sau să le elimini.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D Hartă</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>Explorează viewport-ul 3D local, bara de instrumente, constructorul de amprente, afișarea performanței și închide acțiunea.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>Dispozitive inteligente</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>Găsește, filtrează, reîmprospătează, organizează și înțelege în siguranță dispozitivele inteligente asociate.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>Urmărirea echipelor și jucătorilor</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>Revizuiește colegii de echipă, markerele, urmează comportamentul și cerințele de partajare.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>Chat de echipă și comenzi</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>Citește chat-ul echipei, compune mesaje și configurează comenzi fără să trimiți nimic.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord Integrare</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>Găsește Discord puncte de intrare, configurație, permisiuni și limite de confidențialitate.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>Logic and Automation Engine</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>Înțelege regulile, declanșatoarele, condițiile, acțiunile, starea de rulare și testarea sigură.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>Notificări și alerte</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>Filtrează, caută, revizuiește, marchează și șterge notificările de aplicație.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>Camere și monitorizare</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>Adaugă și revizuiește camerele pereche, păstrând identificatorii camerelor private.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>Calculator de raiduri</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>Construiește un plan de raid, compară metodele și revizuiește totalul materialelor.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>Calculator de reciclare</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>Adaugă obiecte și compară randamentele reciclatorilor sălbatici și cei din zonele sigure.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>Setări</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>Găsește limbajul, performanța hărții, serviciile conectate și controalele de mentenanță.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>Actualizări și diagnostice</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>Verifică actualizările aplicației și localizează jurnalul de diagnostic fără a începe o actualizare.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>Navigație principală</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>Folosește această bară laterală pentru a te muta între dispozitive, urmărirea echipelor, camere, jucători, notificări și calculatoare.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>Extinderea navigației</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>Fixează sau comprimă bara laterală pentru a schimba etichetele pentru mai mult spațiu de lucru pe hartă.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>Server actual</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>Această zonă identifică serverul Rust selectat și contextul contului acestuia.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>Starea conexiunii</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>Plăcile de server arată dacă un server este deconectat, soft conectat sau complet conectat.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>Notificări</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>Problemele de conexiune, alarmele, decesele și rezultatele automatizării sunt colectate aici.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>Centrul de Tutoriale</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>Rejucă, continuă, repornește sau descoperă lecțiile actualizate aici.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>Contextul contului</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>Accesul la cloud este separat de Rust+ împerechere. Funcționalitățile locale rămân disponibile fără sincronizare în cloud.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>Cont Cloud</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>Conectează-te aici pentru sincronizare suportată; Tutorialele nu afișează niciodată datele conturilor private.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>Statut de susținător</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>Accesul suporterilor deblochează funcții blocate. Progresul tutorialului local nu necesită abonament.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>Pereche Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>Asocierea legă această aplicație de Rust Companion înainte ca funcțiile serverului live să poată funcționa.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>Începeți perecherea</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>Începe să asculți, apoi folosește fluxul Rust+ de pereche din joc al Rust. Acreditările nu sunt niciodată înregistrate.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>Servere pereche</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>Selectați un server configurat local înainte de a vă conecta sau schimba setările specifice serverului.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>Soft Connect</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect încarcă comunicarea limitată fără a inițializa toate funcțiile live.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>Conexiune completă</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>Conexiunea completă inițializează datele de hartă, dispozitivele, datele echipei și abonamentele Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>Deconectare</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>Deconectarea oprește comunicarea live. Această lecție nu invocă niciodată acțiunea.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>Resetarea perecherii</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>Comenzile de recuperare se află în meniul contextual Pair. Resetarea elimină configurația locală a împerecherii.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>Pânză de hartă</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>Panoramează trăgând, mărește volanul și interacționează cu marcatorii de pe harta Rust curentă.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>Bara de instrumente a hărții</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>Bara de instrumente controlează straturile, chat-ul, suprapunerile, timerele și modurile 2D sau 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>Resetarea Vizualizării</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>Potrivește harta înapoi în spațiul de lucru după panoramare sau zoom.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>Straturi de hărți</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>Alege aici grilă, jucător, monument, magazin și opțiuni vizuale avansate.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>Hărți termice</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>suprapuneri de densitate extrase deschise. Ele arată zonele probabile de apariție, nu entități vii.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>Harta 3D deschisă</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>Generează sau deschide reprezentarea 3D locală a hărții curente.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>Unelte de desen</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>Desenează notițe de planificare nedistructivă peste hartă și părăsește modul de desen după ce ai terminat.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>Hărți de căldură deschise</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>Răsfoiește straturile de densitate disponibile pentru harta analizată curentă.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>Selector pentru harta termică</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>Selectează o categorie extrasă sau șterge suprapunerea activă.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>Cum funcționează hărțile termice</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>Hărțile termice rezumă zonele probabile de apariție; Ei nu garantează existența unei entități reale la o anumită locație.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>Generează sau deschide 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>Aplicația analizează datele hărților local și reutilizează cache-ul lor când este posibil.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D Viewport</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>Orbitează, panoramează și mărește o reprezentare interactivă a hărții selectate.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D Bara de instrumente</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>Straturi de control, markere live, ecran complet, setări și unelte pentru amprentă.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>Constructor de amprentă de bază</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>Modul Build plasează doar fundațiile de planificare; nu modifică serverul Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>Indicator de performanță</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS și rezoluția adaptivă echilibrează detaliile cu interacțiune fluidă.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>Close 3D View</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>Întoarce-te la 2D și eliberează resursele grele încorporate 3D.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>Lista dispozitivelor</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>Comutatoarele împerecheate, alarmele și monitoarele de stocare apar aici în grupuri.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>Căutarea dispozitivelor</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>Filtrează dispozitivele după nume sau comandă fără a le schimba starea.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>Filtru de tip dispozitiv</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>Limitează lista la întrerupătoare, alarme, monitoare de stocare sau toate dispozitivele.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>Reîmprospătarea stărilor</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>Solicitare stare proaspătă doar pentru citire; Disponibilitatea depinde de conexiune.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>Unelte pentru dispozitive</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>Importul, sincronizarea cloud, automatizarea, tastele rapide, reîmprospătarea și curățarea sunt colectate aici.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>Cardul dispozitivului</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>Un card arată identitatea, starea conexiunii, comenzile și controalele specifice dispozitivului.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>Siguranța dispozitivelor</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>Tutorialele nu comută niciodată un comutator, nu șterg un dispozitiv și nu rulează o tastă rapidă.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>Lista echipelor</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>Coechipieri încărcați, starea online, avatarurile și acțiunile de context apar aici.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>Marcatorii echipei</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>Alege ce stiluri de marcaje pentru coechipieri sunt vizibile pe hartă.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>Urmărește jucătorul</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>Urmărea actualizările hărții centrului despre un coechipier și necesită date actuale ale echipei.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>Partajarea echipei</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>Partajarea bazei și a capturilor de ecran poate necesita un cont și consimțământul pentru upload.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>Istoricul chaturilor</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>Mesajele recente ale echipei Rust apar aici atunci când conexiunea oferă date de chat.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>Introducerea mesajului</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>Scrie aici un mesaj de echipă. Tutorialul nu introduce sau trimite niciodată una.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>Trimite mesaj</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>Trimiterea postărilor către chatul Rust echipei. Acest control este evidențiat doar.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>Setări de comandă</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>Configurați prefixele, legăturile dispozitivelor, întârzierile și disponibilitatea comenzilor.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Comunitatea Discord</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>Această scurtătură deschide comunitatea; Setările de integrare sunt separate.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord Setări</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>Configurați botul, guild-ul, canalele, comenzile și permisiunile fără a loga ID-urile.</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Title" xml:space="preserve">
+    <value>Discord Siguranță</value>
+  </data>
+  <data name="Tutorials.Step.discord.privacy.Description" xml:space="preserve">
+    <value>Tutorialele nu postează niciodată mesaje și nu înregistrează identificatori de guild, canal sau utilizator.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>Open Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>Deschide editorul de reguli al serverului selectat.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>Lista regulilor</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>Regulile și pașii lor de declanșare, condiție, întârziere și acțiune apar aici.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>Starea motorului</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>Activează sau pune pauză executarea regulilor. Tutorialul nu schimbă niciodată această schimbare.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>Fluxul de lucru al regulilor</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>Un declanșator declanșează o regulă; condițiile împiedică acțiunile ulterioare; Pașii se desfășoară în ordine.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>Siguranța prin automatizare</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>Tutorialele nu mențin reguli, nu comută dispozitivele, nu trimit chat și nu execută automatizări.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>Centrul de notificări</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>Revizuiește alertele fără a te baza pe notificări temporare de pe desktop.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>Filtre de notificare</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>Comută între toate notificările, alarmele și decesele.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>Notificări de căutare</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>Găsește notificări după conținutul afișat sau contextul serverului.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>Acțiuni în masă</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>Mark a citit sau a curățat istoria; Tutorialele nu efectuează niciodată aceste acțiuni.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>Lista camerelor</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>Previzualizările configurate apar atunci când un server și o cameră selectate sunt disponibile.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>Adaugă cameră</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>Adaugă o cameră folosind identificatorul său Rust; Tutorialele nu capturează niciodată coduri de cameră.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>Confidențialitatea camerei</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>Identificatoarele camerei și cadrele sunt excluse din diagnosticarea tutorialului.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>Ținte de căutare</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>Găsește un perete, o ușă, o țintă deployabilă sau altă țintă în setul de date inclus.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>Planul de raid</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>Revizuiește țintele, sănătatea, cantitățile, metodele și costurile calculate.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>Metode de comparație</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>Selectați explozibilii sau uneltele permise și comparați alternativele.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>Plan clar</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>Clear elimină planul; tutorialul îl evidențiază fără să schimbe intrările.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>Căutare Elemente</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>Găsește un obiect reciclabil și adaugă-l în calculator.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>Categoria obiectelor</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>Restrângeți catalogul de articole după categorii.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>Elemente de intrare</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>Ajustarea cantităților sau eliminarea înregistrărilor; Tutorialele nu modifică starea calculatorului.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>Rezultatele reciclării</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>Comparați randamentele și timpii pentru reciclatorii sălbatici și cei din zone sigure.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>Deschide setările</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>Comportamentul aplicațiilor, integrările, performanța, backup-ul și mentenanța sunt prezente aici.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>Limbaj</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>Alege limbajul interfeței. Textul tutorialului folosește același sistem de resurse.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>Performanța hărții</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>Ajustează scalarea imaginii, caching-ul GPU-ului, scalarea de randare și modul edge.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>Întreținere</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>Controlul backup, reset, purge și cache pot fi distructivi și nu sunt niciodată activate.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>Verifică actualizările</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>Solicitați disponibilitatea actualizărilor fără a descărca sau instala.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>Stare actualizată</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>Versiunea și progresul descărcării apar în această zonă a barei de titlu.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>Jurnal de diagnostic</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>Filtrați diagnosticele locale înainte de a distribui doar detalii nesensibile.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>Magazine și Vending</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>Caută oferte de vending, compară tranzacțiile și înțelege momentul reîmprospătării.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>Evenimente și monitorizarea serverului</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>Citește indicatorii de evenimente live și creează cronometrate locale.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>Baze și capturi de ecran</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>Creează markere de bază pe hartă și gestionează notițele și capturile de ecran în siguranță.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>Automatizarea dispozitivelor</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>Configurați automatizarea simplă a stării dispozitivului separat de motorul logic.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>Căutare în magazin deschis</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>Deschide panoul de căutare a hărții fără să schimbi harta curentă.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>Căutare de magazine</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>Caută articole, revizuiește cantitățile de cumpărare și vânzare și deschide rezultatele pe hartă.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>Sincronizarea reîmprospătării</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>Ofertele magazinului depind de conectivitatea serverului și pot fi plictisitoare între Rust+ reîmprospătații.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>Docul pentru evenimente live</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>Indicatori de marfă, elicoptere, Chinook, vânzători și alte evenimente active apar aici atunci când sunt disponibile.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>Temporizator personalizat</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>Creează un reminder local fără a schimba starea serverului.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>Prospețimea evenimentelor</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>Datele evenimentelor depind de conexiunea selectată și pot dispărea atunci când devin învechite.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>Marcaje de bază</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>Marcajele de bază sunt plasate și deschise pe harta 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>Note de bază și capturi de ecran</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>Folosește acțiuni de context pe hartă pentru a numi o bază și a atașa capturi de ecran; Partajarea în cloud necesită consimțământ.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>Șterge siguranța</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>Ștergerea unei baze sau a unei capturi de ecran nu se face niciodată printr-un tutorial și necesită întotdeauna intervenția ta.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>Automatizarea Dispozitivelor Deschise</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>Deschide automatizarea ușoară a stării dispozitivului pentru serverul selectat.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>Acțiuni de automatizare</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>Pauză execuția sau adaugă o automatizare; Tutorialele nu schimbă niciodată starea motorului și nu creează date.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>Reguli de automatizare</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>Revizuiește dispozitivele sursă, acțiunile țintă, sincronizarea și starea activată pentru fiecare regulă.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>Siguranța dispozitivelor</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>Niciun tutorial nu execută o regulă sau nu activează un dispozitiv inteligent real.</value>
+  </data>
 </root>
-
-
-

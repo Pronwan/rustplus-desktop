@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>跳过教程</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>回来</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>下一个</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>结束</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>取消这个教程？</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>你的进度已保存。你可以随时从教程中心继续。</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>继续学习</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>取消教程</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>{0}{1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>该功能在当前应用状态下不可用。请安全继续，待所需服务器、账户或数据可用时返回。</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>重启</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0}{1}步骤</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>学习RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>为这个构建准备了重点课程。教程从不激活设备、发送消息、删除数据或运行自动化。</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>开始推荐教程</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>继续上次教程</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>重启所有教程</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>重置教程进度</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>为新用户开启基础</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>提供新功能教程</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>欢迎来到RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>简单介绍导航、服务器连接、地图和设备——或者只选择你需要的课程。</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>开始快速导览</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>选择教程</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>现在不行</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>未开始</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>跳过</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>新功能</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>入门</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>地图</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>团队与沟通</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>自动化</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>监控</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>设置与支持</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>应用基础</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>学习导航、服务器上下文、连接状态、通知以及重播课程的地点。</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>账户与云端</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>了解本地功能、云登录、同步和支持者访问。</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>配对与服务器管理</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>配对Rust+，选择服务器，了解软模式、全模式和断联模式。</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D 地图基础</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>学习地图导航、图层、热力图、绘图工具和3D入门点。</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>资源热力图</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>学习提取生成密度叠加图显示的内容，以及如何选择或清除它们。</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D地图</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>探索本地3D视口、工具栏、封装构建器、性能显示和关闭动作。</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>智能设备</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>查找、筛选、刷新、整理并安全地理解配对的智能设备。</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>团队与球员追踪</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>检查队友、标记、跟踪行为和共享要求。</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>团队聊天与指令</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>阅读团队聊天、生成消息和配置命令，无需发送任何内容。</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord整合</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>找到Discord入口点、配置、权限和隐私边界。</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>逻辑与自动化引擎</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>理解规则、触发器、条件、动作、运行状态和安全测试。</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>通知与警报</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>筛选、搜索、审核、标记并清除申请通知。</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>摄像头与监控</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>添加并审核已配对的摄像头，同时保持摄像头标识的私密。</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>突袭计算器</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>制定突袭计划，比较方法，并审查物资总量。</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>回收计算器</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>添加物品并比较野生区和安全区回收者的产量。</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>设定</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>查找语言、地图性能、连接服务和维护控制。</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>更新与诊断</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>检查应用更新并找到诊断日志，但不启动更新。</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>主导航</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>使用此侧边栏在设备、球队追踪、摄像头、球员、通知和计算器之间切换。</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>导航扩展</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>钉选或折叠侧边栏，以交换标签以获得更多地图工作空间。</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>当前服务器</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>该区域标识所选Rust服务器及其账户上下文。</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>连接状态</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>服务器卡显示服务器是断开连接、软连接还是完全连接。</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>连接问题、警报、死亡和自动化结果均在此收集。</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>教程中心</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>在这里重玩、继续、重启或发现更新的课程。</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>账户背景</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>云访问与Rust+配对是分开的。本地功能在云同步情况下依然可用。</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>云账户</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>请在此登录以获得支持的同步;教程从不显示私人账户数据。</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>支持者身份</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>支持者访问解锁了封闭功能。本地教程进度无需订阅。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>双Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>在实时服务器功能可用之前，将此应用与Rust Companion配对。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>开始配对</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>先听，然后用Rust游戏内的Rust+配对流程。证件从不被记录。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>配对服务器</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>在连接或更改服务器特定设置前，先选择本地配置的服务器。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>软连接</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>Connect 加载有限的通信，但不会初始化所有在线功能。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>全面连接</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>完整连接会初始化地图数据、设备、球队数据和Rust+订阅。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>断开连接</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>断开连接会阻止实时交流。这个教训从未引发行动。</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>重置配对</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>恢复命令在配对的右键菜单里。重置会移除局部配对配置。</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>地图画布</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>通过拖曳平移，用方向盘缩放，并与当前Rust地图上的标记互动。</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>地图工具栏</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>工具栏控制图层、聊天、叠加、计时器以及2D或3D模式。</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>重置视图</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>平移或缩放后，将地图重新放回工作区。</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>地图图层</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>在这里选择网格、球员、纪念碑、商店和高级视觉选项。</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>热力图</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>开放提取密度叠加图。它们显示的是可能的生成区域，而不是活体。</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>开放3D地图</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>生成或打开当前地图的本地3D表示。</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>绘图工具</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>在地图上绘制非破坏性规划笔记，完成后退出绘画模式。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>开放热力图</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>浏览当前解析地图的可用密度图层。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>热图选择器</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>选择一个已提取的类别或清除活动覆盖层。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>在生成一次 3D 地图并登录服务器后，此功能才可用。</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>地图解析与 3D 地图前置要求</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>热力图、Godrocks、冰山及禁止建造区域需要进行一次性 3D 地图生成。你必须在游戏内至少登录过该服务器一次，以便在本地生成可供解析的 .map 文件。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>生成或开放3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>应用会在本地解析地图数据，并在可能的情况下重用缓存。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>创建账号</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>生成 3D 地图需要 RustPlusDesktop 账号（关联 Discord 或邮箱登录）。解析地图数据还会同时解锁 2D 地图上的额外功能（如热力图、冰山、洞穴及 Godrocks）。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D视口</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>绕圈、平移和缩放，围绕所选地图的互动展示。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D工具栏</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>控制图层、实时标记、全屏、设置和封装工具。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>基地覆盖地构建器</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>建造模式仅包含规划基础;它不会修改Rust服务器。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>绩效指标</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS和自适应分辨率在细节和流畅交互之间取得了平衡。</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>关闭3D视图</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>回归2D，释放沉重的嵌入3D资源。</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>设备列表</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>配对开关、报警和存储监视器以组形式出现。</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>设备搜索</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>按设备名称或命令过滤，但不改变其状态。</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>设备类型过滤器</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>将列表限制为开关、报警、存储显示器或所有设备。</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>刷新状态</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>请求新的只读状态;可用性取决于连接。</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>设备工具</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>导入、云同步、自动化、快捷键、刷新和清理都在这里收集。</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>设备卡</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>卡片显示身份、连接状态、命令和设备特定的控制。</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>设备安全</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>教程从不切换开关、删除设备或运行快捷键。</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>球队列表</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>加载队友、在线状态、头像和上下文动作都在这里显示。</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>团队标记</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>选择地图上可见的队友标记样式。</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>关注玩家</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>以下中心会更新队友的地图，并需要当前的队伍数据。</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>团队共享</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>分享基础和截图可能需要账号并上传同意。</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>聊天记录</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>当连接提供聊天数据时，最近Rust团队的消息会显示在这里。</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>消息输入</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>请在这里撰写团队信息。教程从未插入或发送过。</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>发送消息</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>向Rust团队聊天发送帖子。该控制仅被高亮显示。</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>命令设置</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>配置前缀、设备绑定、延迟和命令可用性。</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord社区</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>这个捷径打开了社区;集成设置是分开的。</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord设置</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>配置机器人、公会、频道、命令和权限，但不记录 ID。</value>
+  </data>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>高级 Discord 集成</value>
+  </data>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>高级 Discord 集成需要 Supporter 账号。支持 Discord 指令、双向 Discord 集成以及通过 Webhook 发送离线抄家提醒。</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>基础 Discord 集成与聊天提醒</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>基础 Discord 集成通过 Webhook 工作，无需 Supporter 账号。所有聊天提醒都会发送至 Discord，可选择同时在游戏内和 Discord 发送，或仅独家发送至 Discord。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>离线云端提醒</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>当 RustPlusDesktop 关闭时，离线云端提醒会将 FCM 抄家、事件和死亡通知转发至 Discord Webhook 或自定义 Webhook（如 Google Home、IFTTT、Make.com）。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>同步云端连接</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>配置 Webhook URL 后，点击“Sync Cloud Connection”即可将设置上传并保存至云端服务。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>Telegram 电话通知 (CallMeBot)</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>输入 Telegram 用户名（如 @name）和自定义消息，然后点击“Test Call”。浏览器会打开授权 CallMeBot 的说明。授权完成后，离线 FCM 提醒将自动向你的手机发起电话呼叫。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>Alexa 智能家居集成</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>在 Alexa Skill 中通过“Generate Login PIN”关联账号，选择服务器并点击“Link Selected Server”。Smart Alerts 将作为运动传感器用于触发例程，智能设备则作为开关导入，即使桌面 App 关闭也能正常运作。</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>开放逻辑引擎</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>打开所选服务器的规则编辑器。</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>规则列表</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>规则及其触发条件、延迟和行动步骤在此列出。</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>发动机状态</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>启用或暂停规则执行。教程从未改变过这个开关。</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>规则工作流程</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>触发触发规则;条件门将后续行动;步骤按顺序进行。</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>自动化安全</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>教程不会持久化规则、切换设备、发送聊天或执行自动化。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>通知中心</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>在不依赖临时桌面通知的情况下审查提醒。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>通知过滤器</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>在所有通知、警报和死亡信息之间切换。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>搜索通知</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>按显示内容或服务器上下文查找通知。</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>批量行动</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>标记所有已读或清除历史;教程从未执行过这些操作。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>相机列表</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>当选定的服务器和摄像头可用时，会显示配置好的预览。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>添加摄像机</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>添加带有 Rust 标识符的摄像头;教程从不捕捉摄像机代码。</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>相机隐私</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>摄像头标识符和帧不包含在教程诊断中。</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>搜索目标</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>在捆绑数据集中找到墙壁、门、可部署物或其他目标。</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>突袭计划</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>审查目标、健康状况、数量、方法和计算成本。</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>比较方法</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>选择允许的爆炸物或工具，并比较其他选择。</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>明确计划</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>清除计划;教程会突出显示，但不更改条目。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>搜索物品</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>找一个可回收物品，加入计算器。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>物品类别</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>按类别缩小商品目录范围。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>输入项</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>调整数量或删除分录;教程不会改变计算器的状态。</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>回收商成绩</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>比较野生回收者和安全区回收者的产量和时间。</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>开放设置</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>应用行为、集成、性能、备份和维护都在这里。</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>选择界面语言。教程文本使用相同的资源系统。</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>地图性能</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>调整图像缩放、GPU缓存、渲染缩放和边缘模式。</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>维护</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>备份、重置、清除和缓存控制可能具有破坏性，且从未被调用。</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>请关注最新动态</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>无需下载或安装即可请求更新可用性。</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>更新状态</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>版本和下载进度会显示在这个标题栏区域。</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>诊断日志</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>在仅分享非敏感信息前，先过滤本地诊断信息。</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>商店与自动售货</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>搜索自动售货机优惠，比较交易，了解刷新时间。</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>活动与服务器监控</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>读取实时事件指标并创建本地计时器。</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>基地与截图</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>创建地图基地标记，并安全地管理他们的笔记和截图。</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>设备自动化</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>将简单的设备状态自动化与逻辑引擎分开配置。</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>开放商店搜索</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>在不更改当前地图的情况下打开地图的自动售货搜索面板。</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>商店搜索</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>搜索物品，查看买卖数量，并在地图上打开结果。</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>刷新时机</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>商店优惠依赖服务器连接，且在Rust+刷新之间可能会显得过时。</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>现场活动码头</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>货物、直升机、支奴干、供应商及其他活跃事件指示器在可用时显示于此。</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>自定义计时器</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>创建本地提醒，但不更改服务器状态。</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>活动新鲜度</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>事件数据依赖于所选连接，一旦连接过时可能会消失。</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>基地标记</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>基地标记会放置在2D地图上并打开。</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>基础笔记与截图</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>使用地图上下文操作命名基地并附上截图;云共享需要同意。</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>删除安全</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>删除基地或截图绝不会通过教程完成，始终需要你的参与。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>开放设备自动化</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>为所选服务器开启轻量级设备状态自动化。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>自动化操作</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>暂停执行或添加自动化;教程从不改变发动机状态或生成数据。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>自动化规则</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>审查源设备、目标操作、时序和每个规则的启用状态。</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>设备安全</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>没有教程执行规则或切换真实智能设备。</value>
+  </data>
+  <data name="Tutorials.mini-map.Title" xml:space="preserve">
+    <value>迷你地图</value>
+  </data>
+  <data name="Tutorials.mini-map.Description" xml:space="preserve">
+    <value>一个完全可自定义的主地图镜像。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Title" xml:space="preserve">
+    <value>需要连接服务器</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Description" xml:space="preserve">
+    <value>请先连接到服务器才能访问迷你地图。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Title" xml:space="preserve">
+    <value>打开迷你地图</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
+    <value>点击这里打开迷你地图窗口。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
+    <value>地图设置</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>将鼠标悬停在迷你地图上，然后点击齿轮图标来自定义其形状、大小和不透明度。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
+    <value>服务器时间和人数</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Description" xml:space="preserve">
+    <value>您可以选择直接在迷你地图上显示当前游戏内时间和服务器人数。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Title" xml:space="preserve">
+    <value>地图控制</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Description" xml:space="preserve">
+    <value>与主地图一样，右键单击并拖动即可平移，使用鼠标滚轮缩放，双击右键可重置视图。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Title" xml:space="preserve">
+    <value>跟随玩家</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Description" xml:space="preserve">
+    <value>点击地图工具栏上的'跟随玩家'图标（或在列表中右键单击队友），使迷你地图自动以他们为中心。请注意，迷你地图设置和跟随状态是按服务器保存的！</value>
+  </data>
+  <data name="Update800Title" xml:space="preserve">
+    <value>Rust+ Desktop v8.0.0 Update</value>
+  </data>
+  <data name="Update800DontShowAgain" xml:space="preserve">
+    <value>不再显示</value>
+  </data>
+  <data name="Update800Title1" xml:space="preserve">
+    <value>引导教程</value>
+  </data>
+  <data name="Update800Desc1" xml:space="preserve">
+    <value>通过本地化的分步指南轻松探索各项功能。</value>
+  </data>
+  <data name="Update800Title2" xml:space="preserve">
+    <value>3D地图优化</value>
+  </data>
+  <data name="Update800Desc2" xml:space="preserve">
+    <value>加载时间更快，内存使用量大幅减少，关闭更彻底。</value>
+  </data>
+  <data name="Update800Title3" xml:space="preserve">
+    <value>全新事件提醒</value>
+  </data>
+  <data name="Update800Desc3" xml:space="preserve">
+    <value>连接服务器后仅追踪石油钻井平台、深海事件与货轮的刷新。</value>
+  </data>
+  <data name="Update800Title4" xml:space="preserve">
+    <value>逻辑引擎与界面</value>
+  </data>
+  <data name="Update800Desc4" xml:space="preserve">
+    <value>全新的拆家计算器、重新设计的侧边栏以及Alexa PIN码。</value>
+  </data>
+  <data name="Update800PatchNotesBtn" xml:space="preserve">
+    <value>更新说明</value>
+  </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>战队</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>追踪战队成员、他们的在线状态、角色和备注</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>石油钻井平台补给箱状态</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>监听服务器事件</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>在不再发送事件的服务器上，通过游戏音频识别石油钻井平台、货轮与深海事件。仅在 Rust 运行时生效。</value>
+  </data>
+  <data name="TrustOwnDetections" xml:space="preserve">
+    <value>信任本机的检测结果</value>
+  </data>
+  <data name="TrustOwnDetectionsDesc" xml:space="preserve">
+    <value>本机一听到事件就立即显示，无需等待其他玩家确认。上报机制不变：其他玩家看到的内容仍需他们各自的确认。</value>
+  </data>
+  <data name="ServerEventsSection" xml:space="preserve">
+    <value>服务器事件</value>
+  </data>
+  <data name="OilRigCrateSeen" xml:space="preserve">
+    <value>发现补给箱</value>
+  </data>
+  <data name="EventNotDetected" xml:space="preserve">
+    <value>尚未检测到</value>
+  </data>
+  <data name="EventUnconfirmed" xml:space="preserve">
+    <value>未确认</value>
+  </data>
+  <data name="AlertUnavailableOnServer" xml:space="preserve">
+    <value>此服务器不可用</value>
+  </data>
+  <data name="CargoSpawnedAgo" xml:space="preserve">
+    <value>货轮于 {0} 前刷新</value>
+  </data>
+  <data name="CargoGoneAgo" xml:space="preserve">
+    <value>货轮已离开 {0}</value>
+  </data>
+  <data name="DeepSeaUpFor" xml:space="preserve">
+    <value>深海事件已开启 {0}</value>
+  </data>
+  <data name="AlertCargoSpawnedAudio" xml:space="preserve">
+    <value>货轮已刷新（通过音频识别）</value>
+  </data>
+  <data name="AlertOilRigCrateUp" xml:space="preserve">
+    <value>石油钻井平台补给箱已出现（通过音频识别）</value>
+  </data>
+  <data name="ChatCmdCargoCloudActive" xml:space="preserve">
+    <value>货轮于 {0} 前刷新</value>
+  </data>
+  <data name="ChatCmdCargoCloudGone" xml:space="preserve">
+    <value>货轮已离开 {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudUnknown" xml:space="preserve">
+    <value>尚未检测到货轮刷新</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudActive" xml:space="preserve">
+    <value>深海事件进行中 — {0} 后关闭</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudEnded" xml:space="preserve">
+    <value>深海事件已于 {0} 前关闭</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudUnknown" xml:space="preserve">
+    <value>尚未检测到深海事件刷新</value>
+  </data>
+  <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
+    <value>最近检测到的石油钻井平台补给箱：{0}</value>
+  </data>
+  <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
+    <value>尚未检测到石油钻井平台补给箱</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioName" xml:space="preserve">
+    <value>货轮刷新（音频）</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioDesc" xml:space="preserve">
+    <value>在没有事件标记的服务器上检测到货轮刷新音效时发送。</value>
+  </data>
+  <data name="AlertOilRigCrateUpName" xml:space="preserve">
+    <value>石油钻井平台补给箱（音频）</value>
+  </data>
+  <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
+    <value>检测到石油钻井平台补给箱音效时发送。无法判断是哪一座平台。</value>
+  </data>
+  <data name="EventNotTrackableOnServer" xml:space="preserve">
+    <value>此服务器已无法追踪该事件。</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] 箱子将在 15 分钟后解锁！</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>箱子解锁（15分钟）</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>箱子解锁前 15 分钟发送警告。</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}：钻井平台名称</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}：箱子将在 {1} 分 {2} 秒后解锁</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>启动计时器</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>分钟</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>自定义名称</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>Large Oilrig 触发器</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>Small Oilrig 触发器</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>在地图上显示箱子</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>计时器名称</value>
+  </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>被 Logic Engine 用作石油钻井平台触发器。其警报弹窗、声音和团战提醒均已抑制 — 改为作为钻井平台事件上报。</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>石油钻井平台箱子提醒</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>在游戏中使用 RF 接收器，即可在地图上获得箱子倒计时，并在队伍聊天和 Discord 中收到提醒。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>为什么需要这个</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>箱子倒计时过去是根据支奴干直升机标记推算的，而 Rust+ API 已不再发送这些标记。游戏改为通过无线电频率广播黑客进程，而这个频率你可以自己接收。需要三样东西：游戏内的接收器、与应用配对的智能警报器，以及一条 Logic Engine 规则。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>在游戏中接线</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>放置一个 RF 接收器，并将频率设为目标平台：Large Oil Rig 为 4768，Small Oil Rig 为 4765。接通电源，并将其输出接到已与本应用配对的智能警报器上。黑客开始时，游戏会在该频率广播，接收器接通，警报器随即触发。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>添加 Logic Engine 规则</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>打开 Logic Engine，创建一条以该智能警报器为触发条件的规则，并添加「启动计时器」步骤。设置分钟数，选择 Large Oilrig 触发器或 Small Oilrig 触发器。保持勾选「在地图上显示箱子」即可绘制带倒计时的箱子；聊天和 Discord 提醒无论如何都会送达。在「警报文本」中填写游戏内警报器两行中的上行：推送通知不携带设备 ID，正是这一行让应用在未连接服务器时仍能将其识别为钻井平台触发器。留空则应用会在连接状态下首次触发时自行学习。</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>该警报器不再发出团战提醒</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>这样配置的警报器不是团战，因此其弹窗、声音以及发往 Discord 的团战提醒都会被抑制，改为作为钻井平台事件上报。设备列表会显示一个小标记（Large Oil）或（Small Oil），让这份安静可见而非莫名其妙。把设备从规则中移除，它会立刻恢复成普通警报器。聊天提醒中的 Oil Rig 开关仍可在你需要安静时关闭全部内容。</value>
+  </data>
+  <data name="UiAlarmTextHint" xml:space="preserve">
+    <value>警报文本（上行）</value>
+  </data>
+  <data name="UiAlarmTextHintTooltip" xml:space="preserve">
+    <value>可选。游戏内警报器两行中的上行 — 只有它会随通知一同发送，下行在此不可用。推送通知不携带设备 ID，因此当应用未连接到该服务器时（例如启动时），这段文本是识别警报器的唯一方式。留空即可，应用会在连接状态下首次触发时自行填写。保持默认的行将被忽略，因为所有未重命名的警报器都用它。</value>
+  </data>
+  <data name="UiInGameAlarmTitle" xml:space="preserve">
+    <value>游戏内警报文本（上行）</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>在 Rust 中为每个警报器起一个专属名称</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>智能警报器的推送只会告知服务器，不包含设备 ID 或设备名。两个警报器之间唯一的区别，就是你在游戏内为它设置的文本，而且只会发送两行中的上行。如果全部保持默认，Alexa 就无法分辨是哪个触发的，例程会对其中任意一个执行。</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>触发一次，让应用学会它</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>配对后，在应用运行时触发一次警报器。应用会同时看到推送通知和设备事件，并自行记录名称。不想等？在此列表中右键单击该警报器并手动输入。无论哪种方式，它都与你在这里给设备起的名字无关 — 那个名字可以随意起，对 Alexa 没有影响。</value>
+  </data>
+</root>

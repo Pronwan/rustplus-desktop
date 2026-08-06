@@ -67,6 +67,7 @@ public class TrackingSettings
     public bool MapShowSteamMarkers { get; set; } = true;
     public bool MapShowPlayerArrows { get; set; } = true;
     public bool MapShowDeathTags { get; set; } = false;
+    public bool MapShowDeathHeatmap { get; set; } = false;
     public int MaxSelfDeathMarkers { get; set; } = 3;
     public int MaxTeamDeathMarkers { get; set; } = 3;
     public bool MapAbbreviateNames { get; set; } = false;
@@ -75,6 +76,7 @@ public class TrackingSettings
     public int MapMonumentDisplayMode { get; set; } = 0;
     public double MapMonumentScale { get; set; } = 1.0;
     public double MapMonumentOpacity { get; set; } = 1.0;
+    public double MapGridOpacity { get; set; } = 0.7;
     public bool BackgroundTrackingEnabled { get; set; } = true;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
@@ -82,7 +84,7 @@ public class TrackingSettings
     public bool AutoStartEnabled { get; set; } = false;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
-    public double SidebarWidth { get; set; } = 600;
+    public double SidebarWidth { get; set; } = 420;
     public bool SidebarPinned { get; set; } = true;
     public double WindowWidth { get; set; } = 1280;
     public double WindowHeight { get; set; } = 720;
@@ -96,9 +98,30 @@ public class TrackingSettings
     public bool AnnounceVendor { get; set; } = false;
     public bool AnnounceOilRig { get; set; } = false;
     public bool AnnounceDeepSea { get; set; } = false;
+
+    /// <summary>
+    /// Listen to the game's audio for server-wide monument cues on servers that no longer
+    /// send event markers over Rust+. On by default: without it those servers show nothing at
+    /// all, and the listener only runs while Rust itself is running.
+    /// </summary>
+    public bool ListenForServerEvents { get; set; } = true;
+
+    /// <summary>
+    /// Treat a cue this client heard itself as true, without waiting for another player to
+    /// corroborate it.
+    ///
+    /// On by default, because the alternative is refusing to show someone an event they
+    /// personally just heard. Corroboration exists to stop one client speaking for a whole
+    /// server; it was never meant to stop a client speaking for itself. Reporting is
+    /// unaffected — the backend still applies its own rules to what everyone else sees.
+    /// </summary>
+    public bool TrustOwnDetections { get; set; } = true;
+
     public bool AnnouncePlayerOnline { get; set; } = false;
     public bool AnnouncePlayerOffline { get; set; } = false;
     public bool AnnouncePlayerAfk { get; set; } = false;
+    public bool AnnouncePlayerAfkReturn { get; set; } = false;
+    public int AfkAlertMinutes { get; set; } = 5;
     public bool AnnouncePlayerDeathSelf { get; set; } = false;
     public bool AnnouncePlayerDeathTeam { get; set; } = false;
     public bool AnnouncePlayerRespawnSelf { get; set; } = false;
@@ -107,12 +130,27 @@ public class TrackingSettings
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
     public string SelectedLanguage { get; set; } = "";
+    public string DiscordWebhookUrl { get; set; } = "";
+    public string DiscordWebhookMention { get; set; } = "None";
+    public string SmartHomeWebhookUrl { get; set; } = "";
+    public string TelegramCallWebhookUrl { get; set; } = "";
+    public string TelegramCallUser { get; set; } = "";
+    public string TelegramCallMsg { get; set; } = "Alarm ausgeloest!";
+    public string TelegramCallLang { get; set; } = "de-DE-Standard-A";
+    public bool TelegramCallIncTitle { get; set; } = true;
+    public bool TelegramCallIncMsg { get; set; } = true;
+    public bool TelegramCallIncType { get; set; } = false;
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
     public bool AnnounceCargoEgress { get; set; } = false;
     public bool AnnounceCargoArrival { get; set; } = false;
     public bool AnnounceSmartAlerts { get; set; } = false;
+    /// <summary>Off by default: see SmartDevice.PopupEnabled. Same reasoning, same interruption.</summary>
+    public bool GenericAlarmPopupEnabled { get; set; } = false;
+    public bool GenericAlarmOverlayEnabled { get; set; } = true;
+    public bool GenericAlarmAudioEnabled { get; set; } = true;
+    public string GenericAlarmAudioFilePath { get; set; } = string.Empty;
     public Dictionary<string, int> LearnedDockingDurations { get; set; } = new();
     public Dictionary<string, int> LearnedCargoFullLifeMinutes { get; set; } = new();
     public Dictionary<string, int> LearnedCargoTravelMinutes { get; set; } = new();
@@ -122,7 +160,7 @@ public class TrackingSettings
     public bool ChatMasterOfferSoundEnabled { get; set; } = true;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
-    public bool SuppressVersion7Notice { get; set; } = false;
+    public bool SuppressVersion8Notice { get; set; } = false;
     public DateTime? FcmIssuedAt { get; set; }
     public DateTime? FcmExpiresAt { get; set; }
     public bool AnnounceTracking { get; set; } = false;
@@ -132,6 +170,7 @@ public class TrackingSettings
     public bool CloudSyncEnabled { get; set; } = false;
     // Key = "host:port|entityId", value = true if that device should send a chat alert when toggled via hotkey
     public Dictionary<string, bool> HotkeyTriggerChatAlertEnabled { get; set; } = new();
+    public bool HotkeyTriggerChatAlertsEnabled { get; set; } = true;
     public string LastCrosshairStyle { get; set; } = "GreenDot";
     public string LastCustomCrosshairId { get; set; } = string.Empty;
     public bool OfflineDeathAlertsEnabled { get; set; } = true;
@@ -145,6 +184,8 @@ public class TrackingSettings
     public bool NotificationsSoundsEnabled { get; set; } = true;
     public int NotificationsRetentionDays { get; set; } = 30;
     public List<string> MutedNotificationServers { get; set; } = new();
+    public Dictionary<string, string> MutedNotificationServerNames { get; set; } = new();
+    public Dictionary<string, ulong> ServerFollowingSteamId { get; set; } = new();
 
     /// <summary>Extra monument type names (e.g. "Cave", "God Rock") that the user has chosen to hide on the map.</summary>
     public List<string> HiddenExtraMonumentTypes { get; set; } = new();
@@ -283,6 +324,7 @@ public static class TrackingService
     private static readonly object _dbLock = new();
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
+    public static TrackingSettings Settings => _settings;
     private static Timer? _trackingTimer;
     private static string? _lastServerHost;
     private static int _lastServerPort;
@@ -297,7 +339,7 @@ public static class TrackingService
 
     static TrackingService()
     {
-        _http.DefaultRequestHeaders.Add("User-Agent", "RustPlusDesk/1.0");
+        _http.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
         LoadDB();
     }
 
@@ -341,6 +383,22 @@ public static class TrackingService
 
             var jsonS = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_settingsPath, jsonS);
+        }
+        catch { }
+    }
+
+    private static void SaveSettings()
+    {
+        try
+        {
+            var dir = Path.GetDirectoryName(_settingsPath);
+            if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            string json;
+            lock (_dbLock)
+            {
+                json = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
+            }
+            File.WriteAllText(_settingsPath, json);
         }
         catch { }
     }
@@ -603,6 +661,16 @@ public static class TrackingService
         get => _settings.AnnounceCargo;
         set { _settings.AnnounceCargo = value; SaveDB(); }
     }
+    public static bool ListenForServerEvents
+    {
+        get => _settings.ListenForServerEvents;
+        set { _settings.ListenForServerEvents = value; SaveDB(); }
+    }
+    public static bool TrustOwnDetections
+    {
+        get => _settings.TrustOwnDetections;
+        set { _settings.TrustOwnDetections = value; SaveDB(); }
+    }
     public static bool AnnounceHeli
     {
         get => _settings.AnnounceHeli;
@@ -648,6 +716,16 @@ public static class TrackingService
         get => _settings.AnnouncePlayerAfk;
         set { _settings.AnnouncePlayerAfk = value; SaveDB(); }
     }
+    public static bool AnnouncePlayerAfkReturn
+    {
+        get => _settings.AnnouncePlayerAfkReturn;
+        set { _settings.AnnouncePlayerAfkReturn = value; SaveDB(); }
+    }
+    public static int AfkAlertMinutes
+    {
+        get => _settings.AfkAlertMinutes;
+        set { _settings.AfkAlertMinutes = value; SaveDB(); }
+    }
     public static bool AnnouncePlayerDeathSelf
     {
         get => _settings.AnnouncePlayerDeathSelf;
@@ -687,7 +765,68 @@ public static class TrackingService
     public static string SelectedLanguage
     {
         get => _settings.SelectedLanguage;
-        set { _settings.SelectedLanguage = value; SaveDB(); }
+        set
+        {
+            if (string.Equals(_settings.SelectedLanguage, value, StringComparison.Ordinal)) return;
+            _settings.SelectedLanguage = value;
+            // A language change only modifies settings. Rewriting the complete
+            // tracked-player history here caused an avoidable UI-thread pause.
+            SaveSettings();
+        }
+    }
+
+    public static string DiscordWebhookUrl
+    {
+        get => _settings.DiscordWebhookUrl;
+        set { _settings.DiscordWebhookUrl = value; SaveDB(); }
+    }
+
+    public static string DiscordWebhookMention
+    {
+        get => _settings.DiscordWebhookMention;
+        set { _settings.DiscordWebhookMention = value; SaveDB(); }
+    }
+
+    public static string SmartHomeWebhookUrl
+    {
+        get => _settings.SmartHomeWebhookUrl;
+        set { _settings.SmartHomeWebhookUrl = value; SaveDB(); }
+    }
+    
+    public static string TelegramCallWebhookUrl
+    {
+        get => _settings.TelegramCallWebhookUrl;
+        set { _settings.TelegramCallWebhookUrl = value; SaveDB(); }
+    }
+    public static string TelegramCallUser
+    {
+        get => _settings.TelegramCallUser;
+        set { _settings.TelegramCallUser = value; SaveDB(); }
+    }
+    public static string TelegramCallMsg
+    {
+        get => _settings.TelegramCallMsg;
+        set { _settings.TelegramCallMsg = value; SaveDB(); }
+    }
+    public static string TelegramCallLang
+    {
+        get => _settings.TelegramCallLang;
+        set { _settings.TelegramCallLang = value; SaveDB(); }
+    }
+    public static bool TelegramCallIncTitle
+    {
+        get => _settings.TelegramCallIncTitle;
+        set { _settings.TelegramCallIncTitle = value; SaveDB(); }
+    }
+    public static bool TelegramCallIncMsg
+    {
+        get => _settings.TelegramCallIncMsg;
+        set { _settings.TelegramCallIncMsg = value; SaveDB(); }
+    }
+    public static bool TelegramCallIncType
+    {
+        get => _settings.TelegramCallIncType;
+        set { _settings.TelegramCallIncType = value; SaveDB(); }
     }
 
     public static bool AnnounceSpawnsMaster
@@ -738,6 +877,12 @@ public static class TrackingService
     public static IReadOnlyDictionary<string, bool> GetAllHotkeyTriggerChatAlerts()
         => _settings.HotkeyTriggerChatAlertEnabled;
 
+    public static bool HotkeyTriggerChatAlertsEnabled
+    {
+        get => _settings.HotkeyTriggerChatAlertsEnabled;
+        set { _settings.HotkeyTriggerChatAlertsEnabled = value; SaveDB(); }
+    }
+
     public static bool AnnounceCargoDocking
     {
         get => _settings.AnnounceCargoDocking;
@@ -769,6 +914,26 @@ public static class TrackingService
         get => _settings.AnnounceSmartAlerts;
         set { _settings.AnnounceSmartAlerts = value; SaveDB(); }
     }
+    public static bool GenericAlarmPopupEnabled
+    {
+        get => _settings.GenericAlarmPopupEnabled;
+        set { _settings.GenericAlarmPopupEnabled = value; SaveDB(); }
+    }
+    public static bool GenericAlarmOverlayEnabled
+    {
+        get => _settings.GenericAlarmOverlayEnabled;
+        set { _settings.GenericAlarmOverlayEnabled = value; SaveDB(); }
+    }
+    public static bool GenericAlarmAudioEnabled
+    {
+        get => _settings.GenericAlarmAudioEnabled;
+        set { _settings.GenericAlarmAudioEnabled = value; SaveDB(); }
+    }
+    public static string GenericAlarmAudioFilePath
+    {
+        get => _settings.GenericAlarmAudioFilePath ?? string.Empty;
+        set { _settings.GenericAlarmAudioFilePath = value; SaveDB(); }
+    }
     public static string LastServerName
     {
         get => _settings.LastServerName;
@@ -789,6 +954,11 @@ public static class TrackingService
     {
         get => _settings.MapShowDeathTags;
         set { _settings.MapShowDeathTags = value; SaveDB(); }
+    }
+    public static bool MapShowDeathHeatmap
+    {
+        get => _settings.MapShowDeathHeatmap;
+        set { _settings.MapShowDeathHeatmap = value; SaveDB(); }
     }
     public static int MaxSelfDeathMarkers
     {
@@ -829,6 +999,11 @@ public static class TrackingService
     {
         get => _settings.MapMonumentOpacity;
         set { _settings.MapMonumentOpacity = value; SaveDB(); }
+    }
+    public static double MapGridOpacity
+    {
+        get => _settings.MapGridOpacity;
+        set { _settings.MapGridOpacity = value; SaveDB(); }
     }
     public static int MapBitmapScalingMode
     {
@@ -881,10 +1056,10 @@ public static class TrackingService
         get => _settings.LastSeenVersion;
         set { _settings.LastSeenVersion = value; SaveDB(); }
     }
-    public static bool SuppressVersion7Notice
+    public static bool SuppressVersion8Notice
     {
-        get => _settings.SuppressVersion7Notice;
-        set { _settings.SuppressVersion7Notice = value; SaveDB(); }
+        get => _settings.SuppressVersion8Notice;
+        set { _settings.SuppressVersion8Notice = value; SaveDB(); }
     }
     public static int GetLearnedCargoFullLife(string host)
     {
@@ -1185,7 +1360,7 @@ public static class TrackingService
                 sb.AppendLine($"<h2>{p.Name}</h2>");
                 
                 var statusClass = isOnline ? "badge-online" : "badge-offline";
-                var statusText = isOnline ? "Online" : "Offline";
+                var statusText = isOnline ? RustPlusDesk.Properties.Resources.GetString("Online") : RustPlusDesk.Properties.Resources.GetString("Offline");
                 sb.AppendLine($"<div style='margin-bottom:20px;'><span class='badge {statusClass}'>{statusText}</span></div>");
 
                 var lastS = sessionsSnapshot.LastOrDefault();
@@ -1396,7 +1571,7 @@ public static class TrackingService
             {
                 if (server.Host == _lastServerHost && server.Port == _lastServerPort)
                 {
-                    StatusMessage = "Server offline (A2S Query Timeout)";
+                    StatusMessage = Properties.Resources.GetString("ServerOfflineA2S");
                     OnOnlinePlayersUpdated?.Invoke();
                 }
                 Log($"[A2S] Failed to background poll {server.Name} ({server.Host}:{server.Port}) - Timeout/Offline");
@@ -1425,7 +1600,7 @@ public static class TrackingService
             {
                 if (isCurrentServer)
                 {
-                    StatusMessage = "Auto-Discovering Query Port via Steam API...";
+                    StatusMessage = Properties.Resources.GetString("AutoDiscoveringQueryPort");
                     OnOnlinePlayersUpdated?.Invoke();
                 }
                 
@@ -1443,7 +1618,7 @@ public static class TrackingService
 
             if (isCurrentServer)
             {
-                StatusMessage = "Fetching players via Steam Query...";
+                StatusMessage = Properties.Resources.GetString("FetchingSteamPlayers");
                 OnOnlinePlayersUpdated?.Invoke();
             }
             var onlineList = new List<OnlinePlayerBM>();
@@ -1519,7 +1694,7 @@ public static class TrackingService
             {
                 if (onlineList.Count == 0)
                 {
-                    StatusMessage = "No online players found.";
+                    StatusMessage = Properties.Resources.GetString("NoOnlinePlayersFound");
                 }
                 else
                 {
@@ -1755,21 +1930,34 @@ public static class TrackingService
         }
     }
 
-    public static void MuteServer(string host, int port)
+    public static void MuteServer(string host, int port, string? name = null)
     {
         var key = $"{host}:{port}";
         if (_settings.MutedNotificationServers == null) _settings.MutedNotificationServers = new();
+        if (_settings.MutedNotificationServerNames == null) _settings.MutedNotificationServerNames = new();
+        if (!string.IsNullOrWhiteSpace(name))
+            _settings.MutedNotificationServerNames[key] = name;
         if (!_settings.MutedNotificationServers.Contains(key))
         {
             _settings.MutedNotificationServers.Add(key);
             SaveDB();
         }
+        else if (!string.IsNullOrWhiteSpace(name))
+        {
+            SaveDB();
+        }
     }
 
-    public static void UnmuteServer(string host, int port)
+    public static string? GetMutedServerName(string key) =>
+        _settings.MutedNotificationServerNames?.GetValueOrDefault(key);
+
+    public static void UnmuteServer(string host, int port) => UnmuteServer($"{host}:{port}");
+
+    public static void UnmuteServer(string key)
     {
-        var key = $"{host}:{port}";
-        if (_settings.MutedNotificationServers != null && _settings.MutedNotificationServers.Remove(key))
+        var removed = _settings.MutedNotificationServers?.Remove(key) == true;
+        var removedName = _settings.MutedNotificationServerNames?.Remove(key) == true;
+        if (removed || removedName)
         {
             SaveDB();
         }

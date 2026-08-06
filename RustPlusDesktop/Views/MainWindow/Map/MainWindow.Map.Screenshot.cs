@@ -147,6 +147,7 @@ public partial class MainWindow
             if (!response.IsSuccessStatusCode)
             {
                 string err = await response.Content.ReadAsStringAsync();
+                RustPlusDesk.Services.Auth.SupabaseAuthManager.HandleUpgradeRequiredResponse(err);
                 AppendLog($"[DiscordBot] Map upload failed: {err}");
                 return false;
             }
@@ -162,10 +163,11 @@ public partial class MainWindow
     private async void BtnSendMapToDiscord_Click(object sender, RoutedEventArgs e)
     {
         if (_vm?.Selected == null) return;
+        if (RustPlusDesk.Services.Auth.SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
         
         BtnSendMapToDiscord.IsEnabled = false;
         var oldContent = BtnSendMapToDiscord.Content;
-        BtnSendMapToDiscord.Content = "Sending...";
+        BtnSendMapToDiscord.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiSending");
         
         try
         {
@@ -204,7 +206,7 @@ public partial class MainWindow
             if (string.IsNullOrEmpty(channelId))
             {
                 AppendLog("Failed to send map screenshot. No 'chat' or 'events' channel configured.");
-                MessageBox.Show("Please configure a Discord 'Chat Alerts' or 'Events Alerts' channel in Settings first.", "Missing Channel Config", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C"), RustPlusDesk.Properties.Resources.GetString("CodeUiMissingChannelConfig"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

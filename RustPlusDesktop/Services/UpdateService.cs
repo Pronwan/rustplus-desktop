@@ -202,6 +202,7 @@ namespace RustPlusDesk.Services
             InitializeIfNeeded();
             if (string.Equals(url, PendingVelopackUpdateMarker, StringComparison.OrdinalIgnoreCase))
             {
+                _downloadCts = new CancellationTokenSource();
                 try
                 {
                     var updateInfo = _pendingUpdateInfo ?? await _updateManager.CheckForUpdatesAsync();
@@ -229,7 +230,10 @@ namespace RustPlusDesk.Services
 
                     await _updateManager.DownloadUpdatesAsync(updateInfo, percent =>
                     {
-                        long currentTotal = totalBytes > 0 ? (long)((percent / 100.0) * totalBytes) : 0;
+                        // Velopack reserves the final 30% for package reconstruction.
+                        var isProcessing = percent >= 70;
+                        var downloadProgress = Math.Min(percent / 70.0, 1.0);
+                        long currentTotal = totalBytes > 0 ? (long)(downloadProgress * totalBytes) : 0;
                         long nowTime = sw.ElapsedMilliseconds;
                         double seconds = (nowTime - lastReportTime) / 1000.0;
                         if (seconds <= 0) seconds = 0.1;
@@ -240,16 +244,22 @@ namespace RustPlusDesk.Services
 
                         progress?.Report(new DownloadReport
                         {
-                            Progress = percent / 100.0,
-                            Percentage = $"{percent}%",
+                            Progress = downloadProgress,
+                            Percentage = isProcessing ? "" : $"{downloadProgress:P0}",
+                            Status = isProcessing ? "Processing package..." : "Downloading update...",
+                            IsIndeterminate = isProcessing,
                             BytesReceived = FormatBytes(currentTotal),
                             TotalBytes = totalBytes > 0 ? FormatBytes(totalBytes) : "Unknown",
-                            Speed = FormatBytes(speedBytes) + "/s"
+                            Speed = isProcessing ? "Verifying and preparing files" : FormatBytes(speedBytes) + "/s"
                         });
-                    });
+                    }, _downloadCts.Token);
 
                     PendingInstallerPath = PendingVelopackUpdateMarker;
                     return PendingInstallerPath;
+                }
+                catch (OperationCanceledException)
+                {
+                    return _isDownloadPaused ? "PAUSED" : null;
                 }
                 catch (Exception ex)
                 {
@@ -359,6 +369,7 @@ namespace RustPlusDesk.Services
                         {
                             Progress = (double)currentTotal / totalBytes,
                             Percentage = $"{((double)currentTotal / totalBytes):P0}",
+                            Status = "Downloading update...",
                             BytesReceived = FormatBytes(currentTotal),
                             TotalBytes = FormatBytes(totalBytes),
                             Speed = FormatBytes(speedBytes) + "/s"
@@ -379,6 +390,17 @@ namespace RustPlusDesk.Services
 
                 await Task.WhenAll(tasks);
                 try { await progressTask; } catch { }
+
+                progress?.Report(new DownloadReport
+                {
+                    Progress = 1,
+                    Percentage = "",
+                    Status = "Preparing installer...",
+                    IsIndeterminate = true,
+                    BytesReceived = FormatBytes(totalBytes),
+                    TotalBytes = FormatBytes(totalBytes),
+                    Speed = "Combining downloaded files"
+                });
 
                 using (var outputStream = File.Create(target))
                 {

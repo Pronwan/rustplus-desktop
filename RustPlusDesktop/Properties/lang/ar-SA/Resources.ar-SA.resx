@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1488,7 +1488,7 @@
     <value>[{0}] الصندوق المشفر سيفتح بعد 5 دقائق!</value>
   </data>
   <data name="AlertDeepSeaUp" xml:space="preserve">
-    <value>بدء حدث أعماق البحار في المحيط</value>
+    <value>بدء حدث أعماق البحار في المحيط (تم اكتشافها بالصوت)</value>
   </data>
   <data name="AlertNewShop" xml:space="preserve">
     <value>متجر جديد مضاف {0} في الإحداثية [{1}]: {2}</value>
@@ -1528,6 +1528,12 @@
   </data>
   <data name="AlertPlayerOffline" xml:space="preserve">
     <value>اللاعب {0} خرج من السيرفر (أوفلاين)</value>
+  </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0} غائب (AFK): {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0} لم يعد غائبًا (AFK) الآن. كان غائبًا لمدة {1}</value>
   </data>
   <data name="AlertPlayerDied" xml:space="preserve">
     <value>مات اللاعب {0} عند الإحداثية {1}</value>
@@ -2495,6 +2501,24 @@
   <data name="AlertPlayerOfflineVars" xml:space="preserve">
     <value>{0}: Player Name</value>
   </data>
+  <data name="AlertPlayerAfkName" xml:space="preserve">
+    <value>اللاعب غائب (AFK)</value>
+  </data>
+  <data name="AlertPlayerAfkDesc" xml:space="preserve">
+    <value>يتم إرساله عندما يصبح عضو الفريق المتعقب غائبًا (غير نشط).</value>
+  </data>
+  <data name="AlertPlayerAfkVars" xml:space="preserve">
+    <value>{0}: اسم اللاعب، {1}: حد التنبيه (بالدقائق)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnName" xml:space="preserve">
+    <value>عودة اللاعب من الغياب (AFK)</value>
+  </data>
+  <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
+    <value>يتم إرساله عندما يعود عضو الفريق المتعقب من الغياب (يصبح نشطًا مرة أخرى).</value>
+  </data>
+  <data name="AlertPlayerAfkReturnVars" xml:space="preserve">
+    <value>{0}: اسم اللاعب، {1}: مدة الغياب (ساعة:دقيقة)</value>
+  </data>
   <data name="AlertPlayerDiedName" xml:space="preserve">
     <value>Player Died</value>
   </data>
@@ -2548,15 +2572,6 @@
   </data>
   <data name="ChatCmdNoOneAfk" xml:space="preserve">
     <value>لا أحد AFK.</value>
-  </data>
-  <data name="AlertPlayerAfkName" xml:space="preserve">
-    <value>اللاعب AFK</value>
-  </data>
-  <data name="AlertPlayerAfkDesc" xml:space="preserve">
-    <value>يتم إرساله عندما يكون أحد أعضاء الفريق AFK لفترة طويلة.</value>
-  </data>
-  <data name="AlertPlayerAfkVars" xml:space="preserve">
-    <value>{0}: اسم اللاعب، {1}: الوقت</value>
   </data>
   <data name="ChangeDeviceIconSubtitle" xml:space="preserve">
     <value>ابحث عن أيقونة عنصر لهذا الجهاز وحددها.</value>
@@ -2737,5 +2752,3087 @@
   </data>
   <data name="ServerNotFoundTitle" xml:space="preserve">
     <value>لم يتم العثور على الخادم</value>
+  </data>
+  <data name="UiOpensTheIncomingAlarmsWindow" xml:space="preserve">
+    <value>— يفتح نافذة التنبيهات الواردة.</value>
+  </data>
+  <data name="UiPlaysTheAlarmSoundUseTheButtonToChooseACustomSound" xml:space="preserve">
+    <value>— تشغيل صوت التنبيه. استخدم الزر ... لاختيار صوت مخصص.</value>
+  </data>
+  <data name="UiShowsTheRedAlarmCardInsideTheApp" xml:space="preserve">
+    <value>- تظهر بطاقة الإنذار الحمراء داخل التطبيق.</value>
+  </data>
+  <data name="UiText2FpsRecommendedForAPIStability" xml:space="preserve">
+    <value>(يوصى بمعدل 2 إطارًا في الثانية لاستقرار واجهة برمجة التطبيقات)</value>
+  </data>
+  <data name="UiLogicRule" xml:space="preserve">
+    <value>[قاعدة المنطق]</value>
+  </data>
+  <data name="UiNameMinutes" xml:space="preserve">
+    <value>[الاسم]،[الدقائق]</value>
+  </data>
+  <data name="UiEveryone" xml:space="preserve">
+    <value>@الجميع</value>
+  </data>
+  <data name="UiHere" xml:space="preserve">
+    <value>@هنا</value>
+  </data>
+  <data name="UiJump" xml:space="preserve">
+    <value>▲ القفز</value>
+  </data>
+  <data name="UiDuck" xml:space="preserve">
+    <value>▼ بطة</value>
+  </data>
+  <data name="UiFire" xml:space="preserve">
+    <value>🎯 نار</value>
+  </data>
+  <data name="UiReload" xml:space="preserve">
+    <value>🔄 إعادة التحميل</value>
+  </data>
+  <data name="UiText100Native" xml:space="preserve">
+    <value>100% (أصلي)</value>
+  </data>
+  <data name="UiText100YieldMonuments" xml:space="preserve">
+    <value>عائد 100% (الآثار)</value>
+  </data>
+  <data name="UiText125Sharp" xml:space="preserve">
+    <value>125% (شارب)</value>
+  </data>
+  <data name="UiText150HighResolution" xml:space="preserve">
+    <value>150% (دقة عالية)</value>
+  </data>
+  <data name="UiText200UltraHighResolution" xml:space="preserve">
+    <value>200% (دقة عالية جدًا)</value>
+  </data>
+  <data name="UiText2D" xml:space="preserve">
+    <value>2D</value>
+  </data>
+  <data name="UiText5MinAFK" xml:space="preserve">
+    <value>5 دقائق AFK</value>
+  </data>
+  <data name="UiTextAfkThreshold" xml:space="preserve">
+    <value>حد الغياب (AFK)</value>
+  </data>
+  <data name="UiText50Fastest" xml:space="preserve">
+    <value>50% (الأسرع)</value>
+  </data>
+  <data name="UiText75Performance" xml:space="preserve">
+    <value>75% (الأداء)</value>
+  </data>
+  <data name="UiA" xml:space="preserve">
+    <value>أ...</value>
+  </data>
+  <data name="UiAcceptSync" xml:space="preserve">
+    <value>قبول ومزامنة</value>
+  </data>
+  <data name="UiAcceptAndRemember" xml:space="preserve">
+    <value>قبول وتذكر</value>
+  </data>
+  <data name="UiACCOUNT" xml:space="preserve">
+    <value>الحساب</value>
+  </data>
+  <data name="UiAccountMenu" xml:space="preserve">
+    <value>قائمة الحساب</value>
+  </data>
+  <data name="UiActiveItemAlerts" xml:space="preserve">
+    <value>تنبيهات العنصر النشط</value>
+  </data>
+  <data name="UiActiveRule" xml:space="preserve">
+    <value>القاعدة النشطة:</value>
+  </data>
+  <data name="UiActiveON" xml:space="preserve">
+    <value>نشط/تشغيل</value>
+  </data>
+  <data name="UiAddATargetToSeeRaidCosts" xml:space="preserve">
+    <value>أضف هدفًا لمعرفة تكاليف الغارة.</value>
+  </data>
+  <data name="UiAddAutomation" xml:space="preserve">
+    <value>إضافة الأتمتة</value>
+  </data>
+  <data name="UiAddExecutionStep" xml:space="preserve">
+    <value>إضافة خطوة التنفيذ</value>
+  </data>
+  <data name="UiAddLogin" xml:space="preserve">
+    <value>إضافة تسجيل الدخول</value>
+  </data>
+  <data name="UiAddNestedAction" xml:space="preserve">
+    <value>إضافة إجراء متداخل</value>
+  </data>
+  <data name="UiAddRule" xml:space="preserve">
+    <value>أضف القاعدة</value>
+  </data>
+  <data name="UiAdminPanel" xml:space="preserve">
+    <value>لوحة الإدارة</value>
+  </data>
+  <data name="UiAdminPanelUserOverview" xml:space="preserve">
+    <value>لوحة الإدارة - نظرة عامة على المستخدم</value>
+  </data>
+  <data name="UiAdvancedDiscordBotIntegration" xml:space="preserve">
+    <value>متقدم Discord تكامل الروبوتات</value>
+  </data>
+  <data name="UiAdvancedDiscordBotSettings" xml:space="preserve">
+    <value>إعدادات البوت المتقدمة Discord.</value>
+  </data>
+  <data name="UiÃƒâ" xml:space="preserve">
+    <value>‹‹</value>
+  </data>
+  <data name="UiAgricultureFood" xml:space="preserve">
+    <value>الزراعة والغذاء</value>
+  </data>
+  <data name="UiAlarm" xml:space="preserve">
+    <value>إنذار</value>
+  </data>
+  <data name="UiAlarmAusgeloest" xml:space="preserve">
+    <value>إنذار رائع!</value>
+  </data>
+  <data name="UiAlert" xml:space="preserve">
+    <value>تنبيه</value>
+  </data>
+  <data name="UiAlexaSetupInfo" xml:space="preserve">
+    <value>Alexa معلومات الإعداد</value>
+  </data>
+  <data name="UiAlexaSmartHome" xml:space="preserve">
+    <value>Alexa المنزل الذكي</value>
+  </data>
+  <data name="UiAllPlayersInRange" xml:space="preserve">
+    <value>جميع اللاعبين في النطاق</value>
+  </data>
+  <data name="UiAllPlayersOffline" xml:space="preserve">
+    <value>جميع اللاعبين غير متصلين</value>
+  </data>
+  <data name="UiAllowDiscordCommands" xml:space="preserve">
+    <value>السماح بأوامر Discord.</value>
+  </data>
+  <data name="UiAllowedCommandRoleIDs" xml:space="preserve">
+    <value>معرفات دور القيادة المسموح بها</value>
+  </data>
+  <data name="UiAmazonAlexaLogin" xml:space="preserve">
+    <value>أمازون Alexa تسجيل الدخول</value>
+  </data>
+  <data name="UiAND" xml:space="preserve">
+    <value>و</value>
+  </data>
+  <data name="UiAnyOnlineInRange" xml:space="preserve">
+    <value>أي على الانترنت في النطاق</value>
+  </data>
+  <data name="UiAnyPlayerOffline" xml:space="preserve">
+    <value>أي لاعب غير متصل</value>
+  </data>
+  <data name="UiAutomationActive" xml:space="preserve">
+    <value>الأتمتة نشطة</value>
+  </data>
+  <data name="UiBackToSettingsCategories" xml:space="preserve">
+    <value>العودة إلى فئات الإعدادات</value>
+  </data>
+  <data name="UiBalancedLinear" xml:space="preserve">
+    <value>متوازن (خطي)</value>
+  </data>
+  <data name="UiBaseDetails" xml:space="preserve">
+    <value>تفاصيل القاعدة</value>
+  </data>
+  <data name="UiBasicDiscordIntegration" xml:space="preserve">
+    <value>التكامل الأساسي Discord.</value>
+  </data>
+  <data name="UiBasicDiscordWebhooks" xml:space="preserve">
+    <value>خطافات الويب الأساسية Discord.</value>
+  </data>
+  <data name="UiBears" xml:space="preserve">
+    <value>الدببة</value>
+  </data>
+  <data name="UiBerries" xml:space="preserve">
+    <value>التوت</value>
+  </data>
+  <data name="UiBicycles" xml:space="preserve">
+    <value>دراجات</value>
+  </data>
+  <data name="UiBlue" xml:space="preserve">
+    <value>أزرق</value>
+  </data>
+  <data name="UiBoars" xml:space="preserve">
+    <value>الخنازير</value>
+  </data>
+  <data name="UiBOOMREQUIRED" xml:space="preserve">
+    <value>بوم المطلوبة</value>
+  </data>
+  <data name="UiBrowseMonuments" xml:space="preserve">
+    <value>تصفح الآثار</value>
+  </data>
+  <data name="UiBrowseOnlinePlayersAndTrackedTargets" xml:space="preserve">
+    <value>تصفح اللاعبين عبر الإنترنت والأهداف المتعقبة.</value>
+  </data>
+  <data name="UiBuild3DMap" xml:space="preserve">
+    <value>بناء خريطة ثلاثية الأبعاد</value>
+  </data>
+  <data name="UiBuildLocal3DMap" xml:space="preserve">
+    <value>بناء خريطة محلية ثلاثية الأبعاد</value>
+  </data>
+  <data name="UiBuyX" xml:space="preserve">
+    <value>شراء اكس</value>
+  </data>
+  <data name="UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness" xml:space="preserve">
+    <value>عرض خريطة ذاكرة التخزين المؤقت على وحدة معالجة الرسومات. يحسن للغاية من السلاسة بالغسل والتكبير.</value>
+  </data>
+  <data name="UiCalculateComponentYieldsForWildAndSafeZoneRecyclers" xml:space="preserve">
+    <value>حساب إنتاجية المكونات الخاصة بإعادة التدوير في المناطق البرية والآمنة.</value>
+  </data>
+  <data name="UiCalculateRaidCostsAndRequiredMaterials" xml:space="preserve">
+    <value>حساب تكاليف الغارة والمواد المطلوبة.</value>
+  </data>
+  <data name="UiCancelDownload" xml:space="preserve">
+    <value>إلغاء التنزيل</value>
+  </data>
+  <data name="UiChance" xml:space="preserve">
+    <value>فرصة</value>
+  </data>
+  <data name="UiChange" xml:space="preserve">
+    <value>التغيير</value>
+  </data>
+  <data name="UiChangeCommand" xml:space="preserve">
+    <value>تغيير الأمر</value>
+  </data>
+  <data name="UiChangeIcon" xml:space="preserve">
+    <value>تغيير الأيقونة</value>
+  </data>
+  <data name="UiChannelID" xml:space="preserve">
+    <value>معرف القناة</value>
+  </data>
+  <data name="UiChannelNotificationsConfig" xml:space="preserve">
+    <value>تكوين إشعارات القناة</value>
+  </data>
+  <data name="UiChatAlertsDiscord" xml:space="preserve">
+    <value>تنبيهات الدردشة -&gt; Discord</value>
+  </data>
+  <data name="UiChatAlertsChannelID" xml:space="preserve">
+    <value>معرف قناة تنبيهات الدردشة</value>
+  </data>
+  <data name="UiChatMasterSlaves" xml:space="preserve">
+    <value>دردشة الماجستير والعبيد</value>
+  </data>
+  <data name="UiChatMessageAlerts" xml:space="preserve">
+    <value>تنبيهات رسائل الدردشة</value>
+  </data>
+  <data name="UiCheckAvailability" xml:space="preserve">
+    <value>التحقق من التوفر</value>
+  </data>
+  <data name="UiChickens" xml:space="preserve">
+    <value>دجاج</value>
+  </data>
+  <data name="UiChooseACategory" xml:space="preserve">
+    <value>اختر فئة</value>
+  </data>
+  <data name="UiChooseATargetFromTheCatalogue" xml:space="preserve">
+    <value>اختر هدفا من الكتالوج.</value>
+  </data>
+  <data name="UiClearAll" xml:space="preserve">
+    <value>مسح الكل</value>
+  </data>
+  <data name="UiClearRaidPlan" xml:space="preserve">
+    <value>خطة غارة واضحة</value>
+  </data>
+  <data name="UiClearWebhookURL" xml:space="preserve">
+    <value>مسح عنوان URL للويب هوك</value>
+  </data>
+  <data name="UiCloseRaidCalculator" xml:space="preserve">
+    <value>إغلاق آلة حاسبة الغارة</value>
+  </data>
+  <data name="UiCloseShopsPanel" xml:space="preserve">
+    <value>إغلاق لوحة المتاجر</value>
+  </data>
+  <data name="UiCloseTeamPanel" xml:space="preserve">
+    <value>إغلاق لوحة الفريق</value>
+  </data>
+  <data name="UiCloudAccountSync" xml:space="preserve">
+    <value>الحساب السحابي والمزامنة</value>
+  </data>
+  <data name="UiCloudBaseScreenshots" xml:space="preserve">
+    <value>لقطات شاشة لقاعدة السحابة</value>
+  </data>
+  <data name="UiCloudUserID" xml:space="preserve">
+    <value>معرف المستخدم السحابي</value>
+  </data>
+  <data name="UiCloudDiscordAlexaChatAndSteam" xml:space="preserve">
+    <value>السحابة، Discord، Alexa، والدردشة، و Steam</value>
+  </data>
+  <data name="UiCMD" xml:space="preserve">
+    <value>كمد</value>
+  </data>
+  <data name="UiColor" xml:space="preserve">
+    <value>اللون:</value>
+  </data>
+  <data name="UiCommaSeparatedRoleIDs" xml:space="preserve">
+    <value>معرفات الأدوار مفصولة بفواصل</value>
+  </data>
+  <data name="UiCommandPermissions" xml:space="preserve">
+    <value>أذونات الأوامر</value>
+  </data>
+  <data name="UiConfirmDelete" xml:space="preserve">
+    <value>تأكيد الحذف</value>
+  </data>
+  <data name="UiConnectRustCompanion" xml:space="preserve">
+    <value>تواصل Rust+ رفيق</value>
+  </data>
+  <data name="UiConnectedServices" xml:space="preserve">
+    <value>الخدمات المتصلة</value>
+  </data>
+  <data name="UiCONNECTIONSERVICES" xml:space="preserve">
+    <value>خدمات الاتصال</value>
+  </data>
+  <data name="UiControlYourRustSmartSwitchesWithAmazonAlexaVoiceCommandsAn5B51481980" xml:space="preserve">
+    <value>تحكم في مفاتيح Rust Smart Switches الخاصة بك باستخدام الأوامر الصوتية من Amazon Alexa وقم بتشغيل إجراءات Alexa عندما تنطلق الإنذارات الذكية.</value>
+  </data>
+  <data name="UiControlsMapImageScalingFilteringMode" xml:space="preserve">
+    <value>يتحكم في وضع تصفية قياس صورة الخريطة.</value>
+  </data>
+  <data name="UiCopyADiscordReadySummary" xml:space="preserve">
+    <value>انسخ Discord-ملخص جاهز</value>
+  </data>
+  <data name="UiCopyIP" xml:space="preserve">
+    <value>نسخ IP</value>
+  </data>
+  <data name="UiCopyMapToServer" xml:space="preserve">
+    <value>نسخ الخريطة إلى الخادم...</value>
+  </data>
+  <data name="UiCopyRaidSummary" xml:space="preserve">
+    <value>نسخ ملخص الغارة</value>
+  </data>
+  <data name="UiCorn" xml:space="preserve">
+    <value>الذرة</value>
+  </data>
+  <data name="UiCount" xml:space="preserve">
+    <value>عد</value>
+  </data>
+  <data name="UiCreateAShopAlert" xml:space="preserve">
+    <value>إنشاء تنبيه متجر</value>
+  </data>
+  <data name="UiCrocodiles" xml:space="preserve">
+    <value>التماسيح</value>
+  </data>
+  <data name="UiCurrency" xml:space="preserve">
+    <value>العملة</value>
+  </data>
+  <data name="UiCurrentStep" xml:space="preserve">
+    <value>الخطوة الحالية:</value>
+  </data>
+  <data name="UiCustomAlarmName" xml:space="preserve">
+    <value>اسم التنبيه المخصص</value>
+  </data>
+  <data name="UiCyan" xml:space="preserve">
+    <value>سماوي</value>
+  </data>
+  <data name="UiDeDEStandardA" xml:space="preserve">
+    <value>دي-DE-ستاندارد-A</value>
+  </data>
+  <data name="UiDeadPlayersCountAsOfflineOfflineConditionsIgnoreTheRadius" xml:space="preserve">
+    <value>يتم احتساب اللاعبين الموتى على أنهم غير متصلين بالإنترنت. تتجاهل شروط عدم الاتصال نصف القطر.</value>
+  </data>
+  <data name="UiDeathMarkerSettings" xml:space="preserve">
+    <value>إعدادات علامة الموت</value>
+  </data>
+  <data name="UiDecreaseQuantity" xml:space="preserve">
+    <value>تقليل الكمية</value>
+  </data>
+  <data name="UiDecreaseTargetQuantity" xml:space="preserve">
+    <value>تقليل الكمية المستهدفة</value>
+  </data>
+  <data name="UiDeers" xml:space="preserve">
+    <value>الغزلان</value>
+  </data>
+  <data name="UiDefault" xml:space="preserve">
+    <value>الافتراضي</value>
+  </data>
+  <data name="UiDeleteMissingDevice" xml:space="preserve">
+    <value>حذف الجهاز المفقود</value>
+  </data>
+  <data name="UiDeleteRule" xml:space="preserve">
+    <value>حذف القاعدة</value>
+  </data>
+  <data name="UiDeleteStep" xml:space="preserve">
+    <value>حذف الخطوة</value>
+  </data>
+  <data name="UiDeleteTimer" xml:space="preserve">
+    <value>حذف الموقت</value>
+  </data>
+  <data name="UiDestructionMethod" xml:space="preserve">
+    <value>طريقة التدمير</value>
+  </data>
+  <data name="UiDetailedMapLayerOptions" xml:space="preserve">
+    <value>خيارات طبقة الخريطة التفصيلية</value>
+  </data>
+  <data name="UiDetails" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="UiDeviceAutomation" xml:space="preserve">
+    <value>أتمتة الجهاز</value>
+  </data>
+  <data name="UiDeviceCloudSync" xml:space="preserve">
+    <value>مزامنة سحابة الجهاز</value>
+  </data>
+  <data name="UiDisableGridAntiAliasingAliasedEdgeMode" xml:space="preserve">
+    <value>تعطيل شبكة مكافحة التعرج (وضع الحافة المستعارة)</value>
+  </data>
+  <data name="UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1" xml:space="preserve">
+    <value>تعطيل الصقل على خطوط الشبكة والعلامات. يحسن سرعة العرض على الأنظمة المنخفضة.</value>
+  </data>
+  <data name="UiDiscordName" xml:space="preserve">
+    <value>Discord الاسم</value>
+  </data>
+  <data name="UiDiscordServerIDGuildID" xml:space="preserve">
+    <value>Discord معرف الخادم (معرف النقابة)</value>
+  </data>
+  <data name="UiDiscordWebhook" xml:space="preserve">
+    <value>Discord خطاف الويب</value>
+  </data>
+  <data name="UiDiscordWebhookChatAlerts" xml:space="preserve">
+    <value>Discord Webhook (تنبيهات الدردشة)</value>
+  </data>
+  <data name="UiDiscordWebhookURL" xml:space="preserve">
+    <value>Discord عنوان URL لخطاف الويب</value>
+  </data>
+  <data name="UiDiscordWebhookURLOfflineAlerts" xml:space="preserve">
+    <value>Discord عنوان URL للويب هوك (التنبيهات دون اتصال)</value>
+  </data>
+  <data name="UiDiscordWebhooksGuide" xml:space="preserve">
+    <value>Discord دليل الويب هوك</value>
+  </data>
+  <data name="UiDismiss" xml:space="preserve">
+    <value>استبعاد</value>
+  </data>
+  <data name="UiDisplay" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+  <data name="UiDisplayName" xml:space="preserve">
+    <value>اسم العرض</value>
+  </data>
+  <data name="UiDollar" xml:space="preserve">
+    <value>الدولار</value>
+  </data>
+  <data name="UiDonTShowOffersWithoutStock" xml:space="preserve">
+    <value>لا تظهر العروض بدون مخزون</value>
+  </data>
+  <data name="UiDoubleClickToEditCommand" xml:space="preserve">
+    <value>انقر نقرًا مزدوجًا لتحرير الأمر</value>
+  </data>
+  <data name="UiDuplicateTarget" xml:space="preserve">
+    <value>هدف مكرر</value>
+  </data>
+  <data name="UiÐŸ" xml:space="preserve">
+    <value>ðŸ¤</value>
+  </data>
+  <data name="UiÐŸ2" xml:space="preserve">
+    <value>ðŸ“·</value>
+  </data>
+  <data name="UiEGNAME2" xml:space="preserve">
+    <value>على سبيل المثال الاسم2</value>
+  </data>
+  <data name="UiEditCommand" xml:space="preserve">
+    <value>تحرير الأمر</value>
+  </data>
+  <data name="UiEditSubscriptionsDrawingOverlay" xml:space="preserve">
+    <value>تحرير الاشتراكات (تراكب الرسم)</value>
+  </data>
+  <data name="UiEmail" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="UiEmailAndPassword" xml:space="preserve">
+    <value>البريد الإلكتروني وكلمة المرور</value>
+  </data>
+  <data name="UiEnGBStandardA" xml:space="preserve">
+    <value>ar-GB-قياسي-A</value>
+  </data>
+  <data name="UiEnUSStandardA" xml:space="preserve">
+    <value>ar-US-Standard-A</value>
+  </data>
+  <data name="UiEnableAutomation" xml:space="preserve">
+    <value>تمكين الأتمتة</value>
+  </data>
+  <data name="UiEnableGPUBitmapCaching" xml:space="preserve">
+    <value>تمكين التخزين المؤقت للصور النقطية لوحدة معالجة الرسومات</value>
+  </data>
+  <data name="UiEnableRule" xml:space="preserve">
+    <value>تمكين القاعدة</value>
+  </data>
+  <data name="UiEnemyBaseRed" xml:space="preserve">
+    <value>قاعدة العدو (الأحمر)</value>
+  </data>
+  <data name="UiEngineActivePlayStop" xml:space="preserve">
+    <value>المحرك نشط (تشغيل/إيقاف)</value>
+  </data>
+  <data name="UiEsESStandardA" xml:space="preserve">
+    <value>es-ES-قياسي-A</value>
+  </data>
+  <data name="UiEventsAlertsChannelID" xml:space="preserve">
+    <value>تنبيهات الأحداث معرف القناة</value>
+  </data>
+  <data name="UiExecutionSteps" xml:space="preserve">
+    <value>خطوات التنفيذ</value>
+  </data>
+  <data name="UiExpand" xml:space="preserve">
+    <value>توسيع</value>
+  </data>
+  <data name="UiExpandOrCollapseAutomation" xml:space="preserve">
+    <value>توسيع أو طي الأتمتة</value>
+  </data>
+  <data name="UiExpandOrCollapseGroup" xml:space="preserve">
+    <value>قم بتوسيع المجموعة أو طيها</value>
+  </data>
+  <data name="UiExpandServerDetails" xml:space="preserve">
+    <value>قم بتوسيع تفاصيل الخادم</value>
+  </data>
+  <data name="UiExpandCollapse" xml:space="preserve">
+    <value>توسيع/طي</value>
+  </data>
+  <data name="UiEXTRAMONUMENTTYPES" xml:space="preserve">
+    <value>أنواع النصب التذكارية الإضافية</value>
+  </data>
+  <data name="UiFaunaWildlife" xml:space="preserve">
+    <value>الحيوانات والحياة البرية</value>
+  </data>
+  <data name="UiFillStacks" xml:space="preserve">
+    <value>ملء الأكوام</value>
+  </data>
+  <data name="UiFilterLogs" xml:space="preserve">
+    <value>تصفية السجلات...</value>
+  </data>
+  <data name="UiFindProfitableShopTrades" xml:space="preserve">
+    <value>العثور على صفقات متجر مربحة</value>
+  </data>
+  <data name="UiFindWhereToBuyAnItem" xml:space="preserve">
+    <value>ابحث عن مكان شراء السلعة</value>
+  </data>
+  <data name="UiFitMapToView" xml:space="preserve">
+    <value>تناسب الخريطة لعرضها</value>
+  </data>
+  <data name="UiFlowers" xml:space="preserve">
+    <value>زهور</value>
+  </data>
+  <data name="UiForceOFF" xml:space="preserve">
+    <value>إيقاف القوة</value>
+  </data>
+  <data name="UiForceON" xml:space="preserve">
+    <value>تشغيل القوة</value>
+  </data>
+  <data name="UiForceRefetchMap" xml:space="preserve">
+    <value>فرض خريطة الإعادة</value>
+  </data>
+  <data name="UiForceRefreshAllSubscriptions" xml:space="preserve">
+    <value>فرض تحديث كافة الاشتراكات</value>
+  </data>
+  <data name="UiForgotPassword" xml:space="preserve">
+    <value>هل نسيت كلمة المرور؟</value>
+  </data>
+  <data name="UiFrFRStandardA" xml:space="preserve">
+    <value>الاب-FR-قياسي-A</value>
+  </data>
+  <data name="UiFrom" xml:space="preserve">
+    <value>من</value>
+  </data>
+  <data name="UiGatingConditionOptional" xml:space="preserve">
+    <value>حالة النابضة (اختياري)</value>
+  </data>
+  <data name="UiGenerateSave" xml:space="preserve">
+    <value>إنشاء وحفظ</value>
+  </data>
+  <data name="UiGenerateLoginPIN" xml:space="preserve">
+    <value>إنشاء رقم التعريف الشخصي لتسجيل الدخول</value>
+  </data>
+  <data name="UiGenerateThe3DMapBeforeUsingHeatmaps" xml:space="preserve">
+    <value>قم بإنشاء الخريطة ثلاثية الأبعاد قبل استخدام الخرائط الحرارية.</value>
+  </data>
+  <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
+    <value>قم بإنشاء خريطة ثلاثية الأبعاد لتمكين مناطق عدم البناء.</value>
+  </data>
+  <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
+    <value>خيارات صوت التنبيه العامة</value>
+  </data>
+  <data name="UiGENERICALARMS" xml:space="preserve">
+    <value>إنذارات عامة</value>
+  </data>
+  <data name="UiGPURenderingScale" xml:space="preserve">
+    <value>مقياس عرض GPU</value>
+  </data>
+  <data name="UiGreen" xml:space="preserve">
+    <value>أخضر</value>
+  </data>
+  <data name="UiGuar" xml:space="preserve">
+    <value>غوار.</value>
+  </data>
+  <data name="UiGun" xml:space="preserve">
+    <value>بندقية</value>
+  </data>
+  <data name="UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D" xml:space="preserve">
+    <value>يتم عرض البارود والمتفجرات والتوقيت والتحويلات المطبوخة/الخامية فقط عند توفيرها بواسطة مجموعة البيانات. تم بالفعل توسيع البيانات الحالية لتشمل المكونات الخام.</value>
+  </data>
+  <data name="UiHeatmaps" xml:space="preserve">
+    <value>خرائط الحرارة</value>
+  </data>
+  <data name="UiHeatmapsUnavailable" xml:space="preserve">
+    <value>الخرائط الحرارية غير متاحة</value>
+  </data>
+  <data name="UiHeight" xml:space="preserve">
+    <value>الارتفاع</value>
+  </data>
+  <data name="UiHide0Stock" xml:space="preserve">
+    <value>إخفاء 0-المخزون</value>
+  </data>
+  <data name="UiHighQualityBicubic" xml:space="preserve">
+    <value>جودة عالية (بيكيوبيك)</value>
+  </data>
+  <data name="UiHome" xml:space="preserve">
+    <value>الصفحة الرئيسية</value>
+  </data>
+  <data name="UiHorses" xml:space="preserve">
+    <value>الخيول</value>
+  </data>
+  <data name="UiHotAirBalloons" xml:space="preserve">
+    <value>بالونات الهواء الساخن</value>
+  </data>
+  <data name="UiHotkeyTriggers" xml:space="preserve">
+    <value>مشغلات هوتكي</value>
+  </data>
+  <data name="UiIcons" xml:space="preserve">
+    <value>أيقونات</value>
+  </data>
+  <data name="UiIcons2" xml:space="preserve">
+    <value>الرموز:</value>
+  </data>
+  <data name="UiID" xml:space="preserve">
+    <value>المعرف:</value>
+  </data>
+  <data name="UiIDLE" xml:space="preserve">
+    <value>خامل</value>
+  </data>
+  <data name="UiImageScalingQuality" xml:space="preserve">
+    <value>جودة تحجيم الصورة</value>
+  </data>
+  <data name="UiImageZoomView" xml:space="preserve">
+    <value>عرض تكبير الصورة</value>
+  </data>
+  <data name="UiInGameTime" xml:space="preserve">
+    <value>الوقت داخل اللعبة</value>
+  </data>
+  <data name="UiInactiveOFF" xml:space="preserve">
+    <value>غير نشط/إيقاف</value>
+  </data>
+  <data name="UiIncludeMessageMessage" xml:space="preserve">
+    <value>تضمين الرسالة ({{message})})</value>
+  </data>
+  <data name="UiIncludeNameTitle" xml:space="preserve">
+    <value>تضمين الاسم ({{title})})</value>
+  </data>
+  <data name="UiIncludeTypeType" xml:space="preserve">
+    <value>تضمين النوع ({{type})})</value>
+  </data>
+  <data name="UiIncreaseQuantity" xml:space="preserve">
+    <value>زيادة الكمية</value>
+  </data>
+  <data name="UiIncreaseTargetQuantity" xml:space="preserve">
+    <value>زيادة الكمية المستهدفة</value>
+  </data>
+  <data name="UiInventoryInRecyclerYieldOut" xml:space="preserve">
+    <value>المخزون في، العائد إعادة التدوير خارج</value>
+  </data>
+  <data name="UiInviteDiscordBotToServer" xml:space="preserve">
+    <value>دعوة Discord بوت إلى الخادم</value>
+  </data>
+  <data name="UiISOFFLINE" xml:space="preserve">
+    <value>غير متصل</value>
+  </data>
+  <data name="UiISONLINE" xml:space="preserve">
+    <value>متصل بالإنترنت</value>
+  </data>
+  <data name="UiITEMBAY" xml:space="preserve">
+    <value>خليج البند</value>
+  </data>
+  <data name="UiJunkpiles" xml:space="preserve">
+    <value>أكوام النفايات</value>
+  </data>
+  <data name="UiKeepSidebarUnfolded" xml:space="preserve">
+    <value>أبقِ الشريط الجانبي مفتوحًا</value>
+  </data>
+  <data name="UiLanguageStartupAndAppBehavior" xml:space="preserve">
+    <value>اللغة وبدء التشغيل وسلوك التطبيق</value>
+  </data>
+  <data name="UiLastActive" xml:space="preserve">
+    <value>آخر نشاط</value>
+  </data>
+  <data name="UiLayers" xml:space="preserve">
+    <value>طبقات</value>
+  </data>
+  <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
+    <value>اتركه فارغًا للسماح للجميع بالتواجد على الخادم.</value>
+  </data>
+  <data name="UiLinkSelectedServer" xml:space="preserve">
+    <value>ربط الخادم المحدد</value>
+  </data>
+  <data name="UiListenForRustPairingRequestsRightClickForRecoveryOptions" xml:space="preserve">
+    <value>استمع لطلبات الاقتران Rust+. انقر بزر الماوس الأيمن للحصول على خيارات الاسترداد.</value>
+  </data>
+  <data name="UiListening" xml:space="preserve">
+    <value>الاستماع</value>
+  </data>
+  <data name="UiLoadShopsAutomaticallyOnConnect" xml:space="preserve">
+    <value>تحميل المحلات التجارية تلقائيا على الاتصال</value>
+  </data>
+  <data name="UiLoadingServerDetails" xml:space="preserve">
+    <value>جارٍ تحميل تفاصيل الخادم...</value>
+  </data>
+  <data name="UiLocalSetup" xml:space="preserve">
+    <value>الإعداد المحلي</value>
+  </data>
+  <data name="UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps" xml:space="preserve">
+    <value>قم بتسجيل الدخول إلى حساب Rust+ Desk الخاص بك لإنشاء خرائط ثلاثية الأبعاد وخرائط حرارية.</value>
+  </data>
+  <data name="UiLogOut" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="UiLogPiles" xml:space="preserve">
+    <value>أكوام السجل</value>
+  </data>
+  <data name="UiLogicEngine" xml:space="preserve">
+    <value>محرك المنطق</value>
+  </data>
+  <data name="UiLogicEngineRuntime" xml:space="preserve">
+    <value>وقت تشغيل المحرك المنطقي</value>
+  </data>
+  <data name="UiLogicRules" xml:space="preserve">
+    <value>قواعد المنطق</value>
+  </data>
+  <data name="UiLoginRequired" xml:space="preserve">
+    <value>تسجيل الدخول مطلوب</value>
+  </data>
+  <data name="UiLoopAfterCompletion" xml:space="preserve">
+    <value>حلقة بعد الانتهاء</value>
+  </data>
+  <data name="UiLoot" xml:space="preserve">
+    <value>نهب</value>
+  </data>
+  <data name="UiLootTransport" xml:space="preserve">
+    <value>النهب والنقل</value>
+  </data>
+  <data name="UiMaintenanceBackupResetAndCredits" xml:space="preserve">
+    <value>الصيانة والنسخ الاحتياطي وإعادة التعيين والاعتمادات</value>
+  </data>
+  <data name="UiManualPremium" xml:space="preserve">
+    <value>قسط يدوي</value>
+  </data>
+  <data name="UiManualSince" xml:space="preserve">
+    <value>دليل منذ</value>
+  </data>
+  <data name="UiMap" xml:space="preserve">
+    <value>خريطة</value>
+  </data>
+  <data name="UiMapLayers" xml:space="preserve">
+    <value>طبقات الخريطة</value>
+  </data>
+  <data name="UiMapPerformanceQuality" xml:space="preserve">
+    <value>أداء الخريطة وجودتها</value>
+  </data>
+  <data name="UiMarker" xml:space="preserve">
+    <value>علامة:</value>
+  </data>
+  <data name="UiMatched" xml:space="preserve">
+    <value>متطابق:</value>
+  </data>
+  <data name="UiMeters" xml:space="preserve">
+    <value>متر</value>
+  </data>
+  <data name="UiMethodComparisonMode" xml:space="preserve">
+    <value>وضع مقارنة الطريقة</value>
+  </data>
+  <data name="UiMinProfit" xml:space="preserve">
+    <value>الحد الأدنى للربح:</value>
+  </data>
+  <data name="UiModularCars" xml:space="preserve">
+    <value>سيارات نموذجية</value>
+  </data>
+  <data name="UiMonitorAndControlPairedSmartDevices" xml:space="preserve">
+    <value>مراقبة الأجهزة الذكية المقترنة والتحكم فيها.</value>
+  </data>
+  <data name="UiMushrooms" xml:space="preserve">
+    <value>الفطر</value>
+  </data>
+  <data name="UiMuteNotificationsFromThisServer" xml:space="preserve">
+    <value>تجاهل الإخطارات من هذا الخادم</value>
+  </data>
+  <data name="UiNames" xml:space="preserve">
+    <value>الأسماء</value>
+  </data>
+  <data name="UiNestedStepsIfConditionMet" xml:space="preserve">
+    <value>الخطوات المتداخلة (إذا تم استيفاء الشرط)</value>
+  </data>
+  <data name="UiNewPassword6Characters" xml:space="preserve">
+    <value>كلمة المرور الجديدة (+6 أحرف)</value>
+  </data>
+  <data name="UiNoBuild" xml:space="preserve">
+    <value>لا بناء</value>
+  </data>
+  <data name="UiNoDevicesMatchYourSearch" xml:space="preserve">
+    <value>لا توجد أجهزة تطابق بحثك.</value>
+  </data>
+  <data name="UiNoHeatmapActive" xml:space="preserve">
+    <value>لا توجد خريطة حرارية نشطة</value>
+  </data>
+  <data name="UiNoMatchingTargets" xml:space="preserve">
+    <value>لا توجد أهداف مطابقة</value>
+  </data>
+  <data name="UiNoPendingRules" xml:space="preserve">
+    <value>لا توجد قواعد معلقة</value>
+  </data>
+  <data name="UiNoTargetsSelected" xml:space="preserve">
+    <value>لم يتم تحديد أي أهداف</value>
+  </data>
+  <data name="UiNotConnected" xml:space="preserve">
+    <value>غير متصل</value>
+  </data>
+  <data name="UiNothingToTotalYet" xml:space="preserve">
+    <value>لا شيء لإجمالي حتى الآن</value>
+  </data>
+  <data name="UiNotificationsSoundsAndOfflineDeath" xml:space="preserve">
+    <value>الإخطارات والأصوات والموت دون اتصال بالإنترنت</value>
+  </data>
+  <data name="UiOfflineAlertsSetup" xml:space="preserve">
+    <value>إعداد التنبيهات دون اتصال</value>
+  </data>
+  <data name="UiOfflineCloudAlertsDiscordWebhookTelegramCalls" xml:space="preserve">
+    <value>تنبيهات سحابية دون اتصال | Discord، Webhook و Telegram المكالمات</value>
+  </data>
+  <data name="UiOpacity100" xml:space="preserve">
+    <value>التعتيم: 100%</value>
+  </data>
+  <data name="UiOpenCloudAccount" xml:space="preserve">
+    <value>فتح حساب سحابي</value>
+  </data>
+  <data name="UiOpenInteractive3DMapOnRustMaps" xml:space="preserve">
+    <value>افتح خريطة تفاعلية ثلاثية الأبعاد على RustMaps</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanel" xml:space="preserve">
+    <value>افتح أو أغلق لوحة المتاجر</value>
+  </data>
+  <data name="UiOpenOrCloseShopsPanelCtrlShiftS" xml:space="preserve">
+    <value>فتح أو إغلاق لوحة المتاجر (Ctrl+Shift+S)</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanel" xml:space="preserve">
+    <value>فتح أو إغلاق لوحة الفريق</value>
+  </data>
+  <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
+    <value>فتح لوحة الفريق أو إغلاقها (Ctrl+Shift+T)</value>
+  </data>
+  <data name="UiOpenShopFilters" xml:space="preserve">
+    <value>فتح مرشحات المتجر</value>
+  </data>
+  <data name="UiOpenSignInAndAccountManagement" xml:space="preserve">
+    <value>فتح تسجيل الدخول وإدارة الحساب</value>
+  </data>
+  <data name="UiOptimalMultiHopTradePathfinder" xml:space="preserve">
+    <value>مستكشف التجارة الأمثل متعدد القفزات</value>
+  </data>
+  <data name="UiOptionalPings" xml:space="preserve">
+    <value>الأصوات الاختيارية</value>
+  </data>
+  <data name="UiOR" xml:space="preserve">
+    <value>أو</value>
+  </data>
+  <data name="UiOrGroupName" xml:space="preserve">
+    <value>أو اسم المجموعة</value>
+  </data>
+  <data name="UiOres" xml:space="preserve">
+    <value>الخامات</value>
+  </data>
+  <data name="UiOtherwise" xml:space="preserve">
+    <value>خلاف ذلك:</value>
+  </data>
+  <data name="UiOUTPOST" xml:space="preserve">
+    <value>المخفر</value>
+  </data>
+  <data name="UiOutpostRecyclerTime" xml:space="preserve">
+    <value>وقت إعادة تدوير المخفر</value>
+  </data>
+  <data name="UiOutpostSafezoneRecycler" xml:space="preserve">
+    <value>المخفر الاستيطاني/المنطقة الآمنة لإعادة التدوير</value>
+  </data>
+  <data name="UiOverlayStorage" xml:space="preserve">
+    <value>تراكب التخزين</value>
+  </data>
+  <data name="UiOwnBaseBlack" xml:space="preserve">
+    <value>القاعدة الخاصة (أسود)</value>
+  </data>
+  <data name="UiParachute" xml:space="preserve">
+    <value>المظلة</value>
+  </data>
+  <data name="UiParse3DMapManually" xml:space="preserve">
+    <value>تحليل الخريطة ثلاثية الأبعاد يدويًا</value>
+  </data>
+  <data name="UiPayItemEGCloth" xml:space="preserve">
+    <value>عنصر الدفع (مثل القماش)...</value>
+  </data>
+  <data name="UiPaymentResource" xml:space="preserve">
+    <value>مورد الدفع</value>
+  </data>
+  <data name="UiPendingQueue" xml:space="preserve">
+    <value>قائمة الانتظار المعلقة</value>
+  </data>
+  <data name="UiPerformanceNearestNeighbor" xml:space="preserve">
+    <value>الأداء (أقرب جار)</value>
+  </data>
+  <data name="UiPerformanceMarkersAnd3DData" xml:space="preserve">
+    <value>الأداء والعلامات والبيانات ثلاثية الأبعاد</value>
+  </data>
+  <data name="UiPin" xml:space="preserve">
+    <value>دبوس</value>
+  </data>
+  <data name="UiPinSidebar" xml:space="preserve">
+    <value>تثبيت الشريط الجانبي</value>
+  </data>
+  <data name="UiPLANUSAGE" xml:space="preserve">
+    <value>استخدام الخطة</value>
+  </data>
+  <data name="UiPlay1minCountdownAudio" xml:space="preserve">
+    <value>تشغيل صوت العد التنازلي لمدة دقيقة واحدة</value>
+  </data>
+  <data name="UiPlayLoudAlarmAt0000" xml:space="preserve">
+    <value>قم بتشغيل المنبه بصوت عالٍ عند الساعة 00:00</value>
+  </data>
+  <data name="UiPlayerProximity" xml:space="preserve">
+    <value>قرب اللاعب</value>
+  </data>
+  <data name="UiPotatoes" xml:space="preserve">
+    <value>البطاطس</value>
+  </data>
+  <data name="UiPressDesiredKeyCombination" xml:space="preserve">
+    <value>اضغط على مجموعة المفاتيح المطلوبة...</value>
+  </data>
+  <data name="UiPressESCToCancelEnterToSave" xml:space="preserve">
+    <value>اضغط على ESC للإلغاء، واضغط على Enter للحفظ</value>
+  </data>
+  <data name="UiPressHotkey" xml:space="preserve">
+    <value>اضغط على مفتاح التشغيل السريع</value>
+  </data>
+  <data name="UiPriceHighToLow" xml:space="preserve">
+    <value>السعر (من الأعلى إلى الأقل)</value>
+  </data>
+  <data name="UiPriceLowToHigh" xml:space="preserve">
+    <value>السعر (من الأقل إلى الأعلى)</value>
+  </data>
+  <data name="UiProceduralHeatmaps" xml:space="preserve">
+    <value>الخرائط الحرارية الإجرائية</value>
+  </data>
+  <data name="UiProfit" xml:space="preserve">
+    <value>الربح</value>
+  </data>
+  <data name="UiPumpkins" xml:space="preserve">
+    <value>القرع</value>
+  </data>
+  <data name="UiPurple" xml:space="preserve">
+    <value>أرجواني</value>
+  </data>
+  <data name="UiRaidAlertsChannelID" xml:space="preserve">
+    <value>معرف قناة تنبيهات الغارة</value>
+  </data>
+  <data name="UiRaidCalculator" xml:space="preserve">
+    <value>حاسبة الغارة</value>
+  </data>
+  <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
+    <value>عناصر الغارة ومكونات الصياغة الخام</value>
+  </data>
+  <data name="UiRaidPlan" xml:space="preserve">
+    <value>خطة الغارة</value>
+  </data>
+  <data name="UiRaidSummary" xml:space="preserve">
+    <value>ملخص الغارة</value>
+  </data>
+  <data name="UiRAWRESOURCES" xml:space="preserve">
+    <value>الموارد الخام</value>
+  </data>
+  <data name="UiReadAlertsAloudViaDiscordTTS" xml:space="preserve">
+    <value>قراءة التنبيهات بصوت عال عبر Discord TTS</value>
+  </data>
+  <data name="UiRed" xml:space="preserve">
+    <value>أحمر</value>
+  </data>
+  <data name="UiRefreshDeviceStates" xml:space="preserve">
+    <value>قم بتحديث حالات الجهاز</value>
+  </data>
+  <data name="UiRemoveTarget" xml:space="preserve">
+    <value>إزالة الهدف</value>
+  </data>
+  <data name="UiRepeats0Indefinitely" xml:space="preserve">
+    <value>يتكرر (0 = إلى أجل غير مسمى)</value>
+  </data>
+  <data name="UiResetSoundsToDefault" xml:space="preserve">
+    <value>إعادة تعيين الأصوات إلى الوضع الافتراضي</value>
+  </data>
+  <data name="UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084" xml:space="preserve">
+    <value>مقياس دقة الصورة النقطية لوحدة معالجة الرسومات المخزنة مؤقتًا. تعمل المقاييس المنخفضة على تحسين الأداء على وحدات معالجة الرسومات الأبطأ.</value>
+  </data>
+  <data name="UiResourcesForestry" xml:space="preserve">
+    <value>الموارد والغابات</value>
+  </data>
+  <data name="UiRestoreLocalBackup" xml:space="preserve">
+    <value>استعادة النسخة الاحتياطية المحلية</value>
+  </data>
+  <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
+    <value>مراجعة التنبيهات وأحداث الخادم الأخيرة.</value>
+  </data>
+  <data name="UiRevoke" xml:space="preserve">
+    <value>إبطال</value>
+  </data>
+  <data name="UiRevokeAccess" xml:space="preserve">
+    <value>إبطال الوصول</value>
+  </data>
+  <data name="UiRock" xml:space="preserve">
+    <value>صخرة</value>
+  </data>
+  <data name="UiRowboats" xml:space="preserve">
+    <value>زوارق التجديف</value>
+  </data>
+  <data name="UiRuleCompleted" xml:space="preserve">
+    <value>اكتملت القاعدة</value>
+  </data>
+  <data name="UiRuleName" xml:space="preserve">
+    <value>اسم القاعدة</value>
+  </data>
+  <data name="UiRuleTriggered" xml:space="preserve">
+    <value>تم تشغيل القاعدة</value>
+  </data>
+  <data name="UiRunThisRuleAgainAfterItCompletesAPositiveWaitStepIsRequired" xml:space="preserve">
+    <value>قم بتشغيل هذه القاعدة مرة أخرى بعد اكتمالها. مطلوب خطوة انتظار إيجابية.</value>
+  </data>
+  <data name="UiRUNNING" xml:space="preserve">
+    <value>الجري</value>
+  </data>
+  <data name="UiRustSometimesSendsARaidNotificationWithoutTheSmartAlarmSDe9FA25CBAC2" xml:space="preserve">
+    <value>يرسل Rust أحيانًا إشعارًا بالغارة بدون معرف جهاز Smart Alarm. لا يمكن RustPlusDesk معرفة المنبه الذي أدى إلى تشغيله، لذلك يتم استخدام الإعدادات المشتركة أدناه بدلاً من الإعدادات الخاصة بالجهاز.</value>
+  </data>
+  <data name="UiRUSTCOMPANION" xml:space="preserve">
+    <value>الصدأ+ الرفيق</value>
+  </data>
+  <data name="UiRustCompanionConnection" xml:space="preserve">
+    <value>Rust+ اتصال مصاحب</value>
+  </data>
+  <data name="UiRustCompanionSession" xml:space="preserve">
+    <value>Rust+ جلسة مصاحبة</value>
+  </data>
+  <data name="UiRustDesktopV600Update" xml:space="preserve">
+    <value>Rust+ سطح المكتب 🛠️ v6.0.0 تحديث</value>
+  </data>
+  <data name="UiRustSteamAccount" xml:space="preserve">
+    <value>Rust+ Steam حساب</value>
+  </data>
+  <data name="UiRustmapsCom" xml:space="preserve">
+    <value>صدأمابس.كوم</value>
+  </data>
+  <data name="UiSAMSite" xml:space="preserve">
+    <value>موقع سام</value>
+  </data>
+  <data name="UiSaveAndCloseChatCommandSettings" xml:space="preserve">
+    <value>حفظ وإغلاق إعدادات أوامر الدردشة</value>
+  </data>
+  <data name="UiSaveChannelsConfig" xml:space="preserve">
+    <value>حفظ تكوين القنوات</value>
+  </data>
+  <data name="UiSavedBases" xml:space="preserve">
+    <value>القواعد المحفوظة</value>
+  </data>
+  <data name="UiScope" xml:space="preserve">
+    <value>النطاق</value>
+  </data>
+  <data name="UiScrollOrShiftClickChangesBy10" xml:space="preserve">
+    <value>قم بالتمرير أو Shift+Click التغييرات بمقدار 10</value>
+  </data>
+  <data name="UiScrollToZoomDragToPanClickOrESCToCloseDoubleClickToReset" xml:space="preserve">
+    <value>قم بالتمرير للتكبير والتصغير • اسحب للتحريك • انقر أو ESC للإغلاق • انقر نقرًا مزدوجًا لإعادة التعيين</value>
+  </data>
+  <data name="UiSearchComponents" xml:space="preserve">
+    <value>مكونات البحث...</value>
+  </data>
+  <data name="UiSearchDevicesByNameTypeOwnerID" xml:space="preserve">
+    <value>البحث عن الأجهزة حسب الاسم والنوع والمالك والمعرف ...</value>
+  </data>
+  <data name="UiSearchDevices" xml:space="preserve">
+    <value>أجهزة البحث...</value>
+  </data>
+  <data name="UiSearchItemsEGSulfur" xml:space="preserve">
+    <value>عناصر البحث (مثل الكبريت)...</value>
+  </data>
+  <data name="UiSearchItemsOrTypeFreely" xml:space="preserve">
+    <value>ابحث عن العناصر أو اكتب بحرية...</value>
+  </data>
+  <data name="UiSearchMonument" xml:space="preserve">
+    <value>بحث عن النصب التذكارية...</value>
+  </data>
+  <data name="UiSearchRaidTargets" xml:space="preserve">
+    <value>البحث عن أهداف الغارة</value>
+  </data>
+  <data name="UiSearchSettings" xml:space="preserve">
+    <value>إعدادات البحث</value>
+  </data>
+  <data name="UiSearchTargets" xml:space="preserve">
+    <value>أهداف البحث...</value>
+  </data>
+  <data name="UiSearching" xml:space="preserve">
+    <value>جارٍ البحث...</value>
+  </data>
+  <data name="UiSeconds" xml:space="preserve">
+    <value>ثواني</value>
+  </data>
+  <data name="UiSecs" xml:space="preserve">
+    <value>ثواني</value>
+  </data>
+  <data name="UiSelectALayerToViewSpawnDensity" xml:space="preserve">
+    <value>حدد طبقة لعرض كثافة النشر</value>
+  </data>
+  <data name="UiSelectCustom1MinuteCountdownSound" xml:space="preserve">
+    <value>حدد صوت العد التنازلي المخصص لمدة دقيقة واحدة</value>
+  </data>
+  <data name="UiSelectCustomAlarmSound0000" xml:space="preserve">
+    <value>حدد صوت التنبيه المخصص (00:00)</value>
+  </data>
+  <data name="UiSelectMultipleRaidItemsForTheSmartCombinationSearch" xml:space="preserve">
+    <value>حدد عناصر غارة متعددة للبحث المركب الذكي</value>
+  </data>
+  <data name="UiSelectServerToSyncWithAlexa" xml:space="preserve">
+    <value>حدد الخادم المراد مزامنته مع Alexa</value>
+  </data>
+  <data name="UiSelectSmartMixRaidItems" xml:space="preserve">
+    <value>حدد عناصر غارة المزيج الذكية</value>
+  </data>
+  <data name="UiSelectTheSourceRuleForThisTrigger" xml:space="preserve">
+    <value>حدد القاعدة المصدر لهذا المشغل.</value>
+  </data>
+  <data name="UiSendCurrentMapViewToDiscordChannel" xml:space="preserve">
+    <value>إرسال عرض الخريطة الحالي إلى قناة Discord.</value>
+  </data>
+  <data name="UiSendToDiscord" xml:space="preserve">
+    <value>أرسل إلى Discord</value>
+  </data>
+  <data name="UiSERVERHIDDEN" xml:space="preserve">
+    <value>الخادم مخفي</value>
+  </data>
+  <data name="UiServerName1430" xml:space="preserve">
+    <value>اسم الخادم - 14:30</value>
+  </data>
+  <data name="UiSERVERS" xml:space="preserve">
+    <value>الخوادم</value>
+  </data>
+  <data name="UiSetShortcut" xml:space="preserve">
+    <value>تعيين الاختصار</value>
+  </data>
+  <data name="UiSettingsAreGroupedByWhatTheyControl" xml:space="preserve">
+    <value>يتم تجميع الإعدادات حسب ما يتحكمون فيه.</value>
+  </data>
+  <data name="UiShield" xml:space="preserve">
+    <value>درع</value>
+  </data>
+  <data name="UiShopAlertsChannelID" xml:space="preserve">
+    <value>متجر تنبيهات معرف القناة</value>
+  </data>
+  <data name="UiShow2DMap" xml:space="preserve">
+    <value>عرض خريطة ثنائية الأبعاد</value>
+  </data>
+  <data name="UiShowAll" xml:space="preserve">
+    <value>إظهار الكل</value>
+  </data>
+  <data name="UiShowDamageOverkillAndIngredientBreakdowns" xml:space="preserve">
+    <value>أظهر الضرر والإفراط في القتل وتعطل المكونات</value>
+  </data>
+  <data name="UiShowLocal3DMap" xml:space="preserve">
+    <value>عرض الخريطة ثلاثية الأبعاد المحلية</value>
+  </data>
+  <data name="UiShowMarkersOnMap" xml:space="preserve">
+    <value>إظهار العلامات على الخريطة</value>
+  </data>
+  <data name="UiShowShopsThatBuyItem" xml:space="preserve">
+    <value>عرض المحلات التجارية التي تشتري السلعة</value>
+  </data>
+  <data name="UiShowShopsThatSellItem" xml:space="preserve">
+    <value>عرض المحلات التجارية التي تبيع السلعة</value>
+  </data>
+  <data name="UiShowThe2DMap" xml:space="preserve">
+    <value>عرض الخريطة ثنائية الأبعاد</value>
+  </data>
+  <data name="UiSIGNINMETHODS" xml:space="preserve">
+    <value>طرق تسجيل الدخول</value>
+  </data>
+  <data name="UiSize" xml:space="preserve">
+    <value>الحجم:</value>
+  </data>
+  <data name="UiSize100SHIFTMousewheel" xml:space="preserve">
+    <value>الحجم: 100% (SHIFT+عجلة الماوس)</value>
+  </data>
+  <data name="UiSkull" xml:space="preserve">
+    <value>جمجمة</value>
+  </data>
+  <data name="UiSleep" xml:space="preserve">
+    <value>النوم</value>
+  </data>
+  <data name="UiSmartHomeWebhookURLEGIFTTTAlexaGoogle" xml:space="preserve">
+    <value>عنوان URL للخطاف التلقائي على الويب للمنزل الذكي (مثل IFTTT، Alexa، Google)</value>
+  </data>
+  <data name="UiSmartSwitch" xml:space="preserve">
+    <value>التبديل الذكي</value>
+  </data>
+  <data name="UiSnakes" xml:space="preserve">
+    <value>الثعابين</value>
+  </data>
+  <data name="UiSnooze" xml:space="preserve">
+    <value>غفوة</value>
+  </data>
+  <data name="UiSnoozeAlarm" xml:space="preserve">
+    <value>غفوة التنبيه</value>
+  </data>
+  <data name="UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D" xml:space="preserve">
+    <value>بعض الأساليب المحددة ليس لها تكلفة صياغة في مجموعة البيانات؛ يتم استبعاد مواردهم.</value>
+  </data>
+  <data name="UiSortBy" xml:space="preserve">
+    <value>الترتيب حسب</value>
+  </data>
+  <data name="UiSpecificPlayerInRange" xml:space="preserve">
+    <value>لاعب محدد في النطاق</value>
+  </data>
+  <data name="UiSpecificPlayerOffline" xml:space="preserve">
+    <value>لاعب محدد حاليا</value>
+  </data>
+  <data name="UiSteamID" xml:space="preserve">
+    <value>Steam معرف</value>
+  </data>
+  <data name="UiStopAlarmSound" xml:space="preserve">
+    <value>إيقاف صوت التنبيه</value>
+  </data>
+  <data name="UiStorage" xml:space="preserve">
+    <value>التخزين</value>
+  </data>
+  <data name="UiSupportRustPlusDesk" xml:space="preserve">
+    <value>الدعم RustPlusDesk</value>
+  </data>
+  <data name="UiSwitch" xml:space="preserve">
+    <value>التبديل</value>
+  </data>
+  <data name="UiSyncCloudConnection" xml:space="preserve">
+    <value>مزامنة الاتصال السحابي</value>
+  </data>
+  <data name="UiSyncOK" xml:space="preserve">
+    <value>مزامنة موافق</value>
+  </data>
+  <data name="UiSyncYourRustConnection" xml:space="preserve">
+    <value>مزامنة اتصالك Rust+.</value>
+  </data>
+  <data name="UiSyncYourRustConnectionToTheCloudToReceiveSmartRaidEventAleFE6557D858" xml:space="preserve">
+    <value>قم بمزامنة اتصال Rust+ مع السحابة لتلقي تنبيهات الغارة/الحدث الذكية على Discord، Alexa، وGoogle Home حتى عندما يكون تطبيق سطح المكتب لديك مغلقًا.</value>
+  </data>
+  <data name="UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1" xml:space="preserve">
+    <value>المزامنة والنسخ الاحتياطية وميزات الفريق والوصول إلى الداعمين. هذا الحساب منفصل عن Rust+ الاقتران المصاحب و FCM.</value>
+  </data>
+  <data name="UiSyncedDevices" xml:space="preserve">
+    <value>الأجهزة التي تمت مزامنتها</value>
+  </data>
+  <data name="UiSystem" xml:space="preserve">
+    <value>النظام</value>
+  </data>
+  <data name="UiTargetCategory" xml:space="preserve">
+    <value>الفئة المستهدفة</value>
+  </data>
+  <data name="UiTargetQuantity" xml:space="preserve">
+    <value>الكمية المستهدفة</value>
+  </data>
+  <data name="UiTeamPathsTracking" xml:space="preserve">
+    <value>تتبع مسارات الفريق</value>
+  </data>
+  <data name="UiTelegramCallViaCallMeBot" xml:space="preserve">
+    <value>Telegram اتصل عبر CallMeBot</value>
+  </data>
+  <data name="UiTestCall" xml:space="preserve">
+    <value>مكالمة اختبارية</value>
+  </data>
+  <data name="UiTextToSpeechForWebhook" xml:space="preserve">
+    <value>تحويل النص إلى كلام لـ Webhook</value>
+  </data>
+  <data name="UiTheCloudWorkerListensForIncomingAlarms" xml:space="preserve">
+    <value>يستمع عامل السحابة للإنذارات الواردة.</value>
+  </data>
+  <data name="UiTHEN" xml:space="preserve">
+    <value>ثم</value>
+  </data>
+  <data name="UiThisConnectionIsForTheRustCompanionAPIItEnablesFCMPairingIE31DB5764D" xml:space="preserve">
+    <value>هذا الاتصال مخصص لواجهة برمجة التطبيقات (API) المصاحبة لـ Rust. فهو يتيح الاقتران FCM والبث داخل اللعبة والتنبيهات والدردشة الجماعية. حسابك السحابي منفصل.</value>
+  </data>
+  <data name="UiTier" xml:space="preserve">
+    <value>الطبقة</value>
+  </data>
+  <data name="UiTigers" xml:space="preserve">
+    <value>النمور</value>
+  </data>
+  <data name="UiToggleDelay150ms" xml:space="preserve">
+    <value>تأخير التبديل: 150 مللي ثانية</value>
+  </data>
+  <data name="UiToggleDevice" xml:space="preserve">
+    <value>تبديل الجهاز</value>
+  </data>
+  <data name="UiToggleMiniMap" xml:space="preserve">
+    <value>تبديل الخريطة المصغرة</value>
+  </data>
+  <data name="UiToggleMonumentList" xml:space="preserve">
+    <value>تبديل قائمة النصب التذكارية</value>
+  </data>
+  <data name="UiTrackTeammatesAndSharedActivity" xml:space="preserve">
+    <value>تتبع زملاء الفريق والنشاط المشترك.</value>
+  </data>
+  <data name="UiTriggerEvent" xml:space="preserve">
+    <value>حدث الزناد</value>
+  </data>
+  <data name="UiTriggered" xml:space="preserve">
+    <value>أثار</value>
+  </data>
+  <data name="UiTryAnotherSearchOrCategory" xml:space="preserve">
+    <value>حاول بحث أو فئة أخرى.</value>
+  </data>
+  <data name="UiTTS" xml:space="preserve">
+    <value>تحويل النص إلى كلام</value>
+  </data>
+  <data name="UiTTSLanguage" xml:space="preserve">
+    <value>لغة تحويل النص إلى كلام</value>
+  </data>
+  <data name="UiTurret" xml:space="preserve">
+    <value>برج</value>
+  </data>
+  <data name="UiUntil" xml:space="preserve">
+    <value>حتى</value>
+  </data>
+  <data name="UiUpgradeToSupporter" xml:space="preserve">
+    <value>الترقية إلى الداعم</value>
+  </data>
+  <data name="UiUsernameEGBrunhilde" xml:space="preserve">
+    <value>اسم المستخدم (على سبيل المثال @Brunhilde)</value>
+  </data>
+  <data name="UiUsesYourRustSteamLoginInTheBrowserCloudSignInIsNotRequired" xml:space="preserve">
+    <value>يستخدم Rust+ / Steam تسجيل الدخول في المتصفح. تسجيل الدخول السحابي غير مطلوب.</value>
+  </data>
+  <data name="UiViewAndControlPairedCCTVCameras" xml:space="preserve">
+    <value>عرض ومراقبة كاميرات الدوائر التلفزيونية المغلقة المقترنة.</value>
+  </data>
+  <data name="UiViewPlayers" xml:space="preserve">
+    <value>عرض اللاعبين</value>
+  </data>
+  <data name="UiVisitWebsite" xml:space="preserve">
+    <value>زيارة الموقع</value>
+  </data>
+  <data name="UiWait" xml:space="preserve">
+    <value>انتظر</value>
+  </data>
+  <data name="UiWantItemEGBlue" xml:space="preserve">
+    <value>تريد العنصر (على سبيل المثال الأزرق)...</value>
+  </data>
+  <data name="UiWeCanAutomaticallyLocateTheMapInYourSteamInstallationFoldeEBF810A65E" xml:space="preserve">
+    <value>يمكننا تحديد موقع الخريطة تلقائيًا في مجلد التثبيت Steam، واستخراجها، وإنشاء خريطة ثلاثية الأبعاد باستخدام خرائط حرارية وتراكبات أثرية أكثر ثراءً. لن يتم تغيير أية بيانات، ولن يتم الوصول إلى أي بيانات غير مرتبطة بالمجلد Steam.</value>
+  </data>
+  <data name="UiWebhookInfo" xml:space="preserve">
+    <value>معلومات الويب هوك</value>
+  </data>
+  <data name="UiWhatHappensNext" xml:space="preserve">
+    <value>ماذا سيحدث بعد ذلك:</value>
+  </data>
+  <data name="UiWhatIsAGenericAlarm" xml:space="preserve">
+    <value>ما هو الإنذار العام؟</value>
+  </data>
+  <data name="UiWheat" xml:space="preserve">
+    <value>القمح</value>
+  </data>
+  <data name="UiWHEN" xml:space="preserve">
+    <value>متى</value>
+  </data>
+  <data name="UiWILD" xml:space="preserve">
+    <value>البرية</value>
+  </data>
+  <data name="UiWildRecyclerTime" xml:space="preserve">
+    <value>وقت إعادة التدوير البري</value>
+  </data>
+  <data name="UiWipeCycle" xml:space="preserve">
+    <value>دورة المسح</value>
+  </data>
+  <data name="UiWolves" xml:space="preserve">
+    <value>الذئاب</value>
+  </data>
+  <data name="UiWoodPiles" xml:space="preserve">
+    <value>أكوام الخشب</value>
+  </data>
+  <data name="UiX" xml:space="preserve">
+    <value>س</value>
+  </data>
+  <data name="UiYellow" xml:space="preserve">
+    <value>أصفر</value>
+  </data>
+  <data name="UiYIELDBOARD" xml:space="preserve">
+    <value>لوحة العائد</value>
+  </data>
+  <data name="UiYouCanRevokeThisAccessAtAnyTime" xml:space="preserve">
+    <value>يمكنك إلغاء هذا الوصول في أي وقت.</value>
+  </data>
+  <data name="UiYourFCMConnectionTokenIsUploadedSecurely" xml:space="preserve">
+    <value>تم تحميل رمز الاتصال FCM الخاص بك بشكل آمن.</value>
+  </data>
+  <data name="UiZZZ" xml:space="preserve">
+    <value>ZZZ</value>
+  </data>
+  <data name="CodeUi3DMapData" xml:space="preserve">
+    <value>بيانات الخريطة ثلاثية الأبعاد</value>
+  </data>
+  <data name="CodeUiÃÂÂ" xml:space="preserve">
+    <value>¬¦</value>
+  </data>
+  <data name="CodeUiAccessRevoked" xml:space="preserve">
+    <value>تم إبطال الوصول</value>
+  </data>
+  <data name="CodeUiAddAnEmailAndPasswordToThisAccount" xml:space="preserve">
+    <value>أضف بريدًا إلكترونيًا وكلمة مرور إلى هذا الحساب</value>
+  </data>
+  <data name="CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole" xml:space="preserve">
+    <value>Admin access requires Discord auth and a developer/lead contributor role.</value>
+  </data>
+  <data name="CodeUiAlexaAccessRevokedSuccessfully" xml:space="preserve">
+    <value>Alexa تم إلغاء الوصول بنجاح.</value>
+  </data>
+  <data name="CodeUiApplyingUpdate" xml:space="preserve">
+    <value>جارٍ تطبيق التحديث...</value>
+  </data>
+  <data name="CodeUiAreYouSureYouWantToClearTheOfflineDeathLog" xml:space="preserve">
+    <value>Are you sure you want to clear the offline death log?</value>
+  </data>
+  <data name="CodeUiArrivalWarningUnlearned" xml:space="preserve">
+    <value>تحذير الوصول (غير معروف)</value>
+  </data>
+  <data name="CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain" xml:space="preserve">
+    <value>تم حذف بيانات الخريطة ثلاثية الأبعاد المخزنة مؤقتًا. سيتم إعادة بنائها عند فتح خريطة ثلاثية الأبعاد مرة أخرى.</value>
+  </data>
+  <data name="CodeUiChangeColor" xml:space="preserve">
+    <value>تغيير اللون</value>
+  </data>
+  <data name="CodeUiChannelsConfigurationSavedSuccessfully" xml:space="preserve">
+    <value>تم حفظ تكوين القنوات بنجاح!</value>
+  </data>
+  <data name="CodeUiCheckingDevices" xml:space="preserve">
+    <value>فحص الأجهزة...</value>
+  </data>
+  <data name="CodeUiCheckingForUpdates" xml:space="preserve">
+    <value>جارٍ التحقق من وجود تحديثات...</value>
+  </data>
+  <data name="CodeUiClearEveryTargetFromThisRaidPlan" xml:space="preserve">
+    <value>مسح كل هدف من خطة الغارة هذه؟</value>
+  </data>
+  <data name="CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612" xml:space="preserve">
+    <value>Cloud access has been revoked and your credentials have been deleted from the cloud.</value>
+  </data>
+  <data name="CodeUiCloudSyncFailed" xml:space="preserve">
+    <value>فشلت المزامنة السحابية</value>
+  </data>
+  <data name="CodeUiCloudUser" xml:space="preserve">
+    <value>مستخدم السحابة</value>
+  </data>
+  <data name="CodeUiCollapse" xml:space="preserve">
+    <value>طي</value>
+  </data>
+  <data name="CodeUiConfirmClear" xml:space="preserve">
+    <value>تأكيد مسح</value>
+  </data>
+  <data name="CodeUiConnected" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncEnabled" xml:space="preserve">
+    <value>متصل · تمكين المزامنة السحابية</value>
+  </data>
+  <data name="CodeUiConnectedCloudSyncPaused" xml:space="preserve">
+    <value>Connected · cloud sync paused</value>
+  </data>
+  <data name="CodeUiCopied" xml:space="preserve">
+    <value>منقول</value>
+  </data>
+  <data name="CodeUiCopyMap" xml:space="preserve">
+    <value>انسخ الخريطة</value>
+  </data>
+  <data name="CodeUiCouldNotCheckForUpdates" xml:space="preserve">
+    <value>لا يمكن التحقق من وجود تحديثات</value>
+  </data>
+  <data name="CodeUiCouldNotCopySummary" xml:space="preserve">
+    <value>تعذر نسخ الملخص</value>
+  </data>
+  <data name="CodeUiCouldNotRetrieveDetailsFromTheRustConnectionMakeSureYo3487F38811" xml:space="preserve">
+    <value>Could not retrieve details from the Rust+ connection. تأكد من أنك متصل بالخادم.</value>
+  </data>
+  <data name="CodeUiDeviceImportFailed" xml:space="preserve">
+    <value>فشل استيراد الجهاز:</value>
+  </data>
+  <data name="CodeUiDiscordServerLinkedSuccessfully" xml:space="preserve">
+    <value>Discord تم ربط الخادم بنجاح!</value>
+  </data>
+  <data name="CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E" xml:space="preserve">
+    <value>Discord تم إلغاء ربط الخادم بنجاح. The bot will no longer interact with your server.</value>
+  </data>
+  <data name="CodeUiEmailLoginEnabled" xml:space="preserve">
+    <value>تم تمكين تسجيل الدخول بالبريد الإلكتروني</value>
+  </data>
+  <data name="CodeUiEnabled" xml:space="preserve">
+    <value>ممكّن</value>
+  </data>
+  <data name="CodeUiEraserBig20px" xml:space="preserve">
+    <value>ممحاة كبيرة (20 بكسل)</value>
+  </data>
+  <data name="CodeUiEraserSmall5px" xml:space="preserve">
+    <value>ممحاة صغيرة (5 بكسل)</value>
+  </data>
+  <data name="CodeUiFailedToLinkDiscordServer" xml:space="preserve">
+    <value>فشل الارتباط Discord الخادم.</value>
+  </data>
+  <data name="CodeUiFailedToRevokeFCMConnection" xml:space="preserve">
+    <value>فشل في إبطال الاتصال FCM.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12" xml:space="preserve">
+    <value>فشلت مزامنة الاتصال FCM. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.</value>
+  </data>
+  <data name="CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn" xml:space="preserve">
+    <value>فشلت مزامنة الاتصال FCM. يرجى التأكد من تسجيل الدخول.</value>
+  </data>
+  <data name="CodeUiFehler" xml:space="preserve">
+    <value>فيهلر</value>
+  </data>
+  <data name="CodeUiHotkeysActive" xml:space="preserve">
+    <value>مفاتيح التشغيل السريع نشطة</value>
+  </data>
+  <data name="CodeUiInvalidUsername" xml:space="preserve">
+    <value>اسم مستخدم غير صالح</value>
+  </data>
+  <data name="CodeUiJustNow" xml:space="preserve">
+    <value>الآن فقط</value>
+  </data>
+  <data name="CodeUiLinkDiscord" xml:space="preserve">
+    <value>الرابط Discord</value>
+  </data>
+  <data name="CodeUiLinked" xml:space="preserve">
+    <value>مرتبط</value>
+  </data>
+  <data name="CodeUiLinkedToThisCloudAccount" xml:space="preserve">
+    <value>مرتبط بهذا الحساب السحابي</value>
+  </data>
+  <data name="CodeUiLöschen" xml:space="preserve">
+    <value>لوشن</value>
+  </data>
+  <data name="CodeUiManageEmailAccount" xml:space="preserve">
+    <value>إدارة حساب البريد الإلكتروني</value>
+  </data>
+  <data name="CodeUiManagePlayerGroup" xml:space="preserve">
+    <value>إدارة مجموعة اللاعبين</value>
+  </data>
+  <data name="CodeUiMaximumOf5ActiveTeammateSubscriptionsReachedPleaseUnsu9A1502FD52" xml:space="preserve">
+    <value>Maximum of 5 active teammate subscriptions reached. Please unsubscribe from someone else first.</value>
+  </data>
+  <data name="CodeUiMaximumOf5CustomTimersAllowed" xml:space="preserve">
+    <value>يُسمح بحد أقصى 5 مؤقتات مخصصة.</value>
+  </data>
+  <data name="CodeUiMissingChannelConfig" xml:space="preserve">
+    <value>تكوين القناة مفقود</value>
+  </data>
+  <data name="CodeUiNoActiveConnectionToRetrieveServerInfo" xml:space="preserve">
+    <value>لا يوجد اتصال نشط لاسترداد معلومات الخادم.</value>
+  </data>
+  <data name="CodeUiNoCompanionSession" xml:space="preserve">
+    <value>لا توجد جلسة مصاحبة</value>
+  </data>
+  <data name="CodeUiNoDeviceExportsFoundForYourTeamServer" xml:space="preserve">
+    <value>لم يتم العثور على عمليات تصدير للجهاز لفريقك/خادمك.</value>
+  </data>
+  <data name="CodeUiNoFrame" xml:space="preserve">
+    <value>لا الإطار</value>
+  </data>
+  <data name="CodeUiNoMapFound" xml:space="preserve">
+    <value>لم يتم العثور على خريطة</value>
+  </data>
+  <data name="CodeUiNoOffersAvailable" xml:space="preserve">
+    <value>لا توجد عروض متاحة</value>
+  </data>
+  <data name="CodeUiNoResultsFoundMatchingFilter" xml:space="preserve">
+    <value>لم يتم العثور على نتائج مطابقة للفلتر.</value>
+  </data>
+  <data name="CodeUiNoTextFound" xml:space="preserve">
+    <value>لم يتم العثور على نص</value>
+  </data>
+  <data name="CodeUiNoValidRouteBottlenecks" xml:space="preserve">
+    <value>لا يوجد طريق صالح (الاختناقات).</value>
+  </data>
+  <data name="CodeUiNotLinked" xml:space="preserve">
+    <value>غير مرتبط</value>
+  </data>
+  <data name="CodeUiNotSignedInSyncAndBackupsUnavailable" xml:space="preserve">
+    <value>لم يتم تسجيل الدخول · المزامنة والنسخ الاحتياطية غير متوفرة</value>
+  </data>
+  <data name="CodeUiOfflineMap" xml:space="preserve">
+    <value>خريطة غير متصل</value>
+  </data>
+  <data name="CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers" xml:space="preserve">
+    <value>Only manually parsed offline maps can be copied to other servers.</value>
+  </data>
+  <data name="CodeUiPINGeneratedValidFor15m" xml:space="preserve">
+    <value>تم إنشاء رقم التعريف الشخصي (صالح لمدة 15 مترًا)</value>
+  </data>
+  <data name="CodeUiPleaseConfigureADiscordChatAlertsOrEventsAlertsChannel83A26C087C" xml:space="preserve">
+    <value>Please configure a Discord 'Chat Alerts' or 'Events Alerts' channel in Settings first.</value>
+  </data>
+  <data name="CodeUiPleaseConnectYourCloudAccountFirst" xml:space="preserve">
+    <value>يرجى توصيل حسابك السحابي أولاً.</value>
+  </data>
+  <data name="CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN" xml:space="preserve">
+    <value>Please enable Cloud Sync first before generating an Alexa PIN.</value>
+  </data>
+  <data name="CodeUiPleaseEnterAValidTelegramUsername" xml:space="preserve">
+    <value>الرجاء إدخال اسم مستخدم صالح Telegram.</value>
+  </data>
+  <data name="CodeUiPleaseSaveADiscordServerIDFirst" xml:space="preserve">
+    <value>الرجاء حفظ معرف الخادم Discord أولاً.</value>
+  </data>
+  <data name="CodeUiResumingUpdateDownload" xml:space="preserve">
+    <value>استئناف تنزيل التحديث...</value>
+  </data>
+  <data name="CodeUiSaveAlert" xml:space="preserve">
+    <value>حفظ التنبيه</value>
+  </data>
+  <data name="CodeUiSavedClickToUnsave" xml:space="preserve">
+    <value>تم الحفظ (انقر لإلغاء الحفظ)</value>
+  </data>
+  <data name="CodeUiSearchResults" xml:space="preserve">
+    <value>نتائج البحث</value>
+  </data>
+  <data name="CodeUiSending" xml:space="preserve">
+    <value>جارٍ الإرسال...</value>
+  </data>
+  <data name="CodeUiServerAddressCopiedToClipboard" xml:space="preserve">
+    <value>تم نسخ عنوان الخادم إلى الحافظة!</value>
+  </data>
+  <data name="CodeUiShowNoBuildZones" xml:space="preserve">
+    <value>إظهار مناطق عدم البناء</value>
+  </data>
+  <data name="CodeUiSize14" xml:space="preserve">
+    <value>الحجم: 14</value>
+  </data>
+  <data name="CodeUiSize40" xml:space="preserve">
+    <value>الحجم: 40</value>
+  </data>
+  <data name="CodeUiSteamIDNotFoundPleaseConnectToAServerFirst" xml:space="preserve">
+    <value>Steam لم يتم العثور على المعرف. الرجاء الاتصال بالخادم أولاً.</value>
+  </data>
+  <data name="CodeUiSubscriptionLimit" xml:space="preserve">
+    <value>حد الاشتراك</value>
+  </data>
+  <data name="CodeUiSuccess" xml:space="preserve">
+    <value>النجاح</value>
+  </data>
+  <data name="CodeUiSynced" xml:space="preserve">
+    <value>تمت المزامنة!</value>
+  </data>
+  <data name="CodeUiTheRustAPIDoesNotProvideADetailedDescriptionForThisServer" xml:space="preserve">
+    <value>The Rust+ API does not provide a detailed description for this server.</value>
+  </data>
+  <data name="CodeUiThickness10px" xml:space="preserve">
+    <value>السُمك: 10 بكسل</value>
+  </data>
+  <data name="CodeUiThickness3px" xml:space="preserve">
+    <value>السُمك: 3 بكسل</value>
+  </data>
+  <data name="CodeUiTimer" xml:space="preserve">
+    <value>الموقت</value>
+  </data>
+  <data name="CodeUiTranslate" xml:space="preserve">
+    <value>ترجمة</value>
+  </data>
+  <data name="CodeUiTranslated" xml:space="preserve">
+    <value>مترجم</value>
+  </data>
+  <data name="CodeUiTranslating" xml:space="preserve">
+    <value>ترجمة...</value>
+  </data>
+  <data name="CodeUiTranslationFailed" xml:space="preserve">
+    <value>فشلت الترجمة:</value>
+  </data>
+  <data name="CodeUiUmbenennen" xml:space="preserve">
+    <value>أومبنينن</value>
+  </data>
+  <data name="CodeUiUnavailable" xml:space="preserve">
+    <value>غير متاح</value>
+  </data>
+  <data name="CodeUiUngültigeEingaben" xml:space="preserve">
+    <value>Ungültige Eingaben.</value>
+  </data>
+  <data name="CodeUiUnlimited" xml:space="preserve">
+    <value>غير محدود</value>
+  </data>
+  <data name="CodeUiUpdate" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed" xml:space="preserve">
+    <value>فشل التحقق من التحديث</value>
+  </data>
+  <data name="CodeUiUpdateCheckFailed2" xml:space="preserve">
+    <value>فشل التحقق من التحديث.</value>
+  </data>
+  <data name="CodeUiUpdateDownloadCancelled" xml:space="preserve">
+    <value>تم إلغاء تنزيل التحديث</value>
+  </data>
+  <data name="CodeUiUpdateDownloadFailed" xml:space="preserve">
+    <value>فشل تنزيل التحديث</value>
+  </data>
+  <data name="CodeUiUpdateDownloadPaused" xml:space="preserve">
+    <value>تم إيقاف تنزيل التحديث مؤقتًا</value>
+  </data>
+  <data name="CodeUiUpdateReadyInstallsOnClose" xml:space="preserve">
+    <value>التحديث جاهز - يتم التثبيت عند الإغلاق</value>
+  </data>
+  <data name="CodeUiWhite" xml:space="preserve">
+    <value>أبيض</value>
+  </data>
+  <data name="FormatOfflineMapImported" xml:space="preserve">
+    <value>تم استيراد الخريطة غير المتصلة بالإنترنت بنجاح باسم '{0}'!</value>
+  </data>
+  <data name="MapImportedTitle" xml:space="preserve">
+    <value>تم استيراد الخريطة</value>
+  </data>
+  <data name="FormatFailedImportMap" xml:space="preserve">
+    <value>فشل استيراد الخريطة: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+  <data name="CopyMapStagedMessage" xml:space="preserve">
+    <value>الرجاء تحديد أو الاتصال بخادم مقترن في القائمة. إذا تطابق تخطيطها، فسيتم نسخ الخريطة تلقائيًا.</value>
+  </data>
+  <data name="CopyMapStagedTitle" xml:space="preserve">
+    <value>نسخ الخريطة على مراحل</value>
+  </data>
+  <data name="FormatUpdateAvailable" xml:space="preserve">
+    <value>التحديث {0} متوفر</value>
+  </data>
+  <data name="FormatDownloadingUpdate" xml:space="preserve">
+    <value>التحميل {0}</value>
+  </data>
+  <data name="FormatUpdateReady" xml:space="preserve">
+    <value>التحديث {0} جاهز - يتم التثبيت عند الإغلاق</value>
+  </data>
+  <data name="FormatPlayerStatusError" xml:space="preserve">
+    <value>خطأ: {0}</value>
+  </data>
+  <data name="FormatFailedOpenPlayers" xml:space="preserve">
+    <value>فشل في فتح نافذة اللاعبين:
+
+{0}: {1}
+
+كومة:
+{2}</value>
+  </data>
+  <data name="FormatOfflineMapNotParsed" xml:space="preserve">
+    <value>لم يتم تحليل الخريطة غير المتصلة بالإنترنت '{0}' بعد. افتح خريطتها 3D مرة واحدة لتحليلها، ثم حاول النسخ مرة أخرى.</value>
+  </data>
+  <data name="CopyMapErrorTitle" xml:space="preserve">
+    <value>خطأ في نسخ الخريطة</value>
+  </data>
+  <data name="FormatMapMismatch" xml:space="preserve">
+    <value>تخطيطات الخريطة غير متطابقة. لا يبدو أن الخريطة '{0}' هي نفس خريطة الخادم المتصل '{1}'.</value>
+  </data>
+  <data name="MapMismatchTitle" xml:space="preserve">
+    <value>عدم تطابق الخريطة</value>
+  </data>
+  <data name="FormatMapCopied" xml:space="preserve">
+    <value>تم بنجاح نسخ الخريطة 3D والأصول المحلية من '{0}' إلى '{1}'!</value>
+  </data>
+  <data name="MapCopiedTitle" xml:space="preserve">
+    <value>تم نسخ الخريطة</value>
+  </data>
+  <data name="FormatMapCopyError" xml:space="preserve">
+    <value>حدث خطأ أثناء نسخ الخريطة: {0}</value>
+  </data>
+  <data name="FormatCloudLimits" xml:space="preserve">
+    <value>{0}
+استخدام الخطة:
+• حجم التراكب: {1} KB / {2}
+• الأجهزة: {3} / {4}
+• القواعد: {5} / {6}</value>
+  </data>
+  <data name="FormatFailedUnlinkDiscord" xml:space="preserve">
+    <value>فشل إلغاء ربط الخادم Discord: {0}</value>
+  </data>
+  <data name="FormatFailedLinkDiscord" xml:space="preserve">
+    <value>فشل الارتباط Discord بالخادم: {0}</value>
+  </data>
+  <data name="FormatFailedSaveChannels" xml:space="preserve">
+    <value>فشل حفظ القنوات: {0}</value>
+  </data>
+  <data name="FormatFailedOpenBrowser" xml:space="preserve">
+    <value>فشل في فتح المتصفح: {0}</value>
+  </data>
+  <data name="FormatFailedGeneratePin" xml:space="preserve">
+    <value>فشل في إنشاء PIN: {0}</value>
+  </data>
+  <data name="FormatFailedRevokeAlexa" xml:space="preserve">
+    <value>فشل في إبطال الوصول Alexa إلى: {0}</value>
+  </data>
+  <data name="FormatPremiumPlan" xml:space="preserve">
+    <value>{0}) · المميز</value>
+  </data>
+  <data name="FormatFreePlan" xml:space="preserve">
+    <value>{0}) · مجانا</value>
+  </data>
+  <data name="FormatCouldNotLoadImage" xml:space="preserve">
+    <value>تعذر تحميل الصورة: {0}</value>
+  </data>
+  <data name="FormatErrorSavingCrosshair" xml:space="preserve">
+    <value>خطأ في حفظ علامة التقاطع: {0}</value>
+  </data>
+  <data name="FormatCheckingDevice" xml:space="preserve">
+    <value>فحص الجهاز #{0} ({1})...</value>
+  </data>
+  <data name="FormatToggleDelay" xml:space="preserve">
+    <value>تأخير التبديل: {0} مللي ثانية</value>
+  </data>
+  <data name="FormatErrorLoadingUsers" xml:space="preserve">
+    <value>خطأ في تحميل المستخدمين: {0}</value>
+  </data>
+  <data name="FormatErrorUpdatingOverride" xml:space="preserve">
+    <value>خطأ في تحديث التجاوز: {0}</value>
+  </data>
+  <data name="FormatServerDescriptionWebsite" xml:space="preserve">
+    <value>لا توفر واجهة برمجة التطبيقات Rust+ وصفًا تفصيليًا لهذا الخادم.
+
+يمكنك العثور على مزيد من المعلومات على الموقع الرسمي للخادم:
+{0})</value>
+  </data>
+  <data name="FormatFailedLoadServerDetails" xml:space="preserve">
+    <value>فشل تحميل تفاصيل الخادم: {0}</value>
+  </data>
+  <data name="RaidLoadingData" xml:space="preserve">
+    <value>جارٍ تحميل بيانات الغارة…</value>
+  </data>
+  <data name="RaidNoTargetsAvailable" xml:space="preserve">
+    <value>لا توجد أهداف غارة متاحة.</value>
+  </data>
+  <data name="FormatRaidUnavailable" xml:space="preserve">
+    <value>حاسبة الغارة غير متاحة: {0}</value>
+  </data>
+  <data name="FormatRaidSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ خطة الغارة: {0}</value>
+  </data>
+  <data name="UpdateSuccessfulTitle" xml:space="preserve">
+    <value>تم التحديث بنجاح</value>
+  </data>
+  <data name="FormatUpdateSuccessful" xml:space="preserve">
+    <value>Rust+ Deskتم تحديث الجزء العلوي بنجاح إلى v{0}!</value>
+  </data>
+  <data name="UpdateDownloadedTitle" xml:space="preserve">
+    <value>تم تنزيل التحديث</value>
+  </data>
+  <data name="UpdateInstallsOnClose" xml:space="preserve">
+    <value>سيتم تثبيت التحديث تلقائيًا عند إغلاق التطبيق.</value>
+  </data>
+  <data name="FormatDownloadFailed" xml:space="preserve">
+    <value>فشل التنزيل: {0}</value>
+  </data>
+  <data name="UpdateAlreadyDownloaded" xml:space="preserve">
+    <value>تم تنزيل التحديث بالفعل. سيتم تثبيته عند إغلاق التطبيق.</value>
+  </data>
+  <data name="SelectRustMapFile" xml:space="preserve">
+    <value>حدد ملف الصدأ .map</value>
+  </data>
+  <data name="CloudFeaturesUpdateRequired" xml:space="preserve">
+    <value>لمواصلة استخدام الميزات السحابية، يجب عليك تحديث التطبيق.</value>
+  </data>
+  <data name="RenameCustomCrosshair" xml:space="preserve">
+    <value>إعادة تسمية علامة التقاطع المخصصة</value>
+  </data>
+  <data name="HowToTrackWindowTitle" xml:space="preserve">
+    <value>كيفية تعقب اللاعبين — Rust+ Desk</value>
+  </data>
+  <data name="DiscordClientInitializing" xml:space="preserve">
+    <value>تتم تهيئة عميل سطح المكتب أو لم يتم تحميله بالكامل.</value>
+  </data>
+  <data name="FormatCurrentServerTime" xml:space="preserve">
+    <value>🕒 وقت السيرفر الحالي : {0}</value>
+  </data>
+  <data name="FormatServerPopulation" xml:space="preserve">
+    <value>👥 عدد الخادم: {0}</value>
+  </data>
+  <data name="DiscordInvalidCommandPayload" xml:space="preserve">
+    <value>❌ الأمر غير صالح: اسم الجهاز أو المعرف مفقود.</value>
+  </data>
+  <data name="DiscordRenderingMap" xml:space="preserve">
+    <value>⌛ يتم الآن عرض الخريطة. انتظر من فضلك.</value>
+  </data>
+  <data name="DiscordRenderingFullMap" xml:space="preserve">
+    <value>⌛ يتم الآن عرض الخريطة الكاملة. انتظر من فضلك.</value>
+  </data>
+  <data name="FormatUnknownCommand" xml:space="preserve">
+    <value>أمر غير معروف أو غير مدعوم: {0}</value>
+  </data>
+  <data name="FormatCommandError" xml:space="preserve">
+    <value>خطأ في تنفيذ الأمر: {0}</value>
+  </data>
+  <data name="Existing3DMapReused" xml:space="preserve">
+    <value>تمت إعادة استخدام بيانات الخريطة الموجودة 3D؛ لم يتم الكشف عن أي مسح.</value>
+  </data>
+  <data name="ServerOfflineA2S" xml:space="preserve">
+    <value>الخادم غير متصل (انتهت مهلة استعلام A2S)</value>
+  </data>
+  <data name="AutoDiscoveringQueryPort" xml:space="preserve">
+    <value>العثور على منفذ الاستعلام من خلال واجهة برمجة التطبيقات Steam...</value>
+  </data>
+  <data name="FetchingSteamPlayers" xml:space="preserve">
+    <value>جلب اللاعبين من خلال Steam استعلام...</value>
+  </data>
+  <data name="NoOnlinePlayersFound" xml:space="preserve">
+    <value>لم يتم العثور على لاعبين على الإنترنت.</value>
+  </data>
+  <data name="AssignGroupTitle" xml:space="preserve">
+    <value>تعيين المجموعة</value>
+  </data>
+  <data name="OfflineCloudAlertsTitle" xml:space="preserve">
+    <value>تنبيهات السحابة غير المتصلة بالإنترنت</value>
+  </data>
+  <data name="AlexaSmartHomeTitle" xml:space="preserve">
+    <value>Alexa المنزل الذكي</value>
+  </data>
+  <data name="SelectCustomDeathSound" xml:space="preserve">
+    <value>حدد صوت الموت المخصص</value>
+  </data>
+  <data name="CountdownOneMinute" xml:space="preserve">
+    <value>العد التنازلي لمدة دقيقة واحدة...</value>
+  </data>
+  <data name="TimerExpiredTitle" xml:space="preserve">
+    <value>انتهت صلاحية الموقّت</value>
+  </data>
+  <data name="SelectTimerAlarmSound" xml:space="preserve">
+    <value>حدد صوت المنبه المؤقت</value>
+  </data>
+  <data name="SelectTimerCountdownSound" xml:space="preserve">
+    <value>حدد صوت العد التنازلي لمدة دقيقة واحدة</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="UpdateRequiredTitle" xml:space="preserve">
+    <value>التحديث مطلوب</value>
+  </data>
+  <data name="PauseUpdate" xml:space="preserve">
+    <value>وقفة</value>
+  </data>
+  <data name="ResumeUpdate" xml:space="preserve">
+    <value>استئناف</value>
+  </data>
+  <data name="PurgeOrphanedCloudData" xml:space="preserve">
+    <value>تنظيف البيانات السحابية المهجورة</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
+    <value>يفحص قاعدة بيانات Supabase ويزيل الأجهزة والطبقات والعلامات الخاصة بالسيرفرات المحذوفة.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmTitle" xml:space="preserve">
+    <value>تنظيف البيانات السحابية المهجورة</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد من أنك تريد فحص Supabase والحذف النهائي لجميع الأجهزة والطبقات والعلامات التابعة لسيرفرات لم تعد في قائمتك؟</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
+    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:
+- طبقات الخريطة: {0}
+- علامات القواعد: {1}
+- الأجهزة الذكية: {2}
+- تسجيلات السيرفر: {3}</value>
+  </data>
+  <data name="UiDiscordWebhookExclusive" xml:space="preserve">
+    <value>Discord فقط</value>
+  </data>
+  <data name="UiDiscordWebhookExclusiveTooltip" xml:space="preserve">
+    <value>عند التمكين، يتم إرسال إشعارات التنبيه مباشرة إلى Discord دون نشرها في دردشة الفريق داخل لعبة Rust. مثالي للسيرفرات الفردية أو السيرفرات التي لا تحتوي على دردشة فريق.</value>
+  </data>
+  <data name="Tutorials.Common.Skip" xml:space="preserve">
+    <value>تخطي البرنامج التعليمي</value>
+  </data>
+  <data name="Tutorials.Common.Back" xml:space="preserve">
+    <value>للخلف</value>
+  </data>
+  <data name="Tutorials.Common.Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+  <data name="Tutorials.Common.Finish" xml:space="preserve">
+    <value>إنهاء</value>
+  </data>
+  <data name="Tutorials.Common.CancelTitle" xml:space="preserve">
+    <value>هل تريد إلغاء هذا البرنامج التعليمي؟</value>
+  </data>
+  <data name="Tutorials.Common.CancelDescription" xml:space="preserve">
+    <value>تم حفظ تقدمك. يمكنك المتابعة من مركز الدروس في أي وقت.</value>
+  </data>
+  <data name="Tutorials.Common.KeepLearning" xml:space="preserve">
+    <value>استمر في التعلم</value>
+  </data>
+  <data name="Tutorials.Common.Cancel" xml:space="preserve">
+    <value>إلغاء البرنامج التعليمي</value>
+  </data>
+  <data name="Tutorials.Common.Progress" xml:space="preserve">
+    <value>الخطوة {0} من {1}</value>
+  </data>
+  <data name="Tutorials.Common.TargetUnavailable" xml:space="preserve">
+    <value>هذه الميزة غير متوفرة في حالة التطبيق الحالية. تابع بأمان ثم عد عندما يتوفر الخادم أو الحساب أو البيانات المطلوبة.</value>
+  </data>
+  <data name="Tutorials.Common.Reset" xml:space="preserve">
+    <value>إعادة الضبط</value>
+  </data>
+  <data name="Tutorials.Common.Restart" xml:space="preserve">
+    <value>إعادة التشغيل</value>
+  </data>
+  <data name="Tutorials.Common.Continue" xml:space="preserve">
+    <value>تابع</value>
+  </data>
+  <data name="Tutorials.Common.Start" xml:space="preserve">
+    <value>ابدأ</value>
+  </data>
+  <data name="Tutorials.Common.StepCount" xml:space="preserve">
+    <value>{0} من {1} الخطوات</value>
+  </data>
+  <data name="Tutorials.Center.Title" xml:space="preserve">
+    <value>تعلم RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Center.Description" xml:space="preserve">
+    <value>الدروس المركزة لهذا الإصدار. لا تقوم البرامج التعليمية مطلقًا بتنشيط الأجهزة أو إرسال الرسائل أو حذف البيانات أو تشغيل عمليات التشغيل الآلي.</value>
+  </data>
+  <data name="Tutorials.Center.StartRecommended" xml:space="preserve">
+    <value>ابدأ البرامج التعليمية الموصى بها</value>
+  </data>
+  <data name="Tutorials.Center.ContinueLast" xml:space="preserve">
+    <value>تابع البرنامج التعليمي الأخير</value>
+  </data>
+  <data name="Tutorials.Center.RestartAll" xml:space="preserve">
+    <value>إعادة تشغيل كافة البرامج التعليمية</value>
+  </data>
+  <data name="Tutorials.Center.ResetProgress" xml:space="preserve">
+    <value>إعادة تعيين تقدم البرنامج التعليمي</value>
+  </data>
+  <data name="Tutorials.Center.AutoBasic" xml:space="preserve">
+    <value>ابدأ الأساسيات للمستخدمين الجدد</value>
+  </data>
+  <data name="Tutorials.Center.AutoFeatures" xml:space="preserve">
+    <value>تقديم برامج تعليمية حول الميزات الجديدة</value>
+  </data>
+  <data name="Tutorials.Welcome.Title" xml:space="preserve">
+    <value>مرحبًا بك في RustPlusDesktop</value>
+  </data>
+  <data name="Tutorials.Welcome.Description" xml:space="preserve">
+    <value>قم بجولة قصيرة حول التنقل والاتصال بالخادم والخرائط والأجهزة - أو اختر الدروس التي تحتاجها فقط.</value>
+  </data>
+  <data name="Tutorials.Welcome.StartQuickTour" xml:space="preserve">
+    <value>ابدأ الجولة السريعة</value>
+  </data>
+  <data name="Tutorials.Welcome.Choose" xml:space="preserve">
+    <value>اختر البرامج التعليمية</value>
+  </data>
+  <data name="Tutorials.Welcome.NotNow" xml:space="preserve">
+    <value>ليس الآن</value>
+  </data>
+  <data name="Tutorials.Status.NotStarted" xml:space="preserve">
+    <value>لم يبدأ</value>
+  </data>
+  <data name="Tutorials.Status.InProgress" xml:space="preserve">
+    <value>قيد التقدم</value>
+  </data>
+  <data name="Tutorials.Status.Completed" xml:space="preserve">
+    <value>اكتمل</value>
+  </data>
+  <data name="Tutorials.Status.Skipped" xml:space="preserve">
+    <value>تم تخطيه</value>
+  </data>
+  <data name="Tutorials.Status.Updated" xml:space="preserve">
+    <value>تم التحديث</value>
+  </data>
+  <data name="Tutorials.Status.NewFeature" xml:space="preserve">
+    <value>ميزة جديدة</value>
+  </data>
+  <data name="Tutorials.Category.Getting Started" xml:space="preserve">
+    <value>البدء</value>
+  </data>
+  <data name="Tutorials.Category.Maps" xml:space="preserve">
+    <value>الخرائط</value>
+  </data>
+  <data name="Tutorials.Category.Devices" xml:space="preserve">
+    <value>الأجهزة</value>
+  </data>
+  <data name="Tutorials.Category.Team and Communication" xml:space="preserve">
+    <value>الفريق والتواصل</value>
+  </data>
+  <data name="Tutorials.Category.Automation" xml:space="preserve">
+    <value>التشغيل الآلي</value>
+  </data>
+  <data name="Tutorials.Category.Monitoring" xml:space="preserve">
+    <value>المراقبة</value>
+  </data>
+  <data name="Tutorials.Category.Tools" xml:space="preserve">
+    <value>الأدوات</value>
+  </data>
+  <data name="Tutorials.Category.Settings and Support" xml:space="preserve">
+    <value>الإعدادات والدعم</value>
+  </data>
+  <data name="Tutorials.application-basics.Title" xml:space="preserve">
+    <value>أساسيات التطبيق</value>
+  </data>
+  <data name="Tutorials.application-basics.Description" xml:space="preserve">
+    <value>تعرف على التنقل وسياق الخادم وحالة الاتصال والإشعارات ومكان إعادة تشغيل الدروس.</value>
+  </data>
+  <data name="Tutorials.account-cloud.Title" xml:space="preserve">
+    <value>الحساب والسحابة</value>
+  </data>
+  <data name="Tutorials.account-cloud.Description" xml:space="preserve">
+    <value>فهم الميزات المحلية وتسجيل الدخول إلى السحابة والمزامنة ووصول الداعم.</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Title" xml:space="preserve">
+    <value>الاقتران وإدارة الخادم</value>
+  </data>
+  <data name="Tutorials.pairing-servers.Description" xml:space="preserve">
+    <value>قم بإقران Rust+، واختر خادمًا، وافهم الأوضاع الناعمة والكاملة وغير المتصلة.</value>
+  </data>
+  <data name="Tutorials.map-basics.Title" xml:space="preserve">
+    <value>2D أساسيات الخريطة</value>
+  </data>
+  <data name="Tutorials.map-basics.Description" xml:space="preserve">
+    <value>تعرف على التنقل في الخريطة والطبقات والخرائط الحرارية وأدوات الرسم ونقطة الدخول 3D.</value>
+  </data>
+  <data name="Tutorials.heatmaps.Title" xml:space="preserve">
+    <value>الخرائط الحرارية للموارد</value>
+  </data>
+  <data name="Tutorials.heatmaps.Description" xml:space="preserve">
+    <value>تعرف على ما تظهره تراكبات كثافة النشر المستخرجة وكيفية تحديدها أو مسحها.</value>
+  </data>
+  <data name="Tutorials.map-3d.Title" xml:space="preserve">
+    <value>3D الخريطة</value>
+  </data>
+  <data name="Tutorials.map-3d.Description" xml:space="preserve">
+    <value>استكشف منفذ العرض المحلي 3D وشريط الأدوات ومنشئ البصمة وعرض الأداء وإجراءات الإغلاق.</value>
+  </data>
+  <data name="Tutorials.smart-devices.Title" xml:space="preserve">
+    <value>الأجهزة الذكية</value>
+  </data>
+  <data name="Tutorials.smart-devices.Description" xml:space="preserve">
+    <value>يمكنك البحث عن الأجهزة الذكية المقترنة وتصفيتها وتحديثها وتنظيمها وفهمها بأمان.</value>
+  </data>
+  <data name="Tutorials.team-tracking.Title" xml:space="preserve">
+    <value>تتبع الفريق واللاعب</value>
+  </data>
+  <data name="Tutorials.team-tracking.Description" xml:space="preserve">
+    <value>قم بمراجعة أعضاء الفريق والعلامات ومتابعة السلوك ومتطلبات المشاركة.</value>
+  </data>
+  <data name="Tutorials.chat-commands.Title" xml:space="preserve">
+    <value>دردشة الفريق والأوامر</value>
+  </data>
+  <data name="Tutorials.chat-commands.Description" xml:space="preserve">
+    <value>قراءة الدردشة الجماعية وإنشاء الرسائل وتكوين الأوامر دون إرسال أي شيء.</value>
+  </data>
+  <data name="Tutorials.discord.Title" xml:space="preserve">
+    <value>Discord التكامل</value>
+  </data>
+  <data name="Tutorials.discord.Description" xml:space="preserve">
+    <value>ابحث عن نقاط الدخول والتكوين والأذونات وحدود الخصوصية Discord.</value>
+  </data>
+  <data name="Tutorials.automation.Title" xml:space="preserve">
+    <value>محرك المنطق والأتمتة</value>
+  </data>
+  <data name="Tutorials.automation.Description" xml:space="preserve">
+    <value>فهم القواعد والمشغلات والشروط والإجراءات وحالة وقت التشغيل والاختبار الآمن.</value>
+  </data>
+  <data name="Tutorials.notifications.Title" xml:space="preserve">
+    <value>الإخطارات والتنبيهات</value>
+  </data>
+  <data name="Tutorials.notifications.Description" xml:space="preserve">
+    <value>تصفية إشعارات التطبيق والبحث فيها ومراجعتها ووضع علامة عليها ومسحها.</value>
+  </data>
+  <data name="Tutorials.cameras.Title" xml:space="preserve">
+    <value>الكاميرات والمراقبة</value>
+  </data>
+  <data name="Tutorials.cameras.Description" xml:space="preserve">
+    <value>قم بإضافة ومراجعة الكاميرات المقترنة مع الحفاظ على خصوصية معرفات الكاميرا.</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Title" xml:space="preserve">
+    <value>حاسبة الغارة</value>
+  </data>
+  <data name="Tutorials.raid-calculator.Description" xml:space="preserve">
+    <value>أنشئ خطة مداهمة، وقارن بين الطرق، وراجع إجماليات المواد.</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Title" xml:space="preserve">
+    <value>حاسبة إعادة التدوير</value>
+  </data>
+  <data name="Tutorials.recycler-calculator.Description" xml:space="preserve">
+    <value>أضف العناصر وقارن بين إنتاجية القائمين على إعادة التدوير في المناطق البرية والآمنة.</value>
+  </data>
+  <data name="Tutorials.settings.Title" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="Tutorials.settings.Description" xml:space="preserve">
+    <value>ابحث عن اللغة وأداء الخريطة والخدمات المتصلة وعناصر التحكم في الصيانة.</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Title" xml:space="preserve">
+    <value>التحديثات والتشخيصات</value>
+  </data>
+  <data name="Tutorials.updates-diagnostics.Description" xml:space="preserve">
+    <value>تحقق من تحديثات التطبيق وحدد موقع سجل التشخيص دون بدء التحديث.</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Title" xml:space="preserve">
+    <value>التنبيهات دون اتصال &amp; المنزل الذكي</value>
+  </data>
+  <data name="Tutorials.offline-alerts-smarthome.Description" xml:space="preserve">
+    <value>تعرف على كيفية تكوين التنبيهات السحابية دون اتصال، ومكالمات Telegram CallMeBot، وتكامل Amazon Alexa Smart Home.</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Title" xml:space="preserve">
+    <value>التنقل الرئيسي</value>
+  </data>
+  <data name="Tutorials.Step.basics.navigation.Description" xml:space="preserve">
+    <value>استخدم هذا الشريط الجانبي للتنقل بين الأجهزة وتتبع الفريق والكاميرات واللاعبين والإشعارات والآلات الحاسبة.</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Title" xml:space="preserve">
+    <value>توسيع التنقل</value>
+  </data>
+  <data name="Tutorials.Step.basics.collapse.Description" xml:space="preserve">
+    <value>قم بتثبيت الشريط الجانبي أو طيه لتبادل التسميات للحصول على المزيد من مساحة عمل الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Title" xml:space="preserve">
+    <value>الخادم الحالي</value>
+  </data>
+  <data name="Tutorials.Step.basics.server.Description" xml:space="preserve">
+    <value>تحدد هذه المنطقة خادم Rust المحدد وسياق الحساب الخاص به.</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Title" xml:space="preserve">
+    <value>حالة الاتصال</value>
+  </data>
+  <data name="Tutorials.Step.basics.connection.Description" xml:space="preserve">
+    <value>تُظهر بطاقات الخادم ما إذا كان الخادم غير متصل أو متصل بشكل بسيط أو متصل بالكامل.</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Title" xml:space="preserve">
+    <value>الإخطارات</value>
+  </data>
+  <data name="Tutorials.Step.basics.notifications.Description" xml:space="preserve">
+    <value>يتم جمع مشكلات الاتصال والإنذارات والوفيات ونتائج التشغيل الآلي هنا.</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Title" xml:space="preserve">
+    <value>مركز الدروس</value>
+  </data>
+  <data name="Tutorials.Step.basics.tutorials.Description" xml:space="preserve">
+    <value>أعد تشغيل الدروس أو تابعها أو أعد تشغيلها أو اكتشف الدروس المحدثة هنا.</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Title" xml:space="preserve">
+    <value>سياق الحساب</value>
+  </data>
+  <data name="Tutorials.Step.account.profile.Description" xml:space="preserve">
+    <value>الوصول إلى السحابة منفصل عن اقتران Rust+. تظل الميزات المحلية متاحة بدون المزامنة السحابية.</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Title" xml:space="preserve">
+    <value>الحساب السحابي</value>
+  </data>
+  <data name="Tutorials.Step.account.cloud.Description" xml:space="preserve">
+    <value>قم بتسجيل الدخول هنا للحصول على المزامنة المدعومة؛ لا تعرض البرامج التعليمية أبدًا بيانات الحساب الخاص.</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Title" xml:space="preserve">
+    <value>حالة الداعم</value>
+  </data>
+  <data name="Tutorials.Step.account.premium.Description" xml:space="preserve">
+    <value>يؤدي وصول الداعم إلى فتح الميزات المسورة. لا يتطلب تقدم البرنامج التعليمي المحلي أي اشتراك.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Title" xml:space="preserve">
+    <value>الزوج Rust+</value>
+  </data>
+  <data name="Tutorials.Step.pairing.overview.Description" xml:space="preserve">
+    <value>يؤدي الاقتران إلى ربط هذا التطبيق بـ Rust Companion قبل أن تعمل ميزات الخادم المباشر.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Title" xml:space="preserve">
+    <value>ابدأ الاقتران</value>
+  </data>
+  <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
+    <value>ابدأ الاستماع، ثم استخدم تدفق الاقتران Rust داخل اللعبة Rust+ داخل اللعبة. لا يتم تسجيل بيانات الاعتماد أبدا.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
+    <value>الخوادم المقترنة</value>
+  </data>
+  <data name="Tutorials.Step.pairing.list.Description" xml:space="preserve">
+    <value>حدد خادمًا تم تكوينه محليًا قبل الاتصال أو تغيير الإعدادات الخاصة بالخادم.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Title" xml:space="preserve">
+    <value>اتصال ناعم</value>
+  </data>
+  <data name="Tutorials.Step.pairing.soft.Description" xml:space="preserve">
+    <value>يقوم Connect بتحميل اتصالات محدودة دون تهيئة كل ميزة مباشرة.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Title" xml:space="preserve">
+    <value>اتصال كامل</value>
+  </data>
+  <data name="Tutorials.Step.pairing.full.Description" xml:space="preserve">
+    <value>يعمل الاتصال الكامل على تهيئة بيانات الخريطة والأجهزة وبيانات الفريق واشتراكات Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Title" xml:space="preserve">
+    <value>قطع الاتصال</value>
+  </data>
+  <data name="Tutorials.Step.pairing.disconnect.Description" xml:space="preserve">
+    <value>يؤدي قطع الاتصال إلى إيقاف الاتصال المباشر. هذا الدرس لا يستدعي الإجراء أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Title" xml:space="preserve">
+    <value>إعادة تعيين الاقتران</value>
+  </data>
+  <data name="Tutorials.Step.pairing.reset.Description" xml:space="preserve">
+    <value>توجد أوامر الاسترداد في قائمة سياق الإقران. تؤدي إعادة الضبط إلى إزالة تكوين الاقتران المحلي.</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Title" xml:space="preserve">
+    <value>لوحة الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.map.canvas.Description" xml:space="preserve">
+    <value>قم بالتحريك عن طريق السحب، والتكبير/التصغير باستخدام العجلة، والتفاعل مع العلامات الموجودة على خريطة Rust الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Title" xml:space="preserve">
+    <value>شريط أدوات الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.map.toolbar.Description" xml:space="preserve">
+    <value>يتحكم شريط الأدوات في الطبقات والدردشة والتراكبات والمؤقتات وأوضاع 2D أو 3D.</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Title" xml:space="preserve">
+    <value>إعادة تعيين العرض</value>
+  </data>
+  <data name="Tutorials.Step.map.fit.Description" xml:space="preserve">
+    <value>قم بضبط الخريطة مرة أخرى في مساحة العمل بعد التحريك أو التكبير/التصغير.</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Title" xml:space="preserve">
+    <value>طبقات الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.map.layers.Description" xml:space="preserve">
+    <value>اختر الشبكة والمشغل والنصب التذكاري والمتجر والخيارات المرئية المتقدمة هنا.</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Title" xml:space="preserve">
+    <value>الخرائط الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.map.heatmaps.Description" xml:space="preserve">
+    <value>فتح تراكبات الكثافة المستخرجة. إنها تظهر مناطق الانتشار المحتملة، وليس الكيانات الحية.</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Title" xml:space="preserve">
+    <value>افتح خريطة 3D</value>
+  </data>
+  <data name="Tutorials.Step.map.open3d.Description" xml:space="preserve">
+    <value>قم بإنشاء أو فتح تمثيل 3D المحلي للخريطة الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Title" xml:space="preserve">
+    <value>أدوات الرسم</value>
+  </data>
+  <data name="Tutorials.Step.map.drawing.Description" xml:space="preserve">
+    <value>ارسم ملاحظات التخطيط غير المتلفة على الخريطة واترك وضع الرسم عند الانتهاء.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Title" xml:space="preserve">
+    <value>افتح الخرائط الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.open.Description" xml:space="preserve">
+    <value>تصفح طبقات الكثافة المتاحة للخريطة التي تم تحليلها حاليًا.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Title" xml:space="preserve">
+    <value>محدد الخريطة الحرارية</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Description" xml:space="preserve">
+    <value>حدد فئة واحدة مستخرجة أو قم بمسح التراكب النشط.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.selector.Unavailable" xml:space="preserve">
+    <value>تتوفر هذه الميزة بعد إنشاء الخريطة ثلاثية الأبعاد مرة واحدة وتسجيل الدخول إلى الخادم.</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Title" xml:space="preserve">
+    <value>تحليل الخريطة ومتطلبات الخريطة ثلاثية الأبعاد</value>
+  </data>
+  <data name="Tutorials.Step.heatmaps.meaning.Description" xml:space="preserve">
+    <value>تتطلب الخرائط الحرارية وGodrocks والجبال الجليدية ومناطق حظر البناء إنشاء خريطة ثلاثية الأبعاد لمرة واحدة. يجب أن تكون قد سجلت الدخول إلى الخادم في اللعبة مرة واحدة على الأقل ليتوفر ملف .map محلياً.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Title" xml:space="preserve">
+    <value>إنشاء أو فتح 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.open.Description" xml:space="preserve">
+    <value>يقوم التطبيق بتحليل بيانات الخريطة محليًا وإعادة استخدام ذاكرة التخزين المؤقت الخاصة به عندما يكون ذلك ممكنًا.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Title" xml:space="preserve">
+    <value>إنشاء حساب</value>
+  </data>
+  <data name="Tutorials.Step.map3d.account.Description" xml:space="preserve">
+    <value>يتطلب إنشاء خريطة ثلاثية الأبعاد حساب RustPlusDesktop (عبر رابط Discord أو البريد الإلكتروني). يفتح تحليل الخريطة أيضاً ميزات إضافية على الخريطة ثنائية الأبعاد (مثل الخرائط الحرارية والجبال الجليدية والكهوف وGodrocks).</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Title" xml:space="preserve">
+    <value>3D إطار العرض</value>
+  </data>
+  <data name="Tutorials.Step.map3d.viewport.Description" xml:space="preserve">
+    <value>قم بتدوير تمثيل تفاعلي للخريطة المحددة وتحريكها وتكبيرها/تصغيرها.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Title" xml:space="preserve">
+    <value>3D شريط الأدوات</value>
+  </data>
+  <data name="Tutorials.Step.map3d.toolbar.Description" xml:space="preserve">
+    <value>طبقات التحكم، والعلامات المباشرة، وملء الشاشة، والإعدادات، وأدوات البصمة.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Title" xml:space="preserve">
+    <value>منشئ البصمة الأساسية</value>
+  </data>
+  <data name="Tutorials.Step.map3d.build.Description" xml:space="preserve">
+    <value>يضع وضع البناء أسس التخطيط فقط؛ ولا يقوم بتعديل خادم Rust.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Title" xml:space="preserve">
+    <value>مؤشر الأداء</value>
+  </data>
+  <data name="Tutorials.Step.map3d.performance.Description" xml:space="preserve">
+    <value>FPS وتفاصيل توازن الدقة التكيفية مع التفاعل السلس.</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Title" xml:space="preserve">
+    <value>إغلاق عرض 3D</value>
+  </data>
+  <data name="Tutorials.Step.map3d.close.Description" xml:space="preserve">
+    <value>ارجع إلى 2D وقم بتحرير موارد 3D المضمنة الثقيلة.</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Title" xml:space="preserve">
+    <value>قائمة الأجهزة</value>
+  </data>
+  <data name="Tutorials.Step.devices.overview.Description" xml:space="preserve">
+    <value>تظهر هنا المفاتيح المقترنة والإنذارات وشاشات التخزين في مجموعات.</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Title" xml:space="preserve">
+    <value>بحث الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.search.Description" xml:space="preserve">
+    <value>تصفية الأجهزة حسب الاسم أو الأمر دون تغيير حالتها.</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Title" xml:space="preserve">
+    <value>مرشح نوع الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.filter.Description" xml:space="preserve">
+    <value>قصر القائمة على المفاتيح أو الإنذارات أو شاشات التخزين أو جميع الأجهزة.</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Title" xml:space="preserve">
+    <value>حالات التحديث</value>
+  </data>
+  <data name="Tutorials.Step.devices.refresh.Description" xml:space="preserve">
+    <value>طلب حالة جديدة للقراءة فقط؛ يعتمد التوفر على الاتصال.</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Title" xml:space="preserve">
+    <value>أدوات الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.actions.Description" xml:space="preserve">
+    <value>يتم جمع الاستيراد والمزامنة السحابية والأتمتة ومفاتيح التشغيل السريع والتحديث والتنظيف هنا.</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Title" xml:space="preserve">
+    <value>بطاقة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.first.Description" xml:space="preserve">
+    <value>تعرض البطاقة الهوية وحالة الاتصال والأوامر وعناصر التحكم الخاصة بالجهاز.</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Title" xml:space="preserve">
+    <value>سلامة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.devices.safety.Description" xml:space="preserve">
+    <value>لا تقوم البرامج التعليمية مطلقًا بتبديل المفتاح أو حذف جهاز أو تشغيل مفتاح التشغيل السريع.</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Title" xml:space="preserve">
+    <value>قائمة الفريق</value>
+  </data>
+  <data name="Tutorials.Step.team.list.Description" xml:space="preserve">
+    <value>يظهر هنا زملاء الفريق المحملين، وحالة الاتصال بالإنترنت، والصور الرمزية، وإجراءات السياق.</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Title" xml:space="preserve">
+    <value>علامات الفريق</value>
+  </data>
+  <data name="Tutorials.Step.team.markers.Description" xml:space="preserve">
+    <value>اختر أنماط علامات زميل الفريق التي تظهر على الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Title" xml:space="preserve">
+    <value>اتبع اللاعب</value>
+  </data>
+  <data name="Tutorials.Step.team.follow.Description" xml:space="preserve">
+    <value>تقوم المراكز التالية بتعيين التحديثات على زميل في الفريق وتتطلب بيانات الفريق الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Title" xml:space="preserve">
+    <value>مشاركة الفريق</value>
+  </data>
+  <data name="Tutorials.Step.team.sharing.Description" xml:space="preserve">
+    <value>قد تتطلب مشاركة القاعدة ولقطات الشاشة الحصول على حساب وموافقة على التحميل.</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Title" xml:space="preserve">
+    <value>سجل الدردشة</value>
+  </data>
+  <data name="Tutorials.Step.chat.history.Description" xml:space="preserve">
+    <value>تظهر هنا رسائل فريق Rust الأخيرة عندما يوفر الاتصال بيانات الدردشة.</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Title" xml:space="preserve">
+    <value>إدخال الرسالة</value>
+  </data>
+  <data name="Tutorials.Step.chat.input.Description" xml:space="preserve">
+    <value>أنشئ رسالة للفريق هنا. لا يقوم البرنامج التعليمي أبدًا بإدراج أو إرسال واحدة.</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Title" xml:space="preserve">
+    <value>أرسل رسالة</value>
+  </data>
+  <data name="Tutorials.Step.chat.send.Description" xml:space="preserve">
+    <value>إرسال المشاركات إلى دردشة فريق Rust. يتم تمييز عنصر التحكم هذا فقط.</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Title" xml:space="preserve">
+    <value>إعدادات الأوامر</value>
+  </data>
+  <data name="Tutorials.Step.chat.commands.Description" xml:space="preserve">
+    <value>قم بتكوين البادئات وارتباطات الأجهزة والتأخيرات وإتاحة الأوامر.</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Title" xml:space="preserve">
+    <value>Discord المجتمع</value>
+  </data>
+  <data name="Tutorials.Step.discord.entry.Description" xml:space="preserve">
+    <value>هذا الاختصار يفتح المجتمع؛ إعدادات التكامل منفصلة.</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Title" xml:space="preserve">
+    <value>Discord الإعدادات</value>
+  </data>
+  <data name="Tutorials.Step.discord.settings.Description" xml:space="preserve">
+    <value>قم بتكوين الروبوت والجماعة والقنوات والأوامر والأذونات دون تسجيل المعرفات.</value>
+  </data>
+  <data name="Tutorials.Step.discord.advanced.Title" xml:space="preserve">
+    <value>تكامل Discord المتقدم</value>
+  </data>
+  <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
+    <value>يتطلب تكامل Discord المتقدم حساب Supporter. يتيح أوامر Discord والتكامل ثنائي الاتجاه وتنبيهات الغارات دون اتصال عبر Webhook.</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Title" xml:space="preserve">
+    <value>تكامل Discord الأساسي وتنبيهات الدردشة</value>
+  </data>
+  <data name="Tutorials.Step.discord.basic.Description" xml:space="preserve">
+    <value>يعمل تكامل Discord الأساسي عبر Webhook بدون حساب Supporter. يتم إرسال جميع تنبيهات الدردشة إلى Discord، إما داخل اللعبة وDiscord معاً أو حكراً على Discord.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Title" xml:space="preserve">
+    <value>التنبيهات السحابية دون اتصال</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.overview.Description" xml:space="preserve">
+    <value>تقوم التنبيهات السحابية دون اتصال بتوجيه إشعارات FCM للغارات والأحداث والموت إلى Discord Webhook أو Webhooks مخصصة (مثل Google Home وIFTTT وMake.com) عند إغلاق التطبيق.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Title" xml:space="preserve">
+    <value>مزامنة الاتصال السحابي</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.sync.Description" xml:space="preserve">
+    <value>بعد تكوين عناوين URL لـ Webhook، انقر فوق "Sync Cloud Connection" لتحميل إعداداتك وحفظها في الخدمة السحابية.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Title" xml:space="preserve">
+    <value>مكالمة Telegram عبر CallMeBot</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.telegram.Description" xml:space="preserve">
+    <value>أدخل اسم مستخدم Telegram (@name) والرسالة، ثم انقر فوق "Test Call". تفتح نافذة متصفح لتفويض CallMeBot. بمجرد التفويض، تطلق تنبيهات FCM دون اتصال مكالمات هاتفية إلى جهازك المحمول.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Title" xml:space="preserve">
+    <value>تكامل Alexa Smart Home</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alexa.Description" xml:space="preserve">
+    <value>اربط الحسابات عبر مهارة Alexa باستخدام "Generate Login PIN"، وحدد خادمك وانقر على "Link Selected Server". تصبح Smart Alerts أجهزة استشعار الحركة للروتينات وتعمل الأجهزة كمفاتيح ذكية حتى عند إغلاق التطبيق.</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Title" xml:space="preserve">
+    <value>افتح محرك المنطق</value>
+  </data>
+  <data name="Tutorials.Step.automation.open.Description" xml:space="preserve">
+    <value>افتح محرر قواعد الخادم المحدد.</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Title" xml:space="preserve">
+    <value>قائمة القواعد</value>
+  </data>
+  <data name="Tutorials.Step.automation.list.Description" xml:space="preserve">
+    <value>تظهر هنا القواعد وخطوات التشغيل والحالة والتأخير والإجراء الخاصة بها.</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Title" xml:space="preserve">
+    <value>حالة المحرك</value>
+  </data>
+  <data name="Tutorials.Step.automation.enabled.Description" xml:space="preserve">
+    <value>تمكين تنفيذ القاعدة أو إيقافه مؤقتًا. البرنامج التعليمي لا يغير هذا المفتاح أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Title" xml:space="preserve">
+    <value>سير عمل القاعدة</value>
+  </data>
+  <data name="Tutorials.Step.automation.workflow.Description" xml:space="preserve">
+    <value>مشغل يبدأ قاعدة؛ بوابة الشروط الإجراءات اللاحقة؛ الخطوات تسير بالترتيب.</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Title" xml:space="preserve">
+    <value>سلامة الأتمتة</value>
+  </data>
+  <data name="Tutorials.Step.automation.safety.Description" xml:space="preserve">
+    <value>لا تحافظ البرامج التعليمية على القواعد أو تبديل الأجهزة أو إرسال الدردشة أو تنفيذ الأتمتة.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Title" xml:space="preserve">
+    <value>مركز الإشعارات</value>
+  </data>
+  <data name="Tutorials.Step.notifications.center.Description" xml:space="preserve">
+    <value>قم بمراجعة التنبيهات دون الاعتماد على إشعارات سطح المكتب العابرة.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Title" xml:space="preserve">
+    <value>مرشحات الإشعارات</value>
+  </data>
+  <data name="Tutorials.Step.notifications.filters.Description" xml:space="preserve">
+    <value>التبديل بين جميع الإشعارات والإنذارات والوفيات.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Title" xml:space="preserve">
+    <value>إشعارات البحث</value>
+  </data>
+  <data name="Tutorials.Step.notifications.search.Description" xml:space="preserve">
+    <value>ابحث عن الإشعارات حسب المحتوى المعروض أو سياق الخادم.</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Title" xml:space="preserve">
+    <value>الإجراءات المجمعة</value>
+  </data>
+  <data name="Tutorials.Step.notifications.actions.Description" xml:space="preserve">
+    <value>وضع علامة على كل المحفوظات المقروءة أو مسحها؛ البرامج التعليمية لا تنفذ هذه الإجراءات أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Title" xml:space="preserve">
+    <value>قائمة الكاميرا</value>
+  </data>
+  <data name="Tutorials.Step.cameras.list.Description" xml:space="preserve">
+    <value>تظهر المعاينات التي تم تكوينها عند توفر خادم وكاميرا محددين.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Title" xml:space="preserve">
+    <value>أضف الكاميرا</value>
+  </data>
+  <data name="Tutorials.Step.cameras.add.Description" xml:space="preserve">
+    <value>أضف كاميرا باستخدام معرفها Rust؛ لا تلتقط البرامج التعليمية رموز الكاميرا أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Title" xml:space="preserve">
+    <value>خصوصية الكاميرا</value>
+  </data>
+  <data name="Tutorials.Step.cameras.privacy.Description" xml:space="preserve">
+    <value>يتم استبعاد معرفات الكاميرا وإطاراتها من تشخيصات البرنامج التعليمي.</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Title" xml:space="preserve">
+    <value>أهداف البحث</value>
+  </data>
+  <data name="Tutorials.Step.raid.search.Description" xml:space="preserve">
+    <value>ابحث عن جدار أو باب أو هدف قابل للنشر أو أي هدف آخر في مجموعة البيانات المجمعة.</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Title" xml:space="preserve">
+    <value>خطة الغارة</value>
+  </data>
+  <data name="Tutorials.Step.raid.plan.Description" xml:space="preserve">
+    <value>مراجعة الأهداف والصحة والكميات والأساليب والتكاليف المحسوبة.</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Title" xml:space="preserve">
+    <value>مقارنة الطرق</value>
+  </data>
+  <data name="Tutorials.Step.raid.methods.Description" xml:space="preserve">
+    <value>حدد المتفجرات أو الأدوات المسموح بها وقارن بين البدائل.</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Title" xml:space="preserve">
+    <value>مسح الخطة</value>
+  </data>
+  <data name="Tutorials.Step.raid.clear.Description" xml:space="preserve">
+    <value>يؤدي المسح إلى إزالة الخطة؛ يسلط البرنامج التعليمي الضوء عليه دون تغيير الإدخالات.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Title" xml:space="preserve">
+    <value>عناصر البحث</value>
+  </data>
+  <data name="Tutorials.Step.recycler.search.Description" xml:space="preserve">
+    <value>ابحث عن عنصر قابل لإعادة التدوير وأضفه إلى الآلة الحاسبة.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Title" xml:space="preserve">
+    <value>فئة العنصر</value>
+  </data>
+  <data name="Tutorials.Step.recycler.category.Description" xml:space="preserve">
+    <value>تضييق كتالوج العناصر حسب الفئة.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Title" xml:space="preserve">
+    <value>عناصر الإدخال</value>
+  </data>
+  <data name="Tutorials.Step.recycler.inputs.Description" xml:space="preserve">
+    <value>ضبط الكميات أو إزالة الإدخالات؛ الدروس لا تغير حالة الآلة الحاسبة.</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Title" xml:space="preserve">
+    <value>نتائج إعادة التدوير</value>
+  </data>
+  <data name="Tutorials.Step.recycler.results.Description" xml:space="preserve">
+    <value>قارن بين الإنتاجية والأوقات الخاصة بإعادة التدوير في المناطق البرية والآمنة.</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Title" xml:space="preserve">
+    <value>افتح الإعدادات</value>
+  </data>
+  <data name="Tutorials.Step.settings.open.Description" xml:space="preserve">
+    <value>سلوك التطبيق وعمليات التكامل والأداء والنسخ الاحتياطي والصيانة موجودة هنا.</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Title" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Tutorials.Step.settings.language.Description" xml:space="preserve">
+    <value>اختر لغة واجهة المستخدم. يستخدم النص التعليمي نفس نظام الموارد.</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Title" xml:space="preserve">
+    <value>أداء الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.settings.map.Description" xml:space="preserve">
+    <value>ضبط قياس الصورة والتخزين المؤقت لوحدة معالجة الرسومات ومقياس العرض ووضع الحافة.</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Title" xml:space="preserve">
+    <value>الصيانة</value>
+  </data>
+  <data name="Tutorials.Step.settings.maintenance.Description" xml:space="preserve">
+    <value>يمكن أن تكون عناصر التحكم في النسخ الاحتياطي وإعادة التعيين والتطهير وذاكرة التخزين المؤقت مدمرة ولا يتم استدعاؤها أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Title" xml:space="preserve">
+    <value>التحقق من وجود تحديثات</value>
+  </data>
+  <data name="Tutorials.Step.updates.check.Description" xml:space="preserve">
+    <value>اطلب توفر التحديث بدون تنزيل أو تثبيت.</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Title" xml:space="preserve">
+    <value>تحديث الحالة</value>
+  </data>
+  <data name="Tutorials.Step.updates.status.Description" xml:space="preserve">
+    <value>يظهر تقدم الإصدار والتنزيل في منطقة شريط العنوان هذه.</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Title" xml:space="preserve">
+    <value>سجل التشخيص</value>
+  </data>
+  <data name="Tutorials.Step.updates.logs.Description" xml:space="preserve">
+    <value>قم بتصفية التشخيصات المحلية قبل مشاركة التفاصيل غير الحساسة فقط.</value>
+  </data>
+  <data name="Tutorials.shops-vending.Title" xml:space="preserve">
+    <value>المحلات التجارية والبيع</value>
+  </data>
+  <data name="Tutorials.shops-vending.Description" xml:space="preserve">
+    <value>ابحث عن عروض البيع، وقارن الصفقات، وافهم توقيت التحديث.</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Title" xml:space="preserve">
+    <value>مراقبة الأحداث والخادم</value>
+  </data>
+  <data name="Tutorials.events-monitoring.Description" xml:space="preserve">
+    <value>اقرأ مؤشرات الأحداث المباشرة وقم بإنشاء مؤقتات محلية.</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Title" xml:space="preserve">
+    <value>القواعد ولقطات الشاشة</value>
+  </data>
+  <data name="Tutorials.bases-screenshots.Description" xml:space="preserve">
+    <value>قم بإنشاء علامات قاعدة الخريطة وإدارة الملاحظات ولقطات الشاشة الخاصة بها بأمان.</value>
+  </data>
+  <data name="Tutorials.device-automation.Title" xml:space="preserve">
+    <value>أتمتة الجهاز</value>
+  </data>
+  <data name="Tutorials.device-automation.Description" xml:space="preserve">
+    <value>قم بتكوين أتمتة حالة الجهاز البسيطة بشكل منفصل عن المحرك المنطقي.</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Title" xml:space="preserve">
+    <value>افتح بحث المتجر</value>
+  </data>
+  <data name="Tutorials.Step.shops.open.Description" xml:space="preserve">
+    <value>افتح لوحة بحث البيع الخاصة بالخريطة دون تغيير الخريطة الحالية.</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Title" xml:space="preserve">
+    <value>بحث المتجر</value>
+  </data>
+  <data name="Tutorials.Step.shops.panel.Description" xml:space="preserve">
+    <value>بحث العناصر ومراجعة كميات البيع والشراء وفتح النتائج على الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Title" xml:space="preserve">
+    <value>توقيت التحديث</value>
+  </data>
+  <data name="Tutorials.Step.shops.refresh.Description" xml:space="preserve">
+    <value>تعتمد عروض المتجر على اتصال الخادم وقد تكون قديمة بين عمليات تحديث Rust+.</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Title" xml:space="preserve">
+    <value>منصة الأحداث المباشرة</value>
+  </data>
+  <data name="Tutorials.Step.events.dock.Description" xml:space="preserve">
+    <value>تظهر هنا مؤشرات الشحن، والمروحية، وChinook، والبائعين، وغيرها من مؤشرات الأحداث النشطة عندما تكون متاحة.</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Title" xml:space="preserve">
+    <value>مؤقت مخصص</value>
+  </data>
+  <data name="Tutorials.Step.events.timer.Description" xml:space="preserve">
+    <value>قم بإنشاء تذكير محلي دون تغيير حالة الخادم.</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Title" xml:space="preserve">
+    <value>نضارة الحدث</value>
+  </data>
+  <data name="Tutorials.Step.events.stale.Description" xml:space="preserve">
+    <value>تعتمد بيانات الحدث على الاتصال المحدد وقد تختفي عندما تصبح قديمة.</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Title" xml:space="preserve">
+    <value>العلامات الأساسية</value>
+  </data>
+  <data name="Tutorials.Step.bases.map.Description" xml:space="preserve">
+    <value>يتم وضع العلامات الأساسية وفتحها على خريطة 2D.</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Title" xml:space="preserve">
+    <value>الملاحظات الأساسية ولقطات الشاشة</value>
+  </data>
+  <data name="Tutorials.Step.bases.context.Description" xml:space="preserve">
+    <value>استخدم إجراءات سياق الخريطة لتسمية القاعدة وإرفاق لقطات الشاشة؛ تتطلب المشاركة السحابية موافقة.</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Title" xml:space="preserve">
+    <value>احذف الأمان</value>
+  </data>
+  <data name="Tutorials.Step.bases.safety.Description" xml:space="preserve">
+    <value>لا يتم حذف قاعدة أو لقطة شاشة أبدًا من خلال برنامج تعليمي ويتطلب دائمًا مدخلاتك.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Title" xml:space="preserve">
+    <value>افتح أتمتة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.open.Description" xml:space="preserve">
+    <value>افتح أتمتة حالة الجهاز خفيفة الوزن للخادم المحدد.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Title" xml:space="preserve">
+    <value>إجراءات الأتمتة</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.actions.Description" xml:space="preserve">
+    <value>إيقاف التنفيذ مؤقتًا أو إضافة عملية أتمتة؛ لا تغير البرامج التعليمية حالة المحرك أبدًا أو تنشئ بيانات.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Title" xml:space="preserve">
+    <value>قواعد التشغيل الآلي</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.rules.Description" xml:space="preserve">
+    <value>قم بمراجعة الأجهزة المصدر والإجراءات المستهدفة والتوقيت والحالة الممكّنة لكل قاعدة.</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Title" xml:space="preserve">
+    <value>سلامة الجهاز</value>
+  </data>
+  <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
+    <value>لا يوجد برنامج تعليمي ينفذ قاعدة أو يبدل جهازًا ذكيًا حقيقيًا.</value>
+  </data>
+  <data name="Tutorials.mini-map.Title" xml:space="preserve">
+    <value>الخريطة المصغرة</value>
+  </data>
+  <data name="Tutorials.mini-map.Description" xml:space="preserve">
+    <value>مرآة قابلة للتخصيص بالكامل للخريطة الرئيسية.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Title" xml:space="preserve">
+    <value>مطلوب الاتصال بالخادم</value>
+  </data>
+  <data name="Tutorials.Step.minimap.intro.Description" xml:space="preserve">
+    <value>يرجى الاتصال بخادم أولاً للوصول إلى الخريطة المصغرة.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Title" xml:space="preserve">
+    <value>فتح الخريطة المصغرة</value>
+  </data>
+  <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
+    <value>انقر هنا لفتح نافذة الخريطة المصغرة.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
+    <value>إعدادات الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>قم بتمرير الماوس فوق الخريطة المصغرة وانقر على رمز الترس لتخصيص شكلها وحجمها وشفافيتها.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
+    <value>وقت الخادم وعدد اللاعبين</value>
+  </data>
+  <data name="Tutorials.Step.minimap.timepop.Description" xml:space="preserve">
+    <value>يمكنك اختيارياً عرض الوقت الحالي في اللعبة وعدد لاعبي الخادم مباشرة على الخريطة المصغرة.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Title" xml:space="preserve">
+    <value>التحكم في الخريطة</value>
+  </data>
+  <data name="Tutorials.Step.minimap.controls.Description" xml:space="preserve">
+    <value>مثل الخريطة الرئيسية تماماً، انقر بزر الماوس الأيمن واسحب للتحريك، واستخدم عجلة الماوس للتكبير، وانقر نقراً مزدوجاً بزر الماوس الأيمن لإعادة تعيين العرض.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Title" xml:space="preserve">
+    <value>متابعة اللاعب</value>
+  </data>
+  <data name="Tutorials.Step.minimap.follow.Description" xml:space="preserve">
+    <value>انقر فوق أيقونة 'متابعة اللاعب' في شريط أدوات الخريطة (أو انقر بزر الماوس الأيمن على زميل في الفريق في القائمة) للحفاظ على تركيز الخريطة المصغرة عليهم تلقائياً. لاحظ أن إعدادات الخريطة المصغرة وحالة المتابعة يتم حفظها لكل خادم!</value>
+  </data>
+  <data name="Update800Title" xml:space="preserve">
+    <value>Rust+ Desktop v8.0.0 Update</value>
+  </data>
+  <data name="Update800DontShowAgain" xml:space="preserve">
+    <value>لا تظهر هذا مرة أخرى</value>
+  </data>
+  <data name="Update800Title1" xml:space="preserve">
+    <value>دروس توجيهية</value>
+  </data>
+  <data name="Update800Desc1" xml:space="preserve">
+    <value>اكتشف الميزات بسهولة باستخدام أدلة محلية خطوة بخطوة.</value>
+  </data>
+  <data name="Update800Title2" xml:space="preserve">
+    <value>تحسين الخريطة ثلاثية الأبعاد</value>
+  </data>
+  <data name="Update800Desc2" xml:space="preserve">
+    <value>أوقات تحميل أسرع، استخدام أقل بكثير لذاكرة الوصول العشوائي (RAM)، وإغلاق نظيف.</value>
+  </data>
+  <data name="Update800Title3" xml:space="preserve">
+    <value>تنبيهات الأحداث الجديدة</value>
+  </data>
+  <data name="Update800Desc3" xml:space="preserve">
+    <value>عند الاتصال بخادم، يتم تتبع ظهور منصة النفط والبحر العميق وسفينة الشحن فقط.</value>
+  </data>
+  <data name="Update800Title4" xml:space="preserve">
+    <value>المحرك المنطقي وواجهة المستخدم</value>
+  </data>
+  <data name="Update800Desc4" xml:space="preserve">
+    <value>حاسبة الغارات الجديدة، وشريط جانبي معاد تصميمه، ورموز PIN لـ Alexa.</value>
+  </data>
+  <data name="Update800PatchNotesBtn" xml:space="preserve">
+    <value>ملاحظات التصحيح</value>
+  </data>
+  <data name="ClanTab" xml:space="preserve">
+    <value>العشيرة</value>
+  </data>
+  <data name="UiTrackClanMembers" xml:space="preserve">
+    <value>تتبع أعضاء العشيرة وحالتهم وأدوارهم وملاحظاتهم</value>
+  </data>
+  <data name="OilRigCrateStatus" xml:space="preserve">
+    <value>حالة صناديق منصة النفط</value>
+  </data>
+  <data name="ListenForServerEvents" xml:space="preserve">
+    <value>الاستماع إلى أحداث الخادم</value>
+  </data>
+  <data name="ListenForServerEventsDesc" xml:space="preserve">
+    <value>يكتشف منصة النفط وسفينة الشحن والبحر العميق من صوت اللعبة على الخوادم التي لم تعد ترسل الأحداث. يعمل فقط أثناء تشغيل Rust.</value>
+  </data>
+  <data name="TrustOwnDetections" xml:space="preserve">
+    <value>الوثوق باكتشافاتي الخاصة</value>
+  </data>
+  <data name="TrustOwnDetectionsDesc" xml:space="preserve">
+    <value>يعرض الحدث بمجرد سماعه على هذا الجهاز، دون انتظار تأكيد لاعب آخر. لا يتغير الإبلاغ: ما يراه اللاعبون الآخرون لا يزال يحتاج إلى تأكيداتهم الخاصة.</value>
+  </data>
+  <data name="ServerEventsSection" xml:space="preserve">
+    <value>أحداث الخادم</value>
+  </data>
+  <data name="OilRigCrateSeen" xml:space="preserve">
+    <value>شوهد الصندوق</value>
+  </data>
+  <data name="EventNotDetected" xml:space="preserve">
+    <value>لم يتم اكتشافه بعد</value>
+  </data>
+  <data name="EventUnconfirmed" xml:space="preserve">
+    <value>غير مؤكد</value>
+  </data>
+  <data name="AlertUnavailableOnServer" xml:space="preserve">
+    <value>غير متاح على هذا الخادم</value>
+  </data>
+  <data name="CargoSpawnedAgo" xml:space="preserve">
+    <value>ظهرت سفينة الشحن قبل {0}</value>
+  </data>
+  <data name="CargoGoneAgo" xml:space="preserve">
+    <value>اختفت سفينة الشحن منذ {0}</value>
+  </data>
+  <data name="DeepSeaUpFor" xml:space="preserve">
+    <value>البحر العميق مفتوح منذ {0}</value>
+  </data>
+  <data name="AlertCargoSpawnedAudio" xml:space="preserve">
+    <value>ظهرت سفينة الشحن (تم اكتشافها بالصوت)</value>
+  </data>
+  <data name="AlertOilRigCrateUp" xml:space="preserve">
+    <value>صندوق منصة النفط متاح (تم اكتشافه بالصوت)</value>
+  </data>
+  <data name="ChatCmdCargoCloudActive" xml:space="preserve">
+    <value>ظهرت سفينة الشحن قبل {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudGone" xml:space="preserve">
+    <value>اختفت سفينة الشحن منذ {0}</value>
+  </data>
+  <data name="ChatCmdCargoCloudUnknown" xml:space="preserve">
+    <value>لم يتم اكتشاف ظهور سفينة الشحن بعد</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudActive" xml:space="preserve">
+    <value>البحر العميق مفتوح — يغلق خلال {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudEnded" xml:space="preserve">
+    <value>أُغلق البحر العميق قبل {0}</value>
+  </data>
+  <data name="ChatCmdDeepSeaCloudUnknown" xml:space="preserve">
+    <value>لم يتم اكتشاف ظهور البحر العميق بعد</value>
+  </data>
+  <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
+    <value>آخر صناديق منصة النفط المكتشفة: {0}</value>
+  </data>
+  <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
+    <value>لم يتم اكتشاف صناديق منصة النفط بعد</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioName" xml:space="preserve">
+    <value>ظهور سفينة الشحن (صوت)</value>
+  </data>
+  <data name="AlertCargoSpawnedAudioDesc" xml:space="preserve">
+    <value>يُرسل عند سماع صوت ظهور سفينة الشحن على خادم بدون علامات أحداث.</value>
+  </data>
+  <data name="AlertOilRigCrateUpName" xml:space="preserve">
+    <value>صندوق منصة النفط (صوت)</value>
+  </data>
+  <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
+    <value>يُرسل عند سماع صوت صندوق منصة النفط. لا يمكن تحديد أي منصة.</value>
+  </data>
+  <data name="EventNotTrackableOnServer" xml:space="preserve">
+    <value>لم يعد من الممكن تتبع هذا الحدث على هذا الخادم.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15Min" xml:space="preserve">
+    <value>[{0}] سيُفتح الصندوق خلال 15 دقيقة!</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinName" xml:space="preserve">
+    <value>فتح الصندوق (15 د)</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinDesc" xml:space="preserve">
+    <value>تحذير يُرسل قبل 15 دقيقة من فتح الصندوق.</value>
+  </data>
+  <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
+    <value>{0}: اسم المنصة</value>
+  </data>
+  <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
+    <value>{0}: سيُفتح الصندوق خلال {1} د {2} ث</value>
+  </data>
+  <data name="UiStartTimer" xml:space="preserve">
+    <value>بدء مؤقت</value>
+  </data>
+  <data name="UiMinutes" xml:space="preserve">
+    <value>د</value>
+  </data>
+  <data name="UiTimerTargetCustom" xml:space="preserve">
+    <value>اسم مخصص</value>
+  </data>
+  <data name="UiLargeOilRigTrigger" xml:space="preserve">
+    <value>مُشغِّل Large Oilrig</value>
+  </data>
+  <data name="UiSmallOilRigTrigger" xml:space="preserve">
+    <value>مُشغِّل Small Oilrig</value>
+  </data>
+  <data name="UiShowCrateOnMap" xml:space="preserve">
+    <value>إظهار الصندوق على الخريطة</value>
+  </data>
+  <data name="UiTimerNamePlaceholder" xml:space="preserve">
+    <value>اسم المؤقت</value>
+  </data>
+  <data name="UiBadgeOilRigTooltip" xml:space="preserve">
+    <value>يستخدمه Logic Engine كمُشغِّل لمنصة النفط. تم كتم نافذة الإنذار وصوتها وتنبيهات الغارة — يُبلَّغ عنه كحدث منصة نفط بدلاً من ذلك.</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
+    <value>تنبيهات الصندوق لمنصات النفط</value>
+  </data>
+  <data name="Tutorials.oilrig-crate-alerts.Description" xml:space="preserve">
+    <value>استخدم مستقبل RF داخل اللعبة للحصول على عدّ تنازلي مباشر للصندوق على الخريطة، مع تحذيرات في دردشة الفريق وDiscord.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Title" xml:space="preserve">
+    <value>لماذا يوجد هذا</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
+    <value>كان العدّ التنازلي للصندوق يُستنتج من علامات الشينوك، التي لم تعد واجهة Rust+ ترسلها. بدلاً من ذلك تبثّ اللعبة عملية الاختراق على تردد لاسلكي يمكنك استقباله بنفسك. تحتاج ثلاثة أشياء: مستقبل داخل اللعبة، وإنذار ذكي مقترن بالتطبيق، وقاعدة واحدة في Logic Engine.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
+    <value>التوصيل داخل اللعبة</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
+    <value>ضع مستقبل RF واضبط تردده على المنصة التي تريدها: 4768 لمنصة Large Oil Rig و4765 لمنصة Small Oil Rig. زوّده بالطاقة وصِل مخرجه بإنذار ذكي مقترن بهذا التطبيق. عند بدء الاختراق تبثّ اللعبة على ذلك التردد، فيعمل المستقبل وينطلق الإنذار.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
+    <value>أضف قاعدة Logic Engine</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
+    <value>افتح Logic Engine، وأنشئ قاعدة يكون الإنذار الذكي مُشغِّلاً لها، ثم أضف خطوة «بدء مؤقت». اضبط الدقائق واختر مُشغِّل Large Oilrig أو Small Oilrig. اترك خيار «إظهار الصندوق على الخريطة» مفعّلاً لرسم الصندوق مع عدّه التنازلي؛ أما تحذيرات الدردشة وDiscord فتصل في الحالتين. وفي خانة نص الإنذار اكتب السطر العلوي من سطري الإنذار داخل اللعبة: فإشعارات الدفع لا تحمل معرّف الجهاز، وهذا السطر هو ما يتيح للتطبيق التعرّف على الإنذار كمُشغِّل منصة عندما لا يكون متصلاً بالخادم. اتركه فارغاً وسيتعلّمه التطبيق عند أول انطلاق للإنذار وهو متصل.</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
+    <value>لا تنبيه غارة من هذا الإنذار</value>
+  </data>
+  <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
+    <value>الإنذار المُعدّ بهذه الطريقة ليس غارة، لذا تُكتم نافذته وصوته وتنبيهات الغارة إلى Discord. يُبلَّغ عنه كحدث منصة نفط بدلاً من ذلك. تعرض قائمة الأجهزة شارة صغيرة (Large Oil) أو (Small Oil) ليكون هذا الصمت مرئياً لا غامضاً. أزل الجهاز من القاعدة ليعود فوراً إنذاراً عادياً. ولا يزال مفتاح Oil Rig ضمن تنبيهات الدردشة يوقف كل ذلك متى أردت الهدوء.</value>
+  </data>
+  <data name="UiAlarmTextHint" xml:space="preserve">
+    <value>نص الإنذار (السطر العلوي)</value>
+  </data>
+  <data name="UiAlarmTextHintTooltip" xml:space="preserve">
+    <value>اختياري. السطر العلوي من سطري الإنذار داخل اللعبة — فهو الذي ترسله اللعبة مع الإشعار؛ أما السطر السفلي فلا يصلح لذلك. إشعارات الدفع لا تحمل معرّف الجهاز، لذا فهذا النص هو الطريقة الوحيدة للتعرّف على الإنذار عندما لا يكون التطبيق متصلاً بذلك الخادم — عند بدء التشغيل مثلاً. اتركه فارغاً وسيملأه التطبيق بنفسه عند أول انطلاق للإنذار وهو متصل. ويُتجاهل السطر الافتراضي لأن كل إنذار لم يُعاد تسميته يشترك فيه.</value>
+  </data>
+  <data name="UiInGameAlarmTitle" xml:space="preserve">
+    <value>نص الإنذار داخل اللعبة (السطر العلوي)</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Title" xml:space="preserve">
+    <value>أعطِ كل إنذار اسماً خاصاً به داخل Rust</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmnames.Description" xml:space="preserve">
+    <value>إشعار الإنذار الذكي يذكر الخادم فقط — دون معرّف أو اسم جهاز. الشيء الوحيد الذي يفرّق بين إنذارين هو النص الذي تضبطه داخل اللعبة، ويُرسل السطر العلوي فقط. إذا تركتها جميعاً على الوضع الافتراضي فلن تعرف Alexa أيّها انطلق، وستعمل الروتين لأيّ واحد منها.</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Title" xml:space="preserve">
+    <value>شغّله مرة واحدة ليتعلّمه التطبيق</value>
+  </data>
+  <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
+    <value>بعد الإقتران، شغّل الإنذار مرة واحدة والتطبيق يعمل. سيرى الإشعار وحدث الجهاز في اللحظة نفسها ويسجّل الاسم تلقائياً. لا تريد الانتظار؟ انقر بزر الفأرة الأيمن على الإنذار في هذه القائمة واكتبه. وفي الحالتين هو مستقل عن الاسم الذي تمنحه للجهاز هنا — فذلك اختيارك ولا يؤثر على Alexa.</value>
   </data>
 </root>

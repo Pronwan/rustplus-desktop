@@ -1,0 +1,195 @@
+<Window x:Class="RustPlusDesk.Views.Windows.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RustPlusDesk"
+        Width="620" Height="380"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        Topmost="True">
+
+    <Window.Resources>
+        <!-- Brand accent -->
+        <Color x:Key="AccentColor">#FFCE4022</Color>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+
+        <!-- Indeterminate progress sweep -->
+        <Storyboard x:Key="ProgressStory" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="ProgressFill"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="-160" To="548" Duration="0:0:1.3">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <!-- Soft pulse on the accent dot -->
+        <Storyboard x:Key="PulseStory" RepeatBehavior="Forever" AutoReverse="True">
+            <DoubleAnimation Storyboard.TargetName="StatusDot"
+                             Storyboard.TargetProperty="Opacity"
+                             From="1" To="0.25" Duration="0:0:0.9">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <!-- Fade + rise for the whole card -->
+        <Storyboard x:Key="FadeInStory">
+            <DoubleAnimation Storyboard.TargetName="RootBorder"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.45" />
+            <DoubleAnimation Storyboard.TargetName="ContentTransform"
+                             Storyboard.TargetProperty="Y"
+                             From="14" To="0" Duration="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource FadeInStory}" />
+            <BeginStoryboard Storyboard="{StaticResource ProgressStory}" />
+            <BeginStoryboard Storyboard="{StaticResource PulseStory}" />
+        </EventTrigger>
+    </Window.Triggers>
+
+    <!-- Root card: rounded corners, hairline border, deep shadow -->
+    <Border x:Name="RootBorder" CornerRadius="16" Opacity="0" ClipToBounds="True"
+            BorderThickness="1" BorderBrush="#22FFFFFF">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.65" Direction="270" />
+        </Border.Effect>
+
+        <Grid>
+            <!-- Background image (TitleScreen) -->
+            <Image Source="pack://application:,,,/Assets/TitleScreen-rust-plus-desktop.png"
+                   Stretch="UniformToFill" />
+
+            <!-- Legibility gradient -->
+            <Border>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#33000000" Offset="0" />
+                        <GradientStop Color="#B30D0D0D" Offset="0.55" />
+                        <GradientStop Color="#F00A0A0A" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+
+            <!-- Accent glow anchored bottom-left -->
+            <Border Width="360" Height="360"
+                    HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                    Margin="-120,0,0,-160" IsHitTestVisible="False">
+                <Border.Background>
+                    <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                        <GradientStop Color="#3ECE4022" Offset="0" />
+                        <GradientStop Color="#00CE4022" Offset="1" />
+                    </RadialGradientBrush>
+                </Border.Background>
+            </Border>
+
+            <!-- Content -->
+            <Grid VerticalAlignment="Bottom" Margin="40,0,40,34">
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="ContentTransform" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="4" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="14" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- App name with accent stripe -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Border Width="4" Height="34" CornerRadius="2"
+                            Background="{StaticResource AccentBrush}"
+                            VerticalAlignment="Center" Margin="0,0,14,0" />
+                    <TextBlock Text="Rust+ Desk"
+                               FontFamily="Segoe UI"
+                               FontSize="30"
+                               FontWeight="SemiBold"
+                               Foreground="#FFFFFFFF"
+                               VerticalAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="2" Opacity="0.85" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Status row: pulsing dot + message -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="18,0,0,0">
+                    <Ellipse x:Name="StatusDot" Width="7" Height="7"
+                             Fill="{StaticResource AccentBrush}"
+                             VerticalAlignment="Center" Margin="0,0,9,0" />
+                    <TextBlock x:Name="StatusText"
+                               Text="Loading…"
+                               FontFamily="Segoe UI"
+                               FontSize="13"
+                               Foreground="#D9FFFFFF"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- Progress track -->
+                <Border Grid.Row="4"
+                        Height="4"
+                        CornerRadius="2"
+                        Background="#26FFFFFF"
+                        ClipToBounds="True">
+                    <!-- Moving fill -->
+                    <Border x:Name="ProgressFill"
+                            Width="160" Height="4"
+                            CornerRadius="2"
+                            HorizontalAlignment="Left">
+                        <Border.RenderTransform>
+                            <TranslateTransform X="-160" />
+                        </Border.RenderTransform>
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#00CE4022" Offset="0" />
+                                <GradientStop Color="#FFCE4022" Offset="0.5" />
+                                <GradientStop Color="#FFFF7A4D" Offset="0.75" />
+                                <GradientStop Color="#00FF7A4D" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </Border>
+
+                <!-- Footer: brand tag + version pill -->
+                <Grid Grid.Row="6">
+                    <TextBlock Text="RUST+ DESKTOP"
+                               FontFamily="Segoe UI"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="#59FFFFFF"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" />
+
+                    <Border HorizontalAlignment="Right"
+                            CornerRadius="10"
+                            Background="#1AFFFFFF"
+                            BorderThickness="1"
+                            BorderBrush="#22FFFFFF"
+                            Padding="10,3">
+                        <TextBlock x:Name="VersionText"
+                                   Text="v0.0.0"
+                                   FontFamily="Segoe UI"
+                                   FontSize="11"
+                                   Foreground="#B3FFFFFF" />
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

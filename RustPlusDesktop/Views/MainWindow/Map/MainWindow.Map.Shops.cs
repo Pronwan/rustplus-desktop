@@ -66,6 +66,8 @@ public partial class MainWindow
                     AppendLog($"[DEEPSEA] Active on first poll (mid-event) at {deepSeaShop.X:F0},{deepSeaShop.Y:F0} ({dir})");
                 }
             }
+            // The toggle button is always visible (see MainWindow.xaml) — spawn/despawn only
+            // drives the event state, not the button.
             _deepSeaActive = true;
         }
         else if (_deepSeaActive) // State change: active → inactive
@@ -84,6 +86,8 @@ public partial class MainWindow
             }
             _deepSeaActive = false;
             _deepSeaMidEvent = false;
+            // Event is over — drop back to the main map, but leave the toggle available.
+            Dispatcher.Invoke(() => SetShowingDeepSeaMap(false));
         }
     }
 
@@ -134,10 +138,18 @@ public partial class MainWindow
 
     private async void ChkShops_Checked(object sender, RoutedEventArgs e)
     {
+        // Shops removed from the Rust+ feed — never poll for them.
+        if (Services.RustApiFeatures.EventsAndShopsRemoved)
+        {
+            _shopTimer?.Stop();
+            _shopTimer = null;
+            return;
+        }
+
         if (ChkShops.IsChecked == true && _worldSizeS > 0 && _worldRectPx.Width > 0)
         {
             _shopTimer?.Stop();
-            _shopTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
+            _shopTimer = new DispatcherTimer { Interval = _shopDataAvailable ? ShopPollInterval : ShopProbeInterval };
             _shopTimer.Tick += async (_, __) => await PollShopsOnceAsync();
             _shopTimer.Start();
 
@@ -222,6 +234,9 @@ public partial class MainWindow
 
             UpdateShopsUI(shops);
             _lastShops = shops;
+
+            // Does this server still deliver vending data at all?
+            TrackShopDataAvailability(shops.Count > 0);
 
             UpdateShopLifetimes(shops);
 
@@ -472,7 +487,8 @@ public partial class MainWindow
 
                 _shopEls[clusterId] = grid;
                 Overlay.Children.Add(grid);
-                Panel.SetZIndex(grid, 850);
+                Panel.SetZIndex(grid, 910);
+                grid.Visibility = (_isShowingDeepSeaMap == (avgX < 0)) ? Visibility.Visible : Visibility.Collapsed;
                 el = grid;
                 _shopIconSet.Add(grid);
                 ApplyCurrentOverlayScale(el);
@@ -512,6 +528,8 @@ public partial class MainWindow
 
                     var tb = g.Children.OfType<TextBlock>().FirstOrDefault();
                     if (tb != null) tb.Text = cluster.Count > 1 ? cluster.Count.ToString() : "";
+
+                    g.Visibility = (_isShowingDeepSeaMap == (avgX < 0)) ? Visibility.Visible : Visibility.Collapsed;
                 }
                 if (el is FrameworkElement fe2) _shopIconSet.Add(fe2);
             }
@@ -637,7 +655,7 @@ public partial class MainWindow
             }
             else
             {
-                shopContainer.Children.Add(new TextBlock { Text = "No offers available", Foreground = Brushes.Gray, FontSize = 12, FontStyle = FontStyles.Italic, Margin = new Thickness(4) });
+                shopContainer.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoOffersAvailable"), Foreground = Brushes.Gray, FontSize = 12, FontStyle = FontStyles.Italic, Margin = new Thickness(4) });
             }
 
             ShopDetailsContent.Children.Add(shopContainer);

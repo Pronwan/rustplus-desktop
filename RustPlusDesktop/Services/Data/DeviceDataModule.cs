@@ -24,7 +24,8 @@ namespace RustPlusDesk.Services.Data
                 Alias = d.Alias,
                 IsGroup = d.IsGroup,
                 CustomIconId = d.CustomIconId,
-                CustomIconShortName = d.CustomIconShortName
+                CustomIconShortName = d.CustomIconShortName,
+                InGameAlarmTitle = d.InGameAlarmTitle
             };
 
             if (d.IsGroup && d.Children != null && d.Children.Count > 0)
@@ -173,7 +174,7 @@ namespace RustPlusDesk.Services.Data
             return newGroup;
         }
 
-        public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData canvasOverlay, bool explicitWipe = false)
+        public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData? canvasOverlay, bool explicitWipe = false)
         {
             var dtoList = new List<ExportedDeviceDto>();
             foreach (var d in devices)
@@ -190,46 +191,52 @@ namespace RustPlusDesk.Services.Data
             if (Auth.SupabaseAuthManager.Client != null)
             {
                 if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return 0;
-                int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
-                int actualCount = CountActualDevices(dtoList);
-                if (actualCount > maxDevices)
+                bool canUpload = TrackingService.CloudSyncEnabled
+                              && TrackingService.UploadConsentGiven
+                              && await Auth.SupabaseAuthManager.EnsureCloudSyncConsentAsync();
+                if (canUpload)
                 {
-                    AppendLog($"[devices/cloud] Sync skipped: Smart devices count ({actualCount}/{maxDevices}) exceeds limit for {Auth.SupabaseAuthManager.CurrentTier} tier.");
-                }
-                else
-                {
-                    try
+                    int maxDevices = Auth.SupabaseAuthManager.GetMaxDevices();
+                    int actualCount = CountActualDevices(dtoList);
+                    if (actualCount > maxDevices)
                     {
-                        var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
-
-                        if (!explicitWipe &&
-                            _lastSyncedDevicesJson == devJson &&
-                            _lastSyncedServerKey == serverKey &&
-                            _lastSyncedSteamId == steamId)
-                        {
-                            return 0; // Skip uploading if nothing has changed
-                        }
-
-                        var payload = new
-                        {
-                            server_key = serverKey,
-                            steam_id = steamId.ToString(),
-                            smart_devices = new
-                            {
-                                device_data = devJson
-                            }
-                        };
-                        await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
-
-                        _lastSyncedDevicesJson = devJson;
-                        _lastSyncedServerKey = serverKey;
-                        _lastSyncedSteamId = steamId;
-
-                        syncedCount = actualCount;
+                        AppendLog($"[devices/cloud] Sync skipped: Smart devices count ({actualCount}/{maxDevices}) exceeds limit for {Auth.SupabaseAuthManager.CurrentTier} tier.");
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                        try
+                        {
+                            var devJson = JsonSerializer.Serialize(dtoList, new JsonSerializerOptions { WriteIndented = false });
+
+                            if (!explicitWipe &&
+                                _lastSyncedDevicesJson == devJson &&
+                                _lastSyncedServerKey == serverKey &&
+                                _lastSyncedSteamId == steamId)
+                            {
+                                return 0; // Skip uploading if nothing has changed
+                            }
+
+                            var payload = new
+                            {
+                                server_key = serverKey,
+                                steam_id = steamId.ToString(),
+                                smart_devices = new
+                                {
+                                    device_data = devJson
+                                }
+                            };
+                            await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
+
+                            _lastSyncedDevicesJson = devJson;
+                            _lastSyncedServerKey = serverKey;
+                            _lastSyncedSteamId = steamId;
+
+                            syncedCount = actualCount;
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                        }
                     }
                 }
             }

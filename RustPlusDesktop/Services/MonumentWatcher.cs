@@ -11,8 +11,16 @@ namespace RustPlusDesk.Services
         private class ActiveEvent
         {
             public DateTime EndTime { get; set; }
+            public bool Announce15Min { get; set; } = false;
             public bool Announce10Min { get; set; } = false;
             public bool Announce5Min { get; set; } = false;
+
+            /// <summary>Whole minutes the timer was started with. Reminders at or above this
+            /// are suppressed, because the start announcement has already said that number.</summary>
+            public double TotalMinutes { get; set; } = HackDurationSeconds / 60.0;
+
+            /// <summary>False hides the crate marker but leaves alerts and commands alone.</summary>
+            public bool ShowCrate { get; set; } = true;
         }
 
         // Status eines Chinooks (um Spawn-Zeit und Ort zu tracken)
@@ -154,19 +162,32 @@ namespace RustPlusDesk.Services
                                        rigName == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
                                        rigName;
 
+                // Reminders only below the configured length. A 10-minute timer announces
+                // "10 minutes" when it starts, so repeating it a second later would be noise —
+                // and a 15-minute reminder on it would be a lie.
+                if (minutesLeft <= 15.0 && minutesLeft > 14.0 && !evt.Announce15Min && evt.TotalMinutes > 15.0)
+                {
+                    evt.Announce15Min = true;
+                    OnOilRigChatUpdate?.Invoke(this, AlertTemplateService.GetFormattedAlert("AlertCrateUnlocksIn15Min", localizedRigName));
+                }
+
                 // 10 Min Warnung
-                if (minutesLeft <= 10.0 && minutesLeft > 9.0 && !evt.Announce10Min)
+                if (minutesLeft <= 10.0 && minutesLeft > 9.0 && !evt.Announce10Min && evt.TotalMinutes > 10.0)
                 {
                     evt.Announce10Min = true;
                     OnOilRigChatUpdate?.Invoke(this, AlertTemplateService.GetFormattedAlert("AlertCrateUnlocksIn10Min", localizedRigName));
                 }
 
                 // 5 Min Warnung
-                if (minutesLeft <= 5.0 && minutesLeft > 4.0 && !evt.Announce5Min)
+                if (minutesLeft <= 5.0 && minutesLeft > 4.0 && !evt.Announce5Min && evt.TotalMinutes > 5.0)
                 {
                     evt.Announce5Min = true;
                     OnOilRigChatUpdate?.Invoke(this, AlertTemplateService.GetFormattedAlert("AlertCrateUnlocksIn5Min", localizedRigName));
                 }
+
+                // Alerts above have already run: hiding the crate is a map decision, not a
+                // reason to go quiet.
+                if (!evt.ShowCrate) continue;
 
                 // Position für Marker
                 double x = 0, y = 0;
@@ -316,13 +337,41 @@ namespace RustPlusDesk.Services
             _largeOilPos = null;
         }
 
-        private void TriggerEvent(string rigName, int durationSeconds = HackDurationSeconds)
+        /// <summary>
+        /// Starts a hack timer from outside the Chinook tracking.
+        ///
+        /// Exists because the Chinook markers this class was built on stopped arriving. A
+        /// player can tune an RF receiver to a rig's frequency and wire it to a Smart Alarm,
+        /// which the Logic Engine turns into this call — the game itself becomes the sensor.
+        /// Everything downstream is deliberately unchanged: same crate marker, same reminders,
+        /// same answer to the chat command.
+        /// </summary>
+        /// <param name="rigName">"Small Oil Rig" or "Large Oil Rig".</param>
+        /// <param name="showCrate">False draws no marker but keeps alerts and commands.</param>
+        /// <returns>False if that rig already has a running timer, which is not overwritten.</returns>
+        public bool TriggerExternal(string rigName, int durationSeconds, bool showCrate)
+        {
+            if (string.IsNullOrWhiteSpace(rigName) || durationSeconds <= 0) return false;
+
+            // A second alarm while one is running is the same hack being re-announced, not a
+            // new one. Restarting would push the countdown past the real unlock.
+            if (_activeEvents.TryGetValue(rigName, out var running) && running.EndTime > DateTime.UtcNow)
+                return false;
+
+            TriggerEvent(rigName, durationSeconds, showCrate);
+            return true;
+        }
+
+        private void TriggerEvent(string rigName, int durationSeconds = HackDurationSeconds, bool showCrate = true)
         {
             var evt = new ActiveEvent
             {
                 EndTime = DateTime.UtcNow.AddSeconds(durationSeconds),
+                Announce15Min = false,
                 Announce10Min = false,
-                Announce5Min = false
+                Announce5Min = false,
+                TotalMinutes = durationSeconds / 60.0,
+                ShowCrate = showCrate
             };
 
             _activeEvents[rigName] = evt;

@@ -23,9 +23,77 @@ namespace RustPlusDesk.Views
         private bool _filterSell = true;
         private bool _filterBuy = true;
         private bool _filterHideZero = false;
+        private bool _filterHideMonuments = false;
 
         private string _sortMode = "default";
         private int _resourceFilterId = 0;
+        private string _selectedCategory = "all";
+
+        private static readonly HashSet<string> KnownMonumentShopLabels = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Resource Exchange", "Outpost Resource", "Extra Resource", "Medical Shop",
+            "Building Shop", "Components Shop", "Weapons Shop", "Attire shop",
+            "Farming shop", "Main Food Shop", "Outpost",
+            "Bandit Arms Extra", "Bandit Arms Dealer", "Bandit Produce", "Bandit Camp Black Market",
+            "Produce Shop", "Camp Shop", "Casino Bar Shopkeeper", "Bandit Weapons Shop", "Bandit Town", "Bandit Camp",
+            "Boat Vendor", "Fishing shop", "Boat Shop", "Fishing Village Shop", "Fishing Village",
+            "Horse Vendor", "Stable Vendor", "Ranch Shop", "Barn Shop", "Ranch", "Stables",
+            "Ferry Terminal", "Cargo Ship"
+        };
+
+        private bool IsMonumentShop(RustPlusClientReal.ShopMarker s)
+        {
+            // 1. Off-map / Deep Sea NPC shops
+            if (s.X < 0 || s.Y < 0) return true;
+
+            // 2. Check label against known NPC / Monument Shop names & keywords
+            if (!string.IsNullOrWhiteSpace(s.Label))
+            {
+                string label = s.Label.Trim();
+                if (KnownMonumentShopLabels.Contains(label)) return true;
+
+                string lower = label.ToLowerInvariant();
+                if (lower.Contains("outpost") || lower.Contains("bandit") || lower.Contains("fishing") || 
+                    lower.Contains("ranch") || lower.Contains("stable") || lower.Contains("ferry") || 
+                    lower.Contains("cargo") || lower.Contains("monument"))
+                {
+                    return true;
+                }
+            }
+
+            // 3. Proximity to map monuments
+            if (_mainWindow != null)
+            {
+                var mons = _mainWindow.GetMapMonumentsList();
+                if (mons != null && mons.Any())
+                {
+                    foreach (var m in mons)
+                    {
+                        if (string.IsNullOrWhiteSpace(m.Name)) continue;
+                        string mLower = m.Name.ToLowerInvariant();
+
+                        bool isTargetMonument = mLower.Contains("outpost") || mLower.Contains("bandit") || 
+                                                 mLower.Contains("fishing") || mLower.Contains("ranch") || 
+                                                 mLower.Contains("stable") || mLower.Contains("barn") || 
+                                                 mLower.Contains("ferry") || mLower.Contains("village") ||
+                                                 mLower.Contains("compound");
+
+                        if (isTargetMonument)
+                        {
+                            double dx = m.X - s.X;
+                            double dy = m.Y - s.Y;
+                            double dist = Math.Sqrt(dx * dx + dy * dy);
+                            if (dist <= 180.0) // 180m radius covers the monument perimeter
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
 
         // Custom colors matching HTML premium styles
         private static readonly Brush ActiveAccentBg = new SolidColorBrush(Color.FromArgb(38, 0, 173, 239)); // rgba(0, 173, 239, .15)
@@ -40,6 +108,229 @@ namespace RustPlusDesk.Views
         private static readonly Brush InactiveBorder = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255)); // rgba(255, 255, 255, .08)
         private static readonly Brush InactiveText = new SolidColorBrush(Color.FromArgb(153, 236, 239, 241)); // rgba(236, 239, 241, .6)
 
+        // Category loading and mapping cache
+        private static bool _categoriesLoaded = false;
+        private static readonly Dictionary<string, string> _shortNameToCategory = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<int, string> _itemIdToCategory = new();
+        private static readonly List<string> _allCategoriesList = new();
+
+        private static readonly Dictionary<string, string> _categoryRepresentativeIcons = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Weapons"] = "rifle.ak",
+            ["Ammunition"] = "ammo.rifle",
+            ["Components"] = "riflebody",
+            ["Attire"] = "metal.facemask",
+            ["Electrical"] = "autoturret",
+            ["Medical"] = "syringe.medical",
+            ["Food"] = "pumpkin",
+            ["Tool"] = "hatchet",
+            ["Tools"] = "hatchet",
+            ["Construction"] = "building.planner",
+            ["Fun"] = "fun.guitar",
+            ["Items"] = "box.wooden.large",
+            ["Misc"] = "keycard_red",
+            ["Resources"] = "scrap",
+            ["Traps"] = "guntrap",
+            ["Vehicle"] = "minicopter",
+            ["Vehicles"] = "minicopter"
+        };
+
+        private static ImageSource? GetCategoryIcon(string categoryName)
+        {
+            if (_categoryRepresentativeIcons.TryGetValue(categoryName, out var shortName))
+            {
+                var icon = MainWindow.ResolveItemIcon(0, shortName, 32);
+                if (icon != null) return icon;
+            }
+
+            EnsureCategoriesLoaded();
+            var firstItemShort = _shortNameToCategory.FirstOrDefault(kv => kv.Value.Equals(categoryName, StringComparison.OrdinalIgnoreCase)).Key;
+            if (!string.IsNullOrEmpty(firstItemShort))
+            {
+                return MainWindow.ResolveItemIcon(0, firstItemShort, 32);
+            }
+
+            return null;
+        }
+
+        private static void EnsureCategoriesLoaded()
+        {
+            if (_categoriesLoaded) return;
+            _categoriesLoaded = true;
+
+            try
+            {
+                string jsonContent = "";
+                bool loaded = false;
+
+                var baseDir = AppContext.BaseDirectory;
+                var currDir = System.IO.Directory.GetCurrentDirectory();
+                var entryAsm = System.Reflection.Assembly.GetEntryAssembly();
+                var entryDir = entryAsm != null ? System.IO.Path.GetDirectoryName(entryAsm.Location) : null;
+
+                var filePaths = new[]
+                {
+                    System.IO.Path.Combine(baseDir, "recycler-items.json"),
+                    System.IO.Path.Combine(currDir, "recycler-items.json"),
+                    entryDir is null ? null : System.IO.Path.Combine(entryDir, "recycler-items.json"),
+                    System.IO.Path.Combine(baseDir, "assets", "recycler-items.json"),
+                    System.IO.Path.Combine(baseDir, "data",   "recycler-items.json"),
+                    System.IO.Path.Combine(baseDir, "Assets", "Data", "recycler-items.json"),
+                };
+
+                foreach (var path in filePaths)
+                {
+                    if (path != null && System.IO.File.Exists(path))
+                    {
+                        try
+                        {
+                            jsonContent = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);
+                            loaded = true;
+                            break;
+                        }
+                        catch { }
+                    }
+                }
+
+                if (!loaded)
+                {
+                    string asmName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? "RustPlusDesk";
+                    var packUris = new[]
+                    {
+                        "pack://application:,,,/recycler-items.json",
+                        "pack://application:,,,/assets/recycler-items.json",
+                        "pack://application:,,,/data/recycler-items.json",
+                        "pack://application:,,,/Assets/Data/recycler-items.json",
+                        $"pack://application:,,,/{asmName};component/recycler-items.json",
+                        $"pack://application:,,,/{asmName};component/assets/recycler-items.json",
+                        $"pack://application:,,,/{asmName};component/data/recycler-items.json",
+                        $"pack://application:,,,/{asmName};component/Assets/Data/recycler-items.json",
+                    };
+
+                    foreach (var uri in packUris)
+                    {
+                        try
+                        {
+                            var sri = Application.GetResourceStream(new Uri(uri));
+                            if (sri?.Stream != null)
+                            {
+                                using var r = new System.IO.StreamReader(sri.Stream);
+                                jsonContent = r.ReadToEnd();
+                                loaded = true;
+                                break;
+                            }
+                        }
+                        catch { }
+                    }
+                }
+
+                if (!loaded)
+                {
+                    string entryName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? "RustPlusDesk";
+                    var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                    var resName = $"{entryName}.Assets.Data.recycler-items.json";
+                    try
+                    {
+                        using var stream = asm.GetManifestResourceStream(resName);
+                        if (stream != null)
+                        {
+                            using var r = new System.IO.StreamReader(stream);
+                            jsonContent = r.ReadToEnd();
+                            loaded = true;
+                        }
+                    }
+                    catch { }
+                }
+
+                if (loaded && !string.IsNullOrEmpty(jsonContent))
+                {
+                    var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var parsedItems = System.Text.Json.JsonSerializer.Deserialize<List<RecyclerItemData>>(jsonContent, options);
+                    if (parsedItems != null)
+                    {
+                        var catSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        foreach (var item in parsedItems)
+                        {
+                            if (!string.IsNullOrEmpty(item.category))
+                            {
+                                catSet.Add(item.category);
+                                if (!string.IsNullOrEmpty(item.shortName))
+                                {
+                                    _shortNameToCategory[item.shortName] = item.category;
+                                }
+                                if (item.ingameId != 0)
+                                {
+                                    _itemIdToCategory[item.ingameId] = item.category;
+                                }
+                                if (int.TryParse(item.id, out int parsedId) && parsedId != 0)
+                                {
+                                    _itemIdToCategory[parsedId] = item.category;
+                                }
+                            }
+                        }
+                        // Add Keycard mappings to Misc category
+                        _shortNameToCategory["keycard_green"] = "Misc";
+                        _shortNameToCategory["keycard_blue"] = "Misc";
+                        _shortNameToCategory["keycard_red"] = "Misc";
+                        _itemIdToCategory[37122747] = "Misc";
+                        _itemIdToCategory[-484206264] = "Misc";
+                        _itemIdToCategory[-1880870149] = "Misc";
+                        catSet.Add("Misc");
+
+                        var orderedKeys = _categoryRepresentativeIcons.Keys.ToList();
+                        _allCategoriesList.Clear();
+                        _allCategoriesList.AddRange(catSet.OrderBy(c =>
+                        {
+                            int idx = orderedKeys.FindIndex(k => k.Equals(c, StringComparison.OrdinalIgnoreCase));
+                            return idx >= 0 ? idx : int.MaxValue;
+                        }));
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public static string? GetItemCategory(int itemId, string? itemShortName)
+        {
+            EnsureCategoriesLoaded();
+
+            if (itemId != 0 && _itemIdToCategory.TryGetValue(itemId, out var catByItemId))
+            {
+                return catByItemId;
+            }
+
+            if (!string.IsNullOrEmpty(itemShortName) && _shortNameToCategory.TryGetValue(itemShortName, out var catByShort))
+            {
+                return catByShort;
+            }
+
+            if (!string.IsNullOrEmpty(itemShortName) && itemShortName.Contains("keycard", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Misc";
+            }
+
+            if (itemId != 0 && MainWindow.sItemsById.TryGetValue(itemId, out var info))
+            {
+                if (!string.IsNullOrEmpty(info.ShortName))
+                {
+                    if (_shortNameToCategory.TryGetValue(info.ShortName, out var catByResolvedShort))
+                    {
+                        return catByResolvedShort;
+                    }
+                    if (info.ShortName.Contains("keycard", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "Misc";
+                    }
+                }
+                if (!string.IsNullOrEmpty(info.Display) && info.Display.Contains("keycard", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Misc";
+                }
+            }
+
+            return null;
+        }
+
         public ShopSearchControl()
         {
             InitializeComponent();
@@ -52,6 +343,9 @@ namespace RustPlusDesk.Views
             // Initial button styles
             UpdateFilterButtonsStyles();
             
+            // Populate category dropdown with icons
+            PopulateCategoryComboBox();
+
             // Populate resource dropdown with icons
             PopulateResourceComboBox();
             
@@ -60,6 +354,36 @@ namespace RustPlusDesk.Views
 
             // Refresh search results
             RefreshSearchResults();
+        }
+
+        public class CategoryItem
+        {
+            public string Name { get; set; } = "all";
+            public string Display { get; set; } = "All Categories";
+            public ImageSource? Icon { get; set; }
+        }
+
+        private void PopulateCategoryComboBox()
+        {
+            EnsureCategoriesLoaded();
+
+            var categories = new List<CategoryItem>
+            {
+                new CategoryItem { Name = "all", Display = "All Categories", Icon = null }
+            };
+
+            foreach (var cat in _allCategoriesList)
+            {
+                categories.Add(new CategoryItem
+                {
+                    Name = cat,
+                    Display = cat,
+                    Icon = GetCategoryIcon(cat)
+                });
+            }
+
+            CmbCategory.ItemsSource = categories;
+            CmbCategory.SelectedIndex = 0;
         }
 
         // Helper for Resource ComboBox with icons
@@ -102,6 +426,10 @@ namespace RustPlusDesk.Views
             public string Display { get; set; } = string.Empty;
             public string ShortName { get; set; } = string.Empty;
             public ImageSource? Icon { get; set; }
+            public bool IsCategory { get; set; } = false;
+            public string CategoryName { get; set; } = string.Empty;
+
+            public Visibility CategoryBadgeVisibility => IsCategory ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // Autocomplete filtering logic
@@ -116,6 +444,11 @@ namespace RustPlusDesk.Views
             string query = TxtShopSearch.Text.Trim();
             if (string.IsNullOrWhiteSpace(query))
             {
+                _selectedCategory = "all";
+                if (CmbCategory != null && CmbCategory.SelectedIndex != 0)
+                {
+                    CmbCategory.SelectedIndex = 0;
+                }
                 PopupAutocomplete.IsOpen = false;
                 _selectedItem = null;
                 RefreshSearchResults();
@@ -149,23 +482,89 @@ namespace RustPlusDesk.Views
         private async System.Threading.Tasks.Task RunAutocompleteAndSearchAsync(string query, System.Threading.CancellationToken token)
         {
             var lowercaseQuery = query.ToLowerInvariant();
+            EnsureCategoriesLoaded();
             
-            // Search in items db on a background thread to prevent UI thread lock
+            // Search both categories and items db on a background thread to prevent UI thread lock
             var matches = await System.Threading.Tasks.Task.Run(() =>
             {
-                return MainWindow.sItemsById.Values
-                    .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
-                                 (ii.Display.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase) || 
-                                  (ii.ShortName != null && ii.ShortName.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase))))
-                    .Take(20)
-                    .Select(ii => new AutocompleteItem
+                var rawList = new List<AutocompleteItem>();
+
+                // 1. Categories matching query (or all categories if query is empty)
+                var matchedCategories = string.IsNullOrWhiteSpace(lowercaseQuery)
+                    ? _allCategoriesList
+                    : _allCategoriesList.Where(c => c.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                foreach (var cat in matchedCategories)
+                {
+                    rawList.Add(new AutocompleteItem
                     {
-                        Id = ii.Id,
-                        Display = ii.Display,
-                        ShortName = ii.ShortName ?? "",
-                        Icon = MainWindow.ResolveItemIcon(ii.Id, ii.ShortName, 32)
-                    })
+                        Id = 0,
+                        Display = cat,
+                        ShortName = cat.ToLowerInvariant(),
+                        Icon = GetCategoryIcon(cat),
+                        IsCategory = true,
+                        CategoryName = cat
+                    });
+                }
+
+                // 2. Items matching query
+                if (!string.IsNullOrWhiteSpace(lowercaseQuery))
+                {
+                    var itemMatches = MainWindow.sItemsById.Values
+                        .Where(ii => !string.IsNullOrWhiteSpace(ii.Display) && 
+                                     (ii.Display.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase) || 
+                                      (ii.ShortName != null && ii.ShortName.Contains(lowercaseQuery, StringComparison.OrdinalIgnoreCase))))
+                        .Select(ii => new AutocompleteItem
+                        {
+                            Id = ii.Id,
+                            Display = ii.Display,
+                            ShortName = ii.ShortName ?? "",
+                            Icon = MainWindow.ResolveItemIcon(ii.Id, ii.ShortName, 32),
+                            IsCategory = false,
+                            CategoryName = string.Empty
+                        });
+
+                    rawList.AddRange(itemMatches);
+                }
+
+                if (string.IsNullOrWhiteSpace(lowercaseQuery))
+                {
+                    return rawList;
+                }
+
+                // 3. Match Priority Ranking: Rank 1 = Exact match, Rank 2 = Starts with, Rank 3 = Contains
+                int GetRank(AutocompleteItem item)
+                {
+                    string disp = item.Display;
+                    string sn = item.ShortName;
+
+                    // Rank 1: Exact match (Display or ShortName)
+                    if (disp.Equals(lowercaseQuery, StringComparison.OrdinalIgnoreCase) ||
+                        sn.Equals(lowercaseQuery, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return 1;
+                    }
+
+                    // Rank 2: Starts with match
+                    if (disp.StartsWith(lowercaseQuery, StringComparison.OrdinalIgnoreCase) ||
+                        sn.StartsWith(lowercaseQuery, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return 2;
+                    }
+
+                    // Rank 3: Partial contains match
+                    return 3;
+                }
+
+                var ordered = rawList
+                    .OrderBy(item => GetRank(item))
+                    .ThenBy(item => item.IsCategory ? 0 : 1) // Prefer category if equal rank
+                    .ThenBy(item => item.Display.Length)     // Prefer shorter display names
+                    .ThenBy(item => item.Display)
+                    .Take(60)
                     .ToList();
+
+                return ordered;
             });
 
             if (token.IsCancellationRequested) return;
@@ -190,7 +589,26 @@ namespace RustPlusDesk.Views
             {
                 _selectedItem = selected;
                 TxtShopSearch.TextChanged -= TxtShopSearch_TextChanged;
-                TxtShopSearch.Text = selected.Display;
+
+                if (selected.IsCategory)
+                {
+                    _selectedCategory = selected.CategoryName;
+                    TxtShopSearch.Text = selected.CategoryName;
+
+                    if (CmbCategory != null)
+                    {
+                        var catItem = CmbCategory.Items.OfType<CategoryItem>().FirstOrDefault(c => c.Name.Equals(selected.CategoryName, StringComparison.OrdinalIgnoreCase));
+                        if (catItem != null)
+                        {
+                            CmbCategory.SelectedItem = catItem;
+                        }
+                    }
+                }
+                else
+                {
+                    TxtShopSearch.Text = selected.Display;
+                }
+
                 TxtShopSearch.TextChanged += TxtShopSearch_TextChanged;
                 
                 PopupAutocomplete.IsOpen = false;
@@ -245,10 +663,12 @@ namespace RustPlusDesk.Views
 
         private void TxtShopSearch_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(TxtShopSearch.Text) && LstAutocomplete.HasItems)
-            {
-                PopupAutocomplete.IsOpen = true;
-            }
+            _searchCts?.Cancel();
+            _searchCts = new System.Threading.CancellationTokenSource();
+            var token = _searchCts.Token;
+
+            string query = TxtShopSearch.Text.Trim();
+            _ = RunAutocompleteAndSearchAsync(query, token);
         }
 
         private void TxtShopSearch_LostFocus(object sender, RoutedEventArgs e)
@@ -270,6 +690,10 @@ namespace RustPlusDesk.Views
             ApplyToggleButtonStyle(TglShopSells, _filterSell, false);
             ApplyToggleButtonStyle(TglShopBuys, _filterBuy, false);
             ApplyToggleButtonStyle(TglShopHideZero, _filterHideZero, false);
+            if (TglShopHideMonuments != null)
+            {
+                ApplyToggleButtonStyle(TglShopHideMonuments, _filterHideMonuments, true);
+            }
         }
 
         private void ApplyToggleButtonStyle(Button btn, bool isOn, bool isRed)
@@ -375,6 +799,13 @@ namespace RustPlusDesk.Views
             RefreshSearchResults();
         }
 
+        private void TglShopHideMonuments_Click(object sender, RoutedEventArgs e)
+        {
+            _filterHideMonuments = !_filterHideMonuments;
+            UpdateFilterButtonsStyles();
+            RefreshSearchResults();
+        }
+
         private void CmbSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (CmbSort.SelectedItem is ComboBoxItem item)
@@ -393,6 +824,14 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbCategory.SelectedItem is CategoryItem item)
+            {
+                _selectedCategory = item.Name;
+                RefreshSearchResults();
+            }
+        }
 
         // Collapsible alerts section trigger
         private void AlertHdr_MouseDown(object sender, MouseButtonEventArgs e)
@@ -436,9 +875,22 @@ namespace RustPlusDesk.Views
             {
                 var list = new List<(RustPlusClientReal.ShopMarker Shop, List<RustPlusClientReal.ShopOrder> Offers)>();
                 
+                EnsureCategoriesLoaded();
+                bool hasResourceFilter = _resourceFilterId != 0;
+                bool hasCategoryFilter = !string.IsNullOrEmpty(_selectedCategory) && !_selectedCategory.Equals("all", StringComparison.OrdinalIgnoreCase);
+
+                string? queryCategoryMatch = null;
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    queryCategoryMatch = _allCategoriesList.FirstOrDefault(c => c.Equals(query, StringComparison.OrdinalIgnoreCase));
+                }
+
                 foreach (var s in shops)
                 {
                     if (s.Orders == null || !s.Orders.Any()) continue;
+
+                    // Filter out monument shops if toggle is active
+                    if (_filterHideMonuments && IsMonumentShop(s)) continue;
 
                     bool hasQuery = !string.IsNullOrWhiteSpace(query);
 
@@ -447,37 +899,51 @@ namespace RustPlusDesk.Views
                         // 1. Stock filter
                         if (_filterHideZero && o.Stock <= 0) return false;
 
-                        // 2. Resource ID filter & Text Query combination
+                        // 2. Resource ID filter & Text Query & Category combination
                         string oName = MainWindow.ResolveItemName(o.ItemId, o.ItemShortName).ToLowerInvariant();
                         string cName = MainWindow.ResolveItemName(o.CurrencyItemId, o.CurrencyShortName).ToLowerInvariant();
+                        string? oCat = GetItemCategory(o.ItemId, o.ItemShortName);
+                        string? cCat = GetItemCategory(o.CurrencyItemId, o.CurrencyShortName);
 
-                        bool hasResourceFilter = _resourceFilterId != 0;
-
-                        // Combine text query (matching display names or shortnames) and resource filters under the Sells and Buys toggles
+                        // Combine text query, category filter, and resource filter under the Sells and Buys toggles
                         bool isSellMatch = true;
-                        if (hasQuery)
+                        if (hasCategoryFilter)
                         {
-                            bool matchesSellQuery = oName.Contains(query) || (o.ItemShortName != null && o.ItemShortName.Contains(query, StringComparison.OrdinalIgnoreCase));
+                            if (oCat == null || !oCat.Equals(_selectedCategory, StringComparison.OrdinalIgnoreCase))
+                                isSellMatch = false;
+                        }
+                        if (isSellMatch && hasQuery)
+                        {
+                            bool matchesSellQuery = oName.Contains(query) || 
+                                                   (o.ItemShortName != null && o.ItemShortName.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                                                   (queryCategoryMatch != null && oCat != null && oCat.Equals(queryCategoryMatch, StringComparison.OrdinalIgnoreCase));
                             if (!matchesSellQuery)
                             {
                                 isSellMatch = false;
                             }
                         }
-                        if (hasResourceFilter && o.CurrencyItemId != _resourceFilterId)
+                        if (isSellMatch && hasResourceFilter && o.CurrencyItemId != _resourceFilterId)
                         {
                             isSellMatch = false;
                         }
 
                         bool isBuyMatch = true;
-                        if (hasQuery)
+                        if (hasCategoryFilter)
                         {
-                            bool matchesBuyQuery = cName.Contains(query) || (o.CurrencyShortName != null && o.CurrencyShortName.Contains(query, StringComparison.OrdinalIgnoreCase));
+                            if (cCat == null || !cCat.Equals(_selectedCategory, StringComparison.OrdinalIgnoreCase))
+                                isBuyMatch = false;
+                        }
+                        if (isBuyMatch && hasQuery)
+                        {
+                            bool matchesBuyQuery = cName.Contains(query) || 
+                                                  (o.CurrencyShortName != null && o.CurrencyShortName.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                                                  (queryCategoryMatch != null && cCat != null && cCat.Equals(queryCategoryMatch, StringComparison.OrdinalIgnoreCase));
                             if (!matchesBuyQuery)
                             {
                                 isBuyMatch = false;
                             }
                         }
-                        if (hasResourceFilter && o.ItemId != _resourceFilterId)
+                        if (isBuyMatch && hasResourceFilter && o.ItemId != _resourceFilterId)
                         {
                             isBuyMatch = false;
                         }
@@ -701,7 +1167,7 @@ namespace RustPlusDesk.Views
                     rule.IsSaved = !rule.IsSaved;
                     _mainWindow.SavePersistentAlerts();
                     ApplyAlertBtnStyle(btnSave, rule.IsSaved, true);
-                    btnSave.ToolTip = rule.IsSaved ? "Saved (click to unsave)" : "Save alert";
+                    btnSave.ToolTip = rule.IsSaved ? RustPlusDesk.Properties.Resources.GetString("CodeUiSavedClickToUnsave") : RustPlusDesk.Properties.Resources.GetString("CodeUiSaveAlert");
                 };
                 Grid.SetColumn(btnSave, 3);
                 grid.Children.Add(btnSave);

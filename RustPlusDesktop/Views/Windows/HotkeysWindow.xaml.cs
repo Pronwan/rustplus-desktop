@@ -86,7 +86,7 @@ namespace RustPlusDesk.Views
             CbMode.SelectedIndex = _options.ParallelMode ? 1 : 0;
             SldDelay.Value = _options.ToggleDelayMs;
             PanelDelay.Visibility = _options.ParallelMode ? Visibility.Collapsed : Visibility.Visible;
-            TxtDelayLabel.Text = $"Toggle Delay: {_options.ToggleDelayMs}ms";
+            TxtDelayLabel.Text = string.Format(Properties.Resources.GetString("FormatToggleDelay"), _options.ToggleDelayMs);
         }
 
         private bool IsHotkeyWarningVisible(string? hotkey)
@@ -158,7 +158,7 @@ namespace RustPlusDesk.Views
         {
             if (TxtDelayLabel == null || _options == null) return;
             int val = (int)e.NewValue;
-            TxtDelayLabel.Text = $"Toggle Delay: {val}ms";
+            TxtDelayLabel.Text = string.Format(Properties.Resources.GetString("FormatToggleDelay"), val);
             _options.ToggleDelayMs = val;
         }
 

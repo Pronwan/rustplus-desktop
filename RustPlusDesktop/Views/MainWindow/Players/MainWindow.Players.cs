@@ -251,7 +251,7 @@ public partial class MainWindow
         catch (Exception ex)
         {
             if (PlayersTab == null) return;
-            PlayersTab.TxtOnlinePlayersStatus.Text = $"Error: {ex.Message}";
+            PlayersTab.TxtOnlinePlayersStatus.Text = string.Format(Properties.Resources.GetString("FormatPlayerStatusError"), ex.Message);
             PlayersTab.PnlOnlineStatus.Visibility = Visibility.Visible;
             PlayersTab.PbOnlineLoading.Visibility = Visibility.Collapsed;
             if (PlayersTab.PnlManualTrack != null) PlayersTab.PnlManualTrack.Visibility = Visibility.Visible;
@@ -455,7 +455,7 @@ public partial class MainWindow
             }
             if (players.Count == 0 && !string.IsNullOrEmpty(filter))
             {
-                PlayersTab?.ListTrackedPlayers.Children.Add(new TextBlock { Text = "No results found matching filter.", Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
+                PlayersTab?.ListTrackedPlayers.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoResultsFoundMatchingFilter"), Margin = new Thickness(0, 20, 0, 0), Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center });
             }
         }
         catch (Exception ex)
@@ -686,13 +686,13 @@ public partial class MainWindow
         grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // Players List
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Buttons
 
-        grid.Children.Add(new TextBlock { Text = "Manage Player Group", FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
+        grid.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiManagePlayerGroup"), FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
 
-        var nameLabel = new TextBlock { Text = "Group Name", Margin = new Thickness(0, 10, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
+        var nameLabel = new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("GroupName"), Margin = new Thickness(0, 10, 0, 8), Foreground = (Brush)FindResource("TextSubtle") };
         Grid.SetRow(nameLabel, 1);
         grid.Children.Add(nameLabel);
 
-        var nameInput = new WpfUi.TextBox { PlaceholderText = "Enter group name..." };
+        var nameInput = new WpfUi.TextBox { PlaceholderText = Properties.Resources.EnterGroupNamePlaceholder };
         Grid.SetRow(nameInput, 2);
         grid.Children.Add(nameInput);
         
@@ -760,7 +760,7 @@ public partial class MainWindow
             var gName = nameInput.Text.Trim();
             var gColor = colorSelector.Getter();
             if (string.IsNullOrEmpty(gName)) {
-                MessageBox.Show("Please enter a group name.");
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("EnterGroupName"));
                 return;
             }
             
@@ -798,7 +798,7 @@ public partial class MainWindow
     {
         var win = new Window
         {
-            Title = "Assign Group",
+            Title = Properties.Resources.GetString("AssignGroupTitle"),
             Width = 400,
             Height = 350,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -821,14 +821,14 @@ public partial class MainWindow
         
         stack.Children.Add(new TextBlock { Text = $"Group Settings: {player.Name}", FontSize = 20, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,16) });
         
-        stack.Children.Add(new TextBlock { Text = "Group Name", Foreground = (Brush)FindResource("TextSubtle") });
+        stack.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("GroupName"), Foreground = (Brush)FindResource("TextSubtle") });
         var input = new WpfUi.TextBox { 
             Text = player.GroupName, 
-            PlaceholderText = "Enter group name..."
+            PlaceholderText = Properties.Resources.EnterGroupNamePlaceholder
         };
         stack.Children.Add(input);
 
-        stack.Children.Add(new TextBlock { Text = "Group Color", Margin = new Thickness(0, 8, 0, 0), Foreground = (Brush)FindResource("TextSubtle") });
+        stack.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("GroupColor"), Margin = new Thickness(0, 8, 0, 0), Foreground = (Brush)FindResource("TextSubtle") });
         var colorSelector = CreateColorSelector(string.IsNullOrEmpty(player.GroupColor) ? "None" : player.GroupColor);
         stack.Children.Add(colorSelector.UI);
 
@@ -863,7 +863,7 @@ public partial class MainWindow
 
             var win = new Window
             {
-                Title = "Player Activity Analytics & Forecasts",
+                Title = Properties.Resources.GetString("PlayerAnalyticsTitle"),
                 Width = 900,
                 Height = 750,
                 Background = new SolidColorBrush(Color.FromRgb(18, 20, 23)),
@@ -945,7 +945,7 @@ public partial class MainWindow
         catch (Exception ex)
         {
             _playersPopoutWin = null;
-            MessageBox.Show($"Failed to open players window:\n\n{ex.GetType().Name}: {ex.Message}\n\nStack:\n{ex.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedOpenPlayers"), ex.GetType().Name, ex.Message, ex.StackTrace), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -953,7 +953,7 @@ public partial class MainWindow
     {
         var win = new Window
         {
-            Title = "Players",
+            Title = Properties.Resources.Players,
             Width = 500,
             Height = 700,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
@@ -988,7 +988,7 @@ public partial class MainWindow
         var onlineForegroundBinding = new System.Windows.Data.Binding("Foreground") { Source = onlineTab };
         onlineIcon.SetBinding(Control.ForegroundProperty, onlineForegroundBinding);
 
-        var onlineText = new TextBlock { Text = "Online", VerticalAlignment = VerticalAlignment.Center };
+        var onlineText = new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("Online"), VerticalAlignment = VerticalAlignment.Center };
         onlineHeaderPanel.Children.Add(onlineIcon);
         onlineHeaderPanel.Children.Add(onlineText);
         onlineTab.Header = onlineHeaderPanel;
@@ -1014,7 +1014,7 @@ public partial class MainWindow
         var trackedForegroundBinding = new System.Windows.Data.Binding("Foreground") { Source = trackedTab };
         trackedIcon.SetBinding(Control.ForegroundProperty, trackedForegroundBinding);
 
-        var trackedText = new TextBlock { Text = "Tracked", VerticalAlignment = VerticalAlignment.Center };
+        var trackedText = new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("TrackedTab"), VerticalAlignment = VerticalAlignment.Center };
         trackedHeaderPanel.Children.Add(trackedIcon);
         trackedHeaderPanel.Children.Add(trackedText);
         trackedTab.Header = trackedHeaderPanel;
@@ -1142,7 +1142,7 @@ public partial class MainWindow
                     {
                         var srvName = TrackingService.LastServer.name ?? "Unknown";
                         TrackingService.TrackPlayer(capturedBmId, capturedName, srvName);
-                        btnTrack.Content = "Details";
+                        btnTrack.Content = RustPlusDesk.Properties.Resources.GetString("UiDetails");
                         btnTrack.Appearance = WpfUi.ControlAppearance.Primary;
                     }
                 };

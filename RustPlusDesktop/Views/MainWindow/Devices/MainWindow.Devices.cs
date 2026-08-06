@@ -682,19 +682,25 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private void OnSelectAlarmAudioFileClick(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is SmartDevice dev)
-        {
-            var dlg = new Microsoft.Win32.OpenFileDialog
-            {
-                Filter = "Audio Files|*.mp3;*.wav|All Files|*.*"
-            };
+        if (sender is not MenuItem mi) return;
 
-            if (dlg.ShowDialog() == true)
-            {
-                dev.AudioFilePath = dlg.FileName;
-                _vm.Save();
-                AppendLog($"Selected audio for #{dev.EntityId}: {dlg.SafeFileName}");
-            }
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Audio Files|*.mp3;*.wav|All Files|*.*"
+        };
+
+        if (dlg.ShowDialog() != true) return;
+
+        if (mi.Tag is SmartDevice dev)
+        {
+            dev.AudioFilePath = dlg.FileName;
+            _vm.Save();
+            AppendLog($"Selected audio for #{dev.EntityId}: {dlg.SafeFileName}");
+        }
+        else if (Equals(mi.Tag, "GenericAlarm"))
+        {
+            TrackingService.GenericAlarmAudioFilePath = dlg.FileName;
+            AppendLog($"Selected generic alarm audio: {dlg.SafeFileName}");
         }
     }
 
@@ -705,6 +711,11 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
             dev.AudioFilePath = null;
             _vm.Save();
             AppendLog($"Reset audio to default for #{dev.EntityId}");
+        }
+        else if (sender is MenuItem generic && Equals(generic.Tag, "GenericAlarm"))
+        {
+            TrackingService.GenericAlarmAudioFilePath = string.Empty;
+            AppendLog("Reset generic alarm audio to default");
         }
     }
 
@@ -740,7 +751,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
     private void PlayAlarmAudio(SmartDevice? dev)
     {
         // Wenn ein Gerät erkannt wurde, prüfen wir seine individuellen Audio-Einstellungen.
-        // Wenn kein Gerät erkannt wurde (generischer Alarm), spielen wir den Standard-Sound ab.
+        // Wenn kein Gerät erkannt wurde, verwenden wir den generischen benutzerdefinierten oder Standard-Sound.
         if (dev != null && !dev.AudioEnabled) return;
 
         try
@@ -751,6 +762,10 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
             if (dev != null && !string.IsNullOrWhiteSpace(dev.AudioFilePath))
             {
                 audioFile = dev.AudioFilePath!;
+            }
+            else if (dev == null && !string.IsNullOrWhiteSpace(TrackingService.GenericAlarmAudioFilePath))
+            {
+                audioFile = TrackingService.GenericAlarmAudioFilePath;
             }
             else
             {
@@ -873,6 +888,12 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         if (_logicEngineRunningAction)
         {
             AppendLog("[LogicEngine] Manual toggle blocked: Logic Engine is executing an action.");
+            return;
+        }
+
+        if (_deviceAutomationRunningAction)
+        {
+            AppendLog("[DeviceAutomation] Manual toggle blocked while an automation action is running.");
             return;
         }
 
@@ -1244,6 +1265,240 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         dev.IsEditing = true;
     }
 
+    private bool IsOilRigAlarmAssigned(string rigTarget)
+    {
+        var profile = _vm?.Selected;
+        if (profile?.LogicRules == null) return false;
+
+        return profile.LogicRules.Any(rule =>
+            rule.TriggerType == "SmartAlarm" &&
+            rule.TriggerEntityId != 0 &&
+            rule.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget));
+    }
+
+    private void DeviceContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ContextMenu menu) return;
+        if (menu.DataContext is not SmartDevice dev) return;
+
+        bool isAlarm = string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(dev.Kind, "Smart Alarm", StringComparison.OrdinalIgnoreCase);
+
+        MenuItem? menuSmall = null;
+        MenuItem? menuLarge = null;
+
+        foreach (var item in menu.Items.OfType<MenuItem>())
+        {
+            if (item.Name == "MenuSetSmallOilRig") menuSmall = item;
+            else if (item.Name == "MenuSetLargeOilRig") menuLarge = item;
+        }
+
+        if (!isAlarm)
+        {
+            if (menuSmall != null) menuSmall.Visibility = Visibility.Collapsed;
+            if (menuLarge != null) menuLarge.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var profile = _vm?.Selected;
+        var ruleSmall = profile?.LogicRules?.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == "SmallOilRig"));
+
+        var ruleLarge = profile?.LogicRules?.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == "LargeOilRig"));
+
+        bool isThisSmall = ruleSmall != null && ruleSmall.TriggerEntityId == dev.EntityId && dev.EntityId != 0;
+        bool isThisLarge = ruleLarge != null && ruleLarge.TriggerEntityId == dev.EntityId && dev.EntityId != 0;
+
+        bool isAnySmall = ruleSmall != null && ruleSmall.TriggerEntityId != 0;
+        bool isAnyLarge = ruleLarge != null && ruleLarge.TriggerEntityId != 0;
+
+        if (menuSmall != null)
+        {
+            if (isThisSmall)
+            {
+                menuSmall.Header = Properties.Resources.GetString("UiRemoveAsSmallOilRigTrigger");
+                menuSmall.Tag = "REMOVE";
+                menuSmall.Visibility = Visibility.Visible;
+            }
+            else if (isThisLarge || isAnySmall)
+            {
+                menuSmall.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                menuSmall.Header = Properties.Resources.GetString("UiSetAsSmallOilRigTrigger");
+                menuSmall.Tag = "SET";
+                menuSmall.Visibility = Visibility.Visible;
+            }
+        }
+
+        if (menuLarge != null)
+        {
+            if (isThisLarge)
+            {
+                menuLarge.Header = Properties.Resources.GetString("UiRemoveAsLargeOilRigTrigger");
+                menuLarge.Tag = "REMOVE";
+                menuLarge.Visibility = Visibility.Visible;
+            }
+            else if (isThisSmall || isAnyLarge)
+            {
+                menuLarge.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                menuLarge.Header = Properties.Resources.GetString("UiSetAsLargeOilRigTrigger");
+                menuLarge.Tag = "SET";
+                menuLarge.Visibility = Visibility.Visible;
+            }
+        }
+    }
+
+    private void Device_SetSmallOilRig_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem item || item.DataContext is not SmartDevice dev) return;
+
+        if (string.Equals(item.Tag as string, "REMOVE", StringComparison.OrdinalIgnoreCase))
+            RemoveDeviceAsOilRigTrigger(dev, "SmallOilRig");
+        else
+            SetDeviceAsOilRigTrigger(dev, "SmallOilRig");
+    }
+
+    private void Device_SetLargeOilRig_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem item || item.DataContext is not SmartDevice dev) return;
+
+        if (string.Equals(item.Tag as string, "REMOVE", StringComparison.OrdinalIgnoreCase))
+            RemoveDeviceAsOilRigTrigger(dev, "LargeOilRig");
+        else
+            SetDeviceAsOilRigTrigger(dev, "LargeOilRig");
+    }
+
+    /// <summary>
+    /// Shows and edits the alarm's in-game text.
+    ///
+    /// The app fills this in by itself the first time an alarm fires while it is running, but
+    /// that means triggering every alarm once before Alexa can tell them apart. Typing it is
+    /// the shortcut, and seeing what is stored is the only way to check whether the automatic
+    /// route worked.
+    /// </summary>
+    private void Device_EditAlarmTitle_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem item || item.DataContext is not SmartDevice dev) return;
+
+        var dlg = new Views.Windows.PromptDialog(
+            Properties.Resources.UiInGameAlarmTitle, dev.InGameAlarmTitle ?? "")
+        {
+            Owner = this
+        };
+
+        if (dlg.ShowDialog() != true) return;
+
+        string entered = (dlg.InputText ?? "").Trim();
+        if (string.Equals(entered, dev.InGameAlarmTitle ?? "", StringComparison.Ordinal)) return;
+
+        dev.InGameAlarmTitle = entered;
+        AppendLog(string.IsNullOrEmpty(entered)
+            ? $"[alarm] Cleared in-game title for {dev.PureName} (#{dev.EntityId})."
+            : $"[alarm] In-game title for {dev.PureName} (#{dev.EntityId}) set to \"{entered}\".");
+
+        try { _vm.Save(); } catch { }
+
+        // The cloud worker is the consumer and runs elsewhere, so push it now rather than
+        // waiting for the next routine sync.
+        _ = UploadDevicesSnapshotForCurrentServerAsync();
+    }
+
+    private void RemoveDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
+    {
+        var profile = _vm?.Selected;
+        if (profile?.LogicRules == null) return;
+
+        var rulesToRemove = profile.LogicRules.Where(r =>
+            r.TriggerType == "SmartAlarm" &&
+            (r.TriggerEntityId == dev.EntityId || r.TriggerEntityId == 0) &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget)).ToList();
+
+        foreach (var rule in rulesToRemove)
+        {
+            profile.LogicRules.Remove(rule);
+        }
+
+        RefreshOilRigTimerCapability();
+        LogicEnginePanel?.RefreshListBindings();
+        _vm?.NotifyDevicesChanged();
+        _vm?.Save();
+        AppendLog($"[Devices] Deleted {rigTarget} rule for alarm #{dev.EntityId} ({dev.DisplayName}).");
+    }
+
+    private void SetDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
+    {
+        var profile = _vm?.Selected;
+        if (profile == null) return;
+
+        profile.LogicRules ??= new List<LogicRule>();
+
+        var rule = profile.LogicRules.FirstOrDefault(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.Steps.Any(s => s.StepType == "StartTimer" && s.TimerTarget == rigTarget));
+
+        if (rule != null)
+        {
+            rule.IsEnabled = true;
+            rule.TriggerEntityId = dev.EntityId;
+        }
+        else
+        {
+            rule = new LogicRule
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = rigTarget == "SmallOilRig" ? "Small Oil Rig Chat/Timer" : "Large Oil Rig Chat/Timer",
+                CustomIconId = -1768880890,
+                CustomIconShortName = "fish.smallshark",
+                IsEnabled = true,
+                IsLoopEnabled = false,
+                LoopCount = 1,
+                IsExpanded = true,
+                TriggerType = "SmartAlarm",
+                TriggerEntityId = dev.EntityId,
+                TriggerCommand = "rulecommand",
+                TriggerRuleId = "",
+                TriggerState = true,
+                ConditionOperator = "NONE",
+                ConditionDeviceEntityId = 0,
+                ConditionDeviceState = true,
+                Steps = new System.Collections.ObjectModel.ObservableCollection<LogicStep>
+                {
+                    new LogicStep
+                    {
+                        StepType = "StartTimer",
+                        TimerMinutes = 15,
+                        TimerTarget = rigTarget,
+                        TimerName = "",
+                        ShowCrateOnMap = true,
+                        AlarmTextHint = "",
+                        WaitSeconds = 10,
+                        TargetEntityId = 0,
+                        TargetGroupName = "",
+                        ToggleState = null,
+                        ConditionOperator = "ALL_OFFLINE",
+                        ConditionDeviceIdsCsv = "",
+                        ConditionalSteps = new System.Collections.ObjectModel.ObservableCollection<LogicStep>()
+                    }
+                }
+            };
+            profile.LogicRules.Add(rule);
+        }
+
+        RefreshOilRigTimerCapability();
+        LogicEnginePanel?.RefreshListBindings();
+        _vm?.NotifyDevicesChanged();
+        _vm?.Save();
+        AppendLog($"[Devices] Set alarm #{dev.EntityId} ({dev.DisplayName}) as {rigTarget} trigger.");
+    }
+
     private void DeviceName_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2 && sender is TextBlock tb && tb.DataContext is SmartDevice dev)
@@ -1568,7 +1823,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
             if (items.Count == 0)
             {
-                MessageBox.Show("No device exports found for your team / server.\n\n" +
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiNoDeviceExportsFoundForYourTeamServer") +
                                 "Make sure Cloud Sync is enabled and at least one team member has synced their devices.",
                     "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -1629,7 +1884,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         catch (Exception ex)
         {
             AppendLog("[dev/import] Error: " + ex.Message);
-            MessageBox.Show("Device import failed:\n" + ex.Message,
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDeviceImportFailed") + ex.Message,
                 "Device Import", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -1645,7 +1900,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             _vm.IsDeviceStatusChecking = true;
             _vm.DeviceStatusMax = Math.Max(1, max);
             _vm.DeviceStatusProgress = 0;
-            _vm.DeviceStatusText = "Checking devices...";
+            _vm.DeviceStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCheckingDevices");
             UpdateFullConnectButtonsEnabled();
         }
 
@@ -1666,38 +1921,37 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         if (!await EnsureConnectedAsync())
             return;
 
-        var list = _vm.Selected.Devices;
-        if (list == null || list.Count == 0)
+        var devices = _vm.Selected.AllDevices.ToList();
+        if (devices.Count == 0)
         {
             AppendLog("No Devices Available.");
             return;
         }
 
-        var leaves = LeafDevices(list).ToList();
         if (skipIfRecentlyChecked
-            && leaves.Count > 0
-            && leaves.All(d => (DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15))
+            && devices.All(d => (DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15))
         {
             AppendLog("Device status refresh skipped; recent check is still fresh.");
             return;
         }
 
         AppendLog("Updating Device Status (sequential).");
-        StartProgress(list.Count);
+        StartProgress(devices.Count);
 
-        foreach (var d in list)
+        foreach (var device in devices)
         {
             try
             {
-                _vm.DeviceStatusText = $"Checking device #{d.EntityId} ({d.DisplayName})...";
-                await RefreshDeviceRecursiveAsync(d, maxRetries);
+                _vm.DeviceStatusText = string.Format(Properties.Resources.GetString("FormatCheckingDevice"), device.EntityId, device.DisplayName);
+                await RefreshDeviceStateAsync(device, log: true, forcePull: true, maxRetries: maxRetries);
+                device.LastPolledAt = DateTime.UtcNow;
                 _vm.DeviceStatusProgress++;
                 await Task.Delay(250); // Increased gap to prevent API spam
             }
             catch (Exception ex)
             {
                 _vm.DeviceStatusProgress++;
-                AppendLog($"Error refreshing {d.DisplayName}: {ex.Message}");
+                AppendLog($"Error refreshing {device.DisplayName}: {ex.Message}");
             }
         }
         
@@ -1711,56 +1965,6 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             Interlocked.Exchange(ref _refreshAllBusy, 0);
         }
 
-        static IEnumerable<SmartDevice> LeafDevices(IEnumerable<SmartDevice> devices)
-        {
-            foreach (var d in devices)
-            {
-                if (!d.IsGroup)
-                {
-                    yield return d;
-                    continue;
-                }
-
-                foreach (var child in LeafDevices(d.Children))
-                    yield return child;
-            }
-        }
-    }
-
-    private async Task RefreshDeviceRecursiveAsync(SmartDevice d, int maxRetries = 3)
-    {
-        try
-        {
-            if (!d.IsGroup)
-            {
-                if ((DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15)
-                {
-                    // Skip if recently polled
-                    return;
-                }
-                
-                await RefreshDeviceStateAsync(d, log: true, forcePull: true, maxRetries: maxRetries);
-                d.LastPolledAt = DateTime.UtcNow;
-            }
-            else
-            {
-                // Gruppen haben keinen direkten Status, aber wir refreshen Kinder
-                d.IsMissing = false; // groups are never missing
-                if (d.Children != null)
-                {
-                    foreach (var child in d.Children)
-                    {
-                        await RefreshDeviceRecursiveAsync(child);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            d.IsMissing = true;
-            if (!d.IsGroup)
-                AppendLog($"#{d.EntityId}: Status Request Failed → {ex.Message}");
-        }
     }
 
     private void AddDeviceToImportItems(List<DeviceImportItem> items, ExportedDeviceDto d, TeamMemberVM tm)

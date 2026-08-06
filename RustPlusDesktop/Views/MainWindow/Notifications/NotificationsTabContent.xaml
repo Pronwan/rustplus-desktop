@@ -4,9 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+    xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
     xmlns:services="clr-namespace:RustPlusDesk.Services">
     
-    <Grid Background="#181A1E">
+    <Grid Background="#181A1E" tutorials:Tutorial.TargetId="Notifications.Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -75,7 +76,7 @@
         <Border Grid.Row="0" Margin="8,8,8,4" Padding="10" Background="#FF141F2D" CornerRadius="8">
             <StackPanel>
                 <!-- Row 1: Filters -->
-                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8" tutorials:Tutorial.TargetId="Notifications.Filters">
                     <TextBlock Text="{DynamicResource NotificationsFilter}" VerticalAlignment="Center" Foreground="#8C96A8" FontSize="11" Margin="4,0,8,0" FontWeight="SemiBold"/>
                     <RadioButton x:Name="RadAll" Content="{DynamicResource NotificationsAll}" IsChecked="True" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                     <RadioButton x:Name="RadAlarms" Content="{DynamicResource NotificationsAlarms}" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
@@ -90,6 +91,7 @@
                     </Grid.ColumnDefinitions>
 
                     <ui:TextBox x:Name="TxtSearch" 
+                                tutorials:Tutorial.TargetId="Notifications.Search"
                                 Margin="0,0,8,0" 
                                 PlaceholderText="{DynamicResource SearchNotificationsPlaceholder}" 
                                 TextChanged="TxtSearch_TextChanged"
@@ -97,7 +99,7 @@
                                 VerticalAlignment="Center"
                                 Height="28"/>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" tutorials:Tutorial.TargetId="Notifications.Actions">
                         <ui:Button Click="BtnMarkAllRead_Click" 
                                    Content="{DynamicResource MarkAllAsRead}" 
                                    Appearance="Secondary"
@@ -289,6 +291,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Short Timestamp -->
@@ -299,8 +302,22 @@
                                                VerticalAlignment="Center"
                                                Margin="0,0,6,0"/>
 
-                                    <!-- Action Button: Delete -->
+                                    <!-- Action Button: Mute server -->
                                     <ui:Button Grid.Column="1"
+                                               Click="BtnMuteServer_Click"
+                                               Tag="{Binding}"
+                                               Appearance="Transparent"
+                                               Width="28" Height="28"
+                                               Padding="0"
+                                               VerticalAlignment="Center"
+                                               ToolTip="{DynamicResource UiMuteNotificationsFromThisServer}"
+                                               AutomationProperties.Name="{DynamicResource UiMuteNotificationsFromThisServer}"
+                                               Style="{StaticResource NotificationServerButton}">
+                                        <ui:SymbolIcon Symbol="SpeakerMute24" FontSize="14" Foreground="IndianRed"/>
+                                    </ui:Button>
+
+                                    <!-- Action Button: Delete -->
+                                    <ui:Button Grid.Column="2"
                                                 Click="BtnDelete_Click" 
                                                 Tag="{Binding Id}"
                                                 Appearance="Transparent"
@@ -317,17 +334,27 @@
                                            Tag="{Binding}"
                                            Margin="10,8,12,0"
                                            Style="{StaticResource NotificationServerButton}">
-                                    <TextBlock FontSize="9"
-                                               Foreground="#60CDFF"
-                                               FontWeight="SemiBold"
-                                               TextTrimming="CharacterEllipsis">
-                                        <TextBlock.Text>
-                                            <PriorityBinding>
-                                                <Binding Path="ServerName" />
-                                                <Binding Path="ServerIp" />
-                                            </PriorityBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
+                                    <Grid>
+                                        <TextBlock
+                                            FontSize="9"
+                                            FontWeight="SemiBold"
+                                            Foreground="#60CDFF"
+                                            TextTrimming="CharacterEllipsis"
+                                            Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource VisInv}}">
+                                            <TextBlock.Text>
+                                                <PriorityBinding>
+                                                    <Binding Path="ServerName" />
+                                                    <Binding Path="ServerIp" />
+                                                </PriorityBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock
+                                            FontSize="9"
+                                            FontWeight="SemiBold"
+                                            Foreground="#8C96A8"
+                                            Text="{DynamicResource UiSERVERHIDDEN}"
+                                            Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Vis}}" />
+                                    </Grid>
                                 </ui:Button>
                             </Grid>
                         </Border>

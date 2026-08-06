@@ -40,7 +40,7 @@
                         <TextBlock Text="{DynamicResource TierNoAccountTitle}" FontSize="20" FontWeight="SemiBold" Foreground="#8090A0" HorizontalAlignment="Center" Margin="0,0,0,15"/>
                         
                         <views:ImageGallery Margin="0,0,0,15">
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Account-needed.png" Description="Local Setup"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Account-needed.png" Description="{DynamicResource UiLocalSetup}"/>
                         </views:ImageGallery>
 
                         <TextBlock Text="{DynamicResource TierNoAccountDesc}" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,15" TextAlignment="Center"/>
@@ -61,8 +61,8 @@
                         </Border>
                         
                         <views:ImageGallery Margin="0,0,0,5">
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Device-Cloud-Sync.png" Description="Device Cloud Sync"/>
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Basic-Discord.png" Description="Basic Discord Webhooks"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Device-Cloud-Sync.png" Description="{DynamicResource UiDeviceCloudSync}"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Basic-Discord.png" Description="{DynamicResource UiBasicDiscordWebhooks}"/>
                         </views:ImageGallery>
                         
                         <TextBlock Text="{DynamicResource TierFreeAccountDesc}" TextWrapping="Wrap" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,15" TextAlignment="Center"/>
@@ -85,10 +85,10 @@
                         </Border>
 
                         <views:ImageGallery Margin="0,0,0,5">
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Chat_Master1.png" Description="Chat Master System"/>
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Cloud-Base-Screenshots.png" Description="Cloud Base Screenshots"/>
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Advanced-Discord-Settings.png" Description="Advanced Discord Bot Settings"/>
-                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Chat_Master-Slave.png" Description="Chat Master &amp; Slaves"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Chat_Master1.png" Description="{DynamicResource FeatChatMaster}"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Cloud-Base-Screenshots.png" Description="{DynamicResource UiCloudBaseScreenshots}"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Advanced-Discord-Settings.png" Description="{DynamicResource UiAdvancedDiscordBotSettings}"/>
+                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Images/5.5.0/Chat_Master-Slave.png" Description="{DynamicResource UiChatMasterSlaves}"/>
                         </views:ImageGallery>
                         
                         <TextBlock Text="{DynamicResource TierSupporterDesc}" TextWrapping="Wrap" Foreground="#FFD700" FontWeight="SemiBold" Margin="0,0,0,15" TextAlignment="Center"/>

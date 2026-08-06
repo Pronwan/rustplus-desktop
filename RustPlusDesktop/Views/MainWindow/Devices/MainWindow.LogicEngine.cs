@@ -98,6 +98,44 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void TriggerLogicEngineOnRuleCompleted(string completedRuleId)
+        {
+            if (!IsLogicEngineActiveAndWaiting) return;
+
+            var rules = _vm?.Selected?.LogicRules;
+            if (rules == null) return;
+
+            foreach (var rule in rules.Where(r => r.IsEnabled
+                && r.TriggerType == "RuleCompleted"
+                && r.TriggerRuleId == completedRuleId).ToList())
+            {
+                if (EvaluateTriggerCondition(rule))
+                    _ = EnqueueRuleExecutionAsync(rule);
+            }
+        }
+
+        private void TriggerLogicEngineOnRuleTriggered(LogicRule triggeredRule)
+        {
+            if (!IsLogicEngineActiveAndWaiting) return;
+
+            var rules = _vm?.Selected?.LogicRules;
+            if (rules == null) return;
+
+            foreach (var rule in rules.Where(r => r.IsEnabled
+                && r.TriggerType == "RuleTriggered"
+                && r.TriggerRuleId == triggeredRule.Id).ToList())
+            {
+                if (rule.Id == triggeredRule.Id)
+                {
+                    AppendLog($"[LogicEngine] Rule '{rule.Name}' cannot trigger itself on start; use Loop after completion.");
+                    continue;
+                }
+
+                if (EvaluateTriggerCondition(rule))
+                    _ = EnqueueRuleExecutionAsync(rule);
+            }
+        }
+
         private bool EvaluateTriggerCondition(LogicRule rule)
         {
             if (rule.ConditionOperator == "NONE" || rule.ConditionOperator == null)
@@ -132,19 +170,23 @@ namespace RustPlusDesk.Views
             return true;
         }
 
-        private async Task EnqueueRuleExecutionAsync(LogicRule rule)
+        private async Task EnqueueRuleExecutionAsync(LogicRule rule, int? remainingLoopCount = null)
         {
             var runtime = LogicEngineRuntimeService.Instance;
             AppendLog($"[LogicEngine] Rule '{rule.Name}' triggered. Enqueuing...");
-
-            // Track the rule in the pending queue so the UI can show what is waiting
-            runtime.PendingRules.Add(rule.Name);
-
-            // Wait to execute sequentially
-            await _logicEngineSemaphore.WaitAsync();
+            bool lockTaken = false;
+            bool pending = false;
             try
             {
-                runtime.PendingRules.Remove(rule.Name);
+                await Dispatcher.InvokeAsync(() => runtime.PendingRules.Add(rule.Name));
+                pending = true;
+
+                // Wait to execute sequentially
+                await _logicEngineSemaphore.WaitAsync();
+                lockTaken = true;
+
+                await Dispatcher.InvokeAsync(() => runtime.PendingRules.Remove(rule.Name));
+                pending = false;
 
                 if (_chatFeaturesBlockedByMaster && rule.TriggerType == "ChatCommand")
                 {
@@ -158,10 +200,23 @@ namespace RustPlusDesk.Views
                 runtime.CurrentRuleName = rule.Name;
                 runtime.CurrentStepNumber = 0;
                 runtime.CurrentStepType = null;
+                TriggerLogicEngineOnRuleTriggered(rule);
 
                 try
                 {
                     await RunRuleStepsAsync(rule, cts.Token);
+                    if (rule.IsLoopEnabled)
+                    {
+                        if (rule.Steps.Any(step => step.StepType == "Wait" && step.WaitSeconds > 0))
+                        {
+                            int remaining = remainingLoopCount ?? (rule.LoopCount == 0 ? -1 : rule.LoopCount);
+                            if (remaining != 0)
+                                _ = EnqueueRuleExecutionAsync(rule, remaining < 0 ? -1 : remaining - 1);
+                        }
+                        else
+                            AppendLog($"[LogicEngine] Rule '{rule.Name}' loop skipped: add a Wait step greater than 0 seconds.");
+                    }
+                    TriggerLogicEngineOnRuleCompleted(rule.Id);
                 }
                 finally
                 {
@@ -183,7 +238,10 @@ namespace RustPlusDesk.Views
             }
             finally
             {
-                _logicEngineSemaphore.Release();
+                if (pending)
+                    await Dispatcher.InvokeAsync(() => runtime.PendingRules.Remove(rule.Name));
+                if (lockTaken)
+                    _logicEngineSemaphore.Release();
             }
         }
 
@@ -215,6 +273,10 @@ namespace RustPlusDesk.Views
                 {
                     await ExecuteToggleStepAsync(step, cancellationToken);
                 }
+                else if (step.StepType == "StartTimer")
+                {
+                    await ExecuteStartTimerStepAsync(step);
+                }
                 else if (step.StepType == "CheckAvailability")
                 {
                     bool conditionMet = await ExecuteCheckAvailabilityStepAsync(step, rule, cancellationToken);
@@ -226,6 +288,78 @@ namespace RustPlusDesk.Views
                 }
             }
             AppendLog($"[LogicEngine] Completed execution of rule '{rule.Name}'.");
+        }
+
+        /// <summary>
+        /// Starts a countdown. Two quite different things behind one step, because to the
+        /// player they are the same act.
+        ///
+        /// Picking an oil rig hands the timer to MonumentWatcher, which already owns the
+        /// crate marker, the reminder schedule and the answer to the chat command — the same
+        /// path the Chinook tracking used before those markers stopped arriving. Anything
+        /// else becomes an ordinary custom timer, indistinguishable from one made by hand.
+        /// </summary>
+        private async Task ExecuteStartTimerStepAsync(LogicStep step)
+        {
+            var profile = _vm?.Selected;
+            if (profile == null) return;
+
+            int minutes = Math.Max(1, step.TimerMinutes);
+            string? rigName = step.OilRigName;
+
+            if (rigName != null)
+            {
+                bool started = _monumentWatcher.TriggerExternal(rigName, minutes * 60, step.ShowCrateOnMap);
+                AppendLog(started
+                    ? $"[LogicEngine] Started {minutes} min hack timer for {rigName}" +
+                      (step.ShowCrateOnMap ? " (crate shown on map)." : " (no map marker).")
+                    : $"[LogicEngine] {rigName} already has a running timer — left it alone.");
+                return;
+            }
+
+            // Plain timer. Same ceiling as the manual dialog, since they share the list.
+            string name = string.IsNullOrWhiteSpace(step.TimerName) ? "Timer" : step.TimerName.Trim();
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                if (profile.CustomTimers.Count >= 5)
+                {
+                    AppendLog($"[LogicEngine] Cannot start timer '{name}': the five-timer limit is reached.");
+                    return;
+                }
+
+                // Replace rather than stack: a rule that fires twice means the same countdown
+                // restarted, and two entries with one name cannot be told apart afterwards.
+                var existing = profile.CustomTimers.FirstOrDefault(
+                    t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase));
+                if (existing != null) profile.CustomTimers.Remove(existing);
+
+                string cmd = new string(name.ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());
+                if (cmd.Length == 0) cmd = "timer";
+
+                profile.CustomTimers.Add(new CustomTimer
+                {
+                    Name = name,
+                    Command = cmd,
+                    EndTimeUtc = DateTime.UtcNow.AddMinutes(minutes),
+                    CreatedNotified = false,
+                    // Suppress milestones the timer starts below, exactly as the manual path does.
+                    Notified60 = minutes <= 60,
+                    Notified30 = minutes <= 30,
+                    Notified10 = minutes <= 10,
+                    Notified3 = minutes <= 3,
+                });
+
+                AppendLog($"[LogicEngine] Started {minutes} min timer '{name}'.");
+
+                if (profile.AlertCustomTimer)
+                {
+                    var msg = string.Format(Properties.Resources.TimerCreated,
+                        profile.ChatCommandPrefix + cmd, 0, minutes, 0);
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                    _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", $"⏱️ **Timer:** {msg}");
+                }
+            });
         }
 
         private async Task ExecuteToggleStepAsync(LogicStep step, CancellationToken cancellationToken)
@@ -410,6 +544,10 @@ namespace RustPlusDesk.Views
                     {
                         await ExecuteToggleStepAsync(condStep, cancellationToken);
                     }
+                    else if (condStep.StepType == "StartTimer")
+                    {
+                        await ExecuteStartTimerStepAsync(condStep);
+                    }
                 }
             }
             return conditionMet;
@@ -431,7 +569,7 @@ namespace RustPlusDesk.Views
             {
                 try
                 {
-                    await DiscordBotListenerService.Instance.SendNotificationAsync("event", $"[LogicEngine] {errorMsg}");
+                    await DiscordBotListenerService.Instance.SendNotificationAsync("events", $"[LogicEngine] {errorMsg}");
                 }
                 catch (Exception ex)
                 {

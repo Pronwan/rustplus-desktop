@@ -48,6 +48,8 @@ public partial class MainWindow
 
         // 3) UI-/In-Memory-State leeren
         try { TeamMembers.Clear(); } catch { }
+        try { ClanMembers.Clear(); } catch { }
+        try { _lastClanPoll = DateTime.MinValue; } catch { }
         try { _avatarCache.Clear(); } catch { }
         try { _lastPresence.Clear(); } catch { }
         try { ClearAllDeathPins(); } catch { }
@@ -59,6 +61,8 @@ public partial class MainWindow
         try { _shopLifetimes.Clear(); } catch { }
         try { _knownShopIds.Clear(); } catch { }
         _firstShopPollDone = false;
+        try { ResetShopDataAvailability(); } catch { }
+        try { StopServerEventTracking(); } catch { }
         _initialShopSnapshotTimeUtc = DateTime.MinValue;
         _alertsNeedRebaseline = true;
         _lastChatSendUtc = DateTime.MinValue;

@@ -33,6 +33,150 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v8.0.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v8.0.0 | Smart Home, Automation &amp; QoL" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                Version 8.0.0 is one of the biggest Rust+ Desktop updates so far, bringing a redesigned interface, new calculators, improved integrations, guided tutorials, major 3D map optimisations, and many stability fixes.
+                            </TextBlock>
+
+                            <TextBlock Text="🎓 New guided tutorial system" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Localised Tutorials:</Run>
+                                A new fully localised tutorial system helps new users discover the application and understand its main features, with support for multiple languages and improved overlay positioning for RTL languages.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Comprehensive Guides:</Run>
+                                Step-by-step tutorials across key pages, including inside the 3D map, plus a dedicated tutorial page for restarting individual guides.
+                            </TextBlock>
+
+                            <TextBlock Text="🗺️ Map improvements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Virtual Deep Sea Map:</Run>
+                                Full support for the virtual Deep Sea map overlay. Automatically switches views when entering or leaving the Deep Sea coordinates, allowing you to correctly track the Floating City shops and team members in the Deep Sea zone.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; 3D Map Performance:</Run>
+                                The 3D map now opens faster, uses considerably less memory, and cleans up after closing. Map asset initialisation and streaming has been completely rewritten.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Reduced Memory Usage:</Run>
+                                Drastically reduced initial memory allocation of the map and map images.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Custom HD Maps:</Run>
+                                Added support for custom HD map URLs.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Markers &amp; Indicators:</Run>
+                                Improved player-marker size and visibility, custom markers now correctly appear above monument icons, and fixed the day and night indicator.
+                            </TextBlock>
+
+                            <TextBlock Text="📡 New Event Trackers" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Event tracking without the API:</Run>
+                                The new Rust+ API no longer supports shop polling or event tracking. When connected to a server you can still send event notifications to team chat and Discord for Oil Rig heartbeats, Cargo spawns and Deep Sea spawns.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Your own Oil Rig crate timers:</Run>
+                                Tune an RF receiver to a rig's frequency in-game and wire it to a Smart Alarm, then add a <Run FontStyle="Italic">Start Timer</Run> step in the Logic Engine. The crate is drawn on the rig with a live countdown, and 15/10/5-minute warnings go to team chat and Discord exactly as they did over the API. Alarms used this way no longer raise raid alerts &#x2014; they are marked with a small badge in the device list instead. See the new <Run FontStyle="Italic">Crate Alerts for Oil Rigs</Run> tutorial for the wiring.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Adjusted interface:</Run>
+                                Event dock, chat alerts and chat commands have been adjusted accordingly to align with these changes.
+                            </TextBlock>
+
+                            <TextBlock Text="💻 Logic engine and calculators" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Raid Calculator:</Run>
+                                Brand new Raid Calculator workspace with detailed item breakdown.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Integrations:</Run>
+                                Refined Discord &amp; Telegram logic engine triggers, actions and formatting. Generate and manage Alexa PINs for voice-controlled device automation. Support for the new Server Events features.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Recycler Calculator:</Run>
+                                Recycler calculator improvements.
+                            </TextBlock>
+
+                            <TextBlock Text="⚙️ Device Automations" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; React to where your team actually is:</Run>
+                                A new rule type switches devices based on player proximity. Pick a paired device as the anchor &#x2014; its real in-game position is used &#x2014; set a radius, and choose who counts: anyone online, everyone online, a specific team-mate, or the same conditions inverted. Turrets that arm themselves when the last person leaves, lights that come on when someone comes home.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; React to in-game time:</Run>
+                                Rules can also run on a game-time window, so devices follow the Rust day rather than yours. Each rule sets what to do when the condition matches and what to do when it stops &#x2014; both are yours to choose, so a rule can arm, disarm, or only ever do one of the two.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Positions are approximate:</Run>
+                                Anchors use the location a device was paired at, and player positions come from the team map, so treat radii as rough. Leave a margin rather than cutting it fine.
+                            </TextBlock>
+
+                            <TextBlock Text="💀 Death Stats" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Every death, logged and classified:</Run>
+                                A new window collects your team's deaths with total count, average and longest survival, deadliest place and deadliest grid. Deaths are matched to the monument they happened at using the map's own names, and base deaths are recognised from your in-game team map notes.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Filter, search and see the pattern:</Run>
+                                Live search, per-player filtering, location and time filters, and a deaths-per-day sparkline. A death heatmap layer puts the same data straight on the map, so the places that keep costing you become obvious.
+                            </TextBlock>
+
+                            <TextBlock Text="🔔 App, Privacy &amp; Smart Home" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Smart Home &amp; Alexa:</Run>
+                                Control your smart devices and receive Smart Alerts even when the app is offline with the new official Rust+ Desktop Alexa Skill.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Offline Cloud Alerts:</Run>
+                                Receive Raid Alerts via Discord or Telegram calls even while Rust+ Desktop is closed! Improved cloud notification efficiency and added Discord-only webhooks.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Redesigned UI &amp; Settings:</Run>
+                                Modernised the left sidebar and general UI, added an animated startup splash screen, and completely redesigned the settings menu and structure with a new search bar and dedicated Alarms settings.
+                            </TextBlock>
+
+                            <TextBlock Text="🛡️ Clan Integration" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Redesigned Clan Sidebar:</Run>
+                                A redesigned sidebar for clan details, announcements, score, founder, member count, and list/tile switcher.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Detailed Member Cards:</Run>
+                                View clan member details, including roles, online/offline status, last seen timestamps, Steam IDs, and custom notes.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Clan Chat Integration:</Run>
+                                Full support for reading and writing messages in the Clan Chat directly inside the application.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Discord Forwarding:</Run>
+                                Automatic transmission of clan chat messages to your Discord team-chat channel via the Advanced Discord Bot.
+                            </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/clan_chat.jpg" Description="Redesigned Clan sidebar with a list/tile view switcher, roles, online status, last seen stats, Steam IDs, notes, full Clan Chat integration, and Discord forwarding"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/DeepSea.png" Description="Full virtual Deep Sea map support with automatic view toggling, Floating City tracking, and precise grid coordinate mapping"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Oilrig-Trigger.png" Description="Own Oil Rig crate timers: an RF receiver wired to a Smart Alarm starts a live countdown on the rig, with 15/10/5-minute warnings to team chat and Discord — and no raid alert from that alarm"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/tutorials.png" Description="New fully localised guided tutorial system"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-ui.png" Description="Redesigned left sidebar workspace and modernized UI"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Raid-calculator.png" Description="Brand new Raid Calculator workspace"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/shop-categories-hide-monuments.png" Description="Completely improved shop search with category and monument filtering"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/device-automation.png" Description="Redesigned device automation cards"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Alexa.png" Description="Generate Alexa PINs for voice-controlled smart devices"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/logic-engine-loops-rules-as-trigger.png" Description="Logic Engine improvements with refined triggers"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/new-settings-menu.png" Description="Refactored settings navigation and search"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/supporters-offline-cloud-alerts-alexa.png" Description="Cloud privacy improvements and Discord Only webhooks"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v7.3.3 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

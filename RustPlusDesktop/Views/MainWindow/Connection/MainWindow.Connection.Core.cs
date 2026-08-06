@@ -112,7 +112,7 @@ public partial class MainWindow
         }
         else
         {
-            MessageBox.Show("Ungültige Eingaben.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiUngültigeEingaben"), RustPlusDesk.Properties.Resources.GetString("CodeUiFehler"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -205,8 +205,12 @@ public partial class MainWindow
                 real.ConnectionLost += OnConnectionLost;
                 real.TeamChatReceived -= Real_TeamChatReceived;
                 real.TeamChatReceived += Real_TeamChatReceived;
+                real.ClanChatReceived -= Real_ClanChatReceived;
+                real.ClanChatReceived += Real_ClanChatReceived;
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                try { await real.PrimeClanChatAsync(); }
+                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
 
                 // Discord interactions depend on team-master state, even during soft connect.
                 await LoadTeamAsync();
@@ -364,6 +368,8 @@ public partial class MainWindow
                 StopDynPolling();
                 StopTeamPolling();
                 TeamMembers.Clear();
+                ClanMembers.Clear();
+                _lastClanPoll = DateTime.MinValue;
 
                 _avatarCache.Clear();
                 _lastPresence.Clear();
@@ -388,6 +394,8 @@ public partial class MainWindow
                 StopDynPolling();
                 StopTeamPolling();
                 TeamMembers.Clear();
+                ClanMembers.Clear();
+                _lastClanPoll = DateTime.MinValue;
 
                 _avatarCache.Clear();
                 _lastPresence.Clear();
@@ -465,6 +473,8 @@ public partial class MainWindow
                 // Add global chat subscription for background bot commands
                 real.TeamChatReceived -= Real_TeamChatReceived;
                 real.TeamChatReceived += Real_TeamChatReceived;
+                real.ClanChatReceived -= Real_ClanChatReceived;
+                real.ClanChatReceived += Real_ClanChatReceived;
 
                 real.EnsureEventsHooked();
             }
@@ -475,6 +485,8 @@ public partial class MainWindow
             {
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                try { await real.PrimeClanChatAsync(); }
+                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
             }
 
             if (showBusy)
@@ -545,7 +557,7 @@ public partial class MainWindow
                 }
             });
             
-            if (TrackingService.AutoLoadShops)
+            if (TrackingService.AutoLoadShops && !Services.RustApiFeatures.EventsAndShopsRemoved)
                 Dispatcher.Invoke(() => ChkShops.IsChecked = true);
 
             if (showBusy)
@@ -562,6 +574,8 @@ public partial class MainWindow
             _vm.NotifyDevicesChanged();
             _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
             AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
+
+            _ = StartServerEventTrackingAsync();
 
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
