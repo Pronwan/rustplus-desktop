@@ -876,6 +876,159 @@ function errText(e){
   try { const j = JSON.stringify(e); if (j && j !== "{}") return j; } catch {}
   return String(e);
 }
+
+// --- progressive camera renderer -------------------------------------------------
+// camera.js renders each frame from a sliding window of exactly 10 ray packets. That
+// number was chosen when cameras were 160x90; at 320x180 the same ten packets cover
+// only 52% of the pixels and the rest stay black, which is the speckled picture.
+//
+// Widening the window would fix the holes at the cost of latency: at ~10 packets per
+// second, twenty packets means two seconds of ray history smeared over anything that
+// moves. So instead the pixel buffer persists — every ray updates its own pixel and
+// the others keep their last known value, the way the official app does it. Gaps fill
+// in progressively, nothing is ever black, and each frame decodes one packet instead
+// of ten.
+function installProgressiveRenderer(camera, Jimp) {
+  // Verbatim from camera.js — it is a specific PRNG and has to match the server's
+  // shuffle exactly. It is not exported, so it cannot be borrowed.
+  class IndexGenerator {
+    constructor(e) { this.state = 0 | e; this.nextState(); }
+    nextInt(e) {
+      let t = ((this.nextState() * (0 | e)) / 4294967295) | 0;
+      if (t < 0) t = e + t - 1;
+      return 0 | t;
+    }
+    nextState() {
+      let e = this.state, t = e;
+      e = ((e = ((e = (e ^ ((e << 13) | 0)) | 0) ^ ((e >>> 17) | 0)) | 0) ^ ((e << 5) | 0)) | 0;
+      this.state = e;
+      return t >= 0 ? t : 4294967295 + t - 1;
+    }
+  }
+
+  const COLOURS = [
+    [0.5, 0.5, 0.5], [0.8, 0.7, 0.7], [0.3, 0.7, 1], [0.6, 0.6, 0.6],
+    [0.7, 0.7, 0.7], [0.8, 0.6, 0.4], [1, 0.4, 0.4], [1, 0.1, 0.1],
+  ];
+
+  // Deterministic for a given size, and it was rebuilt on every single frame —
+  // 57600 Fisher-Yates iterations per image for a constant result.
+  let cachedBuffer = null, cachedW = 0, cachedH = 0;
+  function sampleBuffer(width, height) {
+    if (cachedBuffer && cachedW === width && cachedH === height) return cachedBuffer;
+
+    const buf = new Int16Array(width * height * 2);
+    for (let w = 0, _ = 0; _ < height; _++)
+      for (let g = 0; g < width; g++) { buf[w] = g; buf[++w] = _; w++; }
+
+    for (let B = new IndexGenerator(1337), R = width * height - 1; R >= 1; R--) {
+      const C = 2 * R, I = 2 * B.nextInt(R + 1);
+      const P = buf[C], k = buf[C + 1], A = buf[I], F = buf[I + 1];
+      buf[I] = P; buf[I + 1] = k; buf[C] = A; buf[C + 1] = F;
+    }
+
+    cachedBuffer = buf; cachedW = width; cachedH = height;
+    return buf;
+  }
+
+  let output = null, outW = 0, outH = 0, raysSinceReset = 0, warmedUp = false;
+
+  function reset(width, height) {
+    output = new Array(width * height);
+    outW = width; outH = height;
+    raysSinceReset = 0; warmedUp = false;
+  }
+
+  // Returns how many rays were written, so the warm-up can be judged on real coverage
+  // rather than a fixed packet count that only held for one resolution.
+  function decodeInto(frame, width, height) {
+    const positions = sampleBuffer(width, height);
+    const rayData = frame.rayData;
+    let sampleOffset = 2 * frame.sampleOffset;
+    let dataPointer = 0, written = 0;
+
+    const rayLookback = new Array(64);
+    for (let r = 0; r < 64; r++) rayLookback[r] = [0, 0, 0];
+
+    while (dataPointer < rayData.length - 1) {
+      let t, r, i;
+      const n = rayData[dataPointer++];
+
+      if (n === 255) {
+        const l = rayData[dataPointer++], o = rayData[dataPointer++], s = rayData[dataPointer++];
+        const u = (3 * (((t = (l << 2) | (o >> 6)) / 128) | 0) + 5 * (((r = 63 & o) / 16) | 0) + 7 * (i = s)) & 63;
+        const f = rayLookback[u];
+        f[0] = t; f[1] = r; f[2] = i;
+      } else {
+        const c = 192 & n;
+        if (c === 0) {
+          const y = rayLookback[63 & n];
+          t = y[0]; r = y[1]; i = y[2];
+        } else if (c === 64) {
+          const v = rayLookback[63 & n], g = rayData[dataPointer++];
+          t = v[0] + ((g >> 3) - 15); r = v[1] + ((7 & g) - 3); i = v[2];
+        } else if (c === 128) {
+          const C = rayLookback[63 & n];
+          t = C[0] + (rayData[dataPointer++] - 127); r = C[1]; i = C[2];
+        } else {
+          const A = rayData[dataPointer++], F = rayData[dataPointer++];
+          const D = (3 * (((t = (A << 2) | (F >> 6)) / 128) | 0) + 5 * (((r = 63 & F) / 16) | 0) + 7 * (i = 63 & n)) & 63;
+          const E = rayLookback[D];
+          E[0] = t; E[1] = r; E[2] = i;
+        }
+      }
+
+      sampleOffset %= 2 * width * height;
+      const index = positions[sampleOffset++] + positions[sampleOffset++] * width;
+      output[index] = [t / 1023, r / 63, i];
+      written++;
+    }
+
+    return written;
+  }
+
+  async function render(width, height) {
+    const image = new Jimp(width, height);
+    for (let i = 0; i < output.length; i++) {
+      const ray = output[i];
+      if (!ray) continue;
+
+      const distance = ray[0], alignment = ray[1], material = ray[2];
+      let colour;
+      if (distance === 1 && alignment === 0 && material === 0) colour = [208, 230, 252];
+      else {
+        const c = COLOURS[material] || COLOURS[0];
+        colour = [alignment * c[0] * 255, alignment * c[1] * 255, alignment * c[2] * 255];
+      }
+
+      image.setPixelColor(Jimp.rgbaToInt(colour[0], colour[1], colour[2], 255), i % width, height - 1 - Math.floor(i / width));
+    }
+    return image.getBufferAsync(Jimp.MIME_PNG);
+  }
+
+  camera._onCameraRays = async function (cameraRays) {
+    if (!this.isSubscribed) return;
+
+    const info = this.cameraSubscribeInfo;
+    if (!info || !info.width || !info.height) return;
+
+    const width = info.width, height = info.height;
+    if (!output || outW !== width || outH !== height) reset(width, height);
+
+    raysSinceReset += decodeInto(cameraRays, width, height);
+
+    // Hold the first image back until the buffer has been filled about once over.
+    // Derived from actual rays against actual pixels, so it adapts to whatever
+    // resolution and packet size the server happens to use — which is exactly what
+    // the hardcoded ten packets could not do.
+    if (!warmedUp) {
+      if (raysSinceReset < width * height) return;
+      warmedUp = true;
+    }
+
+    this.emit('render', await render(width, height));
+  };
+}
 const pkgDir = process.argv[8]; // ...\node_modules\@liamcottle\rustplus.js
 const useProxy = process.argv[9] === "true";
 // console.error("using pkg dir: " + pkgDir);
@@ -996,6 +1149,15 @@ rp.on("connected", async () => {
  // console.error("CONNECTED");
   try {
     const c = rp.getCamera(cam);
+
+    // Progressive rendering. Without it the picture is roughly half black at 320x180,
+    // because camera.js fills each frame from a fixed ten packets — a number chosen when
+    // cameras were 160x90 and never scaled with them.
+    try {
+      installProgressiveRenderer(c, reqFrom(pkgDir, "jimp"));
+    } catch (e) {
+      console.error("DIAG progressive renderer unavailable, using the built-in one: " + errText(e));
+    }
 
     // ---- Message-Handler (beide Ebenen) ----
     const onMsg = (m) => {
@@ -1874,6 +2036,159 @@ function errText(e){
   return String(e);
 }
 
+// --- progressive camera renderer -------------------------------------------------
+// camera.js renders each frame from a sliding window of exactly 10 ray packets. That
+// number was chosen when cameras were 160x90; at 320x180 the same ten packets cover
+// only 52% of the pixels and the rest stay black, which is the speckled picture.
+//
+// Widening the window would fix the holes at the cost of latency: at ~10 packets per
+// second, twenty packets means two seconds of ray history smeared over anything that
+// moves. So instead the pixel buffer persists — every ray updates its own pixel and
+// the others keep their last known value, the way the official app does it. Gaps fill
+// in progressively, nothing is ever black, and each frame decodes one packet instead
+// of ten.
+function installProgressiveRenderer(camera, Jimp) {
+  // Verbatim from camera.js — it is a specific PRNG and has to match the server's
+  // shuffle exactly. It is not exported, so it cannot be borrowed.
+  class IndexGenerator {
+    constructor(e) { this.state = 0 | e; this.nextState(); }
+    nextInt(e) {
+      let t = ((this.nextState() * (0 | e)) / 4294967295) | 0;
+      if (t < 0) t = e + t - 1;
+      return 0 | t;
+    }
+    nextState() {
+      let e = this.state, t = e;
+      e = ((e = ((e = (e ^ ((e << 13) | 0)) | 0) ^ ((e >>> 17) | 0)) | 0) ^ ((e << 5) | 0)) | 0;
+      this.state = e;
+      return t >= 0 ? t : 4294967295 + t - 1;
+    }
+  }
+
+  const COLOURS = [
+    [0.5, 0.5, 0.5], [0.8, 0.7, 0.7], [0.3, 0.7, 1], [0.6, 0.6, 0.6],
+    [0.7, 0.7, 0.7], [0.8, 0.6, 0.4], [1, 0.4, 0.4], [1, 0.1, 0.1],
+  ];
+
+  // Deterministic for a given size, and it was rebuilt on every single frame —
+  // 57600 Fisher-Yates iterations per image for a constant result.
+  let cachedBuffer = null, cachedW = 0, cachedH = 0;
+  function sampleBuffer(width, height) {
+    if (cachedBuffer && cachedW === width && cachedH === height) return cachedBuffer;
+
+    const buf = new Int16Array(width * height * 2);
+    for (let w = 0, _ = 0; _ < height; _++)
+      for (let g = 0; g < width; g++) { buf[w] = g; buf[++w] = _; w++; }
+
+    for (let B = new IndexGenerator(1337), R = width * height - 1; R >= 1; R--) {
+      const C = 2 * R, I = 2 * B.nextInt(R + 1);
+      const P = buf[C], k = buf[C + 1], A = buf[I], F = buf[I + 1];
+      buf[I] = P; buf[I + 1] = k; buf[C] = A; buf[C + 1] = F;
+    }
+
+    cachedBuffer = buf; cachedW = width; cachedH = height;
+    return buf;
+  }
+
+  let output = null, outW = 0, outH = 0, raysSinceReset = 0, warmedUp = false;
+
+  function reset(width, height) {
+    output = new Array(width * height);
+    outW = width; outH = height;
+    raysSinceReset = 0; warmedUp = false;
+  }
+
+  // Returns how many rays were written, so the warm-up can be judged on real coverage
+  // rather than a fixed packet count that only held for one resolution.
+  function decodeInto(frame, width, height) {
+    const positions = sampleBuffer(width, height);
+    const rayData = frame.rayData;
+    let sampleOffset = 2 * frame.sampleOffset;
+    let dataPointer = 0, written = 0;
+
+    const rayLookback = new Array(64);
+    for (let r = 0; r < 64; r++) rayLookback[r] = [0, 0, 0];
+
+    while (dataPointer < rayData.length - 1) {
+      let t, r, i;
+      const n = rayData[dataPointer++];
+
+      if (n === 255) {
+        const l = rayData[dataPointer++], o = rayData[dataPointer++], s = rayData[dataPointer++];
+        const u = (3 * (((t = (l << 2) | (o >> 6)) / 128) | 0) + 5 * (((r = 63 & o) / 16) | 0) + 7 * (i = s)) & 63;
+        const f = rayLookback[u];
+        f[0] = t; f[1] = r; f[2] = i;
+      } else {
+        const c = 192 & n;
+        if (c === 0) {
+          const y = rayLookback[63 & n];
+          t = y[0]; r = y[1]; i = y[2];
+        } else if (c === 64) {
+          const v = rayLookback[63 & n], g = rayData[dataPointer++];
+          t = v[0] + ((g >> 3) - 15); r = v[1] + ((7 & g) - 3); i = v[2];
+        } else if (c === 128) {
+          const C = rayLookback[63 & n];
+          t = C[0] + (rayData[dataPointer++] - 127); r = C[1]; i = C[2];
+        } else {
+          const A = rayData[dataPointer++], F = rayData[dataPointer++];
+          const D = (3 * (((t = (A << 2) | (F >> 6)) / 128) | 0) + 5 * (((r = 63 & F) / 16) | 0) + 7 * (i = 63 & n)) & 63;
+          const E = rayLookback[D];
+          E[0] = t; E[1] = r; E[2] = i;
+        }
+      }
+
+      sampleOffset %= 2 * width * height;
+      const index = positions[sampleOffset++] + positions[sampleOffset++] * width;
+      output[index] = [t / 1023, r / 63, i];
+      written++;
+    }
+
+    return written;
+  }
+
+  async function render(width, height) {
+    const image = new Jimp(width, height);
+    for (let i = 0; i < output.length; i++) {
+      const ray = output[i];
+      if (!ray) continue;
+
+      const distance = ray[0], alignment = ray[1], material = ray[2];
+      let colour;
+      if (distance === 1 && alignment === 0 && material === 0) colour = [208, 230, 252];
+      else {
+        const c = COLOURS[material] || COLOURS[0];
+        colour = [alignment * c[0] * 255, alignment * c[1] * 255, alignment * c[2] * 255];
+      }
+
+      image.setPixelColor(Jimp.rgbaToInt(colour[0], colour[1], colour[2], 255), i % width, height - 1 - Math.floor(i / width));
+    }
+    return image.getBufferAsync(Jimp.MIME_PNG);
+  }
+
+  camera._onCameraRays = async function (cameraRays) {
+    if (!this.isSubscribed) return;
+
+    const info = this.cameraSubscribeInfo;
+    if (!info || !info.width || !info.height) return;
+
+    const width = info.width, height = info.height;
+    if (!output || outW !== width || outH !== height) reset(width, height);
+
+    raysSinceReset += decodeInto(cameraRays, width, height);
+
+    // Hold the first image back until the buffer has been filled about once over.
+    // Derived from actual rays against actual pixels, so it adapts to whatever
+    // resolution and packet size the server happens to use — which is exactly what
+    // the hardcoded ten packets could not do.
+    if (!warmedUp) {
+      if (raysSinceReset < width * height) return;
+      warmedUp = true;
+    }
+
+    this.emit('render', await render(width, height));
+  };
+}
+
 function reqFrom(base, id){
   return require(require.resolve(id, { paths: [base] }));
 }
@@ -1969,6 +2284,15 @@ const rp = new RustPlus(host, port, pid, tok, useProxy);
 rp.on("connected", async () => {
   try {
     const c = rp.getCamera(cam);
+
+    // Progressive rendering. Without it the picture is roughly half black at 320x180,
+    // because camera.js fills each frame from a fixed ten packets — a number chosen when
+    // cameras were 160x90 and never scaled with them.
+    try {
+      installProgressiveRenderer(c, reqFrom(pkgDir, "jimp"));
+    } catch (e) {
+      console.error("DIAG progressive renderer unavailable, using the built-in one: " + errText(e));
+    }
     const onMsg = (m) => {
       try {
         const resp = (m && (m.response || m.appMessage || m.data)) || m || {};
