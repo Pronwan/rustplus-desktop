@@ -32,6 +32,24 @@ public class SmartDevice : INotifyPropertyChanged
     public bool HasOilRigBadge => !string.IsNullOrEmpty(_oilRigBadge);
 
     /// <summary>
+    /// "SmallOilRig" or "LargeOilRig" while a rule uses this alarm as a rig trigger.
+    ///
+    /// The badge above is a translated label and useless to anything outside the UI. This is
+    /// the stable key, and it is the one that gets synced: the cloud worker has to know that a
+    /// firing alarm is a crate hack rather than a raid, and it can only learn that from here.
+    /// Derived from the rules like the badge, never persisted locally.
+    /// </summary>
+    [JsonIgnore]
+    private string? _oilRigTriggerTarget;
+
+    [JsonIgnore]
+    public string? OilRigTriggerTarget
+    {
+        get => _oilRigTriggerTarget;
+        set { if (_oilRigTriggerTarget != value) { _oilRigTriggerTarget = value; OnProp(); } }
+    }
+
+    /// <summary>
     /// The upper line of the alarm's message as set in-game — the text Rust puts in the push
     /// notification title.
     ///

@@ -93,7 +93,19 @@ public static class OilRigTriggerRegistry
     }
 
     /// <summary>All trigger devices on one profile, for the device-list badges.</summary>
-    public static Dictionary<uint, string> ForProfile(ServerProfile? profile)
+    public static Dictionary<uint, string> ForProfile(ServerProfile? profile) =>
+        TargetsForProfile(profile).ToDictionary(
+            pair => pair.Key,
+            pair => pair.Value == "SmallOilRig"
+                ? Properties.Resources.UiBadgeSmallOil
+                : Properties.Resources.UiBadgeLargeOil);
+
+    /// <summary>
+    /// The same devices, but keyed to the untranslated target — "SmallOilRig" or
+    /// "LargeOilRig". This is what gets synced: a translated badge means nothing to the
+    /// worker, and it would change under the user's language setting.
+    /// </summary>
+    public static Dictionary<uint, string> TargetsForProfile(ServerProfile? profile)
     {
         var map = new Dictionary<uint, string>();
         if (profile?.LogicRules == null) return map;
@@ -107,9 +119,7 @@ public static class OilRigTriggerRegistry
                 .FirstOrDefault(s => s.StepType == "StartTimer" && s.IsOilRigTimer);
             if (step == null) continue;
 
-            map[rule.TriggerEntityId] = step.TimerTarget == "SmallOilRig"
-                ? Properties.Resources.UiBadgeSmallOil
-                : Properties.Resources.UiBadgeLargeOil;
+            map[rule.TriggerEntityId] = step.TimerTarget;
         }
 
         return map;
