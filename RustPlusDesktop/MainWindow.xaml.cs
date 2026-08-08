@@ -4075,6 +4075,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
                 /* >>>>>>> /ENDE EinfÃƒÂ¼geblock <<<<<<< */
 
+                // A freshly-paired Smart Alarm is otherwise invisible to the live WebSocket
+                // until the next (re)connect primes the whole device list. Until then its only
+                // signal is the FCM push, which carries no entity ID — so an oil-rig trigger
+                // cannot be identified and the alarm falls through as generic. Subscribe now, on
+                // the socket for the server it was paired on, so its events arrive with the ID:
+                // that both lets OilRigTriggerRegistry.Lookup match by ID and gives the app the
+                // chance to learn the alarm's text for later ID-less pushes.
+                if (string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase)
+                    && _rust is RustPlusClientReal ar
+                    && _vm.Selected == prof)
+                {
+                    _ = Dispatcher.InvokeAsync(async () =>
+                    {
+                        try
+                        {
+                            await ar.SubscribeEntityAsync(dev.EntityId);
+                            await ar.PokeEntityAsync(dev.EntityId);
+                            AppendLog($"[alarm/sub+poke] #{dev.EntityId} on pair queued");
+                        }
+                        catch (Exception subEx)
+                        {
+                            AppendLog($"[alarm/sub+poke] #{dev.EntityId} on pair: {subEx.Message}");
+                        }
+                    });
+                }
+
                 if (_vm.Selected != prof)
                     _vm.Selected = prof;
 
