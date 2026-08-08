@@ -41,7 +41,6 @@ env:
   APP_PROJECT: "RustPlusDesktop/RustPlusDesk.csproj"
   SOLUTION: "RustPlusDesk.sln"
   PUBLISH_DIR: "${{ github.workspace }}/RustPlusDesktop/bin/Installer/publish"
-  INNO_OUTPUT_DIR: "${{ github.workspace }}/artifacts/inno"
   VELOPACK_OUTPUT_DIR: "${{ github.workspace }}/artifacts/velopack"
   VELOPACK_ID: "RustPlusDesk"
 
@@ -154,17 +153,6 @@ jobs:
           -p:PublishReadyToRun=false
           -p:IncludeNativeLibrariesForSelfExtract=true
 
-      - name: Build Inno Setup installer
-        shell: pwsh
-        run: |
-          choco install innosetup --no-progress -y
-          New-Item -ItemType Directory -Force -Path "${{ env.INNO_OUTPUT_DIR }}" | Out-Null
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
-            "RustPlusDesktop/Installer/Setup.iss" `
-            "/DMyAppVersion=${{ env.VERSION }}" `
-            "/O${{ env.INNO_OUTPUT_DIR }}" `
-            "/FRustPlusDesk-Setup-${{ env.VERSION }}"
-
       - name: Build Velopack release
         shell: pwsh
         run: |
@@ -200,7 +188,6 @@ jobs:
         with:
           name: rustplusdesk-${{ env.VERSION }}-release-artifacts
           path: |
-            ${{ env.INNO_OUTPUT_DIR }}/*.exe
             ${{ env.VELOPACK_OUTPUT_DIR }}/**
           if-no-files-found: error
 
@@ -214,7 +201,6 @@ jobs:
           $title = "RustPlusDesk ${{ steps.version.outputs.version }}"
           $notes = "Automated RustPlusDesk release for $tag."
           $assets = @(
-            Get-ChildItem -Path "${{ env.INNO_OUTPUT_DIR }}" -Filter "*.exe" -File
             Get-ChildItem -Path "${{ env.VELOPACK_OUTPUT_DIR }}" -File -Recurse
           ) | Select-Object -ExpandProperty FullName -Unique
 
