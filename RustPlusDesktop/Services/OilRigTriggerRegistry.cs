@@ -51,9 +51,22 @@ public static class OilRigTriggerRegistry
 
                     byId[rule.TriggerEntityId] = label;
 
-                    // The alarm's own text, for pushes that carry no entity ID. Not the
-                    // device's name in the app: that comes from pairing and has nothing to do
-                    // with what the alarm broadcasts.
+                    // The alarm's own text, for pushes that carry no entity ID — which is every
+                    // push before a server connection exists.
+                    //
+                    // The device's recorded title comes first and is the one that matters: it
+                    // is written automatically whenever the alarm fires and therefore follows a
+                    // rename in-game. The hint typed into the rule is kept as a second key,
+                    // because someone who filled it in expects it to work, but it goes stale
+                    // the moment the alarm is renamed and nothing updates it.
+                    //
+                    // Matching only the hint is what let a renamed alarm ring as a raid again
+                    // after a restart: the device knew its new name, the rule did not, and the
+                    // lookup asked the rule.
+                    var device = FindDevice(profile.Devices, rule.TriggerEntityId);
+                    if (IsDistinctive(device?.InGameAlarmTitle))
+                        byName[device!.InGameAlarmTitle!.Trim()] = label;
+
                     if (IsDistinctive(step.AlarmTextHint))
                         byName[step.AlarmTextHint.Trim()] = label;
                 }

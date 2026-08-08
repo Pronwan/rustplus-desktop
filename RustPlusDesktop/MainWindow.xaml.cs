@@ -2508,6 +2508,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             try { _vm.Save(); } catch { }
 
+            // The registry matches pushes by this title, so it has to be rebuilt now. Without
+            // it the new name only takes effect at the next start, and the alarm keeps ringing
+            // as a raid until then.
+            RebuildOilRigTriggerRegistry();
+
             // Push it out now. The cloud worker is the consumer and runs elsewhere; until it
             // has the new title it keeps treating this alarm as an unknown one.
             _ = UploadDevicesSnapshotForCurrentServerAsync();
