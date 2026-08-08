@@ -25,7 +25,8 @@ namespace RustPlusDesk.Services.Data
                 IsGroup = d.IsGroup,
                 CustomIconId = d.CustomIconId,
                 CustomIconShortName = d.CustomIconShortName,
-                InGameAlarmTitle = d.InGameAlarmTitle
+                InGameAlarmTitle = d.InGameAlarmTitle,
+                OilRigTrigger = d.OilRigTriggerTarget
             };
 
             if (d.IsGroup && d.Children != null && d.Children.Count > 0)

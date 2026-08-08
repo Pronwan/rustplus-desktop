@@ -29,6 +29,10 @@ namespace RustPlusDesk.Models
 
         /// <summary>In-game alarm text. The cloud worker matches pushes against this.</summary>
         public string? InGameAlarmTitle { get; set; }
+
+        /// <summary>"SmallOilRig"/"LargeOilRig" when a rule uses this alarm as a rig trigger.
+        /// Lets the cloud worker tell a crate hack from a raid while the app is closed.</summary>
+        public string? OilRigTrigger { get; set; }
     }
 
     [JsonConverter(typeof(SavedStrokeJsonConverter))]

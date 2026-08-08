@@ -74,18 +74,34 @@ public partial class MainWindow
         var profile = _vm?.Selected;
         if (profile?.Devices == null) return;
 
-        var map = OilRigTriggerRegistry.ForProfile(profile);
+        var labels = OilRigTriggerRegistry.ForProfile(profile);
+        var targets = OilRigTriggerRegistry.TargetsForProfile(profile);
+
+        bool changed = false;
 
         void Walk(IEnumerable<SmartDevice> devices)
         {
             foreach (var device in devices)
             {
-                device.OilRigBadge = map.TryGetValue(device.EntityId, out var label) ? label : null;
+                device.OilRigBadge = labels.TryGetValue(device.EntityId, out var label) ? label : null;
+
+                string? target = targets.TryGetValue(device.EntityId, out var t) ? t : null;
+                if (device.OilRigTriggerTarget != target)
+                {
+                    device.OilRigTriggerTarget = target;
+                    changed = true;
+                }
+
                 if (device.Children != null) Walk(device.Children);
             }
         }
 
         Walk(profile.Devices);
+
+        // The worker only learns about rig triggers through the device sync, so a rule change
+        // has to reach the cloud now rather than at the next routine upload — otherwise a
+        // freshly configured trigger still rings the phone as a raid.
+        if (changed) _ = UploadDevicesSnapshotForCurrentServerAsync();
     }
 
     /// <summary>
