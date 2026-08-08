@@ -104,6 +104,33 @@ namespace RustPlusDesk.Helpers
             return msg;
         }
 
+        /// <summary>
+        /// Files without which the CLI cannot run. Checked instead of merely asking whether
+        /// node_modules exists.
+        ///
+        /// Antivirus is the reason. Defender flags push-receiver — it registers a simulated
+        /// Android device and holds a long-lived socket open, which is behaviourally what
+        /// malware does — and quarantines individual files while leaving the folder in place.
+        /// The old check saw node_modules, decided everything was fine and never re-extracted,
+        /// so the install stayed silently gutted until someone deleted the folder by hand.
+        /// </summary>
+        private static readonly string[] RequiredCliFiles =
+        {
+            Path.Combine("node_modules", "@liamcottle", "rustplus.js", "rustplus.js"),
+            Path.Combine("node_modules", "@liamcottle", "rustplus.js", "camera.js"),
+            Path.Combine("node_modules", "@liamcottle", "push-receiver", "src", "client.js"),
+        };
+
+        private static bool IsUnpackedCliComplete(string root)
+        {
+            if (!Directory.Exists(Path.Combine(root, "node_modules"))) return false;
+
+            foreach (var relative in RequiredCliFiles)
+                if (!File.Exists(Path.Combine(root, relative))) return false;
+
+            return true;
+        }
+
         public static string EnsureCliUnpackedRoot()
         {
             var target = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -134,7 +161,7 @@ namespace RustPlusDesk.Helpers
                 var stamp = Path.Combine(target, ".stamp");
                 var sig = $"{new FileInfo(zip).Length}-{File.GetLastWriteTimeUtc(zip).Ticks}";
                 var need = !File.Exists(stamp) || File.ReadAllText(stamp) != sig
-                           || !Directory.Exists(Path.Combine(target, "node_modules"));
+                           || !IsUnpackedCliComplete(target);
 
                 if (need)
                 {

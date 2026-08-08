@@ -137,38 +137,66 @@ namespace RustPlusDesk.Services
             {
                 _log("Starting one time registration (fcm-register) …");
                 _log("IMPORTANT: Log into the SAME Steam account in your browser that you use in the Rust+ app!");
+
+                // Find the browser before starting, not after failing. Puppeteer only looks
+                // for Chrome where Chrome usually is; without it the run died before opening
+                // anything, which users saw as a console window flashing for two seconds.
+                var browser = FindChromiumBrowser(out var browserName);
+                if (browser == null)
+                {
+                    _log("❌ No Chromium-based browser found. Pairing needs one of: Google Chrome, "
+                       + "Microsoft Edge, Brave, Vivaldi, Opera or Chromium. Edge ships with Windows — "
+                       + "if it was removed, installing any of the others will do.");
+                    _running = false;
+                    Stopped?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
+
+                _log($"Using {browserName} for the login window.");
+                var browserEnv = new (string key, string value)[]
+                {
+                    ("PUPPETEER_EXECUTABLE_PATH", browser),
+                    ("CHROME_PATH", browser)
+                };
+
                 int regExitCode = await RunCliWithLoggingAsync(
                     node,
                     $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
                     wd,
                     "fcm-register",
-                    _cts.Token
+                    _cts.Token,
+                    browserEnv
                 );
-                
+
+                // A second browser, if the first one refuses to start. Antivirus, policies and
+                // a half-removed installation all produce a launch failure that has nothing to
+                // do with the browser being absent.
                 if (regExitCode != 0)
                 {
-                    var edge = FindEdge();
-                    if (edge != null)
+                    var fallback = FindChromiumBrowser(out var fallbackName, "msedge.exe", "chrome.exe");
+                    if (fallback != null && !string.Equals(fallback, browser, StringComparison.OrdinalIgnoreCase))
                     {
-                        var env = new (string key, string value)[] {
-                            ("PUPPETEER_EXECUTABLE_PATH", edge),
-                            ("CHROME_PATH", edge)
-                        };
-                        _log("Chrome start failed. Trying fallback with Microsoft Edge...");
+                        _log($"{browserName} did not start. Trying {fallbackName}…");
                         regExitCode = await RunCliWithLoggingAsync(
                             node,
                             $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
                             wd,
                             "fcm-register",
                             _cts.Token,
-                            env
+                            new (string, string)[]
+                            {
+                                ("PUPPETEER_EXECUTABLE_PATH", fallback),
+                                ("CHROME_PATH", fallback)
+                            }
                         );
                     }
                 }
-                
+
                 if (regExitCode != 0)
                 {
-                    _log("❌ Registering failed. Please ensure Chrome or Edge is installed, or run Start using Edge.");
+                    _log($"❌ Registering failed. {browserName} was found at \"{browser}\" but could not "
+                       + "complete the login. Antivirus or a company policy blocking browser automation "
+                       + "is the usual cause.");
                     _running = false;
                     Stopped?.Invoke(this, EventArgs.Empty);
                     return; // Stop here, do not start listener or loop
@@ -1000,13 +1028,83 @@ namespace RustPlusDesk.Services
 
         // TRY PAIRING WITH EDGE
 
-        private static string? FindEdge()
+        private static string? FindEdge() => FindChromiumBrowser(out _, "msedge.exe");
+
+        /// <summary>
+        /// Any Chromium-family browser Puppeteer can drive, with the name of the one found.
+        ///
+        /// Puppeteer only looks for Chrome in its default location. Users without Chrome —
+        /// and there are many — saw a console window flash for two seconds and nothing else,
+        /// because the registration failed before any browser opened. Chrome installed
+        /// somewhere unusual failed the same way.
+        ///
+        /// Registry first: App Paths is where installers record themselves, so it finds
+        /// installations the hardcoded paths miss entirely.
+        /// </summary>
+        private static string? FindChromiumBrowser(out string browserName, params string[] onlyThese)
         {
-            string p1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                                     "Microsoft", "Edge", "Application", "msedge.exe");
-            string p2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                                     "Microsoft", "Edge", "Application", "msedge.exe");
-            return File.Exists(p1) ? p1 : (File.Exists(p2) ? p2 : null);
+            // Order is preference, not availability: Chrome is what the flow was written
+            // against, Edge is on every Windows machine, the rest are courtesy.
+            var candidates = new (string Exe, string Name, string[] Paths)[]
+            {
+                ("chrome.exe",  "Google Chrome",  new[] { @"Google\Chrome\Application\chrome.exe" }),
+                ("msedge.exe",  "Microsoft Edge", new[] { @"Microsoft\Edge\Application\msedge.exe" }),
+                ("brave.exe",   "Brave",          new[] { @"BraveSoftware\Brave-Browser\Application\brave.exe" }),
+                ("vivaldi.exe", "Vivaldi",        new[] { @"Vivaldi\Application\vivaldi.exe" }),
+                ("opera.exe",   "Opera",          new[] { @"Opera\opera.exe" }),
+                ("chrome.exe",  "Chromium",       new[] { @"Chromium\Application\chrome.exe" }),
+            };
+
+            var roots = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            };
+
+            foreach (var (exe, name, relatives) in candidates)
+            {
+                if (onlyThese.Length > 0 && !onlyThese.Contains(exe, StringComparer.OrdinalIgnoreCase))
+                    continue;
+
+                var fromRegistry = LookUpAppPath(exe);
+                if (fromRegistry != null) { browserName = name; return fromRegistry; }
+
+                foreach (var root in roots)
+                {
+                    if (string.IsNullOrEmpty(root)) continue;
+
+                    foreach (var relative in relatives)
+                    {
+                        var full = Path.Combine(root, relative);
+                        if (File.Exists(full)) { browserName = name; return full; }
+                    }
+                }
+            }
+
+            browserName = "";
+            return null;
+        }
+
+        /// <summary>Reads HKCU/HKLM App Paths, where Windows installers register executables.</summary>
+        private static string? LookUpAppPath(string exeName)
+        {
+            foreach (var hive in new[] { Microsoft.Win32.Registry.CurrentUser, Microsoft.Win32.Registry.LocalMachine })
+            {
+                try
+                {
+                    using var key = hive.OpenSubKey(
+                        $@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{exeName}");
+                    if (key?.GetValue(null) is string path)
+                    {
+                        path = path.Trim('"');
+                        if (File.Exists(path)) return path;
+                    }
+                }
+                catch { }
+            }
+
+            return null;
         }
 
         private static Process StartProcessDirectWithEnv(
