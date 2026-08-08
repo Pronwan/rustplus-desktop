@@ -632,6 +632,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
             {
                 RemoveDeviceAndChildrenFromHotkeys(dev);
                 RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
+                RemoveOwnedOilRigRulesForDevice(dev);
                 _vm.Selected.NotifyFlatDevicesChanged();
                 _vm.NotifyDevicesChanged();
                 _vm.Save();
@@ -1431,6 +1432,46 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         _vm?.NotifyDevicesChanged();
         _vm?.Save();
         AppendLog($"[Devices] Deleted {rigTarget} rule for alarm #{dev.EntityId} ({dev.DisplayName}).");
+    }
+
+    /// <summary>
+    /// Sweeps up the oil-rig timer rules an alarm owned when the alarm itself is deleted.
+    ///
+    /// Setting an alarm as an oil-rig trigger creates a Logic Engine rule keyed to that alarm's
+    /// entity id (see <see cref="SetDeviceAsOilRigTrigger"/>). Deleting the device used to leave
+    /// that rule behind: a trigger pointing at an entity that no longer exists, still counting as
+    /// a rig timer for the crate command and still badging nothing. This removes only the rules
+    /// this feature owns — an oil-rig StartTimer keyed to the exact device (or one of its
+    /// children, which the delete takes with it). A rule left at TriggerEntityId 0 belongs to no
+    /// device and is never swept up here.
+    /// </summary>
+    private void RemoveOwnedOilRigRulesForDevice(SmartDevice dev)
+    {
+        var profile = _vm?.Selected;
+        if (profile?.LogicRules == null) return;
+
+        var ids = new HashSet<uint>();
+        void Collect(SmartDevice d)
+        {
+            ids.Add(d.EntityId);
+            if (d.Children != null)
+                foreach (var child in d.Children) Collect(child);
+        }
+        Collect(dev);
+
+        var owned = profile.LogicRules.Where(r =>
+            r.TriggerType == "SmartAlarm" &&
+            r.TriggerEntityId != 0 &&
+            ids.Contains(r.TriggerEntityId) &&
+            EnumerateSteps(r).Any(s => s.StepType == "StartTimer" && s.IsOilRigTimer)).ToList();
+
+        if (owned.Count == 0) return;
+
+        foreach (var rule in owned) profile.LogicRules.Remove(rule);
+
+        RefreshOilRigTimerCapability();
+        LogicEnginePanel?.RefreshListBindings();
+        AppendLog($"[Devices] Removed {owned.Count} orphaned oil-rig rule(s) owned by deleted alarm #{dev.EntityId}.");
     }
 
     private void SetDeviceAsOilRigTrigger(SmartDevice dev, string rigTarget)
