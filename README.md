@@ -52,6 +52,19 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+## RustPlusDesk 8.0.3 — Smart Alarm & Oil Rig hotfix
+
+### Fixed
+
+- **Smart Alarm socket subscription on pair.** Freshly paired Smart Alarms are now
+  subscribed and queried immediately on the active WebSocket connection. This ensures
+  oil-rig triggers and custom alerts recognize entity IDs straight away without
+  needing to wait for a reconnect.
+
+- **Cleanup of Oil Rig rules on alarm deletion.** Deleting a Smart Alarm now
+  automatically cleans up any associated oil-rig timer rules in the Logic Engine,
+  preventing orphaned rules from keeping rig timer status active.
+
 ## RustPlusDesk 8.0.2 — Clan chat & server switching hotfix
 
 ### Fixed
