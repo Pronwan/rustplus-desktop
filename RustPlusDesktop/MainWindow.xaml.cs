@@ -2462,10 +2462,78 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private readonly List<string> _alarmHistoryDedup = new();
     private readonly Dictionary<string, DateTime> _lastGenericAlarmPerServer = new();
 
+    /// <summary>
+    /// Records what an alarm calls itself in-game, joining the two halves that never arrive
+    /// together: the title from the push, the entity from the WebSocket event.
+    ///
+    /// The entity is taken from the last one seen on that server. The window is generous on
+    /// purpose — a push travels through Google and Expo and is routinely seconds late, while
+    /// two different alarms firing on one server inside a minute is not something that happens
+    /// by accident.
+    /// </summary>
+    private void TryLearnAlarmTitle(AlarmNotification n)
+    {
+        if (string.IsNullOrWhiteSpace(n.Title)) return;
+
+        try
+        {
+            uint? entityId = n.EntityId;
+
+            if (!entityId.HasValue)
+            {
+                string server = Regex.Replace(n.Server ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+                server = Regex.Replace(server, @"\[/?[a-zA-Z]+\]", "").Trim();
+
+                if (_lastSeenIdPerServer.TryGetValue(server, out var seen)
+                    && (DateTime.UtcNow - seen.Time) < TimeSpan.FromMinutes(1))
+                    entityId = seen.Id;
+            }
+
+            if (!entityId.HasValue) return;
+
+            SmartDevice? device = null;
+            foreach (var profile in _vm.Servers)
+            {
+                device = FindDeviceById(profile.Devices, entityId.Value);
+                if (device != null) break;
+            }
+
+            if (device == null) return;
+
+            string title = n.Title!.Trim();
+            if (string.Equals(device.InGameAlarmTitle, title, StringComparison.Ordinal)) return;
+
+            device.InGameAlarmTitle = title;
+            AppendLog($"[alarm] In-game title for {device.PureName} (#{device.EntityId}) is now \"{title}\".");
+
+            try { _vm.Save(); } catch { }
+
+            // The registry matches pushes by this title, so it has to be rebuilt now. Without
+            // it the new name only takes effect at the next start, and the alarm keeps ringing
+            // as a raid until then.
+            RebuildOilRigTriggerRegistry();
+
+            // Push it out now. The cloud worker is the consumer and runs elsewhere; until it
+            // has the new title it keeps treating this alarm as an unknown one.
+            _ = UploadDevicesSnapshotForCurrentServerAsync();
+        }
+        catch { }
+    }
+
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
         // 0) Backlog-Filter: Ignoriere Alarme, die Ã¤lter als 5 Minuten sind
         if ((DateTime.Now - n.Timestamp).TotalMinutes > 5) return;
+
+        // Learn the alarm's in-game text before anything can drop this notification.
+        //
+        // The two halves of that fact arrive separately: the WebSocket event names the entity
+        // but carries no title, the push carries the title but no entity id. Whichever lands
+        // first claims the dedup key below, and the other is discarded — so when the WebSocket
+        // won by 70 milliseconds, the title was thrown away every single time and a renamed
+        // alarm was never picked up. Doing it here means it no longer matters which arrives
+        // first, or whether this particular notification is shown at all.
+        TryLearnAlarmTitle(n);
 
         // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
         string dedupKey = $"{n.Server}|{n.Message}|{n.Timestamp:yyyyMMddHHmmss}";
@@ -2587,22 +2655,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // fire the popup, the raid sound and the raid webhook for a crate hack — the one
         // false alarm that costs a team an actual base defence. Dropped once the device is
         // identified, so it never reaches the notification centre either.
-        // Record the alarm's in-game text on the device itself, while we can still prove which
-        // device it is. This is the only moment both halves exist at once: the push carries the
-        // title but no entity id, and pairing carries the id under the generic name "Smart
-        // Alarm". The cloud worker that drives Alexa only ever sees the push, so without this
-        // it cannot tell two alarms apart at all.
-        if (dev != null && !string.IsNullOrWhiteSpace(n.Title)
-            && !string.Equals(dev.InGameAlarmTitle, n.Title.Trim(), StringComparison.Ordinal))
-        {
-            dev.InGameAlarmTitle = n.Title.Trim();
-            AppendLog($"[alarm] Learned in-game title for {dev.PureName} (#{dev.EntityId}): \"{dev.InGameAlarmTitle}\".");
-
-            // Straight to the cloud: the worker is the consumer, and it is not running in this
-            // process. Waiting for the next routine sync would leave Alexa guessing meanwhile.
-            try { _vm.Save(); } catch { }
-            _ = UploadDevicesSnapshotForCurrentServerAsync();
-        }
 
         // Learn what this alarm actually says, while we can still prove which device it is.
         // Push notifications carry no entity ID of their own; the one we have here was
@@ -4022,6 +4074,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     }
                 }
                 /* >>>>>>> /ENDE EinfÃƒÂ¼geblock <<<<<<< */
+
+                // A freshly-paired Smart Alarm is otherwise invisible to the live WebSocket
+                // until the next (re)connect primes the whole device list. Until then its only
+                // signal is the FCM push, which carries no entity ID — so an oil-rig trigger
+                // cannot be identified and the alarm falls through as generic. Subscribe now, on
+                // the socket for the server it was paired on, so its events arrive with the ID:
+                // that both lets OilRigTriggerRegistry.Lookup match by ID and gives the app the
+                // chance to learn the alarm's text for later ID-less pushes.
+                if (string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase)
+                    && _rust is RustPlusClientReal ar
+                    && _vm.Selected == prof)
+                {
+                    _ = Dispatcher.InvokeAsync(async () =>
+                    {
+                        try
+                        {
+                            await ar.SubscribeEntityAsync(dev.EntityId);
+                            await ar.PokeEntityAsync(dev.EntityId);
+                            AppendLog($"[alarm/sub+poke] #{dev.EntityId} on pair queued");
+                        }
+                        catch (Exception subEx)
+                        {
+                            AppendLog($"[alarm/sub+poke] #{dev.EntityId} on pair: {subEx.Message}");
+                        }
+                    });
+                }
 
                 if (_vm.Selected != prof)
                     _vm.Selected = prof;

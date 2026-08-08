@@ -33,6 +33,24 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v8.0.3 HOTFIX PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v8.0.3 | Smart Alarm &amp; Oil Rig Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Smart Alarm socket subscription on pair:</Run>
+                                Freshly paired Smart Alarms are now subscribed and queried immediately on the active WebSocket connection. This ensures oil-rig triggers and custom alerts recognize entity IDs straight away without needing to wait for a reconnect.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Cleanup of Oil Rig rules on alarm deletion:</Run>
+                                Deleting a Smart Alarm now automatically cleans up any associated oil-rig timer rules in the Logic Engine, preventing orphaned rules from keeping rig timer status active.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v8.0.2 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

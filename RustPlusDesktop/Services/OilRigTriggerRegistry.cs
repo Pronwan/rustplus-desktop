@@ -51,9 +51,22 @@ public static class OilRigTriggerRegistry
 
                     byId[rule.TriggerEntityId] = label;
 
-                    // The alarm's own text, for pushes that carry no entity ID. Not the
-                    // device's name in the app: that comes from pairing and has nothing to do
-                    // with what the alarm broadcasts.
+                    // The alarm's own text, for pushes that carry no entity ID — which is every
+                    // push before a server connection exists.
+                    //
+                    // The device's recorded title comes first and is the one that matters: it
+                    // is written automatically whenever the alarm fires and therefore follows a
+                    // rename in-game. The hint typed into the rule is kept as a second key,
+                    // because someone who filled it in expects it to work, but it goes stale
+                    // the moment the alarm is renamed and nothing updates it.
+                    //
+                    // Matching only the hint is what let a renamed alarm ring as a raid again
+                    // after a restart: the device knew its new name, the rule did not, and the
+                    // lookup asked the rule.
+                    var device = FindDevice(profile.Devices, rule.TriggerEntityId);
+                    if (IsDistinctive(device?.InGameAlarmTitle))
+                        byName[device!.InGameAlarmTitle!.Trim()] = label;
+
                     if (IsDistinctive(step.AlarmTextHint))
                         byName[step.AlarmTextHint.Trim()] = label;
                 }
@@ -93,7 +106,19 @@ public static class OilRigTriggerRegistry
     }
 
     /// <summary>All trigger devices on one profile, for the device-list badges.</summary>
-    public static Dictionary<uint, string> ForProfile(ServerProfile? profile)
+    public static Dictionary<uint, string> ForProfile(ServerProfile? profile) =>
+        TargetsForProfile(profile).ToDictionary(
+            pair => pair.Key,
+            pair => pair.Value == "SmallOilRig"
+                ? Properties.Resources.UiBadgeSmallOil
+                : Properties.Resources.UiBadgeLargeOil);
+
+    /// <summary>
+    /// The same devices, but keyed to the untranslated target — "SmallOilRig" or
+    /// "LargeOilRig". This is what gets synced: a translated badge means nothing to the
+    /// worker, and it would change under the user's language setting.
+    /// </summary>
+    public static Dictionary<uint, string> TargetsForProfile(ServerProfile? profile)
     {
         var map = new Dictionary<uint, string>();
         if (profile?.LogicRules == null) return map;
@@ -107,9 +132,7 @@ public static class OilRigTriggerRegistry
                 .FirstOrDefault(s => s.StepType == "StartTimer" && s.IsOilRigTimer);
             if (step == null) continue;
 
-            map[rule.TriggerEntityId] = step.TimerTarget == "SmallOilRig"
-                ? Properties.Resources.UiBadgeSmallOil
-                : Properties.Resources.UiBadgeLargeOil;
+            map[rule.TriggerEntityId] = step.TimerTarget;
         }
 
         return map;
