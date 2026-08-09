@@ -1098,4 +1098,7 @@
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>配对后，在应用运行时触发一次警报器。应用会同时看到推送通知和设备事件，并自行记录名称。不想等？在此列表中右键单击该警报器并手动输入。无论哪种方式，它都与你在这里给设备起的名字无关 — 那个名字可以随意起，对 Alexa 没有影响。</value>
   </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>来自早先的清档 — 这些设备 ID 已不存在</value>
+  </data>
 </root>

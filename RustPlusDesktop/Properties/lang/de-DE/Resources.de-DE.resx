@@ -5898,4 +5898,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>Löse den Alarm nach dem Pairing einmal aus, während die App läuft. Sie sieht Benachrichtigung und Geräte-Event im selben Moment und trägt den Namen von selbst ein. Lieber nicht warten? Rechtsklick auf den Alarm in dieser Liste und eintippen. So oder so ist das unabhängig von dem Namen, den du dem Gerät hier gibst — den wählst du frei, und er hat keinen Einfluss auf Alexa.</value>
   </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>Aus einem früheren Wipe — diese Geräte-IDs existieren nicht mehr</value>
+  </data>
 </root>

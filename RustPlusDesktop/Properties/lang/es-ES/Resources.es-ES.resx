@@ -5838,4 +5838,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>Tras el emparejamiento, dispara la alarma una vez con la app abierta. Verá la notificación y el evento del dispositivo en el mismo instante y anotará el nombre sola. ¿Prefieres no esperar? Haz clic derecho en la alarma de esta lista y escríbelo. En cualquier caso es independiente del nombre que le des aquí al dispositivo: ese lo eliges libremente y no afecta a Alexa.</value>
   </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>De un wipe anterior: estos ID de dispositivo ya no existen</value>
+  </data>
 </root>

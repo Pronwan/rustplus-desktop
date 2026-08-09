@@ -13,6 +13,10 @@ namespace RustPlusDesk.Models
         public string? Alias { get; init; }
         public bool AlreadyPresent { get; init; }
 
+        /// <summary>True when the snapshot was taken during an earlier wipe, so the entity IDs
+        /// in it are dead. Such devices import without complaint and then never come online.</summary>
+        public bool FromPreviousWipe { get; init; }
+
         public ExportedDeviceDto? OriginalDto { get; init; }
 
         // neu:

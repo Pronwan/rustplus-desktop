@@ -5838,4 +5838,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>Après l’appairage, déclenchez l’alarme une fois pendant que l’application tourne. Elle voit la notification et l’événement de l’appareil au même instant et enregistre le nom toute seule. Vous préférez ne pas attendre ? Clic droit sur l’alarme dans cette liste et saisissez-le. Dans les deux cas, c’est indépendant du nom que vous donnez à l’appareil ici : celui-là est libre et sans effet sur Alexa.</value>
   </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>D’un wipe précédent — ces identifiants d’appareil n’existent plus</value>
+  </data>
 </root>

@@ -5859,4 +5859,7 @@ You can find more information on the server&apos;s official website:
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>After pairing, set the alarm off once while the app is running. The app sees the notification and the device event at the same moment and records the name by itself. Prefer not to wait? Right-click the alarm in this list and type it in. Either way it is separate from the name you give the device here — that one is yours to choose freely and has no effect on Alexa.</value>
   </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>From an earlier wipe — these device IDs no longer exist</value>
+  </data>
 </root>

@@ -5835,4 +5835,7 @@
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>بعد الإقتران، شغّل الإنذار مرة واحدة والتطبيق يعمل. سيرى الإشعار وحدث الجهاز في اللحظة نفسها ويسجّل الاسم تلقائياً. لا تريد الانتظار؟ انقر بزر الفأرة الأيمن على الإنذار في هذه القائمة واكتبه. وفي الحالتين هو مستقل عن الاسم الذي تمنحه للجهاز هنا — فذلك اختيارك ولا يؤثر على Alexa.</value>
   </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>من مسح سابق — معرّفات هذه الأجهزة لم تعد موجودة</value>
+  </data>
 </root>
