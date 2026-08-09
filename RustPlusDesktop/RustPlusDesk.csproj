@@ -25,7 +25,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>8.0.3</Version>
+		<Version>8.0.4</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
