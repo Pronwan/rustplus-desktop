@@ -79,6 +79,39 @@ public sealed class GameAudioListener : IDisposable
     // above all — while confirmed in-game cues scored 423, 515, 622, 962, 1017, 1514 and 1698.
     private const double MinScore = 400;
 
+    /// <summary>
+    /// Per-event floors, where the general one has been shown not to hold.
+    ///
+    /// Oil Rig has the weakest margin of the three (10.9x against Deep Sea's 23.9x) and
+    /// standing next to electric furnaces produced a continuous run of matches between 403
+    /// and 481 — above the general floor, and enough to burn the hourly report quota so a
+    /// genuine rig in the same hour was refused as well.
+    ///
+    /// The cost is real and worth stating: the weakest confirmed genuine cue scored 423 and
+    /// no longer clears this. Losing one faint detection is the better trade, because the rig
+    /// announces on a cycle and will be heard again, while a jammed quota silences everything
+    /// for an hour.
+    /// </summary>
+    private static readonly Dictionary<string, double> EventMinScore =
+        new(StringComparer.OrdinalIgnoreCase) { ["oil-rig"] = 500 };
+
+    /// <summary>
+    /// How many times one event may be reported before the source is treated as continuous.
+    ///
+    /// The number comes from the game, not from tuning. A genuine cue is reported once — the
+    /// offset-based duplicate check swallows every further match of the same occurrence — and
+    /// Rust has exactly two Oil Rigs, so two reports in quick succession is the physical
+    /// maximum. A third can only be something that keeps making the sound.
+    ///
+    /// That is what score cannot separate: a drone matches the fingerprint at arbitrary
+    /// alignments, so every match looks like a fresh occurrence to the duplicate check and
+    /// sails straight through it.
+    /// </summary>
+    private const int MaxReportsPerRun = 2;
+
+    /// <summary>Silence that ends a run and allows reporting again.</summary>
+    private const double SustainedSourceResetSeconds = 20;
+
     // Measured exclusions:
     //   excavator   — only clip in its event, weakest margin, and it produced five of the
     //                 eight false positives observed before thresholds were raised
@@ -92,6 +125,11 @@ public sealed class GameAudioListener : IDisposable
     /// <summary>Last reported occurrence per event: when it fired and where in the analysis
     /// window it sat, which is what distinguishes an echo from a genuine second cue.</summary>
     private readonly Dictionary<string, (DateTime At, int Offset)> _lastHit = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Per event: when it last matched, how many reports this run has produced, and
+    /// whether we have already said we are ignoring it.</summary>
+    private readonly Dictionary<string, (DateTime Last, int Count, bool Warned)> _runStart =
+        new(StringComparer.OrdinalIgnoreCase);
 
     private List<EventSoundFingerprint.Reference>? _references;
     private WasapiLoopbackCapture? _capture;
@@ -204,7 +242,9 @@ public sealed class GameAudioListener : IDisposable
                 worstCross = Math.Max(worstCross, EventSoundFingerprint.Match(other, peaks).Score);
             }
 
-            double floor = Math.Max(worstCross * 1.5, MinScore);
+            double eventFloor = EventMinScore.TryGetValue(reference.EventType, out var special)
+                ? special : MinScore;
+            double floor = Math.Max(worstCross * 1.5, eventFloor);
             double ceiling = Math.Max(self * 0.6, floor);
             reference.Threshold = Math.Clamp(Math.Sqrt(self * Math.Max(worstCross, 1)), floor, ceiling);
         }
@@ -450,6 +490,29 @@ public sealed class GameAudioListener : IDisposable
 
                             if (Math.Abs(top.Offset - expected) <= SameOccurrenceToleranceFrames) continue;
                         }
+                    }
+
+                    // A third report in one run. Score cannot catch this — standing beside
+                    // electric furnaces matched Oil Rig for minutes at 403-481, each match at a
+                    // fresh alignment and therefore invisible to the duplicate check above.
+                    if (_runStart.TryGetValue(top.Ref.EventType, out var run)
+                        && (now - run.Last).TotalSeconds < SustainedSourceResetSeconds)
+                    {
+                        int count = run.Count + 1;
+                        _runStart[top.Ref.EventType] = (now, count, run.Warned || count > MaxReportsPerRun);
+
+                        if (count > MaxReportsPerRun)
+                        {
+                            if (!run.Warned)
+                                Log($"[audio] Ignoring {top.Ref.EventType}: reported {MaxReportsPerRun} times " +
+                                    "already and still matching, so this is a continuous sound rather than an " +
+                                    "announcement. Resumes after it stops.");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        _runStart[top.Ref.EventType] = (now, 1, false);
                     }
 
                     _lastHit[top.Ref.EventType] = (now, top.Offset);
