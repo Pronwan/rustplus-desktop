@@ -1,0 +1,474 @@
+import React, { useState, useMemo } from 'react';
+import {
+  Box,
+  Typography,
+  Tabs,
+  Tab,
+  Button,
+  ButtonGroup,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Tooltip,
+  Collapse,
+  TextField,
+  InputAdornment
+} from '@mui/material';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import GridViewIcon from '@mui/icons-material/GridView';
+import SearchIcon from '@mui/icons-material/Search';
+import FunctionsIcon from '@mui/icons-material/Functions';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { RUST_RECIPES, getItemImageSlug, Recipe } from '../../domain/recipes/recipesData.ts';
+import { RecipeEngine } from '../../domain/recipes/recipeEngine.ts';
+
+const recipeEngine = new RecipeEngine(RUST_RECIPES);
+
+const CATEGORIES = ['All', 'tea', 'pie', 'food', 'resource'] as const;
+
+export const RecipesPage: React.FC = () => {
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState<string>('All');
+  const [multiplier, setMultiplier] = useState<number>(1);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [expandedRowIds, setExpandedRowIds] = useState<Record<string, boolean>>({});
+
+  const toggleRowExpansion = (id: string) => {
+    setExpandedRowIds((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const filteredRecipes = useMemo(() => {
+    return RUST_RECIPES.filter((r) => {
+      if (category !== 'All' && r.category !== category) return false;
+      if (search.trim() && !r.name.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    });
+  }, [search, category]);
+
+  return (
+    <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+      {/* Control & Filter Bar */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 2,
+          mb: 2.5,
+          borderBottom: '1px solid #282828',
+          pb: 1.5
+        }}
+      >
+        {/* Category Tabs */}
+        <Tabs
+          value={category}
+          onChange={(_, val) => setCategory(val)}
+          textColor="inherit"
+          sx={{
+            minHeight: 36,
+            '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 }
+          }}
+        >
+          {CATEGORIES.map((cat) => (
+            <Tab
+              key={cat}
+              value={cat}
+              label={cat.toUpperCase()}
+              sx={{
+                minHeight: 36,
+                py: 0.5,
+                px: 2,
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: category === cat ? '#00E5FF' : '#888888'
+              }}
+            />
+          ))}
+        </Tabs>
+
+        {/* Right Controls: Search, Multiplier, List/Grid View */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          {/* Search Box */}
+          <TextField
+            size="small"
+            placeholder="Search recipes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ fontSize: 16, color: '#666666' }} />
+                  </InputAdornment>
+                )
+              }
+            }}
+            sx={{
+              width: 180,
+              '& .MuiInputBase-root': {
+                backgroundColor: '#141414',
+                color: '#E0E0E0',
+                fontSize: '0.8rem',
+                fontFamily: 'monospace',
+                height: 32
+              }
+            }}
+          />
+
+          {/* Multiplier */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <ButtonGroup size="small" variant="outlined">
+              {[1, 5, 10, 50].map((m) => (
+                <Button
+                  key={m}
+                  onClick={() => setMultiplier(m)}
+                  sx={{
+                    fontSize: '0.75rem',
+                    py: 0.25,
+                    px: 1.2,
+                    backgroundColor: multiplier === m ? '#00E5FF' : 'transparent',
+                    color: multiplier === m ? '#000000' : '#CCCCCC',
+                    borderColor: '#383838',
+                    fontWeight: 700,
+                    '&:hover': {
+                      backgroundColor: multiplier === m ? '#00E5FF' : 'rgba(255,255,255,0.05)'
+                    }
+                  }}
+                >
+                  {m}x
+                </Button>
+              ))}
+            </ButtonGroup>
+          </Box>
+
+          {/* View Mode Toggle */}
+          <ButtonGroup size="small" variant="outlined">
+            <Tooltip title="List / Table View">
+              <Button
+                onClick={() => setViewMode('list')}
+                sx={{
+                  py: 0.25,
+                  px: 1,
+                  backgroundColor: viewMode === 'list' ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
+                  color: viewMode === 'list' ? '#00E5FF' : '#888888',
+                  borderColor: '#383838'
+                }}
+              >
+                <ViewListIcon sx={{ fontSize: 18 }} />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Grid View">
+              <Button
+                onClick={() => setViewMode('grid')}
+                sx={{
+                  py: 0.25,
+                  px: 1,
+                  backgroundColor: viewMode === 'grid' ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
+                  color: viewMode === 'grid' ? '#00E5FF' : '#888888',
+                  borderColor: '#383838'
+                }}
+              >
+                <GridViewIcon sx={{ fontSize: 18 }} />
+              </Button>
+            </Tooltip>
+          </ButtonGroup>
+        </Box>
+      </Box>
+
+      {/* VIEW 1: AUTHENTIC LIST / TABLE VIEW */}
+      {viewMode === 'list' && (
+        <TableContainer
+          component={Paper}
+          variant="outlined"
+          sx={{
+            backgroundColor: '#121212',
+            borderColor: '#242424',
+            borderRadius: '4px'
+          }}
+        >
+          <Table size="small">
+            <TableHead sx={{ backgroundColor: '#181818' }}>
+              <TableRow>
+                <TableCell sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1, width: '28%' }}>
+                  Item
+                </TableCell>
+                <TableCell sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1 }}>
+                  Recipe
+                </TableCell>
+                <TableCell align="right" sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1, width: '8%' }}>
+                  Σ
+                </TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {filteredRecipes.map((recipe) => {
+                const isExpanded = !!expandedRowIds[recipe.id];
+                const rawMaterials = recipeEngine.expandItem(recipe.name, multiplier);
+                const hasRawSubBreakdown =
+                  rawMaterials.length > 0 &&
+                  (rawMaterials.length !== recipe.ingredients.length ||
+                    rawMaterials.some((r, i) => r.item !== recipe.ingredients[i]?.item));
+
+                return (
+                  <React.Fragment key={recipe.id}>
+                    <TableRow
+                      hover
+                      sx={{
+                        backgroundColor: isExpanded ? 'rgba(255, 255, 255, 0.02)' : 'transparent',
+                        borderColor: '#242424',
+                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.03)' }
+                      }}
+                    >
+                      {/* Column 1: Item Name and Icon */}
+                      <TableCell sx={{ borderColor: '#1F1F1F', py: 1.2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                          <Box
+                            component="img"
+                            src={`./img/items/${getItemImageSlug(recipe.name)}.webp`}
+                            alt={recipe.name}
+                            sx={{ width: 28, height: 28, objectFit: 'contain' }}
+                          />
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 700,
+                              color: '#FFFFFF',
+                              fontFamily: '"Roboto Mono", monospace',
+                              fontSize: '0.85rem'
+                            }}
+                          >
+                            {recipe.name}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+
+                      {/* Column 2: Recipe (Ingredients -> Arrow -> Output) */}
+                      <TableCell sx={{ borderColor: '#1F1F1F', py: 1.2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                          {/* Ingredients List */}
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                            {recipe.ingredients.map((ing, idx) => (
+                              <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Box
+                                  component="img"
+                                  src={`./img/items/${getItemImageSlug(ing.item)}.webp`}
+                                  alt={ing.item}
+                                  sx={{ width: 24, height: 24, objectFit: 'contain' }}
+                                />
+                                <Typography
+                                  variant="caption"
+                                  sx={{
+                                    color: '#E0E0E0',
+                                    fontWeight: 700,
+                                    fontFamily: 'monospace',
+                                    fontSize: '0.8rem'
+                                  }}
+                                >
+                                  {ing.quantity * multiplier}
+                                </Typography>
+                              </Box>
+                            ))}
+                          </Box>
+
+                          {/* Arrow */}
+                          <ArrowForwardIcon sx={{ fontSize: 16, color: '#666666' }} />
+
+                          {/* Output Product */}
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <Box
+                              component="img"
+                              src={`./img/items/${getItemImageSlug(recipe.output.item)}.webp`}
+                              alt={recipe.output.item}
+                              sx={{ width: 26, height: 26, objectFit: 'contain' }}
+                            />
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: '#00E5FF',
+                                fontWeight: 800,
+                                fontFamily: 'monospace',
+                                fontSize: '0.85rem'
+                              }}
+                            >
+                              {recipe.output.quantity * multiplier}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+
+                      {/* Column 3: Sigma (Raw Materials Breakdown) */}
+                      <TableCell align="right" sx={{ borderColor: '#1F1F1F', py: 1.2 }}>
+                        {hasRawSubBreakdown ? (
+                          <Tooltip title={isExpanded ? 'Hide Raw Materials Breakdown' : 'Show Total Raw Base Materials (Σ)'}>
+                            <IconButton
+                              size="small"
+                              onClick={() => toggleRowExpansion(recipe.id)}
+                              sx={{
+                                color: isExpanded ? '#00E5FF' : '#777777',
+                                backgroundColor: isExpanded ? 'rgba(0, 229, 255, 0.1)' : 'transparent',
+                                '&:hover': { color: '#00E5FF' }
+                              }}
+                            >
+                              <FunctionsIcon sx={{ fontSize: 18 }} />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          <Typography variant="caption" sx={{ color: '#444' }}>-</Typography>
+                        )}
+                      </TableCell>
+                    </TableRow>
+
+                    {/* Expandable Sigma Sub-Row */}
+                    {hasRawSubBreakdown && (
+                      <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+                        <TableCell colSpan={3} sx={{ py: 0, px: 3, borderColor: '#1F1F1F' }}>
+                          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                            <Box sx={{ py: 1.5, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                              <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 700, fontFamily: 'monospace' }}>
+                                Total Raw Materials:
+                              </Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                                {rawMaterials.map((raw, rIdx) => (
+                                  <Box key={rIdx} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                                    <Box
+                                      component="img"
+                                      src={`./img/items/${getItemImageSlug(raw.item)}.webp`}
+                                      alt={raw.item}
+                                      sx={{ width: 20, height: 20, objectFit: 'contain' }}
+                                    />
+                                    <Typography variant="caption" sx={{ color: '#AAAAAA', fontFamily: 'monospace' }}>
+                                      {raw.item}:
+                                    </Typography>
+                                    <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 800, fontFamily: 'monospace' }}>
+                                      {raw.quantity}
+                                    </Typography>
+                                  </Box>
+                                ))}
+                              </Box>
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      {/* VIEW 2: GRID / CARD VIEW */}
+      {viewMode === 'grid' && (
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+            gap: 2
+          }}
+        >
+          {filteredRecipes.map((recipe) => {
+            const rawMaterials = recipeEngine.expandItem(recipe.name, multiplier);
+
+            return (
+              <Paper
+                key={recipe.id}
+                variant="outlined"
+                sx={{
+                  backgroundColor: '#181818',
+                  borderColor: '#282828',
+                  borderRadius: '6px',
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+              >
+                {/* Header */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+                  <Box
+                    component="img"
+                    src={`./img/items/${getItemImageSlug(recipe.name)}.webp`}
+                    alt={recipe.name}
+                    sx={{ width: 32, height: 32, objectFit: 'contain' }}
+                  />
+                  <Box>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        fontWeight: 700,
+                        color: '#FFFFFF',
+                        fontFamily: '"Roboto Mono", monospace',
+                        lineHeight: 1.2
+                      }}
+                    >
+                      {recipe.name}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 600 }}>
+                      Yield: {recipe.output.quantity * multiplier}x
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Direct Ingredients */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mb: 1.5 }}>
+                  {recipe.ingredients.map((ing, idx) => (
+                    <Box key={idx} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                        <Box
+                          component="img"
+                          src={`./img/items/${getItemImageSlug(ing.item)}.webp`}
+                          alt={ing.item}
+                          sx={{ width: 18, height: 18, objectFit: 'contain' }}
+                        />
+                        <Typography variant="caption" sx={{ color: '#CCCCCC', fontFamily: 'monospace' }}>
+                          {ing.item}
+                        </Typography>
+                      </Box>
+                      <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 700, fontFamily: 'monospace' }}>
+                        {ing.quantity * multiplier}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+
+                {/* Raw Breakdown */}
+                <Box
+                  sx={{
+                    mt: 'auto',
+                    p: 1.2,
+                    backgroundColor: '#121212',
+                    border: '1px solid #242424',
+                    borderRadius: '4px'
+                  }}
+                >
+                  <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 700, display: 'block', mb: 0.5, fontSize: '0.7rem' }}>
+                    Total Raw Materials:
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
+                    {rawMaterials.map((raw, rIdx) => (
+                      <Box key={rIdx} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant="caption" sx={{ color: '#8E8E8E', fontFamily: 'monospace', fontSize: '0.75rem' }}>
+                          {raw.item}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem' }}>
+                          {raw.quantity}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Paper>
+            );
+          })}
+        </Box>
+      )}
+    </Box>
+  );
+};

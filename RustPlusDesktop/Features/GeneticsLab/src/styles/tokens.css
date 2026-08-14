@@ -1,0 +1,91 @@
+:root {
+  /* Common Colors */
+  --color-primary: #0097a7;
+  --color-primary-hover: #00acc1;
+  --color-primary-active: #00838f;
+  --color-primary-light: rgba(0, 151, 167, 0.15);
+  
+  --color-good: #00c853;
+  --color-good-bg: rgba(0, 200, 83, 0.15);
+  --color-good-border: rgba(0, 200, 83, 0.4);
+
+  --color-danger: #e53935;
+  --color-danger-hover: #d32f2f;
+  --color-danger-bg: rgba(229, 57, 53, 0.15);
+  --color-danger-border: rgba(229, 57, 53, 0.4);
+
+  --color-warning: #fb8c00;
+  --color-warning-hover: #f57c00;
+  --color-warning-bg: rgba(251, 140, 0, 0.15);
+
+  --color-info: #0288d1;
+
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-mono: 'Consolas', 'Courier New', Courier, monospace;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Borders & Radius */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.2), 0 2px 4px -1px rgba(0,0,0,0.12);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.15);
+}
+
+/* Dark Theme (Default) */
+[data-theme='dark'] {
+  --color-bg: #121418;
+  --color-bg-alt: #181b20;
+  --color-surface: #1e2229;
+  --color-surface-raised: #282d36;
+  --color-surface-hover: #2f3540;
+  --color-border: #333a46;
+  --color-border-subtle: #252b35;
+
+  --color-text-primary: #f0f3f6;
+  --color-text-secondary: #9aa5b5;
+  --color-text-muted: #6b7787;
+
+  --color-card-highlight: #ffffff;
+  --color-card-highlight-glow: rgba(255, 255, 255, 0.25);
+  --article-highlight-color: #00acc1;
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --color-bg: #f4f6f8;
+  --color-bg-alt: #e9ecf0;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f8fafc;
+  --color-surface-hover: #f0f3f6;
+  --color-border: #d0d7de;
+  --color-border-subtle: #e2e8f0;
+
+  --color-text-primary: #1a1f26;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+
+  --color-card-highlight: #00c853;
+  --color-card-highlight-glow: rgba(0, 200, 83, 0.3);
+  --article-highlight-color: #0097a7;
+}

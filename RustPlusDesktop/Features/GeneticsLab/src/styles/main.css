@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-primary: #0E0E0E;
+  --bg-secondary: #181818;
+  --bg-tertiary: #202020;
+  --color-border: #282828;
+  --color-accent: #00E5FF;
+  --color-gene-green: #4CAF50;
+  --color-gene-red: #C62828;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: #E0E0E0;
+  font-family: 'Roboto Mono', 'Consolas', monospace;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* Pulsing red dot for live scanner */
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(229, 57, 53, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
+  }
+}
+
+.pulsing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  margin-left: 6px;
+  animation: pulse-red 1.5s infinite;
+}
+
+/* Underline filter inputs */
+.filter-underline-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #444444;
+  color: #E0E0E0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  padding: 4px 2px;
+  width: 100%;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.filter-underline-input:focus {
+  border-bottom-color: #00E5FF;
+}

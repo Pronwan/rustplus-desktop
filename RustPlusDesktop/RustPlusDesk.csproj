@@ -62,6 +62,12 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<Content Include="Features\GeneticsLab\dist\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	
+	<ItemGroup>
 	  <None Remove="Assets\1-76fc6c7e.ico" />
 	  <None Remove="Assets\1min.mp3" />
 	  <None Remove="Assets\bell.mp3" />

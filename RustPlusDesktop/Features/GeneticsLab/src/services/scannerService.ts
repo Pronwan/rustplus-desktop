@@ -1,0 +1,666 @@
+import { ScannerRegion, StorageService } from './storageService.ts';
+import {
+  ScannerEvent,
+  ScannerEventListener,
+  ScannerDiagnostics,
+  GeneRecognizer,
+  ScanCandidate,
+  ScannerRegionType
+} from './scanner/scannerTypes.ts';
+import { SCANNER_CONFIG } from './scanner/scannerConfig.ts';
+import { GeneImagePreprocessor } from './scanner/GeneImagePreprocessor.ts';
+import { TesseractGeneRecognizer } from './scanner/TesseractGeneRecognizer.ts';
+import { RegionChangeDetector } from './scanner/RegionChangeDetector.ts';
+import { FrameStabilityDetector } from './scanner/FrameStabilityDetector.ts';
+import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
+import { PlantScanDeduplicator } from './scanner/PlantScanDeduplicator.ts';
+
+export * from './scanner/scannerTypes.ts';
+export * from './scanner/scannerConfig.ts';
+
+export class ScannerService {
+  private listeners: ScannerEventListener[] = [];
+  private mediaStream: MediaStream | null = null;
+  private videoElement: HTMLVideoElement | null = null;
+  private isScanning = false;
+  private isInitializing = false;
+
+  // Background Web Worker ticker
+  private tickerWorker: Worker | null = null;
+  private scanTimerId: any = null;
+
+  // Modular Pipeline Components
+  private regions: ScannerRegion[] = [];
+  private recognizer: GeneRecognizer;
+  private changeDetector: RegionChangeDetector;
+  private stabilityDetector: FrameStabilityDetector;
+  private votingService: TemporalVotingService;
+  private deduplicator: PlantScanDeduplicator;
+
+  // Performance & Diagnostics Tracking
+  private lastPreviewEmitTime = 0;
+  private isOcrInProgress = false;
+  private lastOcrTimestamps: Record<number, number> = {};
+  private scanCount = 0;
+  private acceptedCount = 0;
+  private rejectedCount = 0;
+  private frameCount = 0;
+  private lastFpsCalcTime = Date.now();
+  private currentFps = 0;
+  private lastScanLatency = 0;
+  private lastOcrLatency = 0;
+  private lastRowOcrLatency = 0;
+  private lastSlotOcrLatency = 0;
+  private lastTickTime = 0;
+  private lastTickGap = 0;
+  private lastVideoTime = -1;
+  private lastVideoFrameTime = 0;
+  private lastVideoFrameGap = 0;
+  private pipelineStage = 'idle';
+  private pipelineStageStartedAt = performance.now();
+  private pendingUiGene = '';
+  private pendingUiStartedAt = 0;
+  private lastUiUpdateLatency = 0;
+  private latestConfidence = 0;
+  private activityScores: Record<number, number> = { 0: 0, 1: 0 };
+  private activeRegionType: ScannerRegionType | 'none' = 'none';
+
+  // Reusable Canvases
+  private previewCanvases: HTMLCanvasElement[] = [];
+  private roiCanvases: HTMLCanvasElement[] = [];
+
+  constructor(recognizer?: GeneRecognizer) {
+    this.regions = StorageService.getScannerRegions();
+    this.recognizer = recognizer || new TesseractGeneRecognizer();
+    this.changeDetector = new RegionChangeDetector();
+    this.stabilityDetector = new FrameStabilityDetector();
+    this.votingService = new TemporalVotingService();
+    this.deduplicator = new PlantScanDeduplicator();
+  }
+
+  public static isSupported(): boolean {
+    return typeof navigator !== 'undefined' &&
+      !!navigator.mediaDevices &&
+      'getDisplayMedia' in navigator.mediaDevices;
+  }
+
+  public addEventListener(listener: ScannerEventListener): () => void {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== listener);
+    };
+  }
+
+  private emit(event: ScannerEvent): void {
+    for (const listener of this.listeners) {
+      listener(event);
+    }
+  }
+
+  public async start(): Promise<boolean> {
+    if (this.isScanning || this.isInitializing) return false;
+    this.isInitializing = true;
+    this.emit({ type: 'INITIALIZING' });
+
+    try {
+      this.regions = StorageService.getScannerRegions();
+
+      this.mediaStream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          width: { ideal: SCANNER_CONFIG.capture.idealWidth },
+          height: { ideal: SCANNER_CONFIG.capture.idealHeight },
+          frameRate: { max: SCANNER_CONFIG.capture.maxFrameRate }
+        },
+        audio: false
+      });
+
+      const videoTrack = this.mediaStream.getVideoTracks()[0];
+      if (!videoTrack) {
+        throw new Error('No video track received from screen capture');
+      }
+
+      videoTrack.addEventListener('ended', () => {
+        this.stop();
+      });
+
+      // Mount video element to DOM to ensure Chromium never throttles frame decoding
+      this.videoElement = document.createElement('video');
+      this.videoElement.autoplay = true;
+      this.videoElement.playsInline = true;
+      this.videoElement.muted = true;
+      this.videoElement.style.position = 'fixed';
+      this.videoElement.style.top = '-9999px';
+      this.videoElement.style.left = '-9999px';
+      this.videoElement.style.width = '100px';
+      this.videoElement.style.height = '100px';
+      this.videoElement.style.opacity = '0.001';
+      this.videoElement.style.pointerEvents = 'none';
+      this.videoElement.style.zIndex = '-9999';
+      document.body.appendChild(this.videoElement);
+
+      this.videoElement.srcObject = this.mediaStream;
+
+      await new Promise<void>((resolve, reject) => {
+        if (!this.videoElement) return reject(new Error('Video element lost'));
+        this.videoElement.onloadedmetadata = () => {
+          this.videoElement?.play().then(() => resolve()).catch(reject);
+        };
+      });
+
+      // Warm up Tesseract OCR workers if not already warm
+      if (!this.recognizer.isWarm()) {
+        await this.recognizer.warmup();
+      }
+
+      this.isScanning = true;
+      this.isInitializing = false;
+      this.emit({ type: 'STARTED' });
+
+      this.startScanLoop();
+      return true;
+    } catch (err: any) {
+      this.stop();
+      this.isInitializing = false;
+      this.emit({ type: 'ERROR', error: err?.message || 'Failed to initialize screen capture' });
+      this.emit({ type: 'STOPPED' });
+      return false;
+    }
+  }
+
+  private startScanLoop(): void {
+    if (!this.isScanning) return;
+
+    try {
+      const tickerBlob = new Blob([`
+        let timer = null;
+        self.onmessage = function(e) {
+          if (e.data === 'START') {
+            if (timer) clearInterval(timer);
+            timer = setInterval(function() {
+              self.postMessage('TICK');
+            }, ${SCANNER_CONFIG.performance.scanIntervalMs});
+          } else if (e.data === 'STOP') {
+            if (timer) clearInterval(timer);
+            timer = null;
+          }
+        };
+      `], { type: 'application/javascript' });
+
+      this.tickerWorker = new Worker(URL.createObjectURL(tickerBlob));
+      this.tickerWorker.onmessage = () => {
+        if (this.isScanning) {
+          this.scanFrame();
+        }
+      };
+      this.tickerWorker.postMessage('START');
+    } catch {
+      const runScan = async () => {
+        if (!this.isScanning) return;
+        await this.scanFrame();
+        if (this.isScanning) {
+          this.scanTimerId = setTimeout(runScan, SCANNER_CONFIG.performance.scanIntervalMs);
+        }
+      };
+      runScan();
+    }
+  }
+
+  private async scanFrame(): Promise<void> {
+    if (!this.videoElement || this.videoElement.videoWidth === 0) return;
+
+    const startTime = performance.now();
+    if (this.lastTickTime > 0) {
+      this.lastTickGap = startTime - this.lastTickTime;
+    }
+    this.lastTickTime = startTime;
+
+    if (this.videoElement.currentTime !== this.lastVideoTime) {
+      if (this.lastVideoFrameTime > 0) {
+        this.lastVideoFrameGap = startTime - this.lastVideoFrameTime;
+      }
+      this.lastVideoTime = this.videoElement.currentTime;
+      this.lastVideoFrameTime = startTime;
+    }
+
+    if (!this.isOcrInProgress) {
+      this.setPipelineStage('capture');
+    }
+
+    const videoW = this.videoElement.videoWidth;
+    const videoH = this.videoElement.videoHeight;
+    const now = Date.now();
+
+    // FPS Calculation
+    this.frameCount++;
+    if (now - this.lastFpsCalcTime >= 1000) {
+      this.currentFps = Math.round((this.frameCount * 1000) / (now - this.lastFpsCalcTime));
+      this.frameCount = 0;
+      this.lastFpsCalcTime = now;
+    }
+
+    const shouldEmitPreview = now - this.lastPreviewEmitTime >= SCANNER_CONFIG.performance.previewIntervalMs;
+    if (shouldEmitPreview) {
+      this.lastPreviewEmitTime = now;
+    }
+
+    // Step 1: Evaluate Active Regions and Previews
+    const activeCandidates: {
+      rIdx: number;
+      type: ScannerRegionType;
+      xPx: number;
+      yPx: number;
+      hPx: number;
+      geneWPx: number;
+      gapWPx: number;
+      signature: number;
+      activityScore: number;
+    }[] = [];
+
+    for (let rIdx = 0; rIdx < this.regions.length; rIdx++) {
+      const reg = this.regions[rIdx];
+      const xPx = Math.round(videoW * reg.TOP_LEFT_X);
+      const yPx = Math.round(videoH * reg.TOP_LEFT_Y);
+      const wPx = Math.round(videoW * reg.WIDTH);
+      const normH = reg.WIDTH * reg.HEIGHT_TO_WIDTH_RATIO;
+      const hPx = Math.ceil(videoH * normH);
+
+      if (wPx <= 0 || hPx <= 0) continue;
+
+      // Rust Breeder-style Preview Rendering (throttled)
+      if (shouldEmitPreview) {
+        this.renderPreview(rIdx, xPx, yPx, wPx, hPx, reg);
+      }
+
+      if (!this.roiCanvases[rIdx]) {
+        this.roiCanvases[rIdx] = document.createElement('canvas');
+      }
+      const roiCanvas = this.roiCanvases[rIdx];
+      roiCanvas.width = wPx;
+      roiCanvas.height = hPx;
+      const roiCtx = roiCanvas.getContext('2d', { willReadFrequently: true });
+      if (!roiCtx) continue;
+
+      roiCtx.drawImage(this.videoElement, xPx, yPx, wPx, hPx, 0, 0, wPx, hPx);
+      const roiData = roiCtx.getImageData(0, 0, wPx, hPx).data;
+
+      // Activity Score Calculation
+      const score = GeneImagePreprocessor.computeRegionActivityScore(roiData);
+      this.activityScores[rIdx] = score;
+
+      if (score < SCANNER_CONFIG.recognition.activeRegionThreshold) {
+        this.deduplicator.markRegionDismissed(rIdx);
+        continue;
+      }
+
+      const signature = this.changeDetector.computeSignature(roiCtx, wPx, hPx);
+      const hasChanged = this.changeDetector.hasChanged(rIdx, signature);
+      const isStable = this.stabilityDetector.registerFrame(rIdx, signature);
+      const lastOcr = this.lastOcrTimestamps[rIdx] || 0;
+
+      if ((hasChanged && isStable) || now - lastOcr > 200) {
+        const geneWPx = Math.round(wPx * reg.GENE_WIDTH_TO_WIDTH_RATIO);
+        const totalGeneW = geneWPx * 6;
+        const gapWPx = Math.max(0, (wPx - totalGeneW) / 5);
+
+        activeCandidates.push({
+          rIdx,
+          type: rIdx === 0 ? 'inventory' : 'planter',
+          xPx,
+          yPx,
+          hPx,
+          geneWPx,
+          gapWPx,
+          signature,
+          activityScore: score
+        });
+      }
+    }
+
+    // Step 2: Arbitrated Multi-Region Recognition
+    if (activeCandidates.length > 0 && this.recognizer.isWarm() && !this.isOcrInProgress) {
+      this.isOcrInProgress = true;
+      this.scanCount++;
+
+      this.processArbitratedScan(activeCandidates)
+        .catch((error) => {
+          console.error('Scanner pipeline failed', error);
+          this.setPipelineStage('error');
+        })
+        .finally(() => {
+          this.isOcrInProgress = false;
+        });
+    } else if (!this.isOcrInProgress) {
+      this.setPipelineStage(
+        activeCandidates.length === 0
+          ? 'roi-idle'
+          : 'ocr-cold'
+      );
+    }
+
+    this.lastScanLatency = performance.now() - startTime;
+  }
+
+  private async processArbitratedScan(
+    regionsToScan: {
+      rIdx: number;
+      type: ScannerRegionType;
+      xPx: number;
+      yPx: number;
+      hPx: number;
+      geneWPx: number;
+      gapWPx: number;
+      signature: number;
+      activityScore: number;
+    }[]
+  ): Promise<void> {
+    if (!this.videoElement) return;
+    const ocrStartTime = performance.now();
+    const candidates: ScanCandidate[] = [];
+    let rowOcrLatency = 0;
+    let slotOcrLatency = 0;
+
+    for (const item of regionsToScan) {
+      this.lastOcrTimestamps[item.rIdx] = Date.now();
+
+      // Primary: High-speed single-pass stitched row recognition (~20ms)
+      const stitchedStrip = GeneImagePreprocessor.prepareStitchedGeneStrip(
+        this.videoElement,
+        item.xPx,
+        item.yPx,
+        item.geneWPx,
+        item.gapWPx,
+        item.hPx
+      );
+
+      this.setPipelineStage('row-ocr');
+      const rowStartTime = performance.now();
+      let result = await this.recognizer.recognizeRow(stitchedStrip);
+      rowOcrLatency += performance.now() - rowStartTime;
+
+      // Fallback: Slot recognition if single-pass was ambiguous
+      if (!result) {
+        const slotCanvases = GeneImagePreprocessor.prepareSlotCrops(
+          this.videoElement,
+          item.xPx,
+          item.yPx,
+          item.geneWPx,
+          item.gapWPx,
+          item.hPx
+        );
+        this.setPipelineStage('slot-ocr');
+        const slotStartTime = performance.now();
+        result = await this.recognizer.recognizeSlots(slotCanvases);
+        slotOcrLatency += performance.now() - slotStartTime;
+      }
+
+      if (result && result.geneString) {
+        candidates.push({
+          regionIndex: item.rIdx,
+          regionType: item.type,
+          genes: result.geneString,
+          confidence: result.confidence,
+          geneConfidences: result.slotConfidences || [],
+          activityScore: item.activityScore,
+          valid: true
+        });
+      }
+    }
+
+    this.lastOcrLatency = performance.now() - ocrStartTime;
+    this.lastRowOcrLatency = rowOcrLatency;
+    this.lastSlotOcrLatency = slotOcrLatency;
+    this.setPipelineStage('vote');
+
+    // Step 3: Choose Best Single Candidate
+    const bestCandidate = this.chooseBestCandidate(candidates);
+
+    if (bestCandidate) {
+      this.latestConfidence = bestCandidate.confidence;
+      this.activeRegionType = bestCandidate.regionType;
+
+      // Step 4: 2-of-3 Temporal Confirmation
+      const votedResult = this.votingService.addCandidate(bestCandidate.regionIndex, {
+        geneString: bestCandidate.genes,
+        confidence: bestCandidate.confidence
+      });
+
+      if (votedResult) {
+        // Step 5: Display-State Lock
+        const targetRegion = regionsToScan.find(r => r.rIdx === bestCandidate.regionIndex);
+        const signature = targetRegion ? targetRegion.signature : 0;
+
+        const shouldEmit = this.deduplicator.shouldAccept(
+          bestCandidate.regionIndex,
+          votedResult.geneString,
+          signature
+        );
+
+        if (shouldEmit) {
+          this.acceptedCount++;
+          this.pendingUiGene = votedResult.geneString;
+          this.pendingUiStartedAt = performance.now();
+          this.setPipelineStage('ui-pending');
+          this.emit({
+            type: 'SAPLING-FOUND',
+            regionIndex: bestCandidate.regionIndex,
+            regionType: bestCandidate.regionType,
+            geneString: votedResult.geneString,
+            confidence: votedResult.confidence
+          });
+        } else {
+          this.setPipelineStage('duplicate');
+        }
+      } else {
+        this.setPipelineStage('vote-wait');
+      }
+    } else if (candidates.length > 0) {
+      this.rejectedCount++;
+      this.setPipelineStage('ocr-rejected');
+    } else {
+      this.setPipelineStage('no-result');
+    }
+  }
+
+  /**
+   * Candidate arbitration: picks the strongest valid candidate if multiple regions pass.
+   */
+  private chooseBestCandidate(candidates: ScanCandidate[]): ScanCandidate | null {
+    const valid = candidates
+      .filter(x => x.valid && x.confidence >= SCANNER_CONFIG.recognition.minAverageConfidence)
+      .sort((a, b) => b.confidence - a.confidence);
+
+    if (valid.length === 0) return null;
+    if (valid.length === 1) return valid[0];
+
+    const best = valid[0];
+    const second = valid[1];
+
+    if (best.confidence - second.confidence >= SCANNER_CONFIG.recognition.regionWinnerMargin) {
+      return best;
+    }
+
+    if (best.genes === second.genes) {
+      return best;
+    }
+
+    return null;
+  }
+
+  /**
+   * Renders the exact 6-gene cropped strip directly matching Rust Breeder.
+   */
+  private renderPreview(
+    rIdx: number,
+    xPx: number,
+    yPx: number,
+    wPx: number,
+    hPx: number,
+    reg: ScannerRegion
+  ): void {
+    if (!this.videoElement) return;
+
+    if (!this.previewCanvases[rIdx]) {
+      this.previewCanvases[rIdx] = document.createElement('canvas');
+    }
+    const pCanvas = this.previewCanvases[rIdx];
+    pCanvas.width = wPx;
+    pCanvas.height = hPx;
+    const pCtx = pCanvas.getContext('2d');
+    if (!pCtx) return;
+
+    pCtx.drawImage(this.videoElement, xPx, yPx, wPx, hPx, 0, 0, wPx, hPx);
+
+    // Darken the 5 gaps using exact RustBreeder alpha 0.35
+    const geneWPx = Math.round(wPx * reg.GENE_WIDTH_TO_WIDTH_RATIO);
+    const totalGeneW = geneWPx * 6;
+    const gapW = Math.max(0, (wPx - totalGeneW) / 5);
+
+    pCtx.fillStyle = '#000000';
+    pCtx.globalAlpha = 0.35;
+    for (let g = 0; g < 5; g++) {
+      const gapX = (g + 1) * geneWPx + g * gapW;
+      pCtx.fillRect(gapX, 0, gapW, hPx);
+    }
+    pCtx.globalAlpha = 1.0;
+
+    this.emit({
+      type: 'PREVIEW',
+      regionIndex: rIdx,
+      regionType: rIdx === 0 ? 'inventory' : 'planter',
+      previewDataUrl: pCanvas.toDataURL('image/webp', 0.85)
+    });
+  }
+
+  public getDiagnostics(): ScannerDiagnostics {
+    const now = performance.now();
+    return {
+      fps: this.currentFps,
+      tickGapMs: Math.round(this.lastTickGap * 10) / 10,
+      videoFrameAgeMs: Math.round((this.lastVideoFrameTime > 0 ? now - this.lastVideoFrameTime : 0) * 10) / 10,
+      videoFrameGapMs: Math.round(this.lastVideoFrameGap * 10) / 10,
+      lastScanLatencyMs: Math.round(this.lastScanLatency * 10) / 10,
+      lastOcrLatencyMs: Math.round(this.lastOcrLatency * 10) / 10,
+      rowOcrLatencyMs: Math.round(this.lastRowOcrLatency * 10) / 10,
+      slotOcrLatencyMs: Math.round(this.lastSlotOcrLatency * 10) / 10,
+      pipelineStage: this.pipelineStage,
+      pipelineStageAgeMs: Math.round((now - this.pipelineStageStartedAt) * 10) / 10,
+      uiUpdateLatencyMs: Math.round((this.pendingUiStartedAt > 0 ? now - this.pendingUiStartedAt : this.lastUiUpdateLatency) * 10) / 10,
+      pageVisibility: document.visibilityState,
+      captureResolution: this.videoElement
+        ? `${this.videoElement.videoWidth}x${this.videoElement.videoHeight}`
+        : '0x0',
+      confidence: Math.round(this.latestConfidence),
+      totalScans: this.scanCount,
+      acceptedPlants: this.acceptedCount,
+      rejectedScans: this.rejectedCount,
+      activeRegion: this.activeRegionType,
+      inventoryActivity: this.activityScores[0] || 0,
+      planterActivity: this.activityScores[1] || 0
+    };
+  }
+
+  public acknowledgeGeneHandled(geneString: string): void {
+    if (geneString !== this.pendingUiGene || this.pendingUiStartedAt === 0) return;
+    this.lastUiUpdateLatency = performance.now() - this.pendingUiStartedAt;
+    this.pendingUiGene = '';
+    this.pendingUiStartedAt = 0;
+    this.setPipelineStage('accepted');
+  }
+
+  private setPipelineStage(stage: string): void {
+    if (stage === this.pipelineStage) return;
+    this.pipelineStage = stage;
+    this.pipelineStageStartedAt = performance.now();
+  }
+
+  public moveRegion(regionIndex: number, dxPx: number, dyPx: number, videoW = 1920, videoH = 1080): void {
+    const reg = this.regions[regionIndex];
+    if (!reg) return;
+
+    const dxNorm = dxPx / videoW;
+    const dyNorm = dyPx / videoH;
+
+    reg.TOP_LEFT_X = Math.max(0, Math.min(1 - reg.WIDTH, reg.TOP_LEFT_X + dxNorm));
+    const normH = reg.WIDTH * reg.HEIGHT_TO_WIDTH_RATIO;
+    reg.TOP_LEFT_Y = Math.max(0, Math.min(1 - normH, reg.TOP_LEFT_Y + dyNorm));
+  }
+
+  public scaleRegion(regionIndex: number, dwPx: number, videoW = 1920): void {
+    const reg = this.regions[regionIndex];
+    if (!reg) return;
+
+    const dwNorm = dwPx / videoW;
+    const newWidth = Math.max(0.02, Math.min(0.5, reg.WIDTH + dwNorm));
+    const normH = newWidth * reg.HEIGHT_TO_WIDTH_RATIO;
+
+    if (reg.TOP_LEFT_X + newWidth <= 1.0 && reg.TOP_LEFT_Y + normH <= 1.0) {
+      reg.WIDTH = newWidth;
+    }
+  }
+
+  public adjustHeightRatio(regionIndex: number, dRatio: number): void {
+    const reg = this.regions[regionIndex];
+    if (!reg) return;
+    reg.HEIGHT_TO_WIDTH_RATIO = Math.max(0.05, Math.min(0.5, reg.HEIGHT_TO_WIDTH_RATIO + dRatio));
+  }
+
+  public adjustGeneWidthRatio(regionIndex: number, dRatio: number): void {
+    const reg = this.regions[regionIndex];
+    if (!reg) return;
+    reg.GENE_WIDTH_TO_WIDTH_RATIO = Math.max(0.02, Math.min(0.25, reg.GENE_WIDTH_TO_WIDTH_RATIO + dRatio));
+  }
+
+  public saveRegions(): void {
+    StorageService.saveScannerRegions(this.regions);
+  }
+
+  public resetRegions(): void {
+    this.regions = StorageService.resetScannerRegions();
+  }
+
+  public getRegions(): ScannerRegion[] {
+    return this.regions;
+  }
+
+  public stop(): void {
+    this.isScanning = false;
+    this.isInitializing = false;
+
+    if (this.tickerWorker) {
+      try {
+        this.tickerWorker.postMessage('STOP');
+        this.tickerWorker.terminate();
+      } catch {
+        // ignore
+      }
+      this.tickerWorker = null;
+    }
+
+    if (this.scanTimerId) {
+      clearTimeout(this.scanTimerId);
+      this.scanTimerId = null;
+    }
+
+    if (this.mediaStream) {
+      for (const track of this.mediaStream.getTracks()) {
+        track.stop();
+      }
+      this.mediaStream = null;
+    }
+
+    if (this.videoElement) {
+      this.videoElement.srcObject = null;
+      if (this.videoElement.parentNode) {
+        this.videoElement.parentNode.removeChild(this.videoElement);
+      }
+      this.videoElement = null;
+    }
+
+    this.emit({ type: 'STOPPED' });
+  }
+
+  public async terminateAll(): Promise<void> {
+    this.stop();
+    await this.recognizer.terminate();
+  }
+}
