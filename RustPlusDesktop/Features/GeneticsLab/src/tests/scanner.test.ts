@@ -170,4 +170,153 @@ describe('Scanner Subsystem & Modules', () => {
       expect(rawData[8]).toBe(255);
     });
   });
+
+  describe('Scanner Starvation Detector', () => {
+    let detector: import('../services/scanner/ScannerStarvationDetector.ts').ScannerStarvationDetector;
+
+    beforeEach(async () => {
+      const { ScannerStarvationDetector } = await import('../services/scanner/ScannerStarvationDetector.ts');
+      detector = new ScannerStarvationDetector();
+    });
+
+    it('ignores starvation symptoms during startup grace period (3000ms)', () => {
+      detector.start(1000);
+
+      // During grace period (t = 2000, 1000ms elapsed)
+      const res = detector.evaluate({
+        videoFrameAgeMs: 1200,
+        videoFrameGapMs: 1200,
+        lastOcrLatencyMs: 300,
+        rowOcrLatencyMs: 300,
+        tickGapMs: 200
+      }, 2000);
+
+      expect(res.isStarved).toBe(false);
+      expect(res.stateChanged).toBe(false);
+    });
+
+    it('detects sustained capture frame stalls (>450ms-600ms) after grace period', () => {
+      detector.start(1000);
+
+      const slowMetrics = {
+        videoFrameAgeMs: 800,
+        videoFrameGapMs: 800,
+        lastOcrLatencyMs: 20,
+        rowOcrLatencyMs: 20,
+        tickGapMs: 50
+      };
+
+      // Past grace period: t = 4500 (3500ms elapsed), first stall observation
+      const firstObservation = detector.evaluate(slowMetrics, 4500);
+      expect(firstObservation.isStarved).toBe(false); // not yet sustained
+
+      // 1000ms later: t = 5500 (still under 1500ms sustained requirement)
+      const partialObservation = detector.evaluate(slowMetrics, 5500);
+      expect(partialObservation.isStarved).toBe(false);
+
+      // 1600ms later: t = 6100 (> 1500ms sustained)
+      const starved = detector.evaluate(slowMetrics, 6100);
+      expect(starved.isStarved).toBe(true);
+      expect(starved.starvationReason).toBe('CAPTURE_STALLED');
+      expect(starved.stateChanged).toBe(true);
+      expect(detector.getIsStarved()).toBe(true);
+    });
+
+    it('detects sustained OCR worker latency spikes (>140ms)', () => {
+      detector.start(1000);
+
+      const ocrSlowMetrics = {
+        videoFrameAgeMs: 30,
+        videoFrameGapMs: 30,
+        lastOcrLatencyMs: 250,
+        rowOcrLatencyMs: 250,
+        tickGapMs: 50
+      };
+
+      // First stall observation at t = 4500
+      detector.evaluate(ocrSlowMetrics, 4500);
+
+      // Past sustained duration at t = 6200
+      const res = detector.evaluate(ocrSlowMetrics, 6200);
+      expect(res.isStarved).toBe(true);
+      expect(res.starvationReason).toBe('OCR_LATENCY_SPIKE');
+    });
+
+    it('flags multiple concurrent starvation causes as MULTIPLE', () => {
+      detector.start(1000);
+
+      const multipleSlowMetrics = {
+        videoFrameAgeMs: 900,
+        videoFrameGapMs: 900,
+        lastOcrLatencyMs: 300,
+        rowOcrLatencyMs: 300,
+        tickGapMs: 250
+      };
+
+      detector.evaluate(multipleSlowMetrics, 4500);
+      const res = detector.evaluate(multipleSlowMetrics, 6200);
+      expect(res.isStarved).toBe(true);
+      expect(res.starvationReason).toBe('MULTIPLE');
+    });
+
+    it('recovers from starvation only after sustained healthy frames (>2500ms)', () => {
+      detector.start(1000);
+
+      const slowMetrics = {
+        videoFrameAgeMs: 900,
+        videoFrameGapMs: 900,
+        lastOcrLatencyMs: 20,
+        rowOcrLatencyMs: 20,
+        tickGapMs: 50
+      };
+
+      const healthyMetrics = {
+        videoFrameAgeMs: 25,
+        videoFrameGapMs: 25,
+        lastOcrLatencyMs: 20,
+        rowOcrLatencyMs: 20,
+        tickGapMs: 50
+      };
+
+      // Trigger starvation
+      detector.evaluate(slowMetrics, 4500);
+      detector.evaluate(slowMetrics, 6200);
+      expect(detector.getIsStarved()).toBe(true);
+
+      // Performance recovers at t = 6300, but sustained recovery (2500ms) is required
+      const earlyRecovery = detector.evaluate(healthyMetrics, 6300);
+      expect(earlyRecovery.isStarved).toBe(true);
+
+      // 1000ms of healthy operation at t = 7300
+      const partialRecovery = detector.evaluate(healthyMetrics, 7300);
+      expect(partialRecovery.isStarved).toBe(true);
+
+      // 2600ms of healthy operation at t = 8900 (> 2500ms recovery)
+      const fullRecovery = detector.evaluate(healthyMetrics, 8900);
+      expect(fullRecovery.isStarved).toBe(false);
+      expect(fullRecovery.stateChanged).toBe(true);
+      expect(fullRecovery.starvationReason).toBeUndefined();
+      expect(detector.getIsStarved()).toBe(false);
+    });
+
+    it('resets immediately on scanner stop', () => {
+      detector.start(1000);
+
+      const slowMetrics = {
+        videoFrameAgeMs: 900,
+        videoFrameGapMs: 900,
+        lastOcrLatencyMs: 300,
+        rowOcrLatencyMs: 300,
+        tickGapMs: 250
+      };
+
+      detector.evaluate(slowMetrics, 4500);
+      detector.evaluate(slowMetrics, 6200);
+      expect(detector.getIsStarved()).toBe(true);
+
+      detector.reset(7000);
+      expect(detector.getIsStarved()).toBe(false);
+      expect(detector.getStarvationReason()).toBeUndefined();
+    });
+  });
 });

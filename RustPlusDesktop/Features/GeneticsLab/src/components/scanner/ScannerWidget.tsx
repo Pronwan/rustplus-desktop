@@ -19,6 +19,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { useApp } from '../../context/AppContext.tsx';
 import { ScannerDiagnostics } from '../../services/scanner/scannerTypes.ts';
 import { SCANNER_CONFIG } from '../../services/scanner/scannerConfig.ts';
@@ -27,6 +28,8 @@ export const ScannerWidget: React.FC = () => {
   const {
     isScannerActive,
     isScannerInitializing,
+    isStarved,
+    starvationReason,
     scannerPreviews,
     stopScanner,
     moveScannerRegion,
@@ -77,6 +80,9 @@ export const ScannerWidget: React.FC = () => {
     }, 250);
     return () => clearInterval(interval);
   }, [isDiagnosticsOpen, isScannerActive, getScannerDiagnostics]);
+
+  const effectiveIsStarved = isStarved || !!diagnostics?.isStarved;
+  const effectiveStarvationReason = starvationReason || diagnostics?.starvationReason;
 
   if (!isScannerActive && !isScannerInitializing) return null;
 
@@ -148,125 +154,104 @@ export const ScannerWidget: React.FC = () => {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 26px)',
-            gridTemplateRows: 'repeat(3, 26px)',
+            gridTemplateColumns: 'repeat(3, 24px)',
+            gridTemplateRows: 'repeat(3, 24px)',
             gap: '2px',
             alignItems: 'center',
             justifyItems: 'center'
           }}
         >
           <Box />
-          <IconButton
-            size="small"
-            sx={{ p: 0.25, color: '#FFF' }}
-            onMouseDown={() => startHold(
-              () => moveScannerRegion(regionIndex, 0, -1),
-              () => moveScannerRegion(regionIndex, 0, -3)
-            )}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-          >
-            <ArrowUpwardIcon sx={{ fontSize: 16 }} />
-          </IconButton>
+          <Tooltip title="Nudge Up">
+            <IconButton
+              size="small"
+              onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 0, -1), () => moveScannerRegion(regionIndex, 0, -1))}
+              onMouseUp={stopHold}
+              onMouseLeave={stopHold}
+              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+            >
+              <ArrowUpwardIcon sx={{ fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
           <Box />
 
-          <IconButton
-            size="small"
-            sx={{ p: 0.25, color: '#FFF' }}
-            onMouseDown={() => startHold(
-              () => moveScannerRegion(regionIndex, -1, 0),
-              () => moveScannerRegion(regionIndex, -3, 0)
-            )}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
+          <Tooltip title="Nudge Left">
+            <IconButton
+              size="small"
+              onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, -1, 0), () => moveScannerRegion(regionIndex, -1, 0))}
+              onMouseUp={stopHold}
+              onMouseLeave={stopHold}
+              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+            >
+              <ArrowBackIcon sx={{ fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+          <Box
+            sx={{
+              width: 14,
+              height: 14,
+              borderRadius: '2px',
+              border: '1px solid #444',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
-            <ArrowBackIcon sx={{ fontSize: 16 }} />
-          </IconButton>
-          <DesktopWindowsIcon sx={{ fontSize: 14, color: '#666' }} />
-          <IconButton
-            size="small"
-            sx={{ p: 0.25, color: '#FFF' }}
-            onMouseDown={() => startHold(
-              () => moveScannerRegion(regionIndex, 1, 0),
-              () => moveScannerRegion(regionIndex, 3, 0)
-            )}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-          >
-            <ArrowForwardIcon sx={{ fontSize: 16 }} />
-          </IconButton>
+            <Typography variant="caption" sx={{ fontSize: '0.55rem', color: '#666', fontFamily: 'monospace' }}>
+              {regionIndex === 0 ? 'I' : 'P'}
+            </Typography>
+          </Box>
+          <Tooltip title="Nudge Right">
+            <IconButton
+              size="small"
+              onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 1, 0), () => moveScannerRegion(regionIndex, 1, 0))}
+              onMouseUp={stopHold}
+              onMouseLeave={stopHold}
+              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+            >
+              <ArrowForwardIcon sx={{ fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
 
           <Box />
-          <IconButton
-            size="small"
-            sx={{ p: 0.25, color: '#FFF' }}
-            onMouseDown={() => startHold(
-              () => moveScannerRegion(regionIndex, 0, 1),
-              () => moveScannerRegion(regionIndex, 0, 3)
-            )}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-          >
-            <ArrowDownwardIcon sx={{ fontSize: 16 }} />
-          </IconButton>
+          <Tooltip title="Nudge Down">
+            <IconButton
+              size="small"
+              onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 0, 1), () => moveScannerRegion(regionIndex, 0, 1))}
+              onMouseUp={stopHold}
+              onMouseLeave={stopHold}
+              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+            >
+              <ArrowDownwardIcon sx={{ fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
           <Box />
         </Box>
 
-        {/* Zoom Buttons */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, width: 145 }}>
-          <Button
-            size="small"
-            variant="contained"
-            endIcon={<ZoomInIcon sx={{ fontSize: 15 }} />}
-            onMouseDown={() => startHold(
-              () => scaleScannerRegion(regionIndex, -1),
-              () => scaleScannerRegion(regionIndex, -3)
-            )}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-            sx={{
-              backgroundColor: '#2B2B2B',
-              color: '#E0E0E0',
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              fontFamily: '"Roboto Mono", monospace',
-              py: 0.4,
-              boxShadow: 'none',
-              border: '1px solid #3c3c3c',
-              justifyContent: 'space-between',
-              px: 1.5,
-              '&:hover': { backgroundColor: '#383838', boxShadow: 'none' }
-            }}
-          >
-            ZOOM IN
-          </Button>
-
-          <Button
-            size="small"
-            variant="contained"
-            endIcon={<ZoomOutIcon sx={{ fontSize: 15 }} />}
-            onMouseDown={() => startHold(
-              () => scaleScannerRegion(regionIndex, 1),
-              () => scaleScannerRegion(regionIndex, 3)
-            )}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-            sx={{
-              backgroundColor: '#2B2B2B',
-              color: '#E0E0E0',
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              fontFamily: '"Roboto Mono", monospace',
-              py: 0.4,
-              boxShadow: 'none',
-              border: '1px solid #3c3c3c',
-              justifyContent: 'space-between',
-              px: 1.5,
-              '&:hover': { backgroundColor: '#383838', boxShadow: 'none' }
-            }}
-          >
-            ZOOM OUT
-          </Button>
+        {/* Zoom Controls */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          <Tooltip title="Enlarge Region">
+            <IconButton
+              size="small"
+              onMouseDown={() => startHold(() => scaleScannerRegion(regionIndex, 2), () => scaleScannerRegion(regionIndex, 2))}
+              onMouseUp={stopHold}
+              onMouseLeave={stopHold}
+              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+            >
+              <ZoomInIcon sx={{ fontSize: 15 }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Shrink Region">
+            <IconButton
+              size="small"
+              onMouseDown={() => startHold(() => scaleScannerRegion(regionIndex, -2), () => scaleScannerRegion(regionIndex, -2))}
+              onMouseUp={stopHold}
+              onMouseLeave={stopHold}
+              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+            >
+              <ZoomOutIcon sx={{ fontSize: 15 }} />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
     </Box>
@@ -344,14 +329,14 @@ export const ScannerWidget: React.FC = () => {
             <Box>Res: <span style={{ color: '#FFF' }}>{diagnostics?.captureResolution ?? '0x0'}</span></Box>
             <Box>Stage: <span style={{ color: '#00E5FF' }}>{diagnostics?.pipelineStage ?? 'idle'}</span></Box>
             <Box>Stage Age: <span style={{ color: '#FFF' }}>{diagnostics?.pipelineStageAgeMs ?? 0}ms</span></Box>
-            <Box>Tick Gap: <span style={{ color: '#FFF' }}>{diagnostics?.tickGapMs ?? 0}ms</span></Box>
-            <Box>Frame Age: <span style={{ color: '#FFF' }}>{diagnostics?.videoFrameAgeMs ?? 0}ms</span></Box>
-            <Box>Frame Gap: <span style={{ color: '#FFF' }}>{diagnostics?.videoFrameGapMs ?? 0}ms</span></Box>
+            <Box>Tick Gap: <span style={{ color: (diagnostics?.tickGapMs ?? 0) > 150 ? '#FF5252' : '#FFF' }}>{diagnostics?.tickGapMs ?? 0}ms</span></Box>
+            <Box>Frame Age: <span style={{ color: (diagnostics?.videoFrameAgeMs ?? 0) > 600 ? '#FF5252' : '#FFF' }}>{diagnostics?.videoFrameAgeMs ?? 0}ms</span></Box>
+            <Box>Frame Gap: <span style={{ color: (diagnostics?.videoFrameGapMs ?? 0) > 450 ? '#FF5252' : '#FFF' }}>{diagnostics?.videoFrameGapMs ?? 0}ms</span></Box>
             <Box>Page: <span style={{ color: '#FFF' }}>{diagnostics?.pageVisibility ?? 'visible'}</span></Box>
-            <Box>OCR: <span style={{ color: '#FFF' }}>{diagnostics?.lastOcrLatencyMs ?? 0}ms</span></Box>
-            <Box>Row OCR: <span style={{ color: '#FFF' }}>{diagnostics?.rowOcrLatencyMs ?? 0}ms</span></Box>
+            <Box>OCR: <span style={{ color: (diagnostics?.lastOcrLatencyMs ?? 0) > 140 ? '#FF5252' : '#FFF' }}>{diagnostics?.lastOcrLatencyMs ?? 0}ms</span></Box>
+            <Box>Row OCR: <span style={{ color: (diagnostics?.rowOcrLatencyMs ?? 0) > 140 ? '#FF5252' : '#FFF' }}>{diagnostics?.rowOcrLatencyMs ?? 0}ms</span></Box>
             <Box>Slot OCR: <span style={{ color: '#FFF' }}>{diagnostics?.slotOcrLatencyMs ?? 0}ms</span></Box>
-            <Box>UI Queue: <span style={{ color: '#FFF' }}>{diagnostics?.uiUpdateLatencyMs ?? 0}ms</span></Box>
+            <Box>Starvation: <span style={{ color: effectiveIsStarved ? '#FF5252' : '#4CAF50', fontWeight: effectiveIsStarved ? 700 : 400 }}>{effectiveIsStarved ? (effectiveStarvationReason || 'YES') : 'NO'}</span></Box>
             <Box>Confidence: <span style={{ color: '#00E5FF' }}>{diagnostics?.confidence ?? 0}%</span></Box>
             <Box>Inv Activity: <span style={{ color: '#FFF' }}>{diagnostics?.inventoryActivity ?? 0}</span></Box>
             <Box>Planter Act: <span style={{ color: '#FFF' }}>{diagnostics?.planterActivity ?? 0}</span></Box>
@@ -363,28 +348,67 @@ export const ScannerWidget: React.FC = () => {
 
       {/* Cards Body */}
       <Box sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        {/* Performance hint: fullscreen games at high FPS starve the WebView capture */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 1,
-            backgroundColor: 'rgba(255, 167, 38, 0.06)',
-            border: '1px solid rgba(255, 167, 38, 0.3)',
-            borderRadius: '4px',
-            p: 1
-          }}
-        >
-          <InfoOutlinedIcon sx={{ fontSize: 15, color: '#FFA726', mt: '1px', flexShrink: 0 }} />
-          <Typography
-            variant="caption"
-            sx={{ color: '#C9A26B', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
+        {/* Performance / Starvation Hint */}
+        {effectiveIsStarved ? (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 1,
+              backgroundColor: 'rgba(239, 83, 80, 0.12)',
+              border: '1px solid rgba(239, 83, 80, 0.7)',
+              borderRadius: '4px',
+              p: 1.2
+            }}
           >
-            Scanning feels slow or laggy? Run Rust in <strong>Borderless/Windowed</strong> and <strong>cap your
-            in-game FPS</strong> (e.g. 60-144). A fullscreen game at uncapped FPS starves the screen capture and
-            makes recognition stall.
-          </Typography>
-        </Box>
+            <WarningAmberIcon sx={{ fontSize: 18, color: '#EF5350', mt: '1px', flexShrink: 0 }} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.4 }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: '#FF8A80',
+                  fontFamily: '"Roboto Mono", monospace',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  lineHeight: 1.3
+                }}
+              >
+                ⚠️ Performance Starvation Detected ({effectiveStarvationReason || 'Capture/OCR Stall'})
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: '#FFCDD2',
+                  fontFamily: '"Roboto Mono", monospace',
+                  fontSize: '0.7rem',
+                  lineHeight: 1.4
+                }}
+              >
+                Rust is starving screen capture and OCR threads. Open Rust F1 console and type <strong>fps.limit 50</strong> (or switch to <strong>Borderless/Windowed</strong> mode) to restore real-time recognition.
+              </Typography>
+            </Box>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 1,
+              backgroundColor: 'rgba(255, 167, 38, 0.06)',
+              border: '1px solid rgba(255, 167, 38, 0.3)',
+              borderRadius: '4px',
+              p: 1
+            }}
+          >
+            <InfoOutlinedIcon sx={{ fontSize: 15, color: '#FFA726', mt: '1px', flexShrink: 0 }} />
+            <Typography
+              variant="caption"
+              sx={{ color: '#C9A26B', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
+            >
+              Scanning feels slow or laggy? Run Rust in <strong>Borderless/Windowed</strong> and <strong>cap your in-game FPS to ≤ 50</strong> (F1: <code>fps.limit 50</code>). Uncapped game FPS starves background capture and stalls recognition.
+            </Typography>
+          </Box>
+        )}
 
         {renderRegionCard(0, 'Inventory Region', 'Scans plants hovered inside inventory or storage boxes.')}
         {renderRegionCard(1, 'Planter Region', 'Scans plants hovered while looking at growing planter boxes.')}

@@ -14,6 +14,7 @@ import { RegionChangeDetector } from './scanner/RegionChangeDetector.ts';
 import { FrameStabilityDetector } from './scanner/FrameStabilityDetector.ts';
 import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
 import { PlantScanDeduplicator } from './scanner/PlantScanDeduplicator.ts';
+import { ScannerStarvationDetector } from './scanner/ScannerStarvationDetector.ts';
 
 export * from './scanner/scannerTypes.ts';
 export * from './scanner/scannerConfig.ts';
@@ -36,6 +37,7 @@ export class ScannerService {
   private stabilityDetector: FrameStabilityDetector;
   private votingService: TemporalVotingService;
   private deduplicator: PlantScanDeduplicator;
+  private starvationDetector: ScannerStarvationDetector;
 
   // Performance & Diagnostics Tracking
   private lastPreviewEmitTime = 0;
@@ -80,6 +82,7 @@ export class ScannerService {
     this.stabilityDetector = new FrameStabilityDetector();
     this.votingService = new TemporalVotingService();
     this.deduplicator = new PlantScanDeduplicator();
+    this.starvationDetector = new ScannerStarvationDetector();
   }
 
   public static isSupported(): boolean {
@@ -184,6 +187,7 @@ export class ScannerService {
 
       this.isScanning = true;
       this.isInitializing = false;
+      this.starvationDetector.start();
       this.emit({ type: 'STARTED' });
 
       this.startScanLoop();
@@ -376,6 +380,34 @@ export class ScannerService {
     }
 
     this.lastScanLatency = performance.now() - startTime;
+
+    // Evaluate GPU/CPU starvation in real-time
+    const starvationEval = this.starvationDetector.evaluate({
+      videoFrameAgeMs: this.lastVideoFrameTime > 0 ? startTime - this.lastVideoFrameTime : 0,
+      videoFrameGapMs: this.lastVideoFrameGap,
+      lastOcrLatencyMs: this.lastOcrLatency,
+      rowOcrLatencyMs: this.lastRowOcrLatency,
+      tickGapMs: this.lastTickGap,
+      pipelineStage: this.pipelineStage,
+      pipelineStageAgeMs: startTime - this.pipelineStageStartedAt
+    });
+
+    if (starvationEval.stateChanged) {
+      if (starvationEval.isStarved) {
+        this.emit({
+          type: 'STARVATION_DETECTED',
+          isStarved: true,
+          starvationReason: starvationEval.starvationReason,
+          diagnostics: this.getDiagnostics()
+        });
+      } else {
+        this.emit({
+          type: 'STARVATION_RESOLVED',
+          isStarved: false,
+          diagnostics: this.getDiagnostics()
+        });
+      }
+    }
   }
 
   private async processArbitratedScan(
@@ -642,7 +674,9 @@ export class ScannerService {
       rejectedScans: this.rejectedCount,
       activeRegion: this.activeRegionType,
       inventoryActivity: this.activityScores[0] || 0,
-      planterActivity: this.activityScores[1] || 0
+      planterActivity: this.activityScores[1] || 0,
+      isStarved: this.starvationDetector.getIsStarved(),
+      starvationReason: this.starvationDetector.getStarvationReason()
     };
   }
 
@@ -763,6 +797,7 @@ export class ScannerService {
   public stop(): void {
     this.isScanning = false;
     this.isInitializing = false;
+    this.starvationDetector.reset();
 
     if (this.tickerWorker) {
       try {

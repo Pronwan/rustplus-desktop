@@ -33,6 +33,8 @@ export interface ScannerContextValue {
   getScannerDiagnostics: () => any;
   setScannerPreviewEnabled: (enabled: boolean) => void;
   acknowledgeGeneHandled: (geneString: string) => void;
+  isStarved: boolean;
+  starvationReason?: string;
 }
 
 const ScannerContext = createContext<ScannerContextValue | null>(null);
@@ -52,6 +54,8 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [activeProfileId, setActiveProfileIdState] = useState<string>(() => StorageService.getActiveScannerProfileId());
   const [isCalibrationModalOpen, setIsCalibrationModalOpen] = useState(false);
   const [correctionCandidate, setCorrectionCandidate] = useState<{ genes: string; confidence: number; slotConfidences?: number[] } | null>(null);
+  const [isStarved, setIsStarved] = useState(false);
+  const [starvationReason, setStarvationReason] = useState<string | undefined>(undefined);
 
   const scannerService = useMemo(() => new ScannerService(), []);
 
@@ -214,8 +218,16 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else if (evt.type === 'STOPPED') {
         setIsScannerActive(false);
         setIsScannerInitializing(false);
+        setIsStarved(false);
+        setStarvationReason(undefined);
         setScannerStatusMessage('');
         postScannerState(false);
+      } else if (evt.type === 'STARVATION_DETECTED') {
+        setIsStarved(true);
+        setStarvationReason(evt.starvationReason);
+      } else if (evt.type === 'STARVATION_RESOLVED') {
+        setIsStarved(false);
+        setStarvationReason(undefined);
       } else if (evt.type === 'PREVIEW') {
         if (evt.previewDataUrl && typeof evt.regionIndex === 'number') {
           setScannerPreviews(prev => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
@@ -367,7 +379,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         resetScannerRegions,
         getScannerDiagnostics,
         setScannerPreviewEnabled,
-        acknowledgeGeneHandled
+        acknowledgeGeneHandled,
+        isStarved,
+        starvationReason
       }}
     >
       {children}

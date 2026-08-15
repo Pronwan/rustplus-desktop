@@ -26,6 +26,17 @@ export const SCANNER_CONFIG = {
     idleWorkerTimeoutMs: 300000
   },
 
+  starvation: {
+    startupGracePeriodMs: 3000,
+    frameGapThresholdMs: 450,
+    frameAgeThresholdMs: 600,
+    ocrLatencyThresholdMs: 140,
+    tickGapThresholdMs: 150,
+    sustainedDurationMs: 1500,
+    recoveryDurationMs: 2500,
+    recommendedFpsCap: 50
+  },
+
   calibration: {
     normalStepPx: 1,
     amplifiedStepPx: 3,

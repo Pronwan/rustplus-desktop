@@ -99,6 +99,8 @@ interface AppContextType {
   resetScannerRegions: () => void;
   getScannerDiagnostics: () => import('../services/scanner/scannerTypes.ts').ScannerDiagnostics;
   setScannerPreviewEnabled: (enabled: boolean) => void;
+  isStarved: boolean;
+  starvationReason?: string;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -257,7 +259,9 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
     scaleScannerRegion: scanner.scaleScannerRegion,
     resetScannerRegions: scanner.resetScannerRegions,
     getScannerDiagnostics: scanner.getScannerDiagnostics,
-    setScannerPreviewEnabled: scanner.setScannerPreviewEnabled
+    setScannerPreviewEnabled: scanner.setScannerPreviewEnabled,
+    isStarved: scanner.isStarved,
+    starvationReason: scanner.starvationReason
   };
 
   return (

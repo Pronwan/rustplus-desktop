@@ -10,6 +10,8 @@ export interface ScannerRegion {
   GENE_WIDTH_TO_WIDTH_RATIO: number;
 }
 
+export type StarvationReason = 'CAPTURE_STALLED' | 'OCR_LATENCY_SPIKE' | 'TICK_DELAYED' | 'MULTIPLE';
+
 export type ScannerEventType =
   | 'INITIALIZING'
   | 'STARTED'
@@ -17,7 +19,9 @@ export type ScannerEventType =
   | 'PREVIEW'
   | 'SAPLING-FOUND'
   | 'ERROR'
-  | 'DIAGNOSTICS';
+  | 'DIAGNOSTICS'
+  | 'STARVATION_DETECTED'
+  | 'STARVATION_RESOLVED';
 
 export interface ScannerEvent {
   type: ScannerEventType;
@@ -28,6 +32,8 @@ export interface ScannerEvent {
   confidence?: number;
   error?: string;
   diagnostics?: ScannerDiagnostics;
+  isStarved?: boolean;
+  starvationReason?: StarvationReason;
 }
 
 export type ScannerEventListener = (event: ScannerEvent) => void;
@@ -77,6 +83,8 @@ export interface ScannerDiagnostics {
   activeRegion: ScannerRegionType | 'none';
   inventoryActivity?: number;
   planterActivity?: number;
+  isStarved?: boolean;
+  starvationReason?: StarvationReason;
 }
 
 export interface GeneRecognizer {
