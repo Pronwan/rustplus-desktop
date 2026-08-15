@@ -15,7 +15,7 @@ export function normalizeGeneGlyph(raw: string): string {
 
 export class TesseractGeneRecognizer implements GeneRecognizer {
   private lineWorker: TesseractWorker | null = null;
-  private slotWorkers: TesseractWorker[] = [];
+  private fallbackWorker: TesseractWorker | null = null;
   private isInitializing = false;
   private warm = false;
   private initRetryCount = 0;
@@ -34,48 +34,50 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
     this.isInitializing = true;
 
     try {
-      await this.initWorkersWithRetry();
+      await this.initLineWorkerWithRetry();
       this.warm = true;
+    } catch (err) {
+      console.warn('[GeneticsLab] Failed to warm up OCR worker:', err);
     } finally {
       this.isInitializing = false;
     }
   }
 
-  private async initWorkersWithRetry(): Promise<void> {
+  private async initLineWorkerWithRetry(): Promise<void> {
     this.cleanupWorkers();
 
     const workerPath = this.getAssetUrl('tesseract/worker.min.js');
     const langPath = this.getAssetUrl('tesseract');
 
     try {
-      await this.initWorkers(workerPath, langPath, this.getAssetUrl('tesseract/tesseract-core-lstm.wasm.js'));
+      this.lineWorker = await this.createConfiguredWorker(
+        workerPath,
+        langPath,
+        this.getAssetUrl('tesseract/tesseract-core-lstm.wasm.js'),
+        'GHYWX',
+        '7'
+      );
       this.initRetryCount = 0;
     } catch (primaryErr) {
-      console.warn('Primary Tesseract initialization encountered issue, attempting fallback', primaryErr);
-      this.cleanupWorkers();
+      console.warn('[GeneticsLab] Primary LSTM worker failed, attempting fallback core:', primaryErr);
+      if (this.lineWorker) {
+        try { this.lineWorker.terminate(); } catch {}
+        this.lineWorker = null;
+      }
 
       if (this.initRetryCount < this.MAX_INIT_RETRIES) {
         this.initRetryCount++;
-        await this.initWorkers(workerPath, langPath, this.getAssetUrl('tesseract/tesseract-core.wasm.js'));
+        this.lineWorker = await this.createConfiguredWorker(
+          workerPath,
+          langPath,
+          this.getAssetUrl('tesseract/tesseract-core.wasm.js'),
+          'GHYWX',
+          '7'
+        );
       } else {
         throw primaryErr;
       }
     }
-  }
-
-  private async initWorkers(workerPath: string, langPath: string, corePath: string): Promise<void> {
-    this.lineWorker = await this.createConfiguredWorker(workerPath, langPath, corePath, 'GHYWX', '7');
-
-    await Promise.all(Array.from({ length: SCANNER_CONFIG.recognition.workerCount }, async () => {
-      const worker = await this.createConfiguredWorker(
-        workerPath,
-        langPath,
-        corePath,
-        SCANNER_CONFIG.recognition.whitelist,
-        '10'
-      );
-      this.slotWorkers.push(worker);
-    }));
   }
 
   private async createConfiguredWorker(
@@ -85,12 +87,20 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
     whitelist: string,
     pageSegMode: string
   ): Promise<TesseractWorker> {
-    const worker = await createWorker('eng', 1, { workerPath, corePath, langPath, gzip: true });
-    await worker.setParameters({
-      tessedit_char_whitelist: whitelist,
-      tessedit_pageseg_mode: pageSegMode as any
+    const workerPromise = (async () => {
+      const worker = await createWorker('eng', 1, { workerPath, corePath, langPath, gzip: true });
+      await worker.setParameters({
+        tessedit_char_whitelist: whitelist,
+        tessedit_pageseg_mode: pageSegMode as any
+      });
+      return worker;
+    })();
+
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Tesseract worker initialization timed out')), 8000);
     });
-    return worker;
+
+    return Promise.race([workerPromise, timeoutPromise]);
   }
 
   /**
@@ -142,14 +152,34 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
   }
 
   /**
-   * Fallback Slot Recognition using secondary worker.
+   * Fallback Slot Recognition using secondary worker if single-line was ambiguous.
    */
   public async recognizeSlots(canvases: HTMLCanvasElement[]): Promise<GeneRecognitionResult | null> {
-    if (this.slotWorkers.length < canvases.length || canvases.length !== 6) return null;
+    if (canvases.length !== 6) return null;
 
-    const results = await Promise.all(canvases.map(async (canvas, index) => {
+    if (!this.fallbackWorker) {
       try {
-        const res = await this.slotWorkers[index].recognize(TesseractGeneRecognizer.canvasToInput(canvas));
+        const workerPath = this.getAssetUrl('tesseract/worker.min.js');
+        const langPath = this.getAssetUrl('tesseract');
+        const corePath = this.getAssetUrl('tesseract/tesseract-core-lstm.wasm.js');
+        this.fallbackWorker = await this.createConfiguredWorker(
+          workerPath,
+          langPath,
+          corePath,
+          SCANNER_CONFIG.recognition.whitelist,
+          '10'
+        );
+      } catch {
+        if (!this.lineWorker) return null;
+      }
+    }
+
+    const worker = this.fallbackWorker || this.lineWorker;
+    if (!worker) return null;
+
+    const results = await Promise.all(canvases.map(async (canvas) => {
+      try {
+        const res = await worker.recognize(TesseractGeneRecognizer.canvasToInput(canvas));
         const raw = (res.data.text || '').trim();
         const gene = normalizeGeneGlyph(raw);
         return {
@@ -198,13 +228,13 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
       }
       this.lineWorker = null;
     }
-    for (const worker of this.slotWorkers) {
+    if (this.fallbackWorker) {
       try {
-        worker.terminate();
+        this.fallbackWorker.terminate();
       } catch {
         // ignore
       }
+      this.fallbackWorker = null;
     }
-    this.slotWorkers = [];
   }
 }

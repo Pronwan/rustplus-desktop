@@ -113,7 +113,6 @@ export class ScannerService {
   public async start(): Promise<boolean> {
     if (this.isScanning || this.isInitializing) return false;
     this.isInitializing = true;
-    this.emit({ type: 'INITIALIZING' });
 
     try {
       this.regions = StorageService.getScannerRegions();
@@ -126,6 +125,8 @@ export class ScannerService {
         },
         audio: false
       });
+
+      this.emit({ type: 'INITIALIZING' });
 
       const videoTrack = this.mediaStream.getVideoTracks()[0];
       if (!videoTrack) {
@@ -151,13 +152,29 @@ export class ScannerService {
       this.videoElement.style.zIndex = '-9999';
       document.body.appendChild(this.videoElement);
 
-      this.videoElement.srcObject = this.mediaStream;
+      const video = this.videoElement;
 
-      await new Promise<void>((resolve, reject) => {
-        if (!this.videoElement) return reject(new Error('Video element lost'));
-        this.videoElement.onloadedmetadata = () => {
-          this.videoElement?.play().then(() => resolve()).catch(reject);
+      // Robust video initialization that never hangs on readyState
+      await new Promise<void>((resolve) => {
+        let isDone = false;
+        const done = () => {
+          if (isDone) return;
+          isDone = true;
+          video.play().then(() => resolve()).catch(() => resolve());
         };
+
+        video.onloadedmetadata = done;
+        video.onloadeddata = done;
+        video.oncanplay = done;
+
+        video.srcObject = this.mediaStream;
+
+        if (video.readyState >= 1 && video.videoWidth > 0) {
+          done();
+        }
+
+        // Safety fallback timeout
+        setTimeout(done, 1200);
       });
 
       // Warm up Tesseract OCR workers if not already warm
@@ -174,11 +191,14 @@ export class ScannerService {
     } catch (err: any) {
       this.stop();
       this.isInitializing = false;
-      this.emit({ type: 'ERROR', error: err?.message || 'Failed to initialize screen capture' });
+      if (err?.name !== 'NotAllowedError' && err?.name !== 'AbortError') {
+        this.emit({ type: 'ERROR', error: err?.message || 'Failed to initialize screen capture' });
+      }
       this.emit({ type: 'STOPPED' });
       return false;
     }
   }
+
 
   private startScanLoop(): void {
     if (!this.isScanning) return;
