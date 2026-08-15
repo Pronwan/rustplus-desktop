@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,6 +9,7 @@ import {
   Button
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import YardIcon from '@mui/icons-material/Yard';
 import { GeneticsMap } from '../../domain/genetics/GeneticsMap.ts';
 import { GeneticsMapGroup } from '../../domain/genetics/GeneticsMapGroup.ts';
@@ -153,11 +154,25 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
             const handleBaseClick = (e: React.MouseEvent) => {
               if (isBaseGen && onOpenParentPlan) {
                 e.stopPropagation();
-                const parentGroup =
-                  map.baseSaplingVariants ||
-                  results.find((g) => g.resultSaplingGeneString === map.baseSapling!.toString());
-                const parentMap = parentGroup?.mapList[0];
-                onOpenParentPlan(map.baseSapling!, parentMap);
+                let parentPlanMap: GeneticsMap | undefined;
+                const variantGroup = map.baseSaplingVariants;
+                if (variantGroup && variantGroup.mapList && variantGroup.mapList.length > 0) {
+                  parentPlanMap = variantGroup.mapList[0];
+                }
+                if (!parentPlanMap) {
+                  const foundGroup = results.find((g) => g.resultSaplingGeneString === map.baseSapling!.toString());
+                  parentPlanMap = foundGroup?.mapList?.[0];
+                }
+                if (!parentPlanMap) {
+                  for (const g of results) {
+                    const m = g.mapList.find((ml) => ml.resultSapling.toString() === map.baseSapling!.toString());
+                    if (m) {
+                      parentPlanMap = m;
+                      break;
+                    }
+                  }
+                }
+                onOpenParentPlan(map.baseSapling!, parentPlanMap);
               }
             };
 
@@ -225,11 +240,25 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
             const handleParentClick = (e: React.MouseEvent) => {
               if (isParentGen && onOpenParentPlan) {
                 e.stopPropagation();
-                const parentGroup =
-                  map.crossbreedingSaplingsVariants?.[pIdx] ||
-                  results.find((g) => g.resultSaplingGeneString === parent.toString());
-                const parentMap = parentGroup?.mapList[0];
-                onOpenParentPlan(parent, parentMap);
+                let parentPlanMap: GeneticsMap | undefined;
+                const variantGroup = map.crossbreedingSaplingsVariants?.[pIdx];
+                if (variantGroup && variantGroup.mapList && variantGroup.mapList.length > 0) {
+                  parentPlanMap = variantGroup.mapList[0];
+                }
+                if (!parentPlanMap) {
+                  const foundGroup = results.find((g) => g.resultSaplingGeneString === parent.toString());
+                  parentPlanMap = foundGroup?.mapList?.[0];
+                }
+                if (!parentPlanMap) {
+                  for (const g of results) {
+                    const m = g.mapList.find((ml) => ml.resultSapling.toString() === parent.toString());
+                    if (m) {
+                      parentPlanMap = m;
+                      break;
+                    }
+                  }
+                }
+                onOpenParentPlan(parent, parentPlanMap);
               }
             };
 
@@ -334,6 +363,13 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
   );
 };
 
+interface PlanHistoryItem {
+  type: 'plan' | 'alternatives';
+  sapling?: Sapling | null;
+  map?: GeneticsMap | null;
+  mapGroup?: GeneticsMapGroup | null;
+}
+
 interface PlanDetailModalProps {
   open: boolean;
   onClose: () => void;
@@ -358,9 +394,64 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
   onSelectMapIndex,
   onOpenParentPlan
 }) => {
+  const { results } = useApp();
+  const [history, setHistory] = useState<PlanHistoryItem[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      if (mapGroup && mapGroup.mapList.length > 1) {
+        setHistory([{ type: 'alternatives', mapGroup }]);
+      } else if (parentMap) {
+        setHistory([{ type: 'plan', sapling: parentSapling, map: parentMap }]);
+      } else {
+        setHistory([]);
+      }
+    } else {
+      setHistory([]);
+    }
+  }, [open, parentMap, parentSapling, mapGroup]);
+
   if (!open) return null;
 
-  const isAlternativeView = !!mapGroup && mapGroup.mapList.length > 1;
+  const currentEntry = history[history.length - 1];
+  const isAlternativeView = currentEntry?.type === 'alternatives';
+  const currentMap = currentEntry?.type === 'plan' ? currentEntry.map : parentMap;
+
+  // Handle drill down to a nested parent plan (e.g. Gen 3 -> Gen 2 -> Gen 1)
+  const handleDrillDownParent = (sapling: Sapling, map?: GeneticsMap) => {
+    let resolvedMap = map;
+    if (!resolvedMap) {
+      const foundGroup = results.find((g) => g.resultSaplingGeneString === sapling.toString());
+      resolvedMap = foundGroup?.mapList?.[0];
+    }
+    if (!resolvedMap) {
+      for (const g of results) {
+        const m = g.mapList.find((ml) => ml.resultSapling.toString() === sapling.toString());
+        if (m) {
+          resolvedMap = m;
+          break;
+        }
+      }
+    }
+
+    if (resolvedMap) {
+      setHistory((prev) => [...prev, { type: 'plan', sapling, map: resolvedMap }]);
+    }
+    onOpenParentPlan?.(sapling, resolvedMap);
+  };
+
+  const handleGoBack = () => {
+    setHistory((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+  };
+
+  // Label for previous step in history
+  const previousEntry = history.length > 1 ? history[history.length - 2] : null;
+  const backLabel =
+    previousEntry?.type === 'alternatives'
+      ? 'Back to Alternative Plans'
+      : previousEntry?.sapling?.generationIndex
+      ? `Back to GEN.${previousEntry.sapling.generationIndex}`
+      : 'Back';
 
   return (
     <Dialog
@@ -382,6 +473,37 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
         }
       }}
     >
+      {/* Top Left Back Button when drilled down */}
+      {history.length > 1 && (
+        <Button
+          onClick={handleGoBack}
+          startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 16,
+            left: 16,
+            color: '#00E5FF',
+            fontFamily: 'monospace',
+            fontSize: '0.76rem',
+            fontWeight: 800,
+            textTransform: 'none',
+            letterSpacing: '0.3px',
+            backgroundColor: 'rgba(0, 229, 255, 0.06)',
+            border: '1px solid rgba(0, 229, 255, 0.25)',
+            borderRadius: '4px',
+            px: 1.2,
+            py: 0.3,
+            '&:hover': {
+              backgroundColor: 'rgba(0, 229, 255, 0.15)',
+              borderColor: '#00E5FF'
+            }
+          }}
+        >
+          {backLabel}
+        </Button>
+      )}
+
       {/* Top Right Close Button */}
       <IconButton
         onClick={onClose}
@@ -397,9 +519,9 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
         <CloseIcon sx={{ fontSize: 20 }} />
       </IconButton>
 
-      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {/* VIEW 1: PARENT GEN. X BREEDING PLAN (Screenshot 3) */}
-        {!isAlternativeView && parentMap && (
+      <DialogContent sx={{ p: 0, pt: history.length > 1 ? 4 : 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* VIEW 1: PARENT GEN. X BREEDING PLAN */}
+        {!isAlternativeView && currentMap && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
             <Typography
               variant="body2"
@@ -416,11 +538,11 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               When a map shows a result chance below 100%, plant the Surrounding Plants labeled <strong>1st</strong>, <strong>2nd</strong>, and so on before the others, in that order. Which planter slot you use does not matter-only the order you place them around the center.
             </Typography>
 
-            <SinglePlanCard map={parentMap} isBest={true} onOpenParentPlan={onOpenParentPlan} />
+            <SinglePlanCard map={currentMap} isBest={true} onOpenParentPlan={handleDrillDownParent} />
           </Box>
         )}
 
-        {/* VIEW 2: ALTERNATIVE OPTIONS COMPARISON (Screenshot 5) */}
+        {/* VIEW 2: ALTERNATIVE OPTIONS COMPARISON */}
         {isAlternativeView && mapGroup && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
             <Typography
@@ -459,7 +581,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                     isBest={isFirst}
                     isSelected={isSelected}
                     onSelect={() => onSelectMapIndex?.(idx)}
-                    onOpenParentPlan={onOpenParentPlan}
+                    onOpenParentPlan={handleDrillDownParent}
                   />
                 );
               })}
@@ -494,3 +616,4 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
     </Dialog>
   );
 };
+
