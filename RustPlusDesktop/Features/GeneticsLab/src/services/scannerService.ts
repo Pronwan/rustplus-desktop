@@ -517,7 +517,8 @@ export class ScannerService {
   }
 
   /**
-   * Renders the exact 6-gene cropped strip directly matching Rust Breeder.
+   * Renders a zoomed surround preview with 6 gene slot guide stripes.
+   * Includes surrounding context padding so users can easily align tooltips.
    */
   private renderPreview(
     rIdx: number,
@@ -527,37 +528,93 @@ export class ScannerService {
     hPx: number,
     reg: ScannerRegion
   ): void {
-    if (!this.videoElement) return;
+    if (!this.videoElement || this.videoElement.videoWidth === 0) return;
+
+    const videoW = this.videoElement.videoWidth;
+    const videoH = this.videoElement.videoHeight;
+
+    // Surrounding context padding
+    const padX = Math.round(wPx * 0.15);
+    const padY = Math.round(hPx * 0.75);
+
+    const srcX = Math.max(0, xPx - padX);
+    const srcY = Math.max(0, yPx - padY);
+    const srcW = Math.min(videoW - srcX, wPx + padX * 2);
+    const srcH = Math.min(videoH - srcY, hPx + padY * 2);
+
+    if (srcW <= 0 || srcH <= 0) return;
+
+    // Target preview resolution for crisp high-DPI display
+    const targetW = 440;
+    const scale = targetW / srcW;
+    const targetH = Math.round(srcH * scale);
 
     if (!this.previewCanvases[rIdx]) {
       this.previewCanvases[rIdx] = document.createElement('canvas');
     }
     const pCanvas = this.previewCanvases[rIdx];
-    pCanvas.width = wPx;
-    pCanvas.height = hPx;
+    pCanvas.width = targetW;
+    pCanvas.height = targetH;
     const pCtx = pCanvas.getContext('2d');
     if (!pCtx) return;
 
-    pCtx.drawImage(this.videoElement, xPx, yPx, wPx, hPx, 0, 0, wPx, hPx);
+    // 1. Draw zoomed surrounding video area
+    pCtx.imageSmoothingEnabled = false;
+    pCtx.drawImage(this.videoElement, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
 
-    // Darken the 5 gaps using exact RustBreeder alpha 0.35
+    // 2. Compute local coordinates of the exact capture bounding box inside the preview
+    const localBoxX = (xPx - srcX) * scale;
+    const localBoxY = (yPx - srcY) * scale;
+    const localBoxW = wPx * scale;
+    const localBoxH = hPx * scale;
+
+    // 3. Darken the outside surrounding context slightly for focus
+    pCtx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+    // Top
+    pCtx.fillRect(0, 0, targetW, localBoxY);
+    // Bottom
+    pCtx.fillRect(0, localBoxY + localBoxH, targetW, targetH - (localBoxY + localBoxH));
+    // Left
+    pCtx.fillRect(0, localBoxY, localBoxX, localBoxH);
+    // Right
+    pCtx.fillRect(localBoxX + localBoxW, localBoxY, targetW - (localBoxX + localBoxW), localBoxH);
+
+    // 4. Draw the 6 gene slot stripes (alternating white/shaded guide columns)
     const geneWPx = Math.round(wPx * reg.GENE_WIDTH_TO_WIDTH_RATIO);
     const totalGeneW = geneWPx * 6;
     const gapW = Math.max(0, (wPx - totalGeneW) / 5);
 
-    pCtx.fillStyle = '#000000';
-    pCtx.globalAlpha = 0.35;
-    for (let g = 0; g < 5; g++) {
-      const gapX = (g + 1) * geneWPx + g * gapW;
-      pCtx.fillRect(gapX, 0, gapW, hPx);
+    for (let slot = 0; slot < 6; slot++) {
+      const slotSrcX = xPx + slot * (geneWPx + gapW);
+      const slotLocalX = (slotSrcX - srcX) * scale;
+      const slotLocalW = geneWPx * scale;
+
+      // Alternating stripe highlight
+      pCtx.fillStyle = slot % 2 === 0 ? 'rgba(255, 255, 255, 0.28)' : 'rgba(200, 200, 200, 0.15)';
+      pCtx.fillRect(slotLocalX, localBoxY, slotLocalW, localBoxH);
+
+      // Slot divider border
+      pCtx.strokeStyle = 'rgba(0, 229, 255, 0.6)';
+      pCtx.lineWidth = 1;
+      pCtx.strokeRect(slotLocalX, localBoxY, slotLocalW, localBoxH);
+
+      // Slot number label above slot
+      pCtx.fillStyle = '#00E5FF';
+      pCtx.font = 'bold 9px monospace';
+      pCtx.textAlign = 'center';
+      pCtx.fillText(`${slot + 1}`, slotLocalX + slotLocalW / 2, Math.max(10, localBoxY - 3));
     }
-    pCtx.globalAlpha = 1.0;
+
+    // 5. Draw the outer bounding box
+    pCtx.strokeStyle = '#00E5FF';
+    pCtx.lineWidth = 1.5;
+    pCtx.strokeRect(localBoxX, localBoxY, localBoxW, localBoxH);
 
     this.emit({
       type: 'PREVIEW',
       regionIndex: rIdx,
       regionType: rIdx === 0 ? 'inventory' : 'planter',
-      previewDataUrl: pCanvas.toDataURL('image/webp', 0.85)
+      previewDataUrl: pCanvas.toDataURL('image/webp', 0.9)
     });
   }
 
@@ -603,28 +660,55 @@ export class ScannerService {
     this.pipelineStageStartedAt = performance.now();
   }
 
-  public moveRegion(regionIndex: number, dxPx: number, dyPx: number, videoW = 1920, videoH = 1080): void {
+  public moveRegion(regionIndex: number, dx: number, dy: number, videoW = 1920, videoH = 1080): void {
     const reg = this.regions[regionIndex];
     if (!reg) return;
 
-    const dxNorm = dxPx / videoW;
-    const dyNorm = dyPx / videoH;
+    // Support both normalized delta (< 0.5) and pixel delta (>= 1)
+    const actualVideoW = this.videoElement?.videoWidth || videoW;
+    const actualVideoH = this.videoElement?.videoHeight || videoH;
+    const dxNorm = Math.abs(dx) < 0.5 ? dx : dx / actualVideoW;
+    const dyNorm = Math.abs(dy) < 0.5 ? dy : dy / actualVideoH;
 
     reg.TOP_LEFT_X = Math.max(0, Math.min(1 - reg.WIDTH, reg.TOP_LEFT_X + dxNorm));
     const normH = reg.WIDTH * reg.HEIGHT_TO_WIDTH_RATIO;
     reg.TOP_LEFT_Y = Math.max(0, Math.min(1 - normH, reg.TOP_LEFT_Y + dyNorm));
+
+    this.saveRegions();
+
+    // Trigger instant preview frame re-render
+    if (this.videoElement && this.videoElement.videoWidth > 0) {
+      const xPx = Math.round(actualVideoW * reg.TOP_LEFT_X);
+      const yPx = Math.round(actualVideoH * reg.TOP_LEFT_Y);
+      const wPx = Math.round(actualVideoW * reg.WIDTH);
+      const hPx = Math.ceil(actualVideoH * normH);
+      this.renderPreview(regionIndex, xPx, yPx, wPx, hPx, reg);
+    }
   }
 
-  public scaleRegion(regionIndex: number, dwPx: number, videoW = 1920): void {
+  public scaleRegion(regionIndex: number, dw: number, videoW = 1920): void {
     const reg = this.regions[regionIndex];
     if (!reg) return;
 
-    const dwNorm = dwPx / videoW;
+    const actualVideoW = this.videoElement?.videoWidth || videoW;
+    const actualVideoH = this.videoElement?.videoHeight || 1080;
+    const dwNorm = Math.abs(dw) < 0.5 ? dw : dw / actualVideoW;
     const newWidth = Math.max(0.02, Math.min(0.5, reg.WIDTH + dwNorm));
     const normH = newWidth * reg.HEIGHT_TO_WIDTH_RATIO;
 
     if (reg.TOP_LEFT_X + newWidth <= 1.0 && reg.TOP_LEFT_Y + normH <= 1.0) {
       reg.WIDTH = newWidth;
+    }
+
+    this.saveRegions();
+
+    // Trigger instant preview frame re-render
+    if (this.videoElement && this.videoElement.videoWidth > 0) {
+      const xPx = Math.round(actualVideoW * reg.TOP_LEFT_X);
+      const yPx = Math.round(actualVideoH * reg.TOP_LEFT_Y);
+      const wPx = Math.round(actualVideoW * reg.WIDTH);
+      const hPx = Math.ceil(actualVideoH * normH);
+      this.renderPreview(regionIndex, xPx, yPx, wPx, hPx, reg);
     }
   }
 
@@ -640,12 +724,36 @@ export class ScannerService {
     reg.GENE_WIDTH_TO_WIDTH_RATIO = Math.max(0.02, Math.min(0.25, reg.GENE_WIDTH_TO_WIDTH_RATIO + dRatio));
   }
 
+  public setRegions(newRegions: ScannerRegion[]): void {
+    this.regions = newRegions.map(r => ({ ...r }));
+    this.saveRegions();
+
+    // Trigger instant preview frame re-render for both regions
+    if (this.videoElement && this.videoElement.videoWidth > 0) {
+      const videoW = this.videoElement.videoWidth;
+      const videoH = this.videoElement.videoHeight;
+      for (let rIdx = 0; rIdx < this.regions.length; rIdx++) {
+        const reg = this.regions[rIdx];
+        const xPx = Math.round(videoW * reg.TOP_LEFT_X);
+        const yPx = Math.round(videoH * reg.TOP_LEFT_Y);
+        const wPx = Math.round(videoW * reg.WIDTH);
+        const normH = reg.WIDTH * reg.HEIGHT_TO_WIDTH_RATIO;
+        const hPx = Math.ceil(videoH * normH);
+        this.renderPreview(rIdx, xPx, yPx, wPx, hPx, reg);
+      }
+    }
+  }
+
   public saveRegions(): void {
     StorageService.saveScannerRegions(this.regions);
   }
 
-  public resetRegions(): void {
+  public resetRegions(): ScannerRegion[] {
     this.regions = StorageService.resetScannerRegions();
+    if (this.videoElement && this.videoElement.videoWidth > 0) {
+      this.setRegions(this.regions);
+    }
+    return this.regions;
   }
 
   public getRegions(): ScannerRegion[] {

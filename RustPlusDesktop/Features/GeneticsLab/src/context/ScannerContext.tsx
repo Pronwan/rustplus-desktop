@@ -1,50 +1,45 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ScannerService, ScannerEvent } from '../services/scannerService.ts';
-import { StorageService, ScannerProfile, ScannerRegion } from '../services/storageService.ts';
-import { AudioService } from '../services/audioService.ts';
-import { useWorkspace } from './WorkspaceContext.tsx';
+import { StorageService, ScannerProfile, ScannerRegion, DEFAULT_SCANNER_REGIONS } from '../services/storageService.ts';
+import { CloneUtils } from '../domain/genetics/Clone.ts';
 import { useNotification } from './NotificationContext.tsx';
-import { Sapling } from '../domain/genetics/Sapling.ts';
+import { useWorkspace } from './WorkspaceContext.tsx';
 
-interface ScannerContextType {
+export interface ScannerContextValue {
   isScannerActive: boolean;
   isScannerInitializing: boolean;
   scannerStatusMessage: string;
   lastScannedGenes: string | null;
   lastConfidence: number;
   scannerPreviews: Record<number, string>;
-
-  // Profiles
   profiles: ScannerProfile[];
   activeProfileId: string;
   activeProfile: ScannerProfile;
   setActiveProfileId: (id: string) => void;
   saveProfile: (profile: ScannerProfile) => void;
+  createCustomProfile: (name: string, resolutionName?: string) => ScannerProfile;
+  exportProfileJson: (profileId?: string) => string;
+  importProfileJson: (jsonStr: string) => boolean;
   deleteProfile: (id: string) => void;
-
-  // Calibration Modal
   isCalibrationModalOpen: boolean;
   setIsCalibrationModalOpen: (open: boolean) => void;
-
-  // Single Slot Correction
   correctionCandidate: { genes: string; confidence: number; slotConfidences?: number[] } | null;
   setCorrectionCandidate: (cand: { genes: string; confidence: number; slotConfidences?: number[] } | null) => void;
-
-  // Actions
   startScanner: () => Promise<void>;
   stopScanner: () => void;
   moveScannerRegion: (regionIdx: number, dx: number, dy: number) => void;
   scaleScannerRegion: (regionIdx: number, dw: number) => void;
   resetScannerRegions: () => void;
+  getScannerDiagnostics: () => any;
   setScannerPreviewEnabled: (enabled: boolean) => void;
-  getScannerDiagnostics: () => import('../services/scanner/scannerTypes.ts').ScannerDiagnostics;
+  acknowledgeGeneHandled: (geneString: string) => void;
 }
 
-const ScannerContext = createContext<ScannerContextType | null>(null);
+const ScannerContext = createContext<ScannerContextValue | null>(null);
 
 export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { notifySuccess, notifyInfo, notifyWarning, notifyError } = useNotification();
   const { addClone, selectedPlant } = useWorkspace();
-  const { notifySuccess, notifyWarning, notifyError, notifyInfo } = useNotification();
 
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [isScannerInitializing, setIsScannerInitializing] = useState(false);
@@ -71,14 +66,16 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return profiles.find(p => p.id === activeProfileId) || profiles[0];
   }, [profiles, activeProfileId]);
 
+  // When active profile changes, update scannerService regions immediately
   const setActiveProfileId = useCallback((id: string) => {
     setActiveProfileIdState(id);
     StorageService.saveActiveScannerProfileId(id);
     const prof = profiles.find(p => p.id === id);
-    if (prof) {
-      StorageService.saveScannerRegions(prof.regions);
+    if (prof && prof.regions) {
+      scannerService.setRegions(prof.regions);
+      notifyInfo(`Switched to "${prof.name}" preset`);
     }
-  }, [profiles]);
+  }, [profiles, scannerService, notifyInfo]);
 
   const saveProfile = useCallback((profile: ScannerProfile) => {
     setProfiles(prev => {
@@ -96,6 +93,84 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     notifySuccess(`Saved scanner profile "${profile.name}"`);
   }, [notifySuccess]);
 
+  const createCustomProfile = useCallback((name: string, resolutionName?: string): ScannerProfile => {
+    const currentRegions = scannerService.getRegions();
+    const newProfile: ScannerProfile = {
+      id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      name: name.trim() || 'Custom Preset',
+      resolutionName: resolutionName || `${window.screen.width} x ${window.screen.height}`,
+      regions: currentRegions.map(r => ({ ...r })),
+      scale: 1
+    };
+
+    setProfiles(prev => {
+      const updated = [...prev, newProfile];
+      StorageService.saveScannerProfiles(updated);
+      return updated;
+    });
+
+    setActiveProfileIdState(newProfile.id);
+    StorageService.saveActiveScannerProfileId(newProfile.id);
+    notifySuccess(`Created custom preset "${newProfile.name}"`);
+    return newProfile;
+  }, [scannerService, notifySuccess]);
+
+  const exportProfileJson = useCallback((profileId?: string): string => {
+    if (profileId) {
+      const target = profiles.find(p => p.id === profileId) || activeProfile;
+      return JSON.stringify(target, null, 2);
+    }
+    return JSON.stringify(profiles, null, 2);
+  }, [profiles, activeProfile]);
+
+  const importProfileJson = useCallback((jsonStr: string): boolean => {
+    try {
+      const parsed = JSON.parse(jsonStr);
+      let importedProfiles: ScannerProfile[] = [];
+
+      if (Array.isArray(parsed)) {
+        importedProfiles = parsed.filter(p => p.name && Array.isArray(p.regions) && p.regions.length >= 2);
+      } else if (parsed && parsed.name && Array.isArray(parsed.regions)) {
+        importedProfiles = [{
+          id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          name: parsed.name,
+          resolutionName: parsed.resolutionName || 'Custom',
+          regions: parsed.regions,
+          scale: parsed.scale || 1
+        }];
+      }
+
+      if (importedProfiles.length === 0) {
+        notifyError('Invalid preset JSON format');
+        return false;
+      }
+
+      setProfiles(prev => {
+        const merged = [...prev];
+        for (const imp of importedProfiles) {
+          const existingIdx = merged.findIndex(p => p.id === imp.id || p.name === imp.name);
+          if (existingIdx >= 0) {
+            merged[existingIdx] = imp;
+          } else {
+            merged.push(imp);
+          }
+        }
+        StorageService.saveScannerProfiles(merged);
+        return merged;
+      });
+
+      const firstImported = importedProfiles[0];
+      setActiveProfileIdState(firstImported.id);
+      StorageService.saveActiveScannerProfileId(firstImported.id);
+      scannerService.setRegions(firstImported.regions);
+      notifySuccess(`Successfully imported ${importedProfiles.length} preset(s)!`);
+      return true;
+    } catch {
+      notifyError('Failed to parse preset JSON');
+      return false;
+    }
+  }, [scannerService, notifySuccess, notifyError]);
+
   const deleteProfile = useCallback((id: string) => {
     setProfiles(prev => {
       if (prev.length <= 1) {
@@ -105,12 +180,15 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const updated = prev.filter(p => p.id !== id);
       StorageService.saveScannerProfiles(updated);
       if (activeProfileId === id) {
-        setActiveProfileId(updated[0].id);
+        const nextActive = updated[0];
+        setActiveProfileIdState(nextActive.id);
+        StorageService.saveActiveScannerProfileId(nextActive.id);
+        scannerService.setRegions(nextActive.regions);
       }
       notifyInfo('Profile deleted');
       return updated;
     });
-  }, [activeProfileId, setActiveProfileId, notifyWarning, notifyInfo]);
+  }, [activeProfileId, scannerService, notifyWarning, notifyInfo]);
 
   // Scanner Event Listener
   useEffect(() => {
@@ -138,32 +216,34 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setIsScannerInitializing(false);
         setScannerStatusMessage('');
         postScannerState(false);
-        notifyInfo('Scanner stopped.');
       } else if (evt.type === 'PREVIEW') {
-        if (evt.regionIndex !== undefined && evt.previewDataUrl) {
+        if (evt.previewDataUrl && typeof evt.regionIndex === 'number') {
           setScannerPreviews(prev => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
         }
       } else if (evt.type === 'SAPLING-FOUND') {
         if (evt.geneString) {
-          const found = evt.geneString.toUpperCase();
-          const conf = Math.round((evt.confidence || 0.95) * 100);
-          setLastScannedGenes(found);
-          setLastConfidence(conf);
+          setLastScannedGenes(evt.geneString);
+          setLastConfidence(evt.confidence || 90);
 
-          if (Sapling.isValidGeneString(found)) {
-            // Fresh sound preference read to prevent stale closure
-            const currentOpts = StorageService.getOptions();
-            if (currentOpts.sounds) {
-              AudioService.playPop(true);
+          if (soundPrefRef.current) {
+            try {
+              const audio = new Audio('./assets/scan-beep.mp3');
+              audio.volume = 0.4;
+              audio.play().catch(() => {});
+            } catch {
+              // ignore
             }
-            scannerService.acknowledgeGeneHandled(found);
-            addClone(found, { source: 'scanner' });
-          } else if (found.length === 6) {
-            // Uncertain gene - prompt for single slot correction if needed
-            setCorrectionCandidate({
-              genes: found,
-              confidence: conf
-            });
+          }
+
+          const added = addClone(evt.geneString, {
+            source: 'scanner',
+            quantity: 1
+          });
+
+          if (added) {
+            notifySuccess(`Scanned Clone: ${evt.geneString} (${Math.round(evt.confidence || 0)}% conf)`);
+          } else {
+            notifyInfo(`Clone ${evt.geneString} quantity incremented.`);
           }
         }
       } else if (evt.type === 'ERROR') {
@@ -180,7 +260,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => {
       unsubscribe();
     };
-  }, [scannerService, addClone, notifySuccess, notifyInfo, notifyError]);
+  }, [scannerService, addClone, selectedPlant, notifySuccess, notifyInfo, notifyError]);
 
   // Non-destructive startScanner (Rule #27: DO NOT DESTROY RESULTS ON START/CANCEL)
   const startScanner = useCallback(async () => {
@@ -201,15 +281,50 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const moveScannerRegion = useCallback((regionIdx: number, dx: number, dy: number) => {
     scannerService.moveRegion(regionIdx, dx, dy);
-  }, [scannerService]);
+    // Sync active profile in context
+    const currentRegions = scannerService.getRegions();
+    setProfiles(prev => {
+      const idx = prev.findIndex(p => p.id === activeProfileId);
+      if (idx >= 0) {
+        const updated = [...prev];
+        updated[idx] = { ...updated[idx], regions: currentRegions.map(r => ({ ...r })) };
+        StorageService.saveScannerProfiles(updated);
+        return updated;
+      }
+      return prev;
+    });
+  }, [scannerService, activeProfileId]);
 
   const scaleScannerRegion = useCallback((regionIdx: number, dw: number) => {
     scannerService.scaleRegion(regionIdx, dw);
-  }, [scannerService]);
+    // Sync active profile in context
+    const currentRegions = scannerService.getRegions();
+    setProfiles(prev => {
+      const idx = prev.findIndex(p => p.id === activeProfileId);
+      if (idx >= 0) {
+        const updated = [...prev];
+        updated[idx] = { ...updated[idx], regions: currentRegions.map(r => ({ ...r })) };
+        StorageService.saveScannerProfiles(updated);
+        return updated;
+      }
+      return prev;
+    });
+  }, [scannerService, activeProfileId]);
 
   const resetScannerRegions = useCallback(() => {
-    scannerService.resetRegions();
-  }, [scannerService]);
+    const defaultRegions = scannerService.resetRegions();
+    setProfiles(prev => {
+      const idx = prev.findIndex(p => p.id === activeProfileId);
+      if (idx >= 0) {
+        const updated = [...prev];
+        updated[idx] = { ...updated[idx], regions: defaultRegions.map(r => ({ ...r })) };
+        StorageService.saveScannerProfiles(updated);
+        return updated;
+      }
+      return prev;
+    });
+    notifyInfo('Reset region coordinates to default');
+  }, [scannerService, activeProfileId, notifyInfo]);
 
   const getScannerDiagnostics = useCallback(() => {
     return scannerService.getDiagnostics();
@@ -217,6 +332,10 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const setScannerPreviewEnabled = useCallback((enabled: boolean) => {
     scannerService.setPreviewEnabled(enabled);
+  }, [scannerService]);
+
+  const acknowledgeGeneHandled = useCallback((geneString: string) => {
+    scannerService.acknowledgeGeneHandled(geneString);
   }, [scannerService]);
 
   return (
@@ -233,6 +352,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         activeProfile,
         setActiveProfileId,
         saveProfile,
+        createCustomProfile,
+        exportProfileJson,
+        importProfileJson,
         deleteProfile,
         isCalibrationModalOpen,
         setIsCalibrationModalOpen,
@@ -243,8 +365,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         moveScannerRegion,
         scaleScannerRegion,
         resetScannerRegions,
+        getScannerDiagnostics,
         setScannerPreviewEnabled,
-        getScannerDiagnostics
+        acknowledgeGeneHandled
       }}
     >
       {children}
@@ -252,8 +375,10 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   );
 };
 
-export const useScanner = () => {
+export const useScanner = (): ScannerContextValue => {
   const context = useContext(ScannerContext);
-  if (!context) throw new Error('useScanner must be used within a ScannerProvider');
+  if (!context) {
+    throw new Error('useScanner must be used within a ScannerProvider');
+  }
   return context;
 };

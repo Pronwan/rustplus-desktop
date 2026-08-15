@@ -164,14 +164,6 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return selectedGroup.mapList[selectedMapIndex] || selectedGroup.mapList[0];
   }, [selectedGroup, selectedMapIndex]);
 
-  // Automatically select best group if current selection becomes stale
-  useEffect(() => {
-    if (results.length > 0 && !selectedGroup) {
-      setSelectedGroup(results[0]);
-      setSelectedMapIndex(0);
-    }
-  }, [results, selectedGroup]);
-
   // Score all routes
   const scoredRoutes: ScoredRoute[] = useMemo(() => {
     return results.map(group => {
@@ -245,6 +237,22 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     return list;
   }, [scoredRoutes, targetConfig, inventoryFilterMode, sortBy]);
+
+  // Automatically select best matching route or clear when results/target change
+  useEffect(() => {
+    if (filteredAndSortedRoutes.length > 0) {
+      const exists = selectedGroup && filteredAndSortedRoutes.some(
+        r => r.group.resultSaplingGeneString === selectedGroup.resultSaplingGeneString
+      );
+      if (!exists) {
+        setSelectedGroup(filteredAndSortedRoutes[0].group);
+        setSelectedMapIndex(0);
+      }
+    } else {
+      setSelectedGroup(null);
+      setSelectedMapIndex(0);
+    }
+  }, [filteredAndSortedRoutes, selectedGroup]);
 
   // Solver runner
   const runSimulation = useCallback(async () => {

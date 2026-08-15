@@ -8,6 +8,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
+import { useScanner } from '../../../context/ScannerContext.tsx';
 import { RouteToolbar } from './RouteToolbar.tsx';
 import { RouteCard } from './RouteCard.tsx';
 import { RouteComparisonModal } from './RouteComparisonModal.tsx';
@@ -23,6 +24,7 @@ export const RouteGrid: React.FC = () => {
     runSimulation
   } = useCalculation();
   const { sourceSaplings, selectedPlant } = useWorkspace();
+  const { isScannerActive, isScannerInitializing } = useScanner();
 
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
@@ -31,6 +33,7 @@ export const RouteGrid: React.FC = () => {
     setVisibleCount(PAGE_SIZE);
   }, [results, filteredAndSortedRoutes.length]);
 
+  const isScannerBusy = isScannerActive || isScannerInitializing;
   const hasClones = sourceSaplings.length >= 2;
   const visibleRoutes = filteredAndSortedRoutes.slice(0, visibleCount);
   const hasMore = visibleCount < filteredAndSortedRoutes.length;
@@ -90,12 +93,12 @@ export const RouteGrid: React.FC = () => {
           <Button
             variant="contained"
             size="medium"
-            disabled={!hasClones}
+            disabled={!hasClones || isScannerBusy}
             onClick={() => runSimulation()}
             startIcon={<PlayArrowIcon sx={{ fontSize: 18 }} />}
             sx={{ fontWeight: 800, px: 3, backgroundColor: '#00E5FF', color: '#000', '&:hover': { backgroundColor: '#33EBFF' } }}
           >
-            Calculate Routes
+            {isScannerBusy ? 'Stop Scanner To Calculate' : 'Calculate Routes'}
           </Button>
         </Box>
       ) : filteredAndSortedRoutes.length === 0 ? (

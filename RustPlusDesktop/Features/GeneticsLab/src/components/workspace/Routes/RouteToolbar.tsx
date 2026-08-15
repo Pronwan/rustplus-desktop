@@ -17,6 +17,7 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TuneIcon from '@mui/icons-material/Tune';
 import { useCalculation, RouteSortOption } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
+import { useScanner } from '../../../context/ScannerContext.tsx';
 
 export const RouteToolbar: React.FC = () => {
   const {
@@ -37,8 +38,10 @@ export const RouteToolbar: React.FC = () => {
   } = useCalculation();
 
   const { sourceSaplings } = useWorkspace();
+  const { isScannerActive, isScannerInitializing } = useScanner();
 
-  const isReady = sourceSaplings.length >= 2;
+  const isScannerBusy = isScannerActive || isScannerInitializing;
+  const isReady = sourceSaplings.length >= 2 && !isScannerBusy;
 
   return (
     <Box sx={{ mb: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -69,7 +72,16 @@ export const RouteToolbar: React.FC = () => {
               </Button>
             </>
           ) : (
-            <Tooltip title={isReady ? 'Calculate optimal breeding routes (Ctrl+Enter)' : 'Add at least 2 clones to calculate'} arrow>
+            <Tooltip
+              title={
+                isScannerBusy
+                  ? 'Stop the scanner before calculating routes'
+                  : isReady
+                  ? 'Calculate optimal breeding routes (Ctrl+Enter)'
+                  : 'Add at least 2 plants to calculate'
+              }
+              arrow
+            >
               <span>
                 <Button
                   variant="contained"

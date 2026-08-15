@@ -217,7 +217,7 @@ export const GeneInputs: React.FC = () => {
             <Button
               variant="contained"
               onClick={() => runSimulation()}
-              disabled={sourceSaplings.length < 2 || isScannerActive || isScannerInitializing}
+              disabled={sourceSaplings.length < 2 || isCalculating || isScannerActive || isScannerInitializing}
               sx={{
                 flex: 1.1,
                 backgroundColor: '#00E5FF',

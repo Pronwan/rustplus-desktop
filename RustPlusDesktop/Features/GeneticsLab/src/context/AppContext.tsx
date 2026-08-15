@@ -162,7 +162,9 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
 
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
-        calculation.runSimulation();
+        if (!scanner.isScannerActive && !scanner.isScannerInitializing) {
+          calculation.runSimulation();
+        }
         return;
       }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -13,7 +13,10 @@ import {
   Tabs,
   Tab,
   Paper,
-  Tooltip
+  TextField,
+  Tooltip,
+  Divider,
+  Stack
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -23,7 +26,13 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useScanner } from '../../context/ScannerContext.tsx';
+import { useNotification } from '../../context/NotificationContext.tsx';
 
 export const ScannerCalibrationModal: React.FC = () => {
   const {
@@ -32,178 +41,660 @@ export const ScannerCalibrationModal: React.FC = () => {
     profiles,
     activeProfileId,
     setActiveProfileId,
+    createCustomProfile,
+    exportProfileJson,
+    importProfileJson,
+    deleteProfile,
     scannerPreviews,
+    setScannerPreviewEnabled,
     moveScannerRegion,
     scaleScannerRegion,
     resetScannerRegions
   } = useScanner();
 
+  const { notifySuccess, notifyError } = useNotification();
+
   const [selectedRegionIdx, setSelectedRegionIdx] = useState<number>(0);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [newPresetName, setNewPresetName] = useState('');
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [importJsonText, setImportJsonText] = useState('');
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [exportJsonText, setExportJsonText] = useState('');
+
+  const holdTimerRef = useRef<any>(null);
+  const repeatTimerRef = useRef<any>(null);
+
+  // Enable live preview streaming while calibration modal is open & add arrow key listener
+  useEffect(() => {
+    if (isCalibrationModalOpen) {
+      setScannerPreviewEnabled(true);
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isCalibrationModalOpen || isSaveModalOpen || isImportModalOpen || isExportModalOpen) return;
+      // Ultra-fine 1px step (0.0005) or fast 5px step with Shift (0.0025)
+      const step = e.shiftKey ? 0.0025 : 0.0006;
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        moveScannerRegion(selectedRegionIdx, 0, -step);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        moveScannerRegion(selectedRegionIdx, 0, step);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        moveScannerRegion(selectedRegionIdx, -step, 0);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        moveScannerRegion(selectedRegionIdx, step, 0);
+      } else if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        scaleScannerRegion(selectedRegionIdx, -step);
+      } else if (e.key === '=' || e.key === '+') {
+        e.preventDefault();
+        scaleScannerRegion(selectedRegionIdx, step);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      setScannerPreviewEnabled(false);
+      stopHold();
+    };
+  }, [
+    isCalibrationModalOpen,
+    isSaveModalOpen,
+    isImportModalOpen,
+    isExportModalOpen,
+    selectedRegionIdx,
+    moveScannerRegion,
+    scaleScannerRegion,
+    setScannerPreviewEnabled
+  ]);
+
+  const startHold = (action: () => void) => {
+    action();
+    holdTimerRef.current = setTimeout(() => {
+      repeatTimerRef.current = setInterval(() => {
+        action();
+      }, 50);
+    }, 220);
+  };
+
+  const stopHold = () => {
+    if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+    if (repeatTimerRef.current) clearInterval(repeatTimerRef.current);
+    holdTimerRef.current = null;
+    repeatTimerRef.current = null;
+  };
+
+  const handleSavePreset = () => {
+    if (!newPresetName.trim()) return;
+    createCustomProfile(newPresetName.trim());
+    setNewPresetName('');
+    setIsSaveModalOpen(false);
+  };
+
+  const handleOpenExport = () => {
+    const json = exportProfileJson();
+    setExportJsonText(json);
+    setIsExportModalOpen(true);
+  };
+
+  const handleCopyExport = () => {
+    navigator.clipboard.writeText(exportJsonText);
+    notifySuccess('Preset configuration copied to clipboard!');
+  };
+
+  const handleDownloadExport = () => {
+    const blob = new Blob([exportJsonText], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rust_scanner_presets_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    notifySuccess('Downloaded preset JSON file!');
+  };
+
+  const handleImport = () => {
+    if (!importJsonText.trim()) return;
+    const ok = importProfileJson(importJsonText.trim());
+    if (ok) {
+      setImportJsonText('');
+      setIsImportModalOpen(false);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        setImportJsonText(text);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   if (!isCalibrationModalOpen) return null;
 
+  const isCustomProfile = activeProfileId.startsWith('custom_');
+
   return (
-    <Dialog
-      open={isCalibrationModalOpen}
-      onClose={() => setIsCalibrationModalOpen(false)}
-      maxWidth="md"
-      fullWidth
-      slotProps={{
-        paper: {
-          sx: {
-            backgroundColor: '#141414',
-            border: '1px solid #333333',
-            borderRadius: '6px',
-            color: '#E0E0E0'
+    <>
+      <Dialog
+        open={isCalibrationModalOpen}
+        onClose={() => setIsCalibrationModalOpen(false)}
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: '#141414',
+              border: '1px solid #333333',
+              borderRadius: '6px',
+              color: '#E0E0E0'
+            }
           }
-        }
-      }}
-    >
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Box>
-          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
-            Scanner Calibration & Resolution Profiles
-          </Typography>
-          <Typography variant="caption" sx={{ color: '#888' }}>
-            Fine-tune tooltip OCR capture bounding boxes for your screen resolution
-          </Typography>
-        </Box>
-        <IconButton size="small" onClick={() => setIsCalibrationModalOpen(false)} sx={{ color: '#888' }}>
-          <CloseIcon sx={{ fontSize: 18 }} />
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-        {/* Profile Selector */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.5, backgroundColor: '#1C1C1C', borderRadius: '4px', border: '1px solid #282828' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#E0E0E0' }}>
-              Resolution Preset:
+        }}
+      >
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+              Scanner Calibration & Resolution Profiles
             </Typography>
-            <Select
-              size="small"
-              value={activeProfileId}
-              onChange={(e) => setActiveProfileId(e.target.value)}
-              sx={{ backgroundColor: '#141414', color: '#00E5FF', fontWeight: 700 }}
-            >
-              {profiles.map((p) => (
-                <MenuItem key={p.id} value={p.id}>
-                  {p.name} ({p.resolutionName})
-                </MenuItem>
-              ))}
-            </Select>
+            <Typography variant="caption" sx={{ color: '#888' }}>
+              Align the 6 numbered guide stripes over your in-game tooltip letters
+            </Typography>
           </Box>
+          <IconButton size="small" onClick={() => setIsCalibrationModalOpen(false)} sx={{ color: '#888' }}>
+            <CloseIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+        </DialogTitle>
 
-          <Button
-            size="small"
-            variant="outlined"
-            onClick={resetScannerRegions}
-            startIcon={<RestartAltIcon sx={{ fontSize: 16 }} />}
-            sx={{ borderColor: '#383838', color: '#AAA', fontSize: '0.72rem' }}
-          >
-            Reset Regions
-          </Button>
-        </Box>
-
-        {/* Region Selector Tabs */}
-        <Tabs
-          value={selectedRegionIdx}
-          onChange={(_, val) => setSelectedRegionIdx(val)}
-          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
-        >
-          <Tab value={0} label="Region 1: Inventory Tooltip" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
-          <Tab value={1} label="Region 2: Planter Tooltip" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
-        </Tabs>
-
-        {/* Preview & Calibration Controls */}
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.2fr 1fr' }, gap: 2 }}>
-          {/* Live Preview Box */}
-          <Paper
-            variant="outlined"
+        <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {/* Profile Selector Toolbar */}
+          <Box
             sx={{
-              p: 2,
-              backgroundColor: '#101010',
-              borderColor: '#282828',
-              borderRadius: '4px',
               display: 'flex',
-              flexDirection: 'column',
+              flexWrap: 'wrap',
               alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: 180
+              justifyContent: 'space-between',
+              gap: 1.5,
+              p: 1.5,
+              backgroundColor: '#1C1C1C',
+              borderRadius: '4px',
+              border: '1px solid #282828'
             }}
           >
-            {scannerPreviews[selectedRegionIdx] ? (
-              <Box
-                component="img"
-                src={scannerPreviews[selectedRegionIdx]}
-                alt={`Region ${selectedRegionIdx + 1} Preview`}
-                sx={{
-                  maxWidth: '100%',
-                  maxHeight: 140,
-                  border: '1.5px solid #00E5FF',
-                  borderRadius: '3px',
-                  backgroundColor: '#000'
-                }}
-              />
-            ) : (
-              <Typography variant="caption" sx={{ color: '#666', textAlign: 'center' }}>
-                Preview appears here when scanner is actively running and captures frames.
+            {/* Left: Preset Selector */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Typography variant="body2" sx={{ fontWeight: 700, color: '#E0E0E0', fontSize: '0.8rem' }}>
+                Preset:
               </Typography>
-            )}
-          </Paper>
+              <Select
+                size="small"
+                value={activeProfileId}
+                onChange={(e) => setActiveProfileId(e.target.value)}
+                sx={{
+                  backgroundColor: '#141414',
+                  color: '#00E5FF',
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  minWidth: 200
+                }}
+              >
+                {profiles.map((p) => (
+                  <MenuItem key={p.id} value={p.id} sx={{ fontSize: '0.8rem' }}>
+                    {p.name} ({p.resolutionName})
+                  </MenuItem>
+                ))}
+              </Select>
 
-          {/* Directional Nudge Pad */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, p: 2, backgroundColor: '#181818', borderRadius: '4px', border: '1px solid #282828' }}>
-            <Typography variant="caption" sx={{ color: '#888', fontWeight: 800 }}>
-              NUDGE BOUNDING BOX
-            </Typography>
-
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-              <IconButton size="small" onClick={() => moveScannerRegion(selectedRegionIdx, 0, -0.005)} sx={{ border: '1px solid #333' }}>
-                <ArrowUpwardIcon sx={{ fontSize: 16 }} />
-              </IconButton>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <IconButton size="small" onClick={() => moveScannerRegion(selectedRegionIdx, -0.005, 0)} sx={{ border: '1px solid #333' }}>
-                  <ArrowBackIcon sx={{ fontSize: 16 }} />
-                </IconButton>
-                <IconButton size="small" onClick={() => moveScannerRegion(selectedRegionIdx, 0.005, 0)} sx={{ border: '1px solid #333' }}>
-                  <ArrowForwardIcon sx={{ fontSize: 16 }} />
-                </IconButton>
-              </Box>
-              <IconButton size="small" onClick={() => moveScannerRegion(selectedRegionIdx, 0, 0.005)} sx={{ border: '1px solid #333' }}>
-                <ArrowDownwardIcon sx={{ fontSize: 16 }} />
-              </IconButton>
+              {isCustomProfile && (
+                <Tooltip title="Delete this custom preset">
+                  <IconButton
+                    size="small"
+                    onClick={() => deleteProfile(activeProfileId)}
+                    sx={{ color: '#FF5252', border: '1px solid #442222', p: 0.5 }}
+                  >
+                    <DeleteIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+            {/* Right: Actions (Save As, Export, Import, Reset) */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => scaleScannerRegion(selectedRegionIdx, -0.005)}
-                startIcon={<ZoomOutIcon sx={{ fontSize: 14 }} />}
-                sx={{ fontSize: '0.68rem', py: 0.2 }}
+                onClick={() => setIsSaveModalOpen(true)}
+                startIcon={<AddIcon sx={{ fontSize: 15 }} />}
+                sx={{ borderColor: '#00E5FF', color: '#00E5FF', fontSize: '0.72rem', fontWeight: 700 }}
               >
-                Narrow
+                Save As Preset
               </Button>
+
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => scaleScannerRegion(selectedRegionIdx, 0.005)}
-                startIcon={<ZoomInIcon sx={{ fontSize: 14 }} />}
-                sx={{ fontSize: '0.68rem', py: 0.2 }}
+                onClick={handleOpenExport}
+                startIcon={<FileUploadIcon sx={{ fontSize: 15 }} />}
+                sx={{ borderColor: '#383838', color: '#CCC', fontSize: '0.72rem' }}
               >
-                Widen
+                Export
+              </Button>
+
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => setIsImportModalOpen(true)}
+                startIcon={<FileDownloadIcon sx={{ fontSize: 15 }} />}
+                sx={{ borderColor: '#383838', color: '#CCC', fontSize: '0.72rem' }}
+              >
+                Import
+              </Button>
+
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={resetScannerRegions}
+                startIcon={<RestartAltIcon sx={{ fontSize: 15 }} />}
+                sx={{ borderColor: '#383838', color: '#AAA', fontSize: '0.72rem' }}
+              >
+                Reset
               </Button>
             </Box>
           </Box>
-        </Box>
-      </DialogContent>
 
-      <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={() => setIsCalibrationModalOpen(false)} variant="contained" size="small">
-          Done
-        </Button>
-      </DialogActions>
-    </Dialog>
+          {/* Region Selector Tabs */}
+          <Tabs
+            value={selectedRegionIdx}
+            onChange={(_, val) => setSelectedRegionIdx(val)}
+            sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
+          >
+            <Tab value={0} label="Region 1: Inventory Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
+            <Tab value={1} label="Region 2: Planter Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
+          </Tabs>
+
+          {/* Preview & Calibration Controls */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.4fr 1fr' }, gap: 2 }}>
+            {/* Zoomed Surround Live Preview Box */}
+            <Paper
+              variant="outlined"
+              sx={{
+                p: 1.5,
+                backgroundColor: '#0D0D0D',
+                borderColor: '#282828',
+                borderRadius: '4px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 200,
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              {scannerPreviews[selectedRegionIdx] ? (
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 1
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: '100%',
+                      maxWidth: 440,
+                      overflow: 'hidden',
+                      borderRadius: '4px',
+                      border: '1px solid #333',
+                      backgroundColor: '#000',
+                      display: 'flex',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={scannerPreviews[selectedRegionIdx]}
+                      alt={`Region ${selectedRegionIdx + 1} Preview`}
+                      sx={{
+                        width: '100%',
+                        height: 'auto',
+                        display: 'block',
+                        imageRendering: 'auto'
+                      }}
+                    />
+                  </Box>
+
+                  <Typography variant="caption" sx={{ color: '#00E5FF', fontSize: '0.72rem', fontWeight: 700, textAlign: 'center' }}>
+                    Center each letter inside the 6 numbered stripes
+                  </Typography>
+                </Box>
+              ) : (
+                <Box sx={{ textAlign: 'center', p: 2 }}>
+                  <Typography variant="caption" sx={{ color: '#888', display: 'block', mb: 0.5 }}>
+                    Live Zoom Preview
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#555', fontSize: '0.7rem' }}>
+                    Hover over a plant clone in Rust with scanner active to see real-time alignment.
+                  </Typography>
+                </Box>
+              )}
+            </Paper>
+
+            {/* Directional Nudge Pad */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1,
+                p: 2,
+                backgroundColor: '#181818',
+                borderRadius: '4px',
+                border: '1px solid #282828'
+              }}
+            >
+              <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '0.5px' }}>
+                NUDGE BOUNDING BOX
+              </Typography>
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, my: 0.5 }}>
+                <IconButton
+                  size="small"
+                  sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                  onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0, -0.0006))}
+                  onMouseUp={stopHold}
+                  onMouseLeave={stopHold}
+                >
+                  <ArrowUpwardIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+
+                <Box sx={{ display: 'flex', gap: 1.5 }}>
+                  <IconButton
+                    size="small"
+                    sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                    onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, -0.0006, 0))}
+                    onMouseUp={stopHold}
+                    onMouseLeave={stopHold}
+                  >
+                    <ArrowBackIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+
+                  <IconButton
+                    size="small"
+                    sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                    onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0.0006, 0))}
+                    onMouseUp={stopHold}
+                    onMouseLeave={stopHold}
+                  >
+                    <ArrowForwardIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Box>
+
+                <IconButton
+                  size="small"
+                  sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                  onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0, 0.0006))}
+                  onMouseUp={stopHold}
+                  onMouseLeave={stopHold}
+                >
+                  <ArrowDownwardIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Box>
+
+              <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={<ZoomOutIcon sx={{ fontSize: 14 }} />}
+                  onMouseDown={() => startHold(() => scaleScannerRegion(selectedRegionIdx, -0.0006))}
+                  onMouseUp={stopHold}
+                  onMouseLeave={stopHold}
+                  sx={{ fontSize: '0.7rem', py: 0.3, borderColor: '#444', color: '#DDD' }}
+                >
+                  Narrow
+                </Button>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={<ZoomInIcon sx={{ fontSize: 14 }} />}
+                  onMouseDown={() => startHold(() => scaleScannerRegion(selectedRegionIdx, 0.0006))}
+                  onMouseUp={stopHold}
+                  onMouseLeave={stopHold}
+                  sx={{ fontSize: '0.7rem', py: 0.3, borderColor: '#444', color: '#DDD' }}
+                >
+                  Widen
+                </Button>
+              </Box>
+
+              {/* Keyboard Shortcut Hint */}
+              <Box
+                sx={{
+                  mt: 1,
+                  p: 1,
+                  backgroundColor: 'rgba(0, 229, 255, 0.05)',
+                  borderRadius: '4px',
+                  border: '1px dashed rgba(0, 229, 255, 0.25)',
+                  width: '100%',
+                  textAlign: 'center'
+                }}
+              >
+                <Typography variant="caption" sx={{ color: '#00E5FF', fontSize: '0.7rem', display: 'block', fontWeight: 700 }}>
+                  ⌨️ Tip: Use Keyboard Arrow Keys (↑ ↓ ← →)
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#888', fontSize: '0.65rem', display: 'block', mt: 0.2 }}>
+                  Hold <span style={{ color: '#DDD' }}>Shift</span> for faster movement • <span style={{ color: '#DDD' }}>-</span> / <span style={{ color: '#DDD' }}>+</span> to resize
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={() => setIsCalibrationModalOpen(false)}
+            variant="contained"
+            size="small"
+            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+          >
+            Done
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Save Custom Preset Dialog */}
+      <Dialog
+        open={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        maxWidth="xs"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: '#181818',
+              border: '1px solid #333',
+              borderRadius: '6px',
+              color: '#FFF'
+            }
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem' }}>Save As Custom Preset</DialogTitle>
+        <DialogContent sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          <Typography variant="caption" sx={{ color: '#AAA' }}>
+            Save current coordinates as a named profile for easy switching and sharing.
+          </Typography>
+          <TextField
+            autoFocus
+            size="small"
+            label="Preset Name"
+            placeholder="e.g. My 1440p Custom or 4K Ultrawide"
+            value={newPresetName}
+            onChange={(e) => setNewPresetName(e.target.value)}
+            fullWidth
+            sx={{
+              '& .MuiInputBase-input': { color: '#FFF', fontSize: '0.85rem' },
+              '& .MuiOutlinedInput-root': { borderColor: '#444' }
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setIsSaveModalOpen(false)} size="small" sx={{ color: '#888' }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSavePreset}
+            variant="contained"
+            size="small"
+            disabled={!newPresetName.trim()}
+            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+          >
+            Save Preset
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Export Presets Dialog */}
+      <Dialog
+        open={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: '#181818',
+              border: '1px solid #333',
+              borderRadius: '6px',
+              color: '#FFF'
+            }
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Export Presets (JSON)</span>
+          <IconButton size="small" onClick={() => setIsExportModalOpen(false)} sx={{ color: '#888' }}>
+            <CloseIcon sx={{ fontSize: 16 }} />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          <Typography variant="caption" sx={{ color: '#AAA' }}>
+            Share this configuration with friends or across devices.
+          </Typography>
+          <TextField
+            multiline
+            rows={8}
+            value={exportJsonText}
+            fullWidth
+            slotProps={{ input: { readOnly: true } }}
+            sx={{
+              '& .MuiInputBase-input': { color: '#00E5FF', fontFamily: 'monospace', fontSize: '0.72rem' },
+              backgroundColor: '#0D0D0D'
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, justifyContent: 'space-between' }}>
+          <Button
+            onClick={handleDownloadExport}
+            variant="outlined"
+            size="small"
+            startIcon={<FileDownloadIcon sx={{ fontSize: 16 }} />}
+            sx={{ borderColor: '#444', color: '#DDD' }}
+          >
+            Download .json
+          </Button>
+          <Button
+            onClick={handleCopyExport}
+            variant="contained"
+            size="small"
+            startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
+            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+          >
+            Copy to Clipboard
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Import Presets Dialog */}
+      <Dialog
+        open={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: '#181818',
+              border: '1px solid #333',
+              borderRadius: '6px',
+              color: '#FFF'
+            }
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Import Presets (JSON)</span>
+          <IconButton size="small" onClick={() => setIsImportModalOpen(false)} sx={{ color: '#888' }}>
+            <CloseIcon sx={{ fontSize: 16 }} />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          <Typography variant="caption" sx={{ color: '#AAA' }}>
+            Paste preset JSON code or upload a exported `.json` file from another player.
+          </Typography>
+          <TextField
+            multiline
+            rows={8}
+            placeholder="Paste preset JSON here..."
+            value={importJsonText}
+            onChange={(e) => setImportJsonText(e.target.value)}
+            fullWidth
+            sx={{
+              '& .MuiInputBase-input': { color: '#FFF', fontFamily: 'monospace', fontSize: '0.72rem' },
+              backgroundColor: '#0D0D0D'
+            }}
+          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button
+              component="label"
+              size="small"
+              variant="outlined"
+              startIcon={<FileUploadIcon sx={{ fontSize: 16 }} />}
+              sx={{ borderColor: '#444', color: '#CCC', fontSize: '0.72rem' }}
+            >
+              Upload .json File
+              <input type="file" accept=".json,application/json" hidden onChange={handleFileUpload} />
+            </Button>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setIsImportModalOpen(false)} size="small" sx={{ color: '#888' }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleImport}
+            variant="contained"
+            size="small"
+            disabled={!importJsonText.trim()}
+            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+          >
+            Import & Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
