@@ -108,9 +108,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<ActiveTab>('calculator');
   const [options, setOptionsState] = useState<ApplicationOptions>(() => StorageService.getOptions());
   const [themeMode, setThemeModeState] = useState<'dark' | 'light'>(() => (options.darkMode ? 'dark' : 'light'));
-  // Tracks the last scanned genotype we played the "already in list" sound for, so it
-  // only plays once per plant instead of on every frame the same duplicate is hovered.
-  const lastDuplicateSoundGene = useRef<string | null>(null);
   const [selectedPlant, setSelectedPlantState] = useState<string>(() => StorageService.getSelectedPlantType());
   const [consent, setConsent] = useState<CookieConsentState>(() => StorageService.getConsent());
 
@@ -193,16 +190,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               scannerService.acknowledgeGeneHandled(found);
               if (!existingStrings.includes(found)) {
                 AudioService.playPop(options.sounds);
-                lastDuplicateSoundGene.current = null; // moved to a new plant → re-arm
                 const updated = [...prev, new Sapling(found, 0, prev.length)];
                 setGeneInputText(updated.map((s) => s.toString()).join('\n'));
                 return updated;
-              }
-              // Already in the list: play a distinct "duplicate" sound so the user knows to
-              // skip it — but only once per plant, not on every frame it's still hovered.
-              if (lastDuplicateSoundGene.current !== found) {
-                AudioService.playWrongKey(options.sounds);
-                lastDuplicateSoundGene.current = found;
               }
               return prev;
             });
