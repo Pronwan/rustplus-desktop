@@ -64,6 +64,10 @@ export class ScannerService {
   private latestConfidence = 0;
   private activityScores: Record<number, number> = { 0: 0, 1: 0 };
   private activeRegionType: ScannerRegionType | 'none' = 'none';
+  // Preview rendering is UI-only work. It runs independently of recognition so the OCR
+  // pipeline keeps going while the app is in the background, but there is no point paying
+  // for it when nobody is looking at the calibration/preview panel.
+  private previewEnabled = true;
 
   // Reusable Canvases
   private previewCanvases: HTMLCanvasElement[] = [];
@@ -82,6 +86,15 @@ export class ScannerService {
     return typeof navigator !== 'undefined' &&
       !!navigator.mediaDevices &&
       'getDisplayMedia' in navigator.mediaDevices;
+  }
+
+  /**
+   * Enables/disables preview rendering. The calibration panel turns this on while mounted
+   * and off when it unmounts, so the scanner does no preview work during normal scanning
+   * when the panel isn't on screen. Recognition is never gated by this.
+   */
+  public setPreviewEnabled(enabled: boolean): void {
+    this.previewEnabled = enabled;
   }
 
   public addEventListener(listener: ScannerEventListener): () => void {
@@ -238,7 +251,12 @@ export class ScannerService {
       this.lastFpsCalcTime = now;
     }
 
-    const shouldEmitPreview = now - this.lastPreviewEmitTime >= SCANNER_CONFIG.performance.previewIntervalMs;
+    // Preview is skipped entirely unless a consumer (the calibration panel) is showing it
+    // and the page is actually visible. Recognition below is unaffected by this gate.
+    const previewVisible =
+      this.previewEnabled && (typeof document === 'undefined' || document.visibilityState === 'visible');
+    const shouldEmitPreview =
+      previewVisible && now - this.lastPreviewEmitTime >= SCANNER_CONFIG.performance.previewIntervalMs;
     if (shouldEmitPreview) {
       this.lastPreviewEmitTime = now;
     }
@@ -411,79 +429,71 @@ export class ScannerService {
     this.lastSlotOcrLatency = slotOcrLatency;
     this.setPipelineStage('vote');
 
-    // Step 3: Choose Best Single Candidate
-    const bestCandidate = this.chooseBestCandidate(candidates);
+    if (candidates.length === 0) {
+      this.setPipelineStage('no-result');
+      return;
+    }
 
-    if (bestCandidate) {
-      this.latestConfidence = bestCandidate.confidence;
-      this.activeRegionType = bestCandidate.regionType;
+    // Step 3: Confirm and emit each region independently.
+    // Inventory and planter are distinct sources that are frequently active at the same
+    // time (the planter slots are almost always on screen). They must NOT arbitrate for a
+    // single winner — otherwise hovering an inventory plant while the planter is visible
+    // makes the two regions cancel each other out and nothing gets scanned.
+    let emittedAny = false;
+    let confirmedAny = false;
+    const emittedGenesThisCycle = new Set<string>();
 
-      // Step 4: 2-of-3 Temporal Confirmation
-      const votedResult = this.votingService.addCandidate(bestCandidate.regionIndex, {
-        geneString: bestCandidate.genes,
-        confidence: bestCandidate.confidence
+    for (const candidate of candidates) {
+      this.latestConfidence = candidate.confidence;
+      this.activeRegionType = candidate.regionType;
+
+      // Step 4: Temporal confirmation (per-region history)
+      const votedResult = this.votingService.addCandidate(candidate.regionIndex, {
+        geneString: candidate.genes,
+        confidence: candidate.confidence
       });
 
-      if (votedResult) {
-        // Step 5: Display-State Lock
-        const targetRegion = regionsToScan.find(r => r.rIdx === bestCandidate.regionIndex);
-        const signature = targetRegion ? targetRegion.signature : 0;
+      if (!votedResult) continue;
+      confirmedAny = true;
 
-        const shouldEmit = this.deduplicator.shouldAccept(
-          bestCandidate.regionIndex,
-          votedResult.geneString,
-          signature
-        );
+      // Guard: the same genotype captured by two overlapping regions in one cycle
+      // (e.g. a single tooltip) should only be emitted once.
+      if (emittedGenesThisCycle.has(votedResult.geneString)) continue;
 
-        if (shouldEmit) {
-          this.acceptedCount++;
-          this.pendingUiGene = votedResult.geneString;
-          this.pendingUiStartedAt = performance.now();
-          this.setPipelineStage('ui-pending');
-          this.emit({
-            type: 'SAPLING-FOUND',
-            regionIndex: bestCandidate.regionIndex,
-            regionType: bestCandidate.regionType,
-            geneString: votedResult.geneString,
-            confidence: votedResult.confidence
-          });
-        } else {
-          this.setPipelineStage('duplicate');
-        }
-      } else {
-        this.setPipelineStage('vote-wait');
-      }
-    } else if (candidates.length > 0) {
-      this.rejectedCount++;
-      this.setPipelineStage('ocr-rejected');
+      // Step 5: Display-state lock (per-region dedup)
+      const targetRegion = regionsToScan.find(r => r.rIdx === candidate.regionIndex);
+      const signature = targetRegion ? targetRegion.signature : 0;
+
+      const shouldEmit = this.deduplicator.shouldAccept(
+        candidate.regionIndex,
+        votedResult.geneString,
+        signature
+      );
+
+      if (!shouldEmit) continue;
+
+      this.acceptedCount++;
+      this.pendingUiGene = votedResult.geneString;
+      this.pendingUiStartedAt = performance.now();
+      emittedGenesThisCycle.add(votedResult.geneString);
+      emittedAny = true;
+
+      this.emit({
+        type: 'SAPLING-FOUND',
+        regionIndex: candidate.regionIndex,
+        regionType: candidate.regionType,
+        geneString: votedResult.geneString,
+        confidence: votedResult.confidence
+      });
+    }
+
+    if (emittedAny) {
+      this.setPipelineStage('ui-pending');
+    } else if (confirmedAny) {
+      this.setPipelineStage('duplicate');
     } else {
-      this.setPipelineStage('no-result');
+      this.setPipelineStage('vote-wait');
     }
-  }
-
-  /**
-   * Candidate arbitration: picks the strongest valid candidate if multiple regions pass.
-   */
-  private chooseBestCandidate(candidates: ScanCandidate[]): ScanCandidate | null {
-    const valid = candidates
-      .filter(x => x.valid && x.confidence >= SCANNER_CONFIG.recognition.minAverageConfidence)
-      .sort((a, b) => b.confidence - a.confidence);
-
-    if (valid.length === 0) return null;
-    if (valid.length === 1) return valid[0];
-
-    const best = valid[0];
-    const second = valid[1];
-
-    if (best.confidence - second.confidence >= SCANNER_CONFIG.recognition.regionWinnerMargin) {
-      return best;
-    }
-
-    if (best.genes === second.genes) {
-      return best;
-    }
-
-    return null;
   }
 
   /**

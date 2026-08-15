@@ -1,1 +1,32 @@
-node_modules
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build outputs (compiled code assets only)
+dist/assets/
+dist/index.html
+dist/*.map
+dist-ssr/
+build/
+
+# Vite / test cache & coverage
+.vite/
+coverage/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Local environment and debug logs
+.env.local
+.env.*.local
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temp & OS files
+.DS_Store
+Thumbs.db
+*.tmp

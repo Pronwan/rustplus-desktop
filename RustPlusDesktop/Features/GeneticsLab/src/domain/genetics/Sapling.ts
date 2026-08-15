@@ -14,6 +14,7 @@ export class Sapling {
   public genes: Gene[];
   public generationIndex: number;
   public index?: number;
+  private cachedString?: string;
 
   constructor(
     genesInput?: string | Gene[] | GeneType[],
@@ -46,6 +47,7 @@ export class Sapling {
     } else {
       this.genes.push(new Gene(gene));
     }
+    this.cachedString = undefined;
   }
 
   public numberOfGs(): number {
@@ -78,7 +80,16 @@ export class Sapling {
   }
 
   public toString(): string {
-    return this.genes.map(g => g.type).join('');
+    // Genes only change through the constructor or addGene (which clears the cache), so the
+    // genotype string can be memoized. This is called heavily during grouping/dedup/sort.
+    if (this.cachedString === undefined) {
+      let s = '';
+      for (const g of this.genes) {
+        s += g.type;
+      }
+      this.cachedString = s;
+    }
+    return this.cachedString;
   }
 
   public clone(): Sapling {

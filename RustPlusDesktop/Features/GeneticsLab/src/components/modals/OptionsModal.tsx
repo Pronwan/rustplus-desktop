@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useApp } from '../../context/AppContext.tsx';
 import { ApplicationOptions } from '../../services/orchestrator.ts';
-import { DEFAULT_OPTIONS, StorageService } from '../../services/storageService.ts';
+import { DEFAULT_OPTIONS, StorageService, MAX_WORKER_COUNT, RECOMMENDED_WORKER_COUNT } from '../../services/storageService.ts';
 import { DEFAULT_GENE_SCORES } from '../../domain/genetics/Sapling.ts';
 
 export const OptionsModal: React.FC = () => {
@@ -154,20 +154,14 @@ export const OptionsModal: React.FC = () => {
                 Number of Workers
               </Typography>
               <Slider
-                value={localOptions.numberOfWorkers || 4}
-                min={2}
-                max={16}
-                step={2}
-                marks={[
-                  { value: 2, label: '2' },
-                  { value: 4, label: '4' },
-                  { value: 6, label: '6' },
-                  { value: 8, label: '8' },
-                  { value: 10, label: '10' },
-                  { value: 12, label: '12' },
-                  { value: 14, label: '14' },
-                  { value: 16, label: '16' }
-                ]}
+                value={Math.min(localOptions.numberOfWorkers || RECOMMENDED_WORKER_COUNT, Math.max(1, MAX_WORKER_COUNT))}
+                min={1}
+                max={Math.max(1, MAX_WORKER_COUNT)}
+                step={1}
+                marks={Array.from({ length: Math.max(1, MAX_WORKER_COUNT) }, (_, i) => {
+                  const v = i + 1;
+                  return { value: v, label: v === RECOMMENDED_WORKER_COUNT ? `${v} ★` : `${v}` };
+                })}
                 onChange={(_, val) => setLocalOptions({ ...localOptions, numberOfWorkers: val as number })}
                 sx={{
                   color: '#00E5FF',
@@ -179,7 +173,39 @@ export const OptionsModal: React.FC = () => {
                 }}
               />
               <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 1.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Controls how many background workers are spawned during the calculation. A higher number means the calculation will be finished quicker, but it may cause your processor to be overloaded. If your device is struggling just lower the number.
+                Controls how many background workers are spawned during the calculation. A higher number finishes faster but uses more of your CPU. At least one core is always kept free so your PC and game stay responsive. The ★ marks the recommended value ({RECOMMENDED_WORKER_COUNT}); if your device struggles, lower it.
+              </Typography>
+            </Box>
+
+            {/* 1b. CPU Limit */}
+            <Box>
+              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', mb: 1, fontFamily: 'monospace' }}>
+                CPU Limit: {localOptions.cpuLimitPercent ?? 60}%
+              </Typography>
+              <Slider
+                value={localOptions.cpuLimitPercent ?? 60}
+                min={10}
+                max={100}
+                step={10}
+                marks={[
+                  { value: 10, label: '10%' },
+                  { value: 30, label: '30%' },
+                  { value: 50, label: '50%' },
+                  { value: 70, label: '70%' },
+                  { value: 100, label: 'Max' }
+                ]}
+                onChange={(_, val) => setLocalOptions({ ...localOptions, cpuLimitPercent: val as number })}
+                sx={{
+                  color: '#00E5FF',
+                  '& .MuiSlider-markLabel': {
+                    color: '#8E8E8E',
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem'
+                  }
+                }}
+              />
+              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 1.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
+                Hard ceiling on how much of your total CPU the calculation may use. Workers duty-cycle (work, then briefly pause) to stay under this limit, so the calculation runs in the background instead of taking every free core. Lower = lighter but slower; <strong>Max</strong> removes the cap.
               </Typography>
             </Box>
 

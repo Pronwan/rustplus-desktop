@@ -39,11 +39,27 @@ export const DEFAULT_SCANNER_REGIONS: ScannerRegion[] = [
   }
 ];
 
+// Logical CPU cores available to the browser/WebView.
+const CPU_CORES = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 4;
+
+// Hard ceiling for worker threads: always leave at least one core free so the OS, the
+// UI thread and the game stay responsive. Saturating every core is what makes the whole
+// PC stutter during a heavy (high gene count) calculation.
+export const MAX_WORKER_COUNT = Math.max(1, CPU_CORES - 1);
+
+// Recommended default: leave 2 cores free on larger CPUs, 1 on small ones. This keeps the
+// machine smooth by default while still using most of the CPU for the simulation.
+export const RECOMMENDED_WORKER_COUNT = (() => {
+  if (CPU_CORES <= 2) return 1;
+  if (CPU_CORES <= 4) return CPU_CORES - 1;
+  return CPU_CORES - 2;
+})();
+
 export const DEFAULT_OPTIONS: ApplicationOptions = {
   withRepetitions: true,
   modifyMinimumTrackedScoreManually: false,
   minCrossbreedingSaplingsNumber: 2,
-  maxCrossbreedingSaplingsNumber: 5,
+  maxCrossbreedingSaplingsNumber: 3,
   numberOfGenerations: 2,
   numberOfSaplingsAddedBetweenGenerations: 20,
   minimumTrackedScore: 4,
@@ -52,7 +68,8 @@ export const DEFAULT_OPTIONS: ApplicationOptions = {
   skipScannerGuide: false,
   autoSaveInputSets: true,
   sounds: false,
-  numberOfWorkers: typeof navigator !== 'undefined' ? Math.max(1, navigator.hardwareConcurrency || 4) : 4
+  numberOfWorkers: RECOMMENDED_WORKER_COUNT,
+  cpuLimitPercent: 50
 };
 
 const CONSENT_PREFIX = 'rb-cookie-pref-v1';
@@ -62,6 +79,7 @@ const KEY_ANALYTICS = `${CONSENT_PREFIX}-analytics-cookies`;
 const KEY_ADVERTISEMENT = `${CONSENT_PREFIX}-advertisement-cookies`;
 
 const OPTIONS_KEY = 'options-v4';
+const MAX_CB_MIGRATION_KEY = 'gl-migrated-maxcb-v1';
 const PREVIOUS_GENE_SETS_KEY = 'PREVIOUS_GENE_SETS';
 const SCANNER_REGIONS_KEY = 'SCANNER_REGIONS';
 const SELECTED_PLANT_KEY = 'SELECTED_PLANT_TYPE';
@@ -122,16 +140,65 @@ export class StorageService {
       const raw = localStorage.getItem(OPTIONS_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        const maxWorkers = typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 4 : 4;
-        return {
+        // The previous default set numberOfWorkers to the full core count, which pegged
+        // every core and stuttered the whole PC. If the stored value is that old
+        // all-cores value (i.e. never deliberately lowered), adopt the smoother
+        // recommended default. Otherwise honour the user's choice, but never allow more
+        // than MAX_WORKER_COUNT so at least one core always stays free.
+        const storedWorkers =
+          typeof parsed.numberOfWorkers === 'number' ? parsed.numberOfWorkers : DEFAULT_OPTIONS.numberOfWorkers;
+        const wasOldAllCoresDefault = storedWorkers >= CPU_CORES;
+        const numberOfWorkers = wasOldAllCoresDefault
+          ? RECOMMENDED_WORKER_COUNT
+          : Math.min(storedWorkers, MAX_WORKER_COUNT);
+
+        const cpuLimitPercent = Math.min(
+          100,
+          Math.max(10, typeof parsed.cpuLimitPercent === 'number' ? parsed.cpuLimitPercent : DEFAULT_OPTIONS.cpuLimitPercent)
+        );
+
+        // One-time migration: the old default max crossbreeding plants (5) explodes the
+        // combination count and memory. Lower untouched (old-default) configs to the new
+        // default of 3. Done once via a flag so a deliberately chosen value still sticks.
+        let maxCrossbreedingSaplingsNumber =
+          typeof parsed.maxCrossbreedingSaplingsNumber === 'number'
+            ? parsed.maxCrossbreedingSaplingsNumber
+            : DEFAULT_OPTIONS.maxCrossbreedingSaplingsNumber;
+        let migratedMax = false;
+        if (!localStorage.getItem(MAX_CB_MIGRATION_KEY)) {
+          if (maxCrossbreedingSaplingsNumber === 5) {
+            maxCrossbreedingSaplingsNumber = DEFAULT_OPTIONS.maxCrossbreedingSaplingsNumber;
+            migratedMax = true;
+          }
+          try {
+            localStorage.setItem(MAX_CB_MIGRATION_KEY, '1');
+          } catch {
+            // ignore
+          }
+        }
+
+        const merged = {
           ...DEFAULT_OPTIONS,
           ...parsed,
           geneScores: {
             ...DEFAULT_GENE_SCORES,
             ...(parsed.geneScores || {})
           },
-          numberOfWorkers: Math.min(parsed.numberOfWorkers || DEFAULT_OPTIONS.numberOfWorkers, maxWorkers)
+          numberOfWorkers,
+          cpuLimitPercent,
+          maxCrossbreedingSaplingsNumber
         };
+
+        // Persist the migrated value so it is not undone on the next load.
+        if (migratedMax) {
+          try {
+            localStorage.setItem(OPTIONS_KEY, JSON.stringify(merged));
+          } catch {
+            // ignore
+          }
+        }
+
+        return merged;
       }
     } catch {
       // ignore

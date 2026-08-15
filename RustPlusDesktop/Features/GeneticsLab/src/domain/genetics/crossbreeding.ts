@@ -8,47 +8,61 @@ export interface CrossbreedingOptions {
 }
 
 interface ColumnWeights {
-  weightsByType: Map<GeneType, number>;
   maxWeight: number;
   winningTypes: GeneType[];
   isDefinitiveTie: boolean;
   contributingSaplingIndexesByType: Map<GeneType, number[]>;
 }
 
+// Fixed index for each gene type so the hot loop uses plain array slots instead of
+// allocating Maps and hashing string keys millions of times per calculation.
+const TYPE_TO_INDEX: Record<GeneType, number> = { G: 0, H: 1, Y: 2, W: 3, X: 4 };
+const INDEX_TO_TYPE: GeneType[] = ['G', 'H', 'Y', 'W', 'X'];
+
 /**
  * Calculates weights and winners for a single gene column across surrounding plants.
+ *
+ * Behaviour is identical to a Map-based implementation: types are considered in the order
+ * they are first seen across the surrounding plants (so the "first winner" chosen for a
+ * non-branching column is unchanged), weights are accumulated with the same rounding, and
+ * a definitive tie is still "more than one type tied for max, with max weight above the
+ * red-gene weight". Only the allocation strategy changed.
  */
 function calculateColumnWeights(
   surroundingSaplings: Sapling[],
   columnIndex: number
 ): ColumnWeights {
-  const weightsByType = new Map<GeneType, number>();
-  const contributingSaplingIndexesByType = new Map<GeneType, number[]>();
+  const weights = [0, 0, 0, 0, 0];
+  const contributors: (number[] | null)[] = [null, null, null, null, null];
+  const seenOrder: number[] = [];
 
   for (let sIdx = 0; sIdx < surroundingSaplings.length; sIdx++) {
     const gene = surroundingSaplings[sIdx].genes[columnIndex];
-    const type = gene.type;
-    const weight = gene.getCrossbreedingWeight();
+    const ti = TYPE_TO_INDEX[gene.type];
 
-    const currentWeight = weightsByType.get(type) ?? 0;
-    weightsByType.set(type, Math.round((currentWeight + weight) * 100) / 100);
-
-    const indexes = contributingSaplingIndexesByType.get(type) ?? [];
-    indexes.push(sIdx);
-    contributingSaplingIndexesByType.set(type, indexes);
+    let list = contributors[ti];
+    if (list === null) {
+      list = [];
+      contributors[ti] = list;
+      seenOrder.push(ti);
+    }
+    weights[ti] = Math.round((weights[ti] + gene.weight) * 100) / 100;
+    list.push(sIdx);
   }
 
   let maxWeight = 0;
-  for (const weight of weightsByType.values()) {
-    if (weight > maxWeight) {
-      maxWeight = weight;
+  for (const ti of seenOrder) {
+    if (weights[ti] > maxWeight) {
+      maxWeight = weights[ti];
     }
   }
 
   const winningTypes: GeneType[] = [];
-  for (const [type, weight] of weightsByType.entries()) {
-    if (Math.abs(weight - maxWeight) < 0.001) {
-      winningTypes.push(type);
+  const contributingSaplingIndexesByType = new Map<GeneType, number[]>();
+  for (const ti of seenOrder) {
+    contributingSaplingIndexesByType.set(INDEX_TO_TYPE[ti], contributors[ti]!);
+    if (Math.abs(weights[ti] - maxWeight) < 0.001) {
+      winningTypes.push(INDEX_TO_TYPE[ti]);
     }
   }
 
@@ -56,7 +70,6 @@ function calculateColumnWeights(
   const isDefinitiveTie = winningTypes.length > 1 && maxWeight > RED_GENE_WEIGHT;
 
   return {
-    weightsByType,
     maxWeight,
     winningTypes,
     isDefinitiveTie,
@@ -117,10 +130,16 @@ export function evaluateCombination(
 
   const results: GeneticsMap[] = [];
 
+  // The surrounding plants are identical for every map this combination produces (across
+  // all candidate centers and tie branches) and are never mutated after a map is built, so
+  // clone them ONCE here and share the clones. Previously they were deep-cloned inside every
+  // map for every center, multiplying allocation/GC cost by (centers x maps) in the hot loop.
+  const surroundingSaplingsClone = surroundingSaplings.map(s => s.clone());
+
   if (!needsCenterCheck) {
     // No center plant needed
     const maps = buildMapsForOutcome(
-      surroundingSaplings,
+      surroundingSaplingsClone,
       undefined,
       columnData,
       definitiveTieColumnIndex,
@@ -144,7 +163,7 @@ export function evaluateCombination(
 
     for (const center of candidateCenters) {
       const maps = buildMapsForOutcome(
-        surroundingSaplings,
+        surroundingSaplingsClone,
         center,
         columnData,
         definitiveTieColumnIndex,
@@ -161,9 +180,11 @@ export function evaluateCombination(
 
 /**
  * Builds GeneticsMap instances given surrounding weights and optional center plant.
+ * `surroundingSaplingsClone` is an already-cloned, read-only set shared across every map
+ * produced for the combination (see evaluateCombination) to avoid redundant deep clones.
  */
 function buildMapsForOutcome(
-  surroundingSaplings: Sapling[],
+  surroundingSaplingsClone: Sapling[],
   centerSapling: Sapling | undefined,
   columnData: ColumnWeights[],
   definitiveTieColumnIndex: number,
@@ -250,7 +271,7 @@ function buildMapsForOutcome(
 
     const map = new GeneticsMap(
       resultSapling,
-      surroundingSaplings.map(s => s.clone()),
+      surroundingSaplingsClone,
       centerSapling ? centerSapling.clone() : undefined,
       localChance,
       score,

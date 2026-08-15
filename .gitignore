@@ -97,3 +97,8 @@ env
 build_secrets*.zip
 .gemini/
 Corel Auto-Preserve/
+
+# Genetics Lab (build assets only; static images & resources stay tracked)
+RustPlusDesktop/Features/GeneticsLab/dist/assets/
+RustPlusDesktop/Features/GeneticsLab/dist/index.html
+RustPlusDesktop/Features/GeneticsLab/node_modules/

@@ -93,6 +93,23 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
     return worker;
   }
 
+  /**
+   * Convert a canvas to a synchronous data-URL string before handing it to Tesseract.
+   *
+   * Tesseract.js 'loadImage' feeds an HTMLCanvasElement through canvas.toBlob(), whose
+   * completion callback is gated by the page's rendering/compositor lifecycle. When the
+   * WebView is unfocused or occluded (i.e. every time the user is looking at the game),
+   * that callback can stop firing, so recognize() never resolves and the scan pipeline
+   * hangs at the row-ocr/slot-ocr stage until the app regains focus.
+   *
+   * toDataURL() encodes synchronously on the calling thread and is not tied to frame
+   * production, and Tesseract's loadImage decodes the resulting base64 string synchronously
+   * (no toBlob). This keeps OCR running while the app is in the background.
+   */
+  private static canvasToInput(canvas: HTMLCanvasElement): string {
+    return canvas.toDataURL('image/png');
+  }
+
   public isWarm(): boolean {
     return this.warm && this.lineWorker !== null;
   }
@@ -105,7 +122,7 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
     if (!this.lineWorker) return null;
 
     try {
-      const res = await this.lineWorker.recognize(canvas);
+      const res = await this.lineWorker.recognize(TesseractGeneRecognizer.canvasToInput(canvas));
       const raw = (res.data.text || '').trim().toUpperCase().replace(/[^GHYWX]/g, '');
 
       if (raw.length === 6 && /^[GHYWX]{6}$/.test(raw)) {
@@ -132,7 +149,7 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
 
     const results = await Promise.all(canvases.map(async (canvas, index) => {
       try {
-        const res = await this.slotWorkers[index].recognize(canvas);
+        const res = await this.slotWorkers[index].recognize(TesseractGeneRecognizer.canvasToInput(canvas));
         const raw = (res.data.text || '').trim();
         const gene = normalizeGeneGlyph(raw);
         return {

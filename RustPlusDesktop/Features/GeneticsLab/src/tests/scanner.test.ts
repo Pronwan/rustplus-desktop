@@ -56,17 +56,28 @@ describe('Scanner Subsystem & Modules', () => {
       votingService = new TemporalVotingService();
     });
 
-    it('confirms candidate when 2 out of 3 match exactly', () => {
+    it('confirms candidate when it matches the required number of times exactly', () => {
       votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 85 });
-      const confirmed = votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 90 });
+      const notYet = votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 90 });
+      // 2 matches is no longer enough to confirm (requiredMatches is now 3).
+      expect(notYet).toBeNull();
+      const confirmed = votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 88 });
       expect(confirmed).not.toBeNull();
       expect(confirmed?.geneString).toBe('GGYHYX');
     });
 
-    it('resolves position-by-position majority across 3 samples (GGYHYX, GGYHYX, GGXHYX => GGYHYX)', () => {
+    it('does not confirm on only 2 agreeing torn frames', () => {
+      votingService.addCandidate('inventory', { geneString: 'GGXHYX', confidence: 85 });
+      const voted = votingService.addCandidate('inventory', { geneString: 'GGXHYX', confidence: 86 });
+      // A mis-read that appears on 2 torn frames must not be confirmed.
+      expect(voted).toBeNull();
+    });
+
+    it('resolves position-by-position majority across the sample window (single-slot noise is outvoted)', () => {
       votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 80 });
+      votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 81 });
       votingService.addCandidate('inventory', { geneString: 'GGXHYX', confidence: 82 });
-      const voted = votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 88 });
+      const voted = votingService.addCandidate('inventory', { geneString: 'GGYHYW', confidence: 88 });
 
       expect(voted).not.toBeNull();
       expect(voted?.geneString).toBe('GGYHYX');
@@ -96,10 +107,13 @@ describe('Scanner Subsystem & Modules', () => {
       expect(acceptDuplicate).toBe(false);
     });
 
-    it('accepts immediately when plant genotype changes', () => {
+    it('accepts any different genotype immediately (dedup never drops a differing read)', () => {
       deduplicator.shouldAccept('inventory', 'GGYYHH', 1000);
-      const acceptNewGenotype = deduplicator.shouldAccept('inventory', 'YYYYGG', 1000);
-      expect(acceptNewGenotype).toBe(true);
+      // Differs by several genes => a genuinely new plant.
+      expect(deduplicator.shouldAccept('inventory', 'YYYYGG', 1000)).toBe(true);
+      // Differs by a single gene => still accepted; duplicate mis-reads are handled by
+      // temporal voting upstream, not by the deduplicator.
+      expect(deduplicator.shouldAccept('inventory', 'YYYYGH', 1000)).toBe(true);
     });
 
     it('accepts identical genotype when ROI signature indicates a new item hover', () => {

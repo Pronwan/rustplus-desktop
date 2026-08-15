@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,11 @@ namespace RustPlusDesk.Views
         private bool _isInitialized;
         private static CoreWebView2Environment? _sharedEnvironment;
         private volatile bool _performanceModeEnabled;
+        // The high-priority/anti-throttling performance boost is only justified while the
+        // scanner is actually running. Calculations (tab visible but not scanning) must run
+        // at normal priority so they don't starve the rest of the PC. JS reports this state
+        // over a web message; see OnWebMessageReceived.
+        private bool _isScannerActive;
         private volatile int[] _webViewProcessIds = Array.Empty<int>();
         private DispatcherTimer? _performanceTimer;
         private bool _isReassertingPerformanceMode;
@@ -69,11 +75,37 @@ namespace RustPlusDesk.Views
                 await InitializeWebViewAsync();
             }
 
-            SetPerformanceMode(IsVisible);
+            UpdatePerformanceMode();
         }
 
         private void GeneticsLabTabContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) =>
-            SetPerformanceMode(IsVisible);
+            UpdatePerformanceMode();
+
+        // Boost only while the tab is visible AND the scanner is actively running. This keeps
+        // the scanner's realtime performance intact while ensuring heavy gene calculations
+        // (visible but not scanning) run at normal priority and don't stutter the whole PC.
+        private void UpdatePerformanceMode() => SetPerformanceMode(IsVisible && _isScannerActive);
+
+        private void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+        {
+            try
+            {
+                using JsonDocument doc = JsonDocument.Parse(e.WebMessageAsJson);
+                JsonElement root = doc.RootElement;
+                if (root.TryGetProperty("type", out JsonElement type) &&
+                    type.GetString() == "scanner-state")
+                {
+                    _isScannerActive =
+                        root.TryGetProperty("active", out JsonElement active) &&
+                        active.ValueKind == JsonValueKind.True;
+                    UpdatePerformanceMode();
+                }
+            }
+            catch
+            {
+                // Ignore malformed messages.
+            }
+        }
 
         private async Task InitializeWebViewAsync()
         {
@@ -117,6 +149,7 @@ namespace RustPlusDesk.Views
                     options: envOptions);
 
                 await GeneticsWebView.EnsureCoreWebView2Async(_sharedEnvironment);
+                GeneticsWebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
                 _sharedEnvironment.ProcessInfosChanged += SharedEnvironment_ProcessInfosChanged;
                 RefreshWebViewProcessIds();
 

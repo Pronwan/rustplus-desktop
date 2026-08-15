@@ -61,11 +61,6 @@
 		</Content>
 	</ItemGroup>
 	
-	<ItemGroup>
-		<Content Include="Features\GeneticsLab\dist\**\*">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
 	
 	<ItemGroup>
 	  <None Remove="Assets\1-76fc6c7e.ico" />
@@ -388,6 +383,47 @@
         <Link>MapParser\%(MapParserPublishedContent.RecursiveDir)%(MapParserPublishedContent.Filename)%(MapParserPublishedContent.Extension)</Link>
         <TargetPath>MapParser\%(MapParserPublishedContent.RecursiveDir)%(MapParserPublishedContent.Filename)%(MapParserPublishedContent.Extension)</TargetPath>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <GeneticsLabDir>$(MSBuildProjectDirectory)\Features\GeneticsLab\</GeneticsLabDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)src\**\*.*" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)public\**\*.*" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)index.html" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)package.json" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)package-lock.json" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)tsconfig.json" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)vite.config.ts" />
+  </ItemGroup>
+
+  <Target Name="BuildGeneticsLabDist"
+          BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish"
+          Inputs="@(GeneticsLabSourceFiles)"
+          Outputs="$(GeneticsLabDir)dist\index.html"
+          Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <Message Importance="high" Text="Building GeneticsLab frontend (npm run build)..." />
+    <Exec Command="npm ci" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and Exists('$(GeneticsLabDir)package-lock.json')" />
+    <Exec Command="npm install" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and !Exists('$(GeneticsLabDir)package-lock.json')" />
+    <Exec Command="npm run build" WorkingDirectory="$(GeneticsLabDir)" />
+  </Target>
+
+  <Target Name="IncludeGeneticsLabDist"
+          BeforeTargets="AssignTargetPaths"
+          DependsOnTargets="BuildGeneticsLabDist"
+          Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+    <ItemGroup>
+      <GeneticsLabDistFiles Include="$(GeneticsLabDir)dist\**\*.*" />
+      <Content Include="@(GeneticsLabDistFiles)">
+        <Link>Features\GeneticsLab\dist\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        <TargetPath>Features\GeneticsLab\dist\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </Content>
     </ItemGroup>

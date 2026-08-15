@@ -31,6 +31,10 @@ export interface ApplicationOptions {
   autoSaveInputSets: boolean;
   sounds: boolean;
   numberOfWorkers: number;
+  // Hard cap on how much of the machine's total CPU the calculation may use (10-100).
+  // 100 = no throttling. Below that, each worker duty-cycles (works a slice, sleeps a
+  // slice) so total usage stays near this ceiling even when more cores are free.
+  cpuLimitPercent: number;
 }
 
 export type SimulatorEventType =
@@ -46,6 +50,9 @@ export interface SimulatorEvent {
   estimatedTimeMs?: number | null;
   mapGroups?: GeneticsMapGroup[];
   totalTimeMs?: number;
+  stage?: string;
+  processedCombinations?: number;
+  totalCombinations?: number;
 }
 
 export type SimulatorEventListener = (event: SimulatorEvent) => void;
@@ -71,7 +78,7 @@ export class CrossbreedingOrchestrator {
 
   private startTime = 0;
   private lastPartialResultSentTime = 0;
-  private partialResultIntervalMs = 1000;
+  private partialResultIntervalMs = 750;
 
   private currentGenerationIndex = 0;
   private maxGenerations = 1;
@@ -120,7 +127,8 @@ export class CrossbreedingOrchestrator {
     this.currentGenGroupsMap.clear();
     this.progressHistory = [];
     this.lastPartialResultSentTime = Date.now();
-    this.partialResultIntervalMs = 1000;
+    this.partialResultIntervalMs = 750;
+    this.sendStage(`Building combinations for generation ${genIndex + 1}…`);
 
     const generationInfo: GenerationInfo | undefined =
       genIndex > 0 ? { generationIndex: genIndex, addedSaplings: addedSaplingsCount } : undefined;
@@ -253,7 +261,9 @@ export class CrossbreedingOrchestrator {
               minCrossbreedingSaplingsNumber: this.currentOptions.minCrossbreedingSaplingsNumber,
               maxCrossbreedingSaplingsNumber: this.currentOptions.maxCrossbreedingSaplingsNumber,
               geneScores: this.currentOptions.geneScores,
-              minimumTrackedScore: this.currentOptions.minimumTrackedScore
+              minimumTrackedScore: this.currentOptions.minimumTrackedScore,
+              cpuLimitPercent: this.currentOptions.cpuLimitPercent,
+              workerCount: actualWorkerCount
             }
           });
         } catch {
@@ -351,7 +361,24 @@ export class CrossbreedingOrchestrator {
       type: 'PROGRESS_UPDATE',
       generationIndex: this.currentGenerationIndex + 1,
       progressPercent,
-      estimatedTimeMs
+      estimatedTimeMs,
+      stage: `Evaluating crossbreeding combinations (gen ${this.currentGenerationIndex + 1})`,
+      processedCombinations: this.processedCombinationsInGen,
+      totalCombinations: this.totalCombinationsInGen
+    });
+  }
+
+  private sendStage(stage: string): void {
+    this.sendEvent({
+      type: 'PROGRESS_UPDATE',
+      generationIndex: this.currentGenerationIndex + 1,
+      progressPercent: this.totalCombinationsInGen > 0
+        ? Math.min(100, Math.round((this.processedCombinationsInGen / this.totalCombinationsInGen) * 1000) / 10)
+        : 0,
+      estimatedTimeMs: null,
+      stage,
+      processedCombinations: this.processedCombinationsInGen,
+      totalCombinations: this.totalCombinationsInGen
     });
   }
 
@@ -359,7 +386,9 @@ export class CrossbreedingOrchestrator {
     const now = Date.now();
     if (now - this.lastPartialResultSentTime >= this.partialResultIntervalMs) {
       this.lastPartialResultSentTime = now;
-      this.partialResultIntervalMs += 1000; // Progressively back off
+      // Back off gently but keep a live cadence so the plan count/list stay near real-time
+      // instead of freezing on long searches.
+      this.partialResultIntervalMs = Math.min(this.partialResultIntervalMs + 400, 2000);
 
       const currentSorted = this.getSortedResults();
       this.sendEvent({
@@ -385,6 +414,7 @@ export class CrossbreedingOrchestrator {
     const nextGenIndex = this.currentGenerationIndex + 1;
     if (nextGenIndex < this.maxGenerations) {
       // Select best candidates for next generation
+      this.sendStage(`Selecting best plants for generation ${nextGenIndex + 1}…`);
       const bestCandidates = getBestSaplingsForNextGeneration(
         Array.from(this.currentGenGroupsMap.values()),
         this.currentSourceSaplings,

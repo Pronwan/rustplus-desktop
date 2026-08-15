@@ -7,8 +7,25 @@ export const RED_GENES: readonly GeneType[] = ['W', 'X'] as const;
 export const GREEN_GENE_WEIGHT = 0.6;
 export const RED_GENE_WEIGHT = 1.0;
 
+// Precomputed lookups so the crossbreeding hot path never re-scans arrays.
+const GENE_WEIGHTS: Record<GeneType, number> = {
+  G: GREEN_GENE_WEIGHT,
+  H: GREEN_GENE_WEIGHT,
+  Y: GREEN_GENE_WEIGHT,
+  W: RED_GENE_WEIGHT,
+  X: RED_GENE_WEIGHT
+};
+const GENE_IS_GREEN: Record<GeneType, boolean> = {
+  G: true,
+  H: true,
+  Y: true,
+  W: false,
+  X: false
+};
+
 export class Gene {
   public readonly type: GeneType;
+  public readonly weight: number;
 
   constructor(type: GeneType | string) {
     const upper = type.toUpperCase() as GeneType;
@@ -16,6 +33,7 @@ export class Gene {
       throw new Error(`Invalid gene type: ${type}`);
     }
     this.type = upper;
+    this.weight = GENE_WEIGHTS[upper];
   }
 
   public static isValid(gene: string): gene is GeneType {
@@ -23,19 +41,19 @@ export class Gene {
   }
 
   public static getWeight(type: GeneType): number {
-    return (GREEN_GENES as readonly string[]).includes(type) ? GREEN_GENE_WEIGHT : RED_GENE_WEIGHT;
+    return GENE_WEIGHTS[type];
   }
 
   public getCrossbreedingWeight(): number {
-    return Gene.getWeight(this.type);
+    return this.weight;
   }
 
   public get isGreen(): boolean {
-    return (GREEN_GENES as readonly string[]).includes(this.type);
+    return GENE_IS_GREEN[this.type];
   }
 
   public get isRed(): boolean {
-    return (RED_GENES as readonly string[]).includes(this.type);
+    return !GENE_IS_GREEN[this.type];
   }
 
   public toString(): string {

@@ -32,7 +32,8 @@ export const ScannerWidget: React.FC = () => {
     moveScannerRegion,
     scaleScannerRegion,
     resetScannerRegions,
-    getScannerDiagnostics
+    getScannerDiagnostics,
+    setScannerPreviewEnabled
   } = useApp();
 
   const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState(false);
@@ -60,6 +61,13 @@ export const ScannerWidget: React.FC = () => {
   useEffect(() => {
     return () => stopHold();
   }, []);
+
+  // Preview is UI-only work; only run it while this panel is actually mounted/visible.
+  // Recognition keeps running regardless (including when the app is in the background).
+  useEffect(() => {
+    setScannerPreviewEnabled(true);
+    return () => setScannerPreviewEnabled(false);
+  }, [setScannerPreviewEnabled]);
 
   // Poll diagnostics when open
   useEffect(() => {
@@ -355,6 +363,29 @@ export const ScannerWidget: React.FC = () => {
 
       {/* Cards Body */}
       <Box sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        {/* Performance hint: fullscreen games at high FPS starve the WebView capture */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 1,
+            backgroundColor: 'rgba(255, 167, 38, 0.06)',
+            border: '1px solid rgba(255, 167, 38, 0.3)',
+            borderRadius: '4px',
+            p: 1
+          }}
+        >
+          <InfoOutlinedIcon sx={{ fontSize: 15, color: '#FFA726', mt: '1px', flexShrink: 0 }} />
+          <Typography
+            variant="caption"
+            sx={{ color: '#C9A26B', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
+          >
+            Scanning feels slow or laggy? Run Rust in <strong>Borderless/Windowed</strong> and <strong>cap your
+            in-game FPS</strong> (e.g. 60-144). A fullscreen game at uncapped FPS starves the screen capture and
+            makes recognition stall.
+          </Typography>
+        </Box>
+
         {renderRegionCard(0, 'Inventory Region', 'Scans plants hovered inside inventory or storage boxes.')}
         {renderRegionCard(1, 'Planter Region', 'Scans plants hovered while looking at growing planter boxes.')}
 

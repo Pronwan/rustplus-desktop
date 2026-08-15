@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   ApplicationOptions,
   CrossbreedingOrchestrator,
@@ -36,6 +36,9 @@ export interface ProgressState {
   totalGenerations: number;
   progressPercent: number;
   estimatedTimeRemainingSeconds: number;
+  stage: string;
+  processedCombinations: number;
+  totalCombinations: number;
 }
 
 interface AppContextType {
@@ -96,6 +99,7 @@ interface AppContextType {
   scaleScannerRegion: (regionIdx: number, dw: number) => void;
   resetScannerRegions: () => void;
   getScannerDiagnostics: () => import('../services/scanner/scannerTypes.ts').ScannerDiagnostics;
+  setScannerPreviewEnabled: (enabled: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -104,6 +108,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<ActiveTab>('calculator');
   const [options, setOptionsState] = useState<ApplicationOptions>(() => StorageService.getOptions());
   const [themeMode, setThemeModeState] = useState<'dark' | 'light'>(() => (options.darkMode ? 'dark' : 'light'));
+  // Tracks the last scanned genotype we played the "already in list" sound for, so it
+  // only plays once per plant instead of on every frame the same duplicate is hovered.
+  const lastDuplicateSoundGene = useRef<string | null>(null);
   const [selectedPlant, setSelectedPlantState] = useState<string>(() => StorageService.getSelectedPlantType());
   const [consent, setConsent] = useState<CookieConsentState>(() => StorageService.getConsent());
 
@@ -147,18 +154,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Scanner Event Listener
   useEffect(() => {
+    // Tell the desktop host (WebView2) whether the scanner is running so it only applies
+    // the high-priority performance boost while scanning — not during gene calculations,
+    // which would otherwise inherit the boost and hog the whole PC. No-op in the browser.
+    const postScannerState = (active: boolean) => {
+      try {
+        (window as any).chrome?.webview?.postMessage({ type: 'scanner-state', active });
+      } catch {
+        // ignore (standalone web build or messaging unavailable)
+      }
+    };
+
     const unsubscribe = scannerService.addEventListener((evt: ScannerEvent) => {
       if (evt.type === 'INITIALIZING') {
         setIsScannerInitializing(true);
         setScannerStatusMessage('Initializing OCR engine...');
+        postScannerState(true);
       } else if (evt.type === 'STARTED') {
         setIsScannerInitializing(false);
         setIsScannerActive(true);
         setScannerStatusMessage('Scanner active. Hover over plants in Rust.');
+        postScannerState(true);
       } else if (evt.type === 'STOPPED') {
         setIsScannerActive(false);
         setIsScannerInitializing(false);
         setScannerStatusMessage('');
+        postScannerState(false);
       } else if (evt.type === 'PREVIEW') {
         if (evt.regionIndex !== undefined && evt.previewDataUrl) {
           setScannerPreviews((prev) => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
@@ -172,11 +193,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               scannerService.acknowledgeGeneHandled(found);
               if (!existingStrings.includes(found)) {
                 AudioService.playPop(options.sounds);
+                lastDuplicateSoundGene.current = null; // moved to a new plant → re-arm
                 const updated = [...prev, new Sapling(found, 0, prev.length)];
                 setGeneInputText(updated.map((s) => s.toString()).join('\n'));
                 return updated;
               }
-              // Duplicate: do not play pop sound
+              // Already in the list: play a distinct "duplicate" sound so the user knows to
+              // skip it — but only once per plant, not on every frame it's still hovered.
+              if (lastDuplicateSoundGene.current !== found) {
+                AudioService.playWrongKey(options.sounds);
+                lastDuplicateSoundGene.current = found;
+              }
               return prev;
             });
           }
@@ -185,6 +212,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsScannerActive(false);
         setIsScannerInitializing(false);
         setScannerStatusMessage(`Error: ${evt.error}`);
+        postScannerState(false);
       }
     });
 
@@ -197,13 +225,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const unsubscribe = orchestrator.addEventListener((event: SimulatorEvent) => {
       if (event.type === 'PROGRESS_UPDATE') {
-        setProgress({
+        setProgress((prev) => ({
           isRunning: true,
           currentGeneration: event.generationIndex ?? 1,
           totalGenerations: options.numberOfGenerations || 2,
           progressPercent: event.progressPercent ?? 0,
-          estimatedTimeRemainingSeconds: ((event.estimatedTimeMs ?? 0) / 1000)
-        });
+          estimatedTimeRemainingSeconds: ((event.estimatedTimeMs ?? 0) / 1000),
+          stage: event.stage ?? prev?.stage ?? 'Starting…',
+          processedCombinations: event.processedCombinations ?? prev?.processedCombinations ?? 0,
+          totalCombinations: event.totalCombinations ?? prev?.totalCombinations ?? 0
+        }));
       } else if (event.type === 'PARTIAL_RESULTS') {
         if (event.mapGroups) {
           setResults(event.mapGroups);
@@ -268,15 +299,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const runSimulation = useCallback(async () => {
     if (sourceSaplings.length < 2) return;
+    // Do not start a heavy calculation while the scanner is running — it competes for
+    // the CPU with OCR and would make both the scan and the whole PC stutter.
+    if (isScannerActive || isScannerInitializing) return;
     setIsCalculating(true);
     setProgress({
       isRunning: true,
       currentGeneration: 1,
       totalGenerations: options.numberOfGenerations || 2,
       progressPercent: 0,
-      estimatedTimeRemainingSeconds: 3
+      estimatedTimeRemainingSeconds: 3,
+      stage: 'Preparing…',
+      processedCombinations: 0,
+      totalCombinations: 0
     });
     setResults([]);
+    // A fresh calculation invalidates any previously highlighted plan.
+    setHighlightedGroup(null);
 
     if (options.autoSaveInputSets ?? true) {
       saveCurrentGeneSet();
@@ -286,7 +325,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTimeout(async () => {
       await orchestrator.simulateBestGenetics(sourceSaplings, options);
     }, 16);
-  }, [orchestrator, sourceSaplings, options, saveCurrentGeneSet]);
+  }, [orchestrator, sourceSaplings, options, saveCurrentGeneSet, isScannerActive, isScannerInitializing]);
 
   const cancelSimulation = useCallback(() => {
     orchestrator.cancelSimulation();
@@ -317,6 +356,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Scanner Methods
   const startScanner = useCallback(async () => {
+    // Starting a new scan session begins a fresh set of plants, so clear stale results
+    // and any highlighted plan from the previous calculation.
+    setResults([]);
+    setHighlightedGroup(null);
     await scannerService.start();
   }, [scannerService]);
 
@@ -338,6 +381,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const getScannerDiagnostics = useCallback(() => {
     return scannerService.getDiagnostics();
+  }, [scannerService]);
+
+  const setScannerPreviewEnabled = useCallback((enabled: boolean) => {
+    scannerService.setPreviewEnabled(enabled);
   }, [scannerService]);
 
   return (
@@ -387,7 +434,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         moveScannerRegion,
         scaleScannerRegion,
         resetScannerRegions,
-        getScannerDiagnostics
+        getScannerDiagnostics,
+        setScannerPreviewEnabled
       }}
     >
       {children}

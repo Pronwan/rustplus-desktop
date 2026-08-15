@@ -8,7 +8,8 @@ import {
   IconButton,
   Paper,
   Tooltip,
-  LinearProgress
+  LinearProgress,
+  Popover
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
@@ -61,6 +62,13 @@ export const GeneInputs: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<'current' | 'saved'>('current');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [activeLineIdx, setActiveLineIdx] = useState<number | null>(null);
+  const [clearAnchorEl, setClearAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleClearConfirmed = () => {
+    setGeneInputText('');
+    setSourceSaplings([]);
+    setClearAnchorEl(null);
+  };
 
   // Compute used clone indices from the highlighted plan (Screenshot 1 & 3)
   const usedCloneIndices = useMemo(() => {
@@ -209,7 +217,7 @@ export const GeneInputs: React.FC = () => {
             <Button
               variant="contained"
               onClick={() => runSimulation()}
-              disabled={sourceSaplings.length < 2}
+              disabled={sourceSaplings.length < 2 || isScannerActive || isScannerInitializing}
               sx={{
                 flex: 1.1,
                 backgroundColor: '#00E5FF',
@@ -371,7 +379,14 @@ export const GeneInputs: React.FC = () => {
               variant="caption"
               sx={{ color: '#FFFFFF', fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
             >
-              {Math.min(100, Math.max(0, Math.round(progress.progressPercent)))}%
+              {(() => {
+                const p = Math.min(100, Math.max(0, progress.progressPercent || 0));
+                // Show fractional precision for tiny values so large searches don't look
+                // frozen at "0%" while they are actually making progress.
+                if (p > 0 && p < 1) return p.toFixed(2);
+                if (p < 10) return p.toFixed(1);
+                return Math.round(p);
+              })()}%
             </Typography>
           </Box>
 
@@ -411,6 +426,24 @@ export const GeneInputs: React.FC = () => {
                   }
                   return `${m.toString().padStart(2, '0')}m:${s.toString().padStart(2, '0')}s`;
                 })()}
+              </Typography>
+            )}
+          </Box>
+
+          {/* What the engine is currently doing + concrete combination counts */}
+          <Box sx={{ mt: 0.75, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="caption"
+              sx={{ color: '#B0B0B0', fontSize: '0.72rem', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            >
+              {progress.stage || 'Working…'}
+            </Typography>
+            {progress.totalCombinations > 0 && (
+              <Typography
+                variant="caption"
+                sx={{ color: '#666666', fontSize: '0.72rem', fontFamily: 'monospace', whiteSpace: 'nowrap' }}
+              >
+                {progress.processedCombinations.toLocaleString()} / {progress.totalCombinations.toLocaleString()}
               </Typography>
             )}
           </Box>
@@ -482,13 +515,87 @@ export const GeneInputs: React.FC = () => {
                 #
               </Typography>
 
-              <Button
-                size="small"
-                onClick={handleLoadSample}
-                sx={{ fontSize: '0.68rem', color: '#555555', p: 0, minWidth: 'auto', '&:hover': { color: '#00E5FF' } }}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Button
+                  size="small"
+                  onClick={(e) => setClearAnchorEl(e.currentTarget)}
+                  disabled={isCalculating || geneInputText.trim().length === 0}
+                  sx={{
+                    fontSize: '0.68rem',
+                    color: '#555555',
+                    p: 0,
+                    minWidth: 'auto',
+                    '&:hover': { color: '#E53935' },
+                    '&:disabled': { color: '#333333' }
+                  }}
+                >
+                  CLEAR
+                </Button>
+                <Button
+                  size="small"
+                  onClick={handleLoadSample}
+                  sx={{ fontSize: '0.68rem', color: '#555555', p: 0, minWidth: 'auto', '&:hover': { color: '#00E5FF' } }}
+                >
+                  SAMPLE
+                </Button>
+              </Box>
+
+              <Popover
+                open={Boolean(clearAnchorEl)}
+                anchorEl={clearAnchorEl}
+                onClose={() => setClearAnchorEl(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      backgroundColor: '#1A1A1A',
+                      border: '1px solid #333333',
+                      borderRadius: '4px',
+                      p: 1.5,
+                      mt: 0.5,
+                      maxWidth: 240
+                    }
+                  }
+                }}
               >
-                SAMPLE
-              </Button>
+                <Typography
+                  sx={{ color: '#E0E0E0', fontFamily: '"Roboto Mono", monospace', fontSize: '0.78rem', mb: 1.25 }}
+                >
+                  Clear all gene input? This removes every plant you've entered.
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                  <Button
+                    size="small"
+                    onClick={() => setClearAnchorEl(null)}
+                    sx={{
+                      color: '#888888',
+                      fontFamily: 'monospace',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      '&:hover': { color: '#FFFFFF' }
+                    }}
+                  >
+                    CANCEL
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={handleClearConfirmed}
+                    sx={{
+                      backgroundColor: '#E53935',
+                      color: '#FFFFFF',
+                      fontFamily: 'monospace',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      boxShadow: 'none',
+                      '&:hover': { backgroundColor: '#F44336', boxShadow: 'none' }
+                    }}
+                  >
+                    CLEAR
+                  </Button>
+                </Box>
+              </Popover>
             </Box>
 
             {/* Main Interactive Grid: Line Numbers + Single Textarea + Live Badges */}

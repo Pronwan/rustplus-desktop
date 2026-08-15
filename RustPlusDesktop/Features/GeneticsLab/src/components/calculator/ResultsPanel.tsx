@@ -91,6 +91,14 @@ export const ResultsPanel: React.FC = () => {
     topRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Selecting an alternative plan highlights that specific map at the top as the
+  // "Highlighted Result" instead of replacing the plan shown on the source card.
+  const handleHighlightMap = (group: GeneticsMapGroup, mapIndex: number) => {
+    setHighlightedGroup(group);
+    setHighlightedMapIndex(mapIndex);
+    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const handleClearHighlight = () => {
     setHighlightedGroup(null);
   };
@@ -322,6 +330,7 @@ export const ResultsPanel: React.FC = () => {
                 key={group.resultSaplingGeneString}
                 group={group}
                 onSelectGroup={() => handleSelectGroup(group)}
+                onHighlightMap={(mapIndex) => handleHighlightMap(group, mapIndex)}
               />
             ))}
           </Box>

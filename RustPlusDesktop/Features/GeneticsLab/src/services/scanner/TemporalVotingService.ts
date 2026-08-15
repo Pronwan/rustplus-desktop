@@ -50,7 +50,7 @@ export class TemporalVotingService {
           }
         }
 
-        if (bestCount >= 2 && bestChar) {
+        if (bestCount >= SCANNER_CONFIG.recognition.requiredMatches && bestChar) {
           votedChars.push(bestChar);
         } else {
           return null; // Position inconclusive

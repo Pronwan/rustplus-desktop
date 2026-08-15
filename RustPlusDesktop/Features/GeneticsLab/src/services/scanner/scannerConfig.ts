@@ -13,9 +13,8 @@ export const SCANNER_CONFIG = {
     paddingPx: 8,
     minGeneConfidence: 60, // Minimum confidence for each individual glyph
     minAverageConfidence: 75, // Minimum average confidence across all 6 glyphs
-    temporalSamples: 3,
-    requiredMatches: 2, // 2-of-3 temporal confirmation
-    regionWinnerMargin: 8, // Minimum confidence lead to pick winner if both regions trigger
+    temporalSamples: 4,
+    requiredMatches: 3, // 3-of-4 temporal confirmation (fails safe on torn frames instead of confirming a mis-read)
     activeRegionThreshold: 0.25 // Activity score cutoff to skip inactive background
   },
 

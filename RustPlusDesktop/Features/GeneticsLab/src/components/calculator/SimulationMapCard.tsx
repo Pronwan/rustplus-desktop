@@ -12,6 +12,9 @@ import { useApp } from '../../context/AppContext.tsx';
 interface SimulationMapCardProps {
   group: GeneticsMapGroup;
   onSelectGroup?: () => void;
+  // Highlight a specific plan (map index within this group) as the pinned result,
+  // without changing the plan shown on this source card.
+  onHighlightMap?: (mapIndex: number) => void;
 }
 
 const CENTER_PLANT_TOOLTIP = `Plant that takes the genes from Surrounding Plants during Crossbreeding stage. Plant it in the center and let it grow alone until it reaches about 50% progress in the Sapling stage. After that, plant the Surrounding Plants around it.
@@ -22,7 +25,7 @@ You have to plant the exact plant that the app tells you to, otherwise crossbree
 
 const SURROUNDING_PLANTS_TOOLTIP = `Plants that provide genes to the Center Plant during Crossbreeding stage. Plant them around the Center Plant after the Center Plant reaches Sapling stage.`;
 
-export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onSelectGroup }) => {
+export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onSelectGroup, onHighlightMap }) => {
   const { options, results } = useApp();
   const [selectedMapIndex, setSelectedMapIndex] = useState(0);
   const [isAlternativesModalOpen, setIsAlternativesModalOpen] = useState(false);
@@ -35,7 +38,9 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
   const [focusedParentSapling, setFocusedParentSapling] = useState<Sapling | null>(null);
   const [focusedParentMap, setFocusedParentMap] = useState<GeneticsMap | null>(null);
 
-  const bestMap = group.mapList[selectedMapIndex] || group.mapList[0];
+  // The source card always shows the Best Option. Choosing an alternative highlights it as
+  // a pinned result elsewhere rather than swapping what this card displays.
+  const bestMap = group.mapList[0];
   const targetSapling = new Sapling(group.resultSaplingGeneString, bestMap?.resultSapling.generationIndex);
   const score = targetSapling.getScore(options.geneScores);
   const chanceProd = bestMap ? bestMap.getChanceProduct() : 1;
@@ -57,6 +62,14 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
 
     setFocusedParentSapling(parent);
     setFocusedParentMap(parentMap);
+    setIsParentModalOpen(true);
+  };
+
+  // Drill into a GEN.x parent plan surfaced from inside a PlanDetailModal card
+  // (the map already resolved the parent's breeding plan for us).
+  const handleOpenParentFromPlan = (parentSapling: Sapling, parentMap?: GeneticsMap) => {
+    setFocusedParentSapling(parentSapling);
+    setFocusedParentMap(parentMap || null);
     setIsParentModalOpen(true);
   };
 
@@ -429,6 +442,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
         onClose={() => setIsParentModalOpen(false)}
         parentSapling={focusedParentSapling}
         parentMap={focusedParentMap}
+        onOpenParentPlan={handleOpenParentFromPlan}
       />
 
       {/* Modal 2: Alternative Options Comparison Overlay (Screenshot 5) */}
@@ -437,7 +451,13 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
         onClose={() => setIsAlternativesModalOpen(false)}
         mapGroup={group}
         selectedMapIndex={selectedMapIndex}
-        onSelectMapIndex={(idx) => setSelectedMapIndex(idx)}
+        onSelectMapIndex={(idx) => {
+          setSelectedMapIndex(idx);
+          // Highlight the chosen plan as the pinned "Highlighted Result" instead of
+          // overwriting the plan shown on this source card.
+          onHighlightMap?.(idx);
+        }}
+        onOpenParentPlan={handleOpenParentFromPlan}
       />
 
       {/* Modal 3: Interactive Planter Guide for this specific plan */}

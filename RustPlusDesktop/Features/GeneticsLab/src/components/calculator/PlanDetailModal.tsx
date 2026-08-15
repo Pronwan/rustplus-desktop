@@ -52,32 +52,57 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
       onClick={onSelect}
       variant="outlined"
       sx={{
-        backgroundColor: '#161616',
-        border: isHighlightedView || isSelected || isBest ? '1.5px dashed #FFFFFF' : '1px solid #282828',
+        backgroundColor: isSelected ? '#101a1c' : '#161616',
+        border: isSelected
+          ? '2px solid #00E5FF'
+          : isHighlightedView || isBest
+          ? '1.5px dashed #FFFFFF'
+          : '1px solid #282828',
         borderRadius: '4px',
         p: 2.5,
         width: 320,
         maxWidth: '100%',
         cursor: onSelect ? 'pointer' : 'default',
         transition: 'all 0.2s ease',
+        boxShadow: isSelected ? '0 0 0 1px rgba(0, 229, 255, 0.35), 0 8px 24px rgba(0, 229, 255, 0.12)' : 'none',
         '&:hover': onSelect ? { borderColor: '#00E5FF', transform: 'translateY(-2px)' } : {}
       }}
     >
       {title && (
-        <Typography
-          variant="caption"
-          sx={{
-            display: 'block',
-            textAlign: 'center',
-            fontWeight: 800,
-            color: isBest ? '#00E5FF' : '#E0E0E0',
-            fontFamily: '"Roboto Mono", monospace',
-            fontSize: '0.85rem',
-            mb: 1.5
-          }}
-        >
-          {title}
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1.5, gap: 0.5 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: 'block',
+              textAlign: 'center',
+              fontWeight: 800,
+              color: isSelected ? '#00E5FF' : isBest ? '#00E5FF' : '#E0E0E0',
+              fontFamily: '"Roboto Mono", monospace',
+              fontSize: '0.85rem'
+            }}
+          >
+            {title}
+          </Typography>
+          {isSelected && (
+            <Typography
+              variant="caption"
+              sx={{
+                px: 0.9,
+                py: 0.1,
+                borderRadius: '3px',
+                backgroundColor: 'rgba(0, 229, 255, 0.14)',
+                border: '1px solid rgba(0, 229, 255, 0.5)',
+                color: '#00E5FF',
+                fontWeight: 800,
+                fontFamily: 'monospace',
+                fontSize: '0.62rem',
+                letterSpacing: '0.08em'
+              }}
+            >
+              ✓ SELECTED
+            </Typography>
+          )}
+        </Box>
       )}
 
       {/* Target Result Genes */}
@@ -319,6 +344,8 @@ interface PlanDetailModalProps {
   mapGroup?: GeneticsMapGroup | null;
   selectedMapIndex?: number;
   onSelectMapIndex?: (idx: number) => void;
+  // Drill into a GEN.x parent's breeding plan from inside either view
+  onOpenParentPlan?: (parentSapling: Sapling, parentMap?: GeneticsMap) => void;
 }
 
 export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
@@ -328,7 +355,8 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
   parentMap,
   mapGroup,
   selectedMapIndex = 0,
-  onSelectMapIndex
+  onSelectMapIndex,
+  onOpenParentPlan
 }) => {
   if (!open) return null;
 
@@ -388,7 +416,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               When a map shows a result chance below 100%, plant the Surrounding Plants labeled <strong>1st</strong>, <strong>2nd</strong>, and so on before the others, in that order. Which planter slot you use does not matter-only the order you place them around the center.
             </Typography>
 
-            <SinglePlanCard map={parentMap} isBest={true} />
+            <SinglePlanCard map={parentMap} isBest={true} onOpenParentPlan={onOpenParentPlan} />
           </Box>
         )}
 
@@ -406,7 +434,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                 mb: 3
               }}
             >
-              Here you can see all the different ways you can crossbreed the same selected Sapling.
+              Here you can see all the different ways you can crossbreed the same selected Sapling. Click an option to highlight and use it, then click any <span style={{ color: '#FFA726', fontWeight: 700 }}>GEN.x</span> plant inside it to see how that generation is bred.
             </Typography>
 
             <Box
@@ -430,15 +458,35 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                     title={title}
                     isBest={isFirst}
                     isSelected={isSelected}
-                    onSelect={() => {
-                      if (onSelectMapIndex) {
-                        onSelectMapIndex(idx);
-                        onClose();
-                      }
-                    }}
+                    onSelect={() => onSelectMapIndex?.(idx)}
+                    onOpenParentPlan={onOpenParentPlan}
                   />
                 );
               })}
+            </Box>
+
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <Button
+                onClick={onClose}
+                sx={{
+                  color: '#00E5FF',
+                  fontFamily: 'monospace',
+                  fontSize: '0.8rem',
+                  fontWeight: 800,
+                  py: 0.6,
+                  px: 3,
+                  border: '1px solid rgba(0, 229, 255, 0.4)',
+                  borderRadius: '4px',
+                  backgroundColor: 'rgba(0, 229, 255, 0.06)',
+                  letterSpacing: '0.05em',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 229, 255, 0.14)',
+                    borderColor: '#00E5FF'
+                  }
+                }}
+              >
+                USE SELECTED PLAN
+              </Button>
             </Box>
           </Box>
         )}

@@ -28,7 +28,10 @@ export class PlantScanDeduplicator {
       return true;
     }
 
-    // Check if the plant genetics changed
+    // Any different genotype is accepted as a new plant. Duplicate mis-reads are prevented
+    // upstream by the 3-of-4 temporal voting (a transient wrong read never reaches enough
+    // matching frames to be emitted), so the deduplicator never suppresses a differing
+    // read here — that avoids ever dropping a genuinely different plant.
     if (candidateGeneString !== lastGenes) {
       this.lastAcceptedGenes[key] = candidateGeneString;
       this.lastAcceptedSignatures[key] = currentRoiSignature;
