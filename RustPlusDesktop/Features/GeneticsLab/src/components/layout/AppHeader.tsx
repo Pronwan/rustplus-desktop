@@ -20,6 +20,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import FolderIcon from '@mui/icons-material/Folder';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import InfoIcon from '@mui/icons-material/Info';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import { useApp, PLANT_TYPES } from '../../context/AppContext.tsx';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../context/ScannerContext.tsx';
@@ -177,13 +178,30 @@ export const AppHeader: React.FC = () => {
           </Tooltip>
 
           {/* About */}
-          <Tooltip title="About" arrow>
+          <Tooltip title="About Genetics Lab" arrow>
             <IconButton
               size="small"
               onClick={() => setIsAboutModalOpen(true)}
               sx={{ color: themeMode === 'dark' ? '#AAA' : '#64748B' }}
             >
               <InfoIcon sx={{ fontSize: 19 }} />
+            </IconButton>
+          </Tooltip>
+
+          {/* GitHub Repository */}
+          <Tooltip title="GitHub Repository & Contribute" arrow>
+            <IconButton
+              size="small"
+              component="a"
+              href="https://github.com/JawadYzbk/rust-genetics-lab"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: themeMode === 'dark' ? '#AAA' : '#64748B',
+                '&:hover': { color: '#00E5FF' }
+              }}
+            >
+              <GitHubIcon sx={{ fontSize: 19 }} />
             </IconButton>
           </Tooltip>
         </Box>

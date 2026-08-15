@@ -12,6 +12,7 @@ import {
   Paper
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import { useApp } from '../../context/AppContext.tsx';
 
 export const AboutModal: React.FC = () => {
@@ -75,7 +76,18 @@ export const AboutModal: React.FC = () => {
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2 }}>
+      <DialogActions sx={{ p: 2, justifyContent: 'space-between' }}>
+        <Button
+          variant="outlined"
+          component="a"
+          href="https://github.com/JawadYzbk/rust-genetics-lab"
+          target="_blank"
+          rel="noopener noreferrer"
+          startIcon={<GitHubIcon />}
+          sx={{ borderColor: '#444', color: '#DDD', fontSize: '0.8rem' }}
+        >
+          Contribute
+        </Button>
         <Button variant="contained" onClick={() => setIsAboutModalOpen(false)}>
           Close
         </Button>
