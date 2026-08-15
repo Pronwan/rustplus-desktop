@@ -1,0 +1,223 @@
+import React from 'react';
+import {
+  Box,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  LinearProgress,
+  Tooltip,
+  Badge,
+  IconButton
+} from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import BlockIcon from '@mui/icons-material/Block';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import TuneIcon from '@mui/icons-material/Tune';
+import { useCalculation, RouteSortOption } from '../../../context/CalculationContext.tsx';
+import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
+
+export const RouteToolbar: React.FC = () => {
+  const {
+    isCalculating,
+    progress,
+    runSimulation,
+    cancelSimulation,
+    skipCurrentGeneration,
+    options,
+    setCalculationPreset,
+    sortBy,
+    setSortBy,
+    inventoryFilterMode,
+    setInventoryFilterMode,
+    comparedGroups,
+    setIsCompareModalOpen,
+    filteredAndSortedRoutes
+  } = useCalculation();
+
+  const { sourceSaplings } = useWorkspace();
+
+  const isReady = sourceSaplings.length >= 2;
+
+  return (
+    <Box sx={{ mb: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+      {/* Top Row: Primary Calculate Button & Calculation Presets */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {isCalculating ? (
+            <>
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                onClick={cancelSimulation}
+                startIcon={<BlockIcon sx={{ fontSize: 16 }} />}
+                sx={{ fontWeight: 800, px: 2, py: 0.8 }}
+              >
+                CANCEL
+              </Button>
+              <Button
+                variant="outlined"
+                color="warning"
+                size="small"
+                onClick={skipCurrentGeneration}
+                startIcon={<SkipNextIcon sx={{ fontSize: 16 }} />}
+                sx={{ fontWeight: 800, py: 0.8 }}
+              >
+                SKIP GEN
+              </Button>
+            </>
+          ) : (
+            <Tooltip title={isReady ? 'Calculate optimal breeding routes (Ctrl+Enter)' : 'Add at least 2 clones to calculate'} arrow>
+              <span>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => runSimulation()}
+                  disabled={!isReady}
+                  startIcon={<PlayArrowIcon sx={{ fontSize: 18 }} />}
+                  sx={{
+                    fontWeight: 800,
+                    px: 3,
+                    py: 0.8,
+                    fontSize: '0.85rem',
+                    letterSpacing: '0.5px'
+                  }}
+                >
+                  CALCULATE ROUTES
+                </Button>
+              </span>
+            </Tooltip>
+          )}
+
+          {/* Calculation Presets */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 1 }}>
+            {(['fast', 'balanced', 'thorough'] as const).map((preset) => {
+              const isSelected = options.calculationPreset === preset;
+              return (
+                <Button
+                  key={preset}
+                  size="small"
+                  variant={isSelected ? 'contained' : 'outlined'}
+                  color={isSelected ? 'primary' : 'inherit'}
+                  disabled={isCalculating}
+                  onClick={() => setCalculationPreset(preset)}
+                  sx={{
+                    py: 0.4,
+                    px: 1.2,
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    borderColor: isSelected ? undefined : '#333',
+                    backgroundColor: isSelected ? undefined : '#181818'
+                  }}
+                >
+                  {preset.toUpperCase()}
+                </Button>
+              );
+            })}
+          </Box>
+        </Box>
+
+        {/* Right Controls: Compare & Count */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          {comparedGroups.length > 0 && (
+            <Badge badgeContent={comparedGroups.length} color="secondary">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setIsCompareModalOpen(true)}
+                startIcon={<CompareArrowsIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  borderColor: '#FF9800',
+                  color: '#FF9800',
+                  fontWeight: 800,
+                  fontSize: '0.75rem',
+                  backgroundColor: 'rgba(255, 152, 0, 0.08)'
+                }}
+              >
+                COMPARE ({comparedGroups.length})
+              </Button>
+            </Badge>
+          )}
+
+          <Typography variant="caption" sx={{ color: '#888888', fontFamily: 'monospace', fontWeight: 700 }}>
+            {filteredAndSortedRoutes.length} route{filteredAndSortedRoutes.length === 1 ? '' : 's'}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Progress Bar when Calculating */}
+      {isCalculating && progress && (
+        <Box sx={{ p: 1.5, backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '4px' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.75 }}>
+            <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+              {progress.stage || `Generation ${progress.currentGeneration} of ${progress.totalGenerations}`}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#AAAAAA', fontFamily: 'monospace' }}>
+              {progress.processedCombinations.toLocaleString()} combinations · {progress.progressPercent.toFixed(0)}%
+            </Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={Math.min(100, Math.max(0, progress.progressPercent))}
+            sx={{ height: 6, borderRadius: 3, backgroundColor: '#222' }}
+          />
+        </Box>
+      )}
+
+      {/* Second Row: Sorting & Inventory Filter Bar */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5, pt: 1, borderTop: '1px solid #202020' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="caption" sx={{ color: '#888', fontWeight: 700 }}>
+            Sort By:
+          </Typography>
+          <Select
+            size="small"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as RouteSortOption)}
+            sx={{
+              height: 28,
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              backgroundColor: '#161616',
+              color: '#FFFFFF',
+              '& .MuiSelect-select': { py: 0.5, px: 1.2 },
+              '& fieldset': { borderColor: '#2A2A2A' }
+            }}
+          >
+            <MenuItem value="recommended" sx={{ fontSize: '0.75rem' }}>Recommended Score</MenuItem>
+            <MenuItem value="probability" sx={{ fontSize: '0.75rem' }}>Highest Probability</MenuItem>
+            <MenuItem value="generations" sx={{ fontSize: '0.75rem' }}>Fewest Generations</MenuItem>
+            <MenuItem value="clones" sx={{ fontSize: '0.75rem' }}>Fewest Clones</MenuItem>
+            <MenuItem value="inventory" sx={{ fontSize: '0.75rem' }}>Best Inventory Match</MenuItem>
+          </Select>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="caption" sx={{ color: '#888', fontWeight: 700 }}>
+            Inventory Filter:
+          </Typography>
+          <Select
+            size="small"
+            value={inventoryFilterMode}
+            onChange={(e) => setInventoryFilterMode(e.target.value as any)}
+            sx={{
+              height: 28,
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              backgroundColor: '#161616',
+              color: '#00E5FF',
+              '& .MuiSelect-select': { py: 0.5, px: 1.2 },
+              '& fieldset': { borderColor: '#2A2A2A' }
+            }}
+          >
+            <MenuItem value="all" sx={{ fontSize: '0.75rem' }}>All Routes</MenuItem>
+            <MenuItem value="available-only" sx={{ fontSize: '0.75rem' }}>Available Clones Only</MenuItem>
+            <MenuItem value="partial-or-better" sx={{ fontSize: '0.75rem' }}>Partial / Available</MenuItem>
+          </Select>
+        </Box>
+      </Box>
+    </Box>
+  );
+};

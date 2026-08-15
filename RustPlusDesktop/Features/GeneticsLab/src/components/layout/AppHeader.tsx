@@ -2,199 +2,188 @@ import React from 'react';
 import {
   AppBar,
   Toolbar,
+  Box,
   Typography,
   Tabs,
   Tab,
-  Box,
-  IconButton,
-  Tooltip,
   Select,
   MenuItem,
-  Button
+  Button,
+  IconButton,
+  Tooltip
 } from '@mui/material';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import SettingsIcon from '@mui/icons-material/Settings';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import HelpIcon from '@mui/icons-material/Help';
+import FolderIcon from '@mui/icons-material/Folder';
+import KeyboardIcon from '@mui/icons-material/Keyboard';
+import InfoIcon from '@mui/icons-material/Info';
 import { useApp, PLANT_TYPES } from '../../context/AppContext.tsx';
+import { useWorkspace } from '../../context/WorkspaceContext.tsx';
+import { useScanner } from '../../context/ScannerContext.tsx';
 
 export const AppHeader: React.FC = () => {
   const {
     activeTab,
     setActiveTab,
-    selectedPlant,
-    setSelectedPlant,
-    isCalculating,
-    progress,
+    themeMode,
+    toggleTheme,
     setIsOptionsModalOpen,
-    setIsAboutModalOpen
+    setIsAboutModalOpen,
+    setIsKeyboardShortcutsOpen,
+    setIsProjectManagerOpen
   } = useApp();
+
+  const { selectedPlant, setSelectedPlant } = useWorkspace();
+  const { isScannerActive, startScanner, stopScanner } = useScanner();
 
   return (
     <AppBar
       position="static"
-      elevation={0}
       sx={{
-        backgroundColor: '#141414',
-        borderBottom: '1px solid #282828',
-        color: '#E0E0E0'
+        backgroundColor: themeMode === 'dark' ? '#0A0A0A' : '#FFFFFF',
+        color: themeMode === 'dark' ? '#FFFFFF' : '#1E293B',
+        borderBottom: '1px solid',
+        borderColor: themeMode === 'dark' ? '#222222' : '#E2E8F0',
+        boxShadow: 'none',
+        px: 1
       }}
     >
-      <Toolbar sx={{ minHeight: 56, px: { xs: 2, sm: 4 }, display: 'flex', justifyContent: 'space-between' }}>
-        {/* Brand & Plant Selector */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box
-            component="img"
-            src={`./img/items/${selectedPlant}.webp`}
-            alt={selectedPlant}
-            sx={{ width: 28, height: 28, objectFit: 'contain' }}
-          />
+      <Toolbar variant="dense" sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+        {/* Left: Brand Logo & Crop Selector */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              component="img"
+              src={`./img/items/${selectedPlant}.webp`}
+              alt={selectedPlant}
+              sx={{ width: 28, height: 28, borderRadius: '4px' }}
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 900,
+                fontFamily: '"Roboto Mono", monospace',
+                letterSpacing: '1px',
+                color: themeMode === 'dark' ? '#00E5FF' : '#0284C7',
+                fontSize: '0.95rem'
+              }}
+            >
+              RUST GENETICS LAB
+            </Typography>
+          </Box>
 
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
-              letterSpacing: '0.5px',
-              color: '#FFFFFF'
-            }}
-          >
-            Genetics Lab
-          </Typography>
-
+          {/* Crop Selector */}
           <Select
-            value={selectedPlant}
-            onChange={(e) => setSelectedPlant(e.target.value as string)}
             size="small"
-            variant="standard"
-            disableUnderline
+            value={selectedPlant}
+            onChange={(e) => setSelectedPlant(e.target.value)}
             sx={{
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              color: '#8E8E8E',
-              fontFamily: 'monospace',
-              '& .MuiSelect-select': { py: 0.25, px: 1 }
+              height: 30,
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              backgroundColor: themeMode === 'dark' ? '#181818' : '#F1F5F9',
+              color: themeMode === 'dark' ? '#FFFFFF' : '#1E293B',
+              textTransform: 'capitalize',
+              '& fieldset': { borderColor: themeMode === 'dark' ? '#333' : '#CBD5E1' }
             }}
           >
-            {PLANT_TYPES.map((plant: string) => (
-              <MenuItem key={plant} value={plant}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box
-                    component="img"
-                    src={`./img/items/${plant}.webp`}
-                    alt={plant}
-                    sx={{ width: 16, height: 16, objectFit: 'contain' }}
-                  />
-                  <Typography variant="body2" sx={{ textTransform: 'capitalize', fontSize: '0.8rem' }}>
-                    {plant.replace(/-/g, ' ')}
-                  </Typography>
-                </Box>
+            {PLANT_TYPES.map((plant) => (
+              <MenuItem key={plant} value={plant} sx={{ fontSize: '0.78rem', textTransform: 'capitalize' }}>
+                {plant.replace(/-/g, ' ')}
               </MenuItem>
             ))}
           </Select>
         </Box>
 
-        {/* Center Tabs */}
+        {/* Center: Main Navigation Tabs */}
         <Tabs
           value={activeTab}
           onChange={(_, val) => setActiveTab(val)}
-          textColor="inherit"
-          sx={{ minHeight: 48, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 3 } }}
+          sx={{
+            minHeight: 44,
+            '& .MuiTabs-indicator': { backgroundColor: themeMode === 'dark' ? '#00E5FF' : '#0284C7', height: 2.5 }
+          }}
         >
-          <Tab
-            value="calculator"
-            label="CALCULATOR"
-            sx={{
-              minHeight: 48,
-              px: 2.5,
-              fontWeight: 700,
-              letterSpacing: '1px',
-              fontSize: '0.85rem'
-            }}
-          />
-          <Tab
-            value="guide"
-            label="GUIDE"
-            sx={{
-              minHeight: 48,
-              px: 2.5,
-              fontWeight: 700,
-              letterSpacing: '1px',
-              fontSize: '0.85rem'
-            }}
-          />
-          <Tab
-            value="recipes"
-            label="RECIPES"
-            sx={{
-              minHeight: 48,
-              px: 2.5,
-              fontWeight: 700,
-              letterSpacing: '1px',
-              fontSize: '0.85rem'
-            }}
-          />
+          <Tab value="workspace" label="Breeding Workspace" sx={{ fontSize: '0.82rem', fontWeight: 800 }} />
+          <Tab value="planner" label="Farm Planner" sx={{ fontSize: '0.82rem', fontWeight: 800 }} />
+          <Tab value="recipes" label="Tea Recipes" sx={{ fontSize: '0.82rem', fontWeight: 800 }} />
+          <Tab value="guide" label="Genetics Guide" sx={{ fontSize: '0.82rem', fontWeight: 800 }} />
         </Tabs>
 
-        {/* Right Action Links & EST Progress Time */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {isCalculating && (
-            <Tooltip title="Estimated calculation time remaining" arrow>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.75,
-                  color: '#00E5FF',
-                  backgroundColor: 'rgba(0, 229, 255, 0.08)',
-                  border: '1px solid rgba(0, 229, 255, 0.3)',
-                  borderRadius: '4px',
-                  px: 1.25,
-                  py: 0.25,
-                  fontFamily: '"Roboto Mono", monospace',
-                  fontSize: '0.82rem',
-                  fontWeight: 700
-                }}
-              >
-                <span>⏱</span>
-                <span>
-                  {progress && progress.estimatedTimeRemainingSeconds !== null && progress.estimatedTimeRemainingSeconds !== undefined
-                    ? (() => {
-                        const totalSecs = Math.max(0, progress.estimatedTimeRemainingSeconds);
-                        const m = Math.floor(totalSecs / 60);
-                        const s = Math.floor(totalSecs % 60);
-                        if (m >= 60) {
-                          const h = Math.floor(m / 60);
-                          const rm = m % 60;
-                          return `${h}h:${rm.toString().padStart(2, '0')}m`;
-                        }
-                        return `${m}m:${s.toString().padStart(2, '0')}s`;
-                      })()
-                    : 'calculating...'}
-                </span>
-              </Box>
-            </Tooltip>
-          )}
-
+        {/* Right: Actions & Tools */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Scanner Button */}
           <Button
             size="small"
-            onClick={() => setIsAboutModalOpen(true)}
+            variant={isScannerActive ? 'contained' : 'outlined'}
+            color={isScannerActive ? 'error' : 'primary'}
+            onClick={() => (isScannerActive ? stopScanner() : startScanner())}
+            startIcon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />}
             sx={{
-              color: '#B0B0B0',
-              fontWeight: 700,
-              fontSize: '0.8rem',
-              letterSpacing: '0.5px',
-              '&:hover': { color: '#00E5FF', backgroundColor: 'transparent' }
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              py: 0.4,
+              px: 1.5,
+              borderColor: isScannerActive ? undefined : themeMode === 'dark' ? '#333' : '#CBD5E1'
             }}
           >
-            ABOUT
+            {isScannerActive ? 'STOP SCANNER' : 'SCAN FROM RUST'}
           </Button>
 
-          <Tooltip title="Options & Settings">
+          {/* Farm Projects */}
+          <Tooltip title="Farm Projects & Data (Save/Load/Export)" arrow>
+            <IconButton
+              size="small"
+              onClick={() => setIsProjectManagerOpen(true)}
+              sx={{ color: themeMode === 'dark' ? '#AAA' : '#64748B' }}
+            >
+              <FolderIcon sx={{ fontSize: 19 }} />
+            </IconButton>
+          </Tooltip>
+
+          {/* Theme Toggle */}
+          <Tooltip title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'} arrow>
+            <IconButton size="small" onClick={toggleTheme} sx={{ color: themeMode === 'dark' ? '#AAA' : '#64748B' }}>
+              {themeMode === 'dark' ? <LightModeIcon sx={{ fontSize: 19 }} /> : <DarkModeIcon sx={{ fontSize: 19 }} />}
+            </IconButton>
+          </Tooltip>
+
+          {/* Keyboard Shortcuts */}
+          <Tooltip title="Keyboard Shortcuts" arrow>
+            <IconButton
+              size="small"
+              onClick={() => setIsKeyboardShortcutsOpen(true)}
+              sx={{ color: themeMode === 'dark' ? '#AAA' : '#64748B' }}
+            >
+              <KeyboardIcon sx={{ fontSize: 19 }} />
+            </IconButton>
+          </Tooltip>
+
+          {/* Settings / Options */}
+          <Tooltip title="Options & Performance" arrow>
             <IconButton
               size="small"
               onClick={() => setIsOptionsModalOpen(true)}
-              sx={{ color: '#8E8E8E', '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: themeMode === 'dark' ? '#AAA' : '#64748B' }}
             >
-              <SettingsIcon sx={{ fontSize: 18 }} />
+              <SettingsIcon sx={{ fontSize: 19 }} />
+            </IconButton>
+          </Tooltip>
+
+          {/* About */}
+          <Tooltip title="About" arrow>
+            <IconButton
+              size="small"
+              onClick={() => setIsAboutModalOpen(true)}
+              sx={{ color: themeMode === 'dark' ? '#AAA' : '#64748B' }}
+            >
+              <InfoIcon sx={{ fontSize: 19 }} />
             </IconButton>
           </Tooltip>
         </Box>

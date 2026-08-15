@@ -56,20 +56,12 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
     e.stopPropagation();
     // Lookup parent's breeding map
     const parentGroup =
-      bestMap?.crossbreedingSaplingsVariants?.[pIdx] ||
+      (pIdx >= 0 ? bestMap?.crossbreedingSaplingsVariants?.[pIdx] : bestMap?.baseSaplingVariants) ||
       results.find((g) => g.resultSaplingGeneString === parent.toString());
     const parentMap = parentGroup?.mapList[0] || null;
 
     setFocusedParentSapling(parent);
     setFocusedParentMap(parentMap);
-    setIsParentModalOpen(true);
-  };
-
-  // Drill into a GEN.x parent plan surfaced from inside a PlanDetailModal card
-  // (the map already resolved the parent's breeding plan for us).
-  const handleOpenParentFromPlan = (parentSapling: Sapling, parentMap?: GeneticsMap) => {
-    setFocusedParentSapling(parentSapling);
-    setFocusedParentMap(parentMap || null);
     setIsParentModalOpen(true);
   };
 
@@ -442,7 +434,6 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
         onClose={() => setIsParentModalOpen(false)}
         parentSapling={focusedParentSapling}
         parentMap={focusedParentMap}
-        onOpenParentPlan={handleOpenParentFromPlan}
       />
 
       {/* Modal 2: Alternative Options Comparison Overlay (Screenshot 5) */}
@@ -457,7 +448,6 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
           // overwriting the plan shown on this source card.
           onHighlightMap?.(idx);
         }}
-        onOpenParentPlan={handleOpenParentFromPlan}
       />
 
       {/* Modal 3: Interactive Planter Guide for this specific plan */}

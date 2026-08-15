@@ -380,8 +380,6 @@ interface PlanDetailModalProps {
   mapGroup?: GeneticsMapGroup | null;
   selectedMapIndex?: number;
   onSelectMapIndex?: (idx: number) => void;
-  // Drill into a GEN.x parent's breeding plan from inside either view
-  onOpenParentPlan?: (parentSapling: Sapling, parentMap?: GeneticsMap) => void;
 }
 
 export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
@@ -391,21 +389,22 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
   parentMap,
   mapGroup,
   selectedMapIndex = 0,
-  onSelectMapIndex,
-  onOpenParentPlan
+  onSelectMapIndex
 }) => {
   const { results } = useApp();
   const [history, setHistory] = useState<PlanHistoryItem[]>([]);
 
   useEffect(() => {
     if (open) {
-      if (mapGroup && mapGroup.mapList.length > 1) {
-        setHistory([{ type: 'alternatives', mapGroup }]);
-      } else if (parentMap) {
-        setHistory([{ type: 'plan', sapling: parentSapling, map: parentMap }]);
-      } else {
-        setHistory([]);
-      }
+      setHistory((prev) => {
+        if (prev.length > 0) return prev;
+        if (mapGroup && mapGroup.mapList.length > 1) {
+          return [{ type: 'alternatives', mapGroup }];
+        } else if (parentMap) {
+          return [{ type: 'plan', sapling: parentSapling, map: parentMap }];
+        }
+        return [];
+      });
     } else {
       setHistory([]);
     }
@@ -420,6 +419,18 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
   // Handle drill down to a nested parent plan (e.g. Gen 3 -> Gen 2 -> Gen 1)
   const handleDrillDownParent = (sapling: Sapling, map?: GeneticsMap) => {
     let resolvedMap = map;
+    if (!resolvedMap && currentMap) {
+      if (currentMap.baseSapling?.toString() === sapling.toString() && currentMap.baseSaplingVariants?.mapList?.[0]) {
+        resolvedMap = currentMap.baseSaplingVariants.mapList[0];
+      } else if (currentMap.crossbreedingSaplingsVariants) {
+        for (const vg of currentMap.crossbreedingSaplingsVariants) {
+          if (vg.resultSaplingGeneString === sapling.toString() && vg.mapList?.[0]) {
+            resolvedMap = vg.mapList[0];
+            break;
+          }
+        }
+      }
+    }
     if (!resolvedMap) {
       const foundGroup = results.find((g) => g.resultSaplingGeneString === sapling.toString());
       resolvedMap = foundGroup?.mapList?.[0];
@@ -437,20 +448,26 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
     if (resolvedMap) {
       setHistory((prev) => [...prev, { type: 'plan', sapling, map: resolvedMap }]);
     }
-    onOpenParentPlan?.(sapling, resolvedMap);
   };
 
   const handleGoBack = () => {
     setHistory((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
   };
 
+  const handleJumpToHistory = (index: number) => {
+    setHistory((prev) => prev.slice(0, index + 1));
+  };
+
   // Label for previous step in history
   const previousEntry = history.length > 1 ? history[history.length - 2] : null;
+  const prevGenIndex =
+    previousEntry?.sapling?.generationIndex ||
+    previousEntry?.map?.resultSapling?.generationIndex;
   const backLabel =
     previousEntry?.type === 'alternatives'
-      ? 'Back to Alternative Plans'
-      : previousEntry?.sapling?.generationIndex
-      ? `Back to GEN.${previousEntry.sapling.generationIndex}`
+      ? 'Back to Alternatives'
+      : prevGenIndex
+      ? `Back to GEN.${prevGenIndex}`
       : 'Back';
 
   return (
@@ -473,53 +490,121 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
         }
       }}
     >
-      {/* Top Left Back Button when drilled down */}
-      {history.length > 1 && (
-        <Button
-          onClick={handleGoBack}
-          startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
-          size="small"
-          sx={{
-            position: 'absolute',
-            top: 16,
-            left: 16,
-            color: '#00E5FF',
-            fontFamily: 'monospace',
-            fontSize: '0.76rem',
-            fontWeight: 800,
-            textTransform: 'none',
-            letterSpacing: '0.3px',
-            backgroundColor: 'rgba(0, 229, 255, 0.06)',
-            border: '1px solid rgba(0, 229, 255, 0.25)',
-            borderRadius: '4px',
-            px: 1.2,
-            py: 0.3,
-            '&:hover': {
-              backgroundColor: 'rgba(0, 229, 255, 0.15)',
-              borderColor: '#00E5FF'
-            }
-          }}
-        >
-          {backLabel}
-        </Button>
-      )}
-
-      {/* Top Right Close Button */}
-      <IconButton
-        onClick={onClose}
-        size="small"
+      {/* Top Header Bar with Back Button, Breadcrumbs, and Close Button */}
+      <Box
         sx={{
-          position: 'absolute',
-          top: 16,
-          right: 16,
-          color: '#888888',
-          '&:hover': { color: '#FFFFFF' }
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          mb: 2,
+          minHeight: 36
         }}
       >
-        <CloseIcon sx={{ fontSize: 20 }} />
-      </IconButton>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {history.length > 1 && (
+            <Button
+              onClick={handleGoBack}
+              startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
+              size="small"
+              sx={{
+                color: '#00E5FF',
+                fontFamily: '"Roboto Mono", monospace',
+                fontSize: '0.76rem',
+                fontWeight: 800,
+                textTransform: 'none',
+                letterSpacing: '0.3px',
+                backgroundColor: 'rgba(0, 229, 255, 0.08)',
+                border: '1px solid rgba(0, 229, 255, 0.35)',
+                borderRadius: '4px',
+                px: 1.4,
+                py: 0.35,
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 229, 255, 0.2)',
+                  borderColor: '#00E5FF'
+                }
+              }}
+            >
+              {backLabel}
+            </Button>
+          )}
+        </Box>
 
-      <DialogContent sx={{ p: 0, pt: history.length > 1 ? 4 : 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* Breadcrumb Navigation Trail */}
+        {history.length > 1 && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexWrap: 'wrap' }}>
+            {history.map((item, idx) => {
+              const isCurrent = idx === history.length - 1;
+              const genIndex = item.sapling?.generationIndex || item.map?.resultSapling?.generationIndex || 1;
+              const label = item.type === 'alternatives' ? 'Alternatives' : `GEN.${genIndex}`;
+
+              return (
+                <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  {idx > 0 && (
+                    <Typography variant="caption" sx={{ color: '#555555', fontFamily: 'monospace' }}>
+                      /
+                    </Typography>
+                  )}
+                  {isCurrent ? (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: '#00E5FF',
+                        fontWeight: 800,
+                        fontFamily: 'monospace',
+                        fontSize: '0.75rem',
+                        px: 0.8,
+                        py: 0.2,
+                        backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                        borderRadius: '3px',
+                        border: '1px solid rgba(0, 229, 255, 0.35)'
+                      }}
+                    >
+                      {label}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      onClick={() => handleJumpToHistory(idx)}
+                      sx={{
+                        color: '#888888',
+                        fontWeight: 700,
+                        fontFamily: 'monospace',
+                        fontSize: '0.75rem',
+                        cursor: 'pointer',
+                        px: 0.6,
+                        py: 0.2,
+                        borderRadius: '3px',
+                        transition: 'all 0.15s ease',
+                        '&:hover': {
+                          color: '#FFFFFF',
+                          backgroundColor: 'rgba(255, 255, 255, 0.08)'
+                        }
+                      }}
+                    >
+                      {label}
+                    </Typography>
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
+        )}
+
+        <IconButton
+          onClick={onClose}
+          size="small"
+          sx={{
+            color: '#888888',
+            ml: 'auto',
+            '&:hover': { color: '#FFFFFF' }
+          }}
+        >
+          <CloseIcon sx={{ fontSize: 20 }} />
+        </IconButton>
+      </Box>
+
+      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* VIEW 1: PARENT GEN. X BREEDING PLAN */}
         {!isAlternativeView && currentMap && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>

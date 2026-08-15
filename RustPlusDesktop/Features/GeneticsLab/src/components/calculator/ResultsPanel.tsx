@@ -361,7 +361,6 @@ export const ResultsPanel: React.FC = () => {
         onClose={() => setParentModalOpen(false)}
         parentSapling={parentSapling}
         parentMap={parentMap}
-        onOpenParentPlan={handleOpenParentPlan}
       />
     </Box>
   );

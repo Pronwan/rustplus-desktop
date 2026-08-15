@@ -31,9 +31,6 @@ export interface ApplicationOptions {
   autoSaveInputSets: boolean;
   sounds: boolean;
   numberOfWorkers: number;
-  // Hard cap on how much of the machine's total CPU the calculation may use (10-100).
-  // 100 = no throttling. Below that, each worker duty-cycles (works a slice, sleeps a
-  // slice) so total usage stays near this ceiling even when more cores are free.
   cpuLimitPercent: number;
 }
 
@@ -77,8 +74,9 @@ export class CrossbreedingOrchestrator {
   private progressHistory: ProgressRecord[] = [];
 
   private startTime = 0;
+  private lastProgressSentTime = 0;
   private lastPartialResultSentTime = 0;
-  private partialResultIntervalMs = 750;
+  private partialResultIntervalMs = 1200;
 
   private currentGenerationIndex = 0;
   private maxGenerations = 1;
@@ -126,8 +124,9 @@ export class CrossbreedingOrchestrator {
     this.currentGenerationIndex = genIndex;
     this.currentGenGroupsMap.clear();
     this.progressHistory = [];
+    this.lastProgressSentTime = 0;
     this.lastPartialResultSentTime = Date.now();
-    this.partialResultIntervalMs = 750;
+    this.partialResultIntervalMs = 1200;
     this.sendStage(`Building combinations for generation ${genIndex + 1}…`);
 
     const generationInfo: GenerationInfo | undefined =
@@ -205,7 +204,6 @@ export class CrossbreedingOrchestrator {
             new URL('../workers/crossbreeding.worker.ts', import.meta.url),
             { type: 'module' }
           );
-
           this.activeWorkers.push(worker);
 
           worker.onmessage = (e: MessageEvent) => {
@@ -301,6 +299,8 @@ export class CrossbreedingOrchestrator {
     );
     const minPos = this.currentOptions.minCrossbreedingSaplingsNumber;
 
+    let lastYieldTime = performance.now();
+
     for (const chunk of workChunks) {
       if (this.isCancelled) return;
       const positions = [...chunk.startingPositions];
@@ -322,6 +322,12 @@ export class CrossbreedingOrchestrator {
 
         this.handleProgress(1);
 
+        // Cooperative asynchronous yield to keep UI silky smooth
+        if (performance.now() - lastYieldTime > 20) {
+          await new Promise(r => setTimeout(r, 0));
+          lastYieldTime = performance.now();
+        }
+
         if (c < chunk.combinationsToProcess - 1) {
           const ok = setNextPosition(
             positions,
@@ -339,9 +345,16 @@ export class CrossbreedingOrchestrator {
     this.finishGeneration();
   }
 
-  private handleProgress(processedDelta: number): void {
+  private handleProgress(processedDelta: number, force = false): void {
     this.processedCombinationsInGen += processedDelta;
     const now = Date.now();
+
+    // Throttle progress events to at most once every 120ms to avoid overwhelming React render cycle
+    if (!force && now - this.lastProgressSentTime < 120) {
+      return;
+    }
+    this.lastProgressSentTime = now;
+
     const elapsed = now - this.startTime;
     let estimatedTimeMs: number | null = null;
 
@@ -386,9 +399,7 @@ export class CrossbreedingOrchestrator {
     const now = Date.now();
     if (now - this.lastPartialResultSentTime >= this.partialResultIntervalMs) {
       this.lastPartialResultSentTime = now;
-      // Back off gently but keep a live cadence so the plan count/list stay near real-time
-      // instead of freezing on long searches.
-      this.partialResultIntervalMs = Math.min(this.partialResultIntervalMs + 400, 2000);
+      this.partialResultIntervalMs = Math.min(this.partialResultIntervalMs + 600, 3000);
 
       const currentSorted = this.getSortedResults();
       this.sendEvent({
@@ -413,7 +424,6 @@ export class CrossbreedingOrchestrator {
 
     const nextGenIndex = this.currentGenerationIndex + 1;
     if (nextGenIndex < this.maxGenerations) {
-      // Select best candidates for next generation
       this.sendStage(`Selecting best plants for generation ${nextGenIndex + 1}…`);
       const bestCandidates = getBestSaplingsForNextGeneration(
         Array.from(this.currentGenGroupsMap.values()),
@@ -424,7 +434,6 @@ export class CrossbreedingOrchestrator {
       );
 
       if (bestCandidates.length > 0) {
-        // Prepend best candidates to source saplings
         this.currentSourceSaplings = [...bestCandidates, ...this.originalSourceSaplings];
         this.startGeneration(nextGenIndex, bestCandidates.length);
         return;
@@ -460,36 +469,37 @@ export class CrossbreedingOrchestrator {
   }
 
   private finishSimulation(): void {
+    if (this.isCancelled) return;
+
+    this.terminateAllWorkers();
     this.isRunning = false;
-    const sorted = this.getSortedResults();
+
+    // Link tree relationships across generations
+    linkGenerationTree(
+      Array.from(this.allAccumulatedGroupsMap.values()),
+      this.allAccumulatedGroupsMap
+    );
+
+    const sortedResults = this.getSortedResults();
     const totalTimeMs = Date.now() - this.startTime;
 
     this.sendEvent({
       type: 'DONE',
-      mapGroups: sorted,
+      mapGroups: sortedResults,
       totalTimeMs
     });
   }
 
   public cancelSimulation(): void {
-    if (!this.isRunning && !this.activeWorkers.length) return;
     this.isCancelled = true;
     this.isRunning = false;
-    this.currentRunId = '';
     this.terminateAllWorkers();
-
-    const sorted = this.getSortedResults();
-    this.sendEvent({
-      type: 'DONE',
-      mapGroups: sorted,
-      totalTimeMs: Date.now() - this.startTime
-    });
   }
 
   private terminateAllWorkers(): void {
-    for (const worker of this.activeWorkers) {
+    for (const w of this.activeWorkers) {
       try {
-        worker.terminate();
+        w.terminate();
       } catch {
         // ignore
       }
@@ -498,9 +508,8 @@ export class CrossbreedingOrchestrator {
   }
 
   public getSortedResults(): GeneticsMapGroup[] {
-    const allGroups = Array.from(this.allAccumulatedGroupsMap.values()).map(g => g.clone());
-    linkGenerationTree(allGroups, this.allAccumulatedGroupsMap);
-    allGroups.sort(resultMapGroupsSortingFunction);
-    return allGroups;
+    const groups = Array.from(this.allAccumulatedGroupsMap.values());
+    groups.sort(resultMapGroupsSortingFunction);
+    return groups;
   }
 }

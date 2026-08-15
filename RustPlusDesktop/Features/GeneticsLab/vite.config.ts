@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   worker: {
-    format: 'es'
+    format: 'iife'
   },
   build: {
     outDir: 'dist',

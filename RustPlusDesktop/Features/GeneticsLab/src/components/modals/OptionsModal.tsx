@@ -4,52 +4,66 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Button,
+  Box,
   Typography,
   Tabs,
   Tab,
-  Box,
-  Slider,
-  Button,
-  Checkbox,
   Switch,
   FormControlLabel,
-  Divider
+  Slider,
+  IconButton,
+  Select,
+  MenuItem,
+  Divider,
+  Paper
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useApp } from '../../context/AppContext.tsx';
-import { ApplicationOptions } from '../../services/orchestrator.ts';
-import { DEFAULT_OPTIONS, StorageService, MAX_WORKER_COUNT, RECOMMENDED_WORKER_COUNT } from '../../services/storageService.ts';
-import { DEFAULT_GENE_SCORES } from '../../domain/genetics/Sapling.ts';
+import { useCalculation } from '../../context/CalculationContext.tsx';
+import { useNotification } from '../../context/NotificationContext.tsx';
+import {
+  DEFAULT_OPTIONS,
+  MAX_WORKER_COUNT,
+  RECOMMENDED_WORKER_COUNT,
+  ExtendedApplicationOptions
+} from '../../services/storageService.ts';
 
 export const OptionsModal: React.FC = () => {
-  const { isOptionsModalOpen, setIsOptionsModalOpen, options, updateOptions } = useApp();
+  const {
+    isOptionsModalOpen,
+    setIsOptionsModalOpen,
+    themeMode,
+    setThemeMode,
+    density,
+    setDensity
+  } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'crossbreeding' | 'ui'>('crossbreeding');
-  const [localOptions, setLocalOptions] = useState<ApplicationOptions>({ ...options });
+  const { options, updateOptions } = useCalculation();
+  const { notifySuccess, notifyInfo } = useNotification();
 
-  // Sync with options whenever modal opens
+  const [tab, setTab] = useState<'solver' | 'ui' | 'scanner'>('solver');
+  const [localOptions, setLocalOptions] = useState<ExtendedApplicationOptions>({ ...options });
+
   useEffect(() => {
     if (isOptionsModalOpen) {
-      setLocalOptions({ ...options, geneScores: { ...options.geneScores } });
+      setLocalOptions({ ...options });
     }
   }, [isOptionsModalOpen, options]);
 
-  const handleReset = () => {
-    const reset = {
-      ...DEFAULT_OPTIONS,
-      geneScores: { ...DEFAULT_GENE_SCORES }
-    };
-    setLocalOptions(reset);
-  };
-
-  const handleApplySet = () => {
+  const handleSave = () => {
     updateOptions(localOptions);
-  };
-
-  const handleSaveAndClose = () => {
-    updateOptions(localOptions);
-    StorageService.saveOptions(localOptions);
+    notifySuccess('Saved options');
     setIsOptionsModalOpen(false);
   };
+
+  const handleResetDefaults = () => {
+    setLocalOptions({ ...DEFAULT_OPTIONS });
+    notifyInfo('Reset options to recommended defaults');
+  };
+
+  if (!isOptionsModalOpen) return null;
 
   return (
     <Dialog
@@ -60,464 +74,210 @@ export const OptionsModal: React.FC = () => {
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#181818',
-            border: '1px solid #282828',
-            borderRadius: '4px',
-            color: '#E0E0E0',
-            maxHeight: '90vh'
+            backgroundColor: '#141414',
+            border: '1px solid #333333',
+            borderRadius: '6px',
+            color: '#E0E0E0'
           }
         }
       }}
     >
-      {/* Header */}
-      <DialogTitle
-        sx={{
-          m: 0,
-          p: '16px 24px 8px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}
-      >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 800,
-            fontFamily: '"Roboto Mono", monospace',
-            color: '#FFFFFF',
-            fontSize: '1.25rem'
-          }}
-        >
-          Options
+      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+          Settings & Performance
         </Typography>
-
-        <Button
-          size="small"
-          onClick={handleReset}
-          sx={{
-            color: '#00E5FF',
-            fontWeight: 700,
-            fontSize: '0.8rem',
-            fontFamily: 'monospace',
-            p: 0,
-            minWidth: 'auto',
-            '&:hover': { backgroundColor: 'transparent', textDecoration: 'underline' }
-          }}
-        >
-          RESET
-        </Button>
+        <IconButton size="small" onClick={() => setIsOptionsModalOpen(false)} sx={{ color: '#888' }}>
+          <CloseIcon sx={{ fontSize: 18 }} />
+        </IconButton>
       </DialogTitle>
 
-      {/* Tabs: CROSSBREEDING | UI & SOUNDS */}
-      <Box sx={{ px: 3, borderBottom: '1px solid #282828' }}>
+      <Box sx={{ borderBottom: '1px solid #282828', px: 3 }}>
         <Tabs
-          value={activeTab}
-          onChange={(_, val) => setActiveTab(val)}
-          textColor="inherit"
-          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 } }}
+          value={tab}
+          onChange={(_, val) => setTab(val)}
+          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
         >
-          <Tab
-            value="crossbreeding"
-            label="CROSSBREEDING"
-            sx={{
-              minHeight: 36,
-              py: 0.5,
-              px: 1.5,
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              color: activeTab === 'crossbreeding' ? '#00E5FF' : '#888888'
-            }}
-          />
-          <Tab
-            value="ui"
-            label="UI &amp; SOUNDS"
-            sx={{
-              minHeight: 36,
-              py: 0.5,
-              px: 1.5,
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              color: activeTab === 'ui' ? '#00E5FF' : '#888888'
-            }}
-          />
+          <Tab value="solver" label="Genetics Solver" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
+          <Tab value="ui" label="Theme & Display" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
+          <Tab value="scanner" label="Audio & Scanner" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
         </Tabs>
       </Box>
 
-      {/* Dialog Body */}
-      <DialogContent sx={{ p: '20px 24px', display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {/* TAB 1: CROSSBREEDING */}
-        {activeTab === 'crossbreeding' && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* 1. Number of Workers */}
+      <DialogContent sx={{ pt: 2.5, minHeight: 320, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+        {tab === 'solver' && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {/* Worker Threads Slider */}
             <Box>
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', mb: 1, fontFamily: 'monospace' }}>
-                Number of Workers
-              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                  Worker CPU Threads
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+                  {localOptions.numberOfWorkers} threads (Rec: {RECOMMENDED_WORKER_COUNT})
+                </Typography>
+              </Box>
               <Slider
-                value={Math.min(localOptions.numberOfWorkers || RECOMMENDED_WORKER_COUNT, Math.max(1, MAX_WORKER_COUNT))}
-                min={1}
-                max={Math.max(1, MAX_WORKER_COUNT)}
-                step={1}
-                marks={Array.from({ length: Math.max(1, MAX_WORKER_COUNT) }, (_, i) => {
-                  const v = i + 1;
-                  return { value: v, label: v === RECOMMENDED_WORKER_COUNT ? `${v} ★` : `${v}` };
-                })}
+                value={localOptions.numberOfWorkers}
                 onChange={(_, val) => setLocalOptions({ ...localOptions, numberOfWorkers: val as number })}
-                sx={{
-                  color: '#00E5FF',
-                  '& .MuiSlider-markLabel': {
-                    color: '#8E8E8E',
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem'
-                  }
-                }}
-              />
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 1.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Controls how many background workers are spawned during the calculation. A higher number finishes faster but uses more of your CPU. At least one core is always kept free so your PC and game stay responsive. The ★ marks the recommended value ({RECOMMENDED_WORKER_COUNT}); if your device struggles, lower it.
-              </Typography>
-            </Box>
-
-            {/* 1b. CPU Limit */}
-            <Box>
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', mb: 1, fontFamily: 'monospace' }}>
-                CPU Limit: {localOptions.cpuLimitPercent ?? 60}%
-              </Typography>
-              <Slider
-                value={localOptions.cpuLimitPercent ?? 60}
-                min={10}
-                max={100}
-                step={10}
-                marks={[
-                  { value: 10, label: '10%' },
-                  { value: 30, label: '30%' },
-                  { value: 50, label: '50%' },
-                  { value: 70, label: '70%' },
-                  { value: 100, label: 'Max' }
-                ]}
-                onChange={(_, val) => setLocalOptions({ ...localOptions, cpuLimitPercent: val as number })}
-                sx={{
-                  color: '#00E5FF',
-                  '& .MuiSlider-markLabel': {
-                    color: '#8E8E8E',
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem'
-                  }
-                }}
-              />
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 1.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Hard ceiling on how much of your total CPU the calculation may use. Workers duty-cycle (work, then briefly pause) to stay under this limit, so the calculation runs in the background instead of taking every free core. Lower = lighter but slower; <strong>Max</strong> removes the cap.
-              </Typography>
-            </Box>
-
-            {/* 2. Crossbreeding Plants Range */}
-            <Box>
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', mb: 1, fontFamily: 'monospace' }}>
-                Crossbreeding Plants Range
-              </Typography>
-              <Slider
-                value={[
-                  localOptions.minCrossbreedingSaplingsNumber ?? 2,
-                  localOptions.maxCrossbreedingSaplingsNumber ?? 5
-                ]}
-                min={2}
-                max={8}
+                min={1}
+                max={MAX_WORKER_COUNT}
                 step={1}
-                marks={[
-                  { value: 2, label: '2' },
-                  { value: 3, label: '3' },
-                  { value: 4, label: '4' },
-                  { value: 5, label: '5' },
-                  { value: 6, label: '6' },
-                  { value: 7, label: '7' },
-                  { value: 8, label: '8' }
-                ]}
-                onChange={(_, val) => {
-                  const arr = val as number[];
-                  setLocalOptions({
-                    ...localOptions,
-                    minCrossbreedingSaplingsNumber: arr[0],
-                    maxCrossbreedingSaplingsNumber: arr[1]
-                  });
-                }}
-                sx={{
-                  color: '#00E5FF',
-                  '& .MuiSlider-markLabel': {
-                    color: '#8E8E8E',
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem'
-                  }
-                }}
+                marks
+                valueLabelDisplay="auto"
               />
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 1.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Controls the range of Plants that can be used for a single Crossbreeding session. It seems that range from 2 to 5 is a sweet spot between effectiveness and calculation speed. It is possible that we are missing some results if this value is not set to the extremes, but it saves a lot of processing time.
-              </Typography>
             </Box>
 
-            {/* 3. Number of Generations */}
+            {/* Max Generations */}
             <Box>
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', mb: 1, fontFamily: 'monospace' }}>
-                Number of Generations
-              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                  Number of Breeding Generations
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+                  {localOptions.numberOfGenerations} Generation{localOptions.numberOfGenerations > 1 ? 's' : ''}
+                </Typography>
+              </Box>
               <Slider
-                value={localOptions.numberOfGenerations || 2}
+                value={localOptions.numberOfGenerations}
+                onChange={(_, val) => setLocalOptions({ ...localOptions, numberOfGenerations: val as number })}
                 min={1}
                 max={3}
                 step={1}
-                marks={[
-                  { value: 1, label: 'one' },
-                  { value: 2, label: 'two' },
-                  { value: 3, label: 'three' }
-                ]}
-                onChange={(_, val) => setLocalOptions({ ...localOptions, numberOfGenerations: val as number })}
-                sx={{
-                  color: '#00E5FF',
-                  '& .MuiSlider-markLabel': {
-                    color: '#8E8E8E',
-                    fontFamily: 'monospace',
-                    fontSize: '0.8rem'
-                  }
-                }}
+                marks
               />
             </Box>
 
-            {/* 4. Plants added to next Generation */}
+            {/* Max Crossbreeding Parents */}
             <Box>
-              <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
-                Plants added to next Generation
-              </Typography>
-              <input
-                type="number"
-                min={1}
-                max={100}
-                value={localOptions.numberOfSaplingsAddedBetweenGenerations ?? 20}
-                onChange={(e) =>
-                  setLocalOptions({
-                    ...localOptions,
-                    numberOfSaplingsAddedBetweenGenerations: parseInt(e.target.value, 10) || 20
-                  })
-                }
-                className="filter-underline-input"
-                style={{ textAlign: 'left', fontSize: '0.95rem' }}
-              />
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 0.75, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Number of best result Plants from current Generation that are added to calculation for next Generation.
-              </Typography>
-            </Box>
-
-            {/* 5. Check combinations with repetitions */}
-            <Box>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={localOptions.withRepetitions ?? true}
-                    onChange={(e) => setLocalOptions({ ...localOptions, withRepetitions: e.target.checked })}
-                    sx={{ color: '#00E5FF', '&.Mui-checked': { color: '#00E5FF' }, p: 0.5 }}
-                  />
-                }
-                label={
-                  <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
-                    Check combinations with repetitions
-                  </Typography>
-                }
-              />
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 0.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Additionally, checks combinations where one plant is used more than once in one crossbreeding session. Slightly increases processing time.
-              </Typography>
-            </Box>
-
-            {/* 6. Gene Scores */}
-            <Box>
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', mb: 1, fontFamily: 'monospace' }}>
-                Gene Scores
-              </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 2 }}>
-                {(['G', 'Y', 'H', 'X', 'W'] as const).map((gene) => (
-                  <Box key={gene}>
-                    <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
-                      {gene}
-                    </Typography>
-                    <input
-                      type="number"
-                      step={0.1}
-                      value={localOptions.geneScores[gene] ?? 0}
-                      onChange={(e) =>
-                        setLocalOptions({
-                          ...localOptions,
-                          geneScores: {
-                            ...localOptions.geneScores,
-                            [gene]: parseFloat(e.target.value) || 0
-                          }
-                        })
-                      }
-                      className="filter-underline-input"
-                    />
-                  </Box>
-                ))}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                  Max Surrounding Plants Per Planter
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+                  {localOptions.maxCrossbreedingSaplingsNumber} plants
+                </Typography>
               </Box>
-            </Box>
-
-            {/* 7. Manual Minimum Tracked Score */}
-            <Box>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={localOptions.modifyMinimumTrackedScoreManually ?? false}
-                    onChange={(e) =>
-                      setLocalOptions({
-                        ...localOptions,
-                        modifyMinimumTrackedScoreManually: e.target.checked
-                      })
-                    }
-                    sx={{ color: '#00E5FF', '&.Mui-checked': { color: '#00E5FF' }, p: 0.5 }}
-                  />
-                }
-                label={
-                  <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
-                    Manual Minimum Tracked Score
-                  </Typography>
-                }
+              <Slider
+                value={localOptions.maxCrossbreedingSaplingsNumber}
+                onChange={(_, val) => setLocalOptions({ ...localOptions, maxCrossbreedingSaplingsNumber: val as number })}
+                min={2}
+                max={4}
+                step={1}
+                marks
               />
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 0.5, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Setting a lower Minimum Tracked Score can increase memory consumption.
-              </Typography>
-
-              {localOptions.modifyMinimumTrackedScoreManually && (
-                <Box sx={{ mt: 1 }}>
-                  <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
-                    Minimum Tracked Score
-                  </Typography>
-                  <input
-                    type="number"
-                    value={localOptions.minimumTrackedScore ?? 4}
-                    onChange={(e) =>
-                      setLocalOptions({
-                        ...localOptions,
-                        minimumTrackedScore: parseFloat(e.target.value) || 4
-                      })
-                    }
-                    className="filter-underline-input"
-                    style={{ textAlign: 'left', width: 100 }}
-                  />
-                </Box>
-              )}
             </Box>
           </Box>
         )}
 
-        {/* TAB 2: UI & SOUNDS */}
-        {activeTab === 'ui' && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Switch to Light Mode */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Switch
-                checked={!localOptions.darkMode}
-                onChange={(e) => setLocalOptions({ ...localOptions, darkMode: !e.target.checked })}
-                sx={{
-                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#00E5FF' },
-                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#00E5FF' }
-                }}
-              />
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
-                Switch to Light Mode
-              </Typography>
-            </Box>
-
-            {/* Sounds */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Switch
-                checked={localOptions.sounds ?? false}
-                onChange={(e) => setLocalOptions({ ...localOptions, sounds: e.target.checked })}
-                sx={{
-                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#00E5FF' },
-                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#00E5FF' }
-                }}
-              />
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
-                Sounds: {localOptions.sounds ? 'On' : 'Off'}
-              </Typography>
-            </Box>
-
-            {/* Skip Scanning Guide */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Switch
-                checked={localOptions.skipScannerGuide ?? false}
-                onChange={(e) => setLocalOptions({ ...localOptions, skipScannerGuide: e.target.checked })}
-                sx={{
-                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#00E5FF' },
-                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#00E5FF' }
-                }}
-              />
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
-                Skip Scanning Guide: {localOptions.skipScannerGuide ? 'Yes' : 'No'}
-              </Typography>
-            </Box>
-
-            {/* Automatically save calculated input genes */}
-            <Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Switch
-                  checked={localOptions.autoSaveInputSets ?? true}
-                  onChange={(e) => setLocalOptions({ ...localOptions, autoSaveInputSets: e.target.checked })}
-                  sx={{
-                    '& .MuiSwitch-switchBase.Mui-checked': { color: '#00E5FF' },
-                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#00E5FF' }
-                  }}
-                />
-                <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
-                  Automatically save calculated input genes: {localOptions.autoSaveInputSets ? 'Yes' : 'No'}
+        {tab === 'ui' && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                  Theme Mode
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#888' }}>
+                  Industrial dark mode or bright day light theme
                 </Typography>
               </Box>
-              <Typography variant="caption" sx={{ color: '#888888', display: 'block', mt: 0.5, ml: 7, lineHeight: 1.4, fontFamily: 'monospace' }}>
-                Turning this off enables a save button that allows you to decide which genes you want to save.
-              </Typography>
+              <Select
+                size="small"
+                value={themeMode}
+                onChange={(e) => setThemeMode(e.target.value as any)}
+                sx={{ backgroundColor: '#1C1C1C', color: '#00E5FF' }}
+              >
+                <MenuItem value="dark">Dark Theme</MenuItem>
+                <MenuItem value="light">Light Theme</MenuItem>
+              </Select>
             </Box>
+
+            <Divider sx={{ borderColor: '#282828' }} />
+
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                  Display Density
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#888' }}>
+                  Adjust padding and spacing for high resolution displays
+                </Typography>
+              </Box>
+              <Select
+                size="small"
+                value={density}
+                onChange={(e) => setDensity(e.target.value as any)}
+                sx={{ backgroundColor: '#1C1C1C', color: '#00E5FF' }}
+              >
+                <MenuItem value="comfortable">Comfortable</MenuItem>
+                <MenuItem value="compact">Compact</MenuItem>
+              </Select>
+            </Box>
+          </Box>
+        )}
+
+        {tab === 'scanner' && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={localOptions.sounds}
+                  onChange={(e) => setLocalOptions({ ...localOptions, sounds: e.target.checked })}
+                  color="primary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    Sound Effects
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#888' }}>
+                    Play audio pop notification when clone is successfully scanned in Rust
+                  </Typography>
+                </Box>
+              }
+            />
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={localOptions.skipScannerGuide}
+                  onChange={(e) => setLocalOptions({ ...localOptions, skipScannerGuide: e.target.checked })}
+                  color="primary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    Skip Scanner Onboarding
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#888' }}>
+                    Don't show the initial guide modal when launching screen share
+                  </Typography>
+                </Box>
+              }
+            />
           </Box>
         )}
       </DialogContent>
 
-      {/* Dialog Footer Actions */}
-      <DialogActions sx={{ p: '12px 24px', display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}>
+      <DialogActions sx={{ px: 3, pb: 2, justifyContent: 'space-between' }}>
         <Button
-          onClick={() => setIsOptionsModalOpen(false)}
-          sx={{
-            color: '#8E8E8E',
-            fontWeight: 700,
-            fontFamily: 'monospace',
-            '&:hover': { color: '#FFFFFF', backgroundColor: 'transparent' }
-          }}
+          onClick={handleResetDefaults}
+          color="inherit"
+          size="small"
+          startIcon={<RestartAltIcon sx={{ fontSize: 16 }} />}
+          sx={{ color: '#888' }}
         >
-          CLOSE
+          Reset Defaults
         </Button>
-
-        <Button
-          variant="contained"
-          onClick={handleApplySet}
-          sx={{
-            backgroundColor: '#00E5FF',
-            color: '#000000',
-            fontWeight: 800,
-            fontFamily: 'monospace',
-            px: 2,
-            '&:hover': { backgroundColor: '#33EBFF' }
-          }}
-        >
-          SET
-        </Button>
-
-        <Button
-          variant="contained"
-          onClick={handleSaveAndClose}
-          sx={{
-            backgroundColor: '#00E5FF',
-            color: '#000000',
-            fontWeight: 800,
-            fontFamily: 'monospace',
-            px: 2,
-            '&:hover': { backgroundColor: '#33EBFF' }
-          }}
-        >
-          SAVE
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button onClick={() => setIsOptionsModalOpen(false)} color="inherit" size="small">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} variant="contained" size="small">
+            Save
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );
