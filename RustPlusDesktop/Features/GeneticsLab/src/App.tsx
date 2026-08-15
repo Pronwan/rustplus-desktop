@@ -1,3 +1,4 @@
+// Rust Genetics Lab - Standalone & Desktop Integration
 import React, { useMemo } from 'react';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { getMuiTheme } from './theme/muiTheme.ts';
