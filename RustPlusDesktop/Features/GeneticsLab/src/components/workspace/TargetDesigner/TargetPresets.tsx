@@ -18,21 +18,36 @@ export const TARGET_PRESETS: TargetPreset[] = [
   { key: 'super_yield_1g5y', label: '1G 5Y Giant Yield', target: 'GYYYYY', description: 'Massive single harvest' }
 ];
 
+// Canonical multiset key (sorted genes) so a preset stays "selected" no matter
+// what order its genes were shuffled into.
+const geneKey = (s: string) => s.toUpperCase().split('').sort().join('');
+
+// Randomize the gene order while keeping the exact same gene counts, e.g.
+// "GGGYYY" -> "GYYYGG". Presets describe *which* genes you want, not a fixed order.
+const shuffleGenes = (s: string): string => {
+  const chars = s.toUpperCase().split('');
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join('');
+};
+
 export const TargetPresets: React.FC = () => {
   const { targetConfig, setTargetPreset } = useWorkspace();
-  const currentTarget = targetConfig.targetGenetics.toUpperCase();
+  const currentKey = geneKey(targetConfig.targetGenetics);
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexWrap: 'wrap' }}>
       {TARGET_PRESETS.map((preset) => {
-        const isSelected = currentTarget === preset.target;
+        const isSelected = currentKey === geneKey(preset.target);
         return (
           <Chip
             key={preset.key}
             label={preset.label}
             size="small"
             clickable
-            onClick={() => setTargetPreset(preset.target, 'exact')}
+            onClick={() => setTargetPreset(shuffleGenes(preset.target), 'at-least')}
             sx={{
               fontWeight: isSelected ? 800 : 600,
               fontSize: '0.72rem',

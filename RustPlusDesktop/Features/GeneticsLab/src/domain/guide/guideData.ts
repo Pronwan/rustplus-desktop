@@ -17,18 +17,19 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     summary: 'Understand the plant lifecycle in Rust from seed to clone harvesting.',
     content: [
       'Every plant in Rust progresses through eight distinct stages:',
-      '1. **Seed / Cutting**: Initial planting phase.',
-      '2. **Seedling**: Early root formation.',
-      '3. **Sapling**: Genetics become visible on inspect. This is the stage right before crossbreeding triggers!',
-      '4. **Crossbreeding**: The critical phase where surrounding mature plants rewrite the genetics of the center plant.',
-      '5. **Vegetative**: Rapid plant mass growth.',
-      '6. **Fruiting**: Fruit / fiber begins developing on the plant.',
-      '7. **Ripe**: Maximum harvest yield. Ideal time to take cuttings (clones) to duplicate desired 6-green gene strings forever.',
-      '8. **Dying**: The plant slowly decays if left unharvested.'
+      '1. **Seed / Cutting**: Planting phase. A seed carries random genetics, while a cutting (clone) copies its parent exactly.',
+      '2. **Seedling**: A small sprout forms as health builds. Just keep it watered and lit.',
+      '3. **Sapling**: Genetics become visible on inspect and cloning unlocks. Take cuttings here to lock in a gene string before it can change.',
+      '4. **Crossbreed**: A short cross-pollination window where surrounding mature plants can rewrite the center plant\'s next-generation genetics.',
+      '5. **Mature**: Plant mass and shape are nearly final, and yield begins to build.',
+      '6. **Fruiting**: Fruit, cloth, or berries actively develop on the plant.',
+      '7. **Ripe**: Maximum harvest yield. Ideal time to harvest and to take cuttings that duplicate a desired 6-green gene string forever.',
+      '8. **Dying**: Left unharvested, the plant withers and its yield is lost, leaving only compost scraps.'
     ],
     keyPoints: [
-      'Take cuttings at the Ripe stage to duplicate exact god-clone genetics.',
-      'Crossbreeding only triggers when the center plant transitions into the Crossbreeding stage.'
+      'Clone (take cuttings) as early as the Sapling stage to preserve a plant\'s exact genetics before crossbreeding can alter it.',
+      'Harvest at the Ripe stage for maximum yield — letting a plant slip into Dying wastes the crop.',
+      'Crossbreeding only happens during the brief Crossbreed window and is driven by the genetics of the surrounding mature plants.'
     ]
   },
   {

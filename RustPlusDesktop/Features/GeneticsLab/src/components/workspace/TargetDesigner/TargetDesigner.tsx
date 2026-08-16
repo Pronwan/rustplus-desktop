@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
   Box,
@@ -7,7 +7,8 @@ import {
   MenuItem,
   Button,
   Menu,
-  Tooltip
+  Tooltip,
+  TextField
 } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import HelpIcon from '@mui/icons-material/Help';
@@ -31,6 +32,28 @@ export const TargetDesigner: React.FC = () => {
   const [activeSlotIdx, setActiveSlotIdx] = useState<number | null>(null);
   const [slotMenuAnchor, setSlotMenuAnchor] = useState<null | HTMLElement>(null);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+
+  // Editable text form of the target. Kept in sync with clicks/presets, but also
+  // lets the user just type a target string (e.g. "GGGYYY") instead of cycling.
+  const [targetInput, setTargetInput] = useState(targetConfig.targetGenetics);
+
+  useEffect(() => {
+    // Keep the box in sync with slot clicks / presets, but strip trailing
+    // wildcards so it doesn't fight the user mid-typing (show "G", not "G*****").
+    const stripped = targetConfig.targetGenetics.replace(/\*+$/, '');
+    setTargetInput(prev => (prev.replace(/\*+$/, '') === stripped ? prev : stripped));
+  }, [targetConfig.targetGenetics]);
+
+  const handleTargetInputChange = (raw: string) => {
+    // Keep only valid gene chars, map '?' to the wildcard '*', cap at 6 slots.
+    const sanitized = raw
+      .toUpperCase()
+      .replace(/\?/g, '*')
+      .replace(/[^GYHWX*]/g, '')
+      .slice(0, 6);
+    setTargetInput(sanitized);
+    setTargetConfig(prev => ({ ...prev, targetGenetics: sanitized.padEnd(6, '*') }));
+  };
 
   const handleSlotClick = (idx: number, e?: React.MouseEvent<HTMLElement>) => {
     setActiveSlotIdx(idx);
@@ -82,7 +105,7 @@ export const TargetDesigner: React.FC = () => {
             TARGET GENETICS
           </Typography>
 
-          <Tooltip title="Click any gene circle below to cycle through genes or choose custom targets." arrow>
+          <Tooltip title="Type a target string (e.g. GGGYYY) in the box below, or click any gene circle to cycle it. Use ? for 'any gene'." arrow>
             <HelpIcon sx={{ fontSize: 15, color: 'var(--gl-text-muted)', cursor: 'help' }} />
           </Tooltip>
         </Box>
@@ -146,8 +169,30 @@ export const TargetDesigner: React.FC = () => {
           />
         </Box>
 
+        {/* Direct text entry — type the target instead of clicking each slot */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+          <TextField
+            value={targetInput}
+            onChange={(e) => handleTargetInputChange(e.target.value)}
+            placeholder="GGGYYY"
+            spellCheck={false}
+            slotProps={{ htmlInput: { maxLength: 6, style: { textTransform: 'uppercase', letterSpacing: '0.35em', textAlign: 'center', fontWeight: 800 } } }}
+            sx={{
+              width: 150,
+              '& .MuiInputBase-root': {
+                height: 34,
+                backgroundColor: 'var(--gl-input-bg)',
+                color: 'var(--gl-text-primary)',
+                fontFamily: '"Roboto Mono", monospace',
+                fontSize: '0.9rem'
+              },
+              '& fieldset': { borderColor: 'var(--gl-surface-hover)' }
+            }}
+          />
+        </Box>
+
         <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.7rem' }}>
-          Click any gene to cycle [G → Y → H → W → X → ?]
+          Type a target above, or click any gene to cycle [G → Y → H → W → X → ?]
         </Typography>
       </Box>
 

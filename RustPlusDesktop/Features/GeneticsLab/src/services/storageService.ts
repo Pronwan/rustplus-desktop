@@ -383,7 +383,7 @@ export class StorageService {
     }
     return {
       targetGenetics: 'GGGYYY',
-      matchMode: 'exact'
+      matchMode: 'best-possible'
     };
   }
 

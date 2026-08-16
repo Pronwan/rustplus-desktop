@@ -107,25 +107,31 @@ export const RouteToolbar: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 1 }}>
             {(['fast', 'balanced', 'thorough'] as const).map((preset) => {
               const isSelected = options.calculationPreset === preset;
+              const tips: Record<typeof preset, string> = {
+                fast: 'Fast — 1 generation, up to 3 surrounding plants. Quickest results with the fewest breeding steps; may miss deeper multi-generation routes.',
+                balanced: 'Balanced — up to 2 generations and a wider search. A good trade-off between speed and finding higher-quality routes. Recommended default.',
+                thorough: 'Thorough — up to 3 generations, 4 surrounding plants and the widest search. Finds the best possible routes but takes the longest to calculate.'
+              };
               return (
-                <Button
-                  key={preset}
-                  size="small"
-                  variant={isSelected ? 'contained' : 'outlined'}
-                  color={isSelected ? 'primary' : 'inherit'}
-                  disabled={isCalculating}
-                  onClick={() => setCalculationPreset(preset)}
-                  sx={{
-                    py: 0.4,
-                    px: 1.2,
-                    fontSize: '0.72rem',
-                    fontWeight: 800,
-                    borderColor: isSelected ? undefined : 'var(--gl-surface-hover)',
-                    backgroundColor: isSelected ? undefined : 'var(--gl-panel-header-bg)'
-                  }}
-                >
-                  {preset.toUpperCase()}
-                </Button>
+                <Tooltip key={preset} title={tips[preset]} arrow>
+                  <Button
+                    size="small"
+                    variant={isSelected ? 'contained' : 'outlined'}
+                    color={isSelected ? 'primary' : 'inherit'}
+                    disabled={isCalculating}
+                    onClick={() => setCalculationPreset(preset)}
+                    sx={{
+                      py: 0.4,
+                      px: 1.2,
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      borderColor: isSelected ? undefined : 'var(--gl-surface-hover)',
+                      backgroundColor: isSelected ? undefined : 'var(--gl-panel-header-bg)'
+                    }}
+                  >
+                    {preset.toUpperCase()}
+                  </Button>
+                </Tooltip>
               );
             })}
           </Box>

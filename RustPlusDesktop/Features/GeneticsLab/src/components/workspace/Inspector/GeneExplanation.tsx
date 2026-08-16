@@ -3,12 +3,12 @@ import {
   Box,
   Typography,
   Paper,
-  Tabs,
-  Tab,
+  ButtonBase,
   LinearProgress
 } from '@mui/material';
 import { GeneticsMap } from '../../../domain/genetics/GeneticsMap.ts';
 import { GREEN_GENES, GREEN_GENE_WEIGHT, RED_GENE_WEIGHT } from '../../../domain/genetics/Gene.ts';
+import { HoverScrollRow } from '../../common/HoverScrollRow.tsx';
 
 interface GeneExplanationProps {
   map: GeneticsMap;
@@ -58,32 +58,38 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
         INSPECT GENE POSITION (1 - 6):
       </Typography>
 
-      {/* Slot Selector Tabs */}
-      <Tabs
-        value={selectedSlot}
-        onChange={(_, val) => setSelectedSlot(val)}
-        sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
-      >
+      {/* Slot Selector — scrolls horizontally with hover arrows when it overflows */}
+      <HoverScrollRow gap={0.5}>
         {[0, 1, 2, 3, 4, 5].map((slot) => {
           const resGene = map.resultSapling.genes[slot].type;
           const isGreen = GREEN_GENES.includes(resGene as any);
+          const isActive = selectedSlot === slot;
           return (
-            <Tab
+            <ButtonBase
               key={slot}
-              value={slot}
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'var(--gl-text-muted)' }}>#{slot + 1}</Typography>
-                  <Typography variant="caption" sx={{ fontWeight: 800, color: isGreen ? 'var(--gl-success)' : 'var(--gl-error)' }}>
-                    {resGene}
-                  </Typography>
-                </Box>
-              }
-              sx={{ minHeight: 32, py: 0.25, px: 1 }}
-            />
+              onClick={() => setSelectedSlot(slot)}
+              sx={{
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                py: 0.4,
+                px: 1,
+                borderRadius: '4px',
+                borderBottom: '2px solid',
+                borderColor: isActive ? 'var(--gl-primary)' : 'transparent',
+                backgroundColor: isActive ? 'rgba(0, 229, 255, 0.10)' : 'transparent',
+                '&:hover': { backgroundColor: 'var(--gl-surface)' }
+              }}
+            >
+              <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'var(--gl-text-muted)' }}>#{slot + 1}</Typography>
+              <Typography variant="caption" sx={{ fontWeight: 800, color: isGreen ? 'var(--gl-success)' : 'var(--gl-error)' }}>
+                {resGene}
+              </Typography>
+            </ButtonBase>
           );
         })}
-      </Tabs>
+      </HoverScrollRow>
 
       {/* Position Explanation Content */}
       <Paper variant="outlined" sx={{ p: 1.5, backgroundColor: 'var(--gl-panel-header-bg)', borderColor: 'var(--gl-border)', borderRadius: '4px' }}>

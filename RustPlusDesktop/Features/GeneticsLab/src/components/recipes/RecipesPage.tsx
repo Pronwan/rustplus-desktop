@@ -31,6 +31,34 @@ const recipeEngine = new RecipeEngine(RUST_RECIPES);
 
 const CATEGORIES = ['All', 'tea', 'pie', 'food', 'resource'] as const;
 
+/**
+ * Item icon framed in a Rust-style inventory slot. The dark slot keeps
+ * inherently dark item art (teas) legible in light mode instead of showing
+ * as a muddy blob on the light panel.
+ */
+const ItemIcon: React.FC<{ name: string; size: number }> = ({ name, size }) => (
+  <Box
+    sx={{
+      width: size + 8,
+      height: size + 8,
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'var(--gl-item-slot-bg)',
+      border: '1px solid var(--gl-item-slot-border)',
+      borderRadius: '4px'
+    }}
+  >
+    <Box
+      component="img"
+      src={`./img/items/${getItemImageSlug(name)}.webp`}
+      alt={name}
+      sx={{ width: size, height: size, objectFit: 'contain' }}
+    />
+  </Box>
+);
+
 export const RecipesPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<string>('All');
@@ -229,12 +257,7 @@ export const RecipesPage: React.FC = () => {
                       {/* Column 1: Item Name and Icon */}
                       <TableCell sx={{ borderColor: 'var(--gl-elevated-bg)', py: 1.2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                          <Box
-                            component="img"
-                            src={`./img/items/${getItemImageSlug(recipe.name)}.webp`}
-                            alt={recipe.name}
-                            sx={{ width: 28, height: 28, objectFit: 'contain' }}
-                          />
+                          <ItemIcon name={recipe.name} size={28} />
                           <Typography
                             variant="body2"
                             sx={{
@@ -256,12 +279,7 @@ export const RecipesPage: React.FC = () => {
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
                             {recipe.ingredients.map((ing, idx) => (
                               <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                <Box
-                                  component="img"
-                                  src={`./img/items/${getItemImageSlug(ing.item)}.webp`}
-                                  alt={ing.item}
-                                  sx={{ width: 24, height: 24, objectFit: 'contain' }}
-                                />
+                                <ItemIcon name={ing.item} size={24} />
                                 <Typography
                                   variant="caption"
                                   sx={{
@@ -282,12 +300,7 @@ export const RecipesPage: React.FC = () => {
 
                           {/* Output Product */}
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <Box
-                              component="img"
-                              src={`./img/items/${getItemImageSlug(recipe.output.item)}.webp`}
-                              alt={recipe.output.item}
-                              sx={{ width: 26, height: 26, objectFit: 'contain' }}
-                            />
+                            <ItemIcon name={recipe.output.item} size={26} />
                             <Typography
                               variant="caption"
                               sx={{
@@ -337,12 +350,7 @@ export const RecipesPage: React.FC = () => {
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
                                 {rawMaterials.map((raw, rIdx) => (
                                   <Box key={rIdx} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                                    <Box
-                                      component="img"
-                                      src={`./img/items/${getItemImageSlug(raw.item)}.webp`}
-                                      alt={raw.item}
-                                      sx={{ width: 20, height: 20, objectFit: 'contain' }}
-                                    />
+                                    <ItemIcon name={raw.item} size={20} />
                                     <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontFamily: 'monospace' }}>
                                       {raw.item}:
                                     </Typography>
@@ -392,12 +400,7 @@ export const RecipesPage: React.FC = () => {
               >
                 {/* Header */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                  <Box
-                    component="img"
-                    src={`./img/items/${getItemImageSlug(recipe.name)}.webp`}
-                    alt={recipe.name}
-                    sx={{ width: 32, height: 32, objectFit: 'contain' }}
-                  />
+                  <ItemIcon name={recipe.name} size={32} />
                   <Box>
                     <Typography
                       variant="subtitle2"
@@ -421,12 +424,7 @@ export const RecipesPage: React.FC = () => {
                   {recipe.ingredients.map((ing, idx) => (
                     <Box key={idx} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                        <Box
-                          component="img"
-                          src={`./img/items/${getItemImageSlug(ing.item)}.webp`}
-                          alt={ing.item}
-                          sx={{ width: 18, height: 18, objectFit: 'contain' }}
-                        />
+                        <ItemIcon name={ing.item} size={18} />
                         <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontFamily: 'monospace' }}>
                           {ing.item}
                         </Typography>
