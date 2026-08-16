@@ -49,7 +49,7 @@ export const WorkspaceLayout: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           '&::-webkit-scrollbar': { width: 5 },
-          '&::-webkit-scrollbar-thumb': { backgroundColor: '#2E2E2E', borderRadius: 3 }
+          '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface)', borderRadius: 3 }
         }}
       >
         <TargetDesigner />
@@ -68,11 +68,11 @@ export const WorkspaceLayout: React.FC = () => {
             <IconButton
               onClick={() => setIsInspectorManuallyClosed(false)}
               sx={{
-                backgroundColor: '#1E1E1E',
-                color: '#00E5FF',
-                border: '1px solid #00E5FF',
+                backgroundColor: 'var(--gl-elevated-bg)',
+                color: 'var(--gl-primary)',
+                border: '1px solid var(--gl-primary)',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-                '&:hover': { backgroundColor: '#282828' }
+                '&:hover': { backgroundColor: 'var(--gl-border)' }
               }}
             >
               <ViewSidebarIcon sx={{ fontSize: 20 }} />
@@ -89,14 +89,14 @@ export const WorkspaceLayout: React.FC = () => {
             paper: {
               sx: {
                 width: { xs: '100%', sm: 360 },
-                backgroundColor: '#121212',
+                backgroundColor: 'var(--gl-panel-bg)',
                 p: 1.5
               }
             }
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-            <IconButton size="small" onClick={() => setSelectedGroup(null)} sx={{ color: '#888' }}>
+            <IconButton size="small" onClick={() => setSelectedGroup(null)} sx={{ color: 'var(--gl-text-muted)' }}>
               <CloseIcon sx={{ fontSize: 18 }} />
             </IconButton>
           </Box>

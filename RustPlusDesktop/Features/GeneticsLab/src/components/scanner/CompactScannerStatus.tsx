@@ -27,8 +27,8 @@ export const CompactScannerStatus: React.FC = () => {
         right: 24,
         zIndex: 1300,
         p: 1.5,
-        backgroundColor: '#181818',
-        border: '1.5px solid #00E5FF',
+        backgroundColor: 'var(--gl-panel-header-bg)',
+        border: '1.5px solid var(--gl-primary)',
         borderRadius: '8px',
         boxShadow: '0 8px 32px rgba(0, 229, 255, 0.25)',
         display: 'flex',
@@ -38,25 +38,25 @@ export const CompactScannerStatus: React.FC = () => {
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         {isScannerInitializing ? (
-          <CircularProgress size={16} sx={{ color: '#00E5FF' }} />
+          <CircularProgress size={16} sx={{ color: 'var(--gl-primary)' }} />
         ) : (
-          <AutoAwesomeIcon sx={{ fontSize: 18, color: '#00E5FF', animation: 'pulse 2s infinite' }} />
+          <AutoAwesomeIcon sx={{ fontSize: 18, color: 'var(--gl-primary)', animation: 'pulse 2s infinite' }} />
         )}
 
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="caption" sx={{ fontWeight: 800, color: '#00E5FF', fontFamily: 'monospace', fontSize: '0.75rem' }}>
+          <Typography variant="caption" sx={{ fontWeight: 800, color: 'var(--gl-primary)', fontFamily: 'monospace', fontSize: '0.75rem' }}>
             {isScannerInitializing ? 'INITIALIZING OCR…' : 'LIVE SCANNER ACTIVE'}
           </Typography>
-          <Typography variant="caption" sx={{ color: '#888888', fontSize: '0.68rem' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.68rem' }}>
             Hover clone tooltips in Rust
           </Typography>
         </Box>
       </Box>
 
       {lastScannedGenes && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, borderLeft: '1px solid #333' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, borderLeft: '1px solid var(--gl-surface-hover)' }}>
           <GeneticsSequence genes={lastScannedGenes} size="small" />
-          <Typography variant="caption" sx={{ color: '#4CAF50', fontWeight: 800, fontFamily: 'monospace' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-success)', fontWeight: 800, fontFamily: 'monospace' }}>
             {lastConfidence}%
           </Typography>
         </Box>
@@ -67,7 +67,7 @@ export const CompactScannerStatus: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => setIsCalibrationModalOpen(true)}
-            sx={{ color: '#888888', '&:hover': { color: '#00E5FF' } }}
+            sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-primary)' } }}
           >
             <SettingsIcon sx={{ fontSize: 17 }} />
           </IconButton>

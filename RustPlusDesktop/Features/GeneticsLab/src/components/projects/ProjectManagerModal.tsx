@@ -78,28 +78,28 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#141414',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Farm Projects & Data Manager
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
 
-      <Box sx={{ borderBottom: '1px solid #282828', px: 3 }}>
+      <Box sx={{ borderBottom: '1px solid var(--gl-border)', px: 3 }}>
         <Tabs
           value={tab}
           onChange={(_, val) => setTab(val)}
-          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
+          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
         >
           <Tab value="saved" label={`Saved Farms (${projects.length})`} sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
           <Tab value="save_current" label="Save Current" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
@@ -111,7 +111,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
         {tab === 'saved' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             {projects.length === 0 ? (
-              <Typography variant="body2" sx={{ color: '#888', textAlign: 'center', py: 4 }}>
+              <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', textAlign: 'center', py: 4 }}>
                 No saved farm projects yet. Save your current setup to quickly switch between crops.
               </Typography>
             ) : (
@@ -121,8 +121,8 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
                   variant="outlined"
                   sx={{
                     p: 1.5,
-                    backgroundColor: '#1A1A1A',
-                    borderColor: '#282828',
+                    backgroundColor: 'var(--gl-input-bg)',
+                    borderColor: 'var(--gl-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between'
@@ -130,18 +130,18 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
                 >
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
                         {proj.name}
                       </Typography>
                       <Chip
                         size="small"
                         label={proj.cropType.replace(/-/g, ' ')}
-                        sx={{ height: 18, fontSize: '0.65rem', backgroundColor: '#252525', color: '#AAA' }}
+                        sx={{ height: 18, fontSize: '0.65rem', backgroundColor: 'var(--gl-surface)', color: 'var(--gl-text-secondary)' }}
                       />
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <GeneticsSequence genes={proj.targetGenetics} size="small" />
-                      <Typography variant="caption" sx={{ color: '#888' }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                         {proj.clones.length} Clones
                       </Typography>
                     </Box>
@@ -159,7 +159,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
                     >
                       Load
                     </Button>
-                    <IconButton size="small" onClick={() => deleteProject(proj.id)} sx={{ color: '#E53935' }}>
+                    <IconButton size="small" onClick={() => deleteProject(proj.id)} sx={{ color: 'var(--gl-error)' }}>
                       <DeleteIcon sx={{ fontSize: 16 }} />
                     </IconButton>
                   </Box>
@@ -171,7 +171,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
 
         {tab === 'save_current' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Typography variant="body2" sx={{ color: '#AAAAAA' }}>
+            <Typography variant="body2" sx={{ color: 'var(--gl-text-secondary)' }}>
               Save your current {clones.length} clones and target for {selectedPlant.replace(/-/g, ' ')}:
             </Typography>
 
@@ -199,7 +199,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
         {tab === 'import_export' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box>
-              <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
                 EXPORT CURRENT WORKSPACE
               </Typography>
               <Button
@@ -207,14 +207,14 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
                 size="small"
                 onClick={handleCopyJson}
                 startIcon={<ContentCopyIcon sx={{ fontSize: 15 }} />}
-                sx={{ borderColor: '#383838', color: '#FFF' }}
+                sx={{ borderColor: 'var(--gl-border-strong)', color: 'var(--gl-text-primary)' }}
               >
                 Copy Workspace JSON
               </Button>
             </Box>
 
             <Box>
-              <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
                 IMPORT WORKSPACE JSON
               </Typography>
               <TextField

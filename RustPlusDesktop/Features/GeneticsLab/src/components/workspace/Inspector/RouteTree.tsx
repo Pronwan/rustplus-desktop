@@ -20,8 +20,8 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
         sx={{
           p: 1.5,
           borderRadius: '5px',
-          backgroundColor: '#1C1C1C',
-          border: '1.5px solid #00E5FF',
+          backgroundColor: 'var(--gl-card-hover-bg)',
+          border: '1.5px solid var(--gl-primary)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -39,10 +39,10 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
               fontSize: '0.65rem',
               fontWeight: 800,
               backgroundColor: 'rgba(0, 229, 255, 0.15)',
-              color: '#00E5FF'
+              color: 'var(--gl-primary)'
             }}
           />
-          <Typography variant="caption" sx={{ color: '#4CAF50', fontWeight: 800, fontFamily: 'monospace' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-success)', fontWeight: 800, fontFamily: 'monospace' }}>
             {(map.getChanceProduct() * 100).toFixed(0)}% Chance
           </Typography>
         </Box>
@@ -50,7 +50,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
       </Paper>
 
       {/* Down Connector Line */}
-      <Box sx={{ width: '2px', height: '24px', backgroundColor: '#383838' }} />
+      <Box sx={{ width: '2px', height: '24px', backgroundColor: 'var(--gl-border-strong)' }} />
 
       {/* Crossbreeding Recipe Container */}
       <Paper
@@ -58,8 +58,8 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
         sx={{
           p: 2,
           borderRadius: '6px',
-          backgroundColor: '#161616',
-          border: '1px solid #282828',
+          backgroundColor: 'var(--gl-card-bg)',
+          border: '1px solid var(--gl-border)',
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -68,23 +68,23 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
       >
         {/* Center Plant Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="caption" sx={{ color: '#888', fontSize: '0.72rem', fontWeight: 700, mb: 0.5 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem', fontWeight: 700, mb: 0.5 }}>
             CENTER PLANT:
           </Typography>
 
           {map.baseSapling ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: '4px 8px', backgroundColor: '#202020', borderRadius: '4px', border: '1px solid #333' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: '4px 8px', backgroundColor: 'var(--gl-border-subtle)', borderRadius: '4px', border: '1px solid var(--gl-surface-hover)' }}>
               {map.baseSapling.generationIndex > 0 ? (
-                <Chip size="small" label={`GEN.${map.baseSapling.generationIndex}`} sx={{ height: 16, fontSize: '0.62rem', backgroundColor: '#FFA726', color: '#000', fontWeight: 800 }} />
+                <Chip size="small" label={`GEN.${map.baseSapling.generationIndex}`} sx={{ height: 16, fontSize: '0.62rem', backgroundColor: 'var(--gl-warning)', color: 'var(--gl-on-accent)', fontWeight: 800 }} />
               ) : (
-                <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, minWidth: 16 }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, minWidth: 16 }}>
                   #{map.baseSapling.index !== undefined ? map.baseSapling.index + 1 : '1'}
                 </Typography>
               )}
               <GeneticsSequence genes={map.baseSapling.toString()} size="small" showConnectors={true} />
             </Box>
           ) : (
-            <Typography variant="caption" sx={{ color: '#CCCCCC', fontWeight: 700, fontFamily: 'monospace' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontFamily: 'monospace' }}>
               Any extra plant of same type
             </Typography>
           )}
@@ -92,7 +92,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
 
         {/* Surrounding Plants Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-          <Typography variant="caption" sx={{ color: '#888', fontSize: '0.72rem', fontWeight: 700, mb: 0.75 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem', fontWeight: 700, mb: 0.75 }}>
             SURROUNDING PLANTS:
           </Typography>
 
@@ -112,16 +112,16 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
                     width: '100%',
                     maxWidth: 320,
                     p: '4px 8px',
-                    backgroundColor: '#1E1E1E',
-                    border: isParentGen ? '1px solid #FFA726' : '1px solid #282828',
+                    backgroundColor: 'var(--gl-elevated-bg)',
+                    border: isParentGen ? '1px solid var(--gl-warning)' : '1px solid var(--gl-border)',
                     borderRadius: '4px'
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {isParentGen ? (
-                      <Chip size="small" label={`GEN.${parent.generationIndex}`} sx={{ height: 16, fontSize: '0.62rem', backgroundColor: '#FFA726', color: '#000', fontWeight: 800 }} />
+                      <Chip size="small" label={`GEN.${parent.generationIndex}`} sx={{ height: 16, fontSize: '0.62rem', backgroundColor: 'var(--gl-warning)', color: 'var(--gl-on-accent)', fontWeight: 800 }} />
                     ) : (
-                      <Typography variant="caption" sx={{ color: '#666', fontWeight: 700, minWidth: 16 }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, minWidth: 16 }}>
                         #{parent.index !== undefined ? parent.index + 1 : pIdx + 1}
                       </Typography>
                     )}
@@ -130,12 +130,12 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map, onSelectSubPlan }) =>
 
                   {/* Priority Badge */}
                   {isFirst && (
-                    <Typography variant="caption" sx={{ color: '#4CAF50', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.72rem' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-success)', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.72rem' }}>
                       1st
                     </Typography>
                   )}
                   {isSecond && (
-                    <Typography variant="caption" sx={{ color: '#E53935', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.72rem' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-error)', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.72rem' }}>
                       2nd
                     </Typography>
                   )}

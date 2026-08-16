@@ -84,7 +84,7 @@ export const AboutModal: React.FC = () => {
           target="_blank"
           rel="noopener noreferrer"
           startIcon={<GitHubIcon />}
-          sx={{ borderColor: '#444', color: '#DDD', fontSize: '0.8rem' }}
+          sx={{ borderColor: 'var(--gl-text-faint)', color: 'var(--gl-text-secondary)', fontSize: '0.8rem' }}
         >
           Contribute
         </Button>

@@ -17,12 +17,12 @@ import { TargetPresets } from './TargetPresets.tsx';
 import { MissingCloneAdvisor } from './MissingCloneAdvisor.tsx';
 
 const GENE_OPTIONS = [
-  { value: 'G', label: 'G (Growth)', color: '#4CAF50' },
-  { value: 'Y', label: 'Y (Yield)', color: '#4CAF50' },
-  { value: 'H', label: 'H (Hardiness)', color: '#4CAF50' },
-  { value: 'W', label: 'W (Water)', color: '#E53935' },
-  { value: 'X', label: 'X (Empty)', color: '#E53935' },
-  { value: '*', label: '? (Any Gene)', color: '#888888' }
+  { value: 'G', label: 'G (Growth)', color: 'var(--gl-success)' },
+  { value: 'Y', label: 'Y (Yield)', color: 'var(--gl-success)' },
+  { value: 'H', label: 'H (Hardiness)', color: 'var(--gl-success)' },
+  { value: 'W', label: 'W (Water)', color: 'var(--gl-error)' },
+  { value: 'X', label: 'X (Empty)', color: 'var(--gl-error)' },
+  { value: '*', label: '? (Any Gene)', color: 'var(--gl-text-muted)' }
 ];
 
 export const TargetDesigner: React.FC = () => {
@@ -59,8 +59,8 @@ export const TargetDesigner: React.FC = () => {
     <Paper
       variant="outlined"
       sx={{
-        backgroundColor: '#141414',
-        borderColor: '#262626',
+        backgroundColor: 'var(--gl-panel-bg)',
+        borderColor: 'var(--gl-surface)',
         borderRadius: '6px',
         p: 2,
         mb: 2.5
@@ -75,7 +75,7 @@ export const TargetDesigner: React.FC = () => {
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.9rem',
-              color: '#FFFFFF',
+              color: 'var(--gl-text-primary)',
               letterSpacing: '0.5px'
             }}
           >
@@ -83,12 +83,12 @@ export const TargetDesigner: React.FC = () => {
           </Typography>
 
           <Tooltip title="Click any gene circle below to cycle through genes or choose custom targets." arrow>
-            <HelpIcon sx={{ fontSize: 15, color: '#666', cursor: 'help' }} />
+            <HelpIcon sx={{ fontSize: 15, color: 'var(--gl-text-muted)', cursor: 'help' }} />
           </Tooltip>
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="caption" sx={{ color: '#888', fontWeight: 700 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700 }}>
             Match Mode:
           </Typography>
           <Select
@@ -99,10 +99,10 @@ export const TargetDesigner: React.FC = () => {
               height: 28,
               fontSize: '0.75rem',
               fontWeight: 700,
-              backgroundColor: '#1C1C1C',
-              color: '#00E5FF',
+              backgroundColor: 'var(--gl-card-hover-bg)',
+              color: 'var(--gl-primary)',
               '& .MuiSelect-select': { py: 0.5, px: 1.2 },
-              '& fieldset': { borderColor: '#333' }
+              '& fieldset': { borderColor: 'var(--gl-surface-hover)' }
             }}
           >
             <MenuItem value="exact" sx={{ fontSize: '0.75rem' }}>Exact Target</MenuItem>
@@ -119,12 +119,12 @@ export const TargetDesigner: React.FC = () => {
               height: 28,
               fontSize: '0.72rem',
               fontWeight: 800,
-              color: '#FF9800',
+              color: 'var(--gl-warning)',
               borderColor: 'rgba(255, 152, 0, 0.4)',
               backgroundColor: 'rgba(255, 152, 0, 0.05)',
               '&:hover': {
                 backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                borderColor: '#FF9800'
+                borderColor: 'var(--gl-warning)'
               }
             }}
           >
@@ -146,14 +146,14 @@ export const TargetDesigner: React.FC = () => {
           />
         </Box>
 
-        <Typography variant="caption" sx={{ color: '#666666', fontSize: '0.7rem' }}>
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.7rem' }}>
           Click any gene to cycle [G → Y → H → W → X → ?]
         </Typography>
       </Box>
 
       {/* Target Presets Row */}
-      <Box sx={{ pt: 1, borderTop: '1px solid #222' }}>
-        <Typography variant="caption" sx={{ color: '#666', fontWeight: 800, display: 'block', mb: 0.75 }}>
+      <Box sx={{ pt: 1, borderTop: '1px solid var(--gl-surface)' }}>
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800, display: 'block', mb: 0.75 }}>
           QUICK PRESETS:
         </Typography>
         <TargetPresets />

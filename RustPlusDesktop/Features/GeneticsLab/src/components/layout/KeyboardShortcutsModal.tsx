@@ -32,19 +32,19 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ 
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#141414',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Keyboard Shortcuts
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
@@ -58,12 +58,12 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ 
               alignItems: 'center',
               justifyContent: 'space-between',
               p: 1.25,
-              backgroundColor: '#1C1C1C',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--gl-card-hover-bg)',
+              border: '1px solid var(--gl-border)',
               borderRadius: '4px'
             }}
           >
-            <Typography variant="body2" sx={{ color: '#E0E0E0' }}>
+            <Typography variant="body2" sx={{ color: 'var(--gl-text-primary)' }}>
               {item.description}
             </Typography>
 
@@ -74,13 +74,13 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ 
                   sx={{
                     px: 1,
                     py: 0.25,
-                    backgroundColor: '#282828',
-                    border: '1px solid #444444',
+                    backgroundColor: 'var(--gl-border)',
+                    border: '1px solid var(--gl-text-faint)',
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.75rem',
                     fontWeight: 800,
-                    color: '#00E5FF'
+                    color: 'var(--gl-primary)'
                   }}
                 >
                   {k}

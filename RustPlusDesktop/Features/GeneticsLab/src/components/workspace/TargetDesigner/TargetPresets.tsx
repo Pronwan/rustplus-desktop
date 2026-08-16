@@ -36,15 +36,15 @@ export const TargetPresets: React.FC = () => {
             sx={{
               fontWeight: isSelected ? 800 : 600,
               fontSize: '0.72rem',
-              backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.15)' : '#181818',
-              color: isSelected ? '#00E5FF' : '#AAAAAA',
+              backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.15)' : 'var(--gl-panel-header-bg)',
+              color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
               border: '1px solid',
-              borderColor: isSelected ? '#00E5FF' : '#2A2A2A',
+              borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-surface)',
               transition: 'all 0.15s ease',
               '&:hover': {
-                backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.2)' : '#222222',
-                borderColor: isSelected ? '#00E5FF' : '#444444',
-                color: '#FFFFFF'
+                backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.2)' : 'var(--gl-surface)',
+                borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-faint)',
+                color: 'var(--gl-text-primary)'
               }
             }}
           />

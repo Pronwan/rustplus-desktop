@@ -36,10 +36,10 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#161616',
-            border: '1px solid #282828',
+            backgroundColor: 'var(--gl-card-bg)',
+            border: '1px solid var(--gl-border)',
             borderRadius: '6px',
-            color: '#E0E0E0',
+            color: 'var(--gl-text-primary)',
             p: 2
           }
         }
@@ -60,7 +60,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
             sx={{
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
-              color: '#FFFFFF',
+              color: 'var(--gl-text-primary)',
               fontSize: '1.05rem'
             }}
           >
@@ -72,7 +72,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
         <IconButton
           onClick={onClose}
           size="small"
-          sx={{ color: '#888888', '&:hover': { color: '#FFFFFF' } }}
+          sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}
         >
           <CloseIcon sx={{ fontSize: 20 }} />
         </IconButton>

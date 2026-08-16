@@ -30,11 +30,11 @@ export const CloneValueAnalysis: React.FC<CloneValueAnalysisProps> = ({ open, on
   }, [clones, results, targetConfig.targetGenetics]);
 
   const ratingColors = {
-    CORE: { bg: 'rgba(0, 229, 255, 0.15)', text: '#00E5FF', border: 'rgba(0, 229, 255, 0.4)' },
-    HIGH: { bg: 'rgba(76, 175, 80, 0.15)', text: '#4CAF50', border: 'rgba(76, 175, 80, 0.4)' },
-    MEDIUM: { bg: 'rgba(255, 167, 38, 0.15)', text: '#FFA726', border: 'rgba(255, 167, 38, 0.4)' },
-    LOW: { bg: 'rgba(150, 150, 150, 0.12)', text: '#AAAAAA', border: 'rgba(150, 150, 150, 0.3)' },
-    REDUNDANT: { bg: 'rgba(229, 57, 53, 0.12)', text: '#E53935', border: 'rgba(229, 57, 53, 0.3)' }
+    CORE: { bg: 'rgba(0, 229, 255, 0.15)', text: 'var(--gl-primary)', border: 'rgba(0, 229, 255, 0.4)' },
+    HIGH: { bg: 'rgba(76, 175, 80, 0.15)', text: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.4)' },
+    MEDIUM: { bg: 'rgba(255, 167, 38, 0.15)', text: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.4)' },
+    LOW: { bg: 'rgba(150, 150, 150, 0.12)', text: 'var(--gl-text-secondary)', border: 'rgba(150, 150, 150, 0.3)' },
+    REDUNDANT: { bg: 'rgba(229, 57, 53, 0.12)', text: 'var(--gl-error)', border: 'rgba(229, 57, 53, 0.3)' }
   };
 
   return (
@@ -46,31 +46,31 @@ export const CloneValueAnalysis: React.FC<CloneValueAnalysisProps> = ({ open, on
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#161616',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-card-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
         <Box>
-          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
             Clone Value Analysis
           </Typography>
-          <Typography variant="caption" sx={{ color: '#888888' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
             Target: [{targetConfig.targetGenetics}] · {selectedPlant.replace(/-/g, ' ')}
           </Typography>
         </Box>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
 
       <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 1.5, maxHeight: 480 }}>
         {clones.length === 0 ? (
-          <Typography variant="body2" sx={{ color: '#888', textAlign: 'center', py: 4 }}>
+          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', textAlign: 'center', py: 4 }}>
             No clones in Clone Bank yet.
           </Typography>
         ) : (
@@ -85,8 +85,8 @@ export const CloneValueAnalysis: React.FC<CloneValueAnalysisProps> = ({ open, on
                 sx={{
                   p: 1.5,
                   borderRadius: '4px',
-                  backgroundColor: '#1C1C1C',
-                  border: '1px solid #282828',
+                  backgroundColor: 'var(--gl-card-hover-bg)',
+                  border: '1px solid var(--gl-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -95,20 +95,20 @@ export const CloneValueAnalysis: React.FC<CloneValueAnalysisProps> = ({ open, on
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="caption" sx={{ color: '#666', fontWeight: 800 }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800 }}>
                       #{idx + 1}
                     </Typography>
                     {clone.name && (
-                      <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 700 }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-text-primary)', fontWeight: 700 }}>
                         {clone.name}
                       </Typography>
                     )}
-                    <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800 }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800 }}>
                       ×{clone.quantity}
                     </Typography>
                   </Box>
                   <GeneticsSequence genes={clone.genetics} size="small" showConnectors={true} />
-                  <Typography variant="caption" sx={{ color: '#888888', fontSize: '0.72rem' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem' }}>
                     {utility?.description}
                   </Typography>
                 </Box>

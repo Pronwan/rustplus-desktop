@@ -113,8 +113,8 @@ export const CloneBank: React.FC = () => {
     <Paper
       variant="outlined"
       sx={{
-        backgroundColor: '#121212',
-        borderColor: '#242424',
+        backgroundColor: 'var(--gl-panel-bg)',
+        borderColor: 'var(--gl-surface)',
         borderRadius: '6px',
         p: 1.5,
         display: 'flex',
@@ -134,7 +134,7 @@ export const CloneBank: React.FC = () => {
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.85rem',
-              color: '#FFFFFF',
+              color: 'var(--gl-text-primary)',
               letterSpacing: '0.5px'
             }}
           >
@@ -144,7 +144,7 @@ export const CloneBank: React.FC = () => {
             variant="caption"
             sx={{
               backgroundColor: 'rgba(0, 229, 255, 0.12)',
-              color: '#00E5FF',
+              color: 'var(--gl-primary)',
               fontWeight: 800,
               px: 0.75,
               py: 0.15,
@@ -169,8 +169,8 @@ export const CloneBank: React.FC = () => {
               px: 0.75,
               fontSize: '0.68rem',
               fontWeight: 700,
-              borderColor: '#333',
-              color: '#AAA',
+              borderColor: 'var(--gl-surface-hover)',
+              color: 'var(--gl-text-secondary)',
               minWidth: 'auto'
             }}
           >
@@ -180,11 +180,11 @@ export const CloneBank: React.FC = () => {
       </Box>
 
       {/* Tabs: CURRENT | SAVED */}
-      <Box sx={{ borderBottom: '1px solid #242424', mb: 1 }}>
+      <Box sx={{ borderBottom: '1px solid var(--gl-surface)', mb: 1 }}>
         <Tabs
           value={activeTab}
           onChange={(_, val) => setActiveTab(val)}
-          sx={{ minHeight: 28, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 } }}
+          sx={{ minHeight: 28, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)', height: 2 } }}
         >
           <Tab
             value="current"
@@ -195,7 +195,7 @@ export const CloneBank: React.FC = () => {
               px: 1,
               fontSize: '0.72rem',
               fontWeight: 800,
-              color: activeTab === 'current' ? '#00E5FF' : '#888888'
+              color: activeTab === 'current' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
             }}
           />
           <Tab
@@ -207,7 +207,7 @@ export const CloneBank: React.FC = () => {
               px: 1,
               fontSize: '0.72rem',
               fontWeight: 800,
-              color: activeTab === 'saved' ? '#00E5FF' : '#888888'
+              color: activeTab === 'saved' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
             }}
           />
         </Tabs>
@@ -221,7 +221,7 @@ export const CloneBank: React.FC = () => {
             <Typography
               variant="caption"
               sx={{
-                color: '#666666',
+                color: 'var(--gl-text-muted)',
                 fontFamily: '"Roboto Mono", monospace',
                 fontSize: '0.72rem',
                 fontWeight: 700,
@@ -238,12 +238,12 @@ export const CloneBank: React.FC = () => {
                 disabled={isCalculating || localText.trim().length === 0}
                 sx={{
                   fontSize: '0.65rem',
-                  color: '#666666',
+                  color: 'var(--gl-text-muted)',
                   p: 0,
                   minWidth: 'auto',
                   fontWeight: 700,
-                  '&:hover': { color: '#E53935' },
-                  '&:disabled': { color: '#333333' }
+                  '&:hover': { color: 'var(--gl-error)' },
+                  '&:disabled': { color: 'var(--gl-surface-hover)' }
                 }}
               >
                 CLEAR
@@ -255,11 +255,11 @@ export const CloneBank: React.FC = () => {
                 disabled={isCalculating}
                 sx={{
                   fontSize: '0.65rem',
-                  color: '#666666',
+                  color: 'var(--gl-text-muted)',
                   p: 0,
                   minWidth: 'auto',
                   fontWeight: 700,
-                  '&:hover': { color: '#00E5FF' }
+                  '&:hover': { color: 'var(--gl-primary)' }
                 }}
               >
                 SAMPLE
@@ -271,12 +271,12 @@ export const CloneBank: React.FC = () => {
                 disabled={sourceSaplings.length === 0}
                 sx={{
                   fontSize: '0.65rem',
-                  color: '#666666',
+                  color: 'var(--gl-text-muted)',
                   p: 0,
                   minWidth: 'auto',
                   fontWeight: 700,
-                  '&:hover': { color: '#4CAF50' },
-                  '&:disabled': { color: '#333333' }
+                  '&:hover': { color: 'var(--gl-success)' },
+                  '&:disabled': { color: 'var(--gl-surface-hover)' }
                 }}
               >
                 SAVE
@@ -293,8 +293,8 @@ export const CloneBank: React.FC = () => {
               slotProps={{
                 paper: {
                   sx: {
-                    backgroundColor: '#1C1C1C',
-                    border: '1px solid #333333',
+                    backgroundColor: 'var(--gl-card-hover-bg)',
+                    border: '1px solid var(--gl-surface-hover)',
                     borderRadius: '4px',
                     p: 1.5,
                     mt: 0.5,
@@ -303,11 +303,11 @@ export const CloneBank: React.FC = () => {
                 }
               }}
             >
-              <Typography sx={{ color: '#E0E0E0', fontSize: '0.75rem', mb: 1.25 }}>
+              <Typography sx={{ color: 'var(--gl-text-primary)', fontSize: '0.75rem', mb: 1.25 }}>
                 Clear all manual gene inputs?
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button size="small" onClick={() => setClearAnchorEl(null)} sx={{ color: '#888', fontSize: '0.7rem' }}>
+                <Button size="small" onClick={() => setClearAnchorEl(null)} sx={{ color: 'var(--gl-text-muted)', fontSize: '0.7rem' }}>
                   Cancel
                 </Button>
                 <Button
@@ -328,15 +328,15 @@ export const CloneBank: React.FC = () => {
             variant="outlined"
             sx={{
               flex: 1,
-              backgroundColor: '#0E0E0E',
-              borderColor: '#202020',
+              backgroundColor: 'var(--gl-app-bg)',
+              borderColor: 'var(--gl-border-subtle)',
               borderRadius: '4px',
               p: '6px 8px',
               overflowY: 'auto',
               overflowX: 'hidden',
               position: 'relative',
               '&::-webkit-scrollbar': { width: 5 },
-              '&::-webkit-scrollbar-thumb': { backgroundColor: '#333', borderRadius: 3 }
+              '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface-hover)', borderRadius: 3 }
             }}
           >
             <Box sx={{ position: 'relative', display: 'flex', alignItems: 'flex-start', minHeight: displayRowCount * ROW_HEIGHT }}>
@@ -363,7 +363,7 @@ export const CloneBank: React.FC = () => {
                           ? 'rgba(0, 229, 255, 0.04)'
                           : 'transparent',
                         borderBottom: isUsedInPlan
-                          ? '1.5px solid #FF9800'
+                          ? '1.5px solid var(--gl-warning)'
                           : isActiveCursor
                           ? '1px solid rgba(0, 229, 255, 0.25)'
                           : '1px solid transparent',
@@ -376,7 +376,7 @@ export const CloneBank: React.FC = () => {
                         <Typography
                           variant="caption"
                           sx={{
-                            color: isUsedInPlan ? '#FFA726' : '#555555',
+                            color: isUsedInPlan ? 'var(--gl-warning)' : 'var(--gl-text-faint)',
                             fontFamily: '"Roboto Mono", monospace',
                             fontSize: '0.74rem',
                             fontWeight: isUsedInPlan ? 800 : 500,
@@ -390,7 +390,7 @@ export const CloneBank: React.FC = () => {
                           <Typography
                             variant="caption"
                             sx={{
-                              color: '#FF9800',
+                              color: 'var(--gl-warning)',
                               fontSize: '0.55rem',
                               fontWeight: 800,
                               fontFamily: 'monospace'
@@ -410,7 +410,7 @@ export const CloneBank: React.FC = () => {
                           const char = chars[slotIdx];
                           const hasGene = !!char;
                           const isGreen = hasGene ? (GREEN_GENES as readonly string[]).includes(char) : false;
-                          const bgColor = !hasGene ? '#181818' : isGreen ? '#4A7C17' : '#8A2E22';
+                          const bgColor = !hasGene ? 'var(--gl-panel-header-bg)' : isGreen ? '#4A7C17' : '#8A2E22';
 
                           return (
                             <Box
@@ -429,7 +429,7 @@ export const CloneBank: React.FC = () => {
                                 fontFamily: '"Roboto Mono", "Consolas", monospace',
                                 userSelect: 'none',
                                 lineHeight: 1,
-                                border: !hasGene ? '1px solid #222222' : 'none'
+                                border: !hasGene ? '1px solid var(--gl-surface)' : 'none'
                               }}
                             >
                               {char || ''}
@@ -462,7 +462,7 @@ export const CloneBank: React.FC = () => {
                   backgroundColor: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  color: '#FFFFFF',
+                  color: 'var(--gl-text-primary)',
                   fontFamily: '"Roboto Mono", "Consolas", monospace',
                   fontWeight: 700,
                   fontSize: '0.82rem',
@@ -473,7 +473,7 @@ export const CloneBank: React.FC = () => {
                   whiteSpace: 'pre',
                   padding: 0,
                   margin: 0,
-                  caretColor: '#00E5FF',
+                  caretColor: 'var(--gl-primary)',
                   opacity: isCalculating ? 0.6 : 1,
                   cursor: isCalculating ? 'not-allowed' : 'text'
                 }}
@@ -481,7 +481,7 @@ export const CloneBank: React.FC = () => {
             </Box>
           </Paper>
 
-          <Typography variant="caption" sx={{ color: '#555', fontSize: '0.65rem', mt: 0.75, display: 'block', textAlign: 'center' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.65rem', mt: 0.75, display: 'block', textAlign: 'center' }}>
             Type or paste 6-gene lines. Auto-saved on calculate.
           </Typography>
         </Box>
@@ -492,7 +492,7 @@ export const CloneBank: React.FC = () => {
         <Box sx={{ flex: 1, overflowY: 'auto' }}>
           {savedGeneSets.length === 0 ? (
             <Box sx={{ py: 4, textAlign: 'center' }}>
-              <Typography variant="caption" sx={{ color: '#666666', fontFamily: 'monospace' }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace' }}>
                 No saved plant sets yet.
               </Typography>
             </Box>
@@ -515,14 +515,14 @@ export const CloneBank: React.FC = () => {
                       justifyContent: 'space-between',
                       py: '5px',
                       px: '8px',
-                      backgroundColor: '#161616',
-                      border: '1px solid #242424',
+                      backgroundColor: 'var(--gl-card-bg)',
+                      border: '1px solid var(--gl-surface)',
                       borderRadius: '4px',
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
                       '&:hover': {
-                        backgroundColor: '#202020',
-                        borderColor: '#00E5FF'
+                        backgroundColor: 'var(--gl-border-subtle)',
+                        borderColor: 'var(--gl-primary)'
                       }
                     }}
                   >
@@ -542,7 +542,7 @@ export const CloneBank: React.FC = () => {
                         variant="caption"
                         sx={{
                           fontWeight: 800,
-                          color: '#FFFFFF',
+                          color: 'var(--gl-text-primary)',
                           fontFamily: 'monospace',
                           fontSize: '0.72rem'
                         }}
@@ -555,7 +555,7 @@ export const CloneBank: React.FC = () => {
                     <Typography
                       variant="caption"
                       sx={{
-                        color: '#777777',
+                        color: 'var(--gl-text-muted)',
                         fontSize: '0.68rem',
                         fontFamily: 'monospace'
                       }}
@@ -571,9 +571,9 @@ export const CloneBank: React.FC = () => {
                         deleteSavedGeneSet(set.timestamp);
                       }}
                       sx={{
-                        color: '#666',
+                        color: 'var(--gl-text-muted)',
                         p: 0.2,
-                        '&:hover': { color: '#E53935' }
+                        '&:hover': { color: 'var(--gl-error)' }
                       }}
                     >
                       <CloseIcon sx={{ fontSize: 15 }} />

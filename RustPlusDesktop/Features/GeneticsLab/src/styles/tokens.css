@@ -69,6 +69,38 @@
   --color-card-highlight: #ffffff;
   --color-card-highlight-glow: rgba(255, 255, 255, 0.25);
   --article-highlight-color: #00acc1;
+
+  /* Genetics Lab semantic palette (dark) — consumed by component sx/style props.
+     A matching light block lives under [data-theme='light']. These let inline
+     colors follow the active theme without per-component hooks. */
+  --gl-app-bg: #0E0E0E;
+  --gl-panel-bg: #141414;
+  --gl-panel-header-bg: #181818;
+  --gl-card-bg: #161616;
+  --gl-card-hover-bg: #1C1C1C;
+  --gl-elevated-bg: #1E1E1E;
+  --gl-input-bg: #111111;
+  --gl-surface: #262626;
+  --gl-surface-hover: #333333;
+  --gl-surface-active: #3A3A3A;
+  --gl-border: #282828;
+  --gl-border-strong: #383838;
+  --gl-border-subtle: #202020;
+  --gl-text-primary: #ECECEC;
+  --gl-text-secondary: #AAAAAA;
+  --gl-text-muted: #888888;
+  --gl-text-faint: #555555;
+  --gl-primary: #00E5FF;
+  --gl-primary-hover: #33EBFF;
+  --gl-error: #E53935;
+  --gl-error-hover: #D32F2F;
+  --gl-warning: #FF9800;
+  --gl-warning-hover: #FB8C00;
+  --gl-success: #4CAF50;
+  --gl-gold: #FFD700;
+  --gl-on-accent: #000000;
+  --gl-tint-green: #141E16;
+  --gl-tint-cyan: #101A1C;
 }
 
 /* Light Theme */
@@ -88,4 +120,34 @@
   --color-card-highlight: #00c853;
   --color-card-highlight-glow: rgba(0, 200, 83, 0.3);
   --article-highlight-color: #0097a7;
+
+  /* Genetics Lab semantic palette (light) */
+  --gl-app-bg: #F4F6F8;
+  --gl-panel-bg: #FFFFFF;
+  --gl-panel-header-bg: #F8FAFC;
+  --gl-card-bg: #FFFFFF;
+  --gl-card-hover-bg: #F1F5F9;
+  --gl-elevated-bg: #FFFFFF;
+  --gl-input-bg: #F1F5F9;
+  --gl-surface: #EEF2F6;
+  --gl-surface-hover: #E2E8F0;
+  --gl-surface-active: #D6DEE7;
+  --gl-border: #E2E8F0;
+  --gl-border-strong: #CBD5E1;
+  --gl-border-subtle: #EDF2F7;
+  --gl-text-primary: #1E293B;
+  --gl-text-secondary: #64748B;
+  --gl-text-muted: #94A3B8;
+  --gl-text-faint: #A0AAB8;
+  --gl-primary: #0284C7;
+  --gl-primary-hover: #0369A1;
+  --gl-error: #DC2626;
+  --gl-error-hover: #B91C1C;
+  --gl-warning: #D97706;
+  --gl-warning-hover: #B45309;
+  --gl-success: #16A34A;
+  --gl-gold: #B45309;
+  --gl-on-accent: #FFFFFF;
+  --gl-tint-green: #ECFDF3;
+  --gl-tint-cyan: #ECFEFF;
 }

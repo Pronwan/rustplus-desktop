@@ -35,10 +35,10 @@ export const ScannerGuideModal: React.FC = () => {
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#181818',
-            border: '1px solid #282828',
+            backgroundColor: 'var(--gl-panel-header-bg)',
+            border: '1px solid var(--gl-border)',
             borderRadius: '4px',
-            color: '#E0E0E0',
+            color: 'var(--gl-text-primary)',
             maxHeight: '90vh'
           }
         }
@@ -50,7 +50,7 @@ export const ScannerGuideModal: React.FC = () => {
           p: '20px 24px 12px',
           fontWeight: 800,
           fontFamily: '"Roboto Mono", monospace',
-          color: '#FFFFFF',
+          color: 'var(--gl-text-primary)',
           fontSize: '1.25rem'
         }}
       >
@@ -66,39 +66,39 @@ export const ScannerGuideModal: React.FC = () => {
           fontFamily: '"Roboto Mono", monospace',
           fontSize: '0.85rem',
           lineHeight: 1.6,
-          color: '#CCCCCC'
+          color: 'var(--gl-text-secondary)'
         }}
       >
         {/* Step 1 */}
         <Box>
-          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#CCCCCC' }}>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-secondary)' }}>
             1. For best results, use <strong>Chrome</strong>, <strong>Edge</strong>, or <strong>Firefox</strong>. Other browsers may not work correctly.
           </Typography>
         </Box>
 
         {/* Step 2 */}
         <Box>
-          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#CCCCCC', mb: 0.5 }}>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-secondary)', mb: 0.5 }}>
             2. By default, the scanner is configured to work with the game running with the following settings:
           </Typography>
           <Box sx={{ pl: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • SCREEN MODE: <strong>FULLSCREEN</strong>
             </Typography>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • RESOLUTION: <strong>16:9 screen ratio (1600x900, 1920x1080, 2560x1440, or 4K)</strong>
             </Typography>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • USER INTERFACE SCALE: <strong>1.00</strong>
             </Typography>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • Item ownership display is disabled. Run the command{' '}
-              <code style={{ backgroundColor: '#111111', padding: '2px 6px', borderRadius: '3px', border: '1px solid #333', color: '#00E5FF' }}>
+              <code style={{ backgroundColor: 'var(--gl-input-bg)', padding: '2px 6px', borderRadius: '3px', border: '1px solid var(--gl-surface-hover)', color: 'var(--gl-primary)' }}>
                 inventory.show_item_ownership false
               </code>{' '}
               in Rust console to turn it off.
             </Typography>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • Windows <strong>HDR mode</strong> is not supported.
             </Typography>
           </Box>
@@ -106,8 +106,8 @@ export const ScannerGuideModal: React.FC = () => {
 
         {/* Step 3 */}
         <Box>
-          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#CCCCCC', mb: 1 }}>
-            3. <strong style={{ color: '#00E5FF' }}>[NEW!]</strong> If you want to run the scanner with a different screen ratio or conflicting Rust settings, start scanning and adjust the screen regions by clicking the gear ⚙ icon. A properly configured scanner should have a preview like this:
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-secondary)', mb: 1 }}>
+            3. <strong style={{ color: 'var(--gl-primary)' }}>[NEW!]</strong> If you want to run the scanner with a different screen ratio or conflicting Rust settings, start scanning and adjust the screen regions by clicking the gear ⚙ icon. A properly configured scanner should have a preview like this:
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 1 }}>
             <SaplingGeneRepr sapling={SAMPLE_SCAN_SAPLING} size="medium" showConnectors={true} />
@@ -116,38 +116,38 @@ export const ScannerGuideModal: React.FC = () => {
 
         {/* Step 4 */}
         <Box>
-          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#CCCCCC', mb: 0.5 }}>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-secondary)', mb: 0.5 }}>
             4. After the scanning begins, you need to display the genes on the screen by either:
           </Typography>
           <Box sx={{ pl: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • clicking on a Plant in your inventory or storage,
             </Typography>
-            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#B0B0B0' }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • looking at a planted Plant.
             </Typography>
           </Box>
-          <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#888888', display: 'block', mt: 0.75 }}>
+          <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-muted)', display: 'block', mt: 0.75 }}>
             It takes about a second to capture each Plant.
           </Typography>
         </Box>
 
         {/* Step 5 */}
         <Box>
-          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#CCCCCC' }}>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-secondary)' }}>
             5. Enjoy! If it doesn't work, let me know on Discord!
           </Typography>
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: '12px 24px', display: 'flex', justifyContent: 'flex-end', gap: 1.5, borderTop: '1px solid #282828' }}>
+      <DialogActions sx={{ p: '12px 24px', display: 'flex', justifyContent: 'flex-end', gap: 1.5, borderTop: '1px solid var(--gl-border)' }}>
         <Button
           onClick={() => setIsScannerGuideOpen(false)}
           sx={{
-            color: '#8E8E8E',
+            color: 'var(--gl-text-muted)',
             fontWeight: 700,
             fontFamily: 'monospace',
-            '&:hover': { color: '#FFFFFF', backgroundColor: 'transparent' }
+            '&:hover': { color: 'var(--gl-text-primary)', backgroundColor: 'transparent' }
           }}
         >
           CLOSE
@@ -157,12 +157,12 @@ export const ScannerGuideModal: React.FC = () => {
           variant="contained"
           onClick={handleStartScan}
           sx={{
-            backgroundColor: '#00E5FF',
-            color: '#000000',
+            backgroundColor: 'var(--gl-primary)',
+            color: 'var(--gl-on-accent)',
             fontWeight: 800,
             fontFamily: 'monospace',
             px: 2.5,
-            '&:hover': { backgroundColor: '#33EBFF' }
+            '&:hover': { backgroundColor: 'var(--gl-primary-hover)' }
           }}
         >
           SCAN

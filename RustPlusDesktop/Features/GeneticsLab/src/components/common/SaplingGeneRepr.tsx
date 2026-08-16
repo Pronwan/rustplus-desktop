@@ -36,7 +36,7 @@ export const SaplingGeneRepr: React.FC<SaplingGeneReprProps> = ({
 
         // Authentic circle colors from Rust Breeder
         const bgColor = isGreen ? '#598518' : '#94382A';
-        const borderColor = isHighlighted ? '#00E5FF' : isDonor ? '#FFD700' : 'transparent';
+        const borderColor = isHighlighted ? 'var(--gl-primary)' : isDonor ? 'var(--gl-gold)' : 'transparent';
 
         return (
           <React.Fragment key={idx}>
@@ -47,7 +47,7 @@ export const SaplingGeneRepr: React.FC<SaplingGeneReprProps> = ({
                   sx={{
                     display: 'block',
                     fontSize: '0.65rem',
-                    color: '#888888',
+                    color: 'var(--gl-text-muted)',
                     mb: '2px',
                     fontWeight: 600,
                     fontFamily: 'monospace'
@@ -86,7 +86,7 @@ export const SaplingGeneRepr: React.FC<SaplingGeneReprProps> = ({
               <Typography
                 component="span"
                 sx={{
-                  color: '#444444',
+                  color: 'var(--gl-text-faint)',
                   fontSize: '0.75rem',
                   fontFamily: 'monospace',
                   userSelect: 'none',

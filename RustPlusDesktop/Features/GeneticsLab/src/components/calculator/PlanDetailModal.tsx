@@ -45,20 +45,20 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
   const chanceProd = map.getChanceProduct();
 
   const isGen1 = genIndex === 1;
-  const genColor = isGen1 ? '#598518' : '#FFA726';
-  const chanceColor = chanceProd >= 0.99 ? '#598518' : chanceProd >= 0.5 ? '#FFA726' : '#E53935';
+  const genColor = isGen1 ? '#598518' : 'var(--gl-warning)';
+  const chanceColor = chanceProd >= 0.99 ? '#598518' : chanceProd >= 0.5 ? 'var(--gl-warning)' : 'var(--gl-error)';
 
   return (
     <Paper
       onClick={onSelect}
       variant="outlined"
       sx={{
-        backgroundColor: isSelected ? '#101a1c' : '#161616',
+        backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-card-bg)',
         border: isSelected
-          ? '2px solid #00E5FF'
+          ? '2px solid var(--gl-primary)'
           : isHighlightedView || isBest
           ? '1.5px dashed #FFFFFF'
-          : '1px solid #282828',
+          : '1px solid var(--gl-border)',
         borderRadius: '4px',
         p: 2.5,
         width: 320,
@@ -66,7 +66,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
         cursor: onSelect ? 'pointer' : 'default',
         transition: 'all 0.2s ease',
         boxShadow: isSelected ? '0 0 0 1px rgba(0, 229, 255, 0.35), 0 8px 24px rgba(0, 229, 255, 0.12)' : 'none',
-        '&:hover': onSelect ? { borderColor: '#00E5FF', transform: 'translateY(-2px)' } : {}
+        '&:hover': onSelect ? { borderColor: 'var(--gl-primary)', transform: 'translateY(-2px)' } : {}
       }}
     >
       {title && (
@@ -77,7 +77,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
               display: 'block',
               textAlign: 'center',
               fontWeight: 800,
-              color: isSelected ? '#00E5FF' : isBest ? '#00E5FF' : '#E0E0E0',
+              color: isSelected ? 'var(--gl-primary)' : isBest ? 'var(--gl-primary)' : 'var(--gl-text-primary)',
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.85rem'
             }}
@@ -93,7 +93,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
                 borderRadius: '3px',
                 backgroundColor: 'rgba(0, 229, 255, 0.14)',
                 border: '1px solid rgba(0, 229, 255, 0.5)',
-                color: '#00E5FF',
+                color: 'var(--gl-primary)',
                 fontWeight: 800,
                 fontFamily: 'monospace',
                 fontSize: '0.62rem',
@@ -119,16 +119,16 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
             GEN.{genIndex}
           </Typography>
 
-          <Typography variant="caption" sx={{ color: '#555555' }}>·</Typography>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)' }}>·</Typography>
 
           <Typography
             variant="caption"
-            sx={{ fontWeight: 700, color: '#E0E0E0', fontFamily: 'monospace', fontSize: '0.82rem' }}
+            sx={{ fontWeight: 700, color: 'var(--gl-text-primary)', fontFamily: 'monospace', fontSize: '0.82rem' }}
           >
-            Score: <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{score}</span>
+            Score: <span style={{ color: 'var(--gl-text-primary)', fontWeight: 800 }}>{score}</span>
           </Typography>
 
-          <Typography variant="caption" sx={{ color: '#555555' }}>·</Typography>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)' }}>·</Typography>
 
           <Typography
             variant="caption"
@@ -143,7 +143,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1.5 }}>
         <Typography
           variant="caption"
-          sx={{ color: '#888888', fontSize: '0.75rem', fontFamily: 'monospace', mb: 0.5 }}
+          sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem', fontFamily: 'monospace', mb: 0.5 }}
         >
           Center Plant:
         </Typography>
@@ -184,24 +184,24 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
                   alignItems: 'center',
                   gap: 0.75,
                   p: isBaseGen ? '2px 6px' : 0,
-                  border: isBaseGen ? '1px solid #FFA726' : 'none',
+                  border: isBaseGen ? '1px solid var(--gl-warning)' : 'none',
                   borderRadius: '3px',
                   cursor: isBaseGen && onOpenParentPlan ? 'pointer' : 'default',
                   backgroundColor: isBaseGen ? 'rgba(255, 167, 38, 0.04)' : 'transparent',
-                  '&:hover': isBaseGen && onOpenParentPlan ? { borderColor: '#00E5FF' } : {}
+                  '&:hover': isBaseGen && onOpenParentPlan ? { borderColor: 'var(--gl-primary)' } : {}
                 }}
               >
                 {isBaseGen ? (
                   <Typography
                     variant="caption"
-                    sx={{ color: '#FFA726', fontWeight: 800, fontSize: '0.72rem', fontFamily: 'monospace' }}
+                    sx={{ color: 'var(--gl-warning)', fontWeight: 800, fontSize: '0.72rem', fontFamily: 'monospace' }}
                   >
                     GEN.{map.baseSapling.generationIndex}
                   </Typography>
                 ) : (
                   <Typography
                     variant="caption"
-                    sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.75rem', minWidth: 14 }}
+                    sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.75rem', minWidth: 14 }}
                   >
                     #{map.baseSapling.index !== undefined ? map.baseSapling.index + 1 : '1'}
                   </Typography>
@@ -213,7 +213,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
         ) : (
           <Typography
             variant="caption"
-            sx={{ color: '#E0E0E0', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.78rem' }}
+            sx={{ color: 'var(--gl-text-primary)', fontFamily: 'monospace', fontWeight: 700, fontSize: '0.78rem' }}
           >
             any extra plant of same type
           </Typography>
@@ -224,7 +224,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography
           variant="caption"
-          sx={{ color: '#888888', fontSize: '0.75rem', fontFamily: 'monospace', mb: 0.75 }}
+          sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem', fontFamily: 'monospace', mb: 0.75 }}
         >
           Surrounding Plants:
         </Typography>
@@ -272,18 +272,18 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
                   justifyContent: 'center',
                   gap: 0.75,
                   p: isParentGen ? '2px 6px' : 0,
-                  border: isParentGen ? '1px solid #FFA726' : 'none',
+                  border: isParentGen ? '1px solid var(--gl-warning)' : 'none',
                   borderRadius: '3px',
                   cursor: isParentGen && onOpenParentPlan ? 'pointer' : 'default',
                   backgroundColor: isParentGen ? 'rgba(255, 167, 38, 0.04)' : 'transparent',
-                  '&:hover': isParentGen && onOpenParentPlan ? { borderColor: '#00E5FF' } : {}
+                  '&:hover': isParentGen && onOpenParentPlan ? { borderColor: 'var(--gl-primary)' } : {}
                 }}
               >
                 {isParentGen ? (
                   <Typography
                     variant="caption"
                     sx={{
-                      color: '#FFA726',
+                      color: 'var(--gl-warning)',
                       fontWeight: 800,
                       fontSize: '0.72rem',
                       fontFamily: 'monospace'
@@ -294,7 +294,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
                 ) : (
                   <Typography
                     variant="caption"
-                    sx={{ color: '#666666', fontWeight: 700, fontSize: '0.72rem', fontFamily: 'monospace', minWidth: 16 }}
+                    sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontSize: '0.72rem', fontFamily: 'monospace', minWidth: 16 }}
                   >
                     #{parent.index !== undefined ? parent.index + 1 : pIdx + 1}
                   </Typography>
@@ -314,7 +314,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
                   </Typography>
                 )}
                 {!isFirst && !isSecond && map.chance < 1 && (
-                  <Typography variant="caption" sx={{ color: '#FFA726', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-warning)', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace' }}>
                     {(map.chance * 100).toFixed(0)}%
                   </Typography>
                 )}
@@ -333,7 +333,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
             }}
             startIcon={<YardIcon sx={{ fontSize: 14 }} />}
             sx={{
-              color: '#00E5FF',
+              color: 'var(--gl-primary)',
               fontFamily: 'monospace',
               fontSize: '0.72rem',
               fontWeight: 700,
@@ -344,7 +344,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
               backgroundColor: 'rgba(0, 229, 255, 0.04)',
               '&:hover': {
                 backgroundColor: 'rgba(0, 229, 255, 0.12)',
-                borderColor: '#00E5FF'
+                borderColor: 'var(--gl-primary)'
               }
             }}
           >
@@ -481,9 +481,9 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
           sx: {
             backgroundColor: 'rgba(14, 14, 14, 0.96)',
             backdropFilter: 'blur(8px)',
-            border: '1px solid #282828',
+            border: '1px solid var(--gl-border)',
             borderRadius: '6px',
-            color: '#E0E0E0',
+            color: 'var(--gl-text-primary)',
             p: 3,
             position: 'relative'
           }
@@ -508,7 +508,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               startIcon={<ArrowBackIcon sx={{ fontSize: 16 }} />}
               size="small"
               sx={{
-                color: '#00E5FF',
+                color: 'var(--gl-primary)',
                 fontFamily: '"Roboto Mono", monospace',
                 fontSize: '0.76rem',
                 fontWeight: 800,
@@ -521,7 +521,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                 py: 0.35,
                 '&:hover': {
                   backgroundColor: 'rgba(0, 229, 255, 0.2)',
-                  borderColor: '#00E5FF'
+                  borderColor: 'var(--gl-primary)'
                 }
               }}
             >
@@ -541,7 +541,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               return (
                 <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                   {idx > 0 && (
-                    <Typography variant="caption" sx={{ color: '#555555', fontFamily: 'monospace' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontFamily: 'monospace' }}>
                       /
                     </Typography>
                   )}
@@ -549,7 +549,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                     <Typography
                       variant="caption"
                       sx={{
-                        color: '#00E5FF',
+                        color: 'var(--gl-primary)',
                         fontWeight: 800,
                         fontFamily: 'monospace',
                         fontSize: '0.75rem',
@@ -567,7 +567,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                       variant="caption"
                       onClick={() => handleJumpToHistory(idx)}
                       sx={{
-                        color: '#888888',
+                        color: 'var(--gl-text-muted)',
                         fontWeight: 700,
                         fontFamily: 'monospace',
                         fontSize: '0.75rem',
@@ -577,7 +577,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                         borderRadius: '3px',
                         transition: 'all 0.15s ease',
                         '&:hover': {
-                          color: '#FFFFFF',
+                          color: 'var(--gl-text-primary)',
                           backgroundColor: 'rgba(255, 255, 255, 0.08)'
                         }
                       }}
@@ -595,9 +595,9 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
           onClick={onClose}
           size="small"
           sx={{
-            color: '#888888',
+            color: 'var(--gl-text-muted)',
             ml: 'auto',
-            '&:hover': { color: '#FFFFFF' }
+            '&:hover': { color: 'var(--gl-text-primary)' }
           }}
         >
           <CloseIcon sx={{ fontSize: 20 }} />
@@ -611,7 +611,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
             <Typography
               variant="body2"
               sx={{
-                color: '#CCCCCC',
+                color: 'var(--gl-text-secondary)',
                 fontFamily: '"Roboto Mono", monospace',
                 fontSize: '0.85rem',
                 lineHeight: 1.6,
@@ -633,7 +633,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
             <Typography
               variant="body2"
               sx={{
-                color: '#CCCCCC',
+                color: 'var(--gl-text-secondary)',
                 fontFamily: '"Roboto Mono", monospace',
                 fontSize: '0.9rem',
                 lineHeight: 1.6,
@@ -641,7 +641,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                 mb: 3
               }}
             >
-              Here you can see all the different ways you can crossbreed the same selected Sapling. Click an option to highlight and use it, then click any <span style={{ color: '#FFA726', fontWeight: 700 }}>GEN.x</span> plant inside it to see how that generation is bred.
+              Here you can see all the different ways you can crossbreed the same selected Sapling. Click an option to highlight and use it, then click any <span style={{ color: 'var(--gl-warning)', fontWeight: 700 }}>GEN.x</span> plant inside it to see how that generation is bred.
             </Typography>
 
             <Box
@@ -676,7 +676,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               <Button
                 onClick={onClose}
                 sx={{
-                  color: '#00E5FF',
+                  color: 'var(--gl-primary)',
                   fontFamily: 'monospace',
                   fontSize: '0.8rem',
                   fontWeight: 800,
@@ -688,7 +688,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                   letterSpacing: '0.05em',
                   '&:hover': {
                     backgroundColor: 'rgba(0, 229, 255, 0.14)',
-                    borderColor: '#00E5FF'
+                    borderColor: 'var(--gl-primary)'
                   }
                 }}
               >

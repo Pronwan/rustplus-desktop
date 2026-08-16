@@ -50,20 +50,20 @@ export const GeneCorrectionModal: React.FC = () => {
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#161616',
-            border: '1.5px solid #FFA726',
+            backgroundColor: 'var(--gl-card-bg)',
+            border: '1.5px solid var(--gl-warning)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
-      <DialogTitle sx={{ pb: 1, fontWeight: 800, color: '#FFA726', fontSize: '1rem' }}>
+      <DialogTitle sx={{ pb: 1, fontWeight: 800, color: 'var(--gl-warning)', fontSize: '1rem' }}>
         Scanner Verification Needed
       </DialogTitle>
 
       <DialogContent sx={{ pt: 1.5, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Typography variant="caption" sx={{ color: '#AAAAAA' }}>
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
           The scanner detected an uncertain character ({correctionCandidate.confidence}% confidence). Please verify or correct the 6 genes:
         </Typography>
 

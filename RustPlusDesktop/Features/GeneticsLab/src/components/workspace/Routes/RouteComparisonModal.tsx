@@ -67,31 +67,31 @@ export const RouteComparisonModal: React.FC = () => {
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#141414',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Route Comparison ({comparedGroups.length} Routes)
         </Typography>
-        <IconButton size="small" onClick={handleClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={handleClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
 
       <DialogContent sx={{ pt: 1.5 }}>
-        <TableContainer component={Paper} variant="outlined" sx={{ backgroundColor: '#181818', borderColor: '#282828' }}>
+        <TableContainer component={Paper} variant="outlined" sx={{ backgroundColor: 'var(--gl-panel-header-bg)', borderColor: 'var(--gl-border)' }}>
           <Table size="small">
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#202020' }}>
-                <TableCell sx={{ color: '#888', fontWeight: 800, fontSize: '0.75rem', width: 140 }}>METRIC</TableCell>
+              <TableRow sx={{ backgroundColor: 'var(--gl-border-subtle)' }}>
+                <TableCell sx={{ color: 'var(--gl-text-muted)', fontWeight: 800, fontSize: '0.75rem', width: 140 }}>METRIC</TableCell>
                 {comparedAnalyses.map((item, idx) => (
-                  <TableCell key={idx} align="center" sx={{ color: '#00E5FF', fontWeight: 800, fontSize: '0.8rem' }}>
+                  <TableCell key={idx} align="center" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontSize: '0.8rem' }}>
                     ROUTE {String.fromCharCode(65 + idx)}
                   </TableCell>
                 ))}
@@ -101,7 +101,7 @@ export const RouteComparisonModal: React.FC = () => {
             <TableBody>
               {/* Genetics Row */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>GENETICS</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>GENETICS</TableCell>
                 {comparedAnalyses.map((item, idx) => (
                   <TableCell key={idx} align="center">
                     <GeneticsSequence genes={item.group.resultSaplingGeneString} size="small" showConnectors={true} />
@@ -111,7 +111,7 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Recommendation Score */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>RECOMMENDED SCORE</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>RECOMMENDED SCORE</TableCell>
                 {comparedAnalyses.map((item, idx) => (
                   <TableCell key={idx} align="center">
                     <Chip
@@ -120,7 +120,7 @@ export const RouteComparisonModal: React.FC = () => {
                       sx={{
                         fontWeight: 800,
                         backgroundColor: 'rgba(0, 229, 255, 0.12)',
-                        color: '#00E5FF',
+                        color: 'var(--gl-primary)',
                         border: '1px solid rgba(0, 229, 255, 0.3)'
                       }}
                     />
@@ -130,7 +130,7 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Probability */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>PROBABILITY</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>PROBABILITY</TableCell>
                 {comparedAnalyses.map((item, idx) => (
                   <TableCell
                     key={idx}
@@ -138,7 +138,7 @@ export const RouteComparisonModal: React.FC = () => {
                     sx={{
                       fontWeight: 800,
                       fontFamily: 'monospace',
-                      color: item.analysis.probabilityPercent >= 95 ? '#4CAF50' : '#FFA726'
+                      color: item.analysis.probabilityPercent >= 95 ? 'var(--gl-success)' : 'var(--gl-warning)'
                     }}
                   >
                     {item.analysis.probabilityPercent}%
@@ -148,9 +148,9 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Generations */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>GENERATIONS</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>GENERATIONS</TableCell>
                 {comparedAnalyses.map((item, idx) => (
-                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, fontFamily: 'monospace', color: '#E0E0E0' }}>
+                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, fontFamily: 'monospace', color: 'var(--gl-text-primary)' }}>
                     GEN.{item.analysis.generationCount} ({item.analysis.generationCount === 1 ? '1 Step' : `${item.analysis.generationCount} Steps`})
                   </TableCell>
                 ))}
@@ -158,9 +158,9 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Unique Clones Required */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>UNIQUE CLONES</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>UNIQUE CLONES</TableCell>
                 {comparedAnalyses.map((item, idx) => (
-                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, fontFamily: 'monospace', color: '#E0E0E0' }}>
+                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, fontFamily: 'monospace', color: 'var(--gl-text-primary)' }}>
                     {item.analysis.uniqueCloneCount} Clones
                   </TableCell>
                 ))}
@@ -168,9 +168,9 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Total Placements */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>TOTAL PLACEMENTS</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>TOTAL PLACEMENTS</TableCell>
                 {comparedAnalyses.map((item, idx) => (
-                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, fontFamily: 'monospace', color: '#E0E0E0' }}>
+                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, fontFamily: 'monospace', color: 'var(--gl-text-primary)' }}>
                     {item.analysis.totalPlacementsCount} Plants
                   </TableCell>
                 ))}
@@ -178,7 +178,7 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Inventory Match */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>INVENTORY STATUS</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>INVENTORY STATUS</TableCell>
                 {comparedAnalyses.map((item, idx) => {
                   const isAvail = item.analysis.inventoryStatus === 'available';
                   return (
@@ -190,7 +190,7 @@ export const RouteComparisonModal: React.FC = () => {
                           fontSize: '0.68rem',
                           fontWeight: 800,
                           backgroundColor: isAvail ? 'rgba(76, 175, 80, 0.15)' : 'rgba(255, 167, 38, 0.15)',
-                          color: isAvail ? '#4CAF50' : '#FFA726',
+                          color: isAvail ? 'var(--gl-success)' : 'var(--gl-warning)',
                           border: `1px solid ${isAvail ? 'rgba(76, 175, 80, 0.4)' : 'rgba(255, 167, 38, 0.4)'}`
                         }}
                       />
@@ -201,9 +201,9 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Difficulty */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>DIFFICULTY</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>DIFFICULTY</TableCell>
                 {comparedAnalyses.map((item, idx) => (
-                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, color: '#00E5FF' }}>
+                  <TableCell key={idx} align="center" sx={{ fontWeight: 800, color: 'var(--gl-primary)' }}>
                     {item.analysis.difficulty}
                   </TableCell>
                 ))}
@@ -211,7 +211,7 @@ export const RouteComparisonModal: React.FC = () => {
 
               {/* Action Buttons */}
               <TableRow>
-                <TableCell sx={{ color: '#AAA', fontWeight: 700, fontSize: '0.75rem' }}>ACTION</TableCell>
+                <TableCell sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, fontSize: '0.75rem' }}>ACTION</TableCell>
                 {comparedAnalyses.map((item, idx) => (
                   <TableCell key={idx} align="center">
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, alignItems: 'center' }}>
@@ -229,7 +229,7 @@ export const RouteComparisonModal: React.FC = () => {
                         color="secondary"
                         onClick={() => handleStartBreeding(item.bestMap, item.group.resultSaplingGeneString)}
                         startIcon={<PlayCircleIcon sx={{ fontSize: 13 }} />}
-                        sx={{ fontSize: '0.7rem', py: 0.3, width: 120, backgroundColor: '#FF9800', color: '#000' }}
+                        sx={{ fontSize: '0.7rem', py: 0.3, width: 120, backgroundColor: 'var(--gl-warning)', color: 'var(--gl-on-accent)' }}
                       >
                         Start Breed
                       </Button>

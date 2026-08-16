@@ -72,15 +72,15 @@ export const GeneticsSequence: React.FC<GeneticsSequenceProps> = ({
           textColor = '#FFFFFF';
         } else {
           // Wildcard or neutral
-          bgColor = isDark ? '#2A2A2A' : '#E2E8F0';
-          textColor = isDark ? '#888888' : '#64748B';
-          borderColor = isDark ? '#3D3D3D' : '#CBD5E1';
+          bgColor = isDark ? 'var(--gl-surface)' : 'var(--gl-border)';
+          textColor = isDark ? 'var(--gl-text-muted)' : 'var(--gl-text-secondary)';
+          borderColor = isDark ? 'var(--gl-border-strong)' : 'var(--gl-border-strong)';
         }
 
         if (isHighlighted) {
           borderColor = theme.palette.primary.main;
         } else if (isDonor) {
-          borderColor = '#FFD700';
+          borderColor = 'var(--gl-gold)';
         }
 
         return (
@@ -99,7 +99,7 @@ export const GeneticsSequence: React.FC<GeneticsSequenceProps> = ({
                   variant="caption"
                   sx={{
                     fontSize: dim.slotFont,
-                    color: isDark ? '#777777' : '#94A3B8',
+                    color: isDark ? 'var(--gl-text-muted)' : 'var(--gl-text-muted)',
                     mb: '2px',
                     fontWeight: 700,
                     fontFamily: '"Roboto Mono", monospace'
@@ -154,7 +154,7 @@ export const GeneticsSequence: React.FC<GeneticsSequenceProps> = ({
               <Typography
                 component="span"
                 sx={{
-                  color: isDark ? '#444444' : '#CBD5E1',
+                  color: isDark ? 'var(--gl-text-faint)' : 'var(--gl-border-strong)',
                   fontSize: dim.font,
                   fontFamily: 'monospace',
                   userSelect: 'none',

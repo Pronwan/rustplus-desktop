@@ -54,7 +54,7 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-      <Typography variant="caption" sx={{ color: '#888', fontWeight: 800 }}>
+      <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800 }}>
         INSPECT GENE POSITION (1 - 6):
       </Typography>
 
@@ -62,7 +62,7 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
       <Tabs
         value={selectedSlot}
         onChange={(_, val) => setSelectedSlot(val)}
-        sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
+        sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
       >
         {[0, 1, 2, 3, 4, 5].map((slot) => {
           const resGene = map.resultSapling.genes[slot].type;
@@ -73,8 +73,8 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
               value={slot}
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Typography variant="caption" sx={{ fontSize: '0.68rem', color: '#666' }}>#{slot + 1}</Typography>
-                  <Typography variant="caption" sx={{ fontWeight: 800, color: isGreen ? '#4CAF50' : '#E53935' }}>
+                  <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'var(--gl-text-muted)' }}>#{slot + 1}</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 800, color: isGreen ? 'var(--gl-success)' : 'var(--gl-error)' }}>
                     {resGene}
                   </Typography>
                 </Box>
@@ -86,13 +86,13 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
       </Tabs>
 
       {/* Position Explanation Content */}
-      <Paper variant="outlined" sx={{ p: 1.5, backgroundColor: '#181818', borderColor: '#282828', borderRadius: '4px' }}>
+      <Paper variant="outlined" sx={{ p: 1.5, backgroundColor: 'var(--gl-panel-header-bg)', borderColor: 'var(--gl-border)', borderRadius: '4px' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-          <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800 }}>
             WINNING GENE: [{slotData.winningGene}]
           </Typography>
           {slotData.centerGene && (
-            <Typography variant="caption" sx={{ color: '#AAAAAA' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
               Center Plant: [{slotData.centerGene}]
             </Typography>
           )}
@@ -116,19 +116,19 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
                         sx={{
                           fontWeight: 800,
                           fontFamily: 'monospace',
-                          color: isGreen ? '#4CAF50' : '#E53935'
+                          color: isGreen ? 'var(--gl-success)' : 'var(--gl-error)'
                         }}
                       >
                         [{gene}] {isGreen ? '(0.6 weight)' : '(1.0 weight)'}
                       </Typography>
                       {isWinner && (
-                        <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontSize: '0.65rem' }}>
+                        <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontSize: '0.65rem' }}>
                           ✓ WINNER
                         </Typography>
                       )}
                     </Box>
 
-                    <Typography variant="caption" sx={{ fontWeight: 800, fontFamily: 'monospace', color: '#E0E0E0' }}>
+                    <Typography variant="caption" sx={{ fontWeight: 800, fontFamily: 'monospace', color: 'var(--gl-text-primary)' }}>
                       {data.weight.toFixed(1)} total weight
                     </Typography>
                   </Box>
@@ -139,15 +139,15 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
                     sx={{
                       height: 6,
                       borderRadius: 3,
-                      backgroundColor: '#262626',
+                      backgroundColor: 'var(--gl-surface)',
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: isGreen ? '#4CAF50' : '#E53935'
+                        backgroundColor: isGreen ? 'var(--gl-success)' : 'var(--gl-error)'
                       }
                     }}
                   />
 
                   {/* Contributor List */}
-                  <Typography variant="caption" sx={{ color: '#777', fontSize: '0.65rem', mt: 0.25, display: 'block' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.65rem', mt: 0.25, display: 'block' }}>
                     Contributed by: {data.contributors.map(c => c.label).join(', ')}
                   </Typography>
                 </Box>
@@ -155,7 +155,7 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
             })}
         </Box>
 
-        <Typography variant="caption" sx={{ color: '#888888', fontSize: '0.72rem', mt: 1, display: 'block', borderTop: '1px solid #242424', pt: 1 }}>
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem', mt: 1, display: 'block', borderTop: '1px solid var(--gl-surface)', pt: 1 }}>
           💡 <strong>Rule:</strong> Green genes (G, Y, H) have 0.6 crossbreeding weight. Red genes (W, X) have 1.0 weight. The gene with the highest total weight at this position wins.
         </Typography>
       </Paper>

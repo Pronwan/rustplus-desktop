@@ -195,24 +195,24 @@ export const ScannerCalibrationModal: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: '#141414',
-              border: '1px solid #333333',
+              backgroundColor: 'var(--gl-panel-bg)',
+              border: '1px solid var(--gl-surface-hover)',
               borderRadius: '6px',
-              color: '#E0E0E0'
+              color: 'var(--gl-text-primary)'
             }
           }
         }}
       >
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
               Scanner Calibration & Resolution Profiles
             </Typography>
-            <Typography variant="caption" sx={{ color: '#888' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
               Align the 6 numbered guide stripes over your in-game tooltip letters
             </Typography>
           </Box>
-          <IconButton size="small" onClick={() => setIsCalibrationModalOpen(false)} sx={{ color: '#888' }}>
+          <IconButton size="small" onClick={() => setIsCalibrationModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </DialogTitle>
@@ -227,14 +227,14 @@ export const ScannerCalibrationModal: React.FC = () => {
               justifyContent: 'space-between',
               gap: 1.5,
               p: 1.5,
-              backgroundColor: '#1C1C1C',
+              backgroundColor: 'var(--gl-card-hover-bg)',
               borderRadius: '4px',
-              border: '1px solid #282828'
+              border: '1px solid var(--gl-border)'
             }}
           >
             {/* Left: Preset Selector */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Typography variant="body2" sx={{ fontWeight: 700, color: '#E0E0E0', fontSize: '0.8rem' }}>
+              <Typography variant="body2" sx={{ fontWeight: 700, color: 'var(--gl-text-primary)', fontSize: '0.8rem' }}>
                 Preset:
               </Typography>
               <Select
@@ -242,8 +242,8 @@ export const ScannerCalibrationModal: React.FC = () => {
                 value={activeProfileId}
                 onChange={(e) => setActiveProfileId(e.target.value)}
                 sx={{
-                  backgroundColor: '#141414',
-                  color: '#00E5FF',
+                  backgroundColor: 'var(--gl-panel-bg)',
+                  color: 'var(--gl-primary)',
                   fontWeight: 700,
                   fontSize: '0.8rem',
                   minWidth: 200
@@ -261,7 +261,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                   <IconButton
                     size="small"
                     onClick={() => deleteProfile(activeProfileId)}
-                    sx={{ color: '#FF5252', border: '1px solid #442222', p: 0.5 }}
+                    sx={{ color: 'var(--gl-error)', border: '1px solid var(--gl-tint-green)', p: 0.5 }}
                   >
                     <DeleteIcon sx={{ fontSize: 16 }} />
                   </IconButton>
@@ -276,7 +276,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 variant="outlined"
                 onClick={() => setIsSaveModalOpen(true)}
                 startIcon={<AddIcon sx={{ fontSize: 15 }} />}
-                sx={{ borderColor: '#00E5FF', color: '#00E5FF', fontSize: '0.72rem', fontWeight: 700 }}
+                sx={{ borderColor: 'var(--gl-primary)', color: 'var(--gl-primary)', fontSize: '0.72rem', fontWeight: 700 }}
               >
                 Save As Preset
               </Button>
@@ -286,7 +286,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 variant="outlined"
                 onClick={handleOpenExport}
                 startIcon={<FileUploadIcon sx={{ fontSize: 15 }} />}
-                sx={{ borderColor: '#383838', color: '#CCC', fontSize: '0.72rem' }}
+                sx={{ borderColor: 'var(--gl-border-strong)', color: 'var(--gl-text-secondary)', fontSize: '0.72rem' }}
               >
                 Export
               </Button>
@@ -296,7 +296,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 variant="outlined"
                 onClick={() => setIsImportModalOpen(true)}
                 startIcon={<FileDownloadIcon sx={{ fontSize: 15 }} />}
-                sx={{ borderColor: '#383838', color: '#CCC', fontSize: '0.72rem' }}
+                sx={{ borderColor: 'var(--gl-border-strong)', color: 'var(--gl-text-secondary)', fontSize: '0.72rem' }}
               >
                 Import
               </Button>
@@ -306,7 +306,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 variant="outlined"
                 onClick={resetScannerRegions}
                 startIcon={<RestartAltIcon sx={{ fontSize: 15 }} />}
-                sx={{ borderColor: '#383838', color: '#AAA', fontSize: '0.72rem' }}
+                sx={{ borderColor: 'var(--gl-border-strong)', color: 'var(--gl-text-secondary)', fontSize: '0.72rem' }}
               >
                 Reset
               </Button>
@@ -317,7 +317,7 @@ export const ScannerCalibrationModal: React.FC = () => {
           <Tabs
             value={selectedRegionIdx}
             onChange={(_, val) => setSelectedRegionIdx(val)}
-            sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
+            sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
           >
             <Tab value={0} label="Region 1: Inventory Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
             <Tab value={1} label="Region 2: Planter Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
@@ -330,8 +330,8 @@ export const ScannerCalibrationModal: React.FC = () => {
               variant="outlined"
               sx={{
                 p: 1.5,
-                backgroundColor: '#0D0D0D',
-                borderColor: '#282828',
+                backgroundColor: 'var(--gl-app-bg)',
+                borderColor: 'var(--gl-border)',
                 borderRadius: '4px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -358,8 +358,8 @@ export const ScannerCalibrationModal: React.FC = () => {
                       maxWidth: 440,
                       overflow: 'hidden',
                       borderRadius: '4px',
-                      border: '1px solid #333',
-                      backgroundColor: '#000',
+                      border: '1px solid var(--gl-surface-hover)',
+                      backgroundColor: '#000000',
                       display: 'flex',
                       justifyContent: 'center'
                     }}
@@ -377,16 +377,16 @@ export const ScannerCalibrationModal: React.FC = () => {
                     />
                   </Box>
 
-                  <Typography variant="caption" sx={{ color: '#00E5FF', fontSize: '0.72rem', fontWeight: 700, textAlign: 'center' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontSize: '0.72rem', fontWeight: 700, textAlign: 'center' }}>
                     Center each letter inside the 6 numbered stripes
                   </Typography>
                 </Box>
               ) : (
                 <Box sx={{ textAlign: 'center', p: 2 }}>
-                  <Typography variant="caption" sx={{ color: '#888', display: 'block', mb: 0.5 }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', display: 'block', mb: 0.5 }}>
                     Live Zoom Preview
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#555', fontSize: '0.7rem' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.7rem' }}>
                     Hover over a plant clone in Rust with scanner active to see real-time alignment.
                   </Typography>
                 </Box>
@@ -402,19 +402,19 @@ export const ScannerCalibrationModal: React.FC = () => {
                 justifyContent: 'center',
                 gap: 1,
                 p: 2,
-                backgroundColor: '#181818',
+                backgroundColor: 'var(--gl-panel-header-bg)',
                 borderRadius: '4px',
-                border: '1px solid #282828'
+                border: '1px solid var(--gl-border)'
               }}
             >
-              <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '0.5px' }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-primary)', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '0.5px' }}>
                 NUDGE BOUNDING BOX
               </Typography>
 
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, my: 0.5 }}>
                 <IconButton
                   size="small"
-                  sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                  sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                   onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0, -0.0006))}
                   onMouseUp={stopHold}
                   onMouseLeave={stopHold}
@@ -425,7 +425,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 <Box sx={{ display: 'flex', gap: 1.5 }}>
                   <IconButton
                     size="small"
-                    sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                    sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                     onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, -0.0006, 0))}
                     onMouseUp={stopHold}
                     onMouseLeave={stopHold}
@@ -435,7 +435,7 @@ export const ScannerCalibrationModal: React.FC = () => {
 
                   <IconButton
                     size="small"
-                    sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                    sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                     onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0.0006, 0))}
                     onMouseUp={stopHold}
                     onMouseLeave={stopHold}
@@ -446,7 +446,7 @@ export const ScannerCalibrationModal: React.FC = () => {
 
                 <IconButton
                   size="small"
-                  sx={{ border: '1px solid #333', backgroundColor: '#222' }}
+                  sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                   onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0, 0.0006))}
                   onMouseUp={stopHold}
                   onMouseLeave={stopHold}
@@ -463,7 +463,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                   onMouseDown={() => startHold(() => scaleScannerRegion(selectedRegionIdx, -0.0006))}
                   onMouseUp={stopHold}
                   onMouseLeave={stopHold}
-                  sx={{ fontSize: '0.7rem', py: 0.3, borderColor: '#444', color: '#DDD' }}
+                  sx={{ fontSize: '0.7rem', py: 0.3, borderColor: 'var(--gl-text-faint)', color: 'var(--gl-text-secondary)' }}
                 >
                   Narrow
                 </Button>
@@ -474,7 +474,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                   onMouseDown={() => startHold(() => scaleScannerRegion(selectedRegionIdx, 0.0006))}
                   onMouseUp={stopHold}
                   onMouseLeave={stopHold}
-                  sx={{ fontSize: '0.7rem', py: 0.3, borderColor: '#444', color: '#DDD' }}
+                  sx={{ fontSize: '0.7rem', py: 0.3, borderColor: 'var(--gl-text-faint)', color: 'var(--gl-text-secondary)' }}
                 >
                   Widen
                 </Button>
@@ -492,11 +492,11 @@ export const ScannerCalibrationModal: React.FC = () => {
                   textAlign: 'center'
                 }}
               >
-                <Typography variant="caption" sx={{ color: '#00E5FF', fontSize: '0.7rem', display: 'block', fontWeight: 700 }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontSize: '0.7rem', display: 'block', fontWeight: 700 }}>
                   ⌨️ Tip: Use Keyboard Arrow Keys (↑ ↓ ← →)
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#888', fontSize: '0.65rem', display: 'block', mt: 0.2 }}>
-                  Hold <span style={{ color: '#DDD' }}>Shift</span> for faster movement • <span style={{ color: '#DDD' }}>-</span> / <span style={{ color: '#DDD' }}>+</span> to resize
+                <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.65rem', display: 'block', mt: 0.2 }}>
+                  Hold <span style={{ color: 'var(--gl-text-secondary)' }}>Shift</span> for faster movement • <span style={{ color: 'var(--gl-text-secondary)' }}>-</span> / <span style={{ color: 'var(--gl-text-secondary)' }}>+</span> to resize
                 </Typography>
               </Box>
             </Box>
@@ -508,7 +508,7 @@ export const ScannerCalibrationModal: React.FC = () => {
             onClick={() => setIsCalibrationModalOpen(false)}
             variant="contained"
             size="small"
-            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+            sx={{ backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', fontWeight: 800 }}
           >
             Done
           </Button>
@@ -524,17 +524,17 @@ export const ScannerCalibrationModal: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: '#181818',
-              border: '1px solid #333',
+              backgroundColor: 'var(--gl-panel-header-bg)',
+              border: '1px solid var(--gl-surface-hover)',
               borderRadius: '6px',
-              color: '#FFF'
+              color: 'var(--gl-text-primary)'
             }
           }
         }}
       >
         <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem' }}>Save As Custom Preset</DialogTitle>
         <DialogContent sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-          <Typography variant="caption" sx={{ color: '#AAA' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
             Save current coordinates as a named profile for easy switching and sharing.
           </Typography>
           <TextField
@@ -546,13 +546,13 @@ export const ScannerCalibrationModal: React.FC = () => {
             onChange={(e) => setNewPresetName(e.target.value)}
             fullWidth
             sx={{
-              '& .MuiInputBase-input': { color: '#FFF', fontSize: '0.85rem' },
-              '& .MuiOutlinedInput-root': { borderColor: '#444' }
+              '& .MuiInputBase-input': { color: 'var(--gl-text-primary)', fontSize: '0.85rem' },
+              '& .MuiOutlinedInput-root': { borderColor: 'var(--gl-text-faint)' }
             }}
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setIsSaveModalOpen(false)} size="small" sx={{ color: '#888' }}>
+          <Button onClick={() => setIsSaveModalOpen(false)} size="small" sx={{ color: 'var(--gl-text-muted)' }}>
             Cancel
           </Button>
           <Button
@@ -560,7 +560,7 @@ export const ScannerCalibrationModal: React.FC = () => {
             variant="contained"
             size="small"
             disabled={!newPresetName.trim()}
-            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+            sx={{ backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', fontWeight: 800 }}
           >
             Save Preset
           </Button>
@@ -576,22 +576,22 @@ export const ScannerCalibrationModal: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: '#181818',
-              border: '1px solid #333',
+              backgroundColor: 'var(--gl-panel-header-bg)',
+              border: '1px solid var(--gl-surface-hover)',
               borderRadius: '6px',
-              color: '#FFF'
+              color: 'var(--gl-text-primary)'
             }
           }
         }}
       >
         <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Export Presets (JSON)</span>
-          <IconButton size="small" onClick={() => setIsExportModalOpen(false)} sx={{ color: '#888' }}>
+          <IconButton size="small" onClick={() => setIsExportModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </DialogTitle>
         <DialogContent sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-          <Typography variant="caption" sx={{ color: '#AAA' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
             Share this configuration with friends or across devices.
           </Typography>
           <TextField
@@ -601,8 +601,8 @@ export const ScannerCalibrationModal: React.FC = () => {
             fullWidth
             slotProps={{ input: { readOnly: true } }}
             sx={{
-              '& .MuiInputBase-input': { color: '#00E5FF', fontFamily: 'monospace', fontSize: '0.72rem' },
-              backgroundColor: '#0D0D0D'
+              '& .MuiInputBase-input': { color: 'var(--gl-primary)', fontFamily: 'monospace', fontSize: '0.72rem' },
+              backgroundColor: 'var(--gl-app-bg)'
             }}
           />
         </DialogContent>
@@ -612,7 +612,7 @@ export const ScannerCalibrationModal: React.FC = () => {
             variant="outlined"
             size="small"
             startIcon={<FileDownloadIcon sx={{ fontSize: 16 }} />}
-            sx={{ borderColor: '#444', color: '#DDD' }}
+            sx={{ borderColor: 'var(--gl-text-faint)', color: 'var(--gl-text-secondary)' }}
           >
             Download .json
           </Button>
@@ -621,7 +621,7 @@ export const ScannerCalibrationModal: React.FC = () => {
             variant="contained"
             size="small"
             startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
-            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+            sx={{ backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', fontWeight: 800 }}
           >
             Copy to Clipboard
           </Button>
@@ -637,22 +637,22 @@ export const ScannerCalibrationModal: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: '#181818',
-              border: '1px solid #333',
+              backgroundColor: 'var(--gl-panel-header-bg)',
+              border: '1px solid var(--gl-surface-hover)',
               borderRadius: '6px',
-              color: '#FFF'
+              color: 'var(--gl-text-primary)'
             }
           }
         }}
       >
         <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Import Presets (JSON)</span>
-          <IconButton size="small" onClick={() => setIsImportModalOpen(false)} sx={{ color: '#888' }}>
+          <IconButton size="small" onClick={() => setIsImportModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </DialogTitle>
         <DialogContent sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-          <Typography variant="caption" sx={{ color: '#AAA' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
             Paste preset JSON code or upload a exported `.json` file from another player.
           </Typography>
           <TextField
@@ -663,8 +663,8 @@ export const ScannerCalibrationModal: React.FC = () => {
             onChange={(e) => setImportJsonText(e.target.value)}
             fullWidth
             sx={{
-              '& .MuiInputBase-input': { color: '#FFF', fontFamily: 'monospace', fontSize: '0.72rem' },
-              backgroundColor: '#0D0D0D'
+              '& .MuiInputBase-input': { color: 'var(--gl-text-primary)', fontFamily: 'monospace', fontSize: '0.72rem' },
+              backgroundColor: 'var(--gl-app-bg)'
             }}
           />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -673,7 +673,7 @@ export const ScannerCalibrationModal: React.FC = () => {
               size="small"
               variant="outlined"
               startIcon={<FileUploadIcon sx={{ fontSize: 16 }} />}
-              sx={{ borderColor: '#444', color: '#CCC', fontSize: '0.72rem' }}
+              sx={{ borderColor: 'var(--gl-text-faint)', color: 'var(--gl-text-secondary)', fontSize: '0.72rem' }}
             >
               Upload .json File
               <input type="file" accept=".json,application/json" hidden onChange={handleFileUpload} />
@@ -681,7 +681,7 @@ export const ScannerCalibrationModal: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setIsImportModalOpen(false)} size="small" sx={{ color: '#888' }}>
+          <Button onClick={() => setIsImportModalOpen(false)} size="small" sx={{ color: 'var(--gl-text-muted)' }}>
             Cancel
           </Button>
           <Button
@@ -689,7 +689,7 @@ export const ScannerCalibrationModal: React.FC = () => {
             variant="contained"
             size="small"
             disabled={!importJsonText.trim()}
-            sx={{ backgroundColor: '#00E5FF', color: '#000', fontWeight: 800 }}
+            sx={{ backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', fontWeight: 800 }}
           >
             Import & Apply
           </Button>

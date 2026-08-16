@@ -120,8 +120,8 @@ export const RouteToolbar: React.FC = () => {
                     px: 1.2,
                     fontSize: '0.72rem',
                     fontWeight: 800,
-                    borderColor: isSelected ? undefined : '#333',
-                    backgroundColor: isSelected ? undefined : '#181818'
+                    borderColor: isSelected ? undefined : 'var(--gl-surface-hover)',
+                    backgroundColor: isSelected ? undefined : 'var(--gl-panel-header-bg)'
                   }}
                 >
                   {preset.toUpperCase()}
@@ -141,8 +141,8 @@ export const RouteToolbar: React.FC = () => {
                 onClick={() => setIsCompareModalOpen(true)}
                 startIcon={<CompareArrowsIcon sx={{ fontSize: 16 }} />}
                 sx={{
-                  borderColor: '#FF9800',
-                  color: '#FF9800',
+                  borderColor: 'var(--gl-warning)',
+                  color: 'var(--gl-warning)',
                   fontWeight: 800,
                   fontSize: '0.75rem',
                   backgroundColor: 'rgba(255, 152, 0, 0.08)'
@@ -153,7 +153,7 @@ export const RouteToolbar: React.FC = () => {
             </Badge>
           )}
 
-          <Typography variant="caption" sx={{ color: '#888888', fontFamily: 'monospace', fontWeight: 700 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontWeight: 700 }}>
             {filteredAndSortedRoutes.length} route{filteredAndSortedRoutes.length === 1 ? '' : 's'}
           </Typography>
         </Box>
@@ -161,27 +161,27 @@ export const RouteToolbar: React.FC = () => {
 
       {/* Progress Bar when Calculating */}
       {isCalculating && progress && (
-        <Box sx={{ p: 1.5, backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '4px' }}>
+        <Box sx={{ p: 1.5, backgroundColor: 'var(--gl-panel-header-bg)', border: '1px solid var(--gl-border)', borderRadius: '4px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.75 }}>
-            <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontFamily: 'monospace' }}>
               {progress.stage || `Generation ${progress.currentGeneration} of ${progress.totalGenerations}`}
             </Typography>
-            <Typography variant="caption" sx={{ color: '#AAAAAA', fontFamily: 'monospace' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontFamily: 'monospace' }}>
               {progress.processedCombinations.toLocaleString()} combinations · {progress.progressPercent.toFixed(0)}%
             </Typography>
           </Box>
           <LinearProgress
             variant="determinate"
             value={Math.min(100, Math.max(0, progress.progressPercent))}
-            sx={{ height: 6, borderRadius: 3, backgroundColor: '#222' }}
+            sx={{ height: 6, borderRadius: 3, backgroundColor: 'var(--gl-surface)' }}
           />
         </Box>
       )}
 
       {/* Second Row: Sorting & Inventory Filter Bar */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5, pt: 1, borderTop: '1px solid #202020' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5, pt: 1, borderTop: '1px solid var(--gl-border-subtle)' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="caption" sx={{ color: '#888', fontWeight: 700 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700 }}>
             Sort By:
           </Typography>
           <Select
@@ -192,10 +192,10 @@ export const RouteToolbar: React.FC = () => {
               height: 28,
               fontSize: '0.75rem',
               fontWeight: 700,
-              backgroundColor: '#161616',
-              color: '#FFFFFF',
+              backgroundColor: 'var(--gl-card-bg)',
+              color: 'var(--gl-text-primary)',
               '& .MuiSelect-select': { py: 0.5, px: 1.2 },
-              '& fieldset': { borderColor: '#2A2A2A' }
+              '& fieldset': { borderColor: 'var(--gl-surface)' }
             }}
           >
             <MenuItem value="recommended" sx={{ fontSize: '0.75rem' }}>Recommended Score</MenuItem>
@@ -207,7 +207,7 @@ export const RouteToolbar: React.FC = () => {
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="caption" sx={{ color: '#888', fontWeight: 700 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700 }}>
             Inventory Filter:
           </Typography>
           <Select
@@ -218,10 +218,10 @@ export const RouteToolbar: React.FC = () => {
               height: 28,
               fontSize: '0.75rem',
               fontWeight: 700,
-              backgroundColor: '#161616',
-              color: '#00E5FF',
+              backgroundColor: 'var(--gl-card-bg)',
+              color: 'var(--gl-primary)',
               '& .MuiSelect-select': { py: 0.5, px: 1.2 },
-              '& fieldset': { borderColor: '#2A2A2A' }
+              '& fieldset': { borderColor: 'var(--gl-surface)' }
             }}
           >
             <MenuItem value="all" sx={{ fontSize: '0.75rem' }}>All Routes</MenuItem>

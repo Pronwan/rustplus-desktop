@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap');
+@import './tokens.css';
 
 :root {
   --bg-primary: #0E0E0E;
@@ -17,8 +18,8 @@
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: #E0E0E0;
+  background-color: var(--gl-app-bg);
+  color: var(--gl-text-primary);
   font-family: 'Roboto Mono', 'Consolas', monospace;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -31,16 +32,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #121212;
+  background: var(--gl-panel-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: var(--gl-surface-hover);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+  background: var(--gl-text-faint);
 }
 
 /* Pulsing red dot for live scanner */
@@ -73,8 +74,8 @@ body {
 .filter-underline-input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid #444444;
-  color: #E0E0E0;
+  border-bottom: 1px solid var(--gl-border-strong);
+  color: var(--gl-text-primary);
   font-family: 'Roboto Mono', monospace;
   font-size: 0.9rem;
   padding: 4px 2px;
@@ -85,5 +86,5 @@ body {
 }
 
 .filter-underline-input:focus {
-  border-bottom-color: #00E5FF;
+  border-bottom-color: var(--gl-primary);
 }

@@ -93,8 +93,8 @@ export const ScannerWidget: React.FC = () => {
   ) => (
     <Box
       sx={{
-        backgroundColor: '#202020',
-        border: '1px solid #333333',
+        backgroundColor: 'var(--gl-border-subtle)',
+        border: '1px solid var(--gl-surface-hover)',
         borderRadius: '4px',
         p: 1.5,
         display: 'flex',
@@ -109,14 +109,14 @@ export const ScannerWidget: React.FC = () => {
           sx={{
             fontFamily: '"Roboto Mono", monospace',
             fontSize: '0.82rem',
-            color: '#E0E0E0',
+            color: 'var(--gl-text-primary)',
             fontWeight: 700
           }}
         >
           {title}
         </Typography>
         <Tooltip title={description}>
-          <InfoOutlinedIcon sx={{ fontSize: 16, color: '#888888', cursor: 'pointer' }} />
+          <InfoOutlinedIcon sx={{ fontSize: 16, color: 'var(--gl-text-muted)', cursor: 'pointer' }} />
         </Tooltip>
       </Box>
 
@@ -125,9 +125,9 @@ export const ScannerWidget: React.FC = () => {
         sx={{
           width: '100%',
           height: 52,
-          backgroundColor: '#0a0a0a',
+          backgroundColor: 'var(--gl-app-bg)',
           borderRadius: '3px',
-          border: '1px solid #3a3a3a',
+          border: '1px solid var(--gl-border-strong)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -142,7 +142,7 @@ export const ScannerWidget: React.FC = () => {
             sx={{ width: '100%', height: '100%', objectFit: 'fill', imageRendering: 'crisp-edges' }}
           />
         ) : (
-          <Typography variant="caption" sx={{ color: '#555', fontSize: '0.72rem', fontFamily: 'monospace' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.72rem', fontFamily: 'monospace' }}>
             {isScannerInitializing ? 'Starting OCR Workers...' : 'Waiting for video...'}
           </Typography>
         )}
@@ -168,7 +168,7 @@ export const ScannerWidget: React.FC = () => {
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 0, -1), () => moveScannerRegion(regionIndex, 0, -1))}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: 'var(--gl-text-muted)', p: 0.25, '&:hover': { color: 'var(--gl-primary)' } }}
             >
               <ArrowUpwardIcon sx={{ fontSize: 14 }} />
             </IconButton>
@@ -181,7 +181,7 @@ export const ScannerWidget: React.FC = () => {
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, -1, 0), () => moveScannerRegion(regionIndex, -1, 0))}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: 'var(--gl-text-muted)', p: 0.25, '&:hover': { color: 'var(--gl-primary)' } }}
             >
               <ArrowBackIcon sx={{ fontSize: 14 }} />
             </IconButton>
@@ -191,13 +191,13 @@ export const ScannerWidget: React.FC = () => {
               width: 14,
               height: 14,
               borderRadius: '2px',
-              border: '1px solid #444',
+              border: '1px solid var(--gl-text-faint)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            <Typography variant="caption" sx={{ fontSize: '0.55rem', color: '#666', fontFamily: 'monospace' }}>
+            <Typography variant="caption" sx={{ fontSize: '0.55rem', color: 'var(--gl-text-muted)', fontFamily: 'monospace' }}>
               {regionIndex === 0 ? 'I' : 'P'}
             </Typography>
           </Box>
@@ -207,7 +207,7 @@ export const ScannerWidget: React.FC = () => {
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 1, 0), () => moveScannerRegion(regionIndex, 1, 0))}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: 'var(--gl-text-muted)', p: 0.25, '&:hover': { color: 'var(--gl-primary)' } }}
             >
               <ArrowForwardIcon sx={{ fontSize: 14 }} />
             </IconButton>
@@ -220,7 +220,7 @@ export const ScannerWidget: React.FC = () => {
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 0, 1), () => moveScannerRegion(regionIndex, 0, 1))}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: 'var(--gl-text-muted)', p: 0.25, '&:hover': { color: 'var(--gl-primary)' } }}
             >
               <ArrowDownwardIcon sx={{ fontSize: 14 }} />
             </IconButton>
@@ -236,7 +236,7 @@ export const ScannerWidget: React.FC = () => {
               onMouseDown={() => startHold(() => scaleScannerRegion(regionIndex, 2), () => scaleScannerRegion(regionIndex, 2))}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: 'var(--gl-text-muted)', p: 0.25, '&:hover': { color: 'var(--gl-primary)' } }}
             >
               <ZoomInIcon sx={{ fontSize: 15 }} />
             </IconButton>
@@ -247,7 +247,7 @@ export const ScannerWidget: React.FC = () => {
               onMouseDown={() => startHold(() => scaleScannerRegion(regionIndex, -2), () => scaleScannerRegion(regionIndex, -2))}
               onMouseUp={stopHold}
               onMouseLeave={stopHold}
-              sx={{ color: '#888888', p: 0.25, '&:hover': { color: '#00E5FF' } }}
+              sx={{ color: 'var(--gl-text-muted)', p: 0.25, '&:hover': { color: 'var(--gl-primary)' } }}
             >
               <ZoomOutIcon sx={{ fontSize: 15 }} />
             </IconButton>
@@ -266,8 +266,8 @@ export const ScannerWidget: React.FC = () => {
         right: 20,
         width: 330,
         maxWidth: 'calc(100vw - 40px)',
-        backgroundColor: '#1E1E1E',
-        border: '1px solid #333333',
+        backgroundColor: 'var(--gl-elevated-bg)',
+        border: '1px solid var(--gl-surface-hover)',
         borderRadius: '6px',
         zIndex: 1300,
         overflow: 'hidden',
@@ -282,15 +282,15 @@ export const ScannerWidget: React.FC = () => {
           justifyContent: 'space-between',
           px: 2,
           py: 1.25,
-          backgroundColor: '#1E1E1E',
-          borderBottom: '1px solid #2C2C2C'
+          backgroundColor: 'var(--gl-elevated-bg)',
+          borderBottom: '1px solid var(--gl-surface)'
         }}
       >
         <Typography
           variant="body2"
           sx={{
             fontWeight: 700,
-            color: '#E0E0E0',
+            color: 'var(--gl-text-primary)',
             fontFamily: '"Roboto Mono", monospace',
             fontSize: '0.88rem'
           }}
@@ -303,7 +303,7 @@ export const ScannerWidget: React.FC = () => {
             <IconButton
               size="small"
               onClick={() => setIsDiagnosticsOpen(!isDiagnosticsOpen)}
-              sx={{ color: isDiagnosticsOpen ? '#00E5FF' : '#8E8E8E', p: 0.5 }}
+              sx={{ color: isDiagnosticsOpen ? 'var(--gl-primary)' : 'var(--gl-text-muted)', p: 0.5 }}
             >
               <BugReportIcon sx={{ fontSize: 16 }} />
             </IconButton>
@@ -313,7 +313,7 @@ export const ScannerWidget: React.FC = () => {
             <IconButton
               size="small"
               onClick={stopScanner}
-              sx={{ color: '#8E8E8E', '&:hover': { color: '#E53935' }, p: 0.5 }}
+              sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-error)' }, p: 0.5 }}
             >
               <CloseIcon sx={{ fontSize: 16 }} />
             </IconButton>
@@ -323,25 +323,25 @@ export const ScannerWidget: React.FC = () => {
 
       {/* Diagnostics */}
       {isDiagnosticsOpen && (
-        <Box sx={{ p: 1.5, backgroundColor: '#141414', borderBottom: '1px solid #282828' }}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.5, fontSize: '0.65rem', color: '#AAA', fontFamily: 'monospace' }}>
-            <Box>FPS: <span style={{ color: '#FFF' }}>{diagnostics?.fps ?? 0}</span></Box>
-            <Box>Res: <span style={{ color: '#FFF' }}>{diagnostics?.captureResolution ?? '0x0'}</span></Box>
-            <Box>Stage: <span style={{ color: '#00E5FF' }}>{diagnostics?.pipelineStage ?? 'idle'}</span></Box>
-            <Box>Stage Age: <span style={{ color: '#FFF' }}>{diagnostics?.pipelineStageAgeMs ?? 0}ms</span></Box>
-            <Box>Tick Gap: <span style={{ color: (diagnostics?.tickGapMs ?? 0) > 150 ? '#FF5252' : '#FFF' }}>{diagnostics?.tickGapMs ?? 0}ms</span></Box>
-            <Box>Frame Age: <span style={{ color: (diagnostics?.videoFrameAgeMs ?? 0) > 600 ? '#FF5252' : '#FFF' }}>{diagnostics?.videoFrameAgeMs ?? 0}ms</span></Box>
-            <Box>Frame Gap: <span style={{ color: (diagnostics?.videoFrameGapMs ?? 0) > 450 ? '#FF5252' : '#FFF' }}>{diagnostics?.videoFrameGapMs ?? 0}ms</span></Box>
-            <Box>Page: <span style={{ color: '#FFF' }}>{diagnostics?.pageVisibility ?? 'visible'}</span></Box>
-            <Box>OCR: <span style={{ color: (diagnostics?.lastOcrLatencyMs ?? 0) > 140 ? '#FF5252' : '#FFF' }}>{diagnostics?.lastOcrLatencyMs ?? 0}ms</span></Box>
-            <Box>Row OCR: <span style={{ color: (diagnostics?.rowOcrLatencyMs ?? 0) > 140 ? '#FF5252' : '#FFF' }}>{diagnostics?.rowOcrLatencyMs ?? 0}ms</span></Box>
-            <Box>Slot OCR: <span style={{ color: '#FFF' }}>{diagnostics?.slotOcrLatencyMs ?? 0}ms</span></Box>
-            <Box>Starvation: <span style={{ color: effectiveIsStarved ? '#FF5252' : '#4CAF50', fontWeight: effectiveIsStarved ? 700 : 400 }}>{effectiveIsStarved ? (effectiveStarvationReason || 'YES') : 'NO'}</span></Box>
-            <Box>Confidence: <span style={{ color: '#00E5FF' }}>{diagnostics?.confidence ?? 0}%</span></Box>
-            <Box>Inv Activity: <span style={{ color: '#FFF' }}>{diagnostics?.inventoryActivity ?? 0}</span></Box>
-            <Box>Planter Act: <span style={{ color: '#FFF' }}>{diagnostics?.planterActivity ?? 0}</span></Box>
-            <Box>Active ROI: <span style={{ color: '#00E5FF' }}>{diagnostics?.activeRegion ?? 'none'}</span></Box>
-            <Box>Accepted: <span style={{ color: '#4CAF50' }}>{diagnostics?.acceptedPlants ?? 0}</span></Box>
+        <Box sx={{ p: 1.5, backgroundColor: 'var(--gl-panel-bg)', borderBottom: '1px solid var(--gl-border)' }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.5, fontSize: '0.65rem', color: 'var(--gl-text-secondary)', fontFamily: 'monospace' }}>
+            <Box>FPS: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.fps ?? 0}</span></Box>
+            <Box>Res: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.captureResolution ?? '0x0'}</span></Box>
+            <Box>Stage: <span style={{ color: 'var(--gl-primary)' }}>{diagnostics?.pipelineStage ?? 'idle'}</span></Box>
+            <Box>Stage Age: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.pipelineStageAgeMs ?? 0}ms</span></Box>
+            <Box>Tick Gap: <span style={{ color: (diagnostics?.tickGapMs ?? 0) > 150 ? 'var(--gl-error)' : 'var(--gl-text-primary)' }}>{diagnostics?.tickGapMs ?? 0}ms</span></Box>
+            <Box>Frame Age: <span style={{ color: (diagnostics?.videoFrameAgeMs ?? 0) > 600 ? 'var(--gl-error)' : 'var(--gl-text-primary)' }}>{diagnostics?.videoFrameAgeMs ?? 0}ms</span></Box>
+            <Box>Frame Gap: <span style={{ color: (diagnostics?.videoFrameGapMs ?? 0) > 450 ? 'var(--gl-error)' : 'var(--gl-text-primary)' }}>{diagnostics?.videoFrameGapMs ?? 0}ms</span></Box>
+            <Box>Page: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.pageVisibility ?? 'visible'}</span></Box>
+            <Box>OCR: <span style={{ color: (diagnostics?.lastOcrLatencyMs ?? 0) > 140 ? 'var(--gl-error)' : 'var(--gl-text-primary)' }}>{diagnostics?.lastOcrLatencyMs ?? 0}ms</span></Box>
+            <Box>Row OCR: <span style={{ color: (diagnostics?.rowOcrLatencyMs ?? 0) > 140 ? 'var(--gl-error)' : 'var(--gl-text-primary)' }}>{diagnostics?.rowOcrLatencyMs ?? 0}ms</span></Box>
+            <Box>Slot OCR: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.slotOcrLatencyMs ?? 0}ms</span></Box>
+            <Box>Starvation: <span style={{ color: effectiveIsStarved ? 'var(--gl-error)' : 'var(--gl-success)', fontWeight: effectiveIsStarved ? 700 : 400 }}>{effectiveIsStarved ? (effectiveStarvationReason || 'YES') : 'NO'}</span></Box>
+            <Box>Confidence: <span style={{ color: 'var(--gl-primary)' }}>{diagnostics?.confidence ?? 0}%</span></Box>
+            <Box>Inv Activity: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.inventoryActivity ?? 0}</span></Box>
+            <Box>Planter Act: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.planterActivity ?? 0}</span></Box>
+            <Box>Active ROI: <span style={{ color: 'var(--gl-primary)' }}>{diagnostics?.activeRegion ?? 'none'}</span></Box>
+            <Box>Accepted: <span style={{ color: 'var(--gl-success)' }}>{diagnostics?.acceptedPlants ?? 0}</span></Box>
           </Box>
         </Box>
       )}
@@ -361,12 +361,12 @@ export const ScannerWidget: React.FC = () => {
               p: 1.2
             }}
           >
-            <WarningAmberIcon sx={{ fontSize: 18, color: '#EF5350', mt: '1px', flexShrink: 0 }} />
+            <WarningAmberIcon sx={{ fontSize: 18, color: 'var(--gl-error)', mt: '1px', flexShrink: 0 }} />
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.4 }}>
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#FF8A80',
+                  color: 'var(--gl-error)',
                   fontFamily: '"Roboto Mono", monospace',
                   fontSize: '0.72rem',
                   fontWeight: 700,
@@ -378,7 +378,7 @@ export const ScannerWidget: React.FC = () => {
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#FFCDD2',
+                  color: 'var(--gl-error)',
                   fontFamily: '"Roboto Mono", monospace',
                   fontSize: '0.7rem',
                   lineHeight: 1.4
@@ -400,10 +400,10 @@ export const ScannerWidget: React.FC = () => {
               p: 1
             }}
           >
-            <InfoOutlinedIcon sx={{ fontSize: 15, color: '#FFA726', mt: '1px', flexShrink: 0 }} />
+            <InfoOutlinedIcon sx={{ fontSize: 15, color: 'var(--gl-warning)', mt: '1px', flexShrink: 0 }} />
             <Typography
               variant="caption"
-              sx={{ color: '#C9A26B', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
+              sx={{ color: 'var(--gl-gold)', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
             >
               Scanning feels slow or laggy? Run Rust in <strong>Borderless/Windowed</strong> and <strong>cap your in-game FPS to ≤ 50</strong> (F1: <code>fps.limit 50</code>). Uncapped game FPS starves background capture and stalls recognition.
             </Typography>
@@ -419,12 +419,12 @@ export const ScannerWidget: React.FC = () => {
             size="small"
             onClick={resetScannerRegions}
             sx={{
-              color: '#888888',
+              color: 'var(--gl-text-muted)',
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
-              '&:hover': { color: '#FFFFFF' }
+              '&:hover': { color: 'var(--gl-text-primary)' }
             }}
           >
             RESET
@@ -437,7 +437,7 @@ export const ScannerWidget: React.FC = () => {
               // Regions persist automatically on move/scale
             }}
             sx={{
-              backgroundColor: '#00838F',
+              backgroundColor: 'var(--gl-primary)',
               color: '#FFFFFF',
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.75rem',
@@ -446,7 +446,7 @@ export const ScannerWidget: React.FC = () => {
               px: 2,
               py: 0.5,
               boxShadow: 'none',
-              '&:hover': { backgroundColor: '#0097A7', boxShadow: 'none' }
+              '&:hover': { backgroundColor: 'var(--gl-primary)', boxShadow: 'none' }
             }}
           >
             SAVE REGIONS

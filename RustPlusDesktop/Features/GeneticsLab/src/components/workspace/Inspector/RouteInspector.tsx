@@ -36,8 +36,8 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
       <Paper
         variant="outlined"
         sx={{
-          backgroundColor: '#121212',
-          borderColor: '#242424',
+          backgroundColor: 'var(--gl-panel-bg)',
+          borderColor: 'var(--gl-surface)',
           borderRadius: '6px',
           p: 3,
           height: '100%',
@@ -46,13 +46,13 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
           alignItems: 'center',
           justifyContent: 'center',
           textAlign: 'center',
-          color: '#666'
+          color: 'var(--gl-text-muted)'
         }}
       >
-        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#888', mb: 1 }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'var(--gl-text-muted)', mb: 1 }}>
           No Route Selected
         </Typography>
-        <Typography variant="caption" sx={{ color: '#555', maxWidth: 220 }}>
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', maxWidth: 220 }}>
           Click "Inspect" on any route card in the center panel to view its full breeding tree, 3×3 planter layout, and gene mechanics.
         </Typography>
       </Paper>
@@ -120,8 +120,8 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
     <Paper
       variant="outlined"
       sx={{
-        backgroundColor: '#121212',
-        borderColor: '#242424',
+        backgroundColor: 'var(--gl-panel-bg)',
+        borderColor: 'var(--gl-surface)',
         borderRadius: '6px',
         p: 2,
         height: '100%',
@@ -140,7 +140,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.85rem',
-              color: '#FFFFFF',
+              color: 'var(--gl-text-primary)',
               letterSpacing: '0.5px'
             }}
           >
@@ -155,7 +155,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
               fontWeight: 800,
               fontFamily: 'monospace',
               backgroundColor: 'rgba(0, 229, 255, 0.12)',
-              color: '#00E5FF',
+              color: 'var(--gl-primary)',
               border: '1px solid rgba(0, 229, 255, 0.3)'
             }}
           />
@@ -163,11 +163,11 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <Tooltip title="Copy step-by-step instructions" arrow>
-            <IconButton size="small" onClick={handleCopyInstructions} sx={{ color: '#888' }}>
+            <IconButton size="small" onClick={handleCopyInstructions} sx={{ color: 'var(--gl-text-muted)' }}>
               <ContentCopyIcon sx={{ fontSize: 16 }} />
             </IconButton>
           </Tooltip>
-          <IconButton size="small" onClick={() => (onClose ? onClose() : setSelectedGroup(null))} sx={{ color: '#888' }}>
+          <IconButton size="small" onClick={() => (onClose ? onClose() : setSelectedGroup(null))} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </Box>
@@ -177,8 +177,8 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
       <Paper
         variant="outlined"
         sx={{
-          backgroundColor: '#161616',
-          borderColor: '#2A2A2A',
+          backgroundColor: 'var(--gl-card-bg)',
+          borderColor: 'var(--gl-surface)',
           borderRadius: '4px',
           p: 1.5,
           display: 'flex',
@@ -190,18 +190,18 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
         <GeneticsSequence genes={selectedGroup.resultSaplingGeneString} size="medium" showConnectors={true} />
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="caption" sx={{ color: '#4CAF50', fontWeight: 800, fontFamily: 'monospace' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-success)', fontWeight: 800, fontFamily: 'monospace' }}>
             {Math.round((selectedMap.chance || 1) * 100)}% Probability
           </Typography>
-          <Typography variant="caption" sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontFamily: 'monospace' }}>
             GEN.{selectedMap.resultSapling.generationIndex || 1} ({selectedMap.resultSapling.generationIndex || 1} Step{(selectedMap.resultSapling.generationIndex || 1) > 1 ? 's' : ''})
           </Typography>
         </Box>
       </Paper>
 
       {/* Required Inventory Summary */}
-      <Box sx={{ backgroundColor: '#161616', border: '1px solid #222', borderRadius: '4px', p: 1.25 }}>
-        <Typography variant="caption" sx={{ color: '#888888', fontWeight: 800, fontSize: '0.68rem', mb: 0.75, display: 'block' }}>
+      <Box sx={{ backgroundColor: 'var(--gl-card-bg)', border: '1px solid var(--gl-surface)', borderRadius: '4px', p: 1.25 }}>
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800, fontSize: '0.68rem', mb: 0.75, display: 'block' }}>
           REQUIRED CLONES INVENTORY:
         </Typography>
 
@@ -217,15 +217,15 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                   justifyContent: 'space-between',
                   py: 0.25,
                   px: 0.5,
-                  backgroundColor: '#111',
+                  backgroundColor: 'var(--gl-input-bg)',
                   borderRadius: '3px'
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                   {isReady ? (
-                    <CheckCircleIcon sx={{ fontSize: 13, color: '#4CAF50' }} />
+                    <CheckCircleIcon sx={{ fontSize: 13, color: 'var(--gl-success)' }} />
                   ) : (
-                    <WarningAmberIcon sx={{ fontSize: 13, color: '#FFA726' }} />
+                    <WarningAmberIcon sx={{ fontSize: 13, color: 'var(--gl-warning)' }} />
                   )}
                   <GeneticsSequence genes={leaf.genetics} size="small" showConnectors={false} />
                 </Box>
@@ -236,7 +236,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                     fontFamily: 'monospace',
                     fontSize: '0.7rem',
                     fontWeight: 700,
-                    color: isReady ? '#4CAF50' : '#FFA726'
+                    color: isReady ? 'var(--gl-success)' : 'var(--gl-warning)'
                   }}
                 >
                   Have {leaf.available} / Need {leaf.count}
@@ -248,37 +248,37 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
       </Box>
 
       {/* Tabs: Breeding Tree | 3x3 Planter | Gene Weights */}
-      <Box sx={{ borderBottom: '1px solid #282828' }}>
+      <Box sx={{ borderBottom: '1px solid var(--gl-border)' }}>
         <Tabs
           value={activeTab}
           onChange={(_, val) => setActiveTab(val)}
-          sx={{ minHeight: 30, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 } }}
+          sx={{ minHeight: 30, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)', height: 2 } }}
         >
           <Tab
             value="tree"
             label="Breeding Tree"
-            sx={{ minHeight: 30, py: 0.25, px: 1, fontSize: '0.72rem', fontWeight: 800, color: activeTab === 'tree' ? '#00E5FF' : '#777' }}
+            sx={{ minHeight: 30, py: 0.25, px: 1, fontSize: '0.72rem', fontWeight: 800, color: activeTab === 'tree' ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}
           />
           <Tab
             value="planter"
             label="3x3 Planter"
-            sx={{ minHeight: 30, py: 0.25, px: 1, fontSize: '0.72rem', fontWeight: 800, color: activeTab === 'planter' ? '#00E5FF' : '#777' }}
+            sx={{ minHeight: 30, py: 0.25, px: 1, fontSize: '0.72rem', fontWeight: 800, color: activeTab === 'planter' ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}
           />
           <Tab
             value="genes"
             label="Gene Weights"
-            sx={{ minHeight: 30, py: 0.25, px: 1, fontSize: '0.72rem', fontWeight: 800, color: activeTab === 'genes' ? '#00E5FF' : '#777' }}
+            sx={{ minHeight: 30, py: 0.25, px: 1, fontSize: '0.72rem', fontWeight: 800, color: activeTab === 'genes' ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}
           />
         </Tabs>
       </Box>
 
       {/* Tab Content Container */}
-      <Box sx={{ flex: 1, overflowY: 'auto', pr: 0.5, '&::-webkit-scrollbar': { width: 5 }, '&::-webkit-scrollbar-thumb': { backgroundColor: '#333', borderRadius: 3 } }}>
+      <Box sx={{ flex: 1, overflowY: 'auto', pr: 0.5, '&::-webkit-scrollbar': { width: 5 }, '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface-hover)', borderRadius: 3 } }}>
         {activeTab === 'tree' && <RouteTree map={selectedMap} />}
 
         {activeTab === 'planter' && (
           <Box sx={{ p: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            <Typography variant="caption" sx={{ color: '#888', textAlign: 'center', display: 'block', fontSize: '0.72rem' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', textAlign: 'center', display: 'block', fontSize: '0.72rem' }}>
               Standard 3×3 Planter Box Crossbreeding Placement
             </Typography>
 
@@ -291,10 +291,10 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                 width: '100%',
                 maxWidth: 320,
                 mx: 'auto',
-                backgroundColor: '#0D0D0D',
+                backgroundColor: 'var(--gl-app-bg)',
                 p: 1,
                 borderRadius: '6px',
-                border: '1px solid #222'
+                border: '1px solid var(--gl-surface)'
               }}
             >
               {[
@@ -314,8 +314,8 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                     <Box
                       key={idx}
                       sx={{
-                        backgroundColor: '#182428',
-                        border: '1.5px solid #00E5FF',
+                        backgroundColor: 'var(--gl-tint-cyan)',
+                        border: '1.5px solid var(--gl-primary)',
                         borderRadius: '4px',
                         display: 'flex',
                         flexDirection: 'column',
@@ -325,7 +325,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                         minHeight: 52
                       }}
                     >
-                      <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontSize: '0.58rem', mb: 0.25 }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontSize: '0.58rem', mb: 0.25 }}>
                         CENTER
                       </Typography>
                       {centerGeneStr ? (
@@ -354,7 +354,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                           })}
                         </Box>
                       ) : (
-                        <Typography variant="caption" sx={{ color: '#555', fontSize: '0.6rem' }}>Empty</Typography>
+                        <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.6rem' }}>Empty</Typography>
                       )}
                     </Box>
                   );
@@ -367,9 +367,9 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                   <Box
                     key={idx}
                     sx={{
-                      backgroundColor: plant ? '#181818' : '#101010',
+                      backgroundColor: plant ? 'var(--gl-panel-header-bg)' : 'var(--gl-app-bg)',
                       border: '1px solid',
-                      borderColor: plant ? '#333' : '#1A1A1A',
+                      borderColor: plant ? 'var(--gl-surface-hover)' : 'var(--gl-input-bg)',
                       borderRadius: '4px',
                       display: 'flex',
                       flexDirection: 'column',
@@ -381,7 +381,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                   >
                     {plant ? (
                       <>
-                        <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, fontSize: '0.58rem', mb: 0.25 }}>
+                        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontSize: '0.58rem', mb: 0.25 }}>
                           #{plant.index !== undefined ? plant.index + 1 : (cell.sIdx !== undefined ? cell.sIdx + 1 : idx + 1)}
                         </Typography>
                         <Box sx={{ display: 'flex', gap: '1px' }}>
@@ -410,7 +410,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
                         </Box>
                       </>
                     ) : (
-                      <Typography variant="caption" sx={{ color: '#2A2A2A', fontSize: '0.6rem' }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-surface)', fontSize: '0.6rem' }}>
                         Empty
                       </Typography>
                     )}
@@ -422,8 +422,8 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
             {/* Clean Detailed Plant Breakdown List */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mt: 0.5 }}>
               {selectedMap.baseSapling && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 0.75, backgroundColor: '#141E22', borderRadius: '4px', border: '1px solid rgba(0, 229, 255, 0.3)' }}>
-                  <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontSize: '0.68rem' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 0.75, backgroundColor: 'var(--gl-tint-cyan)', borderRadius: '4px', border: '1px solid rgba(0, 229, 255, 0.3)' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontSize: '0.68rem' }}>
                     CENTER (1st)
                   </Typography>
                   <GeneticsSequence genes={selectedMap.baseSapling.toString()} size="small" />
@@ -431,8 +431,8 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
               )}
 
               {selectedMap.crossbreedingSaplings.map((plant: any, pIdx: number) => (
-                <Box key={pIdx} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 0.75, backgroundColor: '#161616', borderRadius: '4px', border: '1px solid #282828' }}>
-                  <Typography variant="caption" sx={{ color: '#888888', fontWeight: 700, fontSize: '0.68rem' }}>
+                <Box key={pIdx} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 0.75, backgroundColor: 'var(--gl-card-bg)', borderRadius: '4px', border: '1px solid var(--gl-border)' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontSize: '0.68rem' }}>
                     Surrounding #{pIdx + 1}
                   </Typography>
                   <GeneticsSequence genes={plant.toString()} size="small" />
@@ -446,7 +446,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
       </Box>
 
       {/* Bottom Action: Start Breeding */}
-      <Box sx={{ pt: 1, borderTop: '1px solid #222' }}>
+      <Box sx={{ pt: 1, borderTop: '1px solid var(--gl-surface)' }}>
         <Button
           variant="contained"
           size="medium"
@@ -456,10 +456,10 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
           sx={{
             fontWeight: 800,
             py: 0.8,
-            backgroundColor: '#FF9800',
-            color: '#000000',
+            backgroundColor: 'var(--gl-warning)',
+            color: 'var(--gl-on-accent)',
             fontSize: '0.78rem',
-            '&:hover': { backgroundColor: '#FFA726' }
+            '&:hover': { backgroundColor: 'var(--gl-warning)' }
           }}
         >
           START BREEDING MODE

@@ -49,24 +49,24 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
         paper: {
           sx: {
             width: 280,
-            backgroundColor: '#161616',
-            color: '#E0E0E0',
+            backgroundColor: 'var(--gl-card-bg)',
+            color: 'var(--gl-text-primary)',
             p: 2.5,
-            borderRight: '1px solid #282828'
+            borderRight: '1px solid var(--gl-border)'
           }
         }
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Filter Clones
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </Box>
 
-      <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+      <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
         Sort Order
       </Typography>
       <RadioGroup
@@ -80,9 +80,9 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
         <FormControlLabel value="name-asc" control={<Radio size="small" />} label={<Typography variant="body2">Name (A-Z)</Typography>} />
       </RadioGroup>
 
-      <Divider sx={{ my: 2, borderColor: '#282828' }} />
+      <Divider sx={{ my: 2, borderColor: 'var(--gl-border)' }} />
 
-      <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+      <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
         Status & Source
       </Typography>
       <FormGroup sx={{ my: 1 }}>
@@ -108,9 +108,9 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
         />
       </FormGroup>
 
-      <Divider sx={{ my: 2, borderColor: '#282828' }} />
+      <Divider sx={{ my: 2, borderColor: 'var(--gl-border)' }} />
 
-      <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+      <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>
         Gene Content
       </Typography>
       <FormGroup sx={{ my: 1 }}>
@@ -122,7 +122,7 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
               onChange={(e) => onFiltersChange({ ...filters, containsG: e.target.checked })}
             />
           }
-          label={<Typography variant="body2" sx={{ color: '#4CAF50', fontWeight: 700 }}>Contains [G] Growth</Typography>}
+          label={<Typography variant="body2" sx={{ color: 'var(--gl-success)', fontWeight: 700 }}>Contains [G] Growth</Typography>}
         />
         <FormControlLabel
           control={
@@ -132,7 +132,7 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
               onChange={(e) => onFiltersChange({ ...filters, containsY: e.target.checked })}
             />
           }
-          label={<Typography variant="body2" sx={{ color: '#4CAF50', fontWeight: 700 }}>Contains [Y] Yield</Typography>}
+          label={<Typography variant="body2" sx={{ color: 'var(--gl-success)', fontWeight: 700 }}>Contains [Y] Yield</Typography>}
         />
         <FormControlLabel
           control={
@@ -142,7 +142,7 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
               onChange={(e) => onFiltersChange({ ...filters, containsH: e.target.checked })}
             />
           }
-          label={<Typography variant="body2" sx={{ color: '#4CAF50', fontWeight: 700 }}>Contains [H] Hardiness</Typography>}
+          label={<Typography variant="body2" sx={{ color: 'var(--gl-success)', fontWeight: 700 }}>Contains [H] Hardiness</Typography>}
         />
         <FormControlLabel
           control={
@@ -152,7 +152,7 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
               onChange={(e) => onFiltersChange({ ...filters, containsW: e.target.checked })}
             />
           }
-          label={<Typography variant="body2" sx={{ color: '#E53935', fontWeight: 700 }}>Contains [W] Water</Typography>}
+          label={<Typography variant="body2" sx={{ color: 'var(--gl-error)', fontWeight: 700 }}>Contains [W] Water</Typography>}
         />
         <FormControlLabel
           control={
@@ -162,7 +162,7 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
               onChange={(e) => onFiltersChange({ ...filters, containsX: e.target.checked })}
             />
           }
-          label={<Typography variant="body2" sx={{ color: '#E53935', fontWeight: 700 }}>Contains [X] Empty</Typography>}
+          label={<Typography variant="body2" sx={{ color: 'var(--gl-error)', fontWeight: 700 }}>Contains [X] Empty</Typography>}
         />
       </FormGroup>
 

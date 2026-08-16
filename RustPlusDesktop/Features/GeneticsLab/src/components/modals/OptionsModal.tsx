@@ -74,28 +74,28 @@ export const OptionsModal: React.FC = () => {
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#141414',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Settings & Performance
         </Typography>
-        <IconButton size="small" onClick={() => setIsOptionsModalOpen(false)} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={() => setIsOptionsModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
 
-      <Box sx={{ borderBottom: '1px solid #282828', px: 3 }}>
+      <Box sx={{ borderBottom: '1px solid var(--gl-border)', px: 3 }}>
         <Tabs
           value={tab}
           onChange={(_, val) => setTab(val)}
-          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF' } }}
+          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
         >
           <Tab value="solver" label="Genetics Solver" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
           <Tab value="ui" label="Theme & Display" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
@@ -112,7 +112,7 @@ export const OptionsModal: React.FC = () => {
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>
                   Worker CPU Threads
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontFamily: 'monospace' }}>
                   {localOptions.numberOfWorkers} threads (Rec: {RECOMMENDED_WORKER_COUNT})
                 </Typography>
               </Box>
@@ -133,7 +133,7 @@ export const OptionsModal: React.FC = () => {
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>
                   Number of Breeding Generations
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontFamily: 'monospace' }}>
                   {localOptions.numberOfGenerations} Generation{localOptions.numberOfGenerations > 1 ? 's' : ''}
                 </Typography>
               </Box>
@@ -153,7 +153,7 @@ export const OptionsModal: React.FC = () => {
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>
                   Max Surrounding Plants Per Planter
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontFamily: 'monospace' }}>
                   {localOptions.maxCrossbreedingSaplingsNumber} plants
                 </Typography>
               </Box>
@@ -176,7 +176,7 @@ export const OptionsModal: React.FC = () => {
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>
                   Theme Mode
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#888' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                   Industrial dark mode or bright day light theme
                 </Typography>
               </Box>
@@ -184,21 +184,21 @@ export const OptionsModal: React.FC = () => {
                 size="small"
                 value={themeMode}
                 onChange={(e) => setThemeMode(e.target.value as any)}
-                sx={{ backgroundColor: '#1C1C1C', color: '#00E5FF' }}
+                sx={{ backgroundColor: 'var(--gl-card-hover-bg)', color: 'var(--gl-primary)' }}
               >
                 <MenuItem value="dark">Dark Theme</MenuItem>
                 <MenuItem value="light">Light Theme</MenuItem>
               </Select>
             </Box>
 
-            <Divider sx={{ borderColor: '#282828' }} />
+            <Divider sx={{ borderColor: 'var(--gl-border)' }} />
 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box>
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>
                   Display Density
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#888' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                   Adjust padding and spacing for high resolution displays
                 </Typography>
               </Box>
@@ -206,7 +206,7 @@ export const OptionsModal: React.FC = () => {
                 size="small"
                 value={density}
                 onChange={(e) => setDensity(e.target.value as any)}
-                sx={{ backgroundColor: '#1C1C1C', color: '#00E5FF' }}
+                sx={{ backgroundColor: 'var(--gl-card-hover-bg)', color: 'var(--gl-primary)' }}
               >
                 <MenuItem value="comfortable">Comfortable</MenuItem>
                 <MenuItem value="compact">Compact</MenuItem>
@@ -230,7 +230,7 @@ export const OptionsModal: React.FC = () => {
                   <Typography variant="body2" sx={{ fontWeight: 700 }}>
                     Sound Effects
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#888' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                     Play audio pop notification when clone is successfully scanned in Rust
                   </Typography>
                 </Box>
@@ -250,7 +250,7 @@ export const OptionsModal: React.FC = () => {
                   <Typography variant="body2" sx={{ fontWeight: 700 }}>
                     Skip Scanner Onboarding
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#888' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                     Don't show the initial guide modal when launching screen share
                   </Typography>
                 </Box>
@@ -266,7 +266,7 @@ export const OptionsModal: React.FC = () => {
           color="inherit"
           size="small"
           startIcon={<RestartAltIcon sx={{ fontSize: 16 }} />}
-          sx={{ color: '#888' }}
+          sx={{ color: 'var(--gl-text-muted)' }}
         >
           Reset Defaults
         </Button>

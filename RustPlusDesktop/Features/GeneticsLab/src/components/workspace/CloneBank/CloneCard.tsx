@@ -62,11 +62,11 @@ export const CloneCard: React.FC<CloneCardProps> = ({
   };
 
   const ratingColors = {
-    CORE: { bg: 'rgba(0, 229, 255, 0.15)', text: '#00E5FF', border: 'rgba(0, 229, 255, 0.4)' },
-    HIGH: { bg: 'rgba(76, 175, 80, 0.15)', text: '#4CAF50', border: 'rgba(76, 175, 80, 0.4)' },
-    MEDIUM: { bg: 'rgba(255, 167, 38, 0.15)', text: '#FFA726', border: 'rgba(255, 167, 38, 0.4)' },
-    LOW: { bg: 'rgba(150, 150, 150, 0.12)', text: '#AAAAAA', border: 'rgba(150, 150, 150, 0.3)' },
-    REDUNDANT: { bg: 'rgba(229, 57, 53, 0.12)', text: '#E53935', border: 'rgba(229, 57, 53, 0.3)' }
+    CORE: { bg: 'rgba(0, 229, 255, 0.15)', text: 'var(--gl-primary)', border: 'rgba(0, 229, 255, 0.4)' },
+    HIGH: { bg: 'rgba(76, 175, 80, 0.15)', text: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.4)' },
+    MEDIUM: { bg: 'rgba(255, 167, 38, 0.15)', text: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.4)' },
+    LOW: { bg: 'rgba(150, 150, 150, 0.12)', text: 'var(--gl-text-secondary)', border: 'rgba(150, 150, 150, 0.3)' },
+    REDUNDANT: { bg: 'rgba(229, 57, 53, 0.12)', text: 'var(--gl-error)', border: 'rgba(229, 57, 53, 0.3)' }
   };
 
   return (
@@ -76,12 +76,12 @@ export const CloneCard: React.FC<CloneCardProps> = ({
         p: 1.25,
         mb: 1,
         borderRadius: '5px',
-        backgroundColor: '#161616',
-        borderColor: '#262626',
+        backgroundColor: 'var(--gl-card-bg)',
+        borderColor: 'var(--gl-surface)',
         transition: 'all 0.15s ease',
         '&:hover': {
-          borderColor: '#383838',
-          backgroundColor: '#1A1A1A'
+          borderColor: 'var(--gl-border-strong)',
+          backgroundColor: 'var(--gl-input-bg)'
         }
       }}
     >
@@ -91,7 +91,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: '#666666',
+              color: 'var(--gl-text-muted)',
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.72rem'
@@ -116,7 +116,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
                 '& input': {
                   fontSize: '0.75rem',
                   fontWeight: 700,
-                  color: '#FFFFFF',
+                  color: 'var(--gl-text-primary)',
                   py: 0
                 }
               }}
@@ -127,7 +127,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
               onDoubleClick={() => setIsEditingName(true)}
               sx={{
                 fontWeight: 700,
-                color: clone.name ? '#E0E0E0' : '#888888',
+                color: clone.name ? 'var(--gl-text-primary)' : 'var(--gl-text-muted)',
                 fontSize: '0.75rem',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -148,8 +148,8 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             sx={{
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: '#202020',
-              border: '1px solid #333333',
+              backgroundColor: 'var(--gl-border-subtle)',
+              border: '1px solid var(--gl-surface-hover)',
               borderRadius: '3px',
               px: 0.5,
               py: 0.1
@@ -159,7 +159,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
               size="small"
               onClick={(e) => handleQuantityChange(-1, e)}
               disabled={clone.quantity <= 1}
-              sx={{ p: '1px', color: '#888', '&:hover': { color: '#FFF' } }}
+              sx={{ p: '1px', color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}
             >
               <RemoveIcon sx={{ fontSize: 11 }} />
             </IconButton>
@@ -170,7 +170,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
                 fontWeight: 800,
                 fontFamily: 'monospace',
                 fontSize: '0.72rem',
-                color: '#00E5FF',
+                color: 'var(--gl-primary)',
                 px: 0.5,
                 minWidth: 16,
                 textAlign: 'center'
@@ -182,7 +182,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             <IconButton
               size="small"
               onClick={(e) => handleQuantityChange(1, e)}
-              sx={{ p: '1px', color: '#888', '&:hover': { color: '#FFF' } }}
+              sx={{ p: '1px', color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}
             >
               <AddIcon sx={{ fontSize: 11 }} />
             </IconButton>
@@ -191,7 +191,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
           <IconButton
             size="small"
             onClick={() => toggleFavorite(clone.id)}
-            sx={{ p: '2px', color: clone.favorite ? '#FFD700' : '#444444', '&:hover': { color: '#FFD700' } }}
+            sx={{ p: '2px', color: clone.favorite ? 'var(--gl-gold)' : 'var(--gl-text-faint)', '&:hover': { color: 'var(--gl-gold)' } }}
             title={clone.favorite ? 'Unfavorite' : 'Favorite'}
           >
             {clone.favorite ? <StarIcon sx={{ fontSize: 15 }} /> : <StarBorderIcon sx={{ fontSize: 15 }} />}
@@ -200,7 +200,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
           <IconButton
             size="small"
             onClick={(e) => setMenuAnchorEl(e.currentTarget)}
-            sx={{ p: '2px', color: '#666666', '&:hover': { color: '#FFFFFF' } }}
+            sx={{ p: '2px', color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}
           >
             <MoreVertIcon sx={{ fontSize: 15 }} />
           </IconButton>
@@ -217,9 +217,9 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             onClick={handleCopyGenetics}
             sx={{
               p: '3px',
-              color: '#666666',
+              color: 'var(--gl-text-muted)',
               borderRadius: '3px',
-              '&:hover': { color: '#00E5FF', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+              '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
             }}
           >
             <ContentCopyIcon sx={{ fontSize: 13 }} />
@@ -237,7 +237,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
               height: 16,
               fontSize: '0.62rem',
               backgroundColor: 'rgba(0, 229, 255, 0.08)',
-              color: '#00E5FF',
+              color: 'var(--gl-primary)',
               border: '1px solid rgba(0, 229, 255, 0.25)',
               '& .MuiChip-label': { px: 0.5 }
             }}
@@ -265,7 +265,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             variant="caption"
             sx={{
               fontSize: '0.65rem',
-              color: '#888888',
+              color: 'var(--gl-text-muted)',
               fontFamily: 'monospace',
               ml: 'auto'
             }}
@@ -283,8 +283,8 @@ export const CloneCard: React.FC<CloneCardProps> = ({
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: '#1A1A1A',
-              border: '1px solid #333333',
+              backgroundColor: 'var(--gl-input-bg)',
+              border: '1px solid var(--gl-surface-hover)',
               borderRadius: '4px',
               minWidth: 130
             }
@@ -314,7 +314,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             setMenuAnchorEl(null);
             removeClone(clone.id);
           }}
-          sx={{ fontSize: '0.75rem', color: '#E53935', gap: 1 }}
+          sx={{ fontSize: '0.75rem', color: 'var(--gl-error)', gap: 1 }}
         >
           <DeleteIcon sx={{ fontSize: 14 }} /> Remove
         </MenuItem>

@@ -53,16 +53,16 @@ export const RouteGrid: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             p: 6,
-            backgroundColor: '#121212',
-            border: '1px solid #222222',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1px solid var(--gl-surface)',
             borderRadius: '6px',
             textAlign: 'center'
           }}
         >
-          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#00E5FF', mb: 1, fontFamily: 'monospace' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-primary)', mb: 1, fontFamily: 'monospace' }}>
             Simulating Breeding Permutations…
           </Typography>
-          <Typography variant="caption" sx={{ color: '#888888', maxWidth: 360 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', maxWidth: 360 }}>
             Analyzing surrounding plant weights, tie scenarios, and recursive generation routes for {selectedPlant.replace(/-/g, ' ')}.
           </Typography>
         </Box>
@@ -75,16 +75,16 @@ export const RouteGrid: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             p: 5,
-            backgroundColor: '#121212',
-            border: '1.5px dashed #282828',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1.5px dashed var(--gl-border)',
             borderRadius: '6px',
             textAlign: 'center'
           }}
         >
-          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF', mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 1 }}>
             Ready To Find Breeding Routes
           </Typography>
-          <Typography variant="body2" sx={{ color: '#888888', mb: 2.5, maxWidth: 420 }}>
+          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', mb: 2.5, maxWidth: 420 }}>
             {hasClones
               ? `You have ${sourceSaplings.length} plants in your list. Choose your target above and click Calculate Routes.`
               : 'Type or paste at least 2 plants in the Gene Inputs panel on the left to start finding optimal crossbreeding combinations.'}
@@ -96,7 +96,7 @@ export const RouteGrid: React.FC = () => {
             disabled={!hasClones || isScannerBusy}
             onClick={() => runSimulation()}
             startIcon={<PlayArrowIcon sx={{ fontSize: 18 }} />}
-            sx={{ fontWeight: 800, px: 3, backgroundColor: '#00E5FF', color: '#000', '&:hover': { backgroundColor: '#33EBFF' } }}
+            sx={{ fontWeight: 800, px: 3, backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', '&:hover': { backgroundColor: 'var(--gl-primary-hover)' } }}
           >
             {isScannerBusy ? 'Stop Scanner To Calculate' : 'Calculate Routes'}
           </Button>
@@ -107,15 +107,15 @@ export const RouteGrid: React.FC = () => {
           sx={{
             p: 4,
             textAlign: 'center',
-            backgroundColor: '#141414',
-            border: '1px solid #282828',
+            backgroundColor: 'var(--gl-panel-bg)',
+            border: '1px solid var(--gl-border)',
             borderRadius: '6px'
           }}
         >
-          <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#FFFFFF', mb: 1 }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 1 }}>
             No Routes Match Current Target / Filter
           </Typography>
-          <Typography variant="caption" sx={{ color: '#888888', display: 'block', mb: 2 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', display: 'block', mb: 2 }}>
             Try changing the Target Match Mode to "At Least" or "Best Possible", or resetting inventory filters.
           </Typography>
         </Box>
@@ -156,11 +156,11 @@ export const RouteGrid: React.FC = () => {
                 onClick={() => setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredAndSortedRoutes.length))}
                 endIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
                 sx={{
-                  color: '#00E5FF',
+                  color: 'var(--gl-primary)',
                   borderColor: 'rgba(0, 229, 255, 0.4)',
                   fontWeight: 700,
                   fontSize: '0.75rem',
-                  '&:hover': { borderColor: '#00E5FF', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+                  '&:hover': { borderColor: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
                 }}
               >
                 Show More (+{Math.min(PAGE_SIZE, filteredAndSortedRoutes.length - visibleCount)})
@@ -170,7 +170,7 @@ export const RouteGrid: React.FC = () => {
                 variant="text"
                 size="small"
                 onClick={() => setVisibleCount(filteredAndSortedRoutes.length)}
-                sx={{ color: '#888', fontSize: '0.72rem', fontWeight: 600, '&:hover': { color: '#FFF' } }}
+                sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem', fontWeight: 600, '&:hover': { color: 'var(--gl-text-primary)' } }}
               >
                 Show All ({filteredAndSortedRoutes.length})
               </Button>

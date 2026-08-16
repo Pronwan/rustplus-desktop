@@ -67,28 +67,28 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#161616',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-card-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Add Clones to {selectedPlant.replace(/-/g, ' ').toUpperCase()}
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
 
-      <Box sx={{ borderBottom: '1px solid #282828', px: 3 }}>
+      <Box sx={{ borderBottom: '1px solid var(--gl-border)', px: 3 }}>
         <Tabs
           value={tab}
           onChange={(_, val) => setTab(val)}
-          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 } }}
+          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)', height: 2 } }}
         >
           <Tab value="single" label="Single Clone" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
           <Tab value="batch" label="Batch Paste" sx={{ minHeight: 36, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
@@ -99,7 +99,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
         {tab === 'single' ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box>
-              <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, mb: 0.5, display: 'block' }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
                 Genetics (6 letters: G, Y, H, W, X)
               </Typography>
               <TextField
@@ -121,7 +121,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
 
             <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 1.5 }}>
               <Box>
-                <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, mb: 0.5, display: 'block' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
                   Label / Name (Optional)
                 </Typography>
                 <TextField
@@ -134,7 +134,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
               </Box>
 
               <Box>
-                <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, mb: 0.5, display: 'block' }}>
+                <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
                   Quantity
                 </Typography>
                 <TextField
@@ -150,7 +150,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
           </Box>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            <Typography variant="caption" sx={{ color: '#AAAAAA' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
               Paste multiple 6-gene lines from chat, notes, or previous exports:
             </Typography>
             <TextField
@@ -163,7 +163,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
               slotProps={{ htmlInput: { style: { fontFamily: 'monospace', fontSize: '0.85rem' } } }}
               autoFocus
             />
-            <Typography variant="caption" sx={{ color: batchCount > 0 ? '#00E5FF' : '#888888', fontWeight: 700 }}>
+            <Typography variant="caption" sx={{ color: batchCount > 0 ? 'var(--gl-primary)' : 'var(--gl-text-muted)', fontWeight: 700 }}>
               {batchCount} valid clone{batchCount === 1 ? '' : 's'} detected
             </Typography>
           </Box>

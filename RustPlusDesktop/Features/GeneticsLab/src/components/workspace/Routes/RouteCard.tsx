@@ -48,9 +48,9 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   const isBest = rankIndex === 0;
 
   const invBadgeConfig = {
-    available: { label: '✓ Ready', bg: 'rgba(76, 175, 80, 0.12)', color: '#4CAF50', border: 'rgba(76, 175, 80, 0.35)' },
-    partial: { label: `⚠ Missing ${analysis.missingClonesCount}`, bg: 'rgba(255, 167, 38, 0.12)', color: '#FFA726', border: 'rgba(255, 167, 38, 0.35)' },
-    missing: { label: `✕ Missing ${analysis.missingClonesCount}`, bg: 'rgba(229, 57, 53, 0.12)', color: '#E53935', border: 'rgba(229, 57, 53, 0.35)' }
+    available: { label: '✓ Ready', bg: 'rgba(76, 175, 80, 0.12)', color: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.35)' },
+    partial: { label: `⚠ Missing ${analysis.missingClonesCount}`, bg: 'rgba(255, 167, 38, 0.12)', color: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.35)' },
+    missing: { label: `✕ Missing ${analysis.missingClonesCount}`, bg: 'rgba(229, 57, 53, 0.12)', color: 'var(--gl-error)', border: 'rgba(229, 57, 53, 0.35)' }
   };
 
   const invBadge = invBadgeConfig[analysis.inventoryStatus];
@@ -60,9 +60,9 @@ export const RouteCard: React.FC<RouteCardProps> = ({
       onClick={handleInspect}
       variant="outlined"
       sx={{
-        backgroundColor: isSelected ? '#121E22' : '#141414',
+        backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-bg)',
         border: '1px solid',
-        borderColor: isSelected ? '#00E5FF' : isBest ? '#383838' : '#222222',
+        borderColor: isSelected ? 'var(--gl-primary)' : isBest ? 'var(--gl-border-strong)' : 'var(--gl-surface)',
         borderRadius: '5px',
         p: 1.5,
         cursor: 'pointer',
@@ -73,8 +73,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         position: 'relative',
         boxShadow: isSelected ? '0 0 12px rgba(0, 229, 255, 0.12)' : 'none',
         '&:hover': {
-          borderColor: isSelected ? '#00E5FF' : '#444444',
-          backgroundColor: isSelected ? '#121E22' : '#181818'
+          borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-faint)',
+          backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-header-bg)'
         }
       }}
     >
@@ -87,7 +87,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.75rem',
-              color: isBest ? '#00E5FF' : '#E0E0E0'
+              color: isBest ? 'var(--gl-primary)' : 'var(--gl-text-primary)'
             }}
           >
             {isBest ? '⭐ BEST' : `ROUTE #${rankIndex + 1}`}
@@ -102,7 +102,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               fontWeight: 800,
               fontFamily: 'monospace',
               backgroundColor: analysis.recommendationScore >= 80 ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)',
-              color: analysis.recommendationScore >= 80 ? '#00E5FF' : '#AAAAAA',
+              color: analysis.recommendationScore >= 80 ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
               border: `1px solid ${analysis.recommendationScore >= 80 ? 'rgba(0, 229, 255, 0.35)' : 'rgba(255, 255, 255, 0.15)'}`,
               '& .MuiChip-label': { px: 0.6 }
             }}
@@ -125,12 +125,12 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               borderRadius: '3px',
               backgroundColor: isCompared ? 'rgba(255, 152, 0, 0.15)' : 'transparent',
               border: '1px solid',
-              borderColor: isCompared ? '#FF9800' : 'transparent',
+              borderColor: isCompared ? 'var(--gl-warning)' : 'transparent',
               '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.05)' }
             }}
           >
-            <CompareArrowsIcon sx={{ fontSize: 13, color: isCompared ? '#FF9800' : '#666' }} />
-            <Typography variant="caption" sx={{ fontSize: '0.65rem', fontWeight: 700, color: isCompared ? '#FF9800' : '#888' }}>
+            <CompareArrowsIcon sx={{ fontSize: 13, color: isCompared ? 'var(--gl-warning)' : 'var(--gl-text-muted)' }} />
+            <Typography variant="caption" sx={{ fontSize: '0.65rem', fontWeight: 700, color: isCompared ? 'var(--gl-warning)' : 'var(--gl-text-muted)' }}>
               Compare
             </Typography>
           </Box>
@@ -144,8 +144,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 
       {/* Metrics Row */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0.5, textAlign: 'center' }}>
-        <Box sx={{ p: 0.4, backgroundColor: '#1A1A1A', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: '#666', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
+        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
             CHANCE
           </Typography>
           <Typography
@@ -154,15 +154,15 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               fontWeight: 800,
               fontFamily: 'monospace',
               fontSize: '0.75rem',
-              color: analysis.probabilityPercent >= 95 ? '#4CAF50' : analysis.probabilityPercent >= 50 ? '#FFA726' : '#E53935'
+              color: analysis.probabilityPercent >= 95 ? 'var(--gl-success)' : analysis.probabilityPercent >= 50 ? 'var(--gl-warning)' : 'var(--gl-error)'
             }}
           >
             {analysis.probabilityPercent}%
           </Typography>
         </Box>
 
-        <Box sx={{ p: 0.4, backgroundColor: '#1A1A1A', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: '#666', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
+        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
             GENS
           </Typography>
           <Typography
@@ -171,27 +171,27 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               fontWeight: 800,
               fontFamily: 'monospace',
               fontSize: '0.75rem',
-              color: analysis.generationCount === 1 ? '#4CAF50' : '#FFA726'
+              color: analysis.generationCount === 1 ? 'var(--gl-success)' : 'var(--gl-warning)'
             }}
           >
             GEN.{analysis.generationCount}
           </Typography>
         </Box>
 
-        <Box sx={{ p: 0.4, backgroundColor: '#1A1A1A', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: '#666', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
+        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
             CLONES
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', color: '#CCCCCC' }}>
+          <Typography variant="body2" sx={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--gl-text-secondary)' }}>
             {analysis.uniqueCloneCount} unq
           </Typography>
         </Box>
 
-        <Box sx={{ p: 0.4, backgroundColor: '#1A1A1A', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: '#666', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
+        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
             PLANTS
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', color: '#CCCCCC' }}>
+          <Typography variant="body2" sx={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--gl-text-secondary)' }}>
             {analysis.totalPlacementsCount} tot
           </Typography>
         </Box>
@@ -214,14 +214,14 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         />
 
         {group.mapList.length > 1 && (
-          <Typography variant="caption" sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.65rem' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.65rem' }}>
             +{group.mapList.length - 1} alt
           </Typography>
         )}
       </Box>
 
       {/* Card Action Buttons */}
-      <Box sx={{ display: 'flex', gap: 0.75, pt: 0.5, borderTop: '1px solid #1E1E1E' }}>
+      <Box sx={{ display: 'flex', gap: 0.75, pt: 0.5, borderTop: '1px solid var(--gl-elevated-bg)' }}>
         <Button
           variant={isSelected ? 'contained' : 'outlined'}
           color={isSelected ? 'primary' : 'inherit'}
@@ -233,7 +233,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             fontSize: '0.7rem',
             fontWeight: 800,
             py: 0.35,
-            borderColor: isSelected ? undefined : '#2C2C2C'
+            borderColor: isSelected ? undefined : 'var(--gl-surface)'
           }}
         >
           {isSelected ? 'INSPECTING' : 'INSPECT'}
@@ -249,9 +249,9 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             fontSize: '0.7rem',
             fontWeight: 800,
             py: 0.35,
-            backgroundColor: '#FF9800',
-            color: '#000',
-            '&:hover': { backgroundColor: '#FFA726' }
+            backgroundColor: 'var(--gl-warning)',
+            color: 'var(--gl-on-accent)',
+            '&:hover': { backgroundColor: 'var(--gl-warning)' }
           }}
         >
           BREED

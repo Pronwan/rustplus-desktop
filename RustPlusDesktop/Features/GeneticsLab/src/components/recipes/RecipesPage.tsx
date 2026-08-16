@@ -61,7 +61,7 @@ export const RecipesPage: React.FC = () => {
           flexWrap: 'wrap',
           gap: 2,
           mb: 2.5,
-          borderBottom: '1px solid #282828',
+          borderBottom: '1px solid var(--gl-border)',
           pb: 1.5
         }}
       >
@@ -72,7 +72,7 @@ export const RecipesPage: React.FC = () => {
           textColor="inherit"
           sx={{
             minHeight: 36,
-            '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 }
+            '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)', height: 2 }
           }}
         >
           {CATEGORIES.map((cat) => (
@@ -86,7 +86,7 @@ export const RecipesPage: React.FC = () => {
                 px: 2,
                 fontSize: '0.8rem',
                 fontWeight: 700,
-                color: category === cat ? '#00E5FF' : '#888888'
+                color: category === cat ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
               }}
             />
           ))}
@@ -104,7 +104,7 @@ export const RecipesPage: React.FC = () => {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ fontSize: 16, color: '#666666' }} />
+                    <SearchIcon sx={{ fontSize: 16, color: 'var(--gl-text-muted)' }} />
                   </InputAdornment>
                 )
               }
@@ -112,8 +112,8 @@ export const RecipesPage: React.FC = () => {
             sx={{
               width: 180,
               '& .MuiInputBase-root': {
-                backgroundColor: '#141414',
-                color: '#E0E0E0',
+                backgroundColor: 'var(--gl-panel-bg)',
+                color: 'var(--gl-text-primary)',
                 fontSize: '0.8rem',
                 fontFamily: 'monospace',
                 height: 32
@@ -132,12 +132,12 @@ export const RecipesPage: React.FC = () => {
                     fontSize: '0.75rem',
                     py: 0.25,
                     px: 1.2,
-                    backgroundColor: multiplier === m ? '#00E5FF' : 'transparent',
-                    color: multiplier === m ? '#000000' : '#CCCCCC',
-                    borderColor: '#383838',
+                    backgroundColor: multiplier === m ? 'var(--gl-primary)' : 'transparent',
+                    color: multiplier === m ? 'var(--gl-on-accent)' : 'var(--gl-text-secondary)',
+                    borderColor: 'var(--gl-border-strong)',
                     fontWeight: 700,
                     '&:hover': {
-                      backgroundColor: multiplier === m ? '#00E5FF' : 'rgba(255,255,255,0.05)'
+                      backgroundColor: multiplier === m ? 'var(--gl-primary)' : 'rgba(255,255,255,0.05)'
                     }
                   }}
                 >
@@ -156,8 +156,8 @@ export const RecipesPage: React.FC = () => {
                   py: 0.25,
                   px: 1,
                   backgroundColor: viewMode === 'list' ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
-                  color: viewMode === 'list' ? '#00E5FF' : '#888888',
-                  borderColor: '#383838'
+                  color: viewMode === 'list' ? 'var(--gl-primary)' : 'var(--gl-text-muted)',
+                  borderColor: 'var(--gl-border-strong)'
                 }}
               >
                 <ViewListIcon sx={{ fontSize: 18 }} />
@@ -170,8 +170,8 @@ export const RecipesPage: React.FC = () => {
                   py: 0.25,
                   px: 1,
                   backgroundColor: viewMode === 'grid' ? 'rgba(0, 229, 255, 0.15)' : 'transparent',
-                  color: viewMode === 'grid' ? '#00E5FF' : '#888888',
-                  borderColor: '#383838'
+                  color: viewMode === 'grid' ? 'var(--gl-primary)' : 'var(--gl-text-muted)',
+                  borderColor: 'var(--gl-border-strong)'
                 }}
               >
                 <GridViewIcon sx={{ fontSize: 18 }} />
@@ -187,21 +187,21 @@ export const RecipesPage: React.FC = () => {
           component={Paper}
           variant="outlined"
           sx={{
-            backgroundColor: '#121212',
-            borderColor: '#242424',
+            backgroundColor: 'var(--gl-panel-bg)',
+            borderColor: 'var(--gl-surface)',
             borderRadius: '4px'
           }}
         >
           <Table size="small">
-            <TableHead sx={{ backgroundColor: '#181818' }}>
+            <TableHead sx={{ backgroundColor: 'var(--gl-panel-header-bg)' }}>
               <TableRow>
-                <TableCell sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1, width: '28%' }}>
+                <TableCell sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1, width: '28%' }}>
                   Item
                 </TableCell>
-                <TableCell sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1 }}>
+                <TableCell sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1 }}>
                   Recipe
                 </TableCell>
-                <TableCell align="right" sx={{ color: '#888888', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1, width: '8%' }}>
+                <TableCell align="right" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontFamily: 'monospace', fontSize: '0.8rem', py: 1, width: '8%' }}>
                   Σ
                 </TableCell>
               </TableRow>
@@ -222,12 +222,12 @@ export const RecipesPage: React.FC = () => {
                       hover
                       sx={{
                         backgroundColor: isExpanded ? 'rgba(255, 255, 255, 0.02)' : 'transparent',
-                        borderColor: '#242424',
+                        borderColor: 'var(--gl-surface)',
                         '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.03)' }
                       }}
                     >
                       {/* Column 1: Item Name and Icon */}
-                      <TableCell sx={{ borderColor: '#1F1F1F', py: 1.2 }}>
+                      <TableCell sx={{ borderColor: 'var(--gl-elevated-bg)', py: 1.2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                           <Box
                             component="img"
@@ -239,7 +239,7 @@ export const RecipesPage: React.FC = () => {
                             variant="body2"
                             sx={{
                               fontWeight: 700,
-                              color: '#FFFFFF',
+                              color: 'var(--gl-text-primary)',
                               fontFamily: '"Roboto Mono", monospace',
                               fontSize: '0.85rem'
                             }}
@@ -250,7 +250,7 @@ export const RecipesPage: React.FC = () => {
                       </TableCell>
 
                       {/* Column 2: Recipe (Ingredients -> Arrow -> Output) */}
-                      <TableCell sx={{ borderColor: '#1F1F1F', py: 1.2 }}>
+                      <TableCell sx={{ borderColor: 'var(--gl-elevated-bg)', py: 1.2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
                           {/* Ingredients List */}
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
@@ -265,7 +265,7 @@ export const RecipesPage: React.FC = () => {
                                 <Typography
                                   variant="caption"
                                   sx={{
-                                    color: '#E0E0E0',
+                                    color: 'var(--gl-text-primary)',
                                     fontWeight: 700,
                                     fontFamily: 'monospace',
                                     fontSize: '0.8rem'
@@ -278,7 +278,7 @@ export const RecipesPage: React.FC = () => {
                           </Box>
 
                           {/* Arrow */}
-                          <ArrowForwardIcon sx={{ fontSize: 16, color: '#666666' }} />
+                          <ArrowForwardIcon sx={{ fontSize: 16, color: 'var(--gl-text-muted)' }} />
 
                           {/* Output Product */}
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -291,7 +291,7 @@ export const RecipesPage: React.FC = () => {
                             <Typography
                               variant="caption"
                               sx={{
-                                color: '#00E5FF',
+                                color: 'var(--gl-primary)',
                                 fontWeight: 800,
                                 fontFamily: 'monospace',
                                 fontSize: '0.85rem'
@@ -304,23 +304,23 @@ export const RecipesPage: React.FC = () => {
                       </TableCell>
 
                       {/* Column 3: Sigma (Raw Materials Breakdown) */}
-                      <TableCell align="right" sx={{ borderColor: '#1F1F1F', py: 1.2 }}>
+                      <TableCell align="right" sx={{ borderColor: 'var(--gl-elevated-bg)', py: 1.2 }}>
                         {hasRawSubBreakdown ? (
                           <Tooltip title={isExpanded ? 'Hide Raw Materials Breakdown' : 'Show Total Raw Base Materials (Σ)'}>
                             <IconButton
                               size="small"
                               onClick={() => toggleRowExpansion(recipe.id)}
                               sx={{
-                                color: isExpanded ? '#00E5FF' : '#777777',
+                                color: isExpanded ? 'var(--gl-primary)' : 'var(--gl-text-muted)',
                                 backgroundColor: isExpanded ? 'rgba(0, 229, 255, 0.1)' : 'transparent',
-                                '&:hover': { color: '#00E5FF' }
+                                '&:hover': { color: 'var(--gl-primary)' }
                               }}
                             >
                               <FunctionsIcon sx={{ fontSize: 18 }} />
                             </IconButton>
                           </Tooltip>
                         ) : (
-                          <Typography variant="caption" sx={{ color: '#444' }}>-</Typography>
+                          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)' }}>-</Typography>
                         )}
                       </TableCell>
                     </TableRow>
@@ -328,10 +328,10 @@ export const RecipesPage: React.FC = () => {
                     {/* Expandable Sigma Sub-Row */}
                     {hasRawSubBreakdown && (
                       <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
-                        <TableCell colSpan={3} sx={{ py: 0, px: 3, borderColor: '#1F1F1F' }}>
+                        <TableCell colSpan={3} sx={{ py: 0, px: 3, borderColor: 'var(--gl-elevated-bg)' }}>
                           <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                             <Box sx={{ py: 1.5, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                              <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 700, fontFamily: 'monospace' }}>
+                              <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 700, fontFamily: 'monospace' }}>
                                 Total Raw Materials:
                               </Typography>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
@@ -343,10 +343,10 @@ export const RecipesPage: React.FC = () => {
                                       alt={raw.item}
                                       sx={{ width: 20, height: 20, objectFit: 'contain' }}
                                     />
-                                    <Typography variant="caption" sx={{ color: '#AAAAAA', fontFamily: 'monospace' }}>
+                                    <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontFamily: 'monospace' }}>
                                       {raw.item}:
                                     </Typography>
-                                    <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 800, fontFamily: 'monospace' }}>
+                                    <Typography variant="caption" sx={{ color: 'var(--gl-text-primary)', fontWeight: 800, fontFamily: 'monospace' }}>
                                       {raw.quantity}
                                     </Typography>
                                   </Box>
@@ -382,8 +382,8 @@ export const RecipesPage: React.FC = () => {
                 key={recipe.id}
                 variant="outlined"
                 sx={{
-                  backgroundColor: '#181818',
-                  borderColor: '#282828',
+                  backgroundColor: 'var(--gl-panel-header-bg)',
+                  borderColor: 'var(--gl-border)',
                   borderRadius: '6px',
                   p: 2,
                   display: 'flex',
@@ -403,14 +403,14 @@ export const RecipesPage: React.FC = () => {
                       variant="subtitle2"
                       sx={{
                         fontWeight: 700,
-                        color: '#FFFFFF',
+                        color: 'var(--gl-text-primary)',
                         fontFamily: '"Roboto Mono", monospace',
                         lineHeight: 1.2
                       }}
                     >
                       {recipe.name}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 600 }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 600 }}>
                       Yield: {recipe.output.quantity * multiplier}x
                     </Typography>
                   </Box>
@@ -427,11 +427,11 @@ export const RecipesPage: React.FC = () => {
                           alt={ing.item}
                           sx={{ width: 18, height: 18, objectFit: 'contain' }}
                         />
-                        <Typography variant="caption" sx={{ color: '#CCCCCC', fontFamily: 'monospace' }}>
+                        <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontFamily: 'monospace' }}>
                           {ing.item}
                         </Typography>
                       </Box>
-                      <Typography variant="caption" sx={{ color: '#FFFFFF', fontWeight: 700, fontFamily: 'monospace' }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-text-primary)', fontWeight: 700, fontFamily: 'monospace' }}>
                         {ing.quantity * multiplier}
                       </Typography>
                     </Box>
@@ -443,21 +443,21 @@ export const RecipesPage: React.FC = () => {
                   sx={{
                     mt: 'auto',
                     p: 1.2,
-                    backgroundColor: '#121212',
-                    border: '1px solid #242424',
+                    backgroundColor: 'var(--gl-panel-bg)',
+                    border: '1px solid var(--gl-surface)',
                     borderRadius: '4px'
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 700, display: 'block', mb: 0.5, fontSize: '0.7rem' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 700, display: 'block', mb: 0.5, fontSize: '0.7rem' }}>
                     Total Raw Materials:
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
                     {rawMaterials.map((raw, rIdx) => (
                       <Box key={rIdx} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant="caption" sx={{ color: '#8E8E8E', fontFamily: 'monospace', fontSize: '0.75rem' }}>
+                        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.75rem' }}>
                           {raw.item}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem' }}>
+                        <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem' }}>
                           {raw.quantity}
                         </Typography>
                       </Box>

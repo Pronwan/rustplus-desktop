@@ -48,8 +48,8 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
     <Card
       variant="outlined"
       sx={{
-        backgroundColor: '#141414',
-        borderColor: '#282828',
+        backgroundColor: 'var(--gl-panel-bg)',
+        borderColor: 'var(--gl-border)',
         borderRadius: '6px',
         overflow: 'hidden'
       }}
@@ -63,8 +63,8 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 label={`Step ${activeStep + 1} of 4`}
                 size="small"
                 sx={{
-                  backgroundColor: '#00E5FF',
-                  color: '#000000',
+                  backgroundColor: 'var(--gl-primary)',
+                  color: 'var(--gl-on-accent)',
                   fontWeight: 800,
                   fontSize: '0.75rem',
                   borderRadius: '3px'
@@ -74,7 +74,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 variant="subtitle1"
                 sx={{
                   fontWeight: 800,
-                  color: '#FFFFFF',
+                  color: 'var(--gl-text-primary)',
                   fontFamily: '"Roboto Mono", monospace',
                   fontSize: '0.95rem'
                 }}
@@ -88,11 +88,11 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 onClick={() => setIsPlaying(!isPlaying)}
                 startIcon={isPlaying ? <PauseIcon sx={{ fontSize: 14 }} /> : <PlayArrowIcon sx={{ fontSize: 14 }} />}
                 sx={{
-                  color: '#CCCCCC',
-                  borderColor: '#383838',
+                  color: 'var(--gl-text-secondary)',
+                  borderColor: 'var(--gl-border-strong)',
                   fontSize: '0.75rem',
                   py: 0.25,
-                  '&:hover': { borderColor: '#00E5FF' }
+                  '&:hover': { borderColor: 'var(--gl-primary)' }
                 }}
               >
                 {isPlaying ? 'PAUSE' : 'PLAY'}
@@ -101,11 +101,11 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 onClick={() => setActiveStep((s) => (s + 1) % STAGES.length)}
                 startIcon={<SkipNextIcon sx={{ fontSize: 14 }} />}
                 sx={{
-                  color: '#CCCCCC',
-                  borderColor: '#383838',
+                  color: 'var(--gl-text-secondary)',
+                  borderColor: 'var(--gl-border-strong)',
                   fontSize: '0.75rem',
                   py: 0.25,
-                  '&:hover': { borderColor: '#00E5FF' }
+                  '&:hover': { borderColor: 'var(--gl-primary)' }
                 }}
               >
                 NEXT
@@ -116,7 +116,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
           <Typography
             variant="body2"
             sx={{
-              color: '#AAAAAA',
+              color: 'var(--gl-text-secondary)',
               fontFamily: '"Roboto Mono", monospace',
               minHeight: 40,
               fontSize: '0.85rem'
@@ -137,7 +137,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
               backgroundImage: 'url(./img/planter.webp)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              border: '2px solid #282828',
+              border: '2px solid var(--gl-border)',
               p: 2,
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
@@ -156,7 +156,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                   : null;
 
               let label = '';
-              let badgeColor = '#4CAF50';
+              let badgeColor = 'var(--gl-success)';
               let active = false;
               let saplingToRender = null;
 
@@ -164,7 +164,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 // Step 1: Plant Center Target Plant First
                 if (isCenter) {
                   label = 'Center Plant';
-                  badgeColor = '#00E5FF';
+                  badgeColor = 'var(--gl-primary)';
                   active = true;
                   saplingToRender = map?.baseSapling || null;
                 }
@@ -172,7 +172,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 // Step 2: Wait for Center to Reach Sapling Stage
                 if (isCenter) {
                   label = 'Sapling (50%)';
-                  badgeColor = '#00E5FF';
+                  badgeColor = 'var(--gl-primary)';
                   active = true;
                   saplingToRender = map?.baseSapling || null;
                 }
@@ -180,12 +180,12 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 // Step 3: Plant Surrounding Donor Parents
                 if (isCenter) {
                   label = 'Breeding Center';
-                  badgeColor = '#00E5FF';
+                  badgeColor = 'var(--gl-primary)';
                   active = true;
                   saplingToRender = map?.baseSapling || null;
                 } else if (surroundingParent) {
                   label = surroundingParent.generationIndex > 0 ? `GEN.${surroundingParent.generationIndex}` : `#${surroundingParent.index !== undefined ? surroundingParent.index + 1 : surroundingIndex + 1}`;
-                  badgeColor = '#4CAF50';
+                  badgeColor = 'var(--gl-success)';
                   active = true;
                   saplingToRender = surroundingParent;
                 }
@@ -193,7 +193,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 // Step 4: Harvest Cuttings of Target God Clone
                 if (isCenter) {
                   label = 'Target Clone';
-                  badgeColor = '#00E5FF';
+                  badgeColor = 'var(--gl-primary)';
                   active = true;
                   saplingToRender = map?.resultSapling || null;
                 }
@@ -224,7 +224,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                       size="small"
                       sx={{
                         backgroundColor: badgeColor,
-                        color: badgeColor === '#00E5FF' ? '#000000' : '#FFFFFF',
+                        color: badgeColor === 'var(--gl-primary)' ? 'var(--gl-on-accent)' : '#FFFFFF',
                         fontWeight: 800,
                         fontSize: '0.65rem',
                         height: 18,

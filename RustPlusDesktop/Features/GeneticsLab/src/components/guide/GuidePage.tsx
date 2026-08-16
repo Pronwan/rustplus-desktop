@@ -22,7 +22,7 @@ export const GuidePage: React.FC = () => {
         variant="h4"
         sx={{
           fontWeight: 800,
-          color: '#FFFFFF',
+          color: 'var(--gl-text-primary)',
           fontFamily: '"Roboto Mono", monospace',
           mb: 3,
           letterSpacing: '0.5px'
@@ -43,8 +43,8 @@ export const GuidePage: React.FC = () => {
         <Paper
           variant="outlined"
           sx={{
-            backgroundColor: '#141414',
-            borderColor: '#282828',
+            backgroundColor: 'var(--gl-panel-bg)',
+            borderColor: 'var(--gl-border)',
             borderRadius: '6px',
             p: 1.5,
             position: { md: 'sticky' },
@@ -65,7 +65,7 @@ export const GuidePage: React.FC = () => {
                     py: 1,
                     px: 1.5,
                     backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.12)' : 'transparent',
-                    borderLeft: isSelected ? '3px solid #00E5FF' : '3px solid transparent',
+                    borderLeft: isSelected ? '3px solid var(--gl-primary)' : '3px solid transparent',
                     '&:hover': {
                       backgroundColor: 'rgba(255, 255, 255, 0.04)'
                     }
@@ -77,7 +77,7 @@ export const GuidePage: React.FC = () => {
                         variant="body2"
                         sx={{
                           fontWeight: isSelected ? 800 : 500,
-                          color: isSelected ? '#00E5FF' : '#AAAAAA',
+                          color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
                           fontFamily: '"Roboto Mono", monospace',
                           fontSize: '0.85rem'
                         }}
@@ -101,8 +101,8 @@ export const GuidePage: React.FC = () => {
           <Paper
             variant="outlined"
             sx={{
-              backgroundColor: '#141414',
-              borderColor: '#282828',
+              backgroundColor: 'var(--gl-panel-bg)',
+              borderColor: 'var(--gl-border)',
               borderRadius: '6px',
               p: 3.5
             }}
@@ -111,7 +111,7 @@ export const GuidePage: React.FC = () => {
               variant="h5"
               sx={{
                 fontWeight: 800,
-                color: '#FFFFFF',
+                color: 'var(--gl-text-primary)',
                 fontFamily: '"Roboto Mono", monospace',
                 mb: 1
               }}
@@ -122,7 +122,7 @@ export const GuidePage: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                color: '#8E8E8E',
+                color: 'var(--gl-text-muted)',
                 fontFamily: '"Roboto Mono", monospace',
                 mb: 3
               }}
@@ -130,7 +130,7 @@ export const GuidePage: React.FC = () => {
               {activeSection.summary}
             </Typography>
 
-            <Divider sx={{ mb: 3, borderColor: '#282828' }} />
+            <Divider sx={{ mb: 3, borderColor: 'var(--gl-border)' }} />
 
             {/* Paragraphs */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -140,10 +140,10 @@ export const GuidePage: React.FC = () => {
                   variant="body2"
                   sx={{
                     lineHeight: 1.8,
-                    color: '#CCCCCC',
+                    color: 'var(--gl-text-secondary)',
                     fontFamily: '"Roboto Mono", monospace',
                     fontSize: '0.88rem',
-                    '& strong': { color: '#00E5FF', fontWeight: 700 }
+                    '& strong': { color: 'var(--gl-primary)', fontWeight: 700 }
                   }}
                   dangerouslySetInnerHTML={{
                     __html: p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -167,7 +167,7 @@ export const GuidePage: React.FC = () => {
                   variant="subtitle2"
                   sx={{
                     fontWeight: 700,
-                    color: '#4CAF50',
+                    color: 'var(--gl-success)',
                     fontFamily: 'monospace',
                     mb: 1
                   }}
@@ -180,7 +180,7 @@ export const GuidePage: React.FC = () => {
                     variant="caption"
                     sx={{
                       display: 'block',
-                      color: '#E0E0E0',
+                      color: 'var(--gl-text-primary)',
                       fontFamily: 'monospace',
                       lineHeight: 1.6
                     }}

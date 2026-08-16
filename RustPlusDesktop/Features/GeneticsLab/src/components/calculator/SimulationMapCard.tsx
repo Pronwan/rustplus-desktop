@@ -47,8 +47,8 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
   const genIndex = Math.max(1, bestMap?.resultSapling.generationIndex || 1);
 
   const isGen1 = genIndex === 1;
-  const genColor = isGen1 ? '#598518' : '#FFA726';
-  const chanceColor = chanceProd >= 0.99 ? '#598518' : chanceProd >= 0.5 ? '#FFA726' : '#E53935';
+  const genColor = isGen1 ? '#598518' : 'var(--gl-warning)';
+  const chanceColor = chanceProd >= 0.99 ? '#598518' : chanceProd >= 0.5 ? 'var(--gl-warning)' : 'var(--gl-error)';
 
   const hasAlternativePlans = group.mapList.length > 1;
 
@@ -122,8 +122,8 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                   left: 0,
                   right: 0,
                   height: '100%',
-                  backgroundColor: '#141414',
-                  borderColor: isThisHovered ? '#00E5FF' : '#282828',
+                  backgroundColor: 'var(--gl-panel-bg)',
+                  borderColor: isThisHovered ? 'var(--gl-primary)' : 'var(--gl-border)',
                   borderRadius: '4px',
                   p: 1.75,
                   zIndex: z,
@@ -159,8 +159,8 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
         sx={{
           position: 'relative',
           zIndex: 2,
-          backgroundColor: '#181818',
-          border: isContainerHovered ? '1.5px solid #FFFFFF' : '1px solid #282828',
+          backgroundColor: 'var(--gl-panel-header-bg)',
+          border: isContainerHovered ? '1.5px solid #FFFFFF' : '1px solid var(--gl-border)',
           borderRadius: '4px',
           cursor: 'pointer',
           transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
@@ -186,21 +186,21 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 GEN.{genIndex}
               </Typography>
 
-              <Typography variant="caption" sx={{ color: '#555555' }}>·</Typography>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)' }}>·</Typography>
 
               <Typography
                 variant="caption"
                 sx={{
                   fontWeight: 700,
-                  color: '#E0E0E0',
+                  color: 'var(--gl-text-primary)',
                   fontFamily: '"Roboto Mono", monospace',
                   fontSize: '0.8rem'
                 }}
               >
-                Score: <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{score}</span>
+                Score: <span style={{ color: 'var(--gl-text-primary)', fontWeight: 800 }}>{score}</span>
               </Typography>
 
-              <Typography variant="caption" sx={{ color: '#555555' }}>·</Typography>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)' }}>·</Typography>
 
               <Typography
                 variant="caption"
@@ -216,7 +216,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
             </Box>
           </Box>
 
-          <Divider sx={{ borderColor: '#242424', my: 1 }} />
+          <Divider sx={{ borderColor: 'var(--gl-surface)', my: 1 }} />
 
           {/* Center Plant Section */}
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1 }}>
@@ -232,7 +232,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#8E8E8E',
+                  color: 'var(--gl-text-muted)',
                   fontSize: '0.75rem',
                   fontFamily: '"Roboto Mono", monospace',
                   mb: 0.5,
@@ -256,19 +256,19 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                       alignItems: 'center',
                       gap: 0.75,
                       p: isBaseGen ? '2px 6px' : 0,
-                      border: isBaseGen ? '1px solid #FFA726' : 'none',
+                      border: isBaseGen ? '1px solid var(--gl-warning)' : 'none',
                       borderRadius: '3px',
                       cursor: isBaseGen ? 'pointer' : 'default',
                       backgroundColor: isBaseGen ? 'rgba(255, 167, 38, 0.04)' : 'transparent',
-                      '&:hover': isBaseGen ? { borderColor: '#00E5FF' } : {}
+                      '&:hover': isBaseGen ? { borderColor: 'var(--gl-primary)' } : {}
                     }}
                   >
                     {isBaseGen ? (
-                      <Typography variant="caption" sx={{ color: '#FFA726', fontWeight: 800, fontSize: '0.72rem', fontFamily: 'monospace' }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-warning)', fontWeight: 800, fontSize: '0.72rem', fontFamily: 'monospace' }}>
                         GEN.{bestMap.baseSapling.generationIndex}
                       </Typography>
                     ) : (
-                      <Typography variant="caption" sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.75rem', minWidth: 14 }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.75rem', minWidth: 14 }}>
                         #{bestMap.baseSapling.index !== undefined ? bestMap.baseSapling.index + 1 : '1'}
                       </Typography>
                     )}
@@ -280,7 +280,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#CCCCCC',
+                  color: 'var(--gl-text-secondary)',
                   fontFamily: '"Roboto Mono", monospace',
                   fontWeight: 700,
                   fontSize: '0.78rem'
@@ -291,7 +291,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
             )}
           </Box>
 
-          <Divider sx={{ borderColor: '#242424', my: 1 }} />
+          <Divider sx={{ borderColor: 'var(--gl-surface)', my: 1 }} />
 
           {/* Surrounding Plants Section */}
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -307,7 +307,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#8E8E8E',
+                  color: 'var(--gl-text-muted)',
                   fontSize: '0.75rem',
                   fontFamily: '"Roboto Mono", monospace',
                   mb: 0.75,
@@ -338,18 +338,18 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                       justifyContent: 'center',
                       gap: 0.75,
                       p: isParentGen ? '2px 6px' : 0,
-                      border: isParentGen ? '1px solid #FFA726' : 'none',
+                      border: isParentGen ? '1px solid var(--gl-warning)' : 'none',
                       borderRadius: '3px',
                       cursor: isParentGen ? 'pointer' : 'default',
                       backgroundColor: isParentGen ? 'rgba(255, 167, 38, 0.04)' : 'transparent',
-                      '&:hover': isParentGen ? { borderColor: '#00E5FF' } : {}
+                      '&:hover': isParentGen ? { borderColor: 'var(--gl-primary)' } : {}
                     }}
                   >
                     {isParentGen ? (
                       <Typography
                         variant="caption"
                         sx={{
-                          color: '#FFA726',
+                          color: 'var(--gl-warning)',
                           fontWeight: 800,
                           fontSize: '0.72rem',
                           fontFamily: 'monospace',
@@ -362,7 +362,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                       <Typography
                         variant="caption"
                         sx={{
-                          color: '#666666',
+                          color: 'var(--gl-text-muted)',
                           fontWeight: 700,
                           fontSize: '0.72rem',
                           fontFamily: 'monospace',
@@ -387,7 +387,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                       </Typography>
                     )}
                     {!isFirst && !isSecond && bestMap.chance < 1 && (
-                      <Typography variant="caption" sx={{ color: '#FFA726', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace' }}>
+                      <Typography variant="caption" sx={{ color: 'var(--gl-warning)', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace' }}>
                         {(bestMap.chance * 100).toFixed(0)}%
                       </Typography>
                     )}
@@ -406,7 +406,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 }}
                 startIcon={<YardIcon sx={{ fontSize: 14 }} />}
                 sx={{
-                  color: '#00E5FF',
+                  color: 'var(--gl-primary)',
                   fontFamily: 'monospace',
                   fontSize: '0.72rem',
                   fontWeight: 700,
@@ -417,7 +417,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                   backgroundColor: 'rgba(0, 229, 255, 0.04)',
                   '&:hover': {
                     backgroundColor: 'rgba(0, 229, 255, 0.12)',
-                    borderColor: '#00E5FF'
+                    borderColor: 'var(--gl-primary)'
                   }
                 }}
               >

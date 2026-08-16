@@ -31,26 +31,26 @@ export const BreedingHistory: React.FC<BreedingHistoryProps> = ({ open, onClose 
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#161616',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-card-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Breeding Sessions History
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
 
       <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 1.5, maxHeight: 480 }}>
         {breedingHistory.length === 0 ? (
-          <Typography variant="body2" sx={{ color: '#888', textAlign: 'center', py: 4 }}>
+          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', textAlign: 'center', py: 4 }}>
             No past breeding sessions recorded.
           </Typography>
         ) : (
@@ -64,8 +64,8 @@ export const BreedingHistory: React.FC<BreedingHistoryProps> = ({ open, onClose 
                 sx={{
                   p: 1.5,
                   borderRadius: '4px',
-                  backgroundColor: '#1C1C1C',
-                  border: '1px solid #282828',
+                  backgroundColor: 'var(--gl-card-hover-bg)',
+                  border: '1px solid var(--gl-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -74,15 +74,15 @@ export const BreedingHistory: React.FC<BreedingHistoryProps> = ({ open, onClose 
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="caption" sx={{ color: '#AAAAAA', fontWeight: 700, textTransform: 'capitalize' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontWeight: 700, textTransform: 'capitalize' }}>
                       {sess.cropType.replace(/-/g, ' ')}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: '#666' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                       · {new Date(sess.startedAt).toLocaleDateString()}
                     </Typography>
                   </Box>
                   <GeneticsSequence genes={sess.targetGenetics} size="small" showConnectors={true} />
-                  <Typography variant="caption" sx={{ color: '#888', fontSize: '0.7rem' }}>
+                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.7rem' }}>
                     {sess.steps.length} Generation{sess.steps.length > 1 ? 's' : ''}
                   </Typography>
                 </Box>
@@ -94,9 +94,9 @@ export const BreedingHistory: React.FC<BreedingHistoryProps> = ({ open, onClose 
                     fontWeight: 800,
                     fontSize: '0.68rem',
                     backgroundColor: isDone ? 'rgba(76, 175, 80, 0.15)' : isAbandoned ? 'rgba(229, 57, 53, 0.15)' : 'rgba(0, 229, 255, 0.15)',
-                    color: isDone ? '#4CAF50' : isAbandoned ? '#E53935' : '#00E5FF',
+                    color: isDone ? 'var(--gl-success)' : isAbandoned ? 'var(--gl-error)' : 'var(--gl-primary)',
                     border: '1px solid',
-                    borderColor: isDone ? '#4CAF50' : isAbandoned ? '#E53935' : '#00E5FF'
+                    borderColor: isDone ? 'var(--gl-success)' : isAbandoned ? 'var(--gl-error)' : 'var(--gl-primary)'
                   }}
                 />
               </Box>

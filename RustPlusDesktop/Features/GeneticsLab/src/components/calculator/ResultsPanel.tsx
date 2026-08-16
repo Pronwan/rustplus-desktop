@@ -122,7 +122,7 @@ export const ResultsPanel: React.FC = () => {
             variant="caption"
             sx={{
               fontWeight: 800,
-              color: '#FFFFFF',
+              color: 'var(--gl-text-primary)',
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.85rem',
               mb: 1.5,
@@ -145,14 +145,14 @@ export const ResultsPanel: React.FC = () => {
             sx={{
               mt: 1.5,
               mb: 2.5,
-              backgroundColor: '#262626',
-              color: '#FFFFFF',
-              border: '1px solid #383838',
+              backgroundColor: 'var(--gl-surface)',
+              color: 'var(--gl-text-primary)',
+              border: '1px solid var(--gl-border-strong)',
               fontFamily: 'monospace',
               fontSize: '0.75rem',
               fontWeight: 700,
               px: 2,
-              '&:hover': { backgroundColor: '#333333', color: '#00E5FF' }
+              '&:hover': { backgroundColor: 'var(--gl-surface-hover)', color: 'var(--gl-primary)' }
             }}
           >
             CLEAR HIGHLIGHT
@@ -163,20 +163,20 @@ export const ResultsPanel: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                color: '#CCCCCC',
+                color: 'var(--gl-text-secondary)',
                 fontFamily: '"Roboto Mono", monospace',
                 fontSize: '0.82rem',
                 lineHeight: 1.6,
                 mb: 1
               }}
             >
-              The Plant you selected comes from the <strong>{genOrdinal}</strong> generation. To be able to crossbreed it, first you will need to acquire Plants that it requires. Click on <span style={{ color: '#FFA726', textDecoration: 'underline' }}>highlighted</span> Plants to see how to crossbreed them.
+              The Plant you selected comes from the <strong>{genOrdinal}</strong> generation. To be able to crossbreed it, first you will need to acquire Plants that it requires. Click on <span style={{ color: 'var(--gl-warning)', textDecoration: 'underline' }}>highlighted</span> Plants to see how to crossbreed them.
             </Typography>
 
             <Typography
               variant="caption"
               sx={{
-                color: '#8E8E8E',
+                color: 'var(--gl-text-muted)',
                 fontFamily: '"Roboto Mono", monospace',
                 fontSize: '0.78rem'
               }}
@@ -185,7 +185,7 @@ export const ResultsPanel: React.FC = () => {
             </Typography>
           </Box>
 
-          <Divider sx={{ width: '100%', borderColor: '#282828', my: 2 }} />
+          <Divider sx={{ width: '100%', borderColor: 'var(--gl-border)', my: 2 }} />
         </Box>
       )}
 
@@ -201,7 +201,7 @@ export const ResultsPanel: React.FC = () => {
           }}
         >
           <Box>
-            <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
               No. of Gs
             </Typography>
             <input
@@ -215,7 +215,7 @@ export const ResultsPanel: React.FC = () => {
           </Box>
 
           <Box>
-            <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
               No. of Ys
             </Typography>
             <input
@@ -229,7 +229,7 @@ export const ResultsPanel: React.FC = () => {
           </Box>
 
           <Box>
-            <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
               No. of Hs
             </Typography>
             <input
@@ -260,7 +260,7 @@ export const ResultsPanel: React.FC = () => {
             { label: 'Gene 6', val: slot6, set: setSlot6 }
           ].map((item, idx) => (
             <Box key={idx}>
-              <Typography variant="caption" sx={{ color: '#AAAAAA', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', mb: 0.25 }}>
                 {item.label}
               </Typography>
               <input
@@ -282,7 +282,7 @@ export const ResultsPanel: React.FC = () => {
           <Typography
             variant="caption"
             sx={{
-              color: '#00E5FF',
+              color: 'var(--gl-primary)',
               fontWeight: 800,
               fontFamily: '"Roboto Mono", monospace',
               fontSize: '0.82rem',
@@ -305,7 +305,7 @@ export const ResultsPanel: React.FC = () => {
         <Typography
           variant="body2"
           sx={{
-            color: '#B0B0B0',
+            color: 'var(--gl-text-secondary)',
             fontSize: '0.85rem',
             fontFamily: '"Roboto Mono", monospace',
             letterSpacing: '0.2px'
@@ -318,7 +318,7 @@ export const ResultsPanel: React.FC = () => {
       {/* Results List */}
       {filteredResults.length === 0 ? (
         <Box sx={{ textAlign: 'center', py: 6 }}>
-          <Typography variant="body2" sx={{ color: '#666666', fontFamily: 'monospace' }}>
+          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace' }}>
             {isCalculating ? 'Simulating crossbreeding combinations...' : 'No breeding results to display.'}
           </Typography>
         </Box>
@@ -347,7 +347,7 @@ export const ResultsPanel: React.FC = () => {
                 width: '100%'
               }}
             >
-              <Typography variant="caption" sx={{ color: '#666666', fontFamily: 'monospace' }}>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace' }}>
                 Loading more plans ({visibleCount} of {filteredResults.length})...
               </Typography>
             </Box>

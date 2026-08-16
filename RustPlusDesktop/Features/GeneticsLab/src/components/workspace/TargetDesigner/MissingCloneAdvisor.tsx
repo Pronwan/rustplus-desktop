@@ -45,24 +45,24 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
       slotProps={{
         paper: {
           sx: {
-            backgroundColor: '#161616',
-            border: '1px solid #333333',
+            backgroundColor: 'var(--gl-card-bg)',
+            border: '1px solid var(--gl-surface-hover)',
             borderRadius: '6px',
-            color: '#E0E0E0'
+            color: 'var(--gl-text-primary)'
           }
         }
       }}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
         <Box>
-          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#FFFFFF' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
             What Clone Am I Missing?
           </Typography>
-          <Typography variant="caption" sx={{ color: '#888888' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
             Inventory Gap Analysis for Target [{targetConfig.targetGenetics}] · {selectedPlant.replace(/-/g, ' ')}
           </Typography>
         </Box>
-        <IconButton size="small" onClick={onClose} sx={{ color: '#888' }}>
+        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
@@ -70,7 +70,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
       <DialogContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
         {/* Section 1: Per-Slot Donor Strength */}
         <Box>
-          <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
             Slot-by-Slot Donor Strength
           </Typography>
 
@@ -79,7 +79,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
               const isCritical = slot.weaknessLevel === 'critical';
               const isModerate = slot.weaknessLevel === 'moderate';
 
-              const border = isCritical ? '#E53935' : isModerate ? '#FFA726' : '#4CAF50';
+              const border = isCritical ? 'var(--gl-error)' : isModerate ? 'var(--gl-warning)' : 'var(--gl-success)';
               const bg = isCritical ? 'rgba(229, 57, 53, 0.12)' : isModerate ? 'rgba(255, 167, 38, 0.12)' : 'rgba(76, 175, 80, 0.12)';
 
               return (
@@ -96,7 +96,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                     gap: 0.5
                   }}
                 >
-                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.65rem', color: '#888' }}>
+                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.65rem', color: 'var(--gl-text-muted)' }}>
                     Slot {slot.slotNumber}
                   </Typography>
 
@@ -106,7 +106,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                       fontWeight: 800,
                       fontFamily: 'monospace',
                       fontSize: '0.95rem',
-                      color: slot.targetGene === 'G' || slot.targetGene === 'Y' || slot.targetGene === 'H' ? '#4CAF50' : '#E0E0E0'
+                      color: slot.targetGene === 'G' || slot.targetGene === 'Y' || slot.targetGene === 'H' ? 'var(--gl-success)' : 'var(--gl-text-primary)'
                     }}
                   >
                     {slot.targetGene}
@@ -117,7 +117,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                     sx={{
                       fontWeight: 700,
                       fontSize: '0.68rem',
-                      color: isCritical ? '#E53935' : isModerate ? '#FFA726' : '#4CAF50'
+                      color: isCritical ? 'var(--gl-error)' : isModerate ? 'var(--gl-warning)' : 'var(--gl-success)'
                     }}
                   >
                     {slot.currentDonorCount} donor{slot.currentDonorCount === 1 ? '' : 's'}
@@ -130,12 +130,12 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
 
         {/* Section 2: Ranked Patterns to Look For */}
         <Box>
-          <Typography variant="caption" sx={{ color: '#00E5FF', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, textTransform: 'uppercase', mb: 1, display: 'block' }}>
             Recommended Donor Patterns To Look For
           </Typography>
 
           {recommendedPatterns.length === 0 ? (
-            <Typography variant="body2" sx={{ color: '#4CAF50', fontWeight: 700, p: 2, backgroundColor: 'rgba(76, 175, 80, 0.08)', borderRadius: '4px', textAlign: 'center' }}>
+            <Typography variant="body2" sx={{ color: 'var(--gl-success)', fontWeight: 700, p: 2, backgroundColor: 'rgba(76, 175, 80, 0.08)', borderRadius: '4px', textAlign: 'center' }}>
               ✓ Your inventory already has strong donors for all positions in this target!
             </Typography>
           ) : (
@@ -146,8 +146,8 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                   sx={{
                     p: 1.5,
                     borderRadius: '4px',
-                    backgroundColor: '#1C1C1C',
-                    border: '1px solid #282828',
+                    backgroundColor: 'var(--gl-card-hover-bg)',
+                    border: '1px solid var(--gl-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -163,18 +163,18 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                         fontSize: '0.65rem',
                         fontWeight: 800,
                         backgroundColor: rec.priority === 'high' ? 'rgba(229, 57, 53, 0.15)' : 'rgba(255, 167, 38, 0.15)',
-                        color: rec.priority === 'high' ? '#E53935' : '#FFA726',
+                        color: rec.priority === 'high' ? 'var(--gl-error)' : 'var(--gl-warning)',
                         border: `1px solid ${rec.priority === 'high' ? 'rgba(229, 57, 53, 0.4)' : 'rgba(255, 167, 38, 0.4)'}`
                       }}
                     />
                     <GeneticsSequence genes={rec.pattern} size="small" showConnectors={true} />
-                    <Typography variant="caption" sx={{ color: '#AAAAAA' }}>
+                    <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)' }}>
                       {rec.reason}
                     </Typography>
                   </Box>
 
                   <Tooltip title="Copy pattern" arrow>
-                    <IconButton size="small" onClick={() => handleCopyPattern(rec.pattern)} sx={{ color: '#888', '&:hover': { color: '#00E5FF' } }}>
+                    <IconButton size="small" onClick={() => handleCopyPattern(rec.pattern)} sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-primary)' } }}>
                       <ContentCopyIcon sx={{ fontSize: 14 }} />
                     </IconButton>
                   </Tooltip>

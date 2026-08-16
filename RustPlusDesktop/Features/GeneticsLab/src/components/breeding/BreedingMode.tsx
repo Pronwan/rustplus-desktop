@@ -46,21 +46,21 @@ export const BreedingMode: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: '#121212',
-              border: '1.5px solid #333333',
+              backgroundColor: 'var(--gl-panel-bg)',
+              border: '1.5px solid var(--gl-surface-hover)',
               borderRadius: '8px',
-              color: '#E0E0E0',
+              color: 'var(--gl-text-primary)',
               minHeight: 520
             }
           }
         }}
       >
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1, borderBottom: '1px solid #222' }}>
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1, borderBottom: '1px solid var(--gl-surface)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#00E5FF', fontFamily: '"Roboto Mono", monospace' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-primary)', fontFamily: '"Roboto Mono", monospace' }}>
               STEP-BY-STEP BREEDING ASSISTANT
             </Typography>
-            <Typography variant="caption" sx={{ color: '#888', textTransform: 'capitalize' }}>
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', textTransform: 'capitalize' }}>
               {selectedPlant.replace(/-/g, ' ')}
             </Typography>
           </Box>
@@ -72,11 +72,11 @@ export const BreedingMode: React.FC = () => {
               color="inherit"
               onClick={() => setIsHistoryOpen(true)}
               startIcon={<HistoryIcon sx={{ fontSize: 16 }} />}
-              sx={{ fontSize: '0.72rem', borderColor: '#333' }}
+              sx={{ fontSize: '0.72rem', borderColor: 'var(--gl-surface-hover)' }}
             >
               History
             </Button>
-            <IconButton size="small" onClick={() => setIsAbandonConfirmOpen(true)} sx={{ color: '#888' }}>
+            <IconButton size="small" onClick={() => setIsAbandonConfirmOpen(true)} sx={{ color: 'var(--gl-text-muted)' }}>
               <CloseIcon sx={{ fontSize: 18 }} />
             </IconButton>
           </Box>
@@ -84,11 +84,11 @@ export const BreedingMode: React.FC = () => {
 
         <DialogContent sx={{ pt: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Stepper Header */}
-          <Stepper activeStep={currentStepIdx} alternativeLabel sx={{ '& .MuiStepIcon-root.Mui-active': { color: '#00E5FF' }, '& .MuiStepIcon-root.Mui-completed': { color: '#4CAF50' } }}>
+          <Stepper activeStep={currentStepIdx} alternativeLabel sx={{ '& .MuiStepIcon-root.Mui-active': { color: 'var(--gl-primary)' }, '& .MuiStepIcon-root.Mui-completed': { color: 'var(--gl-success)' } }}>
             {activeSession.steps.map((s, idx) => (
               <Step key={idx} completed={s.isCompleted}>
                 <StepLabel>
-                  <Typography variant="caption" sx={{ color: idx === currentStepIdx ? '#00E5FF' : '#888', fontWeight: 800 }}>
+                  <Typography variant="caption" sx={{ color: idx === currentStepIdx ? 'var(--gl-primary)' : 'var(--gl-text-muted)', fontWeight: 800 }}>
                     GEN.{s.generationIndex}
                   </Typography>
                 </StepLabel>
@@ -110,11 +110,11 @@ export const BreedingMode: React.FC = () => {
           )}
         </DialogContent>
 
-        <DialogActions sx={{ px: 3, pb: 2, justifyContent: 'space-between', borderTop: '1px solid #222' }}>
+        <DialogActions sx={{ px: 3, pb: 2, justifyContent: 'space-between', borderTop: '1px solid var(--gl-surface)' }}>
           <Button onClick={() => setIsAbandonConfirmOpen(true)} color="error" size="small">
             Exit Session
           </Button>
-          <Typography variant="caption" sx={{ color: '#666', fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem' }}>
             Progress is automatically saved in your browser.
           </Typography>
         </DialogActions>

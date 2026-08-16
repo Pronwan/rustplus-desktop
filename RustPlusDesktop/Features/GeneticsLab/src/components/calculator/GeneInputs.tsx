@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import BlockIcon from '@mui/icons-material/Block';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { useApp } from '../../context/AppContext.tsx';
+import { useLabColors } from '../../theme/useLabColors.ts';
 import { Sapling } from '../../domain/genetics/Sapling.ts';
 import { GREEN_GENES } from '../../domain/genetics/Gene.ts';
 
@@ -58,6 +59,8 @@ export const GeneInputs: React.FC = () => {
     results,
     highlightedGroup
   } = useApp();
+
+  const C = useLabColors();
 
   const [activeSubTab, setActiveSubTab] = useState<'current' | 'saved'>('current');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -141,7 +144,7 @@ export const GeneInputs: React.FC = () => {
               startIcon={<BlockIcon sx={{ fontSize: 15 }} />}
               sx={{
                 flex: 1,
-                backgroundColor: '#E53935',
+                backgroundColor: C.error,
                 color: '#FFFFFF',
                 fontWeight: 800,
                 fontSize: '0.78rem',
@@ -150,7 +153,7 @@ export const GeneInputs: React.FC = () => {
                 whiteSpace: 'nowrap',
                 minWidth: 0,
                 letterSpacing: '0.3px',
-                '&:hover': { backgroundColor: '#D32F2F' }
+                '&:hover': { backgroundColor: C.errorHover }
               }}
             >
               CANCEL
@@ -173,8 +176,8 @@ export const GeneInputs: React.FC = () => {
                   endIcon={<SkipNextIcon sx={{ fontSize: 15 }} />}
                   sx={{
                     width: '100%',
-                    backgroundColor: '#FF9800',
-                    color: '#000000',
+                    backgroundColor: C.warning,
+                    color: C.isDark ? '#000000' : '#FFFFFF',
                     fontWeight: 800,
                     fontSize: '0.78rem',
                     py: 0.6,
@@ -182,7 +185,7 @@ export const GeneInputs: React.FC = () => {
                     whiteSpace: 'nowrap',
                     minWidth: 0,
                     letterSpacing: '0.3px',
-                    '&:hover': { backgroundColor: '#FB8C00' }
+                    '&:hover': { backgroundColor: C.warningHover }
                   }}
                 >
                   SKIP
@@ -197,9 +200,9 @@ export const GeneInputs: React.FC = () => {
               startIcon={<SettingsIcon sx={{ fontSize: 15 }} />}
               sx={{
                 flex: 1,
-                backgroundColor: '#262626',
-                color: '#555555',
-                border: '1px solid #383838',
+                backgroundColor: C.surface,
+                color: C.textFaint,
+                border: `1px solid ${C.borderStrong}`,
                 fontWeight: 700,
                 fontSize: '0.78rem',
                 py: 0.6,
@@ -220,8 +223,8 @@ export const GeneInputs: React.FC = () => {
               disabled={sourceSaplings.length < 2 || isCalculating || isScannerActive || isScannerInitializing}
               sx={{
                 flex: 1.1,
-                backgroundColor: '#00E5FF',
-                color: '#000000',
+                backgroundColor: C.primary,
+                color: C.onPrimary,
                 fontWeight: 800,
                 fontSize: '0.78rem',
                 py: 0.6,
@@ -229,8 +232,8 @@ export const GeneInputs: React.FC = () => {
                 whiteSpace: 'nowrap',
                 minWidth: 0,
                 letterSpacing: '0.3px',
-                '&:hover': { backgroundColor: '#33EBFF' },
-                '&:disabled': { backgroundColor: '#282828', color: '#555555' }
+                '&:hover': { backgroundColor: C.primaryHover },
+                '&:disabled': { backgroundColor: C.surface, color: C.textFaint }
               }}
             >
               CALCULATE
@@ -245,17 +248,17 @@ export const GeneInputs: React.FC = () => {
                 startIcon={<SaveIcon sx={{ fontSize: 15 }} />}
                 sx={{
                   flex: 0.9,
-                  backgroundColor: '#262626',
-                  color: '#00E5FF',
-                  border: '1px solid rgba(0, 229, 255, 0.3)',
+                  backgroundColor: C.surface,
+                  color: C.primary,
+                  border: `1px solid ${C.primaryBorder}`,
                   fontWeight: 700,
                   fontSize: '0.75rem',
                   py: 0.6,
                   px: 0.8,
                   whiteSpace: 'nowrap',
                   minWidth: 0,
-                  '&:hover': { backgroundColor: '#333333', borderColor: '#00E5FF' },
-                  '&:disabled': { backgroundColor: '#1A1A1A', color: '#444444', borderColor: '#282828' }
+                  '&:hover': { backgroundColor: C.surfaceHover, borderColor: C.primary },
+                  '&:disabled': { backgroundColor: C.inputBg, color: C.textFaint, borderColor: C.border }
                 }}
               >
                 SAVE
@@ -276,16 +279,16 @@ export const GeneInputs: React.FC = () => {
                 startIcon={<DesktopWindowsIcon sx={{ fontSize: 15 }} />}
                 sx={{
                   flex: 1.1,
-                  backgroundColor: '#262626',
-                  color: '#FFFFFF',
-                  border: '1px solid #383838',
+                  backgroundColor: C.surface,
+                  color: C.textPrimary,
+                  border: `1px solid ${C.borderStrong}`,
                   fontWeight: 700,
                   fontSize: '0.78rem',
                   py: 0.6,
                   px: 1,
                   whiteSpace: 'nowrap',
                   minWidth: 0,
-                  '&:hover': { backgroundColor: '#333333' }
+                  '&:hover': { backgroundColor: C.surfaceHover }
                 }}
               >
                 SCAN RUST
@@ -296,8 +299,8 @@ export const GeneInputs: React.FC = () => {
                 disabled
                 sx={{
                   flex: 1.1,
-                  backgroundColor: '#333333',
-                  color: '#888888',
+                  backgroundColor: C.surfaceHover,
+                  color: C.textMuted,
                   fontWeight: 700,
                   fontSize: '0.78rem',
                   py: 0.6,
@@ -314,7 +317,7 @@ export const GeneInputs: React.FC = () => {
                 onClick={stopScanner}
                 sx={{
                   flex: 1.1,
-                  backgroundColor: '#E53935',
+                  backgroundColor: C.error,
                   color: '#FFFFFF',
                   fontWeight: 800,
                   fontSize: '0.78rem',
@@ -324,7 +327,7 @@ export const GeneInputs: React.FC = () => {
                   minWidth: 0,
                   display: 'flex',
                   alignItems: 'center',
-                  '&:hover': { backgroundColor: '#D32F2F' }
+                  '&:hover': { backgroundColor: C.errorHover }
                 }}
               >
                 STOP SCAN
@@ -339,16 +342,16 @@ export const GeneInputs: React.FC = () => {
               startIcon={<SettingsIcon sx={{ fontSize: 15 }} />}
               sx={{
                 flex: 0.9,
-                backgroundColor: '#262626',
-                color: '#FFFFFF',
-                border: '1px solid #383838',
+                backgroundColor: C.surface,
+                color: C.textPrimary,
+                border: `1px solid ${C.borderStrong}`,
                 fontWeight: 700,
                 fontSize: '0.78rem',
                 py: 0.6,
                 px: 1,
                 whiteSpace: 'nowrap',
                 minWidth: 0,
-                '&:hover': { backgroundColor: '#333333' }
+                '&:hover': { backgroundColor: C.surfaceHover }
               }}
             >
               OPTIONS
@@ -363,21 +366,21 @@ export const GeneInputs: React.FC = () => {
           sx={{
             mb: 2,
             p: 1.5,
-            backgroundColor: '#161616',
-            border: '1px solid #282828',
+            backgroundColor: C.cardBg,
+            border: `1px solid ${C.border}`,
             borderRadius: '4px'
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.75 }}>
             <Typography
               variant="caption"
-              sx={{ color: '#00E5FF', fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
+              sx={{ color: C.primary, fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
             >
               GEN. {progress.currentGeneration} OF {progress.totalGenerations}
             </Typography>
             <Typography
               variant="caption"
-              sx={{ color: '#FFFFFF', fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
+              sx={{ color: C.textPrimary, fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
             >
               {(() => {
                 const p = Math.min(100, Math.max(0, progress.progressPercent || 0));
@@ -396,22 +399,22 @@ export const GeneInputs: React.FC = () => {
             sx={{
               height: 6,
               borderRadius: 3,
-              backgroundColor: '#262626',
+              backgroundColor: C.surface,
               '& .MuiLinearProgress-bar': {
-                backgroundColor: '#00E5FF',
+                backgroundColor: C.primary,
                 borderRadius: 3
               }
             }}
           />
 
           <Box sx={{ mt: 0.75, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="caption" sx={{ color: '#00E5FF', fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 700 }}>
+            <Typography variant="caption" sx={{ color: C.primary, fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 700 }}>
               Found: {results.length} plans
             </Typography>
             {progress.estimatedTimeRemainingSeconds !== null && progress.estimatedTimeRemainingSeconds !== undefined && (
               <Typography
                 variant="caption"
-                sx={{ color: '#FFA726', fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 700 }}
+                sx={{ color: C.warning, fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 700 }}
               >
                 EST:{' '}
                 {(() => {
@@ -434,14 +437,14 @@ export const GeneInputs: React.FC = () => {
           <Box sx={{ mt: 0.75, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
             <Typography
               variant="caption"
-              sx={{ color: '#B0B0B0', fontSize: '0.72rem', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+              sx={{ color: C.textSecondary, fontSize: '0.72rem', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
             >
               {progress.stage || 'Working…'}
             </Typography>
             {progress.totalCombinations > 0 && (
               <Typography
                 variant="caption"
-                sx={{ color: '#666666', fontSize: '0.72rem', fontFamily: 'monospace', whiteSpace: 'nowrap' }}
+                sx={{ color: C.textMuted, fontSize: '0.72rem', fontFamily: 'monospace', whiteSpace: 'nowrap' }}
               >
                 {progress.processedCombinations.toLocaleString()} / {progress.totalCombinations.toLocaleString()}
               </Typography>
@@ -451,12 +454,12 @@ export const GeneInputs: React.FC = () => {
       )}
 
       {/* Tabs: CURRENT | SAVED */}
-      <Box sx={{ borderBottom: '1px solid #282828', mb: 1.5 }}>
+      <Box sx={{ borderBottom: `1px solid ${C.border}`, mb: 1.5 }}>
         <Tabs
           value={activeSubTab}
           onChange={(_, val) => setActiveSubTab(val)}
           textColor="inherit"
-          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: '#00E5FF', height: 2 } }}
+          sx={{ minHeight: 36, '& .MuiTabs-indicator': { backgroundColor: C.primary, height: 2 } }}
         >
           <Tab
             value="current"
@@ -467,7 +470,7 @@ export const GeneInputs: React.FC = () => {
               px: 2,
               fontSize: '0.8rem',
               fontWeight: 700,
-              color: activeSubTab === 'current' ? '#00E5FF' : '#888888'
+              color: activeSubTab === 'current' ? C.primary : C.textMuted
             }}
           />
           <Tab
@@ -479,7 +482,7 @@ export const GeneInputs: React.FC = () => {
               px: 2,
               fontSize: '0.8rem',
               fontWeight: 700,
-              color: activeSubTab === 'saved' ? '#00E5FF' : '#888888'
+              color: activeSubTab === 'saved' ? C.primary : C.textMuted
             }}
           />
         </Tabs>
@@ -491,8 +494,8 @@ export const GeneInputs: React.FC = () => {
           <Paper
             variant="outlined"
             sx={{
-              backgroundColor: '#111111',
-              borderColor: '#282828',
+              backgroundColor: C.inputBg,
+              borderColor: C.border,
               borderRadius: '2px',
               p: '10px 14px',
               minHeight: 280,
@@ -505,7 +508,7 @@ export const GeneInputs: React.FC = () => {
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#777777',
+                  color: C.textMuted,
                   fontFamily: '"Roboto Mono", monospace',
                   fontSize: '0.8rem',
                   fontWeight: 600,
@@ -522,11 +525,11 @@ export const GeneInputs: React.FC = () => {
                   disabled={isCalculating || geneInputText.trim().length === 0}
                   sx={{
                     fontSize: '0.68rem',
-                    color: '#555555',
+                    color: C.textFaint,
                     p: 0,
                     minWidth: 'auto',
-                    '&:hover': { color: '#E53935' },
-                    '&:disabled': { color: '#333333' }
+                    '&:hover': { color: C.error },
+                    '&:disabled': { color: C.border }
                   }}
                 >
                   CLEAR
@@ -534,7 +537,7 @@ export const GeneInputs: React.FC = () => {
                 <Button
                   size="small"
                   onClick={handleLoadSample}
-                  sx={{ fontSize: '0.68rem', color: '#555555', p: 0, minWidth: 'auto', '&:hover': { color: '#00E5FF' } }}
+                  sx={{ fontSize: '0.68rem', color: C.textFaint, p: 0, minWidth: 'auto', '&:hover': { color: C.primary } }}
                 >
                   SAMPLE
                 </Button>
@@ -549,8 +552,8 @@ export const GeneInputs: React.FC = () => {
                 slotProps={{
                   paper: {
                     sx: {
-                      backgroundColor: '#1A1A1A',
-                      border: '1px solid #333333',
+                      backgroundColor: C.elevatedBg,
+                      border: `1px solid ${C.borderStrong}`,
                       borderRadius: '4px',
                       p: 1.5,
                       mt: 0.5,
@@ -560,7 +563,7 @@ export const GeneInputs: React.FC = () => {
                 }}
               >
                 <Typography
-                  sx={{ color: '#E0E0E0', fontFamily: '"Roboto Mono", monospace', fontSize: '0.78rem', mb: 1.25 }}
+                  sx={{ color: C.textPrimary, fontFamily: '"Roboto Mono", monospace', fontSize: '0.78rem', mb: 1.25 }}
                 >
                   Clear all gene input? This removes every plant you've entered.
                 </Typography>
@@ -569,11 +572,11 @@ export const GeneInputs: React.FC = () => {
                     size="small"
                     onClick={() => setClearAnchorEl(null)}
                     sx={{
-                      color: '#888888',
+                      color: C.textMuted,
                       fontFamily: 'monospace',
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      '&:hover': { color: '#FFFFFF' }
+                      '&:hover': { color: C.textPrimary }
                     }}
                   >
                     CANCEL
@@ -583,13 +586,13 @@ export const GeneInputs: React.FC = () => {
                     variant="contained"
                     onClick={handleClearConfirmed}
                     sx={{
-                      backgroundColor: '#E53935',
+                      backgroundColor: C.error,
                       color: '#FFFFFF',
                       fontFamily: 'monospace',
                       fontSize: '0.72rem',
                       fontWeight: 800,
                       boxShadow: 'none',
-                      '&:hover': { backgroundColor: '#F44336', boxShadow: 'none' }
+                      '&:hover': { backgroundColor: C.errorHover, boxShadow: 'none' }
                     }}
                   >
                     CLEAR
@@ -618,12 +621,12 @@ export const GeneInputs: React.FC = () => {
                         height: ROW_HEIGHT,
                         px: '4px',
                         backgroundColor: isUsedInPlan
-                          ? 'rgba(255, 255, 255, 0.08)'
+                          ? (C.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(2, 132, 199, 0.08)')
                           : isActiveCursor
                           ? 'rgba(255, 152, 0, 0.03)'
                           : 'transparent',
                         borderBottom: isUsedInPlan
-                          ? '1.5px solid #FF9800'
+                          ? `1.5px solid ${C.warning}`
                           : isActiveCursor
                           ? '1px solid rgba(255, 152, 0, 0.3)'
                           : '1px solid transparent',
@@ -635,7 +638,7 @@ export const GeneInputs: React.FC = () => {
                       <Typography
                         variant="caption"
                         sx={{
-                          color: isUsedInPlan ? '#FFA726' : '#666666',
+                          color: isUsedInPlan ? C.warning : C.textMuted,
                           fontFamily: '"Roboto Mono", monospace',
                           fontSize: '0.82rem',
                           minWidth: 16,
@@ -655,7 +658,7 @@ export const GeneInputs: React.FC = () => {
                           const char = chars[slotIdx];
                           const hasGene = !!char;
                           const isGreen = hasGene ? (GREEN_GENES as readonly string[]).includes(char) : false;
-                          const bgColor = !hasGene ? '#1C1C1C' : isGreen ? '#598518' : '#94382A';
+                          const bgColor = !hasGene ? C.inputBg : isGreen ? '#598518' : '#94382A';
 
                           return (
                             <React.Fragment key={slotIdx}>
@@ -674,7 +677,7 @@ export const GeneInputs: React.FC = () => {
                                   fontFamily: '"Roboto Mono", "Consolas", monospace',
                                   userSelect: 'none',
                                   lineHeight: 1,
-                                  border: !hasGene ? '1px solid #282828' : 'none'
+                                  border: !hasGene ? `1px solid ${C.border}` : 'none'
                                 }}
                               >
                                 {char || ''}
@@ -684,7 +687,7 @@ export const GeneInputs: React.FC = () => {
                                 <Typography
                                   component="span"
                                   sx={{
-                                    color: '#333333',
+                                    color: C.textFaint,
                                     fontSize: '0.75rem',
                                     fontFamily: 'monospace',
                                     userSelect: 'none',
@@ -723,7 +726,7 @@ export const GeneInputs: React.FC = () => {
                   backgroundColor: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  color: '#FFFFFF',
+                  color: C.textPrimary,
                   fontFamily: '"Roboto Mono", "Consolas", monospace',
                   fontWeight: 700,
                   fontSize: '0.88rem',
@@ -734,7 +737,7 @@ export const GeneInputs: React.FC = () => {
                   whiteSpace: 'pre',
                   padding: 0,
                   margin: 0,
-                  caretColor: '#00E5FF',
+                  caretColor: C.primary,
                   opacity: isCalculating ? 0.6 : 1,
                   cursor: isCalculating ? 'not-allowed' : 'text'
                 }}
@@ -749,7 +752,7 @@ export const GeneInputs: React.FC = () => {
         <Box>
           {savedGeneSets.length === 0 ? (
             <Box sx={{ py: 4, textAlign: 'center' }}>
-              <Typography variant="body2" sx={{ color: '#666666', fontFamily: 'monospace' }}>
+              <Typography variant="body2" sx={{ color: C.textMuted, fontFamily: 'monospace' }}>
                 No saved plant sets yet.
               </Typography>
             </Box>
@@ -757,8 +760,8 @@ export const GeneInputs: React.FC = () => {
             <Paper
               variant="outlined"
               sx={{
-                backgroundColor: '#111111',
-                borderColor: '#282828',
+                backgroundColor: C.inputBg,
+                borderColor: C.border,
                 borderRadius: '2px',
                 p: '8px',
                 maxHeight: 440,
@@ -783,14 +786,14 @@ export const GeneInputs: React.FC = () => {
                         justifyContent: 'space-between',
                         py: '6px',
                         px: '12px',
-                        backgroundColor: '#1C1C1C',
-                        border: '1px solid #282828',
+                        backgroundColor: C.surface,
+                        border: `1px solid ${C.border}`,
                         borderRadius: '4px',
                         cursor: 'pointer',
                         transition: 'background-color 0.15s ease, border-color 0.15s ease',
                         '&:hover': {
-                          backgroundColor: '#262626',
-                          borderColor: '#383838'
+                          backgroundColor: C.surfaceHover,
+                          borderColor: C.borderStrong
                         }
                       }}
                     >
@@ -807,7 +810,7 @@ export const GeneInputs: React.FC = () => {
                         variant="caption"
                         sx={{
                           fontWeight: 700,
-                          color: '#FFFFFF',
+                          color: C.textPrimary,
                           fontFamily: '"Roboto Mono", monospace',
                           fontSize: '0.82rem',
                           minWidth: 80,
@@ -821,7 +824,7 @@ export const GeneInputs: React.FC = () => {
                       <Typography
                         variant="caption"
                         sx={{
-                          color: '#CCCCCC',
+                          color: C.textSecondary,
                           fontFamily: '"Roboto Mono", monospace',
                           fontSize: '0.78rem',
                           textAlign: 'right',
@@ -848,9 +851,9 @@ export const GeneInputs: React.FC = () => {
                           deleteSavedGeneSet(set.timestamp);
                         }}
                         sx={{
-                          color: '#8E8E8E',
+                          color: C.textMuted,
                           p: 0.25,
-                          '&:hover': { color: '#E53935' }
+                          '&:hover': { color: C.error }
                         }}
                       >
                         <CloseIcon sx={{ fontSize: 18 }} />
