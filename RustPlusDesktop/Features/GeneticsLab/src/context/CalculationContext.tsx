@@ -22,7 +22,26 @@ export interface ScoredRoute {
   group: GeneticsMapGroup;
   bestMap: GeneticsMap;
   analysis: RouteAnalysis;
+  /** Other routes merged into this one because they are of equal quality. */
+  equivalents?: ScoredRoute[];
 }
+
+/**
+ * Quality signature used to collapse near-identical routes. Two routes with the
+ * same score, chance, generations, clone count, plant count and inventory status
+ * are treated as equivalent — only one representative card is shown.
+ */
+const routeSignature = (r: ScoredRoute): string => {
+  const a = r.analysis;
+  return [
+    Math.round(a.recommendationScore),
+    Math.round(a.probabilityPercent),
+    a.generationCount,
+    a.uniqueCloneCount,
+    a.totalPlacementsCount,
+    a.inventoryStatus
+  ].join('|');
+};
 
 interface CalculationContextType {
   isCalculating: boolean;
@@ -30,10 +49,14 @@ interface CalculationContextType {
   results: GeneticsMapGroup[];
   scoredRoutes: ScoredRoute[];
   filteredAndSortedRoutes: ScoredRoute[];
+  /** Total matching routes before equivalent-quality grouping is applied. */
+  rawRouteCount: number;
 
   // Sorting & Filtering
   sortBy: RouteSortOption;
   setSortBy: (sort: RouteSortOption) => void;
+  groupSimilar: boolean;
+  setGroupSimilar: (on: boolean) => void;
   inventoryFilterMode: 'all' | 'available-only' | 'partial-or-better';
   setInventoryFilterMode: (mode: 'all' | 'available-only' | 'partial-or-better') => void;
 
@@ -75,6 +98,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const [sortBy, setSortBy] = useState<RouteSortOption>('recommended');
   const [inventoryFilterMode, setInventoryFilterMode] = useState<'all' | 'available-only' | 'partial-or-better'>('all');
+  const [groupSimilar, setGroupSimilar] = useState<boolean>(true);
 
   const [selectedGroup, setSelectedGroup] = useState<GeneticsMapGroup | null>(null);
   const [selectedMapIndex, setSelectedMapIndex] = useState<number>(0);
@@ -177,8 +201,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
   }, [results, clones, targetConfig.targetGenetics]);
 
-  // Filter & sort routes
-  const filteredAndSortedRoutes = useMemo(() => {
+  // Filter & sort routes (before equivalent-quality grouping)
+  const filteredRoutes = useMemo(() => {
     let list = [...scoredRoutes];
 
     // Target Filtering
@@ -237,6 +261,30 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     return list;
   }, [scoredRoutes, targetConfig, inventoryFilterMode, sortBy]);
+
+  // Collapse equal-quality routes into a single representative (keeps the flood
+  // of identical "Score 98 · 100% · GEN.1 · 3 clones" cards down to one each).
+  const filteredAndSortedRoutes = useMemo(() => {
+    if (!groupSimilar) return filteredRoutes;
+
+    const clusters: ScoredRoute[] = [];
+    const bySignature = new Map<string, ScoredRoute>();
+
+    for (const route of filteredRoutes) {
+      const sig = routeSignature(route);
+      const rep = bySignature.get(sig);
+      if (rep) {
+        (rep.equivalents ||= []).push(route);
+      } else {
+        const representative: ScoredRoute = { ...route, equivalents: [] };
+        bySignature.set(sig, representative);
+        clusters.push(representative);
+      }
+    }
+    return clusters;
+  }, [filteredRoutes, groupSimilar]);
+
+  const rawRouteCount = filteredRoutes.length;
 
   // Automatically select best matching route or clear when results/target change
   useEffect(() => {
@@ -329,8 +377,11 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         results,
         scoredRoutes,
         filteredAndSortedRoutes,
+        rawRouteCount,
         sortBy,
         setSortBy,
+        groupSimilar,
+        setGroupSimilar,
         inventoryFilterMode,
         setInventoryFilterMode,
         selectedGroup,

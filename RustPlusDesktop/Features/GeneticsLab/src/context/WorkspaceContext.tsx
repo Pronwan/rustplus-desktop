@@ -427,7 +427,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setSelectedPlant(proj.cropType);
       setTargetConfig({
         targetGenetics: proj.targetGenetics,
-        matchMode: 'exact'
+        matchMode: 'best-possible'
       });
       setGeneInputTextState(proj.clones.map(c => c.genetics).join('\n'));
       notifySuccess(`Loaded project "${proj.name}" (${proj.clones.length} clones)`);
@@ -480,7 +480,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if (data.targetConfig?.targetGenetics) {
           setTargetConfig({
             targetGenetics: data.targetConfig.targetGenetics,
-            matchMode: data.targetConfig.matchMode || 'exact'
+            matchMode: data.targetConfig.matchMode || 'best-possible'
           });
         }
 

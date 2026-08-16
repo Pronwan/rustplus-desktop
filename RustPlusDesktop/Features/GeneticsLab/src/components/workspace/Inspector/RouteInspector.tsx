@@ -20,12 +20,13 @@ import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useNotification } from '../../../context/NotificationContext.tsx';
 import { GeneticsSequence } from '../../common/GeneticsSequence.tsx';
+import { generationVisual } from '../../../utils/generationStyle.ts';
 import { RouteTree } from './RouteTree.tsx';
 import { GeneExplanation } from './GeneExplanation.tsx';
 import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 
 export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
-  const { selectedGroup, selectedMap, setSelectedGroup } = useCalculation();
+  const { selectedGroup, selectedMap, setSelectedGroup, selectedMapIndex, setSelectedMapIndex } = useCalculation();
   const { clones, startBreedingSession } = useWorkspace();
   const { notifySuccess } = useNotification();
 
@@ -193,11 +194,75 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
           <Typography variant="caption" sx={{ color: 'var(--gl-success)', fontWeight: 800, fontFamily: 'monospace' }}>
             {Math.round((selectedMap.chance || 1) * 100)}% Probability
           </Typography>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontFamily: 'monospace' }}>
-            GEN.{selectedMap.resultSapling.generationIndex || 1} ({selectedMap.resultSapling.generationIndex || 1} Step{(selectedMap.resultSapling.generationIndex || 1) > 1 ? 's' : ''})
-          </Typography>
+          {(() => {
+            const gen = selectedMap.resultSapling.generationIndex || 1;
+            const gv = generationVisual(gen);
+            return (
+              <Chip
+                size="small"
+                label={`${gv.icon} GEN.${gen} · ${gen} Step${gen > 1 ? 's' : ''}`}
+                sx={{
+                  height: 20,
+                  fontSize: '0.68rem',
+                  fontWeight: 800,
+                  fontFamily: 'monospace',
+                  backgroundColor: gv.tint,
+                  color: gv.color,
+                  border: `1px solid ${gv.border}`
+                }}
+              />
+            );
+          })()}
         </Box>
       </Paper>
+
+      {/* Alternative Plans — same result, different plant layouts. Pick one to load it below. */}
+      {selectedGroup.mapList.length > 1 && (
+        <Box sx={{ backgroundColor: 'var(--gl-card-bg)', border: '1px solid var(--gl-surface)', borderRadius: '4px', p: 1.25 }}>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800, fontSize: '0.68rem', mb: 0.75, display: 'block' }}>
+            ALTERNATIVE PLANS ({selectedGroup.mapList.length}):
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+            {selectedGroup.mapList.map((variant: any, idx: number) => {
+              const isActive = idx === selectedMapIndex;
+              const chance = Math.round((variant.getChanceProduct?.() ?? variant.chance ?? 1) * 100);
+              const gens = variant.resultSapling?.generationIndex || 1;
+              return (
+                <Tooltip key={idx} title={`Plan ${idx + 1}: ${chance}% chance · ${gens} step${gens > 1 ? 's' : ''}`} arrow>
+                  <Chip
+                    size="small"
+                    clickable
+                    onClick={() => setSelectedMapIndex(idx)}
+                    label={`#${idx + 1} · ${chance}%`}
+                    sx={{
+                      height: 22,
+                      fontSize: '0.66rem',
+                      fontWeight: 800,
+                      fontFamily: 'monospace',
+                      // Active state is conveyed by border + glow + text colour only.
+                      // Background is held constant across states so MUI's clickable
+                      // focus/hover styles can't leave a highlight stuck on a
+                      // previously-selected chip.
+                      backgroundColor: 'var(--gl-elevated-bg)',
+                      color: isActive ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
+                      border: '1px solid',
+                      borderColor: isActive ? 'var(--gl-primary)' : 'var(--gl-surface-hover)',
+                      boxShadow: isActive ? '0 0 0 1px var(--gl-primary), 0 0 8px rgba(0, 229, 255, 0.4)' : 'none',
+                      '&:hover, &:focus, &.MuiChip-clickable:focus, &.MuiChip-clickable:hover': {
+                        backgroundColor: 'var(--gl-surface)'
+                      },
+                      '& .MuiChip-label': { px: 0.8 }
+                    }}
+                  />
+                </Tooltip>
+              );
+            })}
+          </Box>
+          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.62rem', mt: 0.5, display: 'block' }}>
+            Same result gene string — each plan uses a different mix of surrounding plants.
+          </Typography>
+        </Box>
+      )}
 
       {/* Required Inventory Summary */}
       <Box sx={{ backgroundColor: 'var(--gl-card-bg)', border: '1px solid var(--gl-surface)', borderRadius: '4px', p: 1.25 }}>

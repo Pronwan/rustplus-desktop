@@ -180,9 +180,14 @@ export class ScannerService {
         setTimeout(done, 1200);
       });
 
-      // Warm up Tesseract OCR workers if not already warm
+      // Warm up Tesseract OCR workers if not already warm. Bounded by a timeout so a
+      // slow or hung warmup (e.g. worker/wasm assets stalling) can't strand the scanner
+      // in "Initializing…" forever — the scan loop already waits for isWarm() before OCR.
       if (!this.recognizer.isWarm()) {
-        await this.recognizer.warmup();
+        await Promise.race([
+          this.recognizer.warmup().catch(() => {}),
+          new Promise<void>((res) => setTimeout(res, 8000))
+        ]);
       }
 
       this.isScanning = true;

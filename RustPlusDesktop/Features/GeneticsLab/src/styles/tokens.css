@@ -51,11 +51,12 @@
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.2), 0 2px 4px -1px rgba(0,0,0,0.12);
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.15);
 
-  /* Rust-style inventory slot behind item icons. Kept dark in BOTH themes so
-     inherently dark item art (teas, wood mugs) stays legible on light panels
-     instead of rendering as a muddy blob. */
-  --gl-item-slot-bg: #2b3038;
-  --gl-item-slot-border: rgba(255, 255, 255, 0.1);
+  /* Inventory slot behind item icons. Item art is mostly dark (teas, wood mugs),
+     so the slot must be LIGHTER than the art to keep it legible. Overridden
+     per-theme below — a light slot in light mode, a lighter-than-panel slate in
+     dark mode. This :root value is only a fallback. */
+  --gl-item-slot-bg: #e4e8ee;
+  --gl-item-slot-border: rgba(0, 0, 0, 0.12);
 }
 
 /* Dark Theme (Default) */
@@ -107,6 +108,9 @@
   --gl-on-accent: #000000;
   --gl-tint-green: #141E16;
   --gl-tint-cyan: #101A1C;
+  /* Lighter-than-panel slate so dark item art (teas) reads against it. */
+  --gl-item-slot-bg: #3a424c;
+  --gl-item-slot-border: rgba(255, 255, 255, 0.12);
 }
 
 /* Light Theme */
@@ -156,4 +160,7 @@
   --gl-on-accent: #FFFFFF;
   --gl-tint-green: #ECFDF3;
   --gl-tint-cyan: #ECFEFF;
+  /* Light slot so inherently dark tea/food art contrasts in light mode. */
+  --gl-item-slot-bg: #E4E8EE;
+  --gl-item-slot-border: rgba(0, 0, 0, 0.12);
 }

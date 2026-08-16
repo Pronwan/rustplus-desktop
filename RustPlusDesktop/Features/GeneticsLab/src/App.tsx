@@ -4,6 +4,7 @@ import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { getMuiTheme } from './theme/muiTheme.ts';
 import { useApp } from './context/AppContext.tsx';
 import { AppHeader } from './components/layout/AppHeader.tsx';
+import { PromoBanner } from './components/layout/PromoBanner.tsx';
 import { WorkspaceLayout } from './components/workspace/WorkspaceLayout.tsx';
 import { FarmOutputPlanner } from './components/planner/FarmOutputPlanner.tsx';
 import { GuidePage } from './components/guide/GuidePage.tsx';
@@ -46,6 +47,9 @@ export const App: React.FC = () => {
       >
         {/* Global Navigation Header */}
         <AppHeader />
+
+        {/* Dismissible promo slot (free web build only; hidden for Premium) */}
+        <PromoBanner />
 
         {/* Main Content Body */}
         <Box component="main" sx={{ flex: 1, overflow: 'hidden' }}>

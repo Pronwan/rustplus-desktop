@@ -172,7 +172,9 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
 
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's')) {
         e.preventDefault();
-        if (scanner.isScannerActive) {
+        // Treat "initializing" as running too, so the toggle can cancel a scan that is
+        // still starting up (share granted but not yet active) instead of no-opping.
+        if (scanner.isScannerActive || scanner.isScannerInitializing) {
           scanner.stopScanner();
         } else {
           scanner.startScanner();

@@ -13,6 +13,7 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { ScoredRoute, useCalculation } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { GeneticsSequence } from '../../common/GeneticsSequence.tsx';
+import { generationVisual } from '../../../utils/generationStyle.ts';
 
 interface RouteCardProps {
   scoredRoute: ScoredRoute;
@@ -54,6 +55,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   };
 
   const invBadge = invBadgeConfig[analysis.inventoryStatus];
+  const genVis = generationVisual(analysis.generationCount);
 
   return (
     <Paper
@@ -63,6 +65,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-bg)',
         border: '1px solid',
         borderColor: isSelected ? 'var(--gl-primary)' : isBest ? 'var(--gl-border-strong)' : 'var(--gl-surface)',
+        // Generation identity: a colored left accent makes GEN 1/2/3 scannable in the grid.
+        borderLeft: `4px solid ${genVis.border}`,
         borderRadius: '5px',
         p: 1.5,
         cursor: 'pointer',
@@ -107,6 +111,23 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               '& .MuiChip-label': { px: 0.6 }
             }}
           />
+
+          <Tooltip title={`Requires ${analysis.generationCount} breeding generation${analysis.generationCount > 1 ? 's' : ''} (steps)`} arrow>
+            <Chip
+              size="small"
+              label={`${genVis.icon} ${genVis.label}`}
+              sx={{
+                height: 18,
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                fontFamily: 'monospace',
+                backgroundColor: genVis.tint,
+                color: genVis.color,
+                border: `1px solid ${genVis.border}`,
+                '& .MuiChip-label': { px: 0.6 }
+              }}
+            />
+          </Tooltip>
         </Box>
 
         <Tooltip title="Compare side-by-side" arrow>
@@ -161,7 +182,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
           </Typography>
         </Box>
 
-        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
+        <Box sx={{ p: 0.4, backgroundColor: genVis.tint, borderRadius: '3px', border: `1px solid ${genVis.border}` }}>
           <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
             GENS
           </Typography>
@@ -171,10 +192,10 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               fontWeight: 800,
               fontFamily: 'monospace',
               fontSize: '0.75rem',
-              color: analysis.generationCount === 1 ? 'var(--gl-success)' : 'var(--gl-warning)'
+              color: genVis.color
             }}
           >
-            GEN.{analysis.generationCount}
+            {genVis.icon} GEN.{analysis.generationCount}
           </Typography>
         </Box>
 
@@ -213,11 +234,22 @@ export const RouteCard: React.FC<RouteCardProps> = ({
           }}
         />
 
-        {group.mapList.length > 1 && (
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.65rem' }}>
-            +{group.mapList.length - 1} alt
-          </Typography>
-        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+          {scoredRoute.equivalents && scoredRoute.equivalents.length > 0 && (
+            <Tooltip title={`${scoredRoute.equivalents.length} other routes reach an equally-good result. Toggle "Group similar" off to list them all.`} arrow>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.65rem' }}>
+                ≡ +{scoredRoute.equivalents.length} similar
+              </Typography>
+            </Tooltip>
+          )}
+          {group.mapList.length > 1 && (
+            <Tooltip title="Alternative plant layouts that reach this same result. Open the inspector to pick one." arrow>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.65rem' }}>
+                +{group.mapList.length - 1} alt
+              </Typography>
+            </Tooltip>
+          )}
+        </Box>
       </Box>
 
       {/* Card Action Buttons */}

@@ -15,6 +15,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TuneIcon from '@mui/icons-material/Tune';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import { useCalculation, RouteSortOption } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../../context/ScannerContext.tsx';
@@ -34,7 +35,10 @@ export const RouteToolbar: React.FC = () => {
     setInventoryFilterMode,
     comparedGroups,
     setIsCompareModalOpen,
-    filteredAndSortedRoutes
+    filteredAndSortedRoutes,
+    rawRouteCount,
+    groupSimilar,
+    setGroupSimilar
   } = useCalculation();
 
   const { sourceSaplings } = useWorkspace();
@@ -159,8 +163,41 @@ export const RouteToolbar: React.FC = () => {
             </Badge>
           )}
 
+          <Tooltip
+            title={
+              groupSimilar
+                ? 'Grouping routes of equal quality (same score, chance, generations & clones) into one card. Click to list every route.'
+                : 'Showing every route individually. Click to group equal-quality routes.'
+            }
+            arrow
+          >
+            <Box
+              onClick={() => setGroupSimilar(!groupSimilar)}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                cursor: 'pointer',
+                px: 0.9,
+                py: 0.35,
+                borderRadius: '4px',
+                border: '1px solid',
+                borderColor: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-surface-hover)',
+                backgroundColor: groupSimilar ? 'rgba(0, 229, 255, 0.1)' : 'var(--gl-panel-header-bg)'
+              }}
+            >
+              <FilterListIcon sx={{ fontSize: 14, color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }} />
+              <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.68rem', color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}>
+                Group similar
+              </Typography>
+            </Box>
+          </Tooltip>
+
           <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontWeight: 700 }}>
             {filteredAndSortedRoutes.length} route{filteredAndSortedRoutes.length === 1 ? '' : 's'}
+            {groupSimilar && rawRouteCount > filteredAndSortedRoutes.length && (
+              <Box component="span" sx={{ color: 'var(--gl-text-faint)', fontWeight: 600 }}> of {rawRouteCount}</Box>
+            )}
           </Typography>
         </Box>
       </Box>

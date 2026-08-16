@@ -9,7 +9,8 @@ import {
   Button,
   Box,
   IconButton,
-  Paper
+  Paper,
+  Chip
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -50,6 +51,20 @@ export const AboutModal: React.FC = () => {
             <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 700 }}>
               Rust Plant Genetics &amp; Crossbreeding
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mt: 1 }}>
+              <Chip
+                size="small"
+                label={`v${__APP_VERSION__}`}
+                sx={{ height: 20, fontWeight: 800, fontFamily: 'monospace', fontSize: '0.7rem' }}
+              />
+              <Chip
+                size="small"
+                label="Stable"
+                color="success"
+                variant="outlined"
+                sx={{ height: 20, fontWeight: 800, fontSize: '0.7rem' }}
+              />
+            </Box>
           </Box>
 
           <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6, textAlign: 'left' }}>

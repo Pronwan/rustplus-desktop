@@ -47,7 +47,7 @@ export const TargetPresets: React.FC = () => {
             label={preset.label}
             size="small"
             clickable
-            onClick={() => setTargetPreset(shuffleGenes(preset.target), 'at-least')}
+            onClick={() => setTargetPreset(shuffleGenes(preset.target), 'best-possible')}
             sx={{
               fontWeight: isSelected ? 800 : 600,
               fontSize: '0.72rem',

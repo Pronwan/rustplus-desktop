@@ -38,7 +38,7 @@ export const AppHeader: React.FC = () => {
   } = useApp();
 
   const { selectedPlant, setSelectedPlant } = useWorkspace();
-  const { isScannerActive, startScanner, stopScanner } = useScanner();
+  const { isScannerActive, isScannerInitializing, startScanner, stopScanner } = useScanner();
 
   return (
     <AppBar
@@ -122,19 +122,19 @@ export const AppHeader: React.FC = () => {
           {/* Scanner Button */}
           <Button
             size="small"
-            variant={isScannerActive ? 'contained' : 'outlined'}
-            color={isScannerActive ? 'error' : 'primary'}
-            onClick={() => (isScannerActive ? stopScanner() : startScanner())}
+            variant={isScannerActive || isScannerInitializing ? 'contained' : 'outlined'}
+            color={isScannerActive || isScannerInitializing ? 'error' : 'primary'}
+            onClick={() => (isScannerActive || isScannerInitializing ? stopScanner() : startScanner())}
             startIcon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />}
             sx={{
               fontSize: '0.75rem',
               fontWeight: 800,
               py: 0.4,
               px: 1.5,
-              borderColor: isScannerActive ? undefined : themeMode === 'dark' ? '#333' : '#CBD5E1'
+              borderColor: isScannerActive || isScannerInitializing ? undefined : themeMode === 'dark' ? '#333' : '#CBD5E1'
             }}
           >
-            {isScannerActive ? 'STOP SCANNER' : 'SCAN FROM RUST'}
+            {isScannerInitializing ? 'STARTING…' : isScannerActive ? 'STOP SCANNER' : 'SCAN FROM RUST'}
           </Button>
 
           {/* Farm Projects */}
