@@ -242,6 +242,7 @@ export const RouteToolbar: React.FC = () => {
             }}
           >
             <MenuItem value="recommended" sx={{ fontSize: '0.75rem' }}>Recommended Score</MenuItem>
+            <MenuItem value="target" sx={{ fontSize: '0.75rem' }}>Closest Target Match</MenuItem>
             <MenuItem value="probability" sx={{ fontSize: '0.75rem' }}>Highest Probability</MenuItem>
             <MenuItem value="generations" sx={{ fontSize: '0.75rem' }}>Fewest Generations</MenuItem>
             <MenuItem value="clones" sx={{ fontSize: '0.75rem' }}>Fewest Clones</MenuItem>

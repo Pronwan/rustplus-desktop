@@ -96,8 +96,12 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
       return worker;
     })();
 
+    // Generous timeout: the first (cold-cache) init downloads ~14MB of OCR assets
+    // (eng.traineddata.gz + core wasm), which can take far longer than a few
+    // seconds on a slow connection. A short cap here was making the very first
+    // scan silently fail until a page refresh warmed the browser cache.
     const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Tesseract worker initialization timed out')), 8000);
+      setTimeout(() => reject(new Error('Tesseract worker initialization timed out')), 90000);
     });
 
     return Promise.race([workerPromise, timeoutPromise]);

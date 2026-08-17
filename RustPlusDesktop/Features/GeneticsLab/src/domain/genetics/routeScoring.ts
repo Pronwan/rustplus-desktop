@@ -1,5 +1,19 @@
 import { GeneticsMap } from './GeneticsMap.ts';
 import { SavedClone } from './Clone.ts';
+import {
+  targetHasConstraint,
+  isExactMatch,
+  targetCloseness,
+  positionMatches
+} from '../../utils/targetMatch.ts';
+
+export type RouteSortOption =
+  | 'recommended'
+  | 'target'
+  | 'probability'
+  | 'generations'
+  | 'clones'
+  | 'inventory';
 
 export interface RouteCloneRequirement {
   genetics: string;
@@ -197,3 +211,168 @@ export function analyzeRoute(
     requirements
   };
 }
+
+export interface SortableRouteLike {
+  group: { resultSaplingGeneString: string };
+  bestMap: GeneticsMap;
+  analysis: RouteAnalysis;
+}
+
+/**
+ * Deterministic comparison of routes according to the 2-level Rust Breeder specification:
+ * 1. Higher genotype score first (score DESC)
+ * 2. Higher recursive chance product first (recursiveChanceProduct DESC)
+ * 3. Lower generationIndex first (generationIndex ASC)
+ * 4. Lower sumOfComposingSaplingsGenerations first (sumOfComposingSaplingsGenerations ASC)
+ * 5. Genotype string alphabetically (genotype ASC) as final deterministic tie-breaker
+ */
+export function compareScoredRoutes(
+  a: SortableRouteLike,
+  b: SortableRouteLike,
+  sortBy: RouteSortOption,
+  target?: string
+): number {
+  const ra = a.group.resultSaplingGeneString;
+  const rb = b.group.resultSaplingGeneString;
+  const hasTarget = !!target && targetHasConstraint(target);
+
+  const mapA = a.bestMap;
+  const mapB = b.bestMap;
+
+  const scoreA = mapA?.score ?? 0;
+  const scoreB = mapB?.score ?? 0;
+
+  const chanceProdA = mapA ? mapA.getChanceProduct() : (a.analysis.probabilityPercent / 100);
+  const chanceProdB = mapB ? mapB.getChanceProduct() : (b.analysis.probabilityPercent / 100);
+
+  const genA = mapA ? mapA.resultSapling.generationIndex : a.analysis.generationCount;
+  const genB = mapB ? mapB.resultSapling.generationIndex : b.analysis.generationCount;
+
+  const sumA = mapA?.sumOfComposingSaplingsGenerations ?? 0;
+  const sumB = mapB?.sumOfComposingSaplingsGenerations ?? 0;
+
+  if (sortBy === 'target' && hasTarget) {
+    const ea = isExactMatch(ra, target) ? 1 : 0;
+    const eb = isExactMatch(rb, target) ? 1 : 0;
+    if (ea !== eb) return eb - ea;
+
+    const ca = targetCloseness(ra, target);
+    const cb = targetCloseness(rb, target);
+    if (ca !== cb) return cb - ca;
+
+    const pa = positionMatches(ra, target);
+    const pb = positionMatches(rb, target);
+    if (pa !== pb) return pb - pa;
+
+    if (Math.abs(scoreB - scoreA) > 0.001) {
+      return scoreB - scoreA;
+    }
+    if (Math.abs(chanceProdB - chanceProdA) > 0.0001) {
+      return chanceProdB - chanceProdA;
+    }
+    if (genA !== genB) {
+      return genA - genB;
+    }
+    if (sumA !== sumB) {
+      return sumA - sumB;
+    }
+    return ra.localeCompare(rb);
+  }
+
+  if (sortBy === 'probability') {
+    if (Math.abs(chanceProdB - chanceProdA) > 0.0001) {
+      return chanceProdB - chanceProdA;
+    }
+    if (Math.abs(scoreB - scoreA) > 0.001) {
+      return scoreB - scoreA;
+    }
+    if (genA !== genB) {
+      return genA - genB;
+    }
+    if (sumA !== sumB) {
+      return sumA - sumB;
+    }
+    return ra.localeCompare(rb);
+  }
+
+  if (sortBy === 'generations') {
+    if (genA !== genB) {
+      return genA - genB;
+    }
+    if (Math.abs(scoreB - scoreA) > 0.001) {
+      return scoreB - scoreA;
+    }
+    if (Math.abs(chanceProdB - chanceProdA) > 0.0001) {
+      return chanceProdB - chanceProdA;
+    }
+    if (sumA !== sumB) {
+      return sumA - sumB;
+    }
+    return ra.localeCompare(rb);
+  }
+
+  if (sortBy === 'clones') {
+    if (a.analysis.uniqueCloneCount !== b.analysis.uniqueCloneCount) {
+      return a.analysis.uniqueCloneCount - b.analysis.uniqueCloneCount;
+    }
+    if (a.analysis.totalPlacementsCount !== b.analysis.totalPlacementsCount) {
+      return a.analysis.totalPlacementsCount - b.analysis.totalPlacementsCount;
+    }
+    if (Math.abs(scoreB - scoreA) > 0.001) {
+      return scoreB - scoreA;
+    }
+    if (Math.abs(chanceProdB - chanceProdA) > 0.0001) {
+      return chanceProdB - chanceProdA;
+    }
+    if (genA !== genB) {
+      return genA - genB;
+    }
+    return ra.localeCompare(rb);
+  }
+
+  if (sortBy === 'inventory') {
+    const invOrder: Record<RouteAnalysis['inventoryStatus'], number> = { available: 3, partial: 2, missing: 1 };
+    const diff = invOrder[b.analysis.inventoryStatus] - invOrder[a.analysis.inventoryStatus];
+    if (diff !== 0) return diff;
+    if (a.analysis.missingClonesCount !== b.analysis.missingClonesCount) {
+      return a.analysis.missingClonesCount - b.analysis.missingClonesCount;
+    }
+    if (Math.abs(scoreB - scoreA) > 0.001) {
+      return scoreB - scoreA;
+    }
+    if (Math.abs(chanceProdB - chanceProdA) > 0.0001) {
+      return chanceProdB - chanceProdA;
+    }
+    if (genA !== genB) {
+      return genA - genB;
+    }
+    return ra.localeCompare(rb);
+  }
+
+  // 'recommended' (default): 2-level Rust Breeder ranking:
+  // 1. Higher genotype score first
+  if (Math.abs(scoreB - scoreA) > 0.001) {
+    return scoreB - scoreA;
+  }
+  // 2. Higher recursive chance product first
+  if (Math.abs(chanceProdB - chanceProdA) > 0.0001) {
+    return chanceProdB - chanceProdA;
+  }
+  // 3. Lower generationIndex first
+  if (genA !== genB) {
+    return genA - genB;
+  }
+  // 4. Lower sumOfComposingSaplingsGenerations first
+  if (sumA !== sumB) {
+    return sumA - sumB;
+  }
+  // Target closeness tiebreaker if target specified
+  if (hasTarget) {
+    const ca = targetCloseness(ra, target);
+    const cb = targetCloseness(rb, target);
+    if (ca !== cb) return cb - ca;
+  }
+  // 5. Genotype string alphabetically/lexicographically as deterministic tie breaker
+  return ra.localeCompare(rb);
+}
+
