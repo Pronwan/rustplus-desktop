@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import {
   Paper,
   Box,
@@ -20,6 +20,24 @@ import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 import { AudioService } from '../../../services/audioService.ts';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
+
+/**
+ * Sanitize to gene letters and wrap each line to 6 genes — overflow cascades onto
+ * new lines instead of being dropped, so typing/pasting past 6 flows to the next
+ * plant. Empty lines are preserved.
+ */
+const sanitizeAndReflow = (str: string): string => {
+  const lines = str.toUpperCase().split('\n').map((l) => l.replace(/[^GHYWX]/g, ''));
+  const out: string[] = [];
+  for (const line of lines) {
+    if (line.length === 0) {
+      out.push('');
+      continue;
+    }
+    for (let i = 0; i < line.length; i += 6) out.push(line.slice(i, i + 6));
+  }
+  return out.join('\n');
+};
 
 export const CloneBank: React.FC = () => {
   const {
@@ -46,6 +64,18 @@ export const CloneBank: React.FC = () => {
   const [localText, setLocalText] = useState(geneInputText);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const debounceTimerRef = useRef<any>(null);
+  // Caret position to restore after a change reflows the text (so the cursor
+  // follows the typed gene onto the next line instead of jumping to the end).
+  const pendingCaretRef = useRef<number | null>(null);
+
+  useLayoutEffect(() => {
+    if (pendingCaretRef.current !== null && textareaRef.current) {
+      const pos = pendingCaretRef.current;
+      textareaRef.current.selectionStart = pos;
+      textareaRef.current.selectionEnd = pos;
+      pendingCaretRef.current = null;
+    }
+  }, [localText]);
 
   // Sync localText when external geneInputText changes (e.g. sample loaded, saved set loaded, scanner added)
   useEffect(() => {
@@ -77,7 +107,7 @@ export const CloneBank: React.FC = () => {
     return localText.split('\n');
   }, [localText]);
 
-  const handleTextChange = (newText: string) => {
+  const handleTextChange = (newText: string, caretPos?: number) => {
     // "Wrong key" feedback: the user typed a character that isn't a gene letter
     // (G/Y/H/W/X) or whitespace. Only fire when adding text (not on delete/paste-shrink).
     const typedInvalidLetter =
@@ -86,10 +116,23 @@ export const CloneBank: React.FC = () => {
       AudioService.playWrongKey(options.sounds);
     }
 
-    // Sanitize: uppercase only G, Y, H, W, X and newlines
-    const linesArr = newText.toUpperCase().split('\n');
-    const cleanedLines = linesArr.map((line) => line.replace(/[^GHYWX]/g, '').slice(0, 6));
-    const cleanedText = cleanedLines.join('\n');
+    let cleanedText = sanitizeAndReflow(newText);
+
+    // Map the caret through the same transform so it lands right after the gene
+    // the user just typed (even after invalid chars are stripped / lines wrap).
+    let newCaret = caretPos != null ? sanitizeAndReflow(newText.slice(0, caretPos)).length : cleanedText.length;
+
+    // Auto-advance: completing a 6-gene line at the end drops the cursor onto a
+    // fresh next line so you can type the next plant without pressing Enter.
+    const isTyping = newText.length > localText.length;
+    const appendedAtEnd = caretPos != null && caretPos === newText.length;
+    const lastLine = cleanedText.split('\n').pop() || '';
+    if (isTyping && appendedAtEnd && lastLine.length === 6) {
+      cleanedText += '\n';
+      newCaret = cleanedText.length;
+    }
+
+    pendingCaretRef.current = newCaret;
 
     // Immediate local update (0ms typing latency)
     setLocalText(cleanedText);
@@ -456,7 +499,7 @@ export const CloneBank: React.FC = () => {
                 ref={textareaRef}
                 value={localText}
                 disabled={isCalculating}
-                onChange={(e) => handleTextChange(e.target.value)}
+                onChange={(e) => handleTextChange(e.target.value, e.target.selectionStart ?? undefined)}
                 onKeyUp={handleCursorMove}
                 onClick={handleCursorMove}
                 onSelect={handleCursorMove}
