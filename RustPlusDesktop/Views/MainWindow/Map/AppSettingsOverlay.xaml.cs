@@ -317,6 +317,16 @@ namespace RustPlusDesk.Views
         private void ShowSettingsCategory(string category, string? selectedSectionId = null)
         {
             _activeSettingsCategory = category;
+
+            // This page can be reached from the gear icon, the settings search and the tutorial,
+            // none of which went through BtnOpenChatCommands_Click - the only caller that used to
+            // rebuild the mappings. Sync here so every route shows the current devices.
+            if (category == "chat-commands")
+            {
+                var chatVm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel
+                             ?? DataContext as RustPlusDesk.ViewModels.MainViewModel;
+                chatVm?.Selected?.SyncChatCommands();
+            }
             var sections = _settingsSections.Where(section => section.Category == category).ToList();
             foreach (var section in _settingsSections)
             {

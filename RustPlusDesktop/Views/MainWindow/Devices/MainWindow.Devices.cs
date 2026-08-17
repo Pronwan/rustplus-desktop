@@ -633,6 +633,10 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 RemoveDeviceAndChildrenFromHotkeys(dev);
                 RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
                 RemoveOwnedOilRigRulesForDevice(dev);
+                // Drop the chat-command mapping that pointed at this entity, before Save() below
+                // persists the profile - otherwise a stale binding survives until the next visit
+                // to the Chat Commands settings.
+                _vm.Selected.SyncChatCommands();
                 _vm.Selected.NotifyFlatDevicesChanged();
                 _vm.NotifyDevicesChanged();
                 _vm.Save();
@@ -1920,6 +1924,8 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
                 }
             }
 
+            // Imported switches and TC monitors need their chat-command mappings too.
+            _vm.Selected.SyncChatCommands();
             _vm.NotifyDevicesChanged();
             _vm.Save();
 

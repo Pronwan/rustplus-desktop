@@ -542,6 +542,9 @@ public class ServerProfile : INotifyPropertyChanged
         
         OnProp(nameof(SwitchCommandMappings));
         OnProp(nameof(UpkeepCommandMappings));
+        // The dropdowns bind to SmartSwitches/TcMonitors, which are computed on demand. Callers
+        // now sync while the page is already visible, so those have to be refreshed as well.
+        NotifySmartSwitchesChanged();
     }
 
     private string? _rustMapsMapId;

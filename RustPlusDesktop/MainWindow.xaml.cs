@@ -4105,6 +4105,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     });
                 }
 
+                // Rebuild the chat-command mappings right away. Without this the !upkeep / !switch
+                // entry only appears once someone happens to enter the settings through the
+                // Chat Commands button, so a freshly paired Storage Monitor stays unusable.
+                prof.SyncChatCommands();
+
                 if (_vm.Selected != prof)
                     _vm.Selected = prof;
 
