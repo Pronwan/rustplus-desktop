@@ -1794,28 +1794,28 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>[지우기] 선택적 초기화 작업이 성공적으로 완료되었습니다.</value>
   </data>
   <data name="DeleteDeathMarker" xml:space="preserve">
-    <value>Delete Death Marker</value>
+    <value>데스 마커 삭제</value>
   </data>
   <data name="WipeDeathMarkers" xml:space="preserve">
-    <value>Wipe Death Markers</value>
+    <value>모든 데스 마커 삭제</value>
   </data>
   <data name="Accept" xml:space="preserve">
-    <value>Accept</value>
+    <value>수락</value>
   </data>
   <data name="RenameDeathMarker" xml:space="preserve">
-    <value>Rename Death Marker</value>
+    <value>데스 마커 이름 바꾸기</value>
   </data>
   <data name="PlayerDirectionArrow" xml:space="preserve">
   <value>방향</value>
 </data>
   <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>프로필</value>
   </data>
   <data name="Death" xml:space="preserve">
-    <value>Death</value>
+    <value>사망</value>
   </data>
   <data name="Markers" xml:space="preserve">
-    <value>Markers:</value>
+    <value>마커:</value>
   </data>
   <data name="WordYou" xml:space="preserve">
     <value>당신</value>
