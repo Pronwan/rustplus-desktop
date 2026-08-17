@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { ScannerService, ScannerEvent } from '../services/scannerService.ts';
 import { StorageService, ScannerProfile, ScannerRegion, DEFAULT_SCANNER_REGIONS } from '../services/storageService.ts';
 import { CloneUtils } from '../domain/genetics/Clone.ts';
+import { AudioService } from '../services/audioService.ts';
 import { useNotification } from './NotificationContext.tsx';
 import { useWorkspace } from './WorkspaceContext.tsx';
 
@@ -237,25 +238,19 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setLastScannedGenes(evt.geneString);
           setLastConfidence(evt.confidence || 90);
 
-          if (soundPrefRef.current) {
-            try {
-              const audio = new Audio('./assets/scan-beep.mp3');
-              audio.volume = 0.4;
-              audio.play().catch(() => {});
-            } catch {
-              // ignore
-            }
-          }
-
           const added = addClone(evt.geneString, {
             source: 'scanner',
             quantity: 1
           });
 
           if (added) {
+            // New clone → satisfying "pop".
+            AudioService.playPop(soundPrefRef.current);
             notifySuccess(`Scanned Clone: ${evt.geneString} (${Math.round(evt.confidence || 0)}% conf)`);
           } else {
-            notifyInfo(`Clone ${evt.geneString} quantity incremented.`);
+            // Duplicate (already in the list) → "death" cue, and don't add a dup row.
+            AudioService.playWrongKey(soundPrefRef.current);
+            notifyInfo(`Duplicate [${evt.geneString}] — already in your list.`);
           }
         }
       } else if (evt.type === 'ERROR') {

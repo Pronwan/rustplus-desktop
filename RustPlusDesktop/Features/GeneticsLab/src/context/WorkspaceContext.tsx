@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { StorageService, TargetConfiguration, BreedingSession, BreedingSessionStep, FarmProject, StoredGeneSet } from '../services/storageService.ts';
 import { SavedClone, CloneUtils } from '../domain/genetics/Clone.ts';
 import { Sapling } from '../domain/genetics/Sapling.ts';
@@ -129,6 +129,17 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setGeneInputTextState(text);
   }, []);
 
+  // Always-current mirror of the input text so scan-dedup can read it without
+  // making addClone/appendScannedGene change identity on every keystroke (which
+  // would churn the scanner's event subscription).
+  const geneInputTextRef = useRef(geneInputText);
+  useEffect(() => {
+    geneInputTextRef.current = geneInputText;
+  }, [geneInputText]);
+
+  const normalizeGene = (s: string) =>
+    s.trim().toUpperCase().replace(/[^GHYWX]/g, '').slice(0, 6);
+
   // Save target config on change
   useEffect(() => {
     StorageService.saveTargetConfig(targetConfig);
@@ -147,28 +158,37 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     notifyInfo(`Loaded ${samples.length} sample plants for ${selectedPlant.replace(/-/g, ' ')}`);
   }, [selectedPlant, notifyInfo]);
 
-  const appendScannedGene = useCallback((geneString: string) => {
-    const clean = geneString.trim().toUpperCase().replace(/[^GHYWX]/g, '').slice(0, 6);
-    if (!Sapling.isValidGeneString(clean)) return;
+  // Append a scanned gene string, de-duplicating against what's already in the
+  // list. Returns true only if it was newly added (false when it's a duplicate).
+  const appendScannedGene = useCallback((geneString: string): boolean => {
+    const clean = normalizeGene(geneString);
+    if (!Sapling.isValidGeneString(clean)) return false;
+
+    const existing = geneInputTextRef.current.split('\n').map(normalizeGene).filter(Boolean);
+    if (existing.includes(clean)) return false; // dedup: already scanned
 
     setGeneInputTextState((prev) => {
+      // Re-check inside the updater to guard against rapid back-to-back scans.
+      const lines = prev.split('\n').map(normalizeGene).filter(Boolean);
+      if (lines.includes(clean)) return prev;
       const trimmed = prev.trim();
       return trimmed ? `${trimmed}\n${clean}` : clean;
     });
-    notifySuccess(`Scanned [${clean}] added`);
-  }, [notifySuccess]);
+    return true;
+  }, []);
 
   const addClone = useCallback(
     (
       genetics: string,
       _options?: any
     ): SavedClone | null => {
-      const clean = genetics.trim().toUpperCase().replace(/[^GHYWX]/g, '').slice(0, 6);
+      const clean = normalizeGene(genetics);
       if (!Sapling.isValidGeneString(clean)) {
         notifyError(`Invalid gene string: "${genetics}"`);
         return null;
       }
-      appendScannedGene(clean);
+      // Null signals a duplicate (already in the list) so callers can react.
+      if (!appendScannedGene(clean)) return null;
       return CloneUtils.create(clean, selectedPlant);
     },
     [appendScannedGene, selectedPlant, notifyError]
