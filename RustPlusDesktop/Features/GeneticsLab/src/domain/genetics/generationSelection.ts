@@ -23,6 +23,15 @@ function getColumnMaxScores(sourceSaplings: Sapling[], geneScores: GeneScores): 
 }
 
 /**
+ * Minimum achievable chance for an intermediate to be worth breeding further.
+ * Chance only compounds downward across generations, so an intermediate below
+ * this bar can only ever yield sub-50% descendants — plans the user would never
+ * use (and which the UI filters out). Not carrying them forward prunes the
+ * gen-2/gen-3 search space without dropping any usable route.
+ */
+const MIN_RELIABLE_CHANCE = 0.5;
+
+/**
  * Selects up to `maxToAdd` best result saplings from the completed generation to use in the next generation.
  */
 export function getBestSaplingsForNextGeneration(
@@ -32,10 +41,14 @@ export function getBestSaplingsForNextGeneration(
   maxToAdd: number,
   completedGenerationIndex: number
 ): Sapling[] {
-  // Filter groups whose best map is from the completed generation
+  // Only carry forward reliable intermediates from the completed generation.
   const candidateGroups = groups.filter(g => {
     const bestMap = g.mapList[0];
-    return bestMap && bestMap.resultSapling.generationIndex === completedGenerationIndex;
+    return (
+      bestMap &&
+      bestMap.resultSapling.generationIndex === completedGenerationIndex &&
+      bestMap.getChanceProduct() >= MIN_RELIABLE_CHANCE
+    );
   });
 
   if (candidateGroups.length === 0) {

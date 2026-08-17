@@ -241,6 +241,12 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       list = list.filter(r => r.analysis.inventoryStatus !== 'missing');
     }
 
+    // Reliability filter: only keep dependable routes — 50% or 100% chance.
+    // Compound-tie routes (25%, 12.5%, …) are gambly and hidden. Fall back to the
+    // unfiltered list if nothing clears the bar so results are never left empty.
+    const reliable = list.filter(r => r.analysis.probabilityPercent >= 50);
+    if (reliable.length > 0) list = reliable;
+
     // User-selected base ordering.
     const baseCompare = (a: ScoredRoute, b: ScoredRoute): number => {
       if (sortBy === 'probability') {
@@ -264,7 +270,14 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         if (diff !== 0) return diff;
         return b.analysis.recommendationScore - a.analysis.recommendationScore;
       }
-      // 'recommended' (default)
+      // 'recommended' (default): 100% chance before 50%, then fewer generations,
+      // then the overall recommendation score.
+      if (a.analysis.probabilityPercent !== b.analysis.probabilityPercent) {
+        return b.analysis.probabilityPercent - a.analysis.probabilityPercent;
+      }
+      if (a.analysis.generationCount !== b.analysis.generationCount) {
+        return a.analysis.generationCount - b.analysis.generationCount;
+      }
       return b.analysis.recommendationScore - a.analysis.recommendationScore;
     };
 
