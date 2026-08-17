@@ -2821,6 +2821,17 @@ rp.connect();
             if (hp == true)
                 isTc = true;
 
+            // Fallback: wenn wir es früher schon als TC gesehen haben, bleibt es TC.
+            // Dieselbe Absicherung wie in BuildAndStoreSnapshotFromStorageNode. Ohne sie macht ein
+            // einzelnes Event ohne das optionale HasProtection-Feld den TC wieder zur Kiste, und
+            // der überschriebene Cache kostet den Upkeep und das !upkeep-Mapping.
+            if (!isTc &&
+                _storageCache.TryGetValue(entityId, out var oldSnap) &&
+                oldSnap.IsToolCupboard)
+            {
+                isTc = true;
+            }
+
             if (!isTc)
                 upkeep = null; // Boxen: kein Upkeep
 
