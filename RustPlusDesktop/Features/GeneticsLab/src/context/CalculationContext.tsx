@@ -9,6 +9,13 @@ import { GeneticsMap } from '../domain/genetics/GeneticsMap.ts';
 import { ProgressState } from './AppContext.tsx';
 import { useWorkspace } from './WorkspaceContext.tsx';
 import { analyzeRoute, RouteAnalysis } from '../domain/genetics/routeScoring.ts';
+import {
+  targetHasConstraint,
+  isExactMatch,
+  meetsAtLeast,
+  targetCloseness,
+  positionMatches
+} from '../utils/targetMatch.ts';
 import { useNotification } from './NotificationContext.tsx';
 
 export type RouteSortOption =
@@ -66,6 +73,11 @@ interface CalculationContextType {
   selectedMapIndex: number;
   setSelectedMapIndex: (idx: number) => void;
   selectedMap: GeneticsMap | null;
+  /** User-intent flag: the inspector was explicitly opened (e.g. Inspect click).
+      Auto-selection of a route does NOT set this, so on small screens the modal
+      inspector drawer only opens when the user asks for it. */
+  isInspectorOpen: boolean;
+  setIsInspectorOpen: (open: boolean) => void;
   highlightedGroup: GeneticsMapGroup | null;
   setHighlightedGroup: (group: GeneticsMapGroup | null) => void;
 
@@ -102,6 +114,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const [selectedGroup, setSelectedGroup] = useState<GeneticsMapGroup | null>(null);
   const [selectedMapIndex, setSelectedMapIndex] = useState<number>(0);
+  const [isInspectorOpen, setIsInspectorOpen] = useState<boolean>(false);
   const [highlightedGroup, setHighlightedGroup] = useState<GeneticsMapGroup | null>(null);
 
   const [comparedGroups, setComparedGroups] = useState<GeneticsMapGroup[]>([]);
@@ -205,22 +218,20 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const filteredRoutes = useMemo(() => {
     let list = [...scoredRoutes];
 
-    // Target Filtering
-    if (targetConfig.targetGenetics) {
-      const targetStr = targetConfig.targetGenetics.toUpperCase();
+    const target = targetConfig.targetGenetics || '';
+    const hasTarget = targetHasConstraint(target);
 
+    // Target Filtering — each mode keeps a different set of routes.
+    if (hasTarget) {
       if (targetConfig.matchMode === 'exact') {
-        list = list.filter(r => {
-          const res = r.group.resultSaplingGeneString;
-          for (let i = 0; i < 6; i++) {
-            const req = targetStr[i];
-            if (req && req !== '*' && req !== '?' && res[i] !== req) {
-              return false;
-            }
-          }
-          return true;
-        });
+        // Only results that match the target slot-by-slot (wildcards match any).
+        list = list.filter(r => isExactMatch(r.group.resultSaplingGeneString, target));
+      } else if (targetConfig.matchMode === 'at-least') {
+        // Only results that contain at least the target's count of each gene.
+        list = list.filter(r => meetsAtLeast(r.group.resultSaplingGeneString, target));
       }
+      // 'best-possible' never filters — it always shows the closest achievable,
+      // ranked below (exact first, then by how many target genes are hit).
     }
 
     // Inventory Filtering
@@ -230,11 +241,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       list = list.filter(r => r.analysis.inventoryStatus !== 'missing');
     }
 
-    // Sorting
-    list.sort((a, b) => {
-      if (sortBy === 'recommended') {
-        return b.analysis.recommendationScore - a.analysis.recommendationScore;
-      }
+    // User-selected base ordering.
+    const baseCompare = (a: ScoredRoute, b: ScoredRoute): number => {
       if (sortBy === 'probability') {
         return b.analysis.probabilityPercent - a.analysis.probabilityPercent;
       }
@@ -256,8 +264,35 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         if (diff !== 0) return diff;
         return b.analysis.recommendationScore - a.analysis.recommendationScore;
       }
-      return 0;
-    });
+      // 'recommended' (default)
+      return b.analysis.recommendationScore - a.analysis.recommendationScore;
+    };
+
+    if (targetConfig.matchMode === 'best-possible' && hasTarget) {
+      // Rank by closeness to target: exact matches first, then most target genes
+      // hit (even if that needs an extra generation), then more matching slots,
+      // then the user's chosen sort.
+      list.sort((a, b) => {
+        const ra = a.group.resultSaplingGeneString;
+        const rb = b.group.resultSaplingGeneString;
+
+        const ea = isExactMatch(ra, target) ? 1 : 0;
+        const eb = isExactMatch(rb, target) ? 1 : 0;
+        if (ea !== eb) return eb - ea;
+
+        const ca = targetCloseness(ra, target);
+        const cb = targetCloseness(rb, target);
+        if (ca !== cb) return cb - ca;
+
+        const pa = positionMatches(ra, target);
+        const pb = positionMatches(rb, target);
+        if (pa !== pb) return pb - pa;
+
+        return baseCompare(a, b);
+      });
+    } else {
+      list.sort(baseCompare);
+    }
 
     return list;
   }, [scoredRoutes, targetConfig, inventoryFilterMode, sortBy]);
@@ -388,6 +423,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setSelectedGroup,
         selectedMapIndex,
         setSelectedMapIndex,
+        isInspectorOpen,
+        setIsInspectorOpen,
         selectedMap,
         highlightedGroup,
         setHighlightedGroup,

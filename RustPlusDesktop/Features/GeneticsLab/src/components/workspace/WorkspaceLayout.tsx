@@ -8,25 +8,116 @@ import { RouteGrid } from './Routes/RouteGrid.tsx';
 import { RouteInspector } from './Inspector/RouteInspector.tsx';
 import { useCalculation } from '../../context/CalculationContext.tsx';
 
+/**
+ * Responsive workspace with three tiers:
+ *   - Desktop (≥ lg / 1200px): 3 fluid columns, inspector docked on the right.
+ *   - Tablet  (md–lg): 2 columns (inputs + center), inspector slides in as a drawer.
+ *   - Compact (< md / 900px): single stacked column that scrolls; inspector drawer.
+ * Column tracks use minmax so they shrink instead of overflowing when the window
+ * is resized, and the center track can collapse to 0 to avoid horizontal blowout.
+ */
 export const WorkspaceLayout: React.FC = () => {
   const theme = useTheme();
-  const isWideDesktop = useMediaQuery(theme.breakpoints.up('xl')); // >= 1440px
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg')); // >= 1200px
+  const isXL = useMediaQuery(theme.breakpoints.up('xl'));       // very wide
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));  // ≥1200 → dock inspector
+  const isCompact = useMediaQuery(theme.breakpoints.down('md')); // <900 → stack
 
-  const { selectedGroup, setSelectedGroup } = useCalculation();
+  const { selectedGroup, isInspectorOpen, setIsInspectorOpen } = useCalculation();
   const [isInspectorManuallyClosed, setIsInspectorManuallyClosed] = useState(false);
 
   const showDesktopInspector = isDesktop && !isInspectorManuallyClosed && Boolean(selectedGroup);
+
+  // The small-screen drawer opens ONLY when the user explicitly inspects a route
+  // (isInspectorOpen), never from auto-selection — otherwise it would take over
+  // the screen unprompted and reopen every time it's closed.
+  const showDrawer = !isDesktop && Boolean(selectedGroup) && isInspectorOpen;
+  const closeDrawer = () => setIsInspectorOpen(false);
+
+  const centerArea = (
+    <Box
+      sx={{
+        height: '100%',
+        minWidth: 0,
+        overflowY: 'auto',
+        pr: 0.5,
+        display: 'flex',
+        flexDirection: 'column',
+        '&::-webkit-scrollbar': { width: 5 },
+        '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface)', borderRadius: 3 }
+      }}
+    >
+      <TargetDesigner />
+      <RouteGrid />
+    </Box>
+  );
+
+  const inspectorDrawer = (
+    <Drawer
+      anchor="right"
+      open={showDrawer}
+      onClose={closeDrawer}
+      slotProps={{
+        paper: {
+          sx: {
+            width: { xs: '100%', sm: 400 },
+            maxWidth: '100vw',
+            backgroundColor: 'var(--gl-panel-bg)',
+            p: 1.5
+          }
+        }
+      }}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+        <IconButton size="small" onClick={closeDrawer} sx={{ color: 'var(--gl-text-muted)' }}>
+          <CloseIcon sx={{ fontSize: 18 }} />
+        </IconButton>
+      </Box>
+      <RouteInspector onClose={closeDrawer} />
+    </Drawer>
+  );
+
+  // --- COMPACT (< md): single stacked column; the whole area scrolls vertically ---
+  if (isCompact) {
+    return (
+      <Box
+        sx={{
+          height: 'calc(100vh - 80px)',
+          overflowY: 'auto',
+          p: 1.5,
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2
+        }}
+      >
+        {/* Gene inputs get a bounded, internally-scrolling block */}
+        <Box sx={{ height: 'min(52vh, 460px)', flexShrink: 0 }}>
+          <CloneBank />
+        </Box>
+
+        {/* Target + routes flow beneath and grow with content */}
+        <Box sx={{ flexShrink: 0, minWidth: 0 }}>
+          <TargetDesigner />
+          <RouteGrid />
+        </Box>
+
+        {inspectorDrawer}
+      </Box>
+    );
+  }
+
+  // --- TABLET / DESKTOP: CSS grid (2 or 3 columns) ---
+  const gridTemplateColumns = showDesktopInspector
+    ? isXL
+      ? 'minmax(260px, 320px) minmax(440px, 1fr) minmax(320px, 380px)'
+      : 'minmax(230px, 270px) minmax(340px, 1fr) minmax(290px, 330px)'
+    : 'minmax(240px, 300px) minmax(0, 1fr)';
 
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: showDesktopInspector
-          ? isWideDesktop
-            ? '300px minmax(420px, 1fr) 350px'
-            : '290px minmax(360px, 1fr) 320px'
-          : '295px minmax(420px, 1fr)',
+        gridTemplateColumns,
         gap: 2,
         height: 'calc(100vh - 80px)',
         p: 1.5,
@@ -35,34 +126,21 @@ export const WorkspaceLayout: React.FC = () => {
         transition: 'grid-template-columns 0.2s ease'
       }}
     >
-      {/* Column 1: Gene Inputs (Left panel) */}
-      <Box sx={{ height: '100%', overflow: 'hidden' }}>
+      {/* Column 1: Gene Inputs */}
+      <Box sx={{ height: '100%', minWidth: 0, overflow: 'hidden' }}>
         <CloneBank />
       </Box>
 
-      {/* Column 2: Center Solver Area (Target Designer + Route Grid) */}
-      <Box
-        sx={{
-          height: '100%',
-          overflowY: 'auto',
-          pr: 0.5,
-          display: 'flex',
-          flexDirection: 'column',
-          '&::-webkit-scrollbar': { width: 5 },
-          '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface)', borderRadius: 3 }
-        }}
-      >
-        <TargetDesigner />
-        <RouteGrid />
-      </Box>
+      {/* Column 2: Center Solver Area */}
+      {centerArea}
 
-      {/* Column 3: Route Inspector (Desktop docking) */}
+      {/* Column 3: Inspector — docked on desktop, drawer otherwise */}
       {showDesktopInspector ? (
-        <Box sx={{ height: '100%', overflow: 'hidden' }}>
+        <Box sx={{ height: '100%', minWidth: 0, overflow: 'hidden' }}>
           <RouteInspector onClose={() => setIsInspectorManuallyClosed(true)} />
         </Box>
       ) : isDesktop && selectedGroup && isInspectorManuallyClosed ? (
-        /* Floating reopen pill when closed on desktop */
+        /* Floating reopen pill when the user closed the docked inspector */
         <Box sx={{ position: 'fixed', right: 16, bottom: 24, zIndex: 100 }}>
           <Tooltip title="Open Route Inspector" arrow>
             <IconButton
@@ -80,28 +158,7 @@ export const WorkspaceLayout: React.FC = () => {
           </Tooltip>
         </Box>
       ) : (
-        /* Tablet / Mobile Drawer when selected */
-        <Drawer
-          anchor="right"
-          open={Boolean(selectedGroup && !isDesktop)}
-          onClose={() => setSelectedGroup(null)}
-          slotProps={{
-            paper: {
-              sx: {
-                width: { xs: '100%', sm: 360 },
-                backgroundColor: 'var(--gl-panel-bg)',
-                p: 1.5
-              }
-            }
-          }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-            <IconButton size="small" onClick={() => setSelectedGroup(null)} sx={{ color: 'var(--gl-text-muted)' }}>
-              <CloseIcon sx={{ fontSize: 18 }} />
-            </IconButton>
-          </Box>
-          <RouteInspector onClose={() => setSelectedGroup(null)} />
-        </Drawer>
+        inspectorDrawer
       )}
     </Box>
   );

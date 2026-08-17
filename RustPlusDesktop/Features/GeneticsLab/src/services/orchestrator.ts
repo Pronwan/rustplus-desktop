@@ -17,6 +17,13 @@ import {
 } from '../domain/genetics/combinations.ts';
 import { evaluateCombination } from '../domain/genetics/crossbreeding.ts';
 
+/**
+ * Max result groups emitted to the UI. Caps main-thread route-analysis + render
+ * work so heavy Thorough / Gen-3 runs don't freeze the UI. Results are sorted
+ * best-first before slicing, and the UI groups/paginates further.
+ */
+const MAX_RETURNED_RESULTS = 500;
+
 export interface ApplicationOptions {
   withRepetitions: boolean;
   modifyMinimumTrackedScoreManually: boolean;
@@ -510,6 +517,13 @@ export class CrossbreedingOrchestrator {
   public getSortedResults(): GeneticsMapGroup[] {
     const groups = Array.from(this.allAccumulatedGroupsMap.values());
     groups.sort(resultMapGroupsSortingFunction);
-    return groups;
+    // Only emit the top routes. Thorough/Gen-3 runs can accumulate thousands of
+    // distinct result strings; returning them all forces the main thread to run
+    // the recursive route analysis + render on every partial/final update, which
+    // freezes the UI. The user only ever views a small, grouped/paginated subset,
+    // so cap the payload to the best results by score.
+    return groups.length > MAX_RETURNED_RESULTS
+      ? groups.slice(0, MAX_RETURNED_RESULTS)
+      : groups;
   }
 }

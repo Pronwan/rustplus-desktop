@@ -77,17 +77,9 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const { notifySuccess, notifyInfo, notifyError } = useNotification();
 
   const [selectedPlant, setSelectedPlantState] = useState<string>(() => StorageService.getSelectedPlantType());
-  const [geneInputText, setGeneInputTextState] = useState<string>(() => {
-    const saved = StorageService.getClones(StorageService.getSelectedPlantType());
-    if (saved.length > 0) {
-      return saved.map(c => c.genetics).join('\n');
-    }
-    const legacy = StorageService.getSavedGeneSets();
-    if (legacy.length > 0) {
-      return legacy[0].genes;
-    }
-    return (DEFAULT_SAMPLE_GENES[StorageService.getSelectedPlantType()] || DEFAULT_SAMPLE_GENES['hemp']).join('\n');
-  });
+  // Always start with an empty gene list. Users load plants via Scan, the SAMPLE
+  // button, or the SAVED sets tab — we no longer auto-restore the previous input.
+  const [geneInputText, setGeneInputTextState] = useState<string>('');
 
   const [savedGeneSets, setSavedGeneSets] = useState<StoredGeneSet[]>(() => StorageService.getSavedGeneSets());
   const [targetConfig, setTargetConfig] = useState<TargetConfiguration>(() => StorageService.getTargetConfig());

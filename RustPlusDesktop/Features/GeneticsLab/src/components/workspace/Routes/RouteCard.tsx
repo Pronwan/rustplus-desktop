@@ -29,7 +29,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   onInspect
 }) => {
   const { group, bestMap, analysis } = scoredRoute;
-  const { setSelectedGroup, setSelectedMapIndex, comparedGroups, toggleCompareGroup } = useCalculation();
+  const { setSelectedGroup, setSelectedMapIndex, setIsInspectorOpen, comparedGroups, toggleCompareGroup } = useCalculation();
   const { startBreedingSession } = useWorkspace();
 
   const isCompared = comparedGroups.some(g => g.resultSaplingGeneString === group.resultSaplingGeneString);
@@ -38,6 +38,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
     e.stopPropagation();
     setSelectedGroup(group);
     setSelectedMapIndex(0);
+    setIsInspectorOpen(true); // explicit user intent → allowed to open the drawer on small screens
     onInspect?.();
   };
 
