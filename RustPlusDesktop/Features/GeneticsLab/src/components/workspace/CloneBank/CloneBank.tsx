@@ -17,6 +17,7 @@ import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useScanner } from '../../../context/ScannerContext.tsx';
 import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
+import { AudioService } from '../../../services/audioService.ts';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
 
@@ -34,7 +35,7 @@ export const CloneBank: React.FC = () => {
     deleteSavedGeneSet
   } = useWorkspace();
 
-  const { isCalculating, highlightedGroup, selectedGroup } = useCalculation();
+  const { isCalculating, highlightedGroup, selectedGroup, options } = useCalculation();
   const { isScannerActive, startScanner } = useScanner();
 
   const [activeTab, setActiveTab] = useState<'current' | 'saved'>('current');
@@ -77,11 +78,19 @@ export const CloneBank: React.FC = () => {
   }, [localText]);
 
   const handleTextChange = (newText: string) => {
+    // "Wrong key" feedback: the user typed a character that isn't a gene letter
+    // (G/Y/H/W/X) or whitespace. Only fire when adding text (not on delete/paste-shrink).
+    const typedInvalidLetter =
+      newText.length > localText.length && /[^GYHWX\s]/i.test(newText);
+    if (typedInvalidLetter) {
+      AudioService.playWrongKey(options.sounds);
+    }
+
     // Sanitize: uppercase only G, Y, H, W, X and newlines
     const linesArr = newText.toUpperCase().split('\n');
     const cleanedLines = linesArr.map((line) => line.replace(/[^GHYWX]/g, '').slice(0, 6));
     const cleanedText = cleanedLines.join('\n');
-    
+
     // Immediate local update (0ms typing latency)
     setLocalText(cleanedText);
 

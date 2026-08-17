@@ -67,6 +67,10 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     soundPrefRef.current = !!opts.sounds;
   }, []);
 
+  // Last gene we reacted to, so holding the cursor on one plant (which fires
+  // SAPLING-FOUND repeatedly) only pops / duplicate-beeps once per distinct plant.
+  const lastProcessedGeneRef = useRef<string | null>(null);
+
   const activeProfile = useMemo(() => {
     return profiles.find(p => p.id === activeProfileId) || profiles[0];
   }, [profiles, activeProfileId]);
@@ -211,12 +215,14 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setScannerStatusMessage('Initializing OCR engine...');
         postScannerState(true);
       } else if (evt.type === 'STARTED') {
+        lastProcessedGeneRef.current = null;
         setIsScannerInitializing(false);
         setIsScannerActive(true);
         setScannerStatusMessage('Scanner active. Hover over plant clones in Rust.');
         postScannerState(true);
         notifySuccess('Scanner started. Hover over clones in Rust.');
       } else if (evt.type === 'STOPPED') {
+        lastProcessedGeneRef.current = null;
         setIsScannerActive(false);
         setIsScannerInitializing(false);
         setIsStarved(false);
@@ -238,19 +244,25 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setLastScannedGenes(evt.geneString);
           setLastConfidence(evt.confidence || 90);
 
-          const added = addClone(evt.geneString, {
-            source: 'scanner',
-            quantity: 1
-          });
+          // Only react when the hovered plant changes, so one plant doesn't
+          // replay sounds/notifications on every scan frame.
+          if (lastProcessedGeneRef.current !== evt.geneString) {
+            lastProcessedGeneRef.current = evt.geneString;
 
-          if (added) {
-            // New clone → satisfying "pop".
-            AudioService.playPop(soundPrefRef.current);
-            notifySuccess(`Scanned Clone: ${evt.geneString} (${Math.round(evt.confidence || 0)}% conf)`);
-          } else {
-            // Duplicate (already in the list) → "death" cue, and don't add a dup row.
-            AudioService.playWrongKey(soundPrefRef.current);
-            notifyInfo(`Duplicate [${evt.geneString}] — already in your list.`);
+            const added = addClone(evt.geneString, {
+              source: 'scanner',
+              quantity: 1
+            });
+
+            if (added) {
+              // New clone → satisfying "pop".
+              AudioService.playPop(soundPrefRef.current);
+              notifySuccess(`Scanned Clone: ${evt.geneString} (${Math.round(evt.confidence || 0)}% conf)`);
+            } else {
+              // Duplicate (already in the list) → its own generated cue, once.
+              AudioService.playDuplicate(soundPrefRef.current);
+              notifyInfo(`Duplicate [${evt.geneString}] — already in your list.`);
+            }
           }
         }
       } else if (evt.type === 'ERROR') {
