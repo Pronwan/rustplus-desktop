@@ -8,22 +8,15 @@ import { GeneticsMapGroup } from '../domain/genetics/GeneticsMapGroup.ts';
 import { GeneticsMap } from '../domain/genetics/GeneticsMap.ts';
 import { ProgressState } from './AppContext.tsx';
 import { useWorkspace } from './WorkspaceContext.tsx';
-import { analyzeRoute, RouteAnalysis } from '../domain/genetics/routeScoring.ts';
+import { analyzeRoute, RouteAnalysis, RouteSortOption, compareScoredRoutes } from '../domain/genetics/routeScoring.ts';
 import {
   targetHasConstraint,
   isExactMatch,
-  meetsAtLeast,
-  targetCloseness,
-  positionMatches
+  meetsAtLeast
 } from '../utils/targetMatch.ts';
 import { useNotification } from './NotificationContext.tsx';
 
-export type RouteSortOption =
-  | 'recommended'
-  | 'probability'
-  | 'generations'
-  | 'clones'
-  | 'inventory';
+export type { RouteSortOption };
 
 export interface ScoredRoute {
   group: GeneticsMapGroup;
@@ -41,7 +34,7 @@ export interface ScoredRoute {
 const routeSignature = (r: ScoredRoute): string => {
   const a = r.analysis;
   return [
-    Math.round(a.recommendationScore),
+    r.bestMap.score,
     Math.round(a.probabilityPercent),
     a.generationCount,
     a.uniqueCloneCount,
@@ -221,6 +214,15 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const target = targetConfig.targetGenetics || '';
     const hasTarget = targetHasConstraint(target);
 
+    // Pre-filter 1: Ignore genotypes that already exist in the source/input plants
+    const sourceGenotypeSet = new Set(sourceSaplings.map(s => s.toString()));
+    list = list.filter(r => !sourceGenotypeSet.has(r.group.resultSaplingGeneString));
+
+    // Pre-filter 2: Ignore results where score < options.minimumTrackedScore
+    if (options.minimumTrackedScore > 0) {
+      list = list.filter(r => r.bestMap.score >= options.minimumTrackedScore);
+    }
+
     // Target Filtering — each mode keeps a different set of routes.
     if (hasTarget) {
       if (targetConfig.matchMode === 'exact') {
@@ -230,8 +232,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         // Only results that contain at least the target's count of each gene.
         list = list.filter(r => meetsAtLeast(r.group.resultSaplingGeneString, target));
       }
-      // 'best-possible' never filters — it always shows the closest achievable,
-      // ranked below (exact first, then by how many target genes are hit).
+      // 'best-possible' never filters — it always shows all achievable routes.
     }
 
     // Inventory Filtering
@@ -247,68 +248,11 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const reliable = list.filter(r => r.analysis.probabilityPercent >= 50);
     if (reliable.length > 0) list = reliable;
 
-    // User-selected base ordering.
-    const baseCompare = (a: ScoredRoute, b: ScoredRoute): number => {
-      if (sortBy === 'probability') {
-        return b.analysis.probabilityPercent - a.analysis.probabilityPercent;
-      }
-      if (sortBy === 'generations') {
-        if (a.analysis.generationCount !== b.analysis.generationCount) {
-          return a.analysis.generationCount - b.analysis.generationCount;
-        }
-        return b.analysis.probabilityPercent - a.analysis.probabilityPercent;
-      }
-      if (sortBy === 'clones') {
-        if (a.analysis.uniqueCloneCount !== b.analysis.uniqueCloneCount) {
-          return a.analysis.uniqueCloneCount - b.analysis.uniqueCloneCount;
-        }
-        return a.analysis.totalPlacementsCount - b.analysis.totalPlacementsCount;
-      }
-      if (sortBy === 'inventory') {
-        const invOrder = { available: 3, partial: 2, missing: 1 };
-        const diff = invOrder[b.analysis.inventoryStatus] - invOrder[a.analysis.inventoryStatus];
-        if (diff !== 0) return diff;
-        return b.analysis.recommendationScore - a.analysis.recommendationScore;
-      }
-      // 'recommended' (default): 100% chance before 50%, then fewer generations,
-      // then the overall recommendation score.
-      if (a.analysis.probabilityPercent !== b.analysis.probabilityPercent) {
-        return b.analysis.probabilityPercent - a.analysis.probabilityPercent;
-      }
-      if (a.analysis.generationCount !== b.analysis.generationCount) {
-        return a.analysis.generationCount - b.analysis.generationCount;
-      }
-      return b.analysis.recommendationScore - a.analysis.recommendationScore;
-    };
-
-    if (targetConfig.matchMode === 'best-possible' && hasTarget) {
-      // Rank by closeness to target: exact matches first, then most target genes
-      // hit (even if that needs an extra generation), then more matching slots,
-      // then the user's chosen sort.
-      list.sort((a, b) => {
-        const ra = a.group.resultSaplingGeneString;
-        const rb = b.group.resultSaplingGeneString;
-
-        const ea = isExactMatch(ra, target) ? 1 : 0;
-        const eb = isExactMatch(rb, target) ? 1 : 0;
-        if (ea !== eb) return eb - ea;
-
-        const ca = targetCloseness(ra, target);
-        const cb = targetCloseness(rb, target);
-        if (ca !== cb) return cb - ca;
-
-        const pa = positionMatches(ra, target);
-        const pb = positionMatches(rb, target);
-        if (pa !== pb) return pb - pa;
-
-        return baseCompare(a, b);
-      });
-    } else {
-      list.sort(baseCompare);
-    }
+    // 2-level Rust Breeder ranking according to selected sortBy
+    list.sort((a, b) => compareScoredRoutes(a, b, sortBy, target));
 
     return list;
-  }, [scoredRoutes, targetConfig, inventoryFilterMode, sortBy]);
+  }, [scoredRoutes, sourceSaplings, options.minimumTrackedScore, targetConfig, inventoryFilterMode, sortBy]);
 
   // Collapse equal-quality routes into a single representative (keeps the flood
   // of identical "Score 98 · 100% · GEN.1 · 3 clones" cards down to one each).

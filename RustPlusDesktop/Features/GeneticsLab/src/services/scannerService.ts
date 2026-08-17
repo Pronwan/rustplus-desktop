@@ -117,6 +117,13 @@ export class ScannerService {
     if (this.isScanning || this.isInitializing) return false;
     this.isInitializing = true;
 
+    // Kick off the OCR warmup right away so its (potentially large, first-run)
+    // asset download runs in parallel with the screen-picker prompt and video
+    // setup below, rather than starting only after the user has picked a window.
+    const warmupPromise: Promise<void> = this.recognizer.isWarm()
+      ? Promise.resolve()
+      : this.recognizer.warmup().catch(() => {});
+
     try {
       this.regions = StorageService.getScannerRegions();
 
@@ -180,13 +187,16 @@ export class ScannerService {
         setTimeout(done, 1200);
       });
 
-      // Warm up Tesseract OCR workers if not already warm. Bounded by a timeout so a
-      // slow or hung warmup (e.g. worker/wasm assets stalling) can't strand the scanner
-      // in "Initializing…" forever — the scan loop already waits for isWarm() before OCR.
+      // Warm up Tesseract OCR workers if not already warm. We wait up to 15s for
+      // the (potentially large, first-time) asset download to finish so the very
+      // first scan can read immediately. If it's still not warm after that, we go
+      // ahead and start the scanner anyway — warmup keeps running in the
+      // background (the scan loop waits for isWarm() before OCR), so reads begin
+      // as soon as the download completes instead of stranding in "Initializing…".
       if (!this.recognizer.isWarm()) {
         await Promise.race([
-          this.recognizer.warmup().catch(() => {}),
-          new Promise<void>((res) => setTimeout(res, 8000))
+          warmupPromise,
+          new Promise<void>((res) => setTimeout(res, 15000))
         ]);
       }
 

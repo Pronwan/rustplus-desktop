@@ -212,7 +212,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const unsubscribe = scannerService.addEventListener((evt: ScannerEvent) => {
       if (evt.type === 'INITIALIZING') {
         setIsScannerInitializing(true);
-        setScannerStatusMessage('Initializing OCR engine...');
+        setScannerStatusMessage('Initializing OCR engine… (first run downloads the recognizer, ~15s)');
         postScannerState(true);
       } else if (evt.type === 'STARTED') {
         lastProcessedGeneRef.current = null;

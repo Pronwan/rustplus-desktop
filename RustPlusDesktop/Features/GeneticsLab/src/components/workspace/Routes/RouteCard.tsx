@@ -98,20 +98,22 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             {isBest ? '⭐ BEST' : `ROUTE #${rankIndex + 1}`}
           </Typography>
 
-          <Chip
-            size="small"
-            label={`Score ${analysis.recommendationScore}`}
-            sx={{
-              height: 18,
-              fontSize: '0.65rem',
-              fontWeight: 800,
-              fontFamily: 'monospace',
-              backgroundColor: analysis.recommendationScore >= 80 ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)',
-              color: analysis.recommendationScore >= 80 ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
-              border: `1px solid ${analysis.recommendationScore >= 80 ? 'rgba(0, 229, 255, 0.35)' : 'rgba(255, 255, 255, 0.15)'}`,
-              '& .MuiChip-label': { px: 0.6 }
-            }}
-          />
+          <Tooltip title={`Gene Quality Score: ${bestMap.score} / 6.0`} arrow>
+            <Chip
+              size="small"
+              label={`Score ${bestMap.score}`}
+              sx={{
+                height: 18,
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                fontFamily: 'monospace',
+                backgroundColor: bestMap.score >= 5 ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+                color: bestMap.score >= 5 ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
+                border: `1px solid ${bestMap.score >= 5 ? 'rgba(0, 229, 255, 0.35)' : 'rgba(255, 255, 255, 0.15)'}`,
+                '& .MuiChip-label': { px: 0.6 }
+              }}
+            />
+          </Tooltip>
 
           <Tooltip title={`Requires ${analysis.generationCount} breeding generation${analysis.generationCount > 1 ? 's' : ''} (steps)`} arrow>
             <Chip
