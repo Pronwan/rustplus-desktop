@@ -608,7 +608,7 @@
     <value>화물선</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Spawn</value>
+    <value>스폰</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
     <value>항만 도킹</value>
@@ -979,7 +979,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>꺼짐</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>ACTIVE</value>
+    <value>활성</value>
   </data>
   <data name="Inactive" xml:space="preserve">
     <value>비활성</value>
@@ -1051,13 +1051,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>식별자:</value>
   </data>
   <data name="FPS" xml:space="preserve">
-    <value>FPS:</value>
+    <value>프레임(FPS):</value>
   </data>
   <data name="CameraFPSNote" xml:space="preserve">
     <value>참고: 2fps를 권장하며, 이보다 높으면 서버에 대한 연결이 끊어질 수 있습니다.</value>
   </data>
   <data name="Pixel" xml:space="preserve">
-    <value>Pixel</value>
+    <value>픽셀</value>
   </data>
   <data name="Pen" xml:space="preserve">
     <value>펜</value>
@@ -1276,22 +1276,22 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>딥씨 종료 {0} 이 세션 전에</value>
   </data>
   <data name="TimerHoursMinutes" xml:space="preserve">
-    <value>{0}h {1:D2}m</value>
+    <value>{0}시간 {1:D2}분</value>
   </data>
   <data name="TimerMinutesSeconds" xml:space="preserve">
-    <value>{0}m {1:D2}s</value>
+    <value>{0}분 {1:D2}초</value>
   </data>
   <data name="AgoHoursMinutes" xml:space="preserve">
-    <value>{0}h {1}m</value>
+    <value>{0}시간 {1}분 전</value>
   </data>
   <data name="AgoMinutes" xml:space="preserve">
-    <value>{0}m</value>
+    <value>{0}분 전</value>
   </data>
   <data name="DurationMinutesSeconds" xml:space="preserve">
-    <value>{0}m {1}s</value>
+    <value>{0}분 {1}초</value>
   </data>
   <data name="DurationSeconds" xml:space="preserve">
-    <value>{0}s</value>
+    <value>{0}초</value>
   </data>
   <data name="ChatCmdPopResponse" xml:space="preserve">
     <value>{0} 현재 온라인 상태인 플레이어 수입니다.{1}</value>
@@ -1408,7 +1408,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>{0}: 비어 있음/만료됨</value>
   </data>
   <data name="ChatCmdUpkeepTimeShort" xml:space="preserve">
-    <value>{0}: {1}d, {2}h</value>
+    <value>{0}: {1}일, {2}시간</value>
   </data>
   <data name="ChatCmdUpkeepHeader" xml:space="preserve">
     <value>유지 관리: {0}</value>
@@ -1441,7 +1441,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>금속</value>
   </data>
   <data name="MaterialHQM" xml:space="preserve">
-    <value>HQM</value>
+    <value>고급 금속 (HQM)</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
     <value>소형 석유 굴착 장치</value>
@@ -5500,5 +5500,14 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>어떤 튜토리얼도 규칙을 실행하거나 실제 스마트 장치를 전환하지 않습니다.</value>
+  </data>
+  <data name="ClanChatTitle" xml:space="preserve">
+    <value>클랜 채팅</value>
+  </data>
+  <data name="AlertPlayerAfk" xml:space="preserve">
+    <value>{0}님이 자리 비움 상태입니다: {1}:00</value>
+  </data>
+  <data name="AlertPlayerAfkReturn" xml:space="preserve">
+    <value>{0}님이 자리 비움에서 돌아왔습니다. 자리 비움 시간: {1}</value>
   </data>
 </root>
