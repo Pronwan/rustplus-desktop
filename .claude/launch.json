@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "genetics-lab",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "RustPlusDesktop/Features/GeneticsLab"],
+      "port": 5173
+    }
+  ]
+}
