@@ -487,6 +487,25 @@ public class ServerProfile : INotifyPropertyChanged
     protected void OnProp([CallerMemberName] string? n = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 
+    /// <summary>
+    /// Lowest index whose command name is still free. Using Count + 1 collided after a deletion:
+    /// removing the middle of [upkeep, upkeep2, upkeep3] leaves Count = 2, so the next device
+    /// would claim "upkeep3" a second time and both would answer the same chat command.
+    /// </summary>
+    private static int NextFreeCommandIndex(
+        ObservableCollection<ChatCommandMapping> mappings,
+        Func<int, string> nameFor)
+    {
+        var taken = new HashSet<string>(
+            mappings.Select(m => m.Command ?? string.Empty),
+            StringComparer.OrdinalIgnoreCase);
+
+        for (int i = 1; ; i++)
+        {
+            if (!taken.Contains(nameFor(i))) return i;
+        }
+    }
+
     public void SyncChatCommands()
     {
         // Sync Switches
@@ -504,12 +523,12 @@ public class ServerProfile : INotifyPropertyChanged
         {
             if (!SwitchCommandMappings.Any(m => m.EntityId == sw.EntityId))
             {
-                int next = SwitchCommandMappings.Count + 1;
-                SwitchCommandMappings.Add(new ChatCommandMapping 
-                { 
-                    Label = $"Switch {next}", 
-                    Command = $"switch{next}", 
-                    EntityId = sw.EntityId 
+                int next = NextFreeCommandIndex(SwitchCommandMappings, i => $"switch{i}");
+                SwitchCommandMappings.Add(new ChatCommandMapping
+                {
+                    Label = $"Switch {next}",
+                    Command = $"switch{next}",
+                    EntityId = sw.EntityId
                 });
             }
         }
@@ -529,13 +548,12 @@ public class ServerProfile : INotifyPropertyChanged
         {
             if (!UpkeepCommandMappings.Any(m => m.EntityId == tc.EntityId))
             {
-                int next = UpkeepCommandMappings.Count + 1;
-                string cmd = next == 1 ? "upkeep" : $"upkeep{next}";
-                UpkeepCommandMappings.Add(new ChatCommandMapping 
-                { 
-                    Label = next == 1 ? "Upkeep" : $"Upkeep {next}", 
-                    Command = cmd, 
-                    EntityId = tc.EntityId 
+                int next = NextFreeCommandIndex(UpkeepCommandMappings, i => i == 1 ? "upkeep" : $"upkeep{i}");
+                UpkeepCommandMappings.Add(new ChatCommandMapping
+                {
+                    Label = next == 1 ? "Upkeep" : $"Upkeep {next}",
+                    Command = next == 1 ? "upkeep" : $"upkeep{next}",
+                    EntityId = tc.EntityId
                 });
             }
         }
