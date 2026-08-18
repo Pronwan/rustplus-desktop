@@ -646,7 +646,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 SaveOwnOverlayToJson();
 
                 // Immediately upload new state to Cloud
-                if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+                if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
                 {
                     try
                     {
@@ -1687,7 +1687,7 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
 
             _vm?.Save();
             SaveOwnOverlayToJson();
-            if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+            if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
             {
                 try
                 {
@@ -1815,7 +1815,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
             // 2) Cloud-Fetch (anon key genügt, kein Discord-Login nötig)
             //    Parallel für alle IDs – Fehler einzelner IDs werden ignoriert
-            if (Services.Auth.SupabaseAuthManager.Client != null && TrackingService.CloudSyncEnabled)
+            if (Services.Cloud.CloudAuth.IsCloudAvailable && TrackingService.CloudSyncEnabled)
             {
                 var fetchTasks = allSteamIds.Select(sid => TryFetchAndUpdateOverlayAsync(sid));
                 await Task.WhenAll(fetchTasks);
@@ -1824,52 +1824,67 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             // 3) Import-Kandidaten sammeln (Cloud zuerst, Fallback auf lokale Datei)
             var items = new List<DeviceImportItem>();
 
-            foreach (var sid in allSteamIds)
+            // Cloud: one team-scoped call returns every teammate's devices already
+            // de-duplicated by entity id on the server, so the same device several
+            // teammates synced shows once (no client-side merge needed).
+            if (Services.Cloud.CloudAuth.IsCloudAvailable && TrackingService.CloudSyncEnabled)
             {
-                // TeamMember-VM für diesen SteamId (oder Dummy für eigene ID ohne VM-Eintrag)
-                var tm = TeamMembers.FirstOrDefault(t => t.SteamId == sid)
-                      ?? new TeamMemberVM { SteamId = sid, Name = sid == _mySteamId ? "Me" : sid.ToString() };
-
-                OverlaySaveData? data = null;
-
-                // Zuerst Cloud versuchen
-                if (Services.Auth.SupabaseAuthManager.Client != null && TrackingService.CloudSyncEnabled)
+                try
                 {
-                    try { data = await OverlayDataModule.FetchOverlayFromServerAsync(GetServerKey(), sid); }
-                    catch { /* Cloud nicht erreichbar – lokale Datei als Fallback */ }
-                }
-
-                // Fallback: lokale Datei
-                if (data == null)
-                {
-                    var path = GetOverlayJsonPathForPlayerServer(sid);
-                    if (File.Exists(path))
+                    var teamDevices = await DeviceDataModule.FetchTeamDevicesAsync(GetServerKey());
+                    foreach (var (dto, ownerSteamId, ownerName) in teamDevices)
                     {
-                        try
+                        var tm = new TeamMemberVM
                         {
-                            var json = File.ReadAllText(path);
-                            data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
-                        }
-                        catch (Exception ex)
-                        {
-                            AppendLog($"[dev/import] Can't parse local overlay for {sid}: {ex.Message}");
-                        }
+                            SteamId = ownerSteamId,
+                            Name = ownerSteamId == _mySteamId ? "Me" : ownerName,
+                        };
+                        AddDeviceToImportItems(items, dto, tm);
                     }
                 }
-
-                if (data?.Devices == null || data.Devices.Count == 0)
-                    continue;
-
-                // Entity IDs are handed out fresh on every wipe, while the server key is
-                // ip-port and survives one unchanged. A snapshot written before the current
-                // wipe therefore lists devices that no longer exist — they import without
-                // complaint and then sit there red, which is exactly what looked like broken
-                // device sharing.
-                bool fromPreviousWipe = IsSnapshotFromPreviousWipe(data);
-
-                foreach (var d in data.Devices)
+                catch (Exception ex)
                 {
-                    CollectIndividualDevices(items, d, tm, fromPreviousWipe);
+                    AppendLog($"[dev/import] Team device fetch failed: {ex.Message}");
+                }
+            }
+
+            // Fallback: local backups when the cloud returned nothing (offline, or
+            // nobody has synced). Dedup by entity id since local files can also carry
+            // the same device under several owners.
+            if (items.Count == 0)
+            {
+                foreach (var sid in allSteamIds)
+                {
+                    var tm = TeamMembers.FirstOrDefault(t => t.SteamId == sid)
+                          ?? new TeamMemberVM { SteamId = sid, Name = sid == _mySteamId ? "Me" : sid.ToString() };
+
+                    var path = GetOverlayJsonPathForPlayerServer(sid);
+                    if (!File.Exists(path))
+                        continue;
+
+                    try
+                    {
+                        var json = File.ReadAllText(path);
+                        var data = System.Text.Json.JsonSerializer.Deserialize<OverlaySaveData>(json);
+                        if (data?.Devices == null || data.Devices.Count == 0)
+                            continue;
+
+                        // Entity IDs are handed out fresh on every wipe, while the server key is
+                        // ip-port and survives one unchanged. A snapshot written before the current
+                        // wipe therefore lists devices that no longer exist — they import without
+                        // complaint and then sit there red, which is exactly what looked like broken
+                        // device sharing.
+                        bool fromPreviousWipe = IsSnapshotFromPreviousWipe(data);
+
+                        foreach (var d in data.Devices)
+                        {
+                            CollectIndividualDevices(items, d, tm, fromPreviousWipe);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[dev/import] Can't parse local overlay for {sid}: {ex.Message}");
+                    }
                 }
             }
 
@@ -2407,7 +2422,7 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
 
                         // Save local and push sync
                         SaveOwnOverlayToJson();
-                        if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+                        if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
                         {
                             try
                             {

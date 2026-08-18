@@ -715,6 +715,8 @@ namespace RustPlusDesk.Views
 
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
+            ChkPlayerWipeTracker.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+            ChkPlayerWipeCloud.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
 
             // Team marker settings
             ChkShowProfileMarkers.IsChecked  = TrackingService.MapShowSteamMarkers;
@@ -907,6 +909,9 @@ namespace RustPlusDesk.Views
             {
                 TrackingService.CloudSyncEnabled = ChkCloudSync.IsChecked == true;
             }
+
+            TrackingService.PlayerWipeTrackerEnabled = ChkPlayerWipeTracker.IsChecked == true;
+            TrackingService.PlayerWipeTrackerCloudBackupEnabled = ChkPlayerWipeCloud.IsChecked == true;
 
             TrackingService.ListenForServerEvents = ChkListenForServerEvents.IsChecked == true;
             TrackingService.TrustOwnDetections = ChkTrustOwnDetections.IsChecked == true;
@@ -1142,7 +1147,7 @@ namespace RustPlusDesk.Views
             {
                 // Disconnect Discord
                 TxtDiscordBtnLabel.Text = T("AuthDisconnectingStatus", "Disconnecting...");
-                await Services.Auth.SupabaseAuthManager.LogoutAsync();
+                await Services.Cloud.CloudAuth.LogoutAsync();
                 ParentWindow?.AppendLog("[Cloud] Discord disconnected.");
             }
             else
@@ -1150,7 +1155,7 @@ namespace RustPlusDesk.Views
                 // Connect Discord
                 ParentWindow?.AppendLog("[Cloud] Starting Discord OAuth login...");
                 TxtDiscordBtnLabel.Text = T("AuthConnectingStatus", "Connecting...");
-                bool success = await Services.Auth.SupabaseAuthManager.LoginWithDiscordAsync();
+                var (success, _) = await Services.Cloud.CloudAuth.LoginWithDiscordAsync();
 
                 if (success)
                 {
@@ -1184,7 +1189,7 @@ namespace RustPlusDesk.Views
 
                 if (result == System.Windows.MessageBoxResult.Yes)
                 {
-                    _ = Services.Auth.SupabaseAuthManager.LogoutAsync();
+                    _ = Services.Cloud.CloudAuth.LogoutAsync();
                     ParentWindow?.AppendLog("[Cloud] Email account signed out.");
                     LoadSettings();
                     ParentWindow?.UpdateCloudSyncUI();
@@ -1369,7 +1374,7 @@ namespace RustPlusDesk.Views
 
         private async void BtnSaveDiscordGuild_Click(object sender, RoutedEventArgs e)
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null) return;
+            if (!Services.Cloud.CloudAuth.IsCloudAvailable) return;
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
             var steamId = vm?.SteamId64;
             if (string.IsNullOrEmpty(steamId)) return;
@@ -1441,7 +1446,7 @@ namespace RustPlusDesk.Views
 
         private async void BtnSaveChannels_Click(object sender, RoutedEventArgs e)
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null) return;
+            if (!Services.Cloud.CloudAuth.IsCloudAvailable) return;
             var guildId = TxtDiscordGuildId.Text?.Trim();
             if (string.IsNullOrEmpty(guildId))
             {
@@ -1523,7 +1528,7 @@ namespace RustPlusDesk.Views
 
         private async Task LoadDiscordBotSettingsAsync()
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null || !Services.Auth.SupabaseAuthManager.IsPremium) return;
+            if (!Services.Cloud.CloudAuth.IsCloudAvailable || !Services.Auth.SupabaseAuthManager.IsPremium) return;
 
             try
             {
@@ -1767,18 +1772,30 @@ namespace RustPlusDesk.Views
         {
             if (!_isSettingsInitialized) return;
             TrackingService.DiscordWebhookUrl = TxtDiscordWebhookUrl.Text;
+            TriggerBackgroundFcmSync();
         }
 
         private void ChkFcmMention_Changed(object sender, RoutedEventArgs e)
         {
             if (!_isSettingsInitialized) return;
             TrackingService.DiscordWebhookMention = GetMentionFromCheckboxes(ChkFcmMentionEveryone, ChkFcmMentionHere);
+            TriggerBackgroundFcmSync();
         }
 
         private void TxtSmartHomeWebhookUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_isSettingsInitialized) return;
             TrackingService.SmartHomeWebhookUrl = TxtSmartHomeWebhookUrl.Text;
+            TriggerBackgroundFcmSync();
+        }
+
+        private async void TriggerBackgroundFcmSync()
+        {
+            if (Services.Auth.SupabaseAuthManager.IsPremium && (Services.Cloud.CloudAuthManager.IsAuthenticated || Services.Auth.SupabaseAuthManager.IsAuthenticated))
+            {
+                await Task.Delay(500);
+                _ = Services.FcmSyncService.SyncFcmCredentialsAsync();
+            }
         }
 
         private async void BtnGenerateTelegramUrl_Click(object sender, RoutedEventArgs e)
@@ -1894,21 +1911,33 @@ namespace RustPlusDesk.Views
 
         private async Task LoadAlexaSettingsAsync()
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null) return;
-            var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
-            if (user == null) return;
-
             try
             {
-                var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
-                    .Where(x => x.UserId == user.Id)
-                    .Single();
+                string? activeServerKey;
 
-                if (response != null && !string.IsNullOrEmpty(response.ActiveServerKey))
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
+                    activeServerKey = await Services.Cloud.CloudAlexaAdapter.GetActiveServerKeyAsync();
+                }
+                else
+                {
+                    if (Services.Auth.SupabaseAuthManager.Client == null) return;
+                    var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
+                    if (user == null) return;
+
+                    var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
+                        .Where(x => x.UserId == user.Id)
+                        .Single();
+
+                    activeServerKey = response?.ActiveServerKey;
+                }
+
+                if (!string.IsNullOrEmpty(activeServerKey))
                 {
                     foreach (ComboBoxItem item in CmbAlexaServer.Items)
                     {
-                        if (item.Tag?.ToString() == response.ActiveServerKey)
+                        if (item.Tag?.ToString() == activeServerKey)
                         {
                             CmbAlexaServer.SelectedItem = item;
                             break;
@@ -1925,7 +1954,7 @@ namespace RustPlusDesk.Views
         private async void BtnGenerateAlexaPIN_Click(object sender, RoutedEventArgs e)
         {
             var client = Services.Auth.SupabaseAuthManager.Client;
-            if (client == null)
+            if (!Services.Cloud.CloudAuth.IsAuthenticated || (!Services.Cloud.CloudBackend.UsePlatform && client == null))
             {
                 MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1945,20 +1974,32 @@ namespace RustPlusDesk.Views
                 var random = new Random();
                 string pin = random.Next(100000, 999999).ToString();
 
-                var response = await client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
-                if (response == null)
+                if (Services.Cloud.CloudBackend.UsePlatform)
                 {
-                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                    BtnGenerateAlexaPIN.IsEnabled = true;
-                    return;
+                    if (!await Services.Cloud.CloudAlexaAdapter.SetAlexaPinAsync(steamId, pin, DateTime.UtcNow.AddMinutes(15)))
+                    {
+                        MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        BtnGenerateAlexaPIN.IsEnabled = true;
+                        return;
+                    }
                 }
+                else
+                {
+                    var response = await client!.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
+                    if (response == null)
+                    {
+                        MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        BtnGenerateAlexaPIN.IsEnabled = true;
+                        return;
+                    }
 
-                var fcmConfig = response.FcmConfig ?? new Newtonsoft.Json.Linq.JObject();
-                fcmConfig["alexa_pin"] = pin;
-                fcmConfig["alexa_pin_expires"] = DateTime.UtcNow.AddMinutes(15).ToString("O");
-                response.FcmConfig = fcmConfig;
-                
-                await client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Upsert(response);
+                    var fcmConfig = response.FcmConfig ?? new Newtonsoft.Json.Linq.JObject();
+                    fcmConfig["alexa_pin"] = pin;
+                    fcmConfig["alexa_pin_expires"] = DateTime.UtcNow.AddMinutes(15).ToString("O");
+                    response.FcmConfig = fcmConfig;
+
+                    await client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Upsert(response);
+                }
 
                 TxtAlexaPIN.Text = pin;
                 TxtAlexaPIN.Visibility = Visibility.Visible;
@@ -1977,7 +2018,7 @@ namespace RustPlusDesk.Views
         private async void BtnLinkAlexa_Click(object sender, RoutedEventArgs e)
         {
             var client = Services.Auth.SupabaseAuthManager.Client;
-            if (client == null)
+            if (!Services.Cloud.CloudAuth.IsAuthenticated || (!Services.Cloud.CloudBackend.UsePlatform && client == null))
             {
                 MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -1999,8 +2040,8 @@ namespace RustPlusDesk.Views
                 return;
             }
 
-            var userId = client.Auth.CurrentUser?.Id;
-            if (string.IsNullOrEmpty(userId)) return;
+            var userId = client?.Auth?.CurrentUser?.Id;
+            if (!Services.Cloud.CloudBackend.UsePlatform && string.IsNullOrEmpty(userId)) return;
 
             var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
             if (consentDialog.ShowDialog() != true) return;
@@ -2024,27 +2065,41 @@ namespace RustPlusDesk.Views
                 var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
                 if (serverProfile != null)
                 {
-                    // 1. Link Alexa active server
-                    var alexaModel = new RustPlusDesk.Models.UserAlexaSettingsModel
+                    if (Services.Cloud.CloudBackend.UsePlatform)
                     {
-                        UserId = userId,
-                        ActiveServerKey = serverKey,
-                        SteamId = steamId,
-                        UpdatedAt = DateTime.UtcNow
-                    };
-                    await client.From<RustPlusDesk.Models.UserAlexaSettingsModel>().Upsert(alexaModel);
+                        // Pairing and linking are one step: the API returns the server id
+                        // that the Alexa setting references.
+                        await Services.Cloud.CloudAlexaAdapter.LinkServerAsync(
+                            steamId,
+                            serverProfile.Host,
+                            serverProfile.Port,
+                            serverProfile.Name,
+                            serverProfile.PlayerToken);
+                    }
+                    else
+                    {
+                        // 1. Link Alexa active server
+                        var alexaModel = new RustPlusDesk.Models.UserAlexaSettingsModel
+                        {
+                            UserId = userId,
+                            ActiveServerKey = serverKey,
+                            SteamId = steamId,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        await client!.From<RustPlusDesk.Models.UserAlexaSettingsModel>().Upsert(alexaModel);
 
-                    // 2. Upload Server Credentials for Cloud Worker
-                    var serverCredsModel = new RustPlusDesk.Models.UserServerModel
-                    {
-                        UserId = userId,
-                        SteamId = steamId,
-                        ServerIp = serverProfile.Host,
-                        ServerPort = serverProfile.Port,
-                        PlayerToken = serverProfile.PlayerToken,
-                        UpdatedAt = DateTime.UtcNow
-                    };
-                    await client.From<RustPlusDesk.Models.UserServerModel>().Upsert(serverCredsModel);
+                        // 2. Upload Server Credentials for Cloud Worker
+                        var serverCredsModel = new RustPlusDesk.Models.UserServerModel
+                        {
+                            UserId = userId,
+                            SteamId = steamId,
+                            ServerIp = serverProfile.Host,
+                            ServerPort = serverProfile.Port,
+                            PlayerToken = serverProfile.PlayerToken,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        await client.From<RustPlusDesk.Models.UserServerModel>().Upsert(serverCredsModel);
+                    }
 
                     // 3. Force Sync Devices for Alexa Discovery
                     if (ulong.TryParse(steamId, out var steamIdUlong))
@@ -2081,16 +2136,23 @@ namespace RustPlusDesk.Views
 
         private async void BtnRevokeAlexa_Click(object sender, RoutedEventArgs e)
         {
-            if (Services.Auth.SupabaseAuthManager.Client == null) return;
-            var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
-            if (user == null) return;
+            if (!Services.Cloud.CloudBackend.UsePlatform && Services.Auth.SupabaseAuthManager.Client == null) return;
+            var user = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser;
+            if (!Services.Cloud.CloudBackend.UsePlatform && user == null) return;
 
             BtnRevokeAlexa.IsEnabled = false;
             try
             {
-                await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
-                    .Where(x => x.UserId == user.Id)
-                    .Delete();
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    await Services.Cloud.CloudAlexaAdapter.RevokeAsync();
+                }
+                else
+                {
+                    await Services.Auth.SupabaseAuthManager.Client!.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
+                        .Where(x => x.UserId == user!.Id)
+                        .Delete();
+                }
 
                 CmbAlexaServer.SelectedItem = null;
                 MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);

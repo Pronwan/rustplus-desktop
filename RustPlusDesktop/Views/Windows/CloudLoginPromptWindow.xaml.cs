@@ -58,7 +58,7 @@ namespace RustPlusDesk.Views.Windows
             BtnEmail.IsEnabled = false;
             Close();
 
-            bool success = await Services.Auth.SupabaseAuthManager.LoginWithDiscordAsync();
+            var (success, _) = await Services.Cloud.CloudAuth.LoginWithDiscordAsync();
             if (success)
             {
                 _owner?.AppendLog("[Cloud] Discord login successful.");

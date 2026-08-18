@@ -189,7 +189,7 @@ namespace RustPlusDesk.Services.Data
 
             // Freemium check
             var syncedCount = 0;
-            if (Auth.SupabaseAuthManager.Client != null)
+            if (Cloud.CloudAuth.IsCloudAvailable)
             {
                 if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return 0;
                 bool canUpload = TrackingService.CloudSyncEnabled
@@ -236,7 +236,13 @@ namespace RustPlusDesk.Services.Data
                         }
                         catch (Exception ex)
                         {
-                            AppendLog($"[Cloud/Error] Syncing devices to Supabase failed: {ex.Message}");
+                            // A conflict means the account has no Steam link.
+                            // Retrying cannot fix it, so it is reported once and
+                            // sync pauses rather than failing on every change.
+                            if (Cloud.CloudSteamLink.HandleSyncConflict(ex))
+                                return syncedCount;
+
+                            AppendLog($"[Cloud/Error] Syncing devices to the cloud failed: {ex.Message}");
                         }
                     }
                 }
@@ -260,6 +266,62 @@ namespace RustPlusDesk.Services.Data
             OverlayDataModule.SaveLocalOverlay(serverKey, steamId, localData);
             return syncedCount;
         }
+
+        /// <summary>
+        /// The team's smart devices for a server, already de-duplicated by entity id
+        /// on the server, for the import picker. Each unique device is returned with
+        /// the owner it was first seen under. Empty when cloud is unavailable.
+        /// </summary>
+        public static async Task<List<(ExportedDeviceDto Device, ulong OwnerSteamId, string OwnerName)>> FetchTeamDevicesAsync(string serverKey)
+        {
+            var result = new List<(ExportedDeviceDto, ulong, string)>();
+
+            if (!Cloud.CloudAuth.IsCloudAvailable) return result;
+            if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return result;
+
+            try
+            {
+                var query = new Dictionary<string, string> { ["server_key"] = serverKey };
+                var body = await Auth.SupabaseAuthManager.CallEdgeFunctionAsync(
+                    "team-devices", System.Net.Http.HttpMethod.Get, null, query);
+
+                using var doc = JsonDocument.Parse(body);
+                if (!doc.RootElement.TryGetProperty("data", out var data)) return result;
+                if (!data.TryGetProperty("devices", out var devices) || devices.ValueKind != JsonValueKind.Array) return result;
+
+                foreach (var d in devices.EnumerateArray())
+                {
+                    if (!d.TryGetProperty("entity_id", out var eidEl) || !eidEl.TryGetUInt32(out var entityId) || entityId == 0)
+                        continue;
+
+                    var dto = new ExportedDeviceDto
+                    {
+                        EntityId = entityId,
+                        Kind = Str(d, "kind"),
+                        Name = Str(d, "name"),
+                        Alias = Str(d, "alias"),
+                        IsGroup = false,
+                        Children = null,
+                        CustomIconId = (d.TryGetProperty("custom_icon_id", out var ci) && ci.ValueKind == JsonValueKind.Number && ci.TryGetInt32(out var ciId)) ? ciId : (int?)null,
+                        CustomIconShortName = Str(d, "custom_icon_short_name"),
+                    };
+
+                    ulong ownerSteamId = (d.TryGetProperty("owner_steam_id", out var os) && os.ValueKind == JsonValueKind.String && ulong.TryParse(os.GetString(), out var oid)) ? oid : 0;
+                    string ownerName = Str(d, "owner_name") ?? (ownerSteamId != 0 ? ownerSteamId.ToString() : "");
+
+                    result.Add((dto, ownerSteamId, ownerName));
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[dev/import/team] fetch failed: {ex.Message}");
+            }
+
+            return result;
+        }
+
+        private static string? Str(JsonElement el, string prop) =>
+            el.TryGetProperty(prop, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
 
         private static void AppendLog(string msg)
         {

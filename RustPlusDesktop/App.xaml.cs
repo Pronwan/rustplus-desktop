@@ -109,7 +109,7 @@ public partial class App : Application
             }
 
             UpdateSplashStatus(splash, splashDispatcher, "Initializing…");
-            _ = SupabaseAuthManager.InitializeAsync();
+            _ = Services.Cloud.CloudAuth.InitializeAsync();
 
             UpdateSplashStatus(splash, splashDispatcher, "Setting up tray…");
             SetupTrayIcon();

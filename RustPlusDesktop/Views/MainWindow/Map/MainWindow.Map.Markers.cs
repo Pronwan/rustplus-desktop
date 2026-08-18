@@ -420,6 +420,14 @@ public partial class MainWindow
             DeleteMapCache(cacheKey);
             DeleteCustomMapCache(cacheKey);
             cached = null;
+
+            // A wipe makes the old deaths meaningless — flush the log (local + the
+            // team's cloud rows) and reset detection so nothing carries over.
+            var deathServerKey = GetServerKey();
+            RustPlusDesk.Services.Deaths.DeathLogStore.Clear(deathServerKey);
+            _ = RustPlusDesk.Services.Deaths.DeathReporter.ClearCloudAsync(deathServerKey);
+            _deathTracker.Reset();
+            AppendLog("[deaths] Wipe detected; cleared the death log.");
             if (_vm?.Selected != null && !string.IsNullOrEmpty(_vm.Selected.CustomMapUrl))
             {
                 AppendLog("[map-cache] Wipe detected; resetting Custom HD Map URL for current server profile.");

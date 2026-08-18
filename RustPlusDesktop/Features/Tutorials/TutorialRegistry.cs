@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using RustPlusDesk.Views;
-using RustPlusDesk.Views.Windows;
 
 namespace RustPlusDesk.Features.Tutorials;
 
@@ -122,7 +121,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
 
         Def("heatmaps", 50, "Maps", false,
             Step("heatmaps.open", "Map.ServerHud", "map", TutorialPlacement.Right),
-            Step("heatmaps.selector", "Map.Heatmaps", "map", TutorialPlacement.Right),
+            Step("heatmaps.selector", "Map.Heatmaps", "map", TutorialPlacement.Right, condition: c => c.IsFullConnected),
             Step("heatmaps.meaning", placement: TutorialPlacement.Center)),
 
         Def("mini-map", 55, "Maps", false,
@@ -131,10 +130,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("minimap.settings", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected, 
                  BeforeShowAsync: async (c, ct) => { 
                      Application.Current.Dispatcher.Invoke(() => {
-                         if (Application.Current.MainWindow is MainWindow mw)
-                         {
-                             mw.EnsureMiniMapOpen();
-                         }
+                         Application.Current.MainWindow?.GetType().GetMethod("EnsureMiniMapOpen")?.Invoke(Application.Current.MainWindow, null);
                      }); 
                      await Task.Delay(150, ct); 
                  }),
@@ -142,11 +138,13 @@ public sealed class TutorialRegistry : ITutorialRegistry
                  BeforeShowAsync: async (c, ct) => { 
                      Application.Current.Dispatcher.Invoke(() => {
                          // Find MiniMapWindow from opened windows
-                         var mmw = Application.Current.Windows.OfType<MiniMapWindow>().FirstOrDefault();
+                         var mmw = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window.GetType().Name == "MiniMapWindow");
                          if (mmw != null)
                          {
-                             mmw.SettingsOverlay.Visibility = Visibility.Visible;
-                             mmw.SettingsHoverBorder.Visibility = Visibility.Collapsed;
+                             if (mmw.GetType().GetProperty("SettingsOverlay")?.GetValue(mmw) is UIElement overlay)
+                                 overlay.Visibility = Visibility.Visible;
+                             if (mmw.GetType().GetProperty("SettingsHoverBorder")?.GetValue(mmw) is UIElement hoverBorder)
+                                 hoverBorder.Visibility = Visibility.Collapsed;
                          }
                      }); 
                      await Task.Delay(150, ct); 

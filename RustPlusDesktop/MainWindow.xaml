@@ -330,16 +330,6 @@
                         Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
                         ToolTip="{DynamicResource PatchNotes}" />
                     <ui:Button
-                        x:Name="BtnDeaths"
-                        Width="36"
-                        Height="36"
-                        Margin="2,6"
-                        Padding="0"
-                        Appearance="Transparent"
-                        Click="BtnDeaths_Click"
-                        Icon="{ui:SymbolIcon Symbol=DataHistogram24}"
-                        ToolTip="Death stats" />
-                    <ui:Button
                         x:Name="BtnSettings"
                         tutorials:Tutorial.TargetId="Navigation.Settings"
                         Width="36"
@@ -3562,6 +3552,29 @@
                             <Grid />
                         </TabItem>
 
+                        <TabItem x:Name="PlayerWipeTrackerTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="History24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Player Wipe Tracker" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid />
+                        </TabItem>
+
+                        <TabItem x:Name="DeathStatsTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="14" Height="14" Margin="0,0,6,0" VerticalAlignment="Center">
+                                        <Path Data="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z"
+                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    </Viewbox>
+                                    <TextBlock VerticalAlignment="Center" Text="Death Stats" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid />
+                        </TabItem>
+
                         <TabItem x:Name="RaidCalculatorTab" Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
@@ -3881,6 +3894,23 @@
                                 <ui:Button x:Name="RailGeneticsLabButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Genetics Lab" AutomationProperties.HelpText="Calculate plant genetics, crossbreeding, and recipes" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=LeafTwo24}" Tag="{Binding ElementName=GeneticsLabTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailGeneticsLabButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailGeneticsLabButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailGeneticsLabButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailPlayerWipeTrackerButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Player Wipe Tracker" AutomationProperties.HelpText="Track teammate routes, activity, and history for the current wipe" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=History24}" Tag="{Binding ElementName=PlayerWipeTrackerTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayerWipeTrackerButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayerWipeTrackerButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailPlayerWipeTrackerButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailDeathStatsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Death stats" AutomationProperties.HelpText="View death statistics for the current server" Click="CompactSidebarTab_Click" Tag="{Binding ElementName=DeathStatsTab}">
+                                    <Viewbox Width="16" Height="16">
+                                        <Path Data="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z"
+                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ui:Button}}}" />
+                                    </Viewbox>
+                                </ui:Button>
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDeathStatsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDeathStatsButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailDeathStatsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
@@ -8351,6 +8381,27 @@
                     </StackPanel>
                 </Border>
             </Grid>
+
+            <!--  Player Wipe Tracker Overlay  -->
+            <Border
+                x:Name="PlayerWipeTrackerPanel"
+                Grid.ColumnSpan="3"
+                Padding="12"
+                Background="{DynamicResource AppBg}"
+                Panel.ZIndex="9000"
+                Visibility="Collapsed">
+                <views:PlayerWipeTrackerView x:Name="PlayerWipeTrackerControl" CloseRequested="PlayerWipeTracker_CloseRequested" />
+            </Border>
+
+            <!--  Death Stats Overlay  -->
+            <Border
+                x:Name="DeathStatsPanel"
+                Grid.ColumnSpan="3"
+                Background="{DynamicResource AppBg}"
+                Panel.ZIndex="9000"
+                Visibility="Collapsed">
+                <views:DeathStatsView x:Name="DeathStatsControl" CloseRequested="DeathStats_CloseRequested" />
+            </Border>
 
             <!--  Raid Calculator Overlay  -->
             <Border

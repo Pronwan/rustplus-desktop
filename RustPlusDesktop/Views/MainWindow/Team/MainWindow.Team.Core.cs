@@ -245,6 +245,8 @@ public partial class MainWindow
     private void StartTeamPolling()
     {
         _teamConnectionSessionId++;
+        StartPlayerWipeTrackerSession();
+        _ = RefreshPlayerWipeTrackerCapabilitiesAsync();
         if (_teamTimer != null) return;
         _teamTimer = new System.Windows.Threading.DispatcherTimer
         {
@@ -265,6 +267,7 @@ public partial class MainWindow
     private void StopTeamPolling()
     {
         NotifyTeamFeatureServerDisconnected(_teamConnectionSessionId);
+        StopPlayerWipeTrackerSession();
 
         var t = _teamTimer;
         if (t != null)
@@ -423,12 +426,13 @@ public partial class MainWindow
     }
 
     // Open the in-app death stats window (reads the local death log for this server).
-    private void BtnDeaths_Click(object sender, RoutedEventArgs e)
+    // Feeds the embedded Death Stats workspace the current server key. Called when the
+    // Death Stats tab becomes active (mirrors the Raid Calculator overlay flow).
+    private void OpenDeathStatsWorkspace()
     {
         try
         {
-            var window = new RustPlusDesk.Views.Windows.DeathStatsWindow(GetServerKey()) { Owner = this };
-            window.Show();
+            DeathStatsControl.Initialize(GetServerKey());
         }
         catch
         {
@@ -606,6 +610,8 @@ public partial class MainWindow
                     _ = AnnouncePresenceChangeAsync(vm, prev, now);
                 }
             }
+
+            ObservePlayerWipeTracker(team);
 
             for (int i = TeamMembers.Count - 1; i >= 0; i--)
                 if (TeamMembers[i].MissingCount > 2)

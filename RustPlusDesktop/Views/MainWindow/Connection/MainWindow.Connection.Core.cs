@@ -577,6 +577,28 @@ public partial class MainWindow
 
             _ = StartServerEventTrackingAsync();
 
+
+
+            // Report what this server said about itself, so its cloud record carries
+            // a name and map details rather than just the key it is filed under.
+            _ = Services.Cloud.CloudServerInfo.ReportOnceAsync(
+                GetServerKey(),
+                connectedProfile.Name,
+                _worldSizeS,
+                connectedProfile.WipeTime);
+
+            // Register the per-user pairing (encrypted player token) for this server so
+            // it appears in the web dashboard and its smart devices are controllable
+            // from the cloud. Previously this only happened via the Alexa link flow, so
+            // servers paired after the cloud migration never became controllable.
+            _ = Services.Cloud.CloudServerInfo.EnsurePairedOnceAsync(
+                GetServerKey(),
+                connectedProfile.Host,
+                connectedProfile.Port,
+                connectedProfile.Name,
+                connectedProfile.PlayerToken,
+                _mySteamId);
+
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
             {

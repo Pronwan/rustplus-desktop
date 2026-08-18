@@ -79,7 +79,7 @@ namespace RustPlusDesk.Views.Windows
 
             SetBusy(true, T("EmailSigningInStatus", "Signing in..."));
 
-            var (success, error) = await Services.Auth.SupabaseAuthManager.LoginWithEmailAsync(email, password);
+            var (success, error) = await Services.Cloud.CloudAuth.LoginWithEmailAsync(email, password);
 
             SetBusy(false);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -105,7 +106,40 @@ public partial class MainWindow
         });
     }
 
-    public async Task<bool> UploadMapScreenshotToDiscordAsync(string base64Image, string? interactionToken, string? applicationId, string? channelId)
+    /// <summary>
+    /// The Discord guild linked to this account, via the cloud seam so it works on
+    /// either backend (cloud derives the owner from the bearer token).
+    /// </summary>
+    private async Task<string?> ResolveDiscordGuildIdAsync()
+    {
+        var steamId = _vm?.SteamId64;
+        if (string.IsNullOrEmpty(steamId)) return null;
+
+        var query = new Dictionary<string, string> { ["owner_steam_id"] = steamId };
+        var body = await RustPlusDesk.Services.Auth.SupabaseAuthManager
+            .CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Get, null, query);
+
+        var guilds = System.Text.Json.JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordBotSettingsModel>>(
+            body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        return guilds?.FirstOrDefault()?.GuildId;
+    }
+
+    /// <summary>The configured 'chat' channel for the guild, falling back to 'events'.</summary>
+    private async Task<string?> ResolveDiscordChannelIdAsync(string guildId)
+    {
+        var query = new Dictionary<string, string> { ["guild_id"] = guildId };
+        var body = await RustPlusDesk.Services.Auth.SupabaseAuthManager
+            .CallEdgeFunctionAsync("discord-bot/channels", HttpMethod.Get, null, query);
+
+        var channels = System.Text.Json.JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(
+            body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        return channels?.FirstOrDefault(c => c.NotificationType == "chat" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId
+            ?? channels?.FirstOrDefault(c => c.NotificationType == "events" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
+    }
+
+    public async Task<bool> UploadMapScreenshotToDiscordAsync(string base64Image, string? interactionToken, string? applicationId, string? channelId, string? guildId = null)
     {
         try
         {
@@ -129,6 +163,21 @@ public partial class MainWindow
             {
                 AppendLog("[DiscordBot] Skipping map upload: application update is required.");
                 return false;
+            }
+
+            // cloud takes the screenshot as a multipart attachment on discord/send-map,
+            // which additionally requires the guild that owns the channel.
+            if (RustPlusDesk.Services.Cloud.CloudBackend.UsePlatform)
+            {
+                guildId ??= await ResolveDiscordGuildIdAsync();
+                if (string.IsNullOrEmpty(guildId))
+                {
+                    AppendLog("[DiscordBot] Map upload skipped: no linked Discord server.");
+                    return false;
+                }
+
+                content.Add(new StringContent(guildId), "guild_id");
+                return await RustPlusDesk.Services.Cloud.CloudApiClient.PostMultipartAsync("discord/send-map", content);
             }
 
             var url = $"{RustPlusDesk.Services.Data.DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-send-map";
@@ -172,31 +221,12 @@ public partial class MainWindow
         try
         {
             string? channelId = null;
+            string? guildId = null;
             try
             {
-                string? guildId = null;
-                var vm = _vm;
-                if (vm != null && !string.IsNullOrEmpty(vm.SteamId64))
-                {
-                    var guildRes = await RustPlusDesk.Services.Auth.SupabaseAuthManager.Client
-                        .From<RustPlusDesk.Models.DiscordBotSettingsModel>()
-                        .Filter("owner_steam_id", Postgrest.Constants.Operator.Equals, vm.SteamId64)
-                        .Get();
-                    guildId = guildRes.Models?.FirstOrDefault()?.GuildId;
-                }
-
+                guildId = await ResolveDiscordGuildIdAsync();
                 if (!string.IsNullOrEmpty(guildId))
-                {
-                    var channelsRes = await RustPlusDesk.Services.Auth.SupabaseAuthManager.Client
-                        .From<RustPlusDesk.Models.DiscordChannelsConfigModel>()
-                        .Filter("guild_id", Postgrest.Constants.Operator.Equals, guildId)
-                        .Get();
-                    channelId = channelsRes.Models?.FirstOrDefault(c => c.NotificationType == "chat" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
-                    if (string.IsNullOrEmpty(channelId))
-                    {
-                        channelId = channelsRes.Models?.FirstOrDefault(c => c.NotificationType == "events" && !string.IsNullOrEmpty(c.ChannelId))?.ChannelId;
-                    }
-                }
+                    channelId = await ResolveDiscordChannelIdAsync(guildId);
             }
             catch (Exception ex)
             {
@@ -211,7 +241,7 @@ public partial class MainWindow
             }
 
             var base64 = await GetCurrentMapScreenshotBase64Async();
-            var success = await UploadMapScreenshotToDiscordAsync(base64, null, null, channelId);
+            var success = await UploadMapScreenshotToDiscordAsync(base64, null, null, channelId, guildId);
             
             if (success)
             {

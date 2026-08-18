@@ -23,7 +23,12 @@
     <Compile Include="..\RustPlusDesktop\Services\Raid\RaidDataService.cs" Link="Production\RaidDataService.cs" />
     <Compile Include="..\RustPlusDesktop\Services\Raid\RaidPlanStore.cs" Link="Production\RaidPlanStore.cs" />
     <Compile Include="..\RustPlusDesktop\Services\CloudTrafficPolicy.cs" Link="Production\CloudTrafficPolicy.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\Cloud\CloudBackend.cs" Link="Production\CloudBackend.cs" />
     <Compile Include="..\RustPlusDesktop\Views\MainWindow\Map\SettingsSearchMatcher.cs" Link="Production\SettingsSearchMatcher.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerModels.cs" Link="Production\PlayerWipeTrackerModels.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerEngine.cs" Link="Production\PlayerWipeTrackerEngine.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerStore.cs" Link="Production\PlayerWipeTrackerStore.cs" />
+    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerInsights.cs" Link="Production\PlayerWipeTrackerInsights.cs" />
     <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialModels.cs" Link="Production\TutorialModels.cs" />
     <Compile Include="..\RustPlusDesktop\Features\Tutorials\Tutorial.cs" Link="Production\Tutorial.cs" />
     <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialRegistry.cs" Link="Production\TutorialRegistry.cs" />
