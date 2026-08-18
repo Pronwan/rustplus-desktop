@@ -6808,7 +6808,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             _expandedSidebarWidth = Math.Clamp(w, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
             _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
-            SetSidebarExpanded(_isSidebarPinnedExpanded);
+            // Keep the sidebar unfolded while a left overlay (e.g. settings) is open.
+            // ApplySettings() runs on every settings toggle; without this guard each
+            // switch flip would re-fold the sidebar out from under the open overlay.
+            SetSidebarExpanded(_isSidebarPinnedExpanded || IsLeftOverlayOpen());
         }
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
 
@@ -7079,14 +7082,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
     {
-        if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true)
+        if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
         {
             return;
         }
 
         Dispatcher.BeginInvoke(() =>
         {
-            if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true)
+            if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
             {
                 return;
             }
@@ -7313,12 +7316,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
+    // True while a left-side overlay (settings / profit trades / buy-x-for-y) is open.
+    // While one is open the sidebar must stay unfolded, even when the mouse leaves the
+    // sidebar border to interact with the overlay (clicking an option briefly captures
+    // the mouse and fires MouseLeave on the underlying border).
+    private bool IsLeftOverlayOpen()
+    {
+        return AppSettingsPanel?.Visibility == Visibility.Visible ||
+               ProfitTradesPanel?.Visibility == Visibility.Visible ||
+               BuyXForYPanel?.Visibility == Visibility.Visible;
+    }
+
     private void UpdateSidebarForOverlayVisibility()
     {
-        bool hasLeftOverlayOpen =
-            AppSettingsPanel?.Visibility == Visibility.Visible ||
-            ProfitTradesPanel?.Visibility == Visibility.Visible ||
-            BuyXForYPanel?.Visibility == Visibility.Visible;
+        bool hasLeftOverlayOpen = IsLeftOverlayOpen();
 
         if (hasLeftOverlayOpen)
         {
