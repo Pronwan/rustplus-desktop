@@ -5604,10 +5604,10 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>분</value>
   </data>
   <data name="UiRemoveAsLargeOilRigTrigger" xml:space="preserve">
-    <value>대형 리그 트리거로 제거</value>
+    <value>대형 리그 트리거로 해제</value>
   </data>
   <data name="UiRemoveAsSmallOilRigTrigger" xml:space="preserve">
-    <value>소형 리그 트리거로 제거</value>
+    <value>소형 리그 트리거로 해제</value>
   </data>
   <data name="UiSetAsLargeOilRigTrigger" xml:space="preserve">
     <value>대형 리그 트리거로 설정</value>
