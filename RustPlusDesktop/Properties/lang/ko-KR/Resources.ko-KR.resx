@@ -629,7 +629,7 @@
     <value>여행 공급업체</value>
   </data>
   <data name="OilRig" xml:space="preserve">
-    <value>석유 굴착 장치 트리거</value>
+    <value>석유 시추 트리거</value>
   </data>
   <data name="DeepSea" xml:space="preserve">
     <value>심해 이벤트</value>
@@ -1174,7 +1174,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>화물선:</value>
   </data>
   <data name="OilRigCommand" xml:space="preserve">
-    <value>석유 굴착 장치:</value>
+    <value>석유 시추:</value>
   </data>
   <data name="PatrolHeliCommand" xml:space="preserve">
     <value>패트롤 헬기:</value>
@@ -1444,10 +1444,10 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>고급 금속 (HQM)</value>
   </data>
   <data name="SmallOilRig" xml:space="preserve">
-    <value>소형 석유 굴착 장치</value>
+    <value>소형 석유 시추</value>
   </data>
   <data name="LargeOilRig" xml:space="preserve">
-    <value>대형 석유 굴착 장비</value>
+    <value>대형 석유 시추</value>
   </data>
   <data name="ShopWord" xml:space="preserve">
     <value>쇼핑</value>
@@ -1465,7 +1465,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>순찰 헬리콥터</value>
   </data>
   <data name="EventOilrigCrate" xml:space="preserve">
-    <value>오일리그 상자</value>
+    <value>석유 시추 상자</value>
   </data>
   <data name="EventExplosion" xml:space="preserve">
     <value>폭발</value>
@@ -2470,13 +2470,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>다시 놓기</value>
   </data>
   <data name="AlertOilRigTriggeredName" xml:space="preserve">
-    <value>석유 굴착 장치가 작동됨</value>
+    <value>석유 시추가 작동됨</value>
   </data>
   <data name="AlertOilRigTriggeredDesc" xml:space="preserve">
-    <value>Oil Rig 이벤트가 시작되면 전송됩니다.</value>
+    <value>석유 시추 이벤트가 시작되면 전송됩니다.</value>
   </data>
   <data name="AlertOilRigTriggeredVars" xml:space="preserve">
-    <value>{0}: 리그 이름,{1}: 오픈 시간</value>
+    <value>{0}: 석유 시추 이름,{1}: 오픈 시간</value>
   </data>
   <data name="AlertCrateUnlocksIn10MinName" xml:space="preserve">
     <value>상자 잠금 해제(10m)</value>
@@ -2485,7 +2485,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>상자가 잠금 해제되기 10분 전에 경고가 전송됩니다.</value>
   </data>
   <data name="AlertCrateUnlocksIn10MinVars" xml:space="preserve">
-    <value>{0}: 리그 이름</value>
+    <value>{0}: 석유 시추 이름</value>
   </data>
   <data name="AlertCrateUnlocksIn5MinName" xml:space="preserve">
     <value>상자 잠금 해제(5m)</value>
@@ -2494,7 +2494,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>상자가 잠금 해제되기 5분 전에 경고가 전송됩니다.</value>
   </data>
   <data name="AlertCrateUnlocksIn5MinVars" xml:space="preserve">
-    <value>{0}: 리그 이름</value>
+    <value>{0}: 석유 시추 이름</value>
   </data>
   <data name="AlertAlarmTriggeredName" xml:space="preserve">
     <value>스마트 알람이 실행됨</value>
@@ -5529,16 +5529,16 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>보급 상자 해제 (15분)</value>
   </data>
   <data name="AlertCrateUnlocksIn15MinVars" xml:space="preserve">
-    <value>{0}: 리그 이름</value>
+    <value>{0}: 석유 시추 이름</value>
   </data>
   <data name="AlertOilRigCrateUp" xml:space="preserve">
-    <value>리그 보급 상자가 활성화됨 (게임 소리로 감지)</value>
+    <value>석유 시추 보급 상자가 활성화됨 (게임 소리로 감지)</value>
   </data>
   <data name="AlertOilRigCrateUpDesc" xml:space="preserve">
-    <value>리그 보급 상자 알림음이 들리면 전송됩니다. 어느 리그인지는 확인할 수 없습니다.</value>
+    <value>석유 시추 보급 상자 알림음이 들리면 전송됩니다. 어느 석유 시추인지는 확인할 수 없습니다.</value>
   </data>
   <data name="AlertOilRigCrateUpName" xml:space="preserve">
-    <value>리그 보급 상자 활성화 (소리 감지)</value>
+    <value>석유 시추 보급 상자 활성화 (소리 감지)</value>
   </data>
   <data name="AlertPlayerAfkReturnDesc" xml:space="preserve">
     <value>추적 중인 팀원이 자리비움 상태에서 돌아오면(다시 활성화되면) 전송됩니다.</value>
@@ -5571,10 +5571,10 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>아직 딥씨 생성이 감지되지 않았습니다.</value>
   </data>
   <data name="ChatCmdOilRigCloudNone" xml:space="preserve">
-    <value>아직 리그 보급 상자가 감지되지 않았습니다.</value>
+    <value>아직 석유 시추 보급 상자가 감지되지 않았습니다.</value>
   </data>
   <data name="ChatCmdOilRigCloudSeen" xml:space="preserve">
-    <value>마지막으로 감지된 리그 보급 상자: {0}</value>
+    <value>마지막으로 감지된 석유 시추 보급 상자: {0}</value>
   </data>
   <data name="ChatCmdOilRigHackRunning" xml:space="preserve">
     <value>{0}: 보급 상자 해제까지 {1}분 {2}초</value>
@@ -5586,40 +5586,40 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>선택 사항입니다. 게임 내 알람의 두 줄 중 윗줄입니다. Rust가 알림과 함께 보내는 것은 이 윗줄뿐이며, 아랫줄은 사용할 수 없습니다. 푸시 알림에는 장치 ID가 없기 때문에 앱이 해당 서버에 연결되어 있지 않을 때(예: 앱 시작 시) 알람을 식별할 수 있는 유일한 방법입니다. 비워두면 연결된 상태에서 알람이 처음 울릴 때 앱이 자동으로 입력합니다. Rust 기본값으로 남겨둔 줄은 무시됩니다. 이름을 변경하지 않은 모든 알람이 같은 값을 공유하기 때문입니다.</value>
   </data>
   <data name="UiBadgeLargeOil" xml:space="preserve">
-    <value>대형 리그</value>
+    <value>대형 석유 시추</value>
   </data>
   <data name="UiBadgeOilRigTooltip" xml:space="preserve">
-    <value>Logic Engine에서 리그 트리거로 사용됩니다. 해당 알람의 팝업, 소리 및 레이드 알림은 억제되고 대신 리그 이벤트로 보고됩니다.</value>
+    <value>Logic Engine에서 석유 시추 트리거로 사용됩니다. 해당 알람의 팝업, 소리 및 레이드 알림은 억제되고 대신 석유 시추 이벤트로 보고됩니다.</value>
   </data>
   <data name="UiBadgeSmallOil" xml:space="preserve">
-    <value>소형 리그</value>
+    <value>소형 석유 시추</value>
   </data>
   <data name="UiInGameAlarmTitle" xml:space="preserve">
     <value>게임 내 알람 텍스트 (윗줄)</value>
   </data>
   <data name="UiLargeOilRigTrigger" xml:space="preserve">
-    <value>대형 리그 트리거</value>
+    <value>대형 석유 시추 트리거</value>
   </data>
   <data name="UiMinutes" xml:space="preserve">
     <value>분</value>
   </data>
   <data name="UiRemoveAsLargeOilRigTrigger" xml:space="preserve">
-    <value>대형 리그 트리거로 해제</value>
+    <value>대형 석유 시추 트리거로 해제</value>
   </data>
   <data name="UiRemoveAsSmallOilRigTrigger" xml:space="preserve">
-    <value>소형 리그 트리거로 해제</value>
+    <value>소형 석유 시추 트리거로 해제</value>
   </data>
   <data name="UiSetAsLargeOilRigTrigger" xml:space="preserve">
-    <value>대형 리그 트리거로 설정</value>
+    <value>대형 석유 시추 트리거로 설정</value>
   </data>
   <data name="UiSetAsSmallOilRigTrigger" xml:space="preserve">
-    <value>소형 리그 트리거로 설정</value>
+    <value>소형 석유 시추 트리거로 설정</value>
   </data>
   <data name="UiShowCrateOnMap" xml:space="preserve">
     <value>지도에 보급 상자 표시</value>
   </data>
   <data name="UiSmallOilRigTrigger" xml:space="preserve">
-    <value>소형 리그 트리거</value>
+    <value>소형 석유 시추 트리거</value>
   </data>
   <data name="UiStartTimer" xml:space="preserve">
     <value>타이머 시작</value>
@@ -5652,7 +5652,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>게임 내 RF 수신기를 사용해 지도에서 실시간 보급 상자 카운트다운을 확인하고, 팀 채팅과 Discord에서 경고를 받을 수 있습니다.</value>
   </data>
   <data name="Tutorials.oilrig-crate-alerts.Title" xml:space="preserve">
-    <value>리그 보급 상자 알림</value>
+    <value>석유 시추 보급 상자 알림</value>
   </data>
   <data name="Tutorials.Step.discord.advanced.Description" xml:space="preserve">
     <value>고급 Discord 연동에는 Supporter 계정이 필요합니다. Discord 봇 명령, 양방향 연동 및 Discord 웹훅을 통한 오프라인 레이드 알림을 사용할 수 있습니다.</value>
@@ -5754,19 +5754,19 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>이 기능이 필요한 이유</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Logic Engine을 열고 '리그 템플릿' 버튼을 클릭하면 미리 설정된 규칙이 즉시 추가됩니다(또는 '+ 규칙 추가' 클릭). 연결된 Smart Alarm을 트리거로 선택하고 타이머 대상으로 대형 리그 트리거 또는 소형 리그 트리거를 선택하세요. '지도에 보급 상자 표시'를 체크해두면 실시간 카운트다운과 함께 보급 상자가 표시되고, 채팅 및 Discord 경고가 자동으로 전송됩니다. 선택적으로 게임 내 알람의 윗줄 텍스트를 알람 텍스트에 입력하면 오프라인 상태에서도 푸시 알림이 일치합니다.</value>
+    <value>Logic Engine을 열고 '석유 시추 템플릿' 버튼을 클릭하면 미리 설정된 규칙이 즉시 추가됩니다(또는 '+ 규칙 추가' 클릭). 연결된 Smart Alarm을 트리거로 선택하고 타이머 대상으로 대형 석유 시추 트리거 또는 소형 석유 시추 트리거를 선택하세요. '지도에 보급 상자 표시'를 체크해두면 실시간 카운트다운과 함께 보급 상자가 표시되고, 채팅 및 Discord 경고가 자동으로 전송됩니다. 선택적으로 게임 내 알람의 윗줄 텍스트를 알람 텍스트에 입력하면 오프라인 상태에서도 푸시 알림이 일치합니다.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
     <value>Logic Engine 규칙 추가</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
-    <value>이 방식으로 설정한 알람은 레이드 알람이 아니므로 팝업, 소리 및 Discord 레이드 알림이 억제됩니다. 대신 리그 이벤트로 보고됩니다. 장치 목록에는 (대형 리그) 또는 (소형 리그) 배지가 표시되어 음소거 상태를 쉽게 확인할 수 있습니다. 규칙에서 장치를 제거하면 즉시 일반 알람으로 다시 동작합니다. 조용히 하고 싶을 때는 채팅 알림의 리그 스위치를 사용해 언제든지 이 기능을 모두 끌 수 있습니다.</value>
+    <value>이 방식으로 설정한 알람은 레이드 알람이 아니므로 팝업, 소리 및 Discord 레이드 알림이 억제됩니다. 대신 석유 시추 이벤트로 보고됩니다. 장치 목록에는 (대형 석유 시추) 또는 (소형 석유 시추) 배지가 표시되어 음소거 상태를 쉽게 확인할 수 있습니다. 규칙에서 장치를 제거하면 즉시 일반 알람으로 다시 동작합니다. 조용히 하고 싶을 때는 채팅 알림의 석유 시추 스위치를 사용해 언제든지 이 기능을 모두 끌 수 있습니다.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>해당 알람에서는 레이드 알림이 발생하지 않음</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>RF 수신기를 설치하고 원하는 리그의 주파수로 설정하세요: 대형 리그는 4768, 소형 리그는 4765입니다. 전원을 연결하고 출력선을 이 앱에 연결된 Smart Alarm에 연결하세요. 해킹이 시작되면 Rust가 해당 주파수로 방송하고, 수신기가 켜지면서 알람이 울립니다.</value>
+    <value>RF 수신기를 설치하고 원하는 석유 시추의 주파수로 설정하세요: 대형 석유 시추는 4768, 소형 석유 시추는 4765입니다. 전원을 연결하고 출력선을 이 앱에 연결된 Smart Alarm에 연결하세요. 해킹이 시작되면 Rust가 해당 주파수로 방송하고, 수신기가 켜지면서 알람이 울립니다.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
     <value>게임 내에서 연결하기</value>
@@ -5799,13 +5799,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>서버 이벤트 수신</value>
   </data>
   <data name="ListenForServerEventsDesc" xml:space="preserve">
-    <value>더 이상 이벤트를 보내지 않는 서버에서 게임 소리를 통해 리그, 카고쉽 및 딥씨를 감지합니다. Rust가 실행 중일 때만 활성화됩니다.</value>
+    <value>더 이상 이벤트를 보내지 않는 서버에서 게임 소리를 통해 석유 시추, 카고쉽 및 딥씨를 감지합니다. Rust가 실행 중일 때만 활성화됩니다.</value>
   </data>
   <data name="OilRigCrateSeen" xml:space="preserve">
     <value>보급 상자 감지됨</value>
   </data>
   <data name="OilRigCrateStatus" xml:space="preserve">
-    <value>리그 보급 상자 상태</value>
+    <value>석유 시추 보급 상자 상태</value>
   </data>
   <data name="PurgeOrphanedCloudData" xml:space="preserve">
     <value>연결이 끊긴 클라우드 데이터 삭제</value>
@@ -5838,7 +5838,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>더 빠른 로딩, 훨씬 적은 RAM 사용량 및 더 깔끔한 종료.</value>
   </data>
   <data name="Update800Desc3" xml:space="preserve">
-    <value>서버에 연결되어 있는 경우 리그, 딥씨 및 카고쉽 생성만 추적됩니다.</value>
+    <value>서버에 연결되어 있는 경우 석유 시추, 딥씨 및 카고쉽 생성만 추적됩니다.</value>
   </data>
   <data name="Update800Desc4" xml:space="preserve">
     <value>새로운 레이드 계산기 작업 공간, 새롭게 디자인된 사이드바 및 Alexa PIN 기능.</value>
