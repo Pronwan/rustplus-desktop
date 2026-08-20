@@ -65,6 +65,7 @@ export const CompactScannerStatus: React.FC = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <Tooltip title="Scanner Calibration & ROIs" arrow>
           <IconButton
+            aria-label="Open scanner calibration"
             size="small"
             onClick={() => setIsCalibrationModalOpen(true)}
             sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-primary)' } }}

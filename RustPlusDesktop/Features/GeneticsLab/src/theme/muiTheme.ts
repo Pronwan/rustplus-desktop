@@ -121,6 +121,24 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
       borderRadius: tokens.spacing.borderRadius
     },
     components: {
+      MuiButtonBase: {
+        styleOverrides: {
+          root: {
+            '&.Mui-focusVisible': {
+              outline: `3px solid ${tokens.colors.border.focus}`,
+              outlineOffset: 2
+            }
+          }
+        }
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            minWidth: 32,
+            minHeight: 32
+          }
+        }
+      },
       MuiCssBaseline: {
         styleOverrides: {
           body: {

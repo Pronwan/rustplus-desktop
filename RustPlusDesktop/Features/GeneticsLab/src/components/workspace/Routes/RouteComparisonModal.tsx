@@ -79,7 +79,7 @@ export const RouteComparisonModal: React.FC = () => {
         <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Route Comparison ({comparedGroups.length} Routes)
         </Typography>
-        <IconButton size="small" onClick={handleClose} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close route comparison" size="small" onClick={handleClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>

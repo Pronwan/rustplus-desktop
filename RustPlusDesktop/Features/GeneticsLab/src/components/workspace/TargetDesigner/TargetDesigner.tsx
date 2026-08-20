@@ -115,6 +115,7 @@ export const TargetDesigner: React.FC = () => {
             Match Mode:
           </Typography>
           <Select
+            inputProps={{ 'aria-label': 'Target match mode' }}
             size="small"
             value={targetConfig.matchMode}
             onChange={(e) => setTargetConfig(prev => ({ ...prev, matchMode: e.target.value as any }))}
@@ -172,6 +173,7 @@ export const TargetDesigner: React.FC = () => {
         {/* Direct text entry — type the target instead of clicking each slot */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
           <TextField
+            aria-label="Target genetics"
             value={targetInput}
             onChange={(e) => handleTargetInputChange(e.target.value)}
             placeholder="GGGYYY"

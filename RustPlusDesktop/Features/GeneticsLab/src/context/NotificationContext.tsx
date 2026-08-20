@@ -95,6 +95,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       >
         {currentNotification ? (
           <Alert
+            role={currentNotification.type === 'error' ? 'alert' : 'status'}
+            aria-live={currentNotification.type === 'error' ? 'assertive' : 'polite'}
             onClose={handleClose}
             severity={currentNotification.type}
             variant="filled"

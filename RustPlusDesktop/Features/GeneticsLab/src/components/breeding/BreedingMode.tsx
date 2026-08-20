@@ -76,7 +76,7 @@ export const BreedingMode: React.FC = () => {
             >
               History
             </Button>
-            <IconButton size="small" onClick={() => setIsAbandonConfirmOpen(true)} sx={{ color: 'var(--gl-text-muted)' }}>
+            <IconButton aria-label="Abandon breeding session" size="small" onClick={() => setIsAbandonConfirmOpen(true)} sx={{ color: 'var(--gl-text-muted)' }}>
               <CloseIcon sx={{ fontSize: 18 }} />
             </IconButton>
           </Box>

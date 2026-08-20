@@ -70,6 +70,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
         </Box>
 
         <IconButton
+          aria-label="Close planter guide"
           onClick={onClose}
           size="small"
           sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}

@@ -219,10 +219,6 @@ export class StorageService {
       localStorage.setItem(KEY_FUNCTIONAL, String(consent.functional));
       localStorage.setItem(KEY_ANALYTICS, String(consent.analytics));
       localStorage.setItem(KEY_ADVERTISEMENT, String(consent.advertisement));
-
-      if (!consent.functional) {
-        this.clearFunctionalData();
-      }
     } catch {
       // storage unavailable
     }

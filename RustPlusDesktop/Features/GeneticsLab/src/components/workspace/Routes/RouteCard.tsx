@@ -63,7 +63,6 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 
   return (
     <Paper
-      onClick={handleInspect}
       variant="outlined"
       data-flip-key={flipKey}
       sx={{
@@ -74,7 +73,6 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         borderLeft: `4px solid ${genVis.border}`,
         borderRadius: '5px',
         p: 1.5,
-        cursor: 'pointer',
         // Colour and elevation interpolate on their own curve; `transform` is
         // deliberately excluded so the grid's FLIP pass owns positional motion.
         transition:
@@ -155,7 +153,9 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         </Box>
 
         <Tooltip title="Compare side-by-side" arrow>
-          <Box
+          <Button
+            type="button"
+            aria-pressed={isCompared}
             onClick={(e) => {
               e.stopPropagation();
               toggleCompareGroup(group);
@@ -164,9 +164,9 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: 0.25,
-              cursor: 'pointer',
               px: 0.5,
               py: 0.2,
+              minWidth: 0,
               borderRadius: '3px',
               backgroundColor: isCompared ? 'rgba(255, 152, 0, 0.15)' : 'transparent',
               border: '1px solid',
@@ -178,7 +178,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             <Typography variant="caption" sx={{ fontSize: '0.65rem', fontWeight: 700, color: isCompared ? 'var(--gl-warning)' : 'var(--gl-text-muted)' }}>
               Compare
             </Typography>
-          </Box>
+          </Button>
         </Tooltip>
       </Box>
 

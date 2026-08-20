@@ -90,7 +90,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
         <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Farm Projects & Data Manager
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close farm projects" size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
@@ -159,7 +159,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
                     >
                       Load
                     </Button>
-                    <IconButton size="small" onClick={() => deleteProject(proj.id)} sx={{ color: 'var(--gl-error)' }}>
+                    <IconButton aria-label={`Delete project ${proj.name}`} size="small" onClick={() => deleteProject(proj.id)} sx={{ color: 'var(--gl-error)' }}>
                       <DeleteIcon sx={{ fontSize: 16 }} />
                     </IconButton>
                   </Box>
@@ -176,6 +176,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
             </Typography>
 
             <TextField
+              aria-label="New project name"
               size="small"
               fullWidth
               placeholder="e.g. Wipe Day 2 Hemp Farm"
@@ -218,6 +219,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({ open, 
                 IMPORT WORKSPACE JSON
               </Typography>
               <TextField
+                aria-label="Workspace JSON to import"
                 multiline
                 rows={4}
                 fullWidth

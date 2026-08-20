@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Paper,
   Typography,
@@ -14,26 +14,16 @@ import {
   FormControlLabel,
   Divider
 } from '@mui/material';
-import { StorageService, CookieConsentState } from '../../services/storageService.ts';
+import { CookieConsentState } from '../../services/storageService.ts';
+import { useApp } from '../../context/AppContext.tsx';
 
 export const CookieConsentBanner: React.FC = () => {
-  const [consent, setConsent] = useState<CookieConsentState | null>(null);
-  const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
-  const [tempPreferences, setTempPreferences] = useState({
-    functional: true,
-    analytics: false
-  });
+  const { consent, updateConsent, isConsentModalOpen, setIsConsentModalOpen } = useApp();
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(consent.analytics);
 
   useEffect(() => {
-    const saved = StorageService.getConsent();
-    if (saved && saved.isPreferenceDecided) {
-      setConsent(saved);
-      setTempPreferences({
-        functional: saved.functional,
-        analytics: saved.analytics
-      });
-    }
-  }, []);
+    setAnalyticsEnabled(consent.analytics);
+  }, [consent.analytics]);
 
   const handleAcceptAll = () => {
     const next: CookieConsentState = {
@@ -42,49 +32,50 @@ export const CookieConsentBanner: React.FC = () => {
       analytics: true,
       advertisement: false
     };
-    StorageService.saveConsent(next);
-    setConsent(next);
+    updateConsent(next);
   };
 
   const handleDeclineAll = () => {
     const next: CookieConsentState = {
       isPreferenceDecided: true,
-      functional: false,
+      functional: true,
       analytics: false,
       advertisement: false
     };
-    StorageService.saveConsent(next);
-    setConsent(next);
+    updateConsent(next);
   };
 
   const handleSaveCustom = () => {
     const next: CookieConsentState = {
       isPreferenceDecided: true,
-      functional: tempPreferences.functional,
-      analytics: tempPreferences.analytics,
+      functional: true,
+      analytics: analyticsEnabled,
       advertisement: false
     };
-    StorageService.saveConsent(next);
-    setConsent(next);
+    updateConsent(next);
     setIsConsentModalOpen(false);
   };
 
-  if (consent?.isPreferenceDecided) return null;
+  if (consent.isPreferenceDecided) return null;
 
   return (
     <>
-      <Slide direction="up" in={!consent?.isPreferenceDecided} mountOnEnter unmountOnExit>
+      <Slide direction="up" in={!isConsentModalOpen} mountOnEnter unmountOnExit>
         <Paper
+          role="region"
+          aria-label="Storage and cookie preferences"
           elevation={6}
           sx={{
             position: 'fixed',
-            bottom: 24,
+            bottom: { xs: 'max(16px, env(safe-area-inset-bottom))', sm: 24 },
             left: { xs: 16, sm: 24 },
             right: { xs: 16, sm: 24 },
             maxWidth: 800,
             mx: 'auto',
             p: 2.5,
-            zIndex: 1400,
+            zIndex: (theme) => theme.zIndex.modal - 1,
+            maxHeight: 'calc(100dvh - 32px)',
+            overflowY: 'auto',
             borderRadius: 3,
             backgroundColor: 'background.paper',
             border: '1px solid',
@@ -106,7 +97,7 @@ export const CookieConsentBanner: React.FC = () => {
                 Storage &amp; Cookie Preferences
               </Typography>
               <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-                Genetics Lab uses functional local storage to remember your plant inputs, calculation preferences, and scanner calibration settings.
+                Genetics Lab uses essential local storage for your inputs and settings. Optional analytics stays off until you allow it.
               </Typography>
             </Box>
 
@@ -115,7 +106,7 @@ export const CookieConsentBanner: React.FC = () => {
                 Accept All
               </Button>
               <Button size="small" variant="outlined" onClick={handleDeclineAll}>
-                Decline
+                Decline Optional
               </Button>
               <Button size="small" variant="text" onClick={() => setIsConsentModalOpen(true)}>
                 Manage
@@ -151,14 +142,14 @@ export const CookieConsentBanner: React.FC = () => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={tempPreferences.functional}
-                    onChange={(e) => setTempPreferences({ ...tempPreferences, functional: e.target.checked })}
+                    checked
+                    disabled
                   />
                 }
                 label={<Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Functional Storage</Typography>}
               />
               <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', pl: 4 }}>
-                Saves plant setups, favorite clones, and OCR calibration coordinates.
+                Required to save plant setups, favorite clones, and OCR calibration coordinates. Declining optional cookies never deletes this data.
               </Typography>
             </Box>
 
@@ -168,8 +159,8 @@ export const CookieConsentBanner: React.FC = () => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={tempPreferences.analytics}
-                    onChange={(e) => setTempPreferences({ ...tempPreferences, analytics: e.target.checked })}
+                    checked={analyticsEnabled}
+                    onChange={(e) => setAnalyticsEnabled(e.target.checked)}
                   />
                 }
                 label={<Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Analytics &amp; Telemetry</Typography>}

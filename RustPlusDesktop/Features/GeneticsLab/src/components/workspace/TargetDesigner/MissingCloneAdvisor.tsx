@@ -62,7 +62,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
             Inventory Gap Analysis for Target [{targetConfig.targetGenetics}] · {selectedPlant.replace(/-/g, ' ')}
           </Typography>
         </Box>
-        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close missing clone advisor" size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
@@ -174,7 +174,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                   </Box>
 
                   <Tooltip title="Copy pattern" arrow>
-                    <IconButton size="small" onClick={() => handleCopyPattern(rec.pattern)} sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-primary)' } }}>
+                    <IconButton aria-label={`Copy clone pattern ${rec.pattern}`} size="small" onClick={() => handleCopyPattern(rec.pattern)} sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-primary)' } }}>
                       <ContentCopyIcon sx={{ fontSize: 14 }} />
                     </IconButton>
                   </Tooltip>

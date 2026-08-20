@@ -79,7 +79,7 @@ export const darkTokens: DesignTokens = {
     text: {
       primary: '#ECECEC',
       secondary: '#9E9E9E',
-      muted: '#666666',
+      muted: '#888888',
       inverse: '#0E0E0E'
     },
     border: {
@@ -142,8 +142,8 @@ export const lightTokens: DesignTokens = {
     },
     text: {
       primary: '#1E293B',
-      secondary: '#64748B',
-      muted: '#94A3B8',
+      secondary: '#475569',
+      muted: '#526174',
       inverse: '#FFFFFF'
     },
     border: {
@@ -153,8 +153,8 @@ export const lightTokens: DesignTokens = {
       focus: '#0284C7'
     },
     brand: {
-      primary: '#0284C7',
-      primaryHover: '#0369A1',
+      primary: '#0369A1',
+      primaryHover: '#075985',
       primaryGlow: 'rgba(2, 132, 199, 0.2)',
       primarySubtle: 'rgba(2, 132, 199, 0.08)',
       accent: '#D97706'
@@ -172,9 +172,9 @@ export const lightTokens: DesignTokens = {
       highlightBorder: '#0284C7'
     },
     status: {
-      success: '#16A34A',
+      success: '#166534',
       successBg: 'rgba(22, 163, 74, 0.12)',
-      warning: '#D97706',
+      warning: '#B45309',
       warningBg: 'rgba(217, 119, 6, 0.12)',
       error: '#DC2626',
       errorBg: 'rgba(220, 38, 38, 0.12)',

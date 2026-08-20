@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   CrossbreedingOrchestrator,
+  MAX_RETURNED_RESULTS,
   SimulatorEvent
 } from '../services/orchestrator.ts';
 import { StorageService, ExtendedApplicationOptions, DEFAULT_OPTIONS } from '../services/storageService.ts';
@@ -51,6 +52,8 @@ interface CalculationContextType {
   filteredAndSortedRoutes: ScoredRoute[];
   /** Total matching routes before equivalent-quality grouping is applied. */
   rawRouteCount: number;
+  resultsCapped: boolean;
+  calculationStatusMessage: string;
 
   // Sorting & Filtering
   sortBy: RouteSortOption;
@@ -94,12 +97,14 @@ const CalculationContext = createContext<CalculationContextType | null>(null);
 
 export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { sourceSaplings, clones, targetConfig, geneInputText, saveCurrentGeneSet } = useWorkspace();
-  const { notifyInfo, notifySuccess, notifyWarning } = useNotification();
+  const { notifyInfo, notifyWarning } = useNotification();
 
   const [options, setOptionsState] = useState<ExtendedApplicationOptions>(() => StorageService.getOptions());
   const [results, setResults] = useState<GeneticsMapGroup[]>([]);
   const [progress, setProgress] = useState<ProgressState | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [calculationStatusMessage, setCalculationStatusMessage] = useState('');
+  const announcedGenerationRef = useRef(1);
 
   const [sortBy, setSortBy] = useState<RouteSortOption>('recommended');
   const [inventoryFilterMode, setInventoryFilterMode] = useState<'all' | 'available-only' | 'partial-or-better'>('all');
@@ -160,6 +165,11 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   useEffect(() => {
     const unsubscribe = orchestrator.addEventListener((event: SimulatorEvent) => {
       if (event.type === 'PROGRESS_UPDATE') {
+        const generation = event.generationIndex ?? 1;
+        if (generation > announcedGenerationRef.current) {
+          announcedGenerationRef.current = generation;
+          setCalculationStatusMessage(`Calculation generation ${generation} of ${options.numberOfGenerations || 2}.`);
+        }
         setProgress((prev) => ({
           isRunning: true,
           currentGeneration: event.generationIndex ?? 1,
@@ -178,11 +188,11 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setAnalysisEpoch(e => e + 1);
         if (event.mapGroups) {
           setResults(event.mapGroups);
-          if (event.mapGroups.length > 0) {
-            notifySuccess(`Found ${event.mapGroups.length} viable breeding routes`);
-          } else {
-            notifyWarning('No viable routes found with current plants. Try adding more plants.');
-          }
+          setCalculationStatusMessage(
+            event.mapGroups.length > 0
+              ? `Calculation complete. ${event.mapGroups.length} viable breeding routes retained.`
+              : 'Calculation complete. No viable routes found with the current plants.'
+          );
         }
         setIsCalculating(false);
         setProgress(null);
@@ -192,7 +202,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return () => {
       unsubscribe();
     };
-  }, [orchestrator, options.numberOfGenerations, notifySuccess, notifyWarning]);
+  }, [orchestrator, options.numberOfGenerations]);
 
   // Selected route map
   const selectedMap = useMemo(() => {
@@ -295,6 +305,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [filteredRoutes, groupSimilar]);
 
   const rawRouteCount = filteredRoutes.length;
+  const resultsCapped = results.length >= MAX_RETURNED_RESULTS;
 
   // Automatically select best matching route or clear when results/target change
   useEffect(() => {
@@ -325,6 +336,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
 
     setIsCalculating(true);
+    announcedGenerationRef.current = 1;
+    setCalculationStatusMessage('Calculation started. Generation 1 is being prepared.');
     setProgress({
       isRunning: true,
       currentGeneration: 1,
@@ -349,7 +362,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         matchMode: targetConfig.matchMode
       });
     }, 16);
-  }, [orchestrator, sourceSaplings, options, geneInputText, saveCurrentGeneSet, notifyWarning]);
+  }, [orchestrator, sourceSaplings, options, geneInputText, saveCurrentGeneSet, notifyWarning, targetConfig]);
 
   const cancelSimulation = useCallback(() => {
     orchestrator.cancelSimulation();
@@ -357,8 +370,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setProgress(null);
     const sorted = orchestrator.getSortedResults();
     setResults(sorted);
-    notifyInfo('Calculation cancelled. Displaying partial results.');
-  }, [orchestrator, notifyInfo]);
+    setCalculationStatusMessage(`Calculation cancelled. Displaying ${sorted.length} partial results.`);
+  }, [orchestrator]);
 
   const skipCurrentGeneration = useCallback(() => {
     orchestrator.skipToNextGeneration();
@@ -394,6 +407,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         scoredRoutes,
         filteredAndSortedRoutes,
         rawRouteCount,
+        resultsCapped,
+        calculationStatusMessage,
         sortBy,
         setSortBy,
         groupSimilar,

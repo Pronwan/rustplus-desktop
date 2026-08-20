@@ -63,7 +63,7 @@ export const CloneValueAnalysis: React.FC<CloneValueAnalysisProps> = ({ open, on
             Target: [{targetConfig.targetGenetics}] · {selectedPlant.replace(/-/g, ' ')}
           </Typography>
         </Box>
-        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close clone value analysis" size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>

@@ -212,7 +212,7 @@ export const ScannerCalibrationModal: React.FC = () => {
               Align the 6 numbered guide stripes over your in-game tooltip letters
             </Typography>
           </Box>
-          <IconButton size="small" onClick={() => setIsCalibrationModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
+          <IconButton aria-label="Close scanner calibration" size="small" onClick={() => setIsCalibrationModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </DialogTitle>
@@ -238,6 +238,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 Preset:
               </Typography>
               <Select
+                inputProps={{ 'aria-label': 'Scanner calibration profile' }}
                 size="small"
                 value={activeProfileId}
                 onChange={(e) => setActiveProfileId(e.target.value)}
@@ -259,6 +260,7 @@ export const ScannerCalibrationModal: React.FC = () => {
               {isCustomProfile && (
                 <Tooltip title="Delete this custom preset">
                   <IconButton
+                    aria-label="Delete scanner profile"
                     size="small"
                     onClick={() => deleteProfile(activeProfileId)}
                     sx={{ color: 'var(--gl-error)', border: '1px solid var(--gl-tint-green)', p: 0.5 }}
@@ -413,6 +415,7 @@ export const ScannerCalibrationModal: React.FC = () => {
 
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, my: 0.5 }}>
                 <IconButton
+                  aria-label="Move selected scanner region up"
                   size="small"
                   sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                   onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0, -0.0006))}
@@ -424,6 +427,7 @@ export const ScannerCalibrationModal: React.FC = () => {
 
                 <Box sx={{ display: 'flex', gap: 1.5 }}>
                   <IconButton
+                    aria-label="Move selected scanner region left"
                     size="small"
                     sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                     onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, -0.0006, 0))}
@@ -434,6 +438,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                   </IconButton>
 
                   <IconButton
+                    aria-label="Move selected scanner region right"
                     size="small"
                     sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                     onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0.0006, 0))}
@@ -445,6 +450,7 @@ export const ScannerCalibrationModal: React.FC = () => {
                 </Box>
 
                 <IconButton
+                  aria-label="Move selected scanner region down"
                   size="small"
                   sx={{ border: '1px solid var(--gl-surface-hover)', backgroundColor: 'var(--gl-surface)' }}
                   onMouseDown={() => startHold(() => moveScannerRegion(selectedRegionIdx, 0, 0.0006))}
@@ -586,7 +592,7 @@ export const ScannerCalibrationModal: React.FC = () => {
       >
         <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Export Presets (JSON)</span>
-          <IconButton size="small" onClick={() => setIsExportModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
+          <IconButton aria-label="Close scanner profile export" size="small" onClick={() => setIsExportModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </DialogTitle>
@@ -595,6 +601,7 @@ export const ScannerCalibrationModal: React.FC = () => {
             Share this configuration with friends or across devices.
           </Typography>
           <TextField
+            aria-label="Scanner profile JSON to import"
             multiline
             rows={8}
             value={exportJsonText}
@@ -647,7 +654,7 @@ export const ScannerCalibrationModal: React.FC = () => {
       >
         <DialogTitle sx={{ fontWeight: 800, fontSize: '0.95rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Import Presets (JSON)</span>
-          <IconButton size="small" onClick={() => setIsImportModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
+          <IconButton aria-label="Close scanner profile import" size="small" onClick={() => setIsImportModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </DialogTitle>

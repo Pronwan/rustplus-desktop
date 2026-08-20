@@ -164,11 +164,11 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <Tooltip title="Copy step-by-step instructions" arrow>
-            <IconButton size="small" onClick={handleCopyInstructions} sx={{ color: 'var(--gl-text-muted)' }}>
+            <IconButton aria-label="Copy breeding instructions" size="small" onClick={handleCopyInstructions} sx={{ color: 'var(--gl-text-muted)' }}>
               <ContentCopyIcon sx={{ fontSize: 16 }} />
             </IconButton>
           </Tooltip>
-          <IconButton size="small" onClick={() => (onClose ? onClose() : setSelectedGroup(null))} sx={{ color: 'var(--gl-text-muted)' }}>
+          <IconButton aria-label="Close route inspector" size="small" onClick={() => (onClose ? onClose() : setSelectedGroup(null))} sx={{ color: 'var(--gl-text-muted)' }}>
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </Box>

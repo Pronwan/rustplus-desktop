@@ -496,6 +496,7 @@ export const CloneBank: React.FC = () => {
 
               {/* Single Unified Floating Textarea */}
               <textarea
+                aria-label="Clone genetics, one six-gene sequence per line"
                 ref={textareaRef}
                 value={localText}
                 disabled={isCalculating}
@@ -617,6 +618,7 @@ export const CloneBank: React.FC = () => {
 
                     {/* Right: Delete */}
                     <IconButton
+                      aria-label={`Delete saved gene set from ${new Date(set.timestamp).toLocaleString()}`}
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation();

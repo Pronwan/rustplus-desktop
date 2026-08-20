@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Typography,
@@ -8,13 +8,11 @@ import {
   LinearProgress,
   Tooltip,
   Badge,
-  IconButton
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import BlockIcon from '@mui/icons-material/Block';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import TuneIcon from '@mui/icons-material/Tune';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useCalculation, RouteSortOption } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
@@ -37,6 +35,8 @@ export const RouteToolbar: React.FC = () => {
     setIsCompareModalOpen,
     filteredAndSortedRoutes,
     rawRouteCount,
+    resultsCapped,
+    calculationStatusMessage,
     groupSimilar,
     setGroupSimilar
   } = useCalculation();
@@ -46,9 +46,28 @@ export const RouteToolbar: React.FC = () => {
 
   const isScannerBusy = isScannerActive || isScannerInitializing;
   const isReady = sourceSaplings.length >= 2 && !isScannerBusy;
+  const [resultStatusMessage, setResultStatusMessage] = useState('');
+  const resultControlsRef = useRef(`${sortBy}|${inventoryFilterMode}|${groupSimilar}`);
+
+  useEffect(() => {
+    const signature = `${sortBy}|${inventoryFilterMode}|${groupSimilar}`;
+    if (signature === resultControlsRef.current) return;
+    resultControlsRef.current = signature;
+    const sortLabel = sortBy.replace(/-/g, ' ');
+    const filterLabel = inventoryFilterMode === 'all' ? 'all inventory' : inventoryFilterMode.replace(/-/g, ' ');
+    setResultStatusMessage(
+      `Routes sorted by ${sortLabel}, filtered to ${filterLabel}${groupSimilar ? ', grouped by similar quality' : ''}. ${filteredAndSortedRoutes.length} matching routes shown.`
+    );
+  }, [sortBy, inventoryFilterMode, groupSimilar, filteredAndSortedRoutes.length]);
 
   return (
     <Box sx={{ mb: 2.5, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+      <Box className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {calculationStatusMessage}
+      </Box>
+      <Box className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {resultStatusMessage}
+      </Box>
       {/* Top Row: Primary Calculate Button & Calculation Presets */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -171,33 +190,33 @@ export const RouteToolbar: React.FC = () => {
             }
             arrow
           >
-            <Box
+            <Button
+              type="button"
+              aria-pressed={groupSimilar}
               onClick={() => setGroupSimilar(!groupSimilar)}
+              startIcon={<FilterListIcon sx={{ fontSize: 14, color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }} />}
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-                cursor: 'pointer',
                 px: 0.9,
                 py: 0.35,
+                minWidth: 0,
                 borderRadius: '4px',
                 border: '1px solid',
                 borderColor: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-surface-hover)',
-                backgroundColor: groupSimilar ? 'rgba(0, 229, 255, 0.1)' : 'var(--gl-panel-header-bg)'
+                backgroundColor: groupSimilar ? 'rgba(0, 229, 255, 0.1)' : 'var(--gl-panel-header-bg)',
+                color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)',
+                fontSize: '0.68rem',
+                '& .MuiButton-startIcon': { mr: 0.5 }
               }}
             >
-              <FilterListIcon sx={{ fontSize: 14, color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }} />
-              <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.68rem', color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}>
-                Group similar
-              </Typography>
-            </Box>
+              Group similar
+            </Button>
           </Tooltip>
 
           <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontWeight: 700 }}>
-            {filteredAndSortedRoutes.length} route{filteredAndSortedRoutes.length === 1 ? '' : 's'}
-            {groupSimilar && rawRouteCount > filteredAndSortedRoutes.length && (
-              <Box component="span" sx={{ color: 'var(--gl-text-faint)', fontWeight: 600 }}> of {rawRouteCount}</Box>
-            )}
+            {groupSimilar && rawRouteCount > filteredAndSortedRoutes.length
+              ? `Showing ${filteredAndSortedRoutes.length} route groups (${rawRouteCount} matching routes)`
+              : `Showing ${filteredAndSortedRoutes.length} matching route${filteredAndSortedRoutes.length === 1 ? '' : 's'}`}
+            {resultsCapped && <Box component="span" sx={{ color: 'var(--gl-text-faint)', fontWeight: 600 }}> · Best 500 retained</Box>}
           </Typography>
         </Box>
       </Box>
@@ -214,6 +233,8 @@ export const RouteToolbar: React.FC = () => {
             </Typography>
           </Box>
           <LinearProgress
+            aria-label="Calculation progress"
+            aria-valuetext={`Generation ${progress.currentGeneration} of ${progress.totalGenerations}, ${progress.stage}, ${Math.round(progress.progressPercent)} percent`}
             variant="determinate"
             value={Math.min(100, Math.max(0, progress.progressPercent))}
             sx={{
@@ -261,6 +282,7 @@ export const RouteToolbar: React.FC = () => {
             Sort By:
           </Typography>
           <Select
+            inputProps={{ 'aria-label': 'Sort routes by' }}
             size="small"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as RouteSortOption)}
@@ -288,6 +310,7 @@ export const RouteToolbar: React.FC = () => {
             Inventory Filter:
           </Typography>
           <Select
+            inputProps={{ 'aria-label': 'Filter routes by inventory availability' }}
             size="small"
             value={inventoryFilterMode}
             onChange={(e) => setInventoryFilterMode(e.target.value as any)}

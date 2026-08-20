@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Typography,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Paper,
-  Divider
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material';
 import { GUIDE_SECTIONS } from '../../domain/guide/guideData.ts';
 import { PlanterVisual } from './PlanterVisual.tsx';
 
 export const GuidePage: React.FC = () => {
   const [selectedSectionId, setSelectedSectionId] = useState(GUIDE_SECTIONS[0].id);
+  const articleHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   const activeSection = GUIDE_SECTIONS.find((s) => s.id === selectedSectionId) || GUIDE_SECTIONS[0];
+  const selectSection = (sectionId: string) => {
+    setSelectedSectionId(sectionId);
+    requestAnimationFrame(() => articleHeadingRef.current?.focus());
+  };
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 3 } }}>
       <Typography
+        component="h1"
         variant="h4"
         sx={{
           fontWeight: 800,
@@ -30,6 +41,18 @@ export const GuidePage: React.FC = () => {
       >
         Guide
       </Typography>
+
+      <FormControl fullWidth size="small" sx={{ display: { xs: 'flex', md: 'none' }, mb: 2 }}>
+        <InputLabel id="guide-section-label">Guide section</InputLabel>
+        <Select
+          labelId="guide-section-label"
+          label="Guide section"
+          value={selectedSectionId}
+          onChange={(event) => selectSection(event.target.value)}
+        >
+          {GUIDE_SECTIONS.map((section) => <MenuItem key={section.id} value={section.id}>{section.title}</MenuItem>)}
+        </Select>
+      </FormControl>
 
       <Box
         sx={{
@@ -47,6 +70,7 @@ export const GuidePage: React.FC = () => {
             borderColor: 'var(--gl-border)',
             borderRadius: '6px',
             p: 1.5,
+            display: { xs: 'none', md: 'block' },
             position: { md: 'sticky' },
             top: 20
           }}
@@ -55,38 +79,29 @@ export const GuidePage: React.FC = () => {
             {GUIDE_SECTIONS.map((sec) => {
               const isSelected = sec.id === selectedSectionId;
               return (
-                <ListItemButton
-                  key={sec.id}
-                  selected={isSelected}
-                  onClick={() => setSelectedSectionId(sec.id)}
-                  sx={{
-                    borderRadius: '4px',
-                    mb: 0.5,
-                    py: 1,
-                    px: 1.5,
-                    backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.12)' : 'transparent',
-                    borderLeft: isSelected ? '3px solid var(--gl-primary)' : '3px solid transparent',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)'
-                    }
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: isSelected ? 800 : 500,
-                          color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
-                          fontFamily: '"Roboto Mono", monospace',
-                          fontSize: '0.85rem'
-                        }}
-                      >
-                        {sec.title}
-                      </Typography>
-                    }
-                  />
-                </ListItemButton>
+                <ListItem key={sec.id} disablePadding>
+                  <ListItemButton
+                    selected={isSelected}
+                    onClick={() => selectSection(sec.id)}
+                    sx={{
+                      borderRadius: '4px',
+                      mb: 0.5,
+                      py: 1,
+                      px: 1.5,
+                      backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.12)' : 'transparent',
+                      borderLeft: isSelected ? '3px solid var(--gl-primary)' : '3px solid transparent',
+                      '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.04)' }
+                    }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="body2" sx={{ fontWeight: isSelected ? 800 : 500, color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)', fontFamily: '"Roboto Mono", monospace', fontSize: '0.85rem' }}>
+                          {sec.title}
+                        </Typography>
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
               );
             })}
           </List>
@@ -108,6 +123,9 @@ export const GuidePage: React.FC = () => {
             }}
           >
             <Typography
+              ref={articleHeadingRef}
+              component="h2"
+              tabIndex={-1}
               variant="h5"
               sx={{
                 fontWeight: 800,
@@ -136,6 +154,7 @@ export const GuidePage: React.FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {activeSection.content.map((p, idx) => (
                 <Typography
+                  component="h3"
                   key={idx}
                   variant="body2"
                   sx={{

@@ -68,7 +68,7 @@ export const WorkspaceLayout: React.FC = () => {
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-        <IconButton size="small" onClick={closeDrawer} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close route inspector" size="small" onClick={closeDrawer} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </Box>
@@ -81,8 +81,7 @@ export const WorkspaceLayout: React.FC = () => {
     return (
       <Box
         sx={{
-          height: 'calc(100vh - 80px)',
-          overflowY: 'auto',
+          minHeight: '100%',
           p: 1.5,
           boxSizing: 'border-box',
           display: 'flex',
@@ -90,6 +89,7 @@ export const WorkspaceLayout: React.FC = () => {
           gap: 2
         }}
       >
+        <Box component="h1" className="sr-only">Breeding Workspace</Box>
         {/* Gene inputs get a bounded, internally-scrolling block */}
         <Box sx={{ height: 'min(52vh, 460px)', flexShrink: 0 }}>
           <CloneBank />
@@ -119,13 +119,14 @@ export const WorkspaceLayout: React.FC = () => {
         display: 'grid',
         gridTemplateColumns,
         gap: 2,
-        height: 'calc(100vh - 80px)',
+        height: '100%',
         p: 1.5,
         boxSizing: 'border-box',
         overflow: 'hidden',
         transition: 'grid-template-columns 0.2s ease'
       }}
     >
+      <Box component="h1" className="sr-only">Breeding Workspace</Box>
       {/* Column 1: Gene Inputs */}
       <Box sx={{ height: '100%', minWidth: 0, overflow: 'hidden' }}>
         <CloneBank />
@@ -144,6 +145,7 @@ export const WorkspaceLayout: React.FC = () => {
         <Box sx={{ position: 'fixed', right: 16, bottom: 24, zIndex: 100 }}>
           <Tooltip title="Open Route Inspector" arrow>
             <IconButton
+              aria-label="Open route inspector"
               onClick={() => setIsInspectorManuallyClosed(false)}
               sx={{
                 backgroundColor: 'var(--gl-elevated-bg)',

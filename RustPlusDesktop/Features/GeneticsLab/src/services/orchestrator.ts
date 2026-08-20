@@ -27,7 +27,7 @@ import type { SolverResponse } from '../workers/solver.worker.ts';
  * work so heavy Thorough / Gen-3 runs don't freeze the UI. Results are sorted
  * best-first before slicing, and the UI groups/paginates further.
  */
-const MAX_RETURNED_RESULTS = 500;
+export const MAX_RETURNED_RESULTS = 500;
 
 /**
  * Target combinations per worker batch, expressed as a divisor of the
@@ -169,7 +169,7 @@ export class CrossbreedingOrchestrator {
 
     // Generations run as a sequential loop so the returned promise settles only
     // when the whole simulation is finished.
-    for (; ;) {
+    for (;;) {
       if (!this.isRunning || this.isCancelled) return;
 
       await this.runGeneration(genIndex, addedSaplings);

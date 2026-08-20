@@ -60,7 +60,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map }) => {
           }}
         >
           <Tooltip title="Back to previous generation" arrow>
-            <IconButton size="small" onClick={goBack} sx={{ color: 'var(--gl-primary)', p: 0.25 }}>
+            <IconButton aria-label="Go back in route tree" size="small" onClick={goBack} sx={{ color: 'var(--gl-primary)', p: 0.25 }}>
               <ArrowBackIcon sx={{ fontSize: 16 }} />
             </IconButton>
           </Tooltip>

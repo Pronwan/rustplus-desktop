@@ -592,6 +592,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
         )}
 
         <IconButton
+          aria-label="Close plan details"
           onClick={onClose}
           size="small"
           sx={{

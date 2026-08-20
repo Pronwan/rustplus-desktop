@@ -86,7 +86,7 @@ export const OptionsModal: React.FC = () => {
         <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Settings & Performance
         </Typography>
-        <IconButton size="small" onClick={() => setIsOptionsModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close settings" size="small" onClick={() => setIsOptionsModalOpen(false)} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
@@ -117,6 +117,7 @@ export const OptionsModal: React.FC = () => {
                 </Typography>
               </Box>
               <Slider
+                aria-label="Worker CPU threads"
                 value={localOptions.numberOfWorkers}
                 onChange={(_, val) => setLocalOptions({ ...localOptions, numberOfWorkers: val as number })}
                 min={1}
@@ -138,6 +139,7 @@ export const OptionsModal: React.FC = () => {
                 </Typography>
               </Box>
               <Slider
+                aria-label="Number of breeding generations"
                 value={localOptions.numberOfGenerations}
                 onChange={(_, val) => setLocalOptions({ ...localOptions, numberOfGenerations: val as number })}
                 min={1}
@@ -158,6 +160,7 @@ export const OptionsModal: React.FC = () => {
                 </Typography>
               </Box>
               <Slider
+                aria-label="Maximum surrounding plants per planter"
                 value={localOptions.maxCrossbreedingSaplingsNumber}
                 onChange={(_, val) => setLocalOptions({ ...localOptions, maxCrossbreedingSaplingsNumber: val as number })}
                 min={2}
@@ -181,6 +184,7 @@ export const OptionsModal: React.FC = () => {
                 </Typography>
               </Box>
               <Select
+                inputProps={{ 'aria-label': 'Theme mode' }}
                 size="small"
                 value={themeMode}
                 onChange={(e) => setThemeMode(e.target.value as any)}
@@ -203,6 +207,7 @@ export const OptionsModal: React.FC = () => {
                 </Typography>
               </Box>
               <Select
+                inputProps={{ 'aria-label': 'Display density' }}
                 size="small"
                 value={density}
                 onChange={(e) => setDensity(e.target.value as any)}
