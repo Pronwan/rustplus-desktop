@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Box, useMediaQuery, useTheme, Drawer, IconButton, Tooltip } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
 import { CloneBank } from './CloneBank/CloneBank.tsx';
 import { TargetDesigner } from './TargetDesigner/TargetDesigner.tsx';
@@ -10,16 +9,15 @@ import { useCalculation } from '../../context/CalculationContext.tsx';
 
 /**
  * Responsive workspace with three tiers:
- *   - Desktop (≥ lg / 1200px): 3 fluid columns, inspector docked on the right.
- *   - Tablet  (md–lg): 2 columns (inputs + center), inspector slides in as a drawer.
+ *   - Wide desktop (≥ xl / 1536px): 3 fluid columns, inspector docked on the right.
+ *   - Tablet / laptop (md–xl): 2 columns (inputs + center), inspector uses a drawer.
  *   - Compact (< md / 900px): single stacked column that scrolls; inspector drawer.
  * Column tracks use minmax so they shrink instead of overflowing when the window
  * is resized, and the center track can collapse to 0 to avoid horizontal blowout.
  */
 export const WorkspaceLayout: React.FC = () => {
   const theme = useTheme();
-  const isXL = useMediaQuery(theme.breakpoints.up('xl'));       // very wide
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));  // ≥1200 → dock inspector
+  const isDesktop = useMediaQuery(theme.breakpoints.up('xl'));  // ≥1536 → dock inspector
   const isCompact = useMediaQuery(theme.breakpoints.down('md')); // <900 → stack
 
   const { selectedGroup, isInspectorOpen, setIsInspectorOpen } = useCalculation();
@@ -58,6 +56,7 @@ export const WorkspaceLayout: React.FC = () => {
       onClose={closeDrawer}
       slotProps={{
         paper: {
+          'aria-label': 'Route inspector',
           sx: {
             width: { xs: '100%', sm: 400 },
             maxWidth: '100vw',
@@ -67,11 +66,6 @@ export const WorkspaceLayout: React.FC = () => {
         }
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-        <IconButton aria-label="Close route inspector" size="small" onClick={closeDrawer} sx={{ color: 'var(--gl-text-muted)' }}>
-          <CloseIcon sx={{ fontSize: 18 }} />
-        </IconButton>
-      </Box>
       <RouteInspector onClose={closeDrawer} />
     </Drawer>
   );
@@ -108,9 +102,7 @@ export const WorkspaceLayout: React.FC = () => {
 
   // --- TABLET / DESKTOP: CSS grid (2 or 3 columns) ---
   const gridTemplateColumns = showDesktopInspector
-    ? isXL
-      ? 'minmax(260px, 320px) minmax(440px, 1fr) minmax(320px, 380px)'
-      : 'minmax(230px, 270px) minmax(340px, 1fr) minmax(290px, 330px)'
+    ? 'minmax(260px, 320px) minmax(440px, 1fr) minmax(320px, 380px)'
     : 'minmax(240px, 300px) minmax(0, 1fr)';
 
   return (

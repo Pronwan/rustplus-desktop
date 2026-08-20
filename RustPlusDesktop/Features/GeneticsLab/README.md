@@ -1,58 +1,118 @@
-# Rust Genetics Lab 🌿🧬
+<div align="center">
 
-A fast, interactive genetics calculator, clone inventory bank, target designer, multi-generation crossbreeding solver, OCR screen scanner, and step-by-step in-game breeding assistant for Rust agriculture.
+# Rust Genetics Lab
 
-inspired from Rust Breeder, but way faster and more features
-<img width="1579" height="1008" alt="image" src="https://github.com/user-attachments/assets/8830da3f-7fbc-4d27-9d3c-91625e961d86" />
-## ✨ Features
+**Fast, inventory-aware plant breeding plans for Rust.**
 
-- **Direct Manual Input & Saved Sets**: Fast, zero-friction multi-line plant input with instant circular gene badges (`G`, `Y`, `H`, `W`, `X`), line indices, and auto-saving history.
-- **Target Designer & Presets**: Rapidly configure target genetics (`3G 3Y Balanced`, `2G 4Y Max Yield`, `4G 2Y Fast Growth`, etc.).
-- **Multi-Generation Crossbreeding Solver**: High-performance multi-threaded solver with Web Workers and cooperative async yielding.
-- **Interactive Route Inspector**: Visualizes the 3×3 planter layout with planting order and full lineage dependency trees.
-- **Step-by-Step Breeding Assistant**: Live in-game execution mode tracking planting steps, probabilities, and success confirmations.
-- **OCR Tooltip Scanner**: Real-time scanner with zoomed surround preview, 6-slot guide stripes calibration, and custom preset import/export.
-- **Standalone Web & Desktop Integration**: Runs both as a standalone React 18 web application and inside RustPlusDesktop via WebView2.
+[![Version](https://img.shields.io/badge/version-1.0.0-00bcd4?style=flat-square)](package.json)
+![React](https://img.shields.io/badge/React-18.3-149eca?style=flat-square&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=flat-square&logo=typescript&logoColor=white)
+[![Tested with Vitest](https://img.shields.io/badge/tested%20with-Vitest-6e9f18?style=flat-square&logo=vitest&logoColor=white)](src/tests)
+[![License](https://img.shields.io/badge/license-CC%20BY%20NC%20SA%204.0-2f855a?style=flat-square)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/JawadYzbk/rust-genetics-lab?style=flat-square&logo=github&label=stars)](https://github.com/JawadYzbk/rust-genetics-lab/stargazers)
 
+Turn a clone box into a practical breeding route, then follow it in game.
 
-## 🚀 Quick Start
+</div>
 
-### Install Dependencies
+![Rust Genetics Lab breeding workspace](docs/images/genetics-lab-workspace.png)
+
+<details>
+<summary>Additional screenshots</summary>
+
+![Rust Genetics Lab workspace overview](https://github.com/user-attachments/assets/dc633ec3-7c6d-41eb-a1d3-ea39b6b988c6)
+
+![Rust Genetics Lab route planning view](https://github.com/user-attachments/assets/9e9295db-3213-4d77-ac7b-01a4faf39ead)
+
+</details>
+
+Rust Genetics Lab combines clone inventory management, target design, route calculation, and step-by-step execution in one workspace. It runs as a standalone web app and inside RustPlusDesktop.
+
+> [!NOTE]
+> Rust Genetics Lab is an unofficial community project. It is not affiliated with or endorsed by Facepunch Studios.
+
+## Highlights
+
+| Capability | What it provides |
+| --- | --- |
+| Inventory-aware solver | Ranks single-generation and multi-generation routes against the clones you own, including missing-clone requirements. |
+| Flexible breeding goals | Choose a preset, enter an exact six-gene target, require minimum genes, or search for the best available result. |
+| Actionable route inspector | Review probability, required clones, storage positions, source-row highlights, planter placement, breeding order, and lineage. |
+| Search controls | Switch between fast, balanced, and thorough calculation profiles, then sort, filter, group, or compare the results. |
+| OCR scanner | Capture genetics from Rust with calibration, correction, preview, and reusable scanner presets. |
+| Breeding Mode | Follow a route in game through a focused sequence of planting and confirmation steps. |
+| Supporting tools | Plan farms, browse tea recipes, and use the built-in genetics guide without leaving the app. |
+
+## Workflow
+
+1. Enter clone genetics manually, paste a list, restore a saved set, or scan from Rust.
+2. Select the plant type and define the breeding goal.
+3. Calculate routes and choose the best plan for the clones currently available.
+4. Check the breeding tree or planter layout, then start Breeding Mode.
+
+The clone numbers shown in a route match their positions in the input list, which makes the list usable as a direct model of an in-game storage box.
+
+## Getting started
+
+### Prerequisites
+
+- A current [Node.js](https://nodejs.org/) LTS release
+- npm
+
+### Install and run
+
 ```bash
-npm install
-```
-
-### Run Local Development Server
-```bash
+git clone https://github.com/JawadYzbk/rust-genetics-lab.git
+cd rust-genetics-lab
+npm ci
 npm run dev
 ```
 
-### Run Unit Tests
-```bash
-npm run test
-```
+Open the local URL printed by Vite.
 
-### Build for Production
+### Available commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite development server. |
+| `npm run build` | Type-check the project and create a production build. |
+| `npm run preview` | Serve the production build locally. |
+| `npm test` | Run the Vitest test suite once. |
+
+## Desktop integration
+
+The standalone build supports the complete planning workflow in a browser. When hosted by RustPlusDesktop through WebView2, the same interface can use the desktop scanner bridge for a tighter capture workflow.
+
+## Privacy
+
+Genetics, saved sets, projects, and settings are stored locally in the browser. OCR and route calculation run on the device. Anonymous usage analytics is enabled by default and can be disabled at any time from the privacy settings.
+
+## Technology
+
+- [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [Material UI](https://mui.com/) and [Emotion](https://emotion.sh/)
+- [Tesseract.js](https://tesseract.projectnaptha.com/) for client-side OCR
+- Web Workers for solver concurrency
+- [Vitest](https://vitest.dev/) for automated tests
+
+## Contributing
+
+Issues and focused pull requests are welcome. Before submitting a change, run:
+
 ```bash
+npm test
 npm run build
 ```
 
----
+Please include a short explanation of the user-facing change and screenshots for visual updates.
 
-## 🛠️ Tech Stack
-- **Framework**: React 18 + TypeScript + Vite
-- **UI Components**: Material UI (MUI v6/v9) + Emotion
-- **OCR Engine**: Tesseract.js
-- **Testing**: Vitest
+## Acknowledgements
 
----
+Rust Breeder inspired the project's early direction. Rust Genetics Lab has since grown into an independent solver and breeding workspace.
 
-## 📄 License
+## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)** License.
+Copyright 2026 Jawad Yazbek and contributors.
 
-- ✅ **Free for Personal & Community Use**: You are free to use, modify, share, and build upon this software.
-- ❌ **Non-Commercial**: You may **not** sell, paywall, or use this software or derived works for commercial monetization.
-- 🔄 **ShareAlike & Open Source**: Any modifications or derivatives must remain open source and distributed under the exact same license terms.
-
-See the [LICENSE](LICENSE) file for details.
+Licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](LICENSE). Commercial use is not permitted, and derivative work must use the same license.

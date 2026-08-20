@@ -4,14 +4,12 @@ import {
   Box,
   Typography,
   Button,
+  ButtonBase,
   Chip,
   Tooltip
 } from '@mui/material';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { ScoredRoute, useCalculation } from '../../../context/CalculationContext.tsx';
-import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { GeneticsSequence } from '../../common/GeneticsSequence.tsx';
 import { generationVisual } from '../../../utils/generationStyle.ts';
 
@@ -20,7 +18,7 @@ interface RouteCardProps {
   rankIndex: number;
   isSelected?: boolean;
   onInspect?: () => void;
-  /** Identity used by the grid's FLIP pass to track this card across reorders. */
+  /** Identity used by the list's FLIP pass to track this route across reorders. */
   flipKey?: string;
 }
 
@@ -31,287 +29,140 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   onInspect,
   flipKey
 }) => {
-  const { group, bestMap, analysis } = scoredRoute;
+  const { group, analysis } = scoredRoute;
   const { setSelectedGroup, setSelectedMapIndex, setIsInspectorOpen, comparedGroups, toggleCompareGroup } = useCalculation();
-  const { startBreedingSession } = useWorkspace();
-
   const isCompared = comparedGroups.some(g => g.resultSaplingGeneString === group.resultSaplingGeneString);
+  const isBest = rankIndex === 0;
+  const generation = generationVisual(analysis.generationCount);
 
-  const handleInspect = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const selectRoute = () => {
     setSelectedGroup(group);
     setSelectedMapIndex(0);
-    setIsInspectorOpen(true); // explicit user intent → allowed to open the drawer on small screens
+    setIsInspectorOpen(true);
     onInspect?.();
   };
 
-  const handleStartBreeding = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    startBreedingSession(bestMap, group.resultSaplingGeneString);
-  };
+  const readiness = analysis.inventoryStatus === 'available'
+    ? { label: 'Ready now', color: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.35)', tint: 'rgba(76, 175, 80, 0.12)' }
+    : { label: `Missing ${analysis.missingClonesCount}`, color: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.35)', tint: 'rgba(255, 167, 38, 0.12)' };
 
-  const isBest = rankIndex === 0;
-
-  const invBadgeConfig = {
-    available: { label: '✓ Ready', bg: 'rgba(76, 175, 80, 0.12)', color: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.35)' },
-    partial: { label: `⚠ Missing ${analysis.missingClonesCount}`, bg: 'rgba(255, 167, 38, 0.12)', color: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.35)' },
-    missing: { label: `✕ Missing ${analysis.missingClonesCount}`, bg: 'rgba(229, 57, 53, 0.12)', color: 'var(--gl-error)', border: 'rgba(229, 57, 53, 0.35)' }
-  };
-
-  const invBadge = invBadgeConfig[analysis.inventoryStatus];
-  const genVis = generationVisual(analysis.generationCount);
+  const reason = analysis.inventoryStatus === 'available'
+    ? `Ready with your clone bank; uses ${analysis.totalPlacementsCount} total plant${analysis.totalPlacementsCount === 1 ? '' : 's'}`
+    : `Collect ${analysis.missingClonesCount} clone${analysis.missingClonesCount === 1 ? '' : 's'} to make this route ready`;
 
   return (
     <Paper
       variant="outlined"
       data-flip-key={flipKey}
       sx={{
-        backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-bg)',
-        border: '1px solid',
-        borderColor: isSelected ? 'var(--gl-primary)' : isBest ? 'var(--gl-border-strong)' : 'var(--gl-surface)',
-        // Generation identity: a colored left accent makes GEN 1/2/3 scannable in the grid.
-        borderLeft: `4px solid ${genVis.border}`,
-        borderRadius: '5px',
-        p: 1.5,
-        // Colour and elevation interpolate on their own curve; `transform` is
-        // deliberately excluded so the grid's FLIP pass owns positional motion.
-        transition:
-          'background-color 220ms cubic-bezier(0.32, 0.72, 0, 1),' +
-          ' border-color 220ms cubic-bezier(0.32, 0.72, 0, 1),' +
-          ' box-shadow 220ms cubic-bezier(0.32, 0.72, 0, 1)',
         display: 'flex',
-        flexDirection: 'column',
-        gap: 1.25,
-        position: 'relative',
-        boxShadow: isSelected ? '0 0 12px rgba(0, 229, 255, 0.12)' : 'none',
+        alignItems: 'stretch',
+        overflow: 'hidden',
+        backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-bg)',
+        borderColor: isSelected ? 'var(--gl-primary)' : isBest ? 'var(--gl-border-strong)' : 'var(--gl-surface)',
+        borderLeft: `4px solid ${generation.border}`,
+        borderRadius: '5px',
+        transition: 'background-color 160ms ease, border-color 160ms ease',
         '&:hover': {
           borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-faint)',
-          backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-header-bg)',
-          boxShadow: isSelected
-            ? '0 0 14px rgba(0, 229, 255, 0.18)'
-            : '0 1px 10px rgba(0, 0, 0, 0.18)'
+          backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-header-bg)'
         },
-        // Physical press feedback, and only while the pointer is down.
-        '&:active': {
-          transform: 'scale(0.994)',
-          transition: 'transform 90ms cubic-bezier(0.32, 0.72, 0, 1)'
-        },
-        '@media (prefers-reduced-motion: reduce)': {
-          transition: 'none',
-          '&:active': { transform: 'none' }
-        }
+        '@media (prefers-reduced-motion: reduce)': { transition: 'none' }
       }}
     >
-      {/* Top Banner: Rank / Score & Compare toggle */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-          <Typography
-            variant="caption"
-            sx={{
-              fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
-              fontSize: '0.75rem',
-              color: isBest ? 'var(--gl-primary)' : 'var(--gl-text-primary)'
-            }}
-          >
-            {isBest ? '⭐ BEST' : `ROUTE #${rankIndex + 1}`}
-          </Typography>
+      <ButtonBase
+        disableRipple
+        onClick={selectRoute}
+        aria-label={`Select route ${rankIndex + 1}, ${group.resultSaplingGeneString}, ${readiness.label}`}
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          p: 1.25,
+          display: 'grid',
+          gridTemplateColumns: { xs: 'auto 1fr', md: '60px 180px minmax(0, 1fr)' },
+          gridTemplateAreas: {
+            xs: '"rank genes" "details details" "metrics metrics"',
+            md: '"rank genes details" "rank genes metrics"'
+          },
+          alignItems: 'center',
+          gap: { xs: 1, md: 1.5 },
+          textAlign: 'left',
+          '&.Mui-focusVisible': { outline: '2px solid var(--gl-primary)', outlineOffset: -2 }
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{
+            fontWeight: 900,
+            fontFamily: '"Roboto Mono", monospace',
+            fontSize: '0.75rem',
+            color: isBest ? 'var(--gl-primary)' : 'var(--gl-text-primary)',
+            whiteSpace: 'nowrap',
+            gridArea: 'rank'
+          }}
+        >
+          {isBest ? '★ BEST' : `#${rankIndex + 1}`}
+        </Typography>
 
-          <Tooltip title={`Gene Quality Score: ${bestMap.score} / 6.0`} arrow>
-            <Chip
-              size="small"
-              label={`Score ${bestMap.score}`}
-              sx={{
-                height: 18,
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                fontFamily: 'monospace',
-                backgroundColor: bestMap.score >= 5 ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)',
-                color: bestMap.score >= 5 ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
-                border: `1px solid ${bestMap.score >= 5 ? 'rgba(0, 229, 255, 0.35)' : 'rgba(255, 255, 255, 0.15)'}`,
-                '& .MuiChip-label': { px: 0.6 }
-              }}
-            />
-          </Tooltip>
-
-          <Tooltip title={`Requires ${analysis.generationCount} breeding generation${analysis.generationCount > 1 ? 's' : ''} (steps)`} arrow>
-            <Chip
-              size="small"
-              label={`${genVis.icon} ${genVis.label}`}
-              sx={{
-                height: 18,
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                fontFamily: 'monospace',
-                backgroundColor: genVis.tint,
-                color: genVis.color,
-                border: `1px solid ${genVis.border}`,
-                '& .MuiChip-label': { px: 0.6 }
-              }}
-            />
-          </Tooltip>
+        <Box sx={{ gridArea: 'genes', display: 'flex', justifyContent: { xs: 'flex-end', md: 'flex-start' } }}>
+          <GeneticsSequence genes={group.resultSaplingGeneString} size="small" showConnectors={true} />
         </Box>
 
-        <Tooltip title="Compare side-by-side" arrow>
+        <Box sx={{ gridArea: 'details', minWidth: 0 }}>
+          <Typography sx={{ color: 'var(--gl-text-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+            {isBest ? 'Recommended route' : `Alternative route ${rankIndex + 1}`}
+          </Typography>
+          <Typography sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem' }}>
+            {reason}
+          </Typography>
+        </Box>
+
+        <Box sx={{ gridArea: 'metrics', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 0.75, flexWrap: 'wrap' }}>
+          <Chip
+            size="small"
+            label={readiness.label}
+            sx={{ height: 24, fontSize: '0.75rem', fontWeight: 800, color: readiness.color, border: `1px solid ${readiness.border}`, backgroundColor: readiness.tint }}
+          />
+          <Chip
+            size="small"
+            label={`${analysis.probabilityPercent}%`}
+            sx={{ height: 24, fontSize: '0.75rem', fontWeight: 800, color: 'var(--gl-text-secondary)', backgroundColor: 'var(--gl-input-bg)' }}
+          />
+          <Chip
+            size="small"
+            label={`${generation.icon} ${analysis.generationCount} gen`}
+            sx={{ height: 24, fontSize: '0.75rem', fontWeight: 800, color: generation.color, border: `1px solid ${generation.border}`, backgroundColor: generation.tint }}
+          />
+          <Typography sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+            {analysis.uniqueCloneCount} clones · {analysis.totalPlacementsCount} plants
+          </Typography>
+        </Box>
+      </ButtonBase>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', px: 0.75, borderLeft: '1px solid var(--gl-surface)' }}>
+        <Tooltip title="Add this route to comparison" arrow>
           <Button
             type="button"
             aria-pressed={isCompared}
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleCompareGroup(group);
-            }}
+            aria-label={`${isCompared ? 'Remove' : 'Add'} route ${rankIndex + 1} ${isCompared ? 'from' : 'to'} comparison`}
+            onClick={() => toggleCompareGroup(group)}
+            startIcon={<CompareArrowsIcon sx={{ fontSize: 16 }} />}
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.25,
-              px: 0.5,
-              py: 0.2,
               minWidth: 0,
-              borderRadius: '3px',
-              backgroundColor: isCompared ? 'rgba(255, 152, 0, 0.15)' : 'transparent',
+              minHeight: 36,
+              px: 1,
+              color: isCompared ? 'var(--gl-warning)' : 'var(--gl-text-muted)',
               border: '1px solid',
               borderColor: isCompared ? 'var(--gl-warning)' : 'transparent',
-              '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+              backgroundColor: isCompared ? 'rgba(255, 152, 0, 0.12)' : 'transparent',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              '& .MuiButton-startIcon': { mr: { xs: 0, sm: 0.5 } }
             }}
           >
-            <CompareArrowsIcon sx={{ fontSize: 13, color: isCompared ? 'var(--gl-warning)' : 'var(--gl-text-muted)' }} />
-            <Typography variant="caption" sx={{ fontSize: '0.65rem', fontWeight: 700, color: isCompared ? 'var(--gl-warning)' : 'var(--gl-text-muted)' }}>
-              Compare
-            </Typography>
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Compare</Box>
           </Button>
         </Tooltip>
-      </Box>
-
-      {/* Target Result Genes */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', my: 0.25 }}>
-        <GeneticsSequence genes={group.resultSaplingGeneString} size="small" showConnectors={true} />
-      </Box>
-
-      {/* Metrics Row */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0.5, textAlign: 'center' }}>
-        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
-            CHANCE
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: 800,
-              fontFamily: 'monospace',
-              fontSize: '0.75rem',
-              color: analysis.probabilityPercent >= 95 ? 'var(--gl-success)' : analysis.probabilityPercent >= 50 ? 'var(--gl-warning)' : 'var(--gl-error)'
-            }}
-          >
-            {analysis.probabilityPercent}%
-          </Typography>
-        </Box>
-
-        <Box sx={{ p: 0.4, backgroundColor: genVis.tint, borderRadius: '3px', border: `1px solid ${genVis.border}` }}>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
-            GENS
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: 800,
-              fontFamily: 'monospace',
-              fontSize: '0.75rem',
-              color: genVis.color
-            }}
-          >
-            {genVis.icon} GEN.{analysis.generationCount}
-          </Typography>
-        </Box>
-
-        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
-            CLONES
-          </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--gl-text-secondary)' }}>
-            {analysis.uniqueCloneCount} unq
-          </Typography>
-        </Box>
-
-        <Box sx={{ p: 0.4, backgroundColor: 'var(--gl-input-bg)', borderRadius: '3px' }}>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontSize: '0.58rem', display: 'block', fontWeight: 700 }}>
-            PLANTS
-          </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--gl-text-secondary)' }}>
-            {analysis.totalPlacementsCount} tot
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Inventory Status Pill */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Chip
-          size="small"
-          label={invBadge.label}
-          sx={{
-            height: 18,
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            backgroundColor: invBadge.bg,
-            color: invBadge.color,
-            border: `1px solid ${invBadge.border}`,
-            '& .MuiChip-label': { px: 0.6 }
-          }}
-        />
-
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-          {scoredRoute.equivalents && scoredRoute.equivalents.length > 0 && (
-            <Tooltip title={`${scoredRoute.equivalents.length} other routes reach an equally-good result. Toggle "Group similar" off to list them all.`} arrow>
-              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.65rem' }}>
-                ≡ +{scoredRoute.equivalents.length} similar
-              </Typography>
-            </Tooltip>
-          )}
-          {group.mapList.length > 1 && (
-            <Tooltip title="Alternative plant layouts that reach this same result. Open the inspector to pick one." arrow>
-              <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.65rem' }}>
-                +{group.mapList.length - 1} alt
-              </Typography>
-            </Tooltip>
-          )}
-        </Box>
-      </Box>
-
-      {/* Card Action Buttons */}
-      <Box sx={{ display: 'flex', gap: 0.75, pt: 0.5, borderTop: '1px solid var(--gl-elevated-bg)' }}>
-        <Button
-          variant={isSelected ? 'contained' : 'outlined'}
-          color={isSelected ? 'primary' : 'inherit'}
-          size="small"
-          fullWidth
-          onClick={handleInspect}
-          startIcon={<VisibilityIcon sx={{ fontSize: 13 }} />}
-          sx={{
-            fontSize: '0.7rem',
-            fontWeight: 800,
-            py: 0.35,
-            borderColor: isSelected ? undefined : 'var(--gl-surface)'
-          }}
-        >
-          {isSelected ? 'INSPECTING' : 'INSPECT'}
-        </Button>
-
-        <Button
-          variant="contained"
-          size="small"
-          fullWidth
-          onClick={handleStartBreeding}
-          startIcon={<PlayCircleIcon sx={{ fontSize: 13 }} />}
-          sx={{
-            fontSize: '0.7rem',
-            fontWeight: 800,
-            py: 0.35,
-            backgroundColor: 'var(--gl-warning)',
-            color: 'var(--gl-on-accent)',
-            '&:hover': { backgroundColor: 'var(--gl-warning)' }
-          }}
-        >
-          BREED
-        </Button>
       </Box>
     </Paper>
   );

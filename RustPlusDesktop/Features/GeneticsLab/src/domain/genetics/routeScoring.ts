@@ -37,20 +37,15 @@ export interface RouteAnalysis {
   requirements: RouteCloneRequirement[];
 }
 
-/**
- * Recursively collects all required base/source clones for a breeding route.
- */
-export function getRequiredSourceGenotypes(map: GeneticsMap): string[] {
-  const sourceGenotypes: string[] = [];
-
-  function traverse(currentMap: GeneticsMap) {
+function visitRequiredSources(map: GeneticsMap, visit: (genetics: string, index?: number) => void): void {
+  function traverse(currentMap: GeneticsMap): void {
     if (currentMap.baseSapling) {
       if (currentMap.baseSapling.generationIndex > 0) {
         if (currentMap.baseSaplingVariants && currentMap.baseSaplingVariants.mapList.length > 0) {
           traverse(currentMap.baseSaplingVariants.mapList[0]);
         }
       } else {
-        sourceGenotypes.push(currentMap.baseSapling.toString());
+        visit(currentMap.baseSapling.toString(), currentMap.baseSapling.index);
       }
     }
 
@@ -61,13 +56,28 @@ export function getRequiredSourceGenotypes(map: GeneticsMap): string[] {
           traverse(variant.mapList[0]);
         }
       } else {
-        sourceGenotypes.push(parent.toString());
+        visit(parent.toString(), parent.index);
       }
     });
   }
 
   traverse(map);
+}
+
+/** Recursively collects all required base/source clones for a breeding route. */
+export function getRequiredSourceGenotypes(map: GeneticsMap): string[] {
+  const sourceGenotypes: string[] = [];
+  visitRequiredSources(map, genetics => sourceGenotypes.push(genetics));
   return sourceGenotypes;
+}
+
+/** Original zero-based input-list positions used by this exact route. */
+export function getRequiredSourceIndexes(map: GeneticsMap): number[] {
+  const sourceIndexes: number[] = [];
+  visitRequiredSources(map, (_genetics, index) => {
+    if (index !== undefined) sourceIndexes.push(index);
+  });
+  return sourceIndexes;
 }
 
 /**

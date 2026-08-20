@@ -5,6 +5,7 @@ import {
   Button,
   Select,
   MenuItem,
+  Menu,
   LinearProgress,
   Tooltip,
   Badge,
@@ -13,7 +14,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import BlockIcon from '@mui/icons-material/Block';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import TuneIcon from '@mui/icons-material/Tune';
+import CheckIcon from '@mui/icons-material/Check';
 import { useCalculation, RouteSortOption } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../../context/ScannerContext.tsx';
@@ -34,6 +36,7 @@ export const RouteToolbar: React.FC = () => {
     comparedGroups,
     setIsCompareModalOpen,
     filteredAndSortedRoutes,
+    results,
     rawRouteCount,
     resultsCapped,
     calculationStatusMessage,
@@ -47,6 +50,7 @@ export const RouteToolbar: React.FC = () => {
   const isScannerBusy = isScannerActive || isScannerInitializing;
   const isReady = sourceSaplings.length >= 2 && !isScannerBusy;
   const [resultStatusMessage, setResultStatusMessage] = useState('');
+  const [viewMenuAnchor, setViewMenuAnchor] = useState<HTMLElement | null>(null);
   const resultControlsRef = useRef(`${sortBy}|${inventoryFilterMode}|${groupSimilar}`);
 
   useEffect(() => {
@@ -126,38 +130,18 @@ export const RouteToolbar: React.FC = () => {
             </Tooltip>
           )}
 
-          {/* Calculation Presets */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 1 }}>
-            {(['fast', 'balanced', 'thorough'] as const).map((preset) => {
-              const isSelected = options.calculationPreset === preset;
-              const tips: Record<typeof preset, string> = {
-                fast: 'Fast — 1 generation, up to 3 surrounding plants. Quickest results with the fewest breeding steps; may miss deeper multi-generation routes.',
-                balanced: 'Balanced — up to 2 generations and a wider search. A good trade-off between speed and finding higher-quality routes. Recommended default.',
-                thorough: 'Thorough — up to 3 generations, 4 surrounding plants and the widest search. Finds the best possible routes but takes the longest to calculate.'
-              };
-              return (
-                <Tooltip key={preset} title={tips[preset]} arrow>
-                  <Button
-                    size="small"
-                    variant={isSelected ? 'contained' : 'outlined'}
-                    color={isSelected ? 'primary' : 'inherit'}
-                    disabled={isCalculating}
-                    onClick={() => setCalculationPreset(preset)}
-                    sx={{
-                      py: 0.4,
-                      px: 1.2,
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      borderColor: isSelected ? undefined : 'var(--gl-surface-hover)',
-                      backgroundColor: isSelected ? undefined : 'var(--gl-panel-header-bg)'
-                    }}
-                  >
-                    {preset.toUpperCase()}
-                  </Button>
-                </Tooltip>
-              );
-            })}
-          </Box>
+          <Select
+            inputProps={{ 'aria-label': 'Search depth' }}
+            size="small"
+            value={options.calculationPreset}
+            disabled={isCalculating}
+            onChange={(event) => setCalculationPreset(event.target.value as 'fast' | 'balanced' | 'thorough')}
+            sx={{ height: 34, minWidth: 150, fontSize: '0.75rem', fontWeight: 800, backgroundColor: 'var(--gl-panel-header-bg)', '& fieldset': { borderColor: 'var(--gl-surface-hover)' } }}
+          >
+            <MenuItem value="fast" sx={{ fontSize: '0.75rem' }}>Search: Fast</MenuItem>
+            <MenuItem value="balanced" sx={{ fontSize: '0.75rem' }}>Search: Balanced</MenuItem>
+            <MenuItem value="thorough" sx={{ fontSize: '0.75rem' }}>Search: Thorough</MenuItem>
+          </Select>
         </Box>
 
         {/* Right Controls: Compare & Count */}
@@ -182,42 +166,35 @@ export const RouteToolbar: React.FC = () => {
             </Badge>
           )}
 
-          <Tooltip
-            title={
-              groupSimilar
-                ? 'Grouping routes of equal quality (same score, chance, generations & clones) into one card. Click to list every route.'
-                : 'Showing every route individually. Click to group equal-quality routes.'
-            }
-            arrow
-          >
-            <Button
-              type="button"
-              aria-pressed={groupSimilar}
-              onClick={() => setGroupSimilar(!groupSimilar)}
-              startIcon={<FilterListIcon sx={{ fontSize: 14, color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }} />}
-              sx={{
-                px: 0.9,
-                py: 0.35,
-                minWidth: 0,
-                borderRadius: '4px',
-                border: '1px solid',
-                borderColor: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-surface-hover)',
-                backgroundColor: groupSimilar ? 'rgba(0, 229, 255, 0.1)' : 'var(--gl-panel-header-bg)',
-                color: groupSimilar ? 'var(--gl-primary)' : 'var(--gl-text-muted)',
-                fontSize: '0.68rem',
-                '& .MuiButton-startIcon': { mr: 0.5 }
-              }}
-            >
-              Group similar
-            </Button>
-          </Tooltip>
+          {results.length > 0 && (
+            <>
+              <Button
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded={Boolean(viewMenuAnchor)}
+                onClick={(event) => setViewMenuAnchor(event.currentTarget)}
+                startIcon={<TuneIcon sx={{ fontSize: 16 }} />}
+                sx={{ minHeight: 32, px: 1, color: 'var(--gl-text-muted)', border: '1px solid var(--gl-surface-hover)', fontSize: '0.75rem', fontWeight: 800 }}
+              >
+                View
+              </Button>
+              <Menu anchorEl={viewMenuAnchor} open={Boolean(viewMenuAnchor)} onClose={() => setViewMenuAnchor(null)}>
+                <MenuItem onClick={() => { setGroupSimilar(!groupSimilar); setViewMenuAnchor(null); }} sx={{ minWidth: 220, fontSize: '0.78rem' }}>
+                  <Box sx={{ width: 24 }}>{groupSimilar && <CheckIcon sx={{ fontSize: 18, color: 'var(--gl-primary)' }} />}</Box>
+                  Group similar routes
+                </MenuItem>
+              </Menu>
+            </>
+          )}
 
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontWeight: 700 }}>
-            {groupSimilar && rawRouteCount > filteredAndSortedRoutes.length
-              ? `Showing ${filteredAndSortedRoutes.length} route groups (${rawRouteCount} matching routes)`
-              : `Showing ${filteredAndSortedRoutes.length} matching route${filteredAndSortedRoutes.length === 1 ? '' : 's'}`}
-            {resultsCapped && <Box component="span" sx={{ color: 'var(--gl-text-faint)', fontWeight: 600 }}> · Best 500 retained</Box>}
-          </Typography>
+          {results.length > 0 && (
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 700 }}>
+              {groupSimilar && rawRouteCount > filteredAndSortedRoutes.length
+                ? `${filteredAndSortedRoutes.length} groups · ${rawRouteCount} routes`
+                : `${filteredAndSortedRoutes.length} route${filteredAndSortedRoutes.length === 1 ? '' : 's'}`}
+              {resultsCapped && <Box component="span" sx={{ color: 'var(--gl-text-faint)', fontWeight: 600 }}> · best 500 kept</Box>}
+            </Typography>
+          )}
         </Box>
       </Box>
 
@@ -247,28 +224,11 @@ export const RouteToolbar: React.FC = () => {
               // A decelerating curve over a slightly longer window turns the
               // same updates into continuous travel.
               '& .MuiLinearProgress-bar': {
-                transition: 'transform 520ms cubic-bezier(0.32, 0.72, 0, 1)',
+                transition: 'transform 160ms ease-out',
                 backgroundColor: 'var(--gl-primary)'
               },
-              // Slow sheen so long flat stretches (deep generations, or the
-              // between-generation selection pause) still read as alive.
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                background:
-                  'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%)',
-                transform: 'translate3d(-100%, 0, 0)',
-                animation: 'glProgressSheen 1900ms cubic-bezier(0.4, 0, 0.2, 1) infinite',
-                pointerEvents: 'none'
-              },
-              '@keyframes glProgressSheen': {
-                '0%': { transform: 'translate3d(-100%, 0, 0)' },
-                '100%': { transform: 'translate3d(100%, 0, 0)' }
-              },
               '@media (prefers-reduced-motion: reduce)': {
-                '& .MuiLinearProgress-bar': { transition: 'none' },
-                '&::after': { animation: 'none', opacity: 0 }
+                '& .MuiLinearProgress-bar': { transition: 'none' }
               }
             }}
           />
@@ -276,7 +236,7 @@ export const RouteToolbar: React.FC = () => {
       )}
 
       {/* Second Row: Sorting & Inventory Filter Bar */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5, pt: 1, borderTop: '1px solid var(--gl-border-subtle)' }}>
+      {results.length > 0 && <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5, pt: 1, borderTop: '1px solid var(--gl-border-subtle)' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700 }}>
             Sort By:
@@ -296,7 +256,7 @@ export const RouteToolbar: React.FC = () => {
               '& fieldset': { borderColor: 'var(--gl-surface)' }
             }}
           >
-            <MenuItem value="recommended" sx={{ fontSize: '0.75rem' }}>Recommended Score</MenuItem>
+            <MenuItem value="recommended" sx={{ fontSize: '0.75rem' }}>Recommended</MenuItem>
             <MenuItem value="target" sx={{ fontSize: '0.75rem' }}>Closest Target Match</MenuItem>
             <MenuItem value="probability" sx={{ fontSize: '0.75rem' }}>Highest Probability</MenuItem>
             <MenuItem value="generations" sx={{ fontSize: '0.75rem' }}>Fewest Generations</MenuItem>
@@ -329,7 +289,7 @@ export const RouteToolbar: React.FC = () => {
             <MenuItem value="partial-or-better" sx={{ fontSize: '0.75rem' }}>Partial / Available</MenuItem>
           </Select>
         </Box>
-      </Box>
+      </Box>}
     </Box>
   );
 };
