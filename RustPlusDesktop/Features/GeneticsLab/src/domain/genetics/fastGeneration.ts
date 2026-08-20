@@ -63,12 +63,20 @@ export function materializeMap(record: RetainedMap): GeneticsMap {
   const surrounding: Sapling[] = [];
   for (let i = 0; i < record.surrounding.length; i++) {
     surrounding.push(
-      new Sapling(decodeGenotype(record.surrounding[i]), record.surroundingGenerations[i])
+      new Sapling(
+        decodeGenotype(record.surrounding[i]),
+        record.surroundingGenerations[i],
+        record.surroundingIndexes[i] >= 0 ? record.surroundingIndexes[i] : undefined
+      )
     );
   }
   const center =
     record.centerCode >= 0
-      ? new Sapling(decodeGenotype(record.centerCode), record.centerGeneration)
+      ? new Sapling(
+          decodeGenotype(record.centerCode),
+          record.centerGeneration,
+          record.centerIndex >= 0 ? record.centerIndex : undefined
+        )
       : undefined;
 
   const map = new GeneticsMap(

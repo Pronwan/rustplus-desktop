@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { analyzeRoute, getRequiredSourceGenotypes, compareScoredRoutes } from '../domain/genetics/routeScoring.ts';
+import { analyzeRoute, getRequiredSourceGenotypes, getRequiredSourceIndexes, compareScoredRoutes } from '../domain/genetics/routeScoring.ts';
 import { GeneticsMap } from '../domain/genetics/GeneticsMap.ts';
+import { GeneticsMapGroup } from '../domain/genetics/GeneticsMapGroup.ts';
 import { Sapling } from '../domain/genetics/Sapling.ts';
 import { CloneUtils } from '../domain/genetics/Clone.ts';
 
@@ -18,6 +19,22 @@ describe('Route Scoring & Inventory Analysis', () => {
     expect(sources).toContain('YYGGHH');
     expect(sources).toContain('WWWWWW');
     expect(sources.length).toBe(3);
+  });
+
+  it('should extract original list positions through intermediate generations', () => {
+    const intermediateResult = new Sapling('GGGGYY', 1);
+    const intermediateMap = new GeneticsMap(
+      intermediateResult,
+      [new Sapling('GGGGGG', 0, 8), new Sapling('YYYYYY', 0, 21)]
+    );
+    const rootMap = new GeneticsMap(
+      new Sapling('GGGYYY', 2),
+      [intermediateResult],
+      new Sapling('HHHHHH', 0, 50)
+    );
+    rootMap.crossbreedingSaplingsVariants = [new GeneticsMapGroup('GGGGYY', [intermediateMap])];
+
+    expect(getRequiredSourceIndexes(rootMap)).toEqual([50, 8, 21]);
   });
 
   it('should analyze route recommendation score and inventory status when all clones are available', () => {

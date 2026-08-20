@@ -96,7 +96,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                     gap: 0.5
                   }}
                 >
-                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.65rem', color: 'var(--gl-text-muted)' }}>
+                  <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.75rem', color: 'var(--gl-text-muted)' }}>
                     Slot {slot.slotNumber}
                   </Typography>
 
@@ -116,7 +116,7 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                     variant="caption"
                     sx={{
                       fontWeight: 700,
-                      fontSize: '0.68rem',
+                      fontSize: '0.75rem',
                       color: isCritical ? 'var(--gl-error)' : isModerate ? 'var(--gl-warning)' : 'var(--gl-success)'
                     }}
                   >
@@ -159,8 +159,8 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
                       size="small"
                       label={rec.priority.toUpperCase()}
                       sx={{
-                        height: 18,
-                        fontSize: '0.65rem',
+                        height: 24,
+                        fontSize: '0.75rem',
                         fontWeight: 800,
                         backgroundColor: rec.priority === 'high' ? 'rgba(229, 57, 53, 0.15)' : 'rgba(255, 167, 38, 0.15)',
                         color: rec.priority === 'high' ? 'var(--gl-error)' : 'var(--gl-warning)',

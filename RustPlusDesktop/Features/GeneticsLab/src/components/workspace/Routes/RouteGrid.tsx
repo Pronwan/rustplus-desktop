@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Button
+  Button,
+  Paper
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useFlipGrid } from '../../../utils/useFlipGrid.ts';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
@@ -13,8 +15,9 @@ import { useScanner } from '../../../context/ScannerContext.tsx';
 import { RouteToolbar } from './RouteToolbar.tsx';
 import { RouteCard } from './RouteCard.tsx';
 import { RouteComparisonModal } from './RouteComparisonModal.tsx';
+import { MissingCloneAdvisor } from '../TargetDesigner/MissingCloneAdvisor.tsx';
 
-const PAGE_SIZE = 18;
+const PAGE_SIZE = 8;
 export const nextRoutePageSize = (current: number, total: number) => Math.min(current + PAGE_SIZE, total);
 
 export const RouteGrid: React.FC = () => {
@@ -30,37 +33,12 @@ export const RouteGrid: React.FC = () => {
   const { isScannerActive, isScannerInitializing } = useScanner();
 
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
-  const [isExpandingAll, setIsExpandingAll] = useState(false);
-  const expansionFrameRef = useRef<number | null>(null);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Reset visible count when results or sorting changes
   useEffect(() => {
-    if (expansionFrameRef.current !== null) cancelAnimationFrame(expansionFrameRef.current);
-    expansionFrameRef.current = null;
-    setIsExpandingAll(false);
     setVisibleCount(PAGE_SIZE);
   }, [filteredAndSortedRoutes]);
-
-  useEffect(() => () => {
-    if (expansionFrameRef.current !== null) cancelAnimationFrame(expansionFrameRef.current);
-  }, []);
-
-  const showAllProgressively = () => {
-    if (isExpandingAll) return;
-    setIsExpandingAll(true);
-    let nextCount = visibleCount;
-    const appendPage = () => {
-      nextCount = nextRoutePageSize(nextCount, filteredAndSortedRoutes.length);
-      setVisibleCount(nextCount);
-      if (nextCount < filteredAndSortedRoutes.length) {
-        expansionFrameRef.current = requestAnimationFrame(appendPage);
-      } else {
-        expansionFrameRef.current = null;
-        setIsExpandingAll(false);
-      }
-    };
-    expansionFrameRef.current = requestAnimationFrame(appendPage);
-  };
 
   // Re-runs the FLIP pass whenever the visible ordering can have changed.
   const gridRef = useFlipGrid<HTMLDivElement>(
@@ -68,13 +46,14 @@ export const RouteGrid: React.FC = () => {
       .slice(0, visibleCount)
       .map(r => r.group.resultSaplingGeneString)
       .join(',')}`,
-    { animateMoves: !isCalculating && !isExpandingAll }
+    { animateMoves: !isCalculating }
   );
 
   const isScannerBusy = isScannerActive || isScannerInitializing;
   const hasClones = sourceSaplings.length >= 2;
   const visibleRoutes = filteredAndSortedRoutes.slice(0, visibleCount);
   const hasMore = visibleCount < filteredAndSortedRoutes.length;
+  const hasReadyRoute = filteredAndSortedRoutes.some(route => route.analysis.inventoryStatus === 'available');
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
@@ -156,19 +135,50 @@ export const RouteGrid: React.FC = () => {
           <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', display: 'block', mb: 2 }}>
             Try changing the Target Match Mode to "At Least" or "Best Possible", or resetting inventory filters.
           </Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setIsAdvisorOpen(true)}
+            startIcon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />}
+            sx={{ minHeight: 36, color: 'var(--gl-warning)', borderColor: 'rgba(255, 152, 0, 0.5)', fontWeight: 800 }}
+          >
+            What Clone Should I Collect?
+          </Button>
         </Box>
       ) : (
-        /* Route Cards Grid */
+        /* Ranked route list */
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {!hasReadyRoute && (
+            <Paper
+              variant="outlined"
+              sx={{ p: 1.25, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5, flexWrap: 'wrap', backgroundColor: 'rgba(255, 152, 0, 0.06)', borderColor: 'rgba(255, 152, 0, 0.35)' }}
+            >
+              <Box>
+                <Typography sx={{ color: 'var(--gl-text-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+                  No route is ready with your current clone bank
+                </Typography>
+                <Typography sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem' }}>
+                  See the smallest useful clone upgrades for this target.
+                </Typography>
+              </Box>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setIsAdvisorOpen(true)}
+                startIcon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />}
+                sx={{ minHeight: 36, color: 'var(--gl-warning)', borderColor: 'rgba(255, 152, 0, 0.5)', fontWeight: 800 }}
+              >
+                What Should I Collect?
+              </Button>
+            </Paper>
+          )}
+
           <Box
             ref={gridRef}
             sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(auto-fill, minmax(260px, 1fr))'
-              },
-              gap: 1.5
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1
             }}
           >
             {visibleRoutes.map((scoredRoute, idx) => {
@@ -193,7 +203,6 @@ export const RouteGrid: React.FC = () => {
               <Button
                 variant="outlined"
                 size="small"
-                disabled={isExpandingAll}
                 onClick={() => setVisibleCount((prev) => nextRoutePageSize(prev, filteredAndSortedRoutes.length))}
                 endIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
                 sx={{
@@ -206,16 +215,6 @@ export const RouteGrid: React.FC = () => {
               >
                 Show More (+{Math.min(PAGE_SIZE, filteredAndSortedRoutes.length - visibleCount)})
               </Button>
-
-              <Button
-                variant="text"
-                size="small"
-                disabled={isExpandingAll}
-                onClick={showAllProgressively}
-                sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem', fontWeight: 600, '&:hover': { color: 'var(--gl-text-primary)' } }}
-              >
-                {isExpandingAll ? `Loading ${visibleCount} of ${filteredAndSortedRoutes.length}…` : `Show All (${filteredAndSortedRoutes.length})`}
-              </Button>
             </Box>
           )}
         </Box>
@@ -223,6 +222,7 @@ export const RouteGrid: React.FC = () => {
 
       {/* Comparison Modal */}
       <RouteComparisonModal />
+      <MissingCloneAdvisor open={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
     </Box>
   );
 };

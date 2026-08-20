@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { Sapling } from '../domain/genetics/Sapling.ts';
+import { Sapling, DEFAULT_GENE_SCORES } from '../domain/genetics/Sapling.ts';
 import {
   fingerprintGroups,
   diffFingerprints,
   runGenerationReference,
   Fingerprint
 } from '../bench/canonical.ts';
-import { runGenerationFast } from '../domain/genetics/fastGeneration.ts';
+import { materializeMap, runGenerationFast } from '../domain/genetics/fastGeneration.ts';
+import { packRecords, unpackRecords } from '../domain/genetics/fastCodec.ts';
 import { SAMPLE_INPUT_124 } from '../bench/sampleInput.ts';
 
 const GENES = 'GHYWX';
@@ -60,6 +61,29 @@ describe('fastCore equivalence with reference crossbreeding', () => {
     const { expected, actual } = compare(source, 2, 3, true, 0);
     expect(expected.length).toBeGreaterThan(0);
     expect(diffFingerprints(expected, actual)).toEqual([]);
+  });
+
+  it('preserves input-list positions through worker transport and materialization', () => {
+    const source = [
+      new Sapling('GGGGGG', 0, 6),
+      new Sapling('YYYYYY', 0, 17),
+      new Sapling('WWWWWW', 0, 29),
+      new Sapling('GYHWXG', 0, 41),
+      new Sapling('XXHHYY', 0, 58)
+    ];
+    const fast = runGenerationFast(source, {
+      minK: 2,
+      maxK: 3,
+      withRepetitions: true,
+      minimumTrackedScore: 0,
+      generationIndex: 1
+    });
+    const maps = unpackRecords(packRecords(fast.store), DEFAULT_GENE_SCORES).map(materializeMap);
+    const validIndexes = new Set(source.map(plant => plant.index));
+    const parents = maps.flatMap(map => [...(map.baseSapling ? [map.baseSapling] : []), ...map.crossbreedingSaplings]);
+
+    expect(parents.length).toBeGreaterThan(0);
+    expect(parents.every(parent => parent.index !== undefined && validIndexes.has(parent.index))).toBe(true);
   });
 
   it.each([

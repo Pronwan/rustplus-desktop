@@ -152,9 +152,12 @@ export interface RetainedMap {
   /** Genotype codes of the surrounding plants, in combination order. */
   surrounding: Int32Array;
   surroundingGenerations: Int32Array;
+  /** Original input-list indexes; -1 denotes a generated intermediate. */
+  surroundingIndexes: Int32Array;
   /** -1 when the plan has no center plant. */
   centerCode: number;
   centerGeneration: number;
+  centerIndex: number;
   tieWinningIndexes?: number[];
   tieLosingIndexes?: number[];
 }
@@ -624,10 +627,12 @@ export class Evaluator {
 
     const surrounding = new Int32Array(k);
     const surroundingGenerations = new Int32Array(k);
+    const surroundingIndexes = new Int32Array(k);
     for (let d = 0; d < k; d++) {
       const p = this.positions[d];
       surrounding[d] = this.src.codes[p];
       surroundingGenerations[d] = this.src.generations[p];
+      surroundingIndexes[d] = this.src.indexes[p];
     }
 
     let tieWinningIndexes: number[] | undefined;
@@ -653,8 +658,10 @@ export class Evaluator {
       sumGenerations,
       surrounding,
       surroundingGenerations,
+      surroundingIndexes,
       centerCode: center >= 0 ? this.src.codes[center] : -1,
       centerGeneration: center >= 0 ? this.src.generations[center] : 0,
+      centerIndex: center >= 0 ? this.src.indexes[center] : -1,
       tieWinningIndexes,
       tieLosingIndexes
     });
