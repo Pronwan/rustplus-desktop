@@ -71,6 +71,22 @@ export const RecipesPage: React.FC = () => {
   const [expandedRowIds, setExpandedRowIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('GL_RECIPE_HANDOFF_V1');
+      if (!raw) return;
+      sessionStorage.removeItem('GL_RECIPE_HANDOFF_V1');
+      const handoff = JSON.parse(raw) as { name?: string; multiplier?: number };
+      const recipe = RUST_RECIPES.find((item) => item.name === handoff.name);
+      if (!recipe) return;
+      setSearch(recipe.name);
+      setCategory(recipe.category);
+      setMultiplier(Math.max(1, Math.ceil(Number(handoff.multiplier) || 1)));
+    } catch {
+      sessionStorage.removeItem('GL_RECIPE_HANDOFF_V1');
+    }
+  }, []);
+
+  useEffect(() => {
     if (isCompact) setViewMode('grid');
   }, [isCompact]);
 
