@@ -200,14 +200,14 @@ export class StorageService {
       return {
         isPreferenceDecided: decided,
         functional: decided ? functional : true,
-        analytics: decided ? analytics : false,
+        analytics: decided ? analytics : true,
         advertisement: decided ? advertisement : false
       };
     } catch {
       return {
         isPreferenceDecided: false,
         functional: true,
-        analytics: false,
+        analytics: true,
         advertisement: false
       };
     }

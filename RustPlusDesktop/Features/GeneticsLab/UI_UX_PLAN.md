@@ -12,7 +12,7 @@ Make every active screen usable at 390, 768, 1024, and 1440 px in dark and light
 
 Implemented in the current working tree:
 
-- **Phase 0:** responsive shell, compact More menu, stable viewport sizing, consent/dialog isolation, saved-data preservation, and analytics consent gating.
+- **Phase 0:** responsive shell, compact More menu, stable viewport sizing, consent/dialog isolation, saved-data preservation, and a disclosed, durable analytics opt-out.
 - **Phase 1:** form/control names, icon-action names, native toggle semantics, page/section headings, Guide list semantics, visible focus, editable-control shortcut guard, calculation/result live regions, progress value text, contrast tokens, and shared minimum icon targets.
 - **Phase 2:** progressive full-result rendering, honest cap wording, one compact workspace scroll owner, compact recipe cards with sticky filters/result count, responsive secondary-page padding, and compact Guide section selection with focus movement.
 - **Phase 3 foundation:** consistent active-page titles/descriptions, focus/tap-compatible MUI tooltips, and reviewed empty/calculating/no-result states.
@@ -22,10 +22,10 @@ Automated verification completed:
 | Check | Result |
 | --- | --- |
 | Production TypeScript/Vite build | Pass |
-| Vitest | 102 passed, 16 benchmark cases intentionally skipped |
+| Vitest | 103 passed, 16 benchmark cases intentionally skipped |
 | 390×844, 768×1024, 1024×800, 1440×1000; dark and light; all four pages | No horizontal document overflow; exactly one page `h1` |
 | axe-core serious/critical checks | 0 on all four pages at compact dark and desktop light coverage |
-| Consent | 0 analytics requests before consent; banner hidden during Manage; choice durable; unrelated data preserved |
+| Consent | Anonymous Umami analytics defaults on; opt-out removes it and persists; banner hides during Manage; unrelated data is preserved |
 | 124-plant production result expansion | 500 retained routes; maximum long task 128 ms (budget: 200 ms) |
 
 Still requires hardware/manual validation before formal sign-off: NVDA keyboard narration, 200%/400% zoom and forced-colors inspection, and the Windows scanner matrix (permission denial, monitor/DPI selection, OCR correction, calibration recovery, stop/restart). These cannot be certified by the headless test environment.
@@ -80,7 +80,7 @@ These were open in the original review and are now closed. Verify rather than re
 - Accept, Decline, and Manage work at every target viewport without force clicking.
 - The banner never overlaps another dialog's actions.
 - Only one consent surface is interactive at a time.
-- No analytics request occurs before affirmative consent when this feature owns analytics.
+- Default-on anonymous analytics is disclosed, and opting out stops subsequent analytics requests immediately and durably.
 - Decline remains durable after reload and does not erase unrelated user data.
 
 ## Phase 1 - Accessibility foundation
