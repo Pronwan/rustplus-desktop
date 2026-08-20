@@ -98,6 +98,7 @@ export const ScannerPreview: React.FC<ScannerPreviewProps> = ({
           {isConfigOpen && (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, pt: 1 }}>
               <IconButton
+                aria-label="Move scanner preview up"
                 size="small"
                 sx={{ border: '1px solid', borderColor: 'divider' }}
                 onMouseDown={() => startHold(() => onMove(0, -2))}
@@ -109,6 +110,7 @@ export const ScannerPreview: React.FC<ScannerPreviewProps> = ({
 
               <Stack direction="row" spacing={1}>
                 <IconButton
+                  aria-label="Move scanner preview left"
                   size="small"
                   sx={{ border: '1px solid', borderColor: 'divider' }}
                   onMouseDown={() => startHold(() => onMove(-2, 0))}
@@ -119,6 +121,7 @@ export const ScannerPreview: React.FC<ScannerPreviewProps> = ({
                 </IconButton>
 
                 <IconButton
+                  aria-label="Move scanner preview down"
                   size="small"
                   sx={{ border: '1px solid', borderColor: 'divider' }}
                   onMouseDown={() => startHold(() => onMove(0, 2))}
@@ -129,6 +132,7 @@ export const ScannerPreview: React.FC<ScannerPreviewProps> = ({
                 </IconButton>
 
                 <IconButton
+                  aria-label="Move scanner preview right"
                   size="small"
                   sx={{ border: '1px solid', borderColor: 'divider' }}
                   onMouseDown={() => startHold(() => onMove(2, 0))}

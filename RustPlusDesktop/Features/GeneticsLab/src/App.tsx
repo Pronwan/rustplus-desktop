@@ -37,7 +37,7 @@ export const App: React.FC = () => {
       <CssBaseline />
       <Box
         sx={{
-          minHeight: '100vh',
+          height: '100dvh',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: muiTheme.palette.background.default,
@@ -48,7 +48,7 @@ export const App: React.FC = () => {
         <AppHeader />
 
         {/* Main Content Body */}
-        <Box component="main" sx={{ flex: 1, overflow: 'hidden' }}>
+        <Box component="main" sx={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
           {(activeTab === 'workspace' || (activeTab as any) === 'calculator') && <WorkspaceLayout />}
           {activeTab === 'planner' && <FarmOutputPlanner />}
           {activeTab === 'guide' && <GuidePage />}

@@ -61,7 +61,7 @@ export const CloneFilterDrawer: React.FC<CloneFilterDrawerProps> = ({
         <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Filter Clones
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close clone filters" size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </Box>

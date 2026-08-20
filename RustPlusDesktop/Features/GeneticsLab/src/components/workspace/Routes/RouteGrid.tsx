@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -15,6 +15,7 @@ import { RouteCard } from './RouteCard.tsx';
 import { RouteComparisonModal } from './RouteComparisonModal.tsx';
 
 const PAGE_SIZE = 18;
+export const nextRoutePageSize = (current: number, total: number) => Math.min(current + PAGE_SIZE, total);
 
 export const RouteGrid: React.FC = () => {
   const {
@@ -29,11 +30,37 @@ export const RouteGrid: React.FC = () => {
   const { isScannerActive, isScannerInitializing } = useScanner();
 
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
+  const [isExpandingAll, setIsExpandingAll] = useState(false);
+  const expansionFrameRef = useRef<number | null>(null);
 
   // Reset visible count when results or sorting changes
   useEffect(() => {
+    if (expansionFrameRef.current !== null) cancelAnimationFrame(expansionFrameRef.current);
+    expansionFrameRef.current = null;
+    setIsExpandingAll(false);
     setVisibleCount(PAGE_SIZE);
-  }, [results, filteredAndSortedRoutes.length]);
+  }, [filteredAndSortedRoutes]);
+
+  useEffect(() => () => {
+    if (expansionFrameRef.current !== null) cancelAnimationFrame(expansionFrameRef.current);
+  }, []);
+
+  const showAllProgressively = () => {
+    if (isExpandingAll) return;
+    setIsExpandingAll(true);
+    let nextCount = visibleCount;
+    const appendPage = () => {
+      nextCount = nextRoutePageSize(nextCount, filteredAndSortedRoutes.length);
+      setVisibleCount(nextCount);
+      if (nextCount < filteredAndSortedRoutes.length) {
+        expansionFrameRef.current = requestAnimationFrame(appendPage);
+      } else {
+        expansionFrameRef.current = null;
+        setIsExpandingAll(false);
+      }
+    };
+    expansionFrameRef.current = requestAnimationFrame(appendPage);
+  };
 
   // Re-runs the FLIP pass whenever the visible ordering can have changed.
   const gridRef = useFlipGrid<HTMLDivElement>(
@@ -41,7 +68,7 @@ export const RouteGrid: React.FC = () => {
       .slice(0, visibleCount)
       .map(r => r.group.resultSaplingGeneString)
       .join(',')}`,
-    { animateMoves: !isCalculating }
+    { animateMoves: !isCalculating && !isExpandingAll }
   );
 
   const isScannerBusy = isScannerActive || isScannerInitializing;
@@ -166,7 +193,8 @@ export const RouteGrid: React.FC = () => {
               <Button
                 variant="outlined"
                 size="small"
-                onClick={() => setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredAndSortedRoutes.length))}
+                disabled={isExpandingAll}
+                onClick={() => setVisibleCount((prev) => nextRoutePageSize(prev, filteredAndSortedRoutes.length))}
                 endIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
                 sx={{
                   color: 'var(--gl-primary)',
@@ -182,10 +210,11 @@ export const RouteGrid: React.FC = () => {
               <Button
                 variant="text"
                 size="small"
-                onClick={() => setVisibleCount(filteredAndSortedRoutes.length)}
+                disabled={isExpandingAll}
+                onClick={showAllProgressively}
                 sx={{ color: 'var(--gl-text-muted)', fontSize: '0.72rem', fontWeight: 600, '&:hover': { color: 'var(--gl-text-primary)' } }}
               >
-                Show All ({filteredAndSortedRoutes.length})
+                {isExpandingAll ? `Loading ${visibleCount} of ${filteredAndSortedRoutes.length}…` : `Show All (${filteredAndSortedRoutes.length})`}
               </Button>
             </Box>
           )}

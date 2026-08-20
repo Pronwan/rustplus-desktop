@@ -164,6 +164,7 @@ export const ScannerWidget: React.FC = () => {
           <Box />
           <Tooltip title="Nudge Up">
             <IconButton
+              aria-label={`Move scanner region ${regionIndex + 1} up`}
               size="small"
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 0, -1), () => moveScannerRegion(regionIndex, 0, -1))}
               onMouseUp={stopHold}
@@ -177,6 +178,7 @@ export const ScannerWidget: React.FC = () => {
 
           <Tooltip title="Nudge Left">
             <IconButton
+              aria-label={`Move scanner region ${regionIndex + 1} left`}
               size="small"
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, -1, 0), () => moveScannerRegion(regionIndex, -1, 0))}
               onMouseUp={stopHold}
@@ -203,6 +205,7 @@ export const ScannerWidget: React.FC = () => {
           </Box>
           <Tooltip title="Nudge Right">
             <IconButton
+              aria-label={`Move scanner region ${regionIndex + 1} right`}
               size="small"
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 1, 0), () => moveScannerRegion(regionIndex, 1, 0))}
               onMouseUp={stopHold}
@@ -216,6 +219,7 @@ export const ScannerWidget: React.FC = () => {
           <Box />
           <Tooltip title="Nudge Down">
             <IconButton
+              aria-label={`Move scanner region ${regionIndex + 1} down`}
               size="small"
               onMouseDown={() => startHold(() => moveScannerRegion(regionIndex, 0, 1), () => moveScannerRegion(regionIndex, 0, 1))}
               onMouseUp={stopHold}
@@ -232,6 +236,7 @@ export const ScannerWidget: React.FC = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
           <Tooltip title="Enlarge Region">
             <IconButton
+              aria-label={`Increase scanner region ${regionIndex + 1} size`}
               size="small"
               onMouseDown={() => startHold(() => scaleScannerRegion(regionIndex, 2), () => scaleScannerRegion(regionIndex, 2))}
               onMouseUp={stopHold}
@@ -243,6 +248,7 @@ export const ScannerWidget: React.FC = () => {
           </Tooltip>
           <Tooltip title="Shrink Region">
             <IconButton
+              aria-label={`Decrease scanner region ${regionIndex + 1} size`}
               size="small"
               onMouseDown={() => startHold(() => scaleScannerRegion(regionIndex, -2), () => scaleScannerRegion(regionIndex, -2))}
               onMouseUp={stopHold}
@@ -301,6 +307,8 @@ export const ScannerWidget: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <Tooltip title={isDiagnosticsOpen ? 'Hide Diagnostics' : 'Dev Diagnostics'}>
             <IconButton
+              aria-label={`${isDiagnosticsOpen ? 'Hide' : 'Show'} scanner diagnostics`}
+              aria-expanded={isDiagnosticsOpen}
               size="small"
               onClick={() => setIsDiagnosticsOpen(!isDiagnosticsOpen)}
               sx={{ color: isDiagnosticsOpen ? 'var(--gl-primary)' : 'var(--gl-text-muted)', p: 0.5 }}
@@ -311,6 +319,7 @@ export const ScannerWidget: React.FC = () => {
 
           <Tooltip title="Stop Scanner">
             <IconButton
+              aria-label="Stop scanner"
               size="small"
               onClick={stopScanner}
               sx={{ color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-error)' }, p: 0.5 }}

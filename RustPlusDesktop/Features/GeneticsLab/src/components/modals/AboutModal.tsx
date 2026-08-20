@@ -30,7 +30,7 @@ export const AboutModal: React.FC = () => {
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           About Genetics Lab
         </Typography>
-        <IconButton size="small" onClick={() => setIsAboutModalOpen(false)}>
+        <IconButton aria-label="Close about dialog" size="small" onClick={() => setIsAboutModalOpen(false)}>
           <CloseIcon fontSize="small" />
         </IconButton>
       </DialogTitle>

@@ -68,6 +68,7 @@ export const GeneCorrectionModal: React.FC = () => {
         </Typography>
 
         <TextField
+          aria-label="Correct scanned genetics"
           size="small"
           fullWidth
           value={clean}

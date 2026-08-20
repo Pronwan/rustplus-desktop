@@ -49,6 +49,7 @@ export const PreviousGenesTab: React.FC = () => {
                   <Box sx={{ display: 'flex', gap: 0.5 }}>
                     <Tooltip title="Load this plant preset">
                       <IconButton
+                        aria-label="Load saved gene set"
                         size="small"
                         color="primary"
                         onClick={() => loadSavedGeneSet(set)}
@@ -58,6 +59,7 @@ export const PreviousGenesTab: React.FC = () => {
                     </Tooltip>
                     <Tooltip title="Delete preset">
                       <IconButton
+                        aria-label="Delete saved gene set"
                         size="small"
                         color="error"
                         onClick={() => deleteSavedGeneSet(set.timestamp)}

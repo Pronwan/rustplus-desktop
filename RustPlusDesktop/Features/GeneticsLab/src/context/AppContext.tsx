@@ -128,6 +128,27 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
     document.documentElement.setAttribute('data-theme', themeMode);
   }, [themeMode]);
 
+  // Analytics is optional and must never be requested before affirmative consent.
+  useEffect(() => {
+    const scriptId = 'rust-genetics-analytics';
+    const existing = document.getElementById(scriptId);
+
+    if (!consent.analytics) {
+      existing?.remove();
+      return;
+    }
+
+    if (existing) return;
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.defer = true;
+    script.src = 'https://stats.rustplusdesktop.cloud/script.js';
+    script.dataset.websiteId = '6ec7a4cc-83a5-4c88-9773-a87336d0a0f7';
+    document.head.appendChild(script);
+
+    return () => script.remove();
+  }, [consent.analytics]);
+
   // Sync favicon
   useEffect(() => {
     const faviconLink = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
@@ -161,6 +182,8 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
       // Ignore when inside input/textarea
       const targetTag = (e.target as HTMLElement)?.tagName;
       const isInput = targetTag === 'INPUT' || targetTag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable;
+
+      if (isInput && e.key !== 'Escape') return;
 
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();

@@ -87,14 +87,14 @@ export const SaplingDetailed: React.FC<SaplingDetailedProps> = ({
 
           {/* Action Buttons */}
           <Tooltip title="Copy gene string">
-            <IconButton size="small" onClick={handleCopy} sx={{ p: 0.5 }}>
+            <IconButton aria-label={`Copy genetics ${sapling.toString()}`} size="small" onClick={handleCopy} sx={{ p: 0.5 }}>
               <ContentCopyIcon fontSize="inherit" />
             </IconButton>
           </Tooltip>
 
           {onRemove && (
             <Tooltip title="Remove plant">
-              <IconButton size="small" color="error" onClick={onRemove} sx={{ p: 0.5 }}>
+              <IconButton aria-label={`Remove genetics ${sapling.toString()}`} size="small" color="error" onClick={onRemove} sx={{ p: 0.5 }}>
                 <DeleteIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -17,7 +17,9 @@ import {
   Tooltip,
   Collapse,
   TextField,
-  InputAdornment
+  InputAdornment,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import GridViewIcon from '@mui/icons-material/GridView';
@@ -60,11 +62,17 @@ const ItemIcon: React.FC<{ name: string; size: number }> = ({ name, size }) => (
 );
 
 export const RecipesPage: React.FC = () => {
+  const theme = useTheme();
+  const isCompact = useMediaQuery(theme.breakpoints.down('sm'));
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<string>('All');
   const [multiplier, setMultiplier] = useState<number>(1);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [expandedRowIds, setExpandedRowIds] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (isCompact) setViewMode('grid');
+  }, [isCompact]);
 
   const toggleRowExpansion = (id: string) => {
     setExpandedRowIds((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -79,7 +87,13 @@ export const RecipesPage: React.FC = () => {
   }, [search, category]);
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 3 } }}>
+      <Typography component="h1" variant="h5" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 0.5 }}>
+        Tea Recipes
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', mb: 2 }}>
+        Browse Rust crafting recipes and scale ingredient totals for your next run.
+      </Typography>
       {/* Control & Filter Bar */}
       <Box
         sx={{
@@ -90,11 +104,17 @@ export const RecipesPage: React.FC = () => {
           gap: 2,
           mb: 2.5,
           borderBottom: '1px solid var(--gl-border)',
-          pb: 1.5
+          pb: 1.5,
+          position: { xs: 'sticky', sm: 'static' },
+          top: 0,
+          zIndex: 5,
+          backgroundColor: 'var(--gl-app-bg)'
         }}
       >
         {/* Category Tabs */}
         <Tabs
+          variant="scrollable"
+          scrollButtons="auto"
           value={category}
           onChange={(_, val) => setCategory(val)}
           textColor="inherit"
@@ -114,6 +134,7 @@ export const RecipesPage: React.FC = () => {
                 px: 2,
                 fontSize: '0.8rem',
                 fontWeight: 700,
+                opacity: 1,
                 color: category === cat ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
               }}
             />
@@ -129,6 +150,7 @@ export const RecipesPage: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             slotProps={{
+              htmlInput: { 'aria-label': 'Search tea recipes' },
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
@@ -151,7 +173,7 @@ export const RecipesPage: React.FC = () => {
 
           {/* Multiplier */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <ButtonGroup size="small" variant="outlined">
+            <ButtonGroup size="small" variant="outlined" aria-label="Recipe quantity multiplier">
               {[1, 5, 10, 50].map((m) => (
                 <Button
                   key={m}
@@ -179,6 +201,8 @@ export const RecipesPage: React.FC = () => {
           <ButtonGroup size="small" variant="outlined">
             <Tooltip title="List / Table View">
               <Button
+                aria-label="Use recipe table view"
+                aria-pressed={viewMode === 'list'}
                 onClick={() => setViewMode('list')}
                 sx={{
                   py: 0.25,
@@ -193,6 +217,8 @@ export const RecipesPage: React.FC = () => {
             </Tooltip>
             <Tooltip title="Grid View">
               <Button
+                aria-label="Use recipe card view"
+                aria-pressed={viewMode === 'grid'}
                 onClick={() => setViewMode('grid')}
                 sx={{
                   py: 0.25,
@@ -208,6 +234,10 @@ export const RecipesPage: React.FC = () => {
           </ButtonGroup>
         </Box>
       </Box>
+
+      <Typography variant="caption" sx={{ display: 'block', color: 'var(--gl-text-muted)', mb: 1.5 }}>
+        Showing {filteredRecipes.length} recipe{filteredRecipes.length === 1 ? '' : 's'}
+      </Typography>
 
       {/* VIEW 1: AUTHENTIC LIST / TABLE VIEW */}
       {viewMode === 'list' && (
@@ -321,6 +351,9 @@ export const RecipesPage: React.FC = () => {
                         {hasRawSubBreakdown ? (
                           <Tooltip title={isExpanded ? 'Hide Raw Materials Breakdown' : 'Show Total Raw Base Materials (Σ)'}>
                             <IconButton
+                              aria-label={`${isExpanded ? 'Hide' : 'Show'} raw materials for ${recipe.name}`}
+                              aria-expanded={isExpanded}
+                              aria-controls={`raw-materials-${recipe.id}`}
                               size="small"
                               onClick={() => toggleRowExpansion(recipe.id)}
                               sx={{
@@ -340,7 +373,7 @@ export const RecipesPage: React.FC = () => {
 
                     {/* Expandable Sigma Sub-Row */}
                     {hasRawSubBreakdown && (
-                      <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+                      <TableRow id={`raw-materials-${recipe.id}`} sx={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
                         <TableCell colSpan={3} sx={{ py: 0, px: 3, borderColor: 'var(--gl-elevated-bg)' }}>
                           <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                             <Box sx={{ py: 1.5, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>

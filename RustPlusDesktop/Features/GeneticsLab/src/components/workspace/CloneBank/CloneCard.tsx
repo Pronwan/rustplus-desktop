@@ -102,6 +102,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
 
           {isEditingName ? (
             <TextField
+              aria-label={`Name for clone ${clone.genetics}`}
               size="small"
               value={editNameValue}
               onChange={(e) => setEditNameValue(e.target.value)}
@@ -156,6 +157,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             }}
           >
             <IconButton
+              aria-label={`Decrease quantity for ${clone.genetics}`}
               size="small"
               onClick={(e) => handleQuantityChange(-1, e)}
               disabled={clone.quantity <= 1}
@@ -180,6 +182,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             </Typography>
 
             <IconButton
+              aria-label={`Increase quantity for ${clone.genetics}`}
               size="small"
               onClick={(e) => handleQuantityChange(1, e)}
               sx={{ p: '1px', color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}
@@ -189,6 +192,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
           </Box>
 
           <IconButton
+            aria-label={`${clone.favorite ? 'Remove' : 'Add'} ${clone.genetics} ${clone.favorite ? 'from' : 'to'} favorites`}
             size="small"
             onClick={() => toggleFavorite(clone.id)}
             sx={{ p: '2px', color: clone.favorite ? 'var(--gl-gold)' : 'var(--gl-text-faint)', '&:hover': { color: 'var(--gl-gold)' } }}
@@ -198,6 +202,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
           </IconButton>
 
           <IconButton
+            aria-label={`More actions for ${clone.genetics}`}
             size="small"
             onClick={(e) => setMenuAnchorEl(e.currentTarget)}
             sx={{ p: '2px', color: 'var(--gl-text-muted)', '&:hover': { color: 'var(--gl-text-primary)' } }}
@@ -213,6 +218,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
 
         <Tooltip title="Copy genes" arrow>
           <IconButton
+            aria-label={`Copy genetics ${clone.genetics}`}
             size="small"
             onClick={handleCopyGenetics}
             sx={{

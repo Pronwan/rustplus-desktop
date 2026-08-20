@@ -37,10 +37,10 @@ export const FarmOutputPlanner: React.FC = () => {
   });
 
   return (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: { xs: 2, md: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
       {/* Header */}
       <Box>
-        <Typography variant="h5" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 0.5 }}>
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 0.5 }}>
           Farm Output & Harvest Planner
         </Typography>
         <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)' }}>
@@ -57,10 +57,11 @@ export const FarmOutputPlanner: React.FC = () => {
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
           {/* Crop Selector */}
           <Box>
-            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
+            <Typography id="planner-crop-label" variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
               Crop Type
             </Typography>
             <Select
+              labelId="planner-crop-label"
               size="small"
               fullWidth
               value={selectedPlant}
@@ -77,7 +78,7 @@ export const FarmOutputPlanner: React.FC = () => {
 
           {/* Planter Count */}
           <Box>
-            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
+            <Typography id="planner-count-label" variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
               Large Planter Boxes
             </Typography>
             <TextField
@@ -86,14 +87,14 @@ export const FarmOutputPlanner: React.FC = () => {
               fullWidth
               value={planterCount}
               onChange={(e) => setPlanterCount(Math.max(1, parseInt(e.target.value, 10) || 1))}
-              slotProps={{ htmlInput: { min: 1 } }}
+              slotProps={{ htmlInput: { min: 1, 'aria-labelledby': 'planner-count-label' } }}
               sx={{ backgroundColor: 'var(--gl-card-hover-bg)' }}
             />
           </Box>
 
           {/* Genetics Input */}
           <Box>
-            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
+            <Typography id="planner-genetics-label" variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, mb: 0.5, display: 'block' }}>
               Target Genetics
             </Typography>
             <TextField
@@ -101,7 +102,7 @@ export const FarmOutputPlanner: React.FC = () => {
               fullWidth
               value={customGenetics}
               onChange={(e) => setCustomGenetics(e.target.value.toUpperCase().replace(/[^GHYWX]/g, '').slice(0, 6))}
-              slotProps={{ htmlInput: { maxLength: 6, style: { fontFamily: 'monospace', fontWeight: 800 } } }}
+              slotProps={{ htmlInput: { maxLength: 6, 'aria-labelledby': 'planner-genetics-label', style: { fontFamily: 'monospace', fontWeight: 800 } } }}
               sx={{ backgroundColor: 'var(--gl-card-hover-bg)' }}
             />
           </Box>

@@ -845,6 +845,7 @@ export const GeneInputs: React.FC = () => {
 
                       {/* Right: Delete (X) */}
                       <IconButton
+                        aria-label="Delete saved gene set"
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();

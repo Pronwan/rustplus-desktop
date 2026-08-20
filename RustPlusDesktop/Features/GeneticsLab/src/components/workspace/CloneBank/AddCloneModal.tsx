@@ -79,7 +79,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
         <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
           Add Clones to {selectedPlant.replace(/-/g, ' ').toUpperCase()}
         </Typography>
-        <IconButton size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
+        <IconButton aria-label="Close add clone dialog" size="small" onClick={onClose} sx={{ color: 'var(--gl-text-muted)' }}>
           <CloseIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </DialogTitle>
@@ -103,6 +103,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
                 Genetics (6 letters: G, Y, H, W, X)
               </Typography>
               <TextField
+                aria-label="Clone genetics"
                 size="small"
                 fullWidth
                 placeholder="e.g. GGYGYX"
@@ -125,6 +126,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
                   Label / Name (Optional)
                 </Typography>
                 <TextField
+                  aria-label="Clone name"
                   size="small"
                   fullWidth
                   placeholder="e.g. Donor #1"
@@ -138,6 +140,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
                   Quantity
                 </Typography>
                 <TextField
+                  aria-label="Clone quantity"
                   size="small"
                   type="number"
                   fullWidth
@@ -154,6 +157,7 @@ export const AddCloneModal: React.FC<AddCloneModalProps> = ({ open, onClose }) =
               Paste multiple 6-gene lines from chat, notes, or previous exports:
             </Typography>
             <TextField
+              aria-label="Clone genetics batch, one sequence per line"
               multiline
               rows={6}
               fullWidth

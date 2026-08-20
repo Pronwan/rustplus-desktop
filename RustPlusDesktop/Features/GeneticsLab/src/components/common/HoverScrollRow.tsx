@@ -89,6 +89,7 @@ export const HoverScrollRow: React.FC<HoverScrollRowProps> = ({ children, gap = 
     <Box sx={{ position: 'relative' }}>
       {canScroll.left && (
         <IconButton
+          aria-label="Scroll left"
           size="small"
           disableRipple
           onMouseEnter={() => startScroll(-1)}
@@ -118,6 +119,7 @@ export const HoverScrollRow: React.FC<HoverScrollRowProps> = ({ children, gap = 
 
       {canScroll.right && (
         <IconButton
+          aria-label="Scroll right"
           size="small"
           disableRipple
           onMouseEnter={() => startScroll(1)}
