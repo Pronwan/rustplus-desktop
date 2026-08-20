@@ -20,13 +20,16 @@ interface RouteCardProps {
   rankIndex: number;
   isSelected?: boolean;
   onInspect?: () => void;
+  /** Identity used by the grid's FLIP pass to track this card across reorders. */
+  flipKey?: string;
 }
 
 export const RouteCard: React.FC<RouteCardProps> = ({
   scoredRoute,
   rankIndex,
   isSelected,
-  onInspect
+  onInspect,
+  flipKey
 }) => {
   const { group, bestMap, analysis } = scoredRoute;
   const { setSelectedGroup, setSelectedMapIndex, setIsInspectorOpen, comparedGroups, toggleCompareGroup } = useCalculation();
@@ -62,6 +65,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
     <Paper
       onClick={handleInspect}
       variant="outlined"
+      data-flip-key={flipKey}
       sx={{
         backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-bg)',
         border: '1px solid',
@@ -71,7 +75,12 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         borderRadius: '5px',
         p: 1.5,
         cursor: 'pointer',
-        transition: 'all 0.15s ease',
+        // Colour and elevation interpolate on their own curve; `transform` is
+        // deliberately excluded so the grid's FLIP pass owns positional motion.
+        transition:
+          'background-color 220ms cubic-bezier(0.32, 0.72, 0, 1),' +
+          ' border-color 220ms cubic-bezier(0.32, 0.72, 0, 1),' +
+          ' box-shadow 220ms cubic-bezier(0.32, 0.72, 0, 1)',
         display: 'flex',
         flexDirection: 'column',
         gap: 1.25,
@@ -79,7 +88,19 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         boxShadow: isSelected ? '0 0 12px rgba(0, 229, 255, 0.12)' : 'none',
         '&:hover': {
           borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-faint)',
-          backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-header-bg)'
+          backgroundColor: isSelected ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-header-bg)',
+          boxShadow: isSelected
+            ? '0 0 14px rgba(0, 229, 255, 0.18)'
+            : '0 1px 10px rgba(0, 0, 0, 0.18)'
+        },
+        // Physical press feedback, and only while the pointer is down.
+        '&:active': {
+          transform: 'scale(0.994)',
+          transition: 'transform 90ms cubic-bezier(0.32, 0.72, 0, 1)'
+        },
+        '@media (prefers-reduced-motion: reduce)': {
+          transition: 'none',
+          '&:active': { transform: 'none' }
         }
       }}
     >
