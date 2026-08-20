@@ -128,7 +128,7 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
     document.documentElement.setAttribute('data-theme', themeMode);
   }, [themeMode]);
 
-  // Analytics is optional and must never be requested before affirmative consent.
+  // Privacy-first anonymous analytics is on by default; a saved opt-out removes it.
   useEffect(() => {
     const scriptId = 'rust-genetics-analytics';
     const existing = document.getElementById(scriptId);
