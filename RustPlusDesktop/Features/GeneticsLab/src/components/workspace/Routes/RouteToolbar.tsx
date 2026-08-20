@@ -216,7 +216,40 @@ export const RouteToolbar: React.FC = () => {
           <LinearProgress
             variant="determinate"
             value={Math.min(100, Math.max(0, progress.progressPercent))}
-            sx={{ height: 6, borderRadius: 3, backgroundColor: 'var(--gl-surface)' }}
+            sx={{
+              height: 6,
+              borderRadius: 3,
+              backgroundColor: 'var(--gl-surface)',
+              overflow: 'hidden',
+              // MUI drives the determinate bar with translateX but eases it
+              // linearly, which reads as stepping against ~120ms progress ticks.
+              // A decelerating curve over a slightly longer window turns the
+              // same updates into continuous travel.
+              '& .MuiLinearProgress-bar': {
+                transition: 'transform 520ms cubic-bezier(0.32, 0.72, 0, 1)',
+                backgroundColor: 'var(--gl-primary)'
+              },
+              // Slow sheen so long flat stretches (deep generations, or the
+              // between-generation selection pause) still read as alive.
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%)',
+                transform: 'translate3d(-100%, 0, 0)',
+                animation: 'glProgressSheen 1900ms cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                pointerEvents: 'none'
+              },
+              '@keyframes glProgressSheen': {
+                '0%': { transform: 'translate3d(-100%, 0, 0)' },
+                '100%': { transform: 'translate3d(100%, 0, 0)' }
+              },
+              '@media (prefers-reduced-motion: reduce)': {
+                '& .MuiLinearProgress-bar': { transition: 'none' },
+                '&::after': { animation: 'none', opacity: 0 }
+              }
+            }}
           />
         </Box>
       )}

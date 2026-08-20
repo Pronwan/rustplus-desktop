@@ -40,7 +40,22 @@ export class GeneticsMap {
     this.sumOfComposingSaplingsGenerations = genSum;
   }
 
+  /**
+   * Memoized recursive chance. The comparator in `resultMapGroupsSortingFunction`
+   * calls this O(n log n) times per sort and route analysis calls it again, so
+   * without a cache the whole dependency tree is re-walked on every comparison.
+   * Invalidated by `linkGenerationTree` when parent links change.
+   */
+  private chanceProductCache?: number;
+
+  public invalidateChanceProduct(): void {
+    this.chanceProductCache = undefined;
+  }
+
   public getChanceProduct(): number {
+    if (this.chanceProductCache !== undefined) {
+      return this.chanceProductCache;
+    }
     let product = this.chance;
 
     if (this.baseSaplingVariants && this.baseSaplingVariants.mapList.length > 0) {
@@ -55,7 +70,8 @@ export class GeneticsMap {
       }
     }
 
-    return Math.round(product * 10000) / 10000;
+    this.chanceProductCache = Math.round(product * 10000) / 10000;
+    return this.chanceProductCache;
   }
 
   public clone(): GeneticsMap {

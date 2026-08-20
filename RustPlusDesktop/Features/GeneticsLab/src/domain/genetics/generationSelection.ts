@@ -105,6 +105,11 @@ export function linkGenerationTree(
   groups: GeneticsMapGroup[],
   allGroupsMap: Map<string, GeneticsMapGroup>
 ): void {
+  // Any cached chance product predates the parent links about to be attached.
+  for (const group of groups) {
+    for (const map of group.mapList) map.invalidateChanceProduct();
+  }
+
   for (const group of groups) {
     for (const map of group.mapList) {
       if (map.baseSapling && map.baseSapling.generationIndex > 0) {

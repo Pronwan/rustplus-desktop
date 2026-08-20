@@ -112,6 +112,11 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const [comparedGroups, setComparedGroups] = useState<GeneticsMapGroup[]>([]);
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  /**
+   * Bumped when the solver finishes and links parent routes, which changes every
+   * recursive chance product and therefore invalidates cached route analyses.
+   */
+  const [analysisEpoch, setAnalysisEpoch] = useState(0);
 
   const orchestrator = useMemo(() => new CrossbreedingOrchestrator(), []);
 
@@ -170,6 +175,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
           setResults(event.mapGroups);
         }
       } else if (event.type === 'DONE') {
+        setAnalysisEpoch(e => e + 1);
         if (event.mapGroups) {
           setResults(event.mapGroups);
           if (event.mapGroups.length > 0) {
@@ -194,18 +200,30 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return selectedGroup.mapList[selectedMapIndex] || selectedGroup.mapList[0];
   }, [selectedGroup, selectedMapIndex]);
 
-  // Score all routes
+  /**
+   * Route analysis is the most expensive main-thread step (it walks each route's
+   * dependency tree and tallies inventory). Results stream in roughly once a
+   * second and the solver keeps unchanged groups identity-stable, so caching by
+   * group instance means only genuinely new routes are analysed on each update
+   * instead of all 500. The cache is dropped whenever an input to the analysis
+   * changes.
+   */
+  const analysisCache = useMemo(
+    () => new WeakMap<GeneticsMapGroup, RouteAnalysis>(),
+    [clones, targetConfig.targetGenetics, analysisEpoch]
+  );
+
   const scoredRoutes: ScoredRoute[] = useMemo(() => {
     return results.map(group => {
       const bestMap = group.mapList[0];
-      const analysis = analyzeRoute(bestMap, clones, targetConfig.targetGenetics);
-      return {
-        group,
-        bestMap,
-        analysis
-      };
+      let analysis = analysisCache.get(group);
+      if (analysis === undefined) {
+        analysis = analyzeRoute(bestMap, clones, targetConfig.targetGenetics);
+        analysisCache.set(group, analysis);
+      }
+      return { group, bestMap, analysis };
     });
-  }, [results, clones, targetConfig.targetGenetics]);
+  }, [results, clones, targetConfig.targetGenetics, analysisCache]);
 
   // Filter & sort routes (before equivalent-quality grouping)
   const filteredRoutes = useMemo(() => {
@@ -323,7 +341,13 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     // Yield to frame
     setTimeout(async () => {
-      await orchestrator.simulateBestGenetics(sourceSaplings, options);
+      // The target is handed to the solver so the FINAL generation can reject
+      // non-matching results before building them. Earlier generations stay
+      // unfiltered because their results feed beam selection.
+      await orchestrator.simulateBestGenetics(sourceSaplings, options, {
+        targetGenetics: targetConfig.targetGenetics,
+        matchMode: targetConfig.matchMode
+      });
     }, 16);
   }, [orchestrator, sourceSaplings, options, geneInputText, saveCurrentGeneSet, notifyWarning]);
 

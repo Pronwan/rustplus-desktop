@@ -7,6 +7,7 @@ import {
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
+import { useFlipGrid } from '../../../utils/useFlipGrid.ts';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../../context/ScannerContext.tsx';
 import { RouteToolbar } from './RouteToolbar.tsx';
@@ -21,7 +22,8 @@ export const RouteGrid: React.FC = () => {
     selectedGroup,
     isCalculating,
     results,
-    runSimulation
+    runSimulation,
+    sortBy
   } = useCalculation();
   const { sourceSaplings, selectedPlant } = useWorkspace();
   const { isScannerActive, isScannerInitializing } = useScanner();
@@ -32,6 +34,15 @@ export const RouteGrid: React.FC = () => {
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [results, filteredAndSortedRoutes.length]);
+
+  // Re-runs the FLIP pass whenever the visible ordering can have changed.
+  const gridRef = useFlipGrid<HTMLDivElement>(
+    `${sortBy}|${visibleCount}|${filteredAndSortedRoutes
+      .slice(0, visibleCount)
+      .map(r => r.group.resultSaplingGeneString)
+      .join(',')}`,
+    { animateMoves: !isCalculating }
+  );
 
   const isScannerBusy = isScannerActive || isScannerInitializing;
   const hasClones = sourceSaplings.length >= 2;
@@ -123,6 +134,7 @@ export const RouteGrid: React.FC = () => {
         /* Route Cards Grid */
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box
+            ref={gridRef}
             sx={{
               display: 'grid',
               gridTemplateColumns: {
@@ -139,6 +151,7 @@ export const RouteGrid: React.FC = () => {
               return (
                 <RouteCard
                   key={scoredRoute.group.resultSaplingGeneString}
+                  flipKey={scoredRoute.group.resultSaplingGeneString}
                   scoredRoute={scoredRoute}
                   rankIndex={idx}
                   isSelected={isSelected}
