@@ -11,14 +11,14 @@ Findings UX-01 through UX-06 and A11Y-01 through A11Y-04 were re-confirmed again
 The findings below remain the audit trail for the pre-fix build. The current working tree now includes:
 
 - Responsive desktop, tablet, and compact header/navigation layouts with no measured horizontal overflow.
-- Consent dialog layering, durable choices, preservation of saved user data, and analytics loading only after affirmative consent.
+- Consent dialog layering, durable choices, preservation of saved user data, and a disclosed, durable analytics opt-out. Anonymous Umami analytics is enabled by default by later product decision.
 - Programmatic form labels, names for icon-only actions, native Compare/group controls, page headings, corrected Guide list semantics, shared focus treatment, and larger action targets.
 - Polite calculation and result-filter live regions plus an accessible progress name/value description.
 - Passing dark/light contrast tokens for the audited screens.
 - Progressive result expansion and explicit 500-result-cap wording.
 - Compact recipe cards and sticky filters, one workspace scroll owner, a compact Guide section selector, and consistent secondary-page padding/headings.
 
-Automated re-verification: production build passes; 102 tests pass; all four active destinations have one `h1` and no horizontal document overflow at 390×844, 768×1024, 1024×800, and 1440×1000 in both themes; axe reports zero serious/critical findings across all four active pages at compact dark and desktop light coverage. A production 124-plant run retained 500 routes and expanded them with a 128 ms maximum long task, below the 200 ms budget.
+Automated re-verification: production build passes; 103 tests pass; all four active destinations have one `h1` and no horizontal document overflow at 390×844, 768×1024, 1024×800, and 1440×1000 in both themes; axe reports zero serious/critical findings across all four active pages at compact dark and desktop light coverage. A production 124-plant run retained 500 routes and expanded them with a 128 ms maximum long task, below the 200 ms budget. The later default-on analytics decision supersedes the original pre-consent request criterion; opt-out remains immediate and durable.
 
 ## Scope and method
 
@@ -99,7 +99,7 @@ Consent actions can be blocked or visually compete with modal actions. More impo
 
 **Recommendation**
 
-Keep the banner below modal layers, hide it while its preference dialog is open, and make it safe-area aware with internal overflow on short screens. Load analytics only after affirmative analytics consent, or remove the preference if the host application governs analytics elsewhere and explain that ownership clearly.
+Keep the banner below modal layers, hide it while its preference dialog is open, and make it safe-area aware with internal overflow on short screens. The original recommendation was affirmative opt-in; the later product decision supersedes it with disclosed anonymous analytics by default and an immediate, durable opt-out.
 
 ### A11Y-01 - High: form controls and icon buttons lack accessible names
 

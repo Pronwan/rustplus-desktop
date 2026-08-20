@@ -97,7 +97,7 @@ export const CookieConsentBanner: React.FC = () => {
                 Storage &amp; Cookie Preferences
               </Typography>
               <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-                Genetics Lab uses essential local storage for your inputs and settings. Optional analytics stays off until you allow it.
+                Genetics Lab uses essential local storage for your inputs and settings. Privacy-first anonymous analytics is enabled by default; you can opt out below.
               </Typography>
             </Box>
 
@@ -166,7 +166,7 @@ export const CookieConsentBanner: React.FC = () => {
                 label={<Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Analytics &amp; Telemetry</Typography>}
               />
               <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', pl: 4 }}>
-                Anonymous telemetry for performance optimization.
+                Anonymous usage telemetry helps improve reliability and performance. Turn this off to opt out.
               </Typography>
             </Box>
           </Stack>
