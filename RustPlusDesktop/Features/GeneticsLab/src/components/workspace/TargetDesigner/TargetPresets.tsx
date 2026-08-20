@@ -1,5 +1,6 @@
-import React from 'react';
-import { Box, Chip } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, Chip, Menu, MenuItem, Tooltip } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 
 export interface TargetPreset {
@@ -18,53 +19,64 @@ export const TARGET_PRESETS: TargetPreset[] = [
   { key: 'super_yield_1g5y', label: '1G 5Y Giant Yield', target: 'GYYYYY', description: 'Massive single harvest' }
 ];
 
-// Canonical multiset key (sorted genes) so a preset stays "selected" no matter
-// what order its genes were shuffled into.
-const geneKey = (s: string) => s.toUpperCase().split('').sort().join('');
-
-// Randomize the gene order while keeping the exact same gene counts, e.g.
-// "GGGYYY" -> "GYYYGG". Presets describe *which* genes you want, not a fixed order.
-const shuffleGenes = (s: string): string => {
-  const chars = s.toUpperCase().split('');
-  for (let i = chars.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [chars[i], chars[j]] = [chars[j], chars[i]];
-  }
-  return chars.join('');
-};
+const geneKey = (genes: string) => genes.toUpperCase().split('').sort().join('');
 
 export const TargetPresets: React.FC = () => {
   const { targetConfig, setTargetPreset } = useWorkspace();
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const currentKey = geneKey(targetConfig.targetGenetics);
+  const commonPresets = TARGET_PRESETS.slice(0, 3);
+  const morePresets = TARGET_PRESETS.slice(3);
+  const choose = (preset: TargetPreset) => {
+    setTargetPreset(preset.target, 'best-possible');
+    setMenuAnchor(null);
+  };
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexWrap: 'wrap' }}>
-      {TARGET_PRESETS.map((preset) => {
+      {commonPresets.map((preset) => {
         const isSelected = currentKey === geneKey(preset.target);
         return (
-          <Chip
-            key={preset.key}
-            label={preset.label}
-            size="small"
-            clickable
-            onClick={() => setTargetPreset(shuffleGenes(preset.target), 'best-possible')}
-            sx={{
-              fontWeight: isSelected ? 800 : 600,
-              fontSize: '0.72rem',
-              backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.15)' : 'var(--gl-panel-header-bg)',
-              color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
-              border: '1px solid',
-              borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-surface)',
-              transition: 'all 0.15s ease',
-              '&:hover': {
-                backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.2)' : 'var(--gl-surface)',
-                borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-faint)',
-                color: 'var(--gl-text-primary)'
-              }
-            }}
-          />
+          <Tooltip key={preset.key} title={preset.description} arrow>
+            <Chip
+              label={preset.label.split(' ').slice(0, 2).join(' ')}
+              size="small"
+              clickable
+              onClick={() => choose(preset)}
+              sx={{
+                height: 28,
+                fontWeight: isSelected ? 800 : 700,
+                fontSize: '0.75rem',
+                backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.15)' : 'var(--gl-panel-header-bg)',
+                color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
+                border: '1px solid',
+                borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-surface)'
+              }}
+            />
+          </Tooltip>
         );
       })}
+
+      <Button
+        size="small"
+        endIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
+        aria-haspopup="menu"
+        aria-expanded={Boolean(menuAnchor)}
+        onClick={(event) => setMenuAnchor(event.currentTarget)}
+        sx={{ minHeight: 28, px: 1, color: 'var(--gl-text-muted)', fontSize: '0.75rem', fontWeight: 800 }}
+      >
+        More goals
+      </Button>
+      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+        {morePresets.map((preset) => (
+          <MenuItem key={preset.key} selected={currentKey === geneKey(preset.target)} onClick={() => choose(preset)}>
+            <Box>
+              <Box sx={{ fontSize: '0.78rem', fontWeight: 800 }}>{preset.label}</Box>
+              <Box sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>{preset.description}</Box>
+            </Box>
+          </MenuItem>
+        ))}
+      </Menu>
     </Box>
   );
 };

@@ -17,6 +17,7 @@ import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useScanner } from '../../../context/ScannerContext.tsx';
 import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
+import { getRequiredSourceIndexes } from '../../../domain/genetics/routeScoring.ts';
 import { AudioService } from '../../../services/audioService.ts';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
@@ -53,7 +54,7 @@ export const CloneBank: React.FC = () => {
     deleteSavedGeneSet
   } = useWorkspace();
 
-  const { isCalculating, highlightedGroup, selectedGroup, options } = useCalculation();
+  const { isCalculating, highlightedGroup, selectedMap, options } = useCalculation();
   const { isScannerActive, startScanner } = useScanner();
 
   const [activeTab, setActiveTab] = useState<'current' | 'saved'>('current');
@@ -82,25 +83,12 @@ export const CloneBank: React.FC = () => {
     setLocalText(geneInputText);
   }, [geneInputText]);
 
-  // Compute used donor clone indices from the active or hovered route
+  // Compute every source-list position used by the exact selected route,
+  // including the source plants needed by intermediate generations.
   const usedCloneIndices = useMemo(() => {
-    const indices = new Set<number>();
-    const activeRouteGroup = highlightedGroup || selectedGroup;
-    if (activeRouteGroup && activeRouteGroup.mapList.length > 0) {
-      const bestMap = activeRouteGroup.mapList[0];
-      if (bestMap) {
-        if (bestMap.baseSapling && bestMap.baseSapling.index !== undefined) {
-          indices.add(bestMap.baseSapling.index);
-        }
-        bestMap.crossbreedingSaplings.forEach((s) => {
-          if (s.index !== undefined) {
-            indices.add(s.index);
-          }
-        });
-      }
-    }
-    return indices;
-  }, [highlightedGroup, selectedGroup]);
+    const activeMap = highlightedGroup?.mapList[0] || selectedMap;
+    return new Set(activeMap ? getRequiredSourceIndexes(activeMap) : []);
+  }, [highlightedGroup, selectedMap]);
 
   // Split text into lines
   const lines = useMemo(() => {
@@ -403,6 +391,7 @@ export const CloneBank: React.FC = () => {
                   return (
                     <Box
                       key={rIdx}
+                      title={isUsedInPlan ? `Plant #${rIdx + 1} is used in the selected route` : undefined}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -419,6 +408,7 @@ export const CloneBank: React.FC = () => {
                           : isActiveCursor
                           ? '1px solid rgba(0, 229, 255, 0.25)'
                           : '1px solid transparent',
+                        borderLeft: isUsedInPlan ? '3px solid var(--gl-warning)' : '3px solid transparent',
                         borderRadius: isUsedInPlan ? '3px' : 0,
                         transition: 'all 0.1s ease'
                       }}
@@ -448,7 +438,7 @@ export const CloneBank: React.FC = () => {
                               fontFamily: 'monospace'
                             }}
                           >
-                            *
+                            ✓
                           </Typography>
                         )}
                       </Box>

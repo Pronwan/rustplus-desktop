@@ -14,7 +14,7 @@
 import { RetainedMap, ResultStore, COLUMNS, INDEX_TYPE } from './fastCore.ts';
 import { GeneScores } from './Sapling.ts';
 
-const HEADER = 9;
+const HEADER = 10;
 
 /**
  * Packs the store's retained maps, or only the genotypes in `codes`.
@@ -40,7 +40,7 @@ export function packRecords(store: ResultStore, codes?: Iterable<number>): Int32
   let count = 0;
   for (const list of lists) {
     for (const r of list) {
-      total += HEADER + 2 * r.surrounding.length +
+      total += HEADER + 3 * r.surrounding.length +
         (r.tieWinningIndexes?.length ?? 0) + (r.tieLosingIndexes?.length ?? 0);
       count++;
     }
@@ -60,11 +60,13 @@ export function packRecords(store: ResultStore, codes?: Iterable<number>): Int32
       buffer[o++] = r.sumGenerations;
       buffer[o++] = r.centerCode;
       buffer[o++] = r.centerGeneration;
+      buffer[o++] = r.centerIndex;
       buffer[o++] = k;
       buffer[o++] = tw.length;
       buffer[o++] = tl.length;
       for (let i = 0; i < k; i++) buffer[o++] = r.surrounding[i];
       for (let i = 0; i < k; i++) buffer[o++] = r.surroundingGenerations[i];
+      for (let i = 0; i < k; i++) buffer[o++] = r.surroundingIndexes[i];
       for (let i = 0; i < tw.length; i++) buffer[o++] = tw[i];
       for (let i = 0; i < tl.length; i++) buffer[o++] = tl[i];
     }
@@ -86,6 +88,7 @@ export function unpackRecords(buffer: Int32Array, geneScores: GeneScores): Retai
     const sumGenerations = buffer[o++];
     const centerCode = buffer[o++];
     const centerGeneration = buffer[o++];
+    const centerIndex = buffer[o++];
     const k = buffer[o++];
     const twLen = buffer[o++];
     const tlLen = buffer[o++];
@@ -93,6 +96,8 @@ export function unpackRecords(buffer: Int32Array, geneScores: GeneScores): Retai
     const surrounding = buffer.subarray(o, o + k);
     o += k;
     const surroundingGenerations = buffer.subarray(o, o + k);
+    o += k;
+    const surroundingIndexes = buffer.subarray(o, o + k);
     o += k;
 
     let tieWinningIndexes: number[] | undefined;
@@ -122,8 +127,10 @@ export function unpackRecords(buffer: Int32Array, geneScores: GeneScores): Retai
       sumGenerations,
       surrounding: surrounding as Int32Array,
       surroundingGenerations: surroundingGenerations as Int32Array,
+      surroundingIndexes: surroundingIndexes as Int32Array,
       centerCode,
       centerGeneration,
+      centerIndex,
       tieWinningIndexes,
       tieLosingIndexes
     };

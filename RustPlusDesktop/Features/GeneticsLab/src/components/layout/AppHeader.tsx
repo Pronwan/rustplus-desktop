@@ -53,41 +53,6 @@ export const AppHeader: React.FC = () => {
     action();
   };
 
-  const utilityActions = (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
-      <Tooltip title="Farm Projects & Data (Save/Load/Export)" arrow>
-        <IconButton aria-label="Open farm projects" size="small" onClick={() => setIsProjectManagerOpen(true)} sx={{ color: iconColor }}>
-          <FolderIcon sx={{ fontSize: 19 }} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'} arrow>
-        <IconButton aria-label={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} size="small" onClick={toggleTheme} sx={{ color: iconColor }}>
-          {themeMode === 'dark' ? <LightModeIcon sx={{ fontSize: 19 }} /> : <DarkModeIcon sx={{ fontSize: 19 }} />}
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Keyboard Shortcuts" arrow>
-        <IconButton aria-label="Open keyboard shortcuts" size="small" onClick={() => setIsKeyboardShortcutsOpen(true)} sx={{ color: iconColor }}>
-          <KeyboardIcon sx={{ fontSize: 19 }} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Options & Performance" arrow>
-        <IconButton aria-label="Open options" size="small" onClick={() => setIsOptionsModalOpen(true)} sx={{ color: iconColor }}>
-          <SettingsIcon sx={{ fontSize: 19 }} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="About Genetics Lab" arrow>
-        <IconButton aria-label="Open about Genetics Lab" size="small" onClick={() => setIsAboutModalOpen(true)} sx={{ color: iconColor }}>
-          <InfoIcon sx={{ fontSize: 19 }} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="GitHub Repository & Contribute" arrow>
-        <IconButton aria-label="Open Genetics Lab GitHub repository" size="small" component="a" href="https://github.com/JawadYzbk/rust-genetics-lab" target="_blank" rel="noopener noreferrer" sx={{ color: iconColor }}>
-          <GitHubIcon sx={{ fontSize: 19 }} />
-        </IconButton>
-      </Tooltip>
-    </Box>
-  );
-
   return (
     <AppBar
       position="static"
@@ -188,29 +153,33 @@ export const AppHeader: React.FC = () => {
             {isCompact ? (scannerBusy ? 'STOP' : 'SCAN') : isScannerInitializing ? 'STARTING…' : isScannerActive ? 'STOP SCANNER' : 'SCAN FROM RUST'}
           </Button>
 
-          {!isCompact && utilityActions}
-          {isCompact && (
-            <>
-              <IconButton
-                aria-label="More actions"
-                aria-controls={menuAnchor ? 'header-actions-menu' : undefined}
-                aria-haspopup="menu"
-                aria-expanded={Boolean(menuAnchor)}
-                onClick={(event) => setMenuAnchor(event.currentTarget)}
-                sx={{ minWidth: 44, minHeight: 44, color: iconColor }}
-              >
-                <MoreVertIcon />
+          {!isCompact && (
+            <Tooltip title="Farm projects & data" arrow>
+              <IconButton aria-label="Open farm projects" size="small" onClick={() => setIsProjectManagerOpen(true)} sx={{ color: iconColor }}>
+                <FolderIcon sx={{ fontSize: 19 }} />
               </IconButton>
-              <Menu id="header-actions-menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
-                <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>
-                <MenuItem onClick={closeMenuThen(toggleTheme)}><ListItemIcon>{themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon><ListItemText>{themeMode === 'dark' ? 'Light mode' : 'Dark mode'}</ListItemText></MenuItem>
-                <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
-                <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>
-                <MenuItem onClick={closeMenuThen(() => setIsAboutModalOpen(true))}><ListItemIcon><InfoIcon /></ListItemIcon><ListItemText>About</ListItemText></MenuItem>
-                <MenuItem component="a" href="https://github.com/JawadYzbk/rust-genetics-lab" target="_blank" rel="noopener noreferrer" onClick={() => setMenuAnchor(null)}><ListItemIcon><GitHubIcon /></ListItemIcon><ListItemText>GitHub repository</ListItemText></MenuItem>
-              </Menu>
-            </>
+            </Tooltip>
           )}
+          <Tooltip title="More actions" arrow>
+            <IconButton
+              aria-label="More actions"
+              aria-controls={menuAnchor ? 'header-actions-menu' : undefined}
+              aria-haspopup="menu"
+              aria-expanded={Boolean(menuAnchor)}
+              onClick={(event) => setMenuAnchor(event.currentTarget)}
+              sx={{ minWidth: { xs: 44, sm: 32 }, minHeight: { xs: 44, sm: 32 }, color: iconColor }}
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu id="header-actions-menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+            {isCompact && <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>}
+            <MenuItem onClick={closeMenuThen(toggleTheme)}><ListItemIcon>{themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon><ListItemText>{themeMode === 'dark' ? 'Light mode' : 'Dark mode'}</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsAboutModalOpen(true))}><ListItemIcon><InfoIcon /></ListItemIcon><ListItemText>About</ListItemText></MenuItem>
+            <MenuItem component="a" href="https://github.com/JawadYzbk/rust-genetics-lab" target="_blank" rel="noopener noreferrer" onClick={() => setMenuAnchor(null)}><ListItemIcon><GitHubIcon /></ListItemIcon><ListItemText>GitHub repository</ListItemText></MenuItem>
+          </Menu>
         </Box>
       </Toolbar>
     </AppBar>

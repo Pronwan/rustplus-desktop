@@ -158,7 +158,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map }) => {
               indexLabel={
                 current.baseSapling.generationIndex > 0
                   ? null
-                  : `#${current.baseSapling.index !== undefined ? current.baseSapling.index + 1 : '1'}`
+                  : `#${current.baseSapling.index !== undefined ? current.baseSapling.index + 1 : '?'}`
               }
               subMap={centerSubMap}
               onDrill={() => drillInto(centerSubMap)}
@@ -188,7 +188,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map }) => {
                   key={pIdx}
                   genes={parent.toString()}
                   genLabel={isParentGen ? parent.generationIndex : null}
-                  indexLabel={isParentGen ? null : `#${parent.index !== undefined ? parent.index + 1 : pIdx + 1}`}
+                  indexLabel={isParentGen ? null : `#${parent.index !== undefined ? parent.index + 1 : '?'}`}
                   subMap={subMap}
                   onDrill={() => drillInto(subMap)}
                   priority={isFirst ? '1st' : isSecond ? '2nd' : undefined}
