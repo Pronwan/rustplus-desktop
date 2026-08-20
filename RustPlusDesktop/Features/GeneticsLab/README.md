@@ -2,7 +2,7 @@
 
 # Rust Genetics Lab
 
-**Fast, inventory-aware plant breeding plans for Rust.**
+**Inventory-aware breeding routes and practical farm plans for Rust.**
 
 [![Version](https://img.shields.io/badge/version-1.0.0-00bcd4?style=flat-square)](package.json)
 ![React](https://img.shields.io/badge/React-18.3-149eca?style=flat-square&logo=react&logoColor=white)
@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/license-CC%20BY%20NC%20SA%204.0-2f855a?style=flat-square)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/JawadYzbk/rust-genetics-lab?style=flat-square&logo=github&label=stars)](https://github.com/JawadYzbk/rust-genetics-lab/stargazers)
 
-Turn a clone box into a practical breeding route, then follow it in game.
+Turn a clone box into a breeding route. Size the farm, find its bottleneck, and carry the plan into the game.
 
 </div>
 
@@ -26,7 +26,7 @@ Turn a clone box into a practical breeding route, then follow it in game.
 
 </details>
 
-Rust Genetics Lab combines clone inventory management, target design, route calculation, and step-by-step execution in one workspace. It runs as a standalone web app and inside RustPlusDesktop.
+Rust Genetics Lab combines clone inventory management, target design, route calculation, farm planning, and step-by-step execution in one workspace. It runs as a standalone web app and inside RustPlusDesktop.
 
 > [!NOTE]
 > Rust Genetics Lab is an unofficial community project. It is not affiliated with or endorsed by Facepunch Studios.
@@ -41,7 +41,10 @@ Rust Genetics Lab combines clone inventory management, target design, route calc
 | Search controls | Switch between fast, balanced, and thorough calculation profiles, then sort, filter, group, or compare the results. |
 | OCR scanner | Capture genetics from Rust with calibration, correction, preview, and reusable scanner presets. |
 | Breeding Mode | Follow a route in game through a focused sequence of planting and confirmation steps. |
-| Supporting tools | Plan farms, browse tea recipes, and use the built-in genetics guide without leaving the app. |
+| Goal-based farm planner | Start with cloth, berries, tea, food, or pie output. Get the required crops, planters, clone reserve, first harvest, and steady production. |
+| Farm setup audit | Enter an existing farm's water, power, slots, genetics, and conditions. The audit names the limiting system and the smallest useful correction. |
+| Build requirements | Generate planter modules, water and power demand, component counts, estimated crafting materials, and a checklist that can be copied, printed, or exported. |
+| Connected tools | Expand recipe goals through the recipe engine, check owned clones, or send missing genetics straight to the Breeding Workspace. |
 
 ## Workflow
 
@@ -51,6 +54,24 @@ Rust Genetics Lab combines clone inventory management, target design, route calc
 4. Check the breeding tree or planter layout, then start Breeding Mode.
 
 The clone numbers shown in a route match their positions in the input list, which makes the list usable as a direct model of an in-game storage box.
+
+## Farm Operations Planner
+
+The planner works backward from a production target. Choose the output, quantity, time window, genetics, planter type, and infrastructure assumptions. The result separates community crop estimates from user-measured calibration and keeps water flow distinct from electrical power.
+
+### Plan by goal
+
+Size a farm for a raw crop or an existing tea and food recipe. The recommendation includes planter allocation, clone reserve, first harvest, output rate, water, power, layout modules, and a build checklist.
+
+![Farm Operations Planner sizing a cloth farm from an hourly production goal](docs/images/farm-planner-goal.png)
+
+### Audit an existing setup
+
+Enter measured water and power capacity to test a farm before expanding it. The audit identifies the primary bottleneck, shows the margin, and recommends a concrete correction.
+
+![Farm Operations Planner identifying a water bottleneck in an existing farm](docs/images/farm-planner-audit.png)
+
+Farm drafts and checklist progress are saved locally. Plans can move directly into the recipe browser or Breeding Workspace without re-entering the target.
 
 ## Getting started
 
