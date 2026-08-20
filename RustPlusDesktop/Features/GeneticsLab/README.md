@@ -17,6 +17,15 @@ Turn a clone box into a practical breeding route, then follow it in game.
 
 ![Rust Genetics Lab breeding workspace](docs/images/genetics-lab-workspace.png)
 
+<details>
+<summary>Additional screenshots</summary>
+
+![Rust Genetics Lab workspace overview](https://github.com/user-attachments/assets/dc633ec3-7c6d-41eb-a1d3-ea39b6b988c6)
+
+![Rust Genetics Lab route planning view](https://github.com/user-attachments/assets/9e9295db-3213-4d77-ac7b-01a4faf39ead)
+
+</details>
+
 Rust Genetics Lab combines clone inventory management, target design, route calculation, and step-by-step execution in one workspace. It runs as a standalone web app and inside RustPlusDesktop.
 
 > [!NOTE]
