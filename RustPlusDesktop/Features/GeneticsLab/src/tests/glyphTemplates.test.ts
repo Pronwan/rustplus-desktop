@@ -252,3 +252,60 @@ describe('Slot-level rejection reporting', () => {
     expect(lines[lines.length - 1]).toBe('ocr not run yet');
   });
 });
+
+describe('Stroke-weight invariance', () => {
+  /**
+   * The defect this locks down: per-slot thresholding on a photographed monitor binarised
+   * one six-letter row at ink shares from 0.12 to 0.74. Comparing raw zone fills made that
+   * scale difference dominate the distance, so every template scored about the same, the
+   * margin collapsed, and the winner was whichever template carried a similar amount of ink
+   * rather than a similar shape. On device that read a whole row as the same letter.
+   */
+  const weights: Array<[string, (m: Uint8Array) => Uint8Array]> = [
+    ['unchanged', mask => mask],
+    ['once dilated', mask => dilate(mask, SIZE, SIZE)],
+    ['twice dilated', mask => dilate(dilate(mask, SIZE, SIZE), SIZE, SIZE)],
+    ['eroded', mask => erode(mask, SIZE, SIZE)],
+    ['dilated then speckled', mask => speckle(dilate(dilate(mask, SIZE, SIZE), SIZE, SIZE), 0.06, 7)]
+  ];
+
+  for (const [label, distort] of weights) {
+    it(`reads every letter when the strokes come out ${label}`, () => {
+      for (const gene of GENE_ALPHABET) {
+        const mask = distort(rasterizeGlyph(gene as GeneLetter, SIZE));
+        const match = classify(mask);
+
+        expect(match, `${gene} ${label}`).not.toBeNull();
+        expect(match!.gene, `${gene} ${label}`).toBe(gene);
+        expect(match!.margin, `${gene} ${label} margin`).toBeGreaterThan(
+          DEFAULT_TEMPLATE_OPTIONS.minMargin
+        );
+      }
+    });
+  }
+
+  it('still refuses a cell that is only noise', () => {
+    const noise = speckle(new Uint8Array(SIZE * SIZE), 0.3, 3);
+    const features = extractGlyphFeatures(despeckle(noise, SIZE, SIZE), SIZE, SIZE);
+    const match = features ? classifyGlyphFeatures(features) : null;
+
+    // Noise resembles nothing in particular, so the margin is what rejects it.
+    expect(match!.margin).toBeLessThan(DEFAULT_TEMPLATE_OPTIONS.minMargin);
+  });
+
+  it('still refuses half a glyph, which a bad crop produces', () => {
+    for (const gene of GENE_ALPHABET) {
+      const mask = rasterizeGlyph(gene as GeneLetter, SIZE);
+      for (let y = 0; y < SIZE; y++) {
+        for (let x = SIZE / 2; x < SIZE; x++) mask[y * SIZE + x] = 0;
+      }
+
+      const features = extractGlyphFeatures(despeckle(mask, SIZE, SIZE), SIZE, SIZE);
+      const match = features ? classifyGlyphFeatures(features) : null;
+
+      // Half a letter can genuinely resemble one template best, so margin alone would let
+      // some of these through. Distance is the gate that catches them.
+      expect(match!.distance, `half ${gene}`).toBeGreaterThan(DEFAULT_TEMPLATE_OPTIONS.maxDistance);
+    }
+  });
+});

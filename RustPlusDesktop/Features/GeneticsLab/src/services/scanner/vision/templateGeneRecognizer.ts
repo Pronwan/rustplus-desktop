@@ -17,11 +17,19 @@ export interface TemplateRecognitionOptions {
   maxDistance: number;
 }
 
+/**
+ * Both gates are needed; each catches what the other lets through.
+ *
+ * Measured against glyphs put through every distortion a photographed monitor applies --
+ * two rounds of dilation, erosion, speckle, and a blur stand-in -- correct matches stay
+ * inside 0.09 distance and 0.60 margin. Pure noise lands at 0.27 distance but only 0.06
+ * margin, so margin rejects it. Half a glyph, which is what a bad crop produces, can reach
+ * 0.47 margin because the surviving half really does resemble one letter best; distance
+ * rejects that at 0.25. The band between the two populations is empty.
+ */
 export const DEFAULT_TEMPLATE_OPTIONS: TemplateRecognitionOptions = {
-  // Testing on distorted glyphs put correct matches at 0.46 and above, and every incorrect
-  // match at 0.02 or below, so this sits in an empty band between the two.
-  minMargin: 0.2,
-  maxDistance: 0.4
+  minMargin: 0.35,
+  maxDistance: 0.15
 };
 
 export type GlyphRowRecognizer = (slotImages: RasterImage[]) => GeneRecognitionResult | null;

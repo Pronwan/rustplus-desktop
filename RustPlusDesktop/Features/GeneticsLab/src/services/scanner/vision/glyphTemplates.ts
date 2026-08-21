@@ -258,18 +258,39 @@ export interface GlyphMatch {
   margin: number;
 }
 
+/**
+ * Angle between the two zoning vectors, which compares where the ink is and ignores how
+ * much of it there is.
+ *
+ * Straight Euclidean distance could not do that. Per-slot thresholding on a photographed
+ * monitor lands anywhere from twice too fat to half too thin across a single row -- device
+ * captures showed six cells of one word binarising at ink shares from 0.12 to 0.74 -- and
+ * that scales every zone up or down together. The mismatch in overall ink then dominates
+ * the sum, so all five templates sit at roughly the same distance, the margin collapses to
+ * nothing, and the winner is decided by whichever template happens to carry a similar
+ * amount of ink. Measured on dilated glyphs, Euclidean fell from 0.93 margin to 0.37 on
+ * stroke weight alone.
+ */
 function featureDistance(a: GlyphFeatures, b: GlyphFeatures): number {
-  let sum = 0;
+  let dot = 0;
+  let normA = 0;
+  let normB = 0;
+
   for (let i = 0; i < a.zones.length; i++) {
-    const delta = a.zones[i] - b.zones[i];
-    sum += delta * delta;
+    dot += a.zones[i] * b.zones[i];
+    normA += a.zones[i] * a.zones[i];
+    normB += b.zones[i] * b.zones[i];
   }
-  const zoning = Math.sqrt(sum / a.zones.length);
+
+  if (normA === 0 || normB === 0) return 1;
+
+  const cosine = dot / Math.sqrt(normA * normB);
+  const shape = 1 - Math.max(0, Math.min(1, cosine));
 
   // A surviving enclosed ring is strong evidence for G, but camera blur can break it, so
   // this nudges rather than decides.
   const holePenalty = Math.min(1, Math.abs(a.holes - b.holes)) * 0.05;
-  return zoning + holePenalty;
+  return shape + holePenalty;
 }
 
 export function classifyGlyphFeatures(features: GlyphFeatures): GlyphMatch | null {
