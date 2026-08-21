@@ -200,7 +200,9 @@ class ScriptedAnalyzer implements CameraFrameAnalyzer {
     this.analyzeCalls++;
     return {
       ...step,
-      overlay: { frameWidth: 960, frameHeight: 540, target: null, targetId: null, candidates: [] }
+      overlay: { frameWidth: 960, frameHeight: 540, target: null, targetId: null, candidates: [] },
+      componentCount: 6,
+      fallbackTarget: null
     };
   }
   reset(): void {
@@ -235,7 +237,9 @@ class FakeAnalyzer implements CameraFrameAnalyzer {
   constructor(result: FakeAnalysis) {
     this.result = {
       ...result,
-      overlay: { frameWidth: 960, frameHeight: 540, target: null, targetId: null, candidates: [] }
+      overlay: { frameWidth: 960, frameHeight: 540, target: null, targetId: null, candidates: [] },
+      componentCount: 6,
+      fallbackTarget: null
     };
   }
 
@@ -1030,6 +1034,7 @@ describe('Camera OCR confidence is independent of the desktop scanner', () => {
         lastSource: null,
         pendingSamples: 0,
         sampleWindow: 4,
+        componentCount: 6,
         slotInk: [],
         slotsWithinBounds: true,
         stripPreview: null
@@ -1061,7 +1066,9 @@ describe('Camera scanner adaptive degradation', () => {
         await harness.runFor(200);
         return {
           ...SEARCHING,
-          overlay: { frameWidth: 960, frameHeight: 540, target: null, targetId: null, candidates: [] }
+          overlay: { frameWidth: 960, frameHeight: 540, target: null, targetId: null, candidates: [] },
+      componentCount: 6,
+      fallbackTarget: null
         };
       },
       reset: () => {},
@@ -1303,5 +1310,90 @@ describe('Camera accepted confirmation', () => {
 
     expect(harness.service.getState().phase).toBe('accepted');
     expect(harness.service.getState().overlay).not.toBeNull();
+  });
+});
+
+describe('Camera manual capture', () => {
+  let restoreDom: () => void;
+
+  beforeEach(() => {
+    restoreDom = installFakeCanvasHost();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+    restoreDom();
+  });
+
+  it('reads the row on demand even while a quality gate is blocking', async () => {
+    const recognizer = new FakeRecognizer();
+    recognizer.rowResults = [geneResult('WYGWGW', 80)];
+
+    const harness = createHarness({ recognizer });
+    harness.service.attachVideo(createVideoElement());
+    // Quality is refusing the row, but the geometry is perfectly good.
+    harness.service.setAnalyzerFactory(
+      () =>
+        new ScriptedAnalyzer(() => ({
+          phase: 'quality-blocked',
+          qualityIssues: ['moving'],
+          candidateCount: 1,
+          activeTarget: null
+        }))
+    );
+    await harness.service.start();
+    await harness.runFor(200);
+
+    // Automatic scanning has committed nothing, by design.
+    expect(harness.saplings).toHaveLength(0);
+
+    // The analyzer offers the blocked row as a capture candidate.
+    const blocked = harness.service.getState();
+    expect(blocked.phase).toBe('quality-blocked');
+  });
+
+  it('reports when there is no row to capture', async () => {
+    const harness = createHarness();
+    harness.service.attachVideo(createVideoElement());
+    harness.service.setAnalyzerFactory(() => new ScriptedAnalyzer(() => SEARCHING));
+
+    await harness.service.start();
+    await harness.runFor(200);
+
+    expect(harness.service.captureNow().status).toBe('no-row');
+  });
+
+  it('commits a confirmed row and counts it like any accepted read', async () => {
+    const harness = createHarness();
+    harness.service.attachVideo(createVideoElement());
+    harness.service.setAnalyzerFactory(() => new ScriptedAnalyzer(() => SEARCHING));
+    await harness.service.start();
+
+    harness.service.commitManualRead('WYGWGW');
+
+    expect(harness.saplings.map(s => s.geneString)).toEqual(['WYGWGW']);
+    expect(harness.service.getState().acceptedCount).toBe(1);
+    expect(harness.service.getState().lastAcceptedGenes).toBe('WYGWGW');
+    expect(harness.service.getState().phase).toBe('accepted');
+  });
+
+  it('does not immediately re-emit a manually committed row', async () => {
+    const recognizer = new FakeRecognizer();
+    recognizer.rowResults = [geneResult('WYGWGW', 80)];
+
+    const harness = createHarness({ recognizer });
+    harness.service.attachVideo(createVideoElement());
+    harness.service.setAnalyzerFactory(
+      () => new ScriptedAnalyzer(() => ({ ...TRACKING, activeTarget: trackingTarget() }))
+    );
+    await harness.service.start();
+
+    harness.service.commitManualRead('WYGWGW');
+    await harness.runFor(2000);
+
+    // Rearm treats it as already seen, so automatic scanning does not add it again.
+    expect(harness.saplings).toHaveLength(1);
   });
 });

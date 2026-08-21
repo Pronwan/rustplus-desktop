@@ -64,7 +64,7 @@ export const CAMERA_SCANNER_CONFIG = {
     /** Two candidates closer than this in score are ambiguous, and neither is chosen. */
     ambiguityMargin: 0.08,
     /** Below this a row is not worth pursuing at all. */
-    minCandidateScore: 0.45,
+    minCandidateScore: 0.38,
     /** How far a candidate may move between frames and still be the same target. */
     continuityRadiusFactor: 2.2
   },

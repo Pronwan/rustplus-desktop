@@ -7,6 +7,7 @@ import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import LockIcon from '@mui/icons-material/Lock';
 import { useScanner } from '../../context/ScannerContext.tsx';
+import type { CameraCaptureResult } from '../../services/scanner/scannerTypes.ts';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import {
   CameraStatusTone,
@@ -64,7 +65,11 @@ export const MobileCameraScanner: React.FC = () => {
     attachCameraVideo,
     selectCameraCandidateAt,
     isCameraDebugEnabled,
-    toggleCameraDebug
+    toggleCameraDebug,
+    cameraCapture,
+    captureCameraRow,
+    confirmCameraCapture,
+    dismissCameraCapture
   } = useScanner();
   const { clones } = useWorkspace();
 
@@ -478,6 +483,14 @@ export const MobileCameraScanner: React.FC = () => {
         {status.announce ? `${displayedStatus.headline}. ${displayedStatus.instruction}` : ''}
       </Box>
 
+      {cameraCapture && (
+        <CaptureReview
+          result={cameraCapture}
+          onConfirm={confirmCameraCapture}
+          onDismiss={dismissCameraCapture}
+        />
+      )}
+
       {/* Controls */}
       {hasStarted && (
         <Box sx={{ flexShrink: 0, display: 'flex', gap: 1, mt: 1, px: 1 }}>
@@ -494,29 +507,164 @@ export const MobileCameraScanner: React.FC = () => {
             <>
               <Button
                 fullWidth
-                variant="outlined"
-                startIcon={cameraState.phase === 'paused' ? <PlayArrowIcon /> : <PauseIcon />}
-                onClick={cameraState.phase === 'paused' ? resumeCameraScanner : pauseCameraScanner}
-                sx={{ minHeight: TOUCH_TARGET, fontFamily: 'monospace', fontWeight: 800, color: '#FFFFFF', borderColor: '#4B5563' }}
+                variant="contained"
+                onClick={captureCameraRow}
+                sx={{ minHeight: TOUCH_TARGET, fontFamily: 'monospace', fontWeight: 800 }}
               >
-                {cameraState.phase === 'paused' ? 'Resume' : 'Pause'}
+                Capture
+              </Button>
+
+              <Button
+                variant="outlined"
+                aria-label={cameraState.phase === 'paused' ? 'Resume scanning' : 'Pause scanning'}
+                onClick={cameraState.phase === 'paused' ? resumeCameraScanner : pauseCameraScanner}
+                sx={{ minHeight: TOUCH_TARGET, minWidth: TOUCH_TARGET, color: '#FFFFFF', borderColor: '#4B5563' }}
+              >
+                {cameraState.phase === 'paused' ? <PlayArrowIcon /> : <PauseIcon />}
               </Button>
 
               {cameraState.canSwitchCamera && (
                 <Button
-                  fullWidth
                   variant="outlined"
-                  startIcon={<CameraswitchIcon />}
+                  aria-label="Switch camera"
                   onClick={switchCameraFacing}
-                  sx={{ minHeight: TOUCH_TARGET, fontFamily: 'monospace', fontWeight: 800, color: '#FFFFFF', borderColor: '#4B5563' }}
+                  sx={{ minHeight: TOUCH_TARGET, minWidth: TOUCH_TARGET, color: '#FFFFFF', borderColor: '#4B5563' }}
                 >
-                  Switch
+                  <CameraswitchIcon />
                 </Button>
               )}
             </>
           )}
         </Box>
       )}
+    </Box>
+  );
+};
+
+interface CaptureReviewProps {
+  result: CameraCaptureResult;
+  onConfirm: (geneString: string) => void;
+  onDismiss: () => void;
+}
+
+const GENE_LETTERS = ['G', 'Y', 'H', 'W', 'X'] as const;
+
+/**
+ * Review step for a manual capture.
+ *
+ * Automatic scanning only commits a read that clears every gate, which is right for
+ * unattended adding but leaves the user stuck whenever a gate is being over-cautious about
+ * a row they can plainly see. Here the read is shown, every letter can be corrected by tap,
+ * and nothing is saved until the user says so.
+ */
+const CaptureReview: React.FC<CaptureReviewProps> = ({ result, onConfirm, onDismiss }) => {
+  const [genes, setGenes] = useState<string[]>(() =>
+    result.geneString ? result.geneString.split('') : ['G', 'G', 'G', 'G', 'G', 'G']
+  );
+  const [editingSlot, setEditingSlot] = useState<number | null>(null);
+
+  const isComplete = genes.length === 6 && genes.every(g => (GENE_LETTERS as readonly string[]).includes(g));
+
+  return (
+    <Box
+      role="dialog"
+      aria-label="Confirm captured genetics"
+      sx={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 10,
+        p: 2,
+        backgroundColor: '#0B0B0BF5',
+        borderTop: '2px solid #00E5FF',
+        ...SURFACE_PADDING
+      }}
+    >
+      {result.status === 'read' ? (
+        <>
+          <Typography sx={{ fontFamily: 'monospace', fontWeight: 800, fontSize: '0.85rem', mb: 1 }}>
+            Captured — tap a letter to correct it
+          </Typography>
+
+          <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5, justifyContent: 'center' }}>
+            {genes.map((gene, index) => (
+              <Button
+                key={index}
+                onClick={() => setEditingSlot(editingSlot === index ? null : index)}
+                aria-label={`Gene ${index + 1}, currently ${gene}`}
+                sx={{
+                  minWidth: 44,
+                  minHeight: 44,
+                  p: 0,
+                  fontFamily: 'monospace',
+                  fontWeight: 900,
+                  fontSize: '1.1rem',
+                  borderRadius: '50%',
+                  color: '#FFFFFF',
+                  backgroundColor: editingSlot === index ? '#00E5FF33' : '#1F2937',
+                  border: editingSlot === index ? '2px solid #00E5FF' : '2px solid #374151'
+                }}
+              >
+                {gene}
+              </Button>
+            ))}
+          </Box>
+
+          {editingSlot !== null && (
+            <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5, justifyContent: 'center' }}>
+              {GENE_LETTERS.map(letter => (
+                <Button
+                  key={letter}
+                  onClick={() => {
+                    setGenes(current => current.map((g, i) => (i === editingSlot ? letter : g)));
+                    setEditingSlot(null);
+                  }}
+                  sx={{
+                    minWidth: 44,
+                    minHeight: 44,
+                    p: 0,
+                    fontFamily: 'monospace',
+                    fontWeight: 900,
+                    color: '#111827',
+                    backgroundColor: '#00E5FF'
+                  }}
+                >
+                  {letter}
+                </Button>
+              ))}
+            </Box>
+          )}
+        </>
+      ) : (
+        <Typography sx={{ fontFamily: 'monospace', fontSize: '0.82rem', color: '#F59E0B', mb: 1.5 }}>
+          {result.status === 'no-row'
+            ? 'No gene row found in the frame. Point the camera so all six genes are visible, then capture again.'
+            : 'The genes could not be read from that frame. Try moving slightly closer or changing the angle.'}
+        </Typography>
+      )}
+
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        {result.status === 'read' && (
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={!isComplete}
+            onClick={() => onConfirm(genes.join(''))}
+            sx={{ minHeight: TOUCH_TARGET, fontFamily: 'monospace', fontWeight: 800 }}
+          >
+            Add clone
+          </Button>
+        )}
+        <Button
+          fullWidth={result.status !== 'read'}
+          variant="outlined"
+          onClick={onDismiss}
+          sx={{ minHeight: TOUCH_TARGET, fontFamily: 'monospace', fontWeight: 800, color: '#FFFFFF', borderColor: '#4B5563' }}
+        >
+          {result.status === 'read' ? 'Discard' : 'Back'}
+        </Button>
+      </Box>
     </Box>
   );
 };

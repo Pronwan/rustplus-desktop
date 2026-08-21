@@ -243,6 +243,8 @@ export interface CameraScannerState {
     pendingSamples: number;
     /** Samples needed before a result can be confirmed. */
     sampleWindow: number;
+    /** Badge blobs found this frame, before grouping. Separates masking from grouping failures. */
+    componentCount: number;
     /** Ink share per glyph cell. 0 means that cell reached the recogniser blank. */
     slotInk: number[];
     /** False when the measured slots fall outside the normalised row. */
@@ -260,6 +262,19 @@ export type CameraScannerEvent =
   | { type: 'CAMERA_STATE'; state: CameraScannerState }
   | { type: 'SAPLING-FOUND'; geneString: string; confidence: number };
 
+/**
+ * Outcome of a manual capture.
+ *
+ * Automatic scanning only commits a read that clears every gate. Manual capture deliberately
+ * bypasses those gates and hands the result to the user to confirm or correct, so framing a
+ * row always produces something actionable even when the gates are being over-cautious.
+ */
+export interface CameraCaptureResult {
+  status: 'read' | 'no-row' | 'unreadable';
+  geneString: string | null;
+  confidence: number | null;
+}
+
 export type CameraScannerEventListener = (event: CameraScannerEvent) => void;
 
 /**
@@ -270,9 +285,16 @@ export interface CameraAnalysisResult {
   phase: Extract<CameraScannerPhase, 'searching' | 'ambiguous' | 'tracking' | 'quality-blocked'>;
   qualityIssues: CameraQualityIssue[];
   candidateCount: number;
+  /** Badge blobs found before grouping, for diagnostics. */
+  componentCount: number;
   /** Present only when geometry and quality both passed, i.e. when OCR is allowed to run. */
   activeTarget: CameraTarget | null;
   overlay: CameraOverlay;
+  /**
+   * The best row found this frame even when a quality gate blocked it. Manual capture reads
+   * this, so the user is never stuck behind a gate that is merely being cautious.
+   */
+  fallbackTarget: CameraTarget | null;
 }
 
 /**

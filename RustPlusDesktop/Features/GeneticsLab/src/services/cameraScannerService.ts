@@ -5,6 +5,7 @@ import {
   CameraScannerErrorCode,
   CameraScannerEvent,
   CameraScannerEventListener,
+  CameraCaptureResult,
   CameraScannerState,
   CameraTarget,
   CameraTrackCapabilities,
@@ -199,6 +200,9 @@ export class CameraScannerService {
   private readAttempts = 0;
   private lastReadAt = 0;
   private acceptedUntil = 0;
+  private lastComponentCount = 0;
+  /** Most recent row with usable geometry, whether or not a quality gate let it through. */
+  private captureCandidate: CameraTarget | null = null;
   private debugPreviewEnabled = false;
   private lastPreviewAt = 0;
   private lastStrip: { image: import('./scanner/scannerTypes.ts').RasterImage } | null = null;
@@ -261,6 +265,47 @@ export class CameraScannerService {
     if (element && this.mediaStream) {
       this.bindStreamToVideo(element, this.mediaStream);
     }
+  }
+
+  /**
+   * Reads the row on screen right now, regardless of the quality gates.
+   *
+   * The automatic path is deliberately conservative and will refuse a row it is not certain
+   * about. This is the manual escape hatch: it reads whatever geometry the locator last
+   * found and hands the answer back for the user to confirm, so a visibly readable row is
+   * never unreachable because a threshold disagrees.
+   */
+  public captureNow(): CameraCaptureResult {
+    const target = this.captureCandidate;
+    if (!target) return { status: 'no-row', geneString: null, confidence: null };
+
+    const built = buildCameraGeneStrip(target.normalizedRow, target.slots, {
+      cellHeight: CAMERA_SCANNER_CONFIG.recognition.cellHeight,
+      padding: 16,
+      gap: 16
+    });
+    if (!built) return { status: 'unreadable', geneString: null, confidence: null };
+
+    const result = this.recognizeGlyphs(built.slotImages);
+    if (!result) return { status: 'unreadable', geneString: null, confidence: null };
+
+    return { status: 'read', geneString: result.geneString, confidence: result.confidence };
+  }
+
+  /** Confirms a manually captured or corrected row, emitting it like any accepted read. */
+  public commitManualRead(geneString: string): void {
+    this.rearm.recordEmit(geneString);
+    this.voting.reset(CAMERA_VOTE_KEY);
+    this.acceptedUntil = this.env.now() + CAMERA_SCANNER_CONFIG.confirmation.acceptedHoldMs;
+
+    this.setState({
+      phase: 'accepted',
+      acceptedCount: this.state.acceptedCount + 1,
+      lastAcceptedGenes: geneString,
+      qualityIssues: []
+    });
+
+    this.emit({ type: 'SAPLING-FOUND', geneString, confidence: 100 });
   }
 
   /** Resolves an ambiguous scene from a tap, in analysis frame coordinates. */
@@ -614,6 +659,9 @@ export class CameraScannerService {
       return;
     }
 
+    this.lastComponentCount = result.componentCount;
+    this.captureCandidate = result.activeTarget ?? result.fallbackTarget;
+
     this.setState({
       phase: result.phase,
       qualityIssues: result.qualityIssues,
@@ -710,6 +758,7 @@ export class CameraScannerService {
         lastSource: source,
         pendingSamples: this.voting.getSampleCount(CAMERA_VOTE_KEY),
         sampleWindow: CAMERA_SCANNER_CONFIG.confirmation.samples,
+        componentCount: this.lastComponentCount,
         slotInk: built.slotInk.map(value => Math.round(value * 100) / 100),
         slotsWithinBounds: built.slotsWithinBounds,
         stripPreview

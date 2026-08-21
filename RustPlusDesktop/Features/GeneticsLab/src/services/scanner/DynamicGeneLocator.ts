@@ -126,6 +126,9 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
   private trackFailures = 0;
   private pendingSelection: Point | null = null;
   private warpBuffer: RasterImage | undefined;
+  private lastComponentCount = 0;
+  /** Best row this frame, even when a quality gate blocked it. Manual capture uses this. */
+  private fallbackTarget: CameraTarget | null = null;
   private disposed = false;
 
   constructor(options: DynamicGeneLocatorOptions = {}) {
@@ -141,6 +144,7 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
     const frame = this.grabber.grabAnalysis(video, this.discoveryWidth);
     if (!frame) return this.searching(emptyOverlay(0, 0));
 
+    this.fallbackTarget = null;
     const candidates = this.findCandidates(frame, nowMs);
     const overlay: CameraOverlay = {
       frameWidth: frame.width,
@@ -162,8 +166,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
           phase: 'quality-blocked',
           qualityIssues: ['moving'],
           candidateCount: 1,
+          componentCount: this.lastComponentCount,
           activeTarget: null,
-          overlay
+          overlay,
+          fallbackTarget: null
         };
       }
       this.loseTarget();
@@ -177,8 +183,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
         phase: 'ambiguous',
         qualityIssues: [],
         candidateCount: selection.count,
+        componentCount: this.lastComponentCount,
         activeTarget: null,
-        overlay
+        overlay,
+        fallbackTarget: null
       };
     }
 
@@ -203,9 +211,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
     if (!shouldRediscover && this.tracked) {
       const local = this.searchNearTarget(frame, this.tracked);
       if (local.length > 0) return local;
-      // A local miss is not yet a lost target; the next tick falls back to full discovery.
+      // Fall through to a full-frame pass in this same frame. Returning empty here and
+      // waiting for the next tick meant a single local miss reported "no target", so the
+      // status flipped between tracking and searching several times a second.
       this.trackFailures++;
-      return [];
     }
 
     this.lastDiscoveryAt = nowMs;
@@ -226,6 +235,7 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       width: frameWidth,
       height: frameHeight
     });
+    if (!isCropped) this.lastComponentCount = components.length;
     if (components.length < GENES_PER_ROW) return [];
 
     const options = {
@@ -478,8 +488,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       phase: 'tracking',
       qualityIssues: [],
       candidateCount: 1,
+      componentCount: this.lastComponentCount,
       activeTarget: target,
-      overlay
+      overlay,
+      fallbackTarget: target
     };
   }
 
@@ -561,8 +573,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       phase: 'quality-blocked',
       qualityIssues: issues,
       candidateCount: 1,
+      componentCount: this.lastComponentCount,
       activeTarget: null,
-      overlay
+      overlay,
+      fallbackTarget: this.fallbackTarget
     };
   }
 
@@ -571,8 +585,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       phase: 'searching',
       qualityIssues: [],
       candidateCount: overlay.candidates.length,
+      componentCount: this.lastComponentCount,
       activeTarget: null,
-      overlay
+      overlay,
+      fallbackTarget: null
     };
   }
 

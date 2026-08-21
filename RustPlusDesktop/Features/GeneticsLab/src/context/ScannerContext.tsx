@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ScannerService, ScannerEvent } from '../services/scannerService.ts';
 import type { CameraScannerService } from '../services/cameraScannerService.ts';
-import type { CameraScannerEvent, CameraScannerState } from '../services/scanner/scannerTypes.ts';
+import type {
+  CameraCaptureResult,
+  CameraScannerEvent,
+  CameraScannerState
+} from '../services/scanner/scannerTypes.ts';
 import {
   createIdleCameraState,
   isCameraCaptureSupported,
@@ -60,6 +64,10 @@ export interface ScannerContextValue {
   selectCameraCandidateAt: (point: { x: number; y: number }) => void;
   isCameraDebugEnabled: boolean;
   toggleCameraDebug: () => void;
+  cameraCapture: CameraCaptureResult | null;
+  captureCameraRow: () => void;
+  confirmCameraCapture: (geneString: string) => void;
+  dismissCameraCapture: () => void;
 }
 
 const ScannerContext = createContext<ScannerContextValue | null>(null);
@@ -468,6 +476,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     cameraServiceRef.current?.stop();
     setIsCameraScannerOpen(false);
     setCameraLastResultKind(null);
+    setCameraCapture(null);
   }, []);
 
   const startCameraScanner = useCallback(async () => {
@@ -501,6 +510,25 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   const [isCameraDebugEnabled, setIsCameraDebugEnabled] = useState(false);
+  const [cameraCapture, setCameraCapture] = useState<CameraCaptureResult | null>(null);
+
+  const captureCameraRow = useCallback(() => {
+    const service = cameraServiceRef.current;
+    if (!service) return;
+    service.pause();
+    setCameraCapture(service.captureNow());
+  }, []);
+
+  const dismissCameraCapture = useCallback(() => {
+    setCameraCapture(null);
+    cameraServiceRef.current?.resume();
+  }, []);
+
+  const confirmCameraCapture = useCallback((geneString: string) => {
+    cameraServiceRef.current?.commitManualRead(geneString);
+    setCameraCapture(null);
+    cameraServiceRef.current?.resume();
+  }, []);
 
   const toggleCameraDebug = useCallback(() => {
     setIsCameraDebugEnabled(previous => {
@@ -563,7 +591,11 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         attachCameraVideo,
         selectCameraCandidateAt,
         isCameraDebugEnabled,
-        toggleCameraDebug
+        toggleCameraDebug,
+        cameraCapture,
+        captureCameraRow,
+        confirmCameraCapture,
+        dismissCameraCapture
       }}
     >
       {children}

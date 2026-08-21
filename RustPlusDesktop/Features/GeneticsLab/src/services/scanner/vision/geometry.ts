@@ -355,7 +355,11 @@ function contextScore(
   void normal;
 
   const darkness = 1 - Math.min(above, below) / 255;
-  return clamp01((darkness - 0.35) / 0.45);
+  const score = clamp01((darkness - 0.35) / 0.45);
+  // Neutral rather than zero when the panel does not read as dark. The tooltip is
+  // semi-transparent, so bright scenery behind it is common and says nothing about whether
+  // these six badges are a genuine gene row.
+  return Math.max(score, 0.5);
 }
 
 export function scoreRowCandidate(
