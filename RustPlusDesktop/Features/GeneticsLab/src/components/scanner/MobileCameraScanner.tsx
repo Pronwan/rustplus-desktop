@@ -32,6 +32,9 @@ const TONE_COLORS: Record<CameraStatusTone, string> = {
 /** Every primary control is at least this tall/wide, per the mobile touch-target rule. */
 const TOUCH_TARGET = 44;
 
+/** Minimum time a status message stays on screen before another can replace it. */
+const STATUS_DWELL_MS = 450;
+
 const SURFACE_PADDING = {
   paddingTop: 'max(12px, env(safe-area-inset-top))',
   paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
@@ -93,6 +96,36 @@ export const MobileCameraScanner: React.FC = () => {
     () => describeCameraStatus(cameraState, { lastResultKind: cameraLastResultKind, recentlyLostTarget }),
     [cameraState, cameraLastResultKind, recentlyLostTarget]
   );
+
+  /**
+   * Hold each message briefly before replacing it.
+   *
+   * Detection state legitimately changes several times a second, and mirroring that straight
+   * to the status line produced text that flickered too fast to read. Success and failure
+   * jump the queue; routine churn waits its turn.
+   */
+  const [displayedStatus, setDisplayedStatus] = useState(status);
+  const statusChangedAtRef = useRef(0);
+  const statusSignature = `${status.tone}|${displayedStatus.headline}|${displayedStatus.instruction}`;
+
+  useEffect(() => {
+    const isUrgent = status.tone === 'success' || status.tone === 'error';
+    const elapsed = Date.now() - statusChangedAtRef.current;
+
+    if (isUrgent || elapsed >= STATUS_DWELL_MS) {
+      statusChangedAtRef.current = Date.now();
+      setDisplayedStatus(status);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      statusChangedAtRef.current = Date.now();
+      setDisplayedStatus(status);
+    }, STATUS_DWELL_MS - elapsed);
+    return () => clearTimeout(timer);
+    // Keyed on the rendered content, not the object identity, which changes every frame.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusSignature]);
 
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
@@ -170,7 +203,7 @@ export const MobileCameraScanner: React.FC = () => {
 
   if (!isCameraScannerOpen) return null;
 
-  const toneColor = TONE_COLORS[status.tone];
+  const toneColor = TONE_COLORS[displayedStatus.tone];
   const canStart = isCameraScannerSupported && isCameraSecureOrigin;
 
   return (
@@ -359,10 +392,10 @@ export const MobileCameraScanner: React.FC = () => {
           }}
         >
           <Typography sx={{ fontFamily: 'monospace', fontWeight: 800, fontSize: '0.85rem', color: toneColor }}>
-            {status.headline}
+            {displayedStatus.headline}
           </Typography>
           <Typography sx={{ fontFamily: 'monospace', fontSize: '0.78rem', color: '#E5E7EB' }}>
-            {status.instruction}
+            {displayedStatus.instruction}
           </Typography>
 
           {cameraState.isOcrUnavailable && (
@@ -442,7 +475,7 @@ export const MobileCameraScanner: React.FC = () => {
           whiteSpace: 'nowrap'
         }}
       >
-        {status.announce ? `${status.headline}. ${status.instruction}` : ''}
+        {status.announce ? `${displayedStatus.headline}. ${displayedStatus.instruction}` : ''}
       </Box>
 
       {/* Controls */}

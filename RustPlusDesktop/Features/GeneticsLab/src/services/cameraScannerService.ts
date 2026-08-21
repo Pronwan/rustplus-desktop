@@ -9,7 +9,6 @@ import {
   CameraTarget,
   CameraTrackCapabilities,
   GeneRecognitionResult,
-  GeneRecognizer,
   Point
 } from './scanner/scannerTypes.ts';
 import { CAMERA_SCANNER_CONFIG } from './scanner/cameraScannerConfig.ts';
@@ -19,10 +18,13 @@ import {
   isCameraSecureContext
 } from './scanner/cameraSupport.ts';
 import { buildCameraGeneStrip } from './scanner/vision/cameraGeneStrip.ts';
+import {
+  GlyphRowRecognizer,
+  recognizeGenesByTemplate
+} from './scanner/vision/templateGeneRecognizer.ts';
 import { rasterToCanvas, releaseRasterCanvases } from './scanner/vision/frameGrabber.ts';
 import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
 import { CameraTargetRearm } from './scanner/CameraTargetRearm.ts';
-import { TesseractGeneRecognizer } from './scanner/TesseractGeneRecognizer.ts';
 
 export * from './scanner/cameraScannerConfig.ts';
 
@@ -49,7 +51,8 @@ export interface CameraScannerEnvironment {
 
 export interface CameraScannerOptions {
   env?: Partial<CameraScannerEnvironment>;
-  recognizer?: GeneRecognizer;
+  /** Overridable for tests. Defaults to template matching against the gene alphabet. */
+  glyphRecognizer?: GlyphRowRecognizer;
 }
 
 function defaultEnvironment(): CameraScannerEnvironment {
@@ -172,7 +175,7 @@ const FRAME_COST_WINDOW = 20;
  */
 export class CameraScannerService {
   private readonly env: CameraScannerEnvironment;
-  private readonly recognizer: GeneRecognizer;
+  private readonly recognizeGlyphs: GlyphRowRecognizer;
   // Camera confidence floor, not the desktop one. See CAMERA_SCANNER_CONFIG.recognition.
   private readonly voting = new TemporalVotingService(
     CAMERA_SCANNER_CONFIG.recognition.minRowConfidence
@@ -212,7 +215,7 @@ export class CameraScannerService {
 
   constructor(options: CameraScannerOptions = {}) {
     this.env = { ...defaultEnvironment(), ...options.env };
-    this.recognizer = options.recognizer || new TesseractGeneRecognizer();
+    this.recognizeGlyphs = options.glyphRecognizer ?? recognizeGenesByTemplate;
   }
 
   public static isSupported(env?: Partial<CameraScannerEnvironment>): boolean {
@@ -291,12 +294,11 @@ export class CameraScannerService {
       errorMessage: undefined,
       qualityIssues: [],
       candidateCount: 0,
-      overlay: null
+      overlay: null,
+      // Template matching needs no worker and no asset download; it is ready immediately.
+      isOcrReady: true,
+      isOcrUnavailable: false
     });
-
-    // Warm-up runs alongside the permission prompt. A warm-up failure leaves the preview
-    // running and is surfaced as "OCR unavailable" rather than killing the camera.
-    void this.warmUpRecognizer(token);
 
     let stream: MediaStream;
     try {
@@ -395,30 +397,6 @@ export class CameraScannerService {
     } catch {
       // Enumeration can be blocked; camera switching simply stays hidden.
     }
-  }
-
-  private async warmUpRecognizer(token: number): Promise<void> {
-    if (this.recognizer.isWarm()) {
-      if (token === this.sessionToken) this.setState({ isOcrReady: true, isOcrUnavailable: false });
-      return;
-    }
-
-    try {
-      await this.recognizer.warmup();
-      if (token !== this.sessionToken) return;
-      const warm = this.recognizer.isWarm();
-      this.setState({ isOcrReady: warm, isOcrUnavailable: !warm });
-    } catch {
-      if (token !== this.sessionToken) return;
-      this.setState({ isOcrReady: false, isOcrUnavailable: true });
-    }
-  }
-
-  /** Retry after a warm-up failure without restarting the camera. */
-  public async retryOcrWarmup(): Promise<void> {
-    if (!this.isRunning()) return;
-    this.setState({ isOcrUnavailable: false });
-    await this.warmUpRecognizer(this.sessionToken);
   }
 
   public async switchCamera(): Promise<void> {
@@ -622,6 +600,11 @@ export class CameraScannerService {
     // at all, and re-read the same row from scratch indefinitely.
     if (!targetPresent) {
       this.voting.reset(CAMERA_VOTE_KEY);
+      // Reported here as well as after a read, otherwise the sample count lingers on screen
+      // after the row has gone and suggests progress that no longer exists.
+      if (this.state.diagnostics.pendingSamples !== 0) {
+        this.setState({ diagnostics: { ...this.state.diagnostics, pendingSamples: 0 } });
+      }
     }
 
     // Let a successful scan stay readable. The overlay and diagnostics keep updating
@@ -644,58 +627,30 @@ export class CameraScannerService {
    * ---------------------------------------------------------------- */
 
   private async recognizeTarget(target: CameraTarget, token: number): Promise<void> {
-    if (this.isRecognizing || !this.recognizer.isWarm()) return;
+    if (this.isRecognizing) return;
 
     const now = this.env.now();
     // Nothing to gain from re-reading a row we just accepted.
     if (now < this.acceptedUntil) return;
-    if (now - this.lastReadAt < CAMERA_SCANNER_CONFIG.recognition.intervalMs) return;
-    this.lastReadAt = now;
 
     this.isRecognizing = true;
     this.readAttempts++;
     this.setState({ phase: 'reading' });
 
     try {
-      const recognition = CAMERA_SCANNER_CONFIG.recognition;
       const built = buildCameraGeneStrip(target.normalizedRow, target.slots, {
-        cellHeight: recognition.cellHeight,
+        cellHeight: CAMERA_SCANNER_CONFIG.recognition.cellHeight,
         padding: 16,
         gap: 16
       });
       if (!built) return;
 
-      // Per-slot recognition comes first on the camera path.
-      //
-      // The locator has already measured exactly where each of the six badges sits, so
-      // reading them one at a time always yields six characters. Letting the recogniser
-      // segment a whole line instead lets it merge or drop a glyph -- observed in the field
-      // as a five-character read of a six-gene row, which was then discarded outright and
-      // the confirmation window restarted, forever.
-      const slotCanvases = built.slotImages.map((image, index) => rasterToCanvas(image, index));
-      let source: 'row' | 'slots' | null = null;
-      let result: GeneRecognitionResult | null = null;
+      // Six slots in, six answers out. Runs in microseconds, so it happens on every
+      // tracking frame rather than on a throttle.
+      const result = this.recognizeGlyphs(built.slotImages);
+      if (token !== this.sessionToken) return;
 
-      if (slotCanvases.every(Boolean)) {
-        result = await this.recognizer.recognizeSlots(
-          slotCanvases as HTMLCanvasElement[],
-          recognition.minSlotConfidence,
-          recognition.minAverageSlotConfidence
-        );
-        if (token !== this.sessionToken) return;
-        if (result) source = 'slots';
-      }
-
-      if (!result) {
-        const stripCanvas = rasterToCanvas(built.strip, 6);
-        if (stripCanvas) {
-          result = await this.recognizer.recognizeRow(stripCanvas, recognition.minRowConfidence);
-          if (token !== this.sessionToken) return;
-          if (result) source = 'row';
-        }
-      }
-
-      this.publishReadDiagnostics(result, source, built);
+      this.publishReadDiagnostics(result, result ? 'template' : null, built);
       if (!result) return;
 
       // 3-of-4 temporal confirmation, the same policy the desktop scanner uses.
@@ -732,10 +687,9 @@ export class CameraScannerService {
    */
   private publishReadDiagnostics(
     result: GeneRecognitionResult | null,
-    source: 'row' | 'slots' | null,
+    source: 'template' | null,
     built: { strip: import('./scanner/scannerTypes.ts').RasterImage; slotInk: number[]; slotsWithinBounds: boolean }
   ): void {
-    const raw = this.recognizer.getLastRawRead?.() ?? null;
 
     let stripPreview = this.state.diagnostics.stripPreview;
     if (this.debugPreviewEnabled) {
@@ -751,8 +705,8 @@ export class CameraScannerService {
     this.setState({
       diagnostics: {
         readAttempts: this.readAttempts,
-        lastRawText: result?.geneString ?? raw?.text?.trim() ?? null,
-        lastConfidence: result?.confidence ?? (raw?.confidence || null),
+        lastRawText: result?.geneString ?? null,
+        lastConfidence: result?.confidence ?? null,
         lastSource: source,
         pendingSamples: this.voting.getSampleCount(CAMERA_VOTE_KEY),
         sampleWindow: CAMERA_SCANNER_CONFIG.confirmation.samples,
@@ -881,15 +835,9 @@ export class CameraScannerService {
     }
   }
 
-  /** Terminates the OCR worker. Only for app teardown; stop() keeps the worker warm. */
   public async dispose(): Promise<void> {
     this.stop();
     this.listeners = [];
-    try {
-      await this.recognizer.terminate();
-    } catch {
-      // ignore
-    }
   }
 
   private failWith(code: CameraScannerErrorCode, message?: string): void {

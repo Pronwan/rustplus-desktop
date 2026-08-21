@@ -49,17 +49,15 @@ export const CAMERA_SCANNER_CONFIG = {
      * routinely scores in the 40s and 50s. Holding it to the desktop floor rejected every
      * single read. Confidence in the *result* comes from 3-of-4 temporal agreement instead.
      */
-    minRowConfidence: 40,
-    minSlotConfidence: 35,
-    minAverageSlotConfidence: 45,
-    /** Height of one glyph cell handed to Tesseract, in pixels. */
-    cellHeight: 120,
     /**
-     * Minimum gap between OCR attempts. Recognition ran on every tracking frame, which burnt
-     * roughly 170 reads a minute for no extra certainty; confirmation needs a handful of
-     * independent samples, not a flood.
+     * Confidence floor for a sample entering the confirmation window.
+     *
+     * Template matching reports how much better the winning glyph is than the runner-up, so
+     * this rejects genuinely ambiguous reads while letting an ordinary correct one through.
      */
-    intervalMs: 140
+    minRowConfidence: 40,
+    /** Height of one glyph cell fed to the classifier, in pixels. */
+    cellHeight: 120
   },
 
   selection: {
@@ -72,6 +70,14 @@ export const CAMERA_SCANNER_CONFIG = {
   },
 
   tracking: {
+    /**
+     * How long a momentarily undetected row keeps its lock.
+     *
+     * Detection misses a frame here and there on a hand-held phone. Dropping straight to
+     * "searching" made the status thrash between modes several times a second and threw
+     * away the confirmation window every time.
+     */
+    lostGraceMs: 400,
     /** Local search box around the last target, as a multiple of its own size. */
     searchExpansion: 1.8,
     /** Consecutive local-search misses before falling back to full-frame discovery. */

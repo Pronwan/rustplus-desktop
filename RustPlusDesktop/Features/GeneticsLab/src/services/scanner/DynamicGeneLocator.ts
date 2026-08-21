@@ -153,6 +153,19 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
     const selection = this.select(candidates, nowMs);
 
     if (selection.kind === 'none') {
+      // Hold the lock briefly through a detection miss instead of thrashing to "searching"
+      // and discarding the confirmation window.
+      if (this.tracked && nowMs - this.tracked.lastSeenAt < CAMERA_SCANNER_CONFIG.tracking.lostGraceMs) {
+        overlay.target = toPointQuad(this.tracked.quad);
+        overlay.targetId = this.tracked.id;
+        return {
+          phase: 'quality-blocked',
+          qualityIssues: ['moving'],
+          candidateCount: 1,
+          activeTarget: null,
+          overlay
+        };
+      }
       this.loseTarget();
       return this.searching(overlay);
     }

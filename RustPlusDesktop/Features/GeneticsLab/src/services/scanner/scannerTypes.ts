@@ -238,7 +238,7 @@ export interface CameraScannerState {
     lastRawText: string | null;
     lastConfidence: number | null;
     /** Which recognition path produced the last text. */
-    lastSource: 'row' | 'slots' | null;
+    lastSource: 'template' | null;
     /** Samples currently held in the confirmation window. */
     pendingSamples: number;
     /** Samples needed before a result can be confirmed. */

@@ -14,13 +14,13 @@ import {
   assessRowQuality
 } from '../services/scanner/vision/quality.ts';
 import type { RasterImage } from '../services/scanner/scannerTypes.ts';
+import type { GlyphRowRecognizer } from '../services/scanner/vision/templateGeneRecognizer.ts';
 import type {
   CameraAnalysisResult,
   CameraFrameAnalyzer,
   CameraScannerState,
   CameraTarget,
-  GeneRecognitionResult,
-  GeneRecognizer
+  GeneRecognitionResult
 } from '../services/scanner/scannerTypes.ts';
 
 /* ------------------------------------------------------------------ *
@@ -109,39 +109,17 @@ function createMediaDevices(outcomes: Array<FakeStream | Error>, cameraCount = 1
   return { getUserMedia, enumerateDevices, calls };
 }
 
-class FakeRecognizer implements GeneRecognizer {
-  public warmupCalls = 0;
+/** Scripted stand-in for template matching, so recognition behaviour can be driven exactly. */
+class FakeRecognizer {
   public rowCalls = 0;
-  public slotCalls = 0;
   /** Consumed in order; the last entry repeats once exhausted. */
   public rowResults: Array<GeneRecognitionResult | null> = [null];
-  /** Confidence floor the caller asked for, per call. */
-  public rowMinConfidences: Array<number | undefined> = [];
-  private warm = false;
 
-  constructor(private readonly shouldFail = false) {}
-
-  async recognizeRow(_canvas?: unknown, minConfidence?: number): Promise<GeneRecognitionResult | null> {
-    this.rowMinConfidences.push(minConfidence);
+  readonly recognize: GlyphRowRecognizer = () => {
     const result = this.rowResults[Math.min(this.rowCalls, this.rowResults.length - 1)] ?? null;
     this.rowCalls++;
     return result;
-  }
-  async recognizeSlots(): Promise<GeneRecognitionResult | null> {
-    this.slotCalls++;
-    return null;
-  }
-  async warmup(): Promise<void> {
-    this.warmupCalls++;
-    if (this.shouldFail) throw new Error('warmup failed');
-    this.warm = true;
-  }
-  async terminate(): Promise<void> {
-    this.warm = false;
-  }
-  isWarm(): boolean {
-    return this.warm;
-  }
+  };
 }
 
 function geneResult(geneString: string, confidence = 92): GeneRecognitionResult {
@@ -314,7 +292,7 @@ function createHarness(options: {
   let clock = 0;
 
   const service = new CameraScannerService({
-    recognizer,
+    glyphRecognizer: (...args) => recognizer.recognize(...args),
     env: {
       mediaDevices: devices as unknown as MediaDevices,
       isSecureContext: options.isSecureContext ?? true,
@@ -758,24 +736,15 @@ describe('Camera scanner processing cadence', () => {
   });
 });
 
-describe('Camera scanner OCR warm-up', () => {
-  it('marks OCR ready once the recognizer is warm', async () => {
+describe('Camera recognition readiness', () => {
+  it('is ready to read the moment the camera opens', async () => {
+    // Template matching needs no worker and no model download, so there is no warm-up
+    // window during which reads are impossible.
     const harness = createHarness();
-
     await harness.service.start();
-    await vi.waitFor(() => expect(harness.service.getState().isOcrReady).toBe(true));
 
-    expect(harness.recognizer.warmupCalls).toBe(1);
-  });
-
-  it('keeps the preview running when OCR warm-up fails', async () => {
-    const harness = createHarness({ recognizer: new FakeRecognizer(true) });
-
-    await harness.service.start();
-    await vi.waitFor(() => expect(harness.service.getState().isOcrUnavailable).toBe(true));
-
-    expect(harness.service.isRunning()).toBe(true);
-    expect(harness.service.getState().isOcrReady).toBe(false);
+    expect(harness.service.getState().isOcrReady).toBe(true);
+    expect(harness.service.getState().isOcrUnavailable).toBe(false);
   });
 });
 
@@ -859,11 +828,10 @@ describe('Camera recognition safety', () => {
   });
 
   it('discards the pending window when the target is genuinely lost', async () => {
-    // Two agreeing reads, the row leaves the frame, then two more agreeing reads. The
-    // window restarts on the loss, so the total never reaches three in a row.
     let visible = true;
     const recognizer = new FakeRecognizer();
-    recognizer.rowResults = [geneResult('GGYHYX')];
+    // Alternating reads never confirm on their own, so the window fills without emptying.
+    recognizer.rowResults = [geneResult('GGYHYX'), geneResult('WWXXYY')];
 
     const harness = createHarness({ recognizer });
     harness.service.attachVideo(createVideoElement());
@@ -873,18 +841,15 @@ describe('Camera recognition safety', () => {
     await harness.service.start();
     await vi.advanceTimersByTimeAsync(0);
 
-    await harness.runFor(340);
-    const readsBeforeLoss = harness.recognizer.rowCalls;
-    expect(readsBeforeLoss).toBeGreaterThanOrEqual(2);
+    await harness.runFor(200);
+    expect(harness.service.getState().diagnostics.pendingSamples).toBeGreaterThan(0);
     expect(harness.saplings).toHaveLength(0);
 
     visible = false;
     await harness.runFor(200);
-    visible = true;
-    await harness.runFor(200);
 
-    expect(harness.recognizer.rowCalls).toBeGreaterThan(readsBeforeLoss);
-    expect(harness.saplings).toHaveLength(0);
+    // The row left the frame, so nothing collected before it counts as evidence any more.
+    expect(harness.service.getState().diagnostics.pendingSamples).toBe(0);
   });
 
   it('keeps the pending window through a shaky frame', async () => {
@@ -959,33 +924,16 @@ describe('Camera recognition safety', () => {
     expect(harness.saplings.map(s => s.geneString)).toEqual(['GGYHYX', 'WWXXYY']);
   });
 
-  it('falls back to slot recognition when the row read fails', async () => {
-    const { harness } = await startWith(
+  it('produces nothing when the glyphs cannot be classified confidently', async () => {
+    const { harness } = await startCameraWith(
       () => ({ ...TRACKING, activeTarget: trackingTarget() }),
       [null]
     );
 
-    await harness.runFor(300);
+    await harness.runFor(400);
 
     expect(harness.recognizer.rowCalls).toBeGreaterThan(0);
-    expect(harness.recognizer.slotCalls).toBe(harness.recognizer.rowCalls);
     expect(harness.saplings).toHaveLength(0);
-  });
-
-  it('does not attempt OCR before the recogniser is warm', async () => {
-    const recognizer = new FakeRecognizer(true);
-    const harness = createHarness({ recognizer });
-    harness.service.attachVideo(createVideoElement());
-    harness.service.setAnalyzerFactory(
-      () => new ScriptedAnalyzer(() => ({ ...TRACKING, activeTarget: trackingTarget() }))
-    );
-
-    await harness.service.start();
-    await harness.runFor(600);
-
-    expect(harness.recognizer.rowCalls).toBe(0);
-    expect(harness.service.getState().isOcrUnavailable).toBe(true);
-    expect(harness.service.isRunning()).toBe(true);
   });
 
   it('clears the pending window when the page is hidden', async () => {
@@ -1054,22 +1002,6 @@ describe('Camera OCR confidence is independent of the desktop scanner', () => {
     await harness.runFor(600);
 
     expect(harness.saplings.map(s => s.geneString)).toEqual(['GGGYYY']);
-  });
-
-  it('passes the camera floor down to the recogniser rather than the desktop one', async () => {
-    const recognizer = new FakeRecognizer();
-    recognizer.rowResults = [geneResult('GGGYYY', 52)];
-
-    const harness = createHarness({ recognizer });
-    harness.service.attachVideo(createVideoElement());
-    harness.service.setAnalyzerFactory(
-      () => new ScriptedAnalyzer(() => ({ ...TRACKING, activeTarget: trackingTarget() }))
-    );
-    await harness.service.start();
-    await harness.runFor(200);
-
-    expect(recognizer.rowMinConfidences[0]).toBe(CAMERA_SCANNER_CONFIG.recognition.minRowConfidence);
-    expect(recognizer.rowMinConfidences[0]).toBeLessThan(75);
   });
 
   it('reports what OCR saw so a failing read is diagnosable', async () => {
