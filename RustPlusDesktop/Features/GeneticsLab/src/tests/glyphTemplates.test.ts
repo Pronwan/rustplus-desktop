@@ -5,6 +5,7 @@ import {
   classifyGlyphFeatures,
   countHoles,
   despeckle,
+  isolateGlyphInk,
   extractGlyphFeatures,
   rasterizeGlyph
 } from '../services/scanner/vision/glyphTemplates.ts';
@@ -307,5 +308,82 @@ describe('Stroke-weight invariance', () => {
       // some of these through. Distance is the gate that catches them.
       expect(match!.distance, `half ${gene}`).toBeGreaterThan(DEFAULT_TEMPLATE_OPTIONS.maxDistance);
     }
+  });
+});
+
+describe('Detached ink', () => {
+  /**
+   * Real strip-cell geometry. This matters: at template size the glyph fills its box, so a
+   * corner speck barely moves the bounding box and the defect is invisible. In an actual
+   * cell the letter sits in the middle with padding around it, and one speck in the corner
+   * stretches the box across the whole cell.
+   */
+  const CELL_W = 165;
+  const CELL_H = 152;
+  const GLYPH = 80;
+
+  function cellWithGlyph(gene: GeneLetter): Uint8Array {
+    const glyph = rasterizeGlyph(gene, GLYPH);
+    const cell = new Uint8Array(CELL_W * CELL_H);
+    const ox = Math.round((CELL_W - GLYPH) / 2);
+    const oy = Math.round((CELL_H - GLYPH) / 2);
+    for (let y = 0; y < GLYPH; y++) {
+      for (let x = 0; x < GLYPH; x++) {
+        if (glyph[y * GLYPH + x]) cell[(oy + y) * CELL_W + (ox + x)] = 1;
+      }
+    }
+    return cell;
+  }
+
+  function withSpeck(mask: Uint8Array, cx: number, cy: number, r: number): Uint8Array {
+    const out = Uint8Array.from(mask);
+    for (let y = cy - r; y <= cy + r; y++) {
+      for (let x = cx - r; x <= cx + r; x++) {
+        if (x < 0 || y < 0 || x >= CELL_W || y >= CELL_H) continue;
+        out[y * CELL_W + x] = 1;
+      }
+    }
+    return out;
+  }
+
+  function read(mask: Uint8Array) {
+    const cleaned = isolateGlyphInk(despeckle(mask, CELL_W, CELL_H), CELL_W, CELL_H);
+    const features = extractGlyphFeatures(cleaned, CELL_W, CELL_H);
+    return features ? { match: classifyGlyphFeatures(features), density: features.density } : null;
+  }
+
+  it('reads every letter identically with or without specks in the cell', () => {
+    for (const gene of GENE_ALPHABET) {
+      const clean = cellWithGlyph(gene as GeneLetter);
+      const specked = withSpeck(withSpeck(clean, 6, 6, 2), CELL_W - 7, CELL_H - 7, 2);
+
+      const before = read(clean)!;
+      const after = read(specked)!;
+
+      expect(after.match!.gene, gene).toBe(gene);
+      expect(after.match!.distance, gene).toBeCloseTo(before.match!.distance, 5);
+      expect(after.density, gene).toBeCloseTo(before.density, 5);
+    }
+  });
+
+  it('keeps a glyph that blur has broken into pieces', () => {
+    // Components are kept in proportion to the largest, so an H whose crossbar has faded
+    // keeps both uprights instead of being reduced to one.
+    const mask = new Uint8Array(CELL_W * CELL_H);
+    for (let y = 40; y < 110; y++) {
+      for (let x = 60; x < 70; x++) mask[y * CELL_W + x] = 1;
+      for (let x = 95; x < 105; x++) mask[y * CELL_W + x] = 1;
+    }
+
+    const kept = isolateGlyphInk(mask, CELL_W, CELL_H);
+    let total = 0;
+    for (const value of kept) total += value;
+
+    expect(total).toBe(70 * 20);
+  });
+
+  it('leaves a single-component mask untouched', () => {
+    const mask = cellWithGlyph('X');
+    expect(isolateGlyphInk(mask, CELL_W, CELL_H)).toBe(mask);
   });
 });

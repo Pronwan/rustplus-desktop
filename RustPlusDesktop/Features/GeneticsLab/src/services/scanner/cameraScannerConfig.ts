@@ -65,7 +65,16 @@ export const CAMERA_SCANNER_CONFIG = {
      * tens of milliseconds per slot, so it runs alongside on a throttle: often enough to
      * confirm a row within a glance, rarely enough to leave the tracking loop its budget.
      */
-    ocrIntervalMs: 220
+    ocrIntervalMs: 220,
+    /**
+     * Slots OCR must confirm before a row is accepted on the spot.
+     *
+     * A blank slot is OCR abstaining, not OCR objecting, so it must not be treated as a
+     * disagreement -- one unread slot out of six was routinely holding an otherwise
+     * unanimous row back into the four-frame window. Any slot OCR *does* read still has to
+     * match, so a single contradiction rejects the whole row however many others agree.
+     */
+    minCrossCheckedSlots: 5
   },
 
   selection: {

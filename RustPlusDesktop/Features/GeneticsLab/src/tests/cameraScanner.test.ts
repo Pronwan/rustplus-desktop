@@ -2,7 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   CameraScannerService,
   buildConstraintTiers,
-  classifyCameraError
+  classifyCameraError,
+  crossCheckSlots
 } from '../services/cameraScannerService.ts';
 import { describeCameraStatus } from '../services/scanner/cameraStatusMessages.ts';
 import { createIdleCameraState } from '../services/scanner/cameraSupport.ts';
@@ -964,6 +965,24 @@ describe('Camera recognition safety', () => {
     expect(harness.states.some(state => state.diagnostics.lastSource === 'agreed')).toBe(true);
   });
 
+  it('accepts when OCR confirms five slots and abstains on the sixth', async () => {
+    // The common device case: OCR reads five glyphs cleanly and misses one. Treating the
+    // miss as a disagreement pushed an otherwise unanimous row into the four-frame window.
+    const ocr = new FakeSlotOcr();
+    ocr.letters = ['G', 'H', 'Y', 'W', 'X', ''];
+
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: rowWithGenes('GHYWXG') }),
+      [null],
+      ocr
+    );
+
+    await harness.runFor(1200);
+
+    expect(harness.saplings.map(s => s.geneString)).toEqual(['GHYWXG']);
+    expect(harness.states.some(state => state.diagnostics.lastSource === 'agreed')).toBe(true);
+  });
+
   it('accepts once three of four samples agree', async () => {
     const { harness } = await startWith(
       () => ({ ...TRACKING, activeTarget: trackingTarget() }),
@@ -1584,5 +1603,33 @@ describe('Camera manual capture', () => {
 
     // Rearm treats it as already seen, so automatic scanning does not add it again.
     expect(harness.saplings).toHaveLength(1);
+  });
+});
+
+describe('Cross-checking the two recognisers', () => {
+  const nearest = ['G', 'H', 'Y', 'W', 'X', 'G'];
+
+  it('confirms a row when every letter OCR read matches', () => {
+    expect(crossCheckSlots(nearest, ['G', 'H', 'Y', 'W', 'X', 'G'])).toBe('GHYWXG');
+  });
+
+  it('treats a blank slot as an abstention rather than a disagreement', () => {
+    expect(crossCheckSlots(nearest, ['G', 'H', 'Y', 'W', 'X', ''])).toBe('GHYWXG');
+  });
+
+  it('refuses the row on a single contradiction, however many others agree', () => {
+    expect(crossCheckSlots(nearest, ['G', 'H', 'Y', 'W', 'X', 'W'])).toBeNull();
+    // Even a contradiction on a slot the rest of the row outvotes.
+    expect(crossCheckSlots(nearest, ['W', 'H', 'Y', 'W', 'X', 'G'])).toBeNull();
+  });
+
+  it('refuses a row OCR barely read at all', () => {
+    expect(crossCheckSlots(nearest, ['G', 'H', 'Y', 'W', '', ''])).toBeNull();
+    expect(crossCheckSlots(nearest, ['', '', '', '', '', ''])).toBeNull();
+  });
+
+  it('has nothing to say when either reader produced no row', () => {
+    expect(crossCheckSlots(null, ['G', 'H', 'Y', 'W', 'X', 'G'])).toBeNull();
+    expect(crossCheckSlots(nearest, null)).toBeNull();
   });
 });

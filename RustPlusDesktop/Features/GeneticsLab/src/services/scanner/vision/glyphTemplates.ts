@@ -372,7 +372,8 @@ export interface GlyphInspection {
  * to fix and guessing.
  */
 export function inspectGlyphImage(image: RasterImage): GlyphInspection {
-  const mask = despeckle(maskFromImage(image), image.width, image.height);
+  const cleaned = despeckle(maskFromImage(image), image.width, image.height);
+  const mask = isolateGlyphInk(cleaned, image.width, image.height);
   const features = extractGlyphFeatures(mask, image.width, image.height);
   if (!features) return { density: 0, holes: 0, match: null, reject: 'blank' };
 
@@ -384,6 +385,73 @@ export function inspectGlyphImage(image: RasterImage): GlyphInspection {
   if (features.density > 0.85) return { ...base, match, reject: 'solid' };
 
   return { ...base, match, reject: null };
+}
+
+/**
+ * Keeps the glyph and discards ink detached from it.
+ *
+ * Every letter in the alphabet is a single connected shape, so anything sitting apart from
+ * the main body is debris: moire that survived thresholding, a neighbouring badge's edge, a
+ * fragment of the separator dash. Debris is cheap to ignore visually and ruinous to measure
+ * against, because the feature extractor takes the bounding box of *all* ink. One speck in
+ * the corner of a cell stretches that box across the whole cell, so the zoning grid spreads
+ * over mostly empty space and the shape signal disappears. Measured on real cell geometry,
+ * a single 5x5 speck moved G from a perfect match to a confident X.
+ *
+ * Components are kept in proportion to the largest rather than by absolute size, so a glyph
+ * that camera blur has broken into two pieces survives while specks do not.
+ */
+export function isolateGlyphInk(
+  mask: Uint8Array,
+  width: number,
+  height: number,
+  minShareOfLargest = 0.15
+): Uint8Array {
+  const labels = new Int32Array(mask.length).fill(-1);
+  const areas: number[] = [];
+  const stack: number[] = [];
+
+  for (let start = 0; start < mask.length; start++) {
+    if (!mask[start] || labels[start] >= 0) continue;
+
+    const label = areas.length;
+    let area = 0;
+    labels[start] = label;
+    stack.push(start);
+
+    while (stack.length > 0) {
+      const index = stack.pop()!;
+      area++;
+      const x = index % width;
+      const y = (index - x) / width;
+
+      for (let dy = -1; dy <= 1; dy++) {
+        const ny = y + dy;
+        if (ny < 0 || ny >= height) continue;
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx;
+          if (nx < 0 || nx >= width) continue;
+          const neighbour = ny * width + nx;
+          if (!mask[neighbour] || labels[neighbour] >= 0) continue;
+          labels[neighbour] = label;
+          stack.push(neighbour);
+        }
+      }
+    }
+
+    areas.push(area);
+  }
+
+  if (areas.length <= 1) return mask;
+
+  const largest = Math.max(...areas);
+  const threshold = largest * minShareOfLargest;
+  const out = new Uint8Array(mask.length);
+  for (let i = 0; i < mask.length; i++) {
+    if (mask[i] && areas[labels[i]] >= threshold) out[i] = 1;
+  }
+
+  return out;
 }
 
 export function classifyGlyphImage(image: RasterImage): GlyphMatch | null {

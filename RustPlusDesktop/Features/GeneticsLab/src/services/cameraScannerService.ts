@@ -37,6 +37,34 @@ export * from './scanner/cameraScannerConfig.ts';
 /** Vote history key. The camera path has exactly one target at a time. */
 const CAMERA_VOTE_KEY = 'camera';
 
+/**
+ * Cross-checks the template's letters against OCR's, returning the row only if OCR backs it.
+ *
+ * A blank OCR slot is an abstention and is skipped; a slot OCR read differently is a
+ * contradiction and rejects the whole row, however many other slots agree. Requiring all six
+ * to be read was holding back rows where OCR simply missed one glyph, which is common and
+ * says nothing about the other five.
+ */
+export function crossCheckSlots(
+  nearestSlots: string[] | null,
+  ocrSlots: string[] | null
+): string | null {
+  if (!nearestSlots || !ocrSlots) return null;
+  if (nearestSlots.length !== 6 || ocrSlots.length !== 6) return null;
+
+  let confirmed = 0;
+  for (let slot = 0; slot < 6; slot++) {
+    const letter = ocrSlots[slot];
+    if (!letter) continue;
+    if (letter !== nearestSlots[slot]) return null;
+    confirmed++;
+  }
+
+  return confirmed >= CAMERA_SCANNER_CONFIG.recognition.minCrossCheckedSlots
+    ? nearestSlots.join('')
+    : null;
+}
+
 export interface WakeLockHandle {
   release(): Promise<void> | void;
   addEventListener?(type: 'release', handler: () => void): void;
@@ -735,20 +763,15 @@ export class CameraScannerService {
       const ocrSlots = await this.readSlotsWithOcr(built.slotImages, now);
       if (token !== this.sessionToken) return;
 
-      const ocrGenes =
-        ocrSlots && ocrSlots.length === 6 && ocrSlots.every(letter => letter.length === 1)
-          ? ocrSlots.join('')
-          : null;
-
       // The letters each slot matched best, before the margin and distance gates had a say.
       // Those gates exist to stop a lone uncertain reader from guessing; they have nothing
-      // to add once a second, independent reader has produced the same six letters.
-      const nearestGenes =
+      // to add once a second, independent reader has confirmed the same letters.
+      const nearestSlots =
         reports.length === 6 && reports.every(report => report.gene)
-          ? reports.map(report => report.gene).join('')
+          ? reports.map(report => report.gene as string)
           : null;
 
-      const { result, source } = this.combineReads(templateResult, nearestGenes, ocrGenes);
+      const { result, source } = this.combineReads(templateResult, nearestSlots, ocrSlots);
       this.publishReadDiagnostics(result, source, built, reports, ocrSlots ?? this.lastOcrSlots);
       if (!result) return;
 
@@ -781,21 +804,27 @@ export class CameraScannerService {
    */
   private combineReads(
     templateResult: GeneRecognitionResult | null,
-    nearestGenes: string | null,
-    ocrGenes: string | null
+    nearestSlots: string[] | null,
+    ocrSlots: string[] | null
   ): { result: GeneRecognitionResult | null; source: CameraReadSource | null } {
-    if (ocrGenes && nearestGenes && ocrGenes === nearestGenes) {
+    const crossChecked = crossCheckSlots(nearestSlots, ocrSlots);
+    if (crossChecked) {
       return {
         result: {
-          geneString: ocrGenes,
+          geneString: crossChecked,
           confidence: Math.max(templateResult?.confidence ?? 0, 90),
-          rawText: ocrGenes
+          rawText: crossChecked
         },
         source: 'agreed'
       };
     }
 
     if (templateResult) return { result: templateResult, source: 'template' };
+
+    const ocrGenes =
+      ocrSlots && ocrSlots.length === 6 && ocrSlots.every(letter => letter.length === 1)
+        ? ocrSlots.join('')
+        : null;
 
     if (ocrGenes) {
       // OCR alone still has to earn its place through repeated agreement, so this sits just
