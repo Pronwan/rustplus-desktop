@@ -58,6 +58,8 @@ export interface ScannerContextValue {
   switchCameraFacing: () => Promise<void>;
   attachCameraVideo: (element: HTMLVideoElement | null) => void;
   selectCameraCandidateAt: (point: { x: number; y: number }) => void;
+  isCameraDebugEnabled: boolean;
+  toggleCameraDebug: () => void;
 }
 
 const ScannerContext = createContext<ScannerContextValue | null>(null);
@@ -498,6 +500,16 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     cameraServiceRef.current?.selectCandidateAt(point);
   }, []);
 
+  const [isCameraDebugEnabled, setIsCameraDebugEnabled] = useState(false);
+
+  const toggleCameraDebug = useCallback(() => {
+    setIsCameraDebugEnabled(previous => {
+      const next = !previous;
+      cameraServiceRef.current?.setDebugPreviewEnabled(next);
+      return next;
+    });
+  }, []);
+
   // Release the camera if the provider itself goes away.
   useEffect(() => {
     return () => {
@@ -549,7 +561,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         resumeCameraScanner,
         switchCameraFacing,
         attachCameraVideo,
-        selectCameraCandidateAt
+        selectCameraCandidateAt,
+        isCameraDebugEnabled,
+        toggleCameraDebug
       }}
     >
       {children}

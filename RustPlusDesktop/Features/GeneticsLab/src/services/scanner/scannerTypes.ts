@@ -243,6 +243,16 @@ export interface CameraScannerState {
     pendingSamples: number;
     /** Samples needed before a result can be confirmed. */
     sampleWindow: number;
+    /** Ink share per glyph cell. 0 means that cell reached the recogniser blank. */
+    slotInk: number[];
+    /** False when the measured slots fall outside the normalised row. */
+    slotsWithinBounds: boolean;
+    /**
+     * PNG data URL of the exact image handed to the recogniser, when the debug view is on.
+     * Nothing else can show whether a failing read is a blank strip, a misaligned crop, or a
+     * genuinely unreadable glyph.
+     */
+    stripPreview: string | null;
   };
 }
 

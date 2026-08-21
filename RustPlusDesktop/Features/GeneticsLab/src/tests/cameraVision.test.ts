@@ -1016,3 +1016,69 @@ describe('Camera gene strip', () => {
     expect(buildCameraGeneStrip(normalizedRow(), { ...SLOTS, height: 0 })).toBeNull();
   });
 });
+
+describe('Camera gene strip thresholding', () => {
+  const SLOTS = { baseX: 4, baseY: 4, geneWidth: 30, gapWidth: 10, height: 34 };
+
+  function rowWith(badge: [number, number, number], panel: [number, number, number]): RasterImage {
+    const width = SLOTS.baseX + 6 * (SLOTS.geneWidth + SLOTS.gapWidth);
+    const height = SLOTS.baseY * 2 + SLOTS.height;
+    const img: RasterImage = { data: new Uint8ClampedArray(width * height * 4), width, height };
+    const put = (x: number, y: number, c: number[]) => {
+      const i = (y * width + x) * 4;
+      img.data[i] = c[0];
+      img.data[i + 1] = c[1];
+      img.data[i + 2] = c[2];
+      img.data[i + 3] = 255;
+    };
+
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) put(x, y, panel);
+    for (let slot = 0; slot < 6; slot++) {
+      const x0 = SLOTS.baseX + slot * (SLOTS.geneWidth + SLOTS.gapWidth);
+      for (let y = SLOTS.baseY; y < SLOTS.baseY + SLOTS.height; y++) {
+        for (let x = x0; x < x0 + SLOTS.geneWidth; x++) {
+          const glyph = Math.abs(x - (x0 + 15)) < 4 && Math.abs(y - (SLOTS.baseY + 17)) < 11;
+          put(x, y, glyph ? [240, 240, 235] : badge);
+        }
+      }
+    }
+    return img;
+  }
+
+  it('finds the glyph whether the badge reads saturated or washed out', () => {
+    // A camera photographing a monitor desaturates badge colour unpredictably. A fixed
+    // fraction of the intensity range picks a different side of the boundary depending on
+    // that shift; Otsu locates the split from the data.
+    const saturated = buildCameraGeneStrip(rowWith([60, 200, 40], [26, 26, 30]), SLOTS)!;
+    const washed = buildCameraGeneStrip(rowWith([150, 235, 130], [35, 35, 40]), SLOTS)!;
+    const dim = buildCameraGeneStrip(rowWith([40, 90, 35], [12, 12, 16]), SLOTS)!;
+
+    for (const built of [saturated, washed, dim]) {
+      const coverage = inkCoverage(built.strip);
+      expect(coverage).toBeGreaterThan(0.01);
+      expect(coverage).toBeLessThan(0.3);
+      expect(built.slotInk.every(ink => ink > 0.005)).toBe(true);
+    }
+  });
+
+  it('reports slots that fall outside the normalised row instead of reading edge pixels', () => {
+    const row = rowWith([60, 200, 40], [26, 26, 30]);
+
+    const inside = buildCameraGeneStrip(row, SLOTS)!;
+    expect(inside.slotsWithinBounds).toBe(true);
+
+    const outside = buildCameraGeneStrip(row, { ...SLOTS, baseX: row.width - 10 })!;
+    expect(outside.slotsWithinBounds).toBe(false);
+  });
+
+  it('leaves a featureless slot blank rather than splitting noise', () => {
+    const flat = buildCameraGeneStrip(rowWith([60, 200, 40], [26, 26, 30]), {
+      ...SLOTS,
+      // Aim the slots at the flat panel between badges.
+      baseY: 0,
+      height: 3
+    })!;
+
+    expect(inkCoverage(flat.strip)).toBeLessThan(0.02);
+  });
+});

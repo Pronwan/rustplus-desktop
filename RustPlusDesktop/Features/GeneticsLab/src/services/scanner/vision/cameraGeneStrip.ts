@@ -32,6 +32,10 @@ export interface CameraStripResult {
   strip: RasterImage;
   /** The same glyphs individually, for the single-character fallback. */
   slotImages: RasterImage[];
+  /** Ink share per slot. A slot at 0 or near 1 produced nothing a recogniser can use. */
+  slotInk: number[];
+  /** True when the measured slot rectangles actually fall inside the normalised row. */
+  slotsWithinBounds: boolean;
 }
 
 const GENES_PER_ROW = 6;
@@ -78,9 +82,48 @@ function slotThreshold(
     }
   }
 
-  // Mirrors the desktop rule, applied locally: a flat slot with no real contrast falls back
-  // to a fixed cut rather than amplifying noise into letters.
-  return max - min > 35 ? min + (max - min) * 0.45 : 110;
+  // A flat slot has no letter in it. Splitting noise would invent strokes.
+  if (max - min <= 35) return 255;
+
+  // Otsu: pick the cut that best separates the slot's two populations, glyph and badge.
+  // A fixed fraction of the range guesses where that boundary is and gets it wrong whenever
+  // exposure or badge colour shifts, which on a photographed monitor is constantly.
+  const histogram = new Int32Array(256);
+  let total = 0;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      histogram[Math.round(minChannelAt(source, x0 + x, y0 + y))]++;
+      total++;
+    }
+  }
+
+  let sum = 0;
+  for (let level = 0; level < 256; level++) sum += level * histogram[level];
+
+  let backgroundWeight = 0;
+  let backgroundSum = 0;
+  let bestVariance = -1;
+  let bestThreshold = min + (max - min) * 0.45;
+
+  for (let level = 0; level < 256; level++) {
+    backgroundWeight += histogram[level];
+    if (backgroundWeight === 0) continue;
+    const foregroundWeight = total - backgroundWeight;
+    if (foregroundWeight === 0) break;
+
+    backgroundSum += level * histogram[level];
+    const backgroundMean = backgroundSum / backgroundWeight;
+    const foregroundMean = (sum - backgroundSum) / foregroundWeight;
+    const delta = backgroundMean - foregroundMean;
+    const variance = backgroundWeight * foregroundWeight * delta * delta;
+
+    if (variance > bestVariance) {
+      bestVariance = variance;
+      bestThreshold = level;
+    }
+  }
+
+  return bestThreshold;
 }
 
 /**
@@ -107,7 +150,8 @@ function renderSlot(
     const sy = sourceY + (y + 0.5) * scaleY;
     for (let x = 0; x < cellWidth; x++) {
       const sx = sourceX + (x + 0.5) * scaleX;
-      if (minChannelAt(source, sx, sy) < threshold) continue;
+      // Otsu returns the top of the background class, so the glyph is strictly above it.
+      if (minChannelAt(source, sx, sy) <= threshold) continue;
 
       // Letter stroke: paint it black. Everything else stays the white the strip began with.
       const i = ((destY + y) * target.width + (destX + x)) * 4;
@@ -133,7 +177,17 @@ export function buildCameraGeneStrip(
 
   const strip = createWhiteImage(stripWidth, stripHeight);
   const slotImages: RasterImage[] = [];
+  const slotInk: number[] = [];
   const pitch = slots.geneWidth + slots.gapWidth;
+
+  // If the measured slots sit outside the normalised row, every sample clamps to an edge
+  // pixel and the strip comes out blank. Worth knowing about explicitly.
+  const lastSlotRight = slots.baseX + 5 * pitch + slots.geneWidth;
+  const slotsWithinBounds =
+    slots.baseX >= -1 &&
+    slots.baseY >= -1 &&
+    lastSlotRight <= normalizedRow.width + 1 &&
+    slots.baseY + slots.height <= normalizedRow.height + 1;
 
   for (let slot = 0; slot < GENES_PER_ROW; slot++) {
     const sourceX = slots.baseX + slot * pitch;
@@ -168,9 +222,10 @@ export function buildCameraGeneStrip(
       threshold
     );
     slotImages.push(slotImage);
+    slotInk.push(inkCoverage(slotImage));
   }
 
-  return { strip, slotImages };
+  return { strip, slotImages, slotInk, slotsWithinBounds };
 }
 
 /** Share of black pixels in an image. Used to spot a strip that came out empty or solid. */

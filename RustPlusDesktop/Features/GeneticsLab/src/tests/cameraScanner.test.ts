@@ -1097,7 +1097,10 @@ describe('Camera OCR confidence is independent of the desktop scanner', () => {
         lastConfidence: 12,
         lastSource: null,
         pendingSamples: 0,
-        sampleWindow: 4
+        sampleWindow: 4,
+        slotInk: [],
+        slotsWithinBounds: true,
+        stripPreview: null
       }
     });
 

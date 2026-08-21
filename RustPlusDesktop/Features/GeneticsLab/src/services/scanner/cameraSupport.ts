@@ -47,7 +47,10 @@ export function createIdleCameraState(): CameraScannerState {
       lastConfidence: null,
       lastSource: null,
       pendingSamples: 0,
-      sampleWindow: 0
+      sampleWindow: 0,
+      slotInk: [],
+      slotsWithinBounds: true,
+      stripPreview: null
     },
     candidateCount: 0
   };

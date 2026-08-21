@@ -196,6 +196,9 @@ export class CameraScannerService {
   private readAttempts = 0;
   private lastReadAt = 0;
   private acceptedUntil = 0;
+  private debugPreviewEnabled = false;
+  private lastPreviewAt = 0;
+  private lastStrip: { image: import('./scanner/scannerTypes.ts').RasterImage } | null = null;
 
   private degradationLevel = 0;
   private frameCosts: number[] = [];
@@ -692,7 +695,7 @@ export class CameraScannerService {
         }
       }
 
-      this.publishReadDiagnostics(result, source);
+      this.publishReadDiagnostics(result, source, built);
       if (!result) return;
 
       // 3-of-4 temporal confirmation, the same policy the desktop scanner uses.
@@ -729,9 +732,22 @@ export class CameraScannerService {
    */
   private publishReadDiagnostics(
     result: GeneRecognitionResult | null,
-    source: 'row' | 'slots' | null
+    source: 'row' | 'slots' | null,
+    built: { strip: import('./scanner/scannerTypes.ts').RasterImage; slotInk: number[]; slotsWithinBounds: boolean }
   ): void {
     const raw = this.recognizer.getLastRawRead?.() ?? null;
+
+    let stripPreview = this.state.diagnostics.stripPreview;
+    if (this.debugPreviewEnabled) {
+      const now = this.env.now();
+      if (now - this.lastPreviewAt >= 500) {
+        this.lastPreviewAt = now;
+        stripPreview = encodeRasterPreview(built.strip);
+      }
+    } else {
+      stripPreview = null;
+    }
+
     this.setState({
       diagnostics: {
         readAttempts: this.readAttempts,
@@ -739,7 +755,10 @@ export class CameraScannerService {
         lastConfidence: result?.confidence ?? (raw?.confidence || null),
         lastSource: source,
         pendingSamples: this.voting.getSampleCount(CAMERA_VOTE_KEY),
-        sampleWindow: CAMERA_SCANNER_CONFIG.confirmation.samples
+        sampleWindow: CAMERA_SCANNER_CONFIG.confirmation.samples,
+        slotInk: built.slotInk.map(value => Math.round(value * 100) / 100),
+        slotsWithinBounds: built.slotsWithinBounds,
+        stripPreview
       }
     });
   }
@@ -782,6 +801,21 @@ export class CameraScannerService {
       this.stopAnalysisLoop();
       this.startAnalysisLoop();
     }
+  }
+
+  /**
+   * Turns on a preview of the exact image handed to the recogniser. Off by default: it costs
+   * a PNG encode, and it is only useful while diagnosing a read failure.
+   */
+  public setDebugPreviewEnabled(enabled: boolean): void {
+    this.debugPreviewEnabled = enabled;
+    if (!enabled) {
+      this.setState({ diagnostics: { ...this.state.diagnostics, stripPreview: null } });
+    }
+  }
+
+  public isDebugPreviewEnabled(): boolean {
+    return this.debugPreviewEnabled;
   }
 
   /** Current degradation step, for diagnostics and tests. */
@@ -882,6 +916,18 @@ export class CameraScannerService {
 
 function clamp(value: number, min: number, max: number): number {
   return value < min ? min : value > max ? max : value;
+}
+
+function encodeRasterPreview(
+  image: import('./scanner/scannerTypes.ts').RasterImage
+): string | null {
+  const canvas = rasterToCanvas(image, 7);
+  if (!canvas) return null;
+  try {
+    return canvas.toDataURL('image/png');
+  } catch {
+    return null;
+  }
 }
 
 function stopStreamTracks(stream: MediaStream): void {

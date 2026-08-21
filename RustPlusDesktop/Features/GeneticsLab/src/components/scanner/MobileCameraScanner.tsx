@@ -59,7 +59,9 @@ export const MobileCameraScanner: React.FC = () => {
     resumeCameraScanner,
     switchCameraFacing,
     attachCameraVideo,
-    selectCameraCandidateAt
+    selectCameraCandidateAt,
+    isCameraDebugEnabled,
+    toggleCameraDebug
   } = useScanner();
   const { clones } = useWorkspace();
 
@@ -370,13 +372,23 @@ export const MobileCameraScanner: React.FC = () => {
           )}
 
           {/* Beta diagnostics. Without this a failing read is indistinguishable from a
-              hanging one, and there is nothing to report back for tuning. */}
+              hanging one, and there is nothing to report back for tuning. Tapping it shows
+              the exact image being handed to the recogniser. */}
           {cameraState.diagnostics.readAttempts > 0 && (
             <Typography
+              component="button"
+              onClick={toggleCameraDebug}
+              aria-label="Toggle OCR debug view"
               sx={{
+                display: 'block',
+                width: '100%',
+                textAlign: 'left',
+                background: 'none',
+                border: 'none',
+                p: 0,
                 fontFamily: 'monospace',
                 fontSize: '0.66rem',
-                color: '#6B7280',
+                color: isCameraDebugEnabled ? '#00E5FF' : '#6B7280',
                 mt: 0.5,
                 wordBreak: 'break-all'
               }}
@@ -385,7 +397,34 @@ export const MobileCameraScanner: React.FC = () => {
               {cameraState.diagnostics.lastSource ? ` (${cameraState.diagnostics.lastSource})` : ''}
               {` · ${cameraState.diagnostics.pendingSamples}/${cameraState.diagnostics.sampleWindow || CAMERA_CONFIRMATION_SAMPLES} samples`}
               {` · ${cameraState.diagnostics.readAttempts} reads`}
+              {!cameraState.diagnostics.slotsWithinBounds && ' · SLOTS OUT OF BOUNDS'}
             </Typography>
+          )}
+
+          {isCameraDebugEnabled && (
+            <Box sx={{ mt: 0.75 }}>
+              <Typography sx={{ fontFamily: 'monospace', fontSize: '0.62rem', color: '#6B7280' }}>
+                {`ink ${cameraState.diagnostics.slotInk.map(v => v.toFixed(2)).join(' ')}`}
+              </Typography>
+              {cameraState.diagnostics.stripPreview ? (
+                <Box
+                  component="img"
+                  src={cameraState.diagnostics.stripPreview}
+                  alt="Image passed to the text recogniser"
+                  sx={{
+                    mt: 0.5,
+                    width: '100%',
+                    imageRendering: 'pixelated',
+                    border: '1px solid #374151',
+                    backgroundColor: '#FFFFFF'
+                  }}
+                />
+              ) : (
+                <Typography sx={{ fontFamily: 'monospace', fontSize: '0.62rem', color: '#6B7280' }}>
+                  waiting for the next read…
+                </Typography>
+              )}
+            </Box>
           )}
         </Box>
       )}
