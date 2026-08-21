@@ -57,7 +57,15 @@ export const CAMERA_SCANNER_CONFIG = {
      */
     minRowConfidence: 40,
     /** Height of one glyph cell fed to the classifier, in pixels. */
-    cellHeight: 120
+    cellHeight: 120,
+    /**
+     * Minimum gap between OCR passes.
+     *
+     * Template matching runs in microseconds and happens on every tracking frame. OCR costs
+     * tens of milliseconds per slot, so it runs alongside on a throttle: often enough to
+     * confirm a row within a glance, rarely enough to leave the tracking loop its budget.
+     */
+    ocrIntervalMs: 220
   },
 
   selection: {

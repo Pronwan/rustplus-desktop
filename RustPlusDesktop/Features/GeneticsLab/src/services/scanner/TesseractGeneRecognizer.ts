@@ -171,15 +171,10 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
   }
 
   /**
-   * Fallback Slot Recognition using secondary worker if single-line was ambiguous.
+   * Single-character worker, created on first use. Page segmentation mode 10 treats the
+   * image as exactly one character, so it cannot merge or drop glyphs the way line mode can.
    */
-  public async recognizeSlots(
-    canvases: HTMLCanvasElement[],
-    minGeneConfidence: number = SCANNER_CONFIG.recognition.minGeneConfidence,
-    minAverageConfidence: number = SCANNER_CONFIG.recognition.minAverageConfidence
-  ): Promise<GeneRecognitionResult | null> {
-    if (canvases.length !== 6) return null;
-
+  private async ensureSlotWorker(): Promise<TesseractWorker | null> {
     if (!this.fallbackWorker) {
       try {
         const workerPath = this.getAssetUrl('tesseract/worker.min.js');
@@ -193,11 +188,53 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
           '10'
         );
       } catch {
-        if (!this.lineWorker) return null;
+        // Fall back to the line worker below rather than failing the read outright.
       }
     }
 
-    const worker = this.fallbackWorker || this.lineWorker;
+    return this.fallbackWorker || this.lineWorker;
+  }
+
+  /** Pre-creates the single-character worker so the first slot read is not the slow one. */
+  public async warmupSlotWorker(): Promise<void> {
+    await this.ensureSlotWorker();
+  }
+
+  /**
+   * Per-slot letters with no gating at all, for the camera path.
+   *
+   * `recognizeSlots` folds six answers into one nullable row result, so a row that read five
+   * letters and lost the sixth is indistinguishable from one that read nothing. The camera
+   * path cross-checks OCR against template matching and shows the user what it saw, so it
+   * needs the individual answers, blanks included.
+   */
+  public async readSlotLetters(canvases: HTMLCanvasElement[]): Promise<string[]> {
+    const worker = await this.ensureSlotWorker();
+    if (!worker) return canvases.map(() => '');
+
+    return Promise.all(
+      canvases.map(async canvas => {
+        try {
+          const res = await worker.recognize(TesseractGeneRecognizer.canvasToInput(canvas));
+          return normalizeGeneGlyph((res.data.text || '').trim());
+        } catch {
+          return '';
+        }
+      })
+    );
+  }
+
+  /**
+   * Fallback Slot Recognition using secondary worker if single-line was ambiguous.
+   */
+  public async recognizeSlots(
+    canvases: HTMLCanvasElement[],
+    minGeneConfidence: number = SCANNER_CONFIG.recognition.minGeneConfidence,
+    minAverageConfidence: number = SCANNER_CONFIG.recognition.minAverageConfidence
+  ): Promise<GeneRecognitionResult | null> {
+    if (canvases.length !== 6) return null;
+
+    const worker = await this.ensureSlotWorker();
     if (!worker) return null;
 
     const results = await Promise.all(canvases.map(async (canvas) => {

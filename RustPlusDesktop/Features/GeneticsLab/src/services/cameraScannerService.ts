@@ -2,15 +2,18 @@ import {
   CameraAnalysisResult,
   CameraFacingMode,
   CameraFrameAnalyzer,
+  CameraReadSource,
   CameraScannerErrorCode,
   CameraScannerEvent,
   CameraScannerEventListener,
   CameraCaptureResult,
   CameraScannerState,
+  CameraSlotReport,
   CameraTarget,
   CameraTrackCapabilities,
   GeneRecognitionResult,
-  Point
+  Point,
+  RasterImage
 } from './scanner/scannerTypes.ts';
 import { CAMERA_SCANNER_CONFIG } from './scanner/cameraScannerConfig.ts';
 import {
@@ -21,8 +24,10 @@ import {
 import { buildCameraGeneStrip } from './scanner/vision/cameraGeneStrip.ts';
 import {
   GlyphRowRecognizer,
+  inspectGeneRow,
   recognizeGenesByTemplate
 } from './scanner/vision/templateGeneRecognizer.ts';
+import { CameraSlotOcr, createTesseractSlotOcr } from './scanner/vision/cameraSlotOcr.ts';
 import { rasterToCanvas, releaseRasterCanvases } from './scanner/vision/frameGrabber.ts';
 import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
 import { CameraTargetRearm } from './scanner/CameraTargetRearm.ts';
@@ -54,6 +59,11 @@ export interface CameraScannerOptions {
   env?: Partial<CameraScannerEnvironment>;
   /** Overridable for tests. Defaults to template matching against the gene alphabet. */
   glyphRecognizer?: GlyphRowRecognizer;
+  /**
+   * Second-opinion OCR. Omit to lazily load Tesseract once the camera is running; pass null
+   * to run on template matching alone, which is what the headless tests do.
+   */
+  slotOcr?: CameraSlotOcr | null;
 }
 
 function defaultEnvironment(): CameraScannerEnvironment {
@@ -203,6 +213,12 @@ export class CameraScannerService {
   private lastComponentCount = 0;
   /** Most recent row with usable geometry, whether or not a quality gate let it through. */
   private captureCandidate: CameraTarget | null = null;
+  private slotOcr: CameraSlotOcr | null = null;
+  private readonly ocrInjected: boolean;
+  private ocrLoading = false;
+  private lastOcrAt = 0;
+  /** Kept for the debug line only, never for confirming a later frame's template read. */
+  private lastOcrSlots: string[] | null = null;
   private debugPreviewEnabled = false;
   private lastPreviewAt = 0;
   private lastStrip: { image: import('./scanner/scannerTypes.ts').RasterImage } | null = null;
@@ -220,6 +236,8 @@ export class CameraScannerService {
   constructor(options: CameraScannerOptions = {}) {
     this.env = { ...defaultEnvironment(), ...options.env };
     this.recognizeGlyphs = options.glyphRecognizer ?? recognizeGenesByTemplate;
+    this.ocrInjected = 'slotOcr' in options;
+    this.slotOcr = options.slotOcr ?? null;
   }
 
   public static isSupported(env?: Partial<CameraScannerEnvironment>): boolean {
@@ -286,10 +304,22 @@ export class CameraScannerService {
     });
     if (!built) return { status: 'unreadable', geneString: null, confidence: null };
 
-    const result = this.recognizeGlyphs(built.slotImages);
-    if (!result) return { status: 'unreadable', geneString: null, confidence: null };
+    // Deliberately ungated. Manual capture exists precisely for the rows the automatic
+    // gates refuse, so it falls back to each slot's nearest template and lets the user fix
+    // whatever is wrong. Only a slot with no ink at all has nothing to offer.
+    const reports = inspectGeneRow(built.slotImages);
+    if (reports.length !== 6 || reports.some(report => !report.gene)) {
+      return { status: 'unreadable', geneString: null, confidence: null };
+    }
 
-    return { status: 'read', geneString: result.geneString, confidence: result.confidence };
+    const geneString = reports.map(report => report.gene).join('');
+    const meanMargin = reports.reduce((sum, report) => sum + report.margin, 0) / reports.length;
+
+    return {
+      status: 'read',
+      geneString,
+      confidence: Math.min(100, Math.round(45 + meanMargin * 60))
+    };
   }
 
   /** Confirms a manually captured or corrected row, emitting it like any accepted read. */
@@ -415,6 +445,9 @@ export class CameraScannerService {
     this.visibilityCleanup = this.env.addVisibilityListener(() => this.handleVisibilityChange());
 
     void this.refreshCameraSwitchAvailability(token);
+    // Loads in the background so the first frames are read by template matching alone
+    // rather than waiting on a worker that may take seconds to appear on a cold cache.
+    this.ensureSlotOcr();
     this.startAnalysisLoop();
     return true;
   }
@@ -695,33 +728,43 @@ export class CameraScannerService {
 
       // Six slots in, six answers out. Runs in microseconds, so it happens on every
       // tracking frame rather than on a throttle.
-      const result = this.recognizeGlyphs(built.slotImages);
+      const reports = inspectGeneRow(built.slotImages);
+      const templateResult = this.recognizeGlyphs(built.slotImages);
+
+      // The slow half, on its own throttle. Null means it did not run this frame.
+      const ocrSlots = await this.readSlotsWithOcr(built.slotImages, now);
       if (token !== this.sessionToken) return;
 
-      this.publishReadDiagnostics(result, result ? 'template' : null, built);
+      const ocrGenes =
+        ocrSlots && ocrSlots.length === 6 && ocrSlots.every(letter => letter.length === 1)
+          ? ocrSlots.join('')
+          : null;
+
+      // The letters each slot matched best, before the margin and distance gates had a say.
+      // Those gates exist to stop a lone uncertain reader from guessing; they have nothing
+      // to add once a second, independent reader has produced the same six letters.
+      const nearestGenes =
+        reports.length === 6 && reports.every(report => report.gene)
+          ? reports.map(report => report.gene).join('')
+          : null;
+
+      const { result, source } = this.combineReads(templateResult, nearestGenes, ocrGenes);
+      this.publishReadDiagnostics(result, source, built, reports, ocrSlots ?? this.lastOcrSlots);
       if (!result) return;
 
-      // 3-of-4 temporal confirmation, the same policy the desktop scanner uses.
+      // Two independent recognisers landing on the same six letters is stronger evidence
+      // than the same recogniser repeating itself, so it skips the confirmation window
+      // entirely. Waiting four frames for a row both readers already agree on is what made
+      // a single clone cost a hundred reads.
+      if (source === 'agreed') {
+        this.acceptRead(result.geneString, result.confidence);
+        return;
+      }
+
+      // Otherwise fall back to 3-of-4 temporal confirmation, as the desktop scanner does.
       const confirmed = this.voting.addCandidate(CAMERA_VOTE_KEY, result);
       if (!confirmed) return;
-
-      if (!this.rearm.shouldEmit(confirmed.geneString)) return;
-      this.rearm.recordEmit(confirmed.geneString);
-      this.voting.reset(CAMERA_VOTE_KEY);
-
-      this.acceptedUntil = this.env.now() + CAMERA_SCANNER_CONFIG.confirmation.acceptedHoldMs;
-      this.setState({
-        phase: 'accepted',
-        acceptedCount: this.state.acceptedCount + 1,
-        lastAcceptedGenes: confirmed.geneString,
-        qualityIssues: []
-      });
-
-      this.emit({
-        type: 'SAPLING-FOUND',
-        geneString: confirmed.geneString,
-        confidence: confirmed.confidence
-      });
+      this.acceptRead(confirmed.geneString, confirmed.confidence);
     } catch {
       // A failed read is just a frame that produced nothing.
     } finally {
@@ -730,13 +773,135 @@ export class CameraScannerService {
   }
 
   /**
+   * Reconciles the two recognisers.
+   *
+   * Agreement is the fast path. Disagreement is treated as neither reader being trustworthy
+   * on its own, so the row goes back through temporal confirmation rather than one of them
+   * being arbitrarily preferred.
+   */
+  private combineReads(
+    templateResult: GeneRecognitionResult | null,
+    nearestGenes: string | null,
+    ocrGenes: string | null
+  ): { result: GeneRecognitionResult | null; source: CameraReadSource | null } {
+    if (ocrGenes && nearestGenes && ocrGenes === nearestGenes) {
+      return {
+        result: {
+          geneString: ocrGenes,
+          confidence: Math.max(templateResult?.confidence ?? 0, 90),
+          rawText: ocrGenes
+        },
+        source: 'agreed'
+      };
+    }
+
+    if (templateResult) return { result: templateResult, source: 'template' };
+
+    if (ocrGenes) {
+      // OCR alone still has to earn its place through repeated agreement, so this sits just
+      // above the confirmation floor rather than anywhere near certainty.
+      return {
+        result: { geneString: ocrGenes, confidence: 55, rawText: ocrGenes },
+        source: 'ocr'
+      };
+    }
+
+    return { result: null, source: null };
+  }
+
+  /**
+   * Runs OCR at most once per interval, and returns null on the frames it skips.
+   *
+   * Returning the previous frame's letters would let a stale row confirm the current one,
+   * which is exactly the class of mistake that saves the wrong clone.
+   */
+  private async readSlotsWithOcr(slotImages: RasterImage[], now: number): Promise<string[] | null> {
+    const ocr = this.slotOcr;
+    if (!ocr) return null;
+    if (now - this.lastOcrAt < CAMERA_SCANNER_CONFIG.recognition.ocrIntervalMs) return null;
+
+    this.lastOcrAt = now;
+    try {
+      const letters = await ocr.readSlots(slotImages);
+      this.lastOcrSlots = letters;
+      return letters;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Emits a confirmed row, subject to the rearm guard so one clone is not added twice. */
+  private acceptRead(geneString: string, confidence: number): void {
+    if (!this.rearm.shouldEmit(geneString)) return;
+    this.rearm.recordEmit(geneString);
+    this.voting.reset(CAMERA_VOTE_KEY);
+
+    this.acceptedUntil = this.env.now() + CAMERA_SCANNER_CONFIG.confirmation.acceptedHoldMs;
+    this.setState({
+      phase: 'accepted',
+      acceptedCount: this.state.acceptedCount + 1,
+      lastAcceptedGenes: geneString,
+      qualityIssues: []
+    });
+
+    this.emit({ type: 'SAPLING-FOUND', geneString, confidence });
+  }
+
+  /**
+   * Loads Tesseract once the camera is live.
+   *
+   * Deferred to here rather than to module load so the OCR bundle never reaches a desktop
+   * user who will not open the camera, and so a failure to load degrades to template-only
+   * scanning instead of breaking the session.
+   */
+  private ensureSlotOcr(): void {
+    if (this.ocrInjected || this.slotOcr || this.ocrLoading) return;
+    // OCR draws each slot into a canvas, so without a DOM there is nothing it can read.
+    // This is also what keeps the headless lifecycle tests off the Tesseract bundle.
+    if (typeof document === 'undefined') return;
+    this.ocrLoading = true;
+
+    const token = this.sessionToken;
+    void (async () => {
+      try {
+        const ocr = await createTesseractSlotOcr();
+        if (token !== this.sessionToken) {
+          void ocr.terminate();
+          return;
+        }
+        await ocr.warmup();
+        if (token !== this.sessionToken) {
+          void ocr.terminate();
+          return;
+        }
+        this.slotOcr = ocr;
+      } catch {
+        // Template matching alone still reads rows. OCR is a second opinion, not a dependency.
+      } finally {
+        this.ocrLoading = false;
+      }
+    })();
+  }
+
+  private releaseSlotOcr(): void {
+    if (this.ocrInjected) return;
+    const ocr = this.slotOcr;
+    this.slotOcr = null;
+    this.lastOcrSlots = null;
+    this.lastOcrAt = 0;
+    if (ocr) void ocr.terminate();
+  }
+
+  /**
    * Surfaces what the recogniser actually saw. A read that is correct but below the
    * confidence floor looks identical to a read that failed outright unless it is reported.
    */
   private publishReadDiagnostics(
     result: GeneRecognitionResult | null,
-    source: 'template' | null,
-    built: { strip: import('./scanner/scannerTypes.ts').RasterImage; slotInk: number[]; slotsWithinBounds: boolean }
+    source: CameraReadSource | null,
+    built: { strip: RasterImage; slotInk: number[]; slotsWithinBounds: boolean },
+    slotReports: CameraSlotReport[],
+    ocrSlots: string[] | null
   ): void {
 
     let stripPreview = this.state.diagnostics.stripPreview;
@@ -760,6 +925,8 @@ export class CameraScannerService {
         sampleWindow: CAMERA_SCANNER_CONFIG.confirmation.samples,
         componentCount: this.lastComponentCount,
         slotInk: built.slotInk.map(value => Math.round(value * 100) / 100),
+        slotReports,
+        ocrSlots,
         slotsWithinBounds: built.slotsWithinBounds,
         stripPreview
       }
@@ -847,6 +1014,7 @@ export class CameraScannerService {
     this.lastReadAt = 0;
     this.acceptedUntil = 0;
     releaseRasterCanvases();
+    this.releaseSlotOcr();
     this.degradationLevel = 0;
     this.frameCosts = [];
 

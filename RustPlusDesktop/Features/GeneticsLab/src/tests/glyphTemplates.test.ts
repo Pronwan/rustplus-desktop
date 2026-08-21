@@ -10,8 +10,10 @@ import {
 } from '../services/scanner/vision/glyphTemplates.ts';
 import {
   DEFAULT_TEMPLATE_OPTIONS,
+  inspectGeneRow,
   recognizeGenesByTemplate
 } from '../services/scanner/vision/templateGeneRecognizer.ts';
+import { formatSlotDiagnostics } from '../services/scanner/cameraStatusMessages.ts';
 import type { RasterImage } from '../services/scanner/scannerTypes.ts';
 
 const SIZE = 40;
@@ -199,5 +201,54 @@ describe('Template row recognition', () => {
   it('reads every letter of the alphabet in row position', () => {
     const result = recognizeGenesByTemplate(slotsFor('GHYWXH'));
     expect(result?.geneString).toBe('GHYWXH');
+  });
+});
+
+describe('Slot-level rejection reporting', () => {
+  const blankCell = (): RasterImage => toImage(new Uint8Array(SIZE * SIZE));
+  const solidCell = (): RasterImage => toImage(new Uint8Array(SIZE * SIZE).fill(1));
+
+  it('names the gate that rejected each slot instead of collapsing the row to null', () => {
+    const good = toImage(rasterizeGlyph('H', SIZE));
+    const reports = inspectGeneRow([good, blankCell(), solidCell(), good, good, good]);
+
+    expect(reports).toHaveLength(6);
+    expect(reports[0].reject).toBeNull();
+    expect(reports[0].gene).toBe('H');
+    expect(reports[1].reject).toBe('blank');
+    expect(reports[2].reject).toBe('solid');
+
+    // The row itself still fails, which is the behaviour the reporting explains.
+    expect(recognizeGenesByTemplate([good, blankCell(), solidCell(), good, good, good])).toBeNull();
+  });
+
+  it('keeps the nearest template and its scores on a slot that failed a gate', () => {
+    // A cell whose ink is below the density floor: it has a nearest match, but the match
+    // means nothing, and reporting both is what distinguishes the two cases on a device.
+    const faint = new Uint8Array(SIZE * SIZE);
+    faint[10 * SIZE + 10] = 1;
+    faint[10 * SIZE + 11] = 1;
+
+    const [report] = inspectGeneRow([toImage(faint)]);
+    expect(report.reject).not.toBeNull();
+    expect(report.distance).toBeGreaterThanOrEqual(0);
+  });
+
+  it('reports every slot on one line each, with the OCR letter beside the template letter', () => {
+    const reports = inspectGeneRow([toImage(rasterizeGlyph('W', SIZE)), blankCell()]);
+    const lines = formatSlotDiagnostics(reports, ['W', '']);
+
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toContain('tpl W');
+    expect(lines[0]).toContain('ocr W');
+    expect(lines[0]).toContain('ok');
+    expect(lines[1]).toContain('tpl -');
+    expect(lines[1]).toContain('ocr -');
+    expect(lines[1]).toContain('blank');
+  });
+
+  it('says so explicitly when OCR has not run yet', () => {
+    const lines = formatSlotDiagnostics(inspectGeneRow([toImage(rasterizeGlyph('X', SIZE))]), null);
+    expect(lines[lines.length - 1]).toBe('ocr not run yet');
   });
 });

@@ -330,12 +330,42 @@ export function despeckle(mask: Uint8Array, width: number, height: number): Uint
   return out;
 }
 
-export function classifyGlyphImage(image: RasterImage): GlyphMatch | null {
+/** Why a cell produced no letter, or null when it produced one. */
+export type GlyphRejection = 'blank' | 'empty' | 'solid';
+
+export interface GlyphInspection {
+  /** Ink share of the ink bounding box, 0 when the cell held no ink at all. */
+  density: number;
+  holes: number;
+  /** Nearest template and its scores. Present even when a gate rejects the cell. */
+  match: GlyphMatch | null;
+  reject: GlyphRejection | null;
+}
+
+/**
+ * Classifies a cell and reports what it saw either way.
+ *
+ * `classifyGlyphImage` collapses every failure into `null`, which makes a blank cell, an
+ * over-inked cell and a genuinely ambiguous glyph indistinguishable from each other. On a
+ * device that only shows a status line, that is the difference between knowing which stage
+ * to fix and guessing.
+ */
+export function inspectGlyphImage(image: RasterImage): GlyphInspection {
   const mask = despeckle(maskFromImage(image), image.width, image.height);
   const features = extractGlyphFeatures(mask, image.width, image.height);
-  if (!features) return null;
+  if (!features) return { density: 0, holes: 0, match: null, reject: 'blank' };
+
+  const base = { density: features.density, holes: features.holes };
   // A cell that is almost empty or almost solid carries no glyph, whatever the nearest
-  // template happens to be.
-  if (features.density < 0.05 || features.density > 0.85) return null;
-  return classifyGlyphFeatures(features);
+  // template happens to be. Still report the nearest one so the numbers are inspectable.
+  const match = classifyGlyphFeatures(features);
+  if (features.density < 0.05) return { ...base, match, reject: 'empty' };
+  if (features.density > 0.85) return { ...base, match, reject: 'solid' };
+
+  return { ...base, match, reject: null };
+}
+
+export function classifyGlyphImage(image: RasterImage): GlyphMatch | null {
+  const inspection = inspectGlyphImage(image);
+  return inspection.reject ? null : inspection.match;
 }

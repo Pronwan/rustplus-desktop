@@ -1,4 +1,4 @@
-import { CameraQualityIssue, CameraScannerState } from './scannerTypes.ts';
+import { CameraQualityIssue, CameraScannerState, CameraSlotReport } from './scannerTypes.ts';
 
 export type CameraStatusTone = 'neutral' | 'warn' | 'active' | 'success' | 'error';
 
@@ -155,4 +155,32 @@ export function describeCameraStatus(
         announce: false
       };
   }
+}
+
+/** Two decimals with no leading zero, so six slots fit on a phone-width line. */
+function shortScore(value: number): string {
+  const clamped = Math.max(0, Math.min(9.99, value));
+  return clamped.toFixed(2).replace(/^0/, '');
+}
+
+/**
+ * One line per glyph cell, for the debug view.
+ *
+ * A row that fails to read reports a single null, which is true of a blank cell, an
+ * over-inked cell and a genuinely ambiguous glyph alike. Those need completely different
+ * fixes, and on a phone the status line is the only place the difference can show up.
+ */
+export function formatSlotDiagnostics(
+  reports: CameraSlotReport[],
+  ocrSlots: string[] | null
+): string[] {
+  const lines = reports.map((report, index) => {
+    const letter = report.gene ?? '-';
+    const ocr = ocrSlots?.[index] || '-';
+    const verdict = report.reject ?? 'ok';
+    return `${index + 1} tpl ${letter} ocr ${ocr} ink${shortScore(report.density)} m${shortScore(report.margin)} d${shortScore(report.distance)} ${verdict}`;
+  });
+
+  if (reports.length > 0 && !ocrSlots) lines.push('ocr not run yet');
+  return lines;
 }

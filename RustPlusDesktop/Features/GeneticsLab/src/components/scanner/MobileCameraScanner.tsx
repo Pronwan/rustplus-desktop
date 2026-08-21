@@ -11,7 +11,8 @@ import type { CameraCaptureResult } from '../../services/scanner/scannerTypes.ts
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import {
   CameraStatusTone,
-  describeCameraStatus
+  describeCameraStatus,
+  formatSlotDiagnostics
 } from '../../services/scanner/cameraStatusMessages.ts';
 import {
   computeContainRect,
@@ -444,6 +445,19 @@ export const MobileCameraScanner: React.FC = () => {
               <Typography sx={{ fontFamily: 'monospace', fontSize: '0.62rem', color: '#6B7280' }}>
                 {`ink ${cameraState.diagnostics.slotInk.map(v => v.toFixed(2)).join(' ')}`}
               </Typography>
+              {/* Which slot failed, and at which gate. Without this a refused row is just a
+                  dash, and the fix has to be guessed at from a photograph of the screen. */}
+              {formatSlotDiagnostics(
+                cameraState.diagnostics.slotReports,
+                cameraState.diagnostics.ocrSlots
+              ).map(line => (
+                <Typography
+                  key={line}
+                  sx={{ fontFamily: 'monospace', fontSize: '0.62rem', color: '#9CA3AF', whiteSpace: 'pre' }}
+                >
+                  {line}
+                </Typography>
+              ))}
               {cameraState.diagnostics.stripPreview ? (
                 <Box
                   component="img"

@@ -50,6 +50,8 @@ export function createIdleCameraState(): CameraScannerState {
       sampleWindow: 0,
       componentCount: 0,
       slotInk: [],
+      slotReports: [],
+      ocrSlots: null,
       slotsWithinBounds: true,
       stripPreview: null
     },

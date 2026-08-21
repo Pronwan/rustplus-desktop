@@ -208,6 +208,23 @@ export interface CameraOverlay {
   candidates: Array<{ id: string; corners: [Point, Point, Point, Point] }>;
 }
 
+/** Which recogniser produced a read. 'agreed' means both did, on the same six letters. */
+export type CameraReadSource = 'template' | 'ocr' | 'agreed';
+
+/** What the template classifier made of one glyph cell, gate failures included. */
+export interface CameraSlotReport {
+  /** Nearest template letter, or null when the cell held no usable ink. */
+  gene: string | null;
+  /** Ink share of the glyph bounding box. */
+  density: number;
+  /** How much better the winner scored than the runner-up, 0..1. */
+  margin: number;
+  /** Zoning distance to the winning template, lower is better. */
+  distance: number;
+  /** Which gate rejected the cell, or null when it passed. */
+  reject: 'blank' | 'empty' | 'solid' | 'margin' | 'distance' | null;
+}
+
 export interface CameraScannerState {
   phase: CameraScannerPhase;
   qualityIssues: CameraQualityIssue[];
@@ -238,7 +255,7 @@ export interface CameraScannerState {
     lastRawText: string | null;
     lastConfidence: number | null;
     /** Which recognition path produced the last text. */
-    lastSource: 'template' | null;
+    lastSource: CameraReadSource | null;
     /** Samples currently held in the confirmation window. */
     pendingSamples: number;
     /** Samples needed before a result can be confirmed. */
@@ -247,6 +264,10 @@ export interface CameraScannerState {
     componentCount: number;
     /** Ink share per glyph cell. 0 means that cell reached the recogniser blank. */
     slotInk: number[];
+    /** Per-slot template scores, including for slots that failed a gate. */
+    slotReports: CameraSlotReport[];
+    /** Raw per-slot text from the OCR pass, when one has run. */
+    ocrSlots: string[] | null;
     /** False when the measured slots fall outside the normalised row. */
     slotsWithinBounds: boolean;
     /**

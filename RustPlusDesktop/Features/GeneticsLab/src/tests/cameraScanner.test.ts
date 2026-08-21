@@ -15,6 +15,8 @@ import {
 } from '../services/scanner/vision/quality.ts';
 import type { RasterImage } from '../services/scanner/scannerTypes.ts';
 import type { GlyphRowRecognizer } from '../services/scanner/vision/templateGeneRecognizer.ts';
+import type { CameraSlotOcr } from '../services/scanner/vision/cameraSlotOcr.ts';
+import { GeneLetter, rasterizeGlyph } from '../services/scanner/vision/glyphTemplates.ts';
 import type {
   CameraAnalysisResult,
   CameraFrameAnalyzer,
@@ -122,6 +124,22 @@ class FakeRecognizer {
   };
 }
 
+/** Scripted stand-in for the Tesseract second opinion. */
+class FakeSlotOcr implements CameraSlotOcr {
+  public readCalls = 0;
+  /** Six letters, or an empty string per slot to mean "read nothing". */
+  public letters: string[] = ['', '', '', '', '', ''];
+
+  async warmup(): Promise<void> {}
+
+  async readSlots(): Promise<string[]> {
+    this.readCalls++;
+    return this.letters;
+  }
+
+  async terminate(): Promise<void> {}
+}
+
 function geneResult(geneString: string, confidence = 92): GeneRecognitionResult {
   return { geneString, confidence };
 }
@@ -185,6 +203,48 @@ function trackingTarget(): CameraTarget {
     },
     slots: { baseX: 10, baseY: 12, geneWidth: 84, gapWidth: 12, height: 76 }
   };
+}
+
+/**
+ * A target carrying real glyphs, so the recognition path can be exercised end to end.
+ *
+ * Drawn the way a badge actually looks to the camera: bright letters over a dark, uniform
+ * patch. The strip builder separates them on the minimum channel, so a plain grey stand-in
+ * would not exercise the thresholding at all.
+ */
+function rowWithGenes(genes: string): CameraTarget {
+  const target = trackingTarget();
+  const row = target.normalizedRow;
+  const { baseX, baseY, geneWidth, gapWidth, height } = target.slots;
+
+  for (let i = 0; i < row.data.length; i += 4) {
+    row.data[i] = 40;
+    row.data[i + 1] = 40;
+    row.data[i + 2] = 40;
+    row.data[i + 3] = 255;
+  }
+
+  const glyphSize = 60;
+  genes.split('').forEach((gene, slot) => {
+    const mask = rasterizeGlyph(gene as GeneLetter, glyphSize);
+    const originX = Math.round(baseX + slot * (geneWidth + gapWidth) + (geneWidth - glyphSize) / 2);
+    const originY = Math.round(baseY + (height - glyphSize) / 2);
+
+    for (let y = 0; y < glyphSize; y++) {
+      for (let x = 0; x < glyphSize; x++) {
+        if (!mask[y * glyphSize + x]) continue;
+        const px = originX + x;
+        const py = originY + y;
+        if (px < 0 || py < 0 || px >= row.width || py >= row.height) continue;
+        const i = (py * row.width + px) * 4;
+        row.data[i] = 255;
+        row.data[i + 1] = 255;
+        row.data[i + 2] = 255;
+      }
+    }
+  });
+
+  return target;
 }
 
 /** Analyzer whose result is chosen per call, so a whole scanning sequence can be scripted. */
@@ -284,12 +344,16 @@ function createHarness(options: {
   isSecureContext?: boolean;
   mediaDevices?: FakeMediaDevices | null;
   recognizer?: FakeRecognizer;
+  slotOcr?: CameraSlotOcr | null;
 } = {}): Harness {
   const devices = options.mediaDevices !== undefined
     ? options.mediaDevices
     : createMediaDevices(options.outcomes ?? [new FakeStream()], options.cameraCount ?? 1);
 
   const recognizer = options.recognizer ?? new FakeRecognizer();
+  // Always passed, never omitted: an omitted key makes the service lazily import Tesseract,
+  // which has no business loading inside a headless lifecycle test.
+  const slotOcr = options.slotOcr ?? null;
 
   let hidden = false;
   let visibilityHandlers: Array<() => void> = [];
@@ -297,6 +361,7 @@ function createHarness(options: {
 
   const service = new CameraScannerService({
     glyphRecognizer: (...args) => recognizer.recognize(...args),
+    slotOcr,
     env: {
       mediaDevices: devices as unknown as MediaDevices,
       isSecureContext: options.isSecureContext ?? true,
@@ -345,12 +410,13 @@ function createHarness(options: {
 /** Boots a camera session with a scripted analyzer and scripted OCR results. */
 async function startCameraWith(
   script: (call: number) => FakeAnalysis,
-  rowResults: Array<GeneRecognitionResult | null>
+  rowResults: Array<GeneRecognitionResult | null>,
+  slotOcr: CameraSlotOcr | null = null
 ): Promise<{ harness: Harness; analyzer: ScriptedAnalyzer }> {
   const recognizer = new FakeRecognizer();
   recognizer.rowResults = rowResults;
 
-  const harness = createHarness({ recognizer });
+  const harness = createHarness({ recognizer, slotOcr });
   const analyzer = new ScriptedAnalyzer(script);
   harness.service.attachVideo(createVideoElement());
   harness.service.setAnalyzerFactory(() => analyzer);
@@ -804,6 +870,100 @@ describe('Camera recognition safety', () => {
     expect(harness.service.getState().phase).toBe('ambiguous');
   });
 
+  it('accepts on agreement between the two recognisers without waiting for the window', async () => {
+    // Template matching alternates between two answers, so 3-of-4 temporal agreement can
+    // never be reached. Anything accepted here was accepted on cross-recogniser agreement.
+    const alternating = Array.from({ length: 40 }, (_, i) =>
+      geneResult(i % 2 === 0 ? 'GGYHYX' : 'WWXXYY')
+    );
+    const ocr = new FakeSlotOcr();
+    ocr.letters = ['G', 'H', 'Y', 'W', 'X', 'G'];
+
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: rowWithGenes('GHYWXG') }),
+      alternating,
+      ocr
+    );
+
+    await harness.runFor(1200);
+
+    expect(harness.saplings).toHaveLength(1);
+    expect(harness.saplings[0].geneString).toBe('GHYWXG');
+    expect(harness.saplings[0].confidence).toBeGreaterThanOrEqual(90);
+    expect(harness.states.some(state => state.diagnostics.lastSource === 'agreed')).toBe(true);
+  });
+
+  it('ignores a disagreeing OCR read rather than letting it override the template', async () => {
+    const ocr = new FakeSlotOcr();
+    ocr.letters = ['W', 'W', 'X', 'X', 'Y', 'Y'];
+
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [geneResult('GGYHYX')],
+      ocr
+    );
+
+    await harness.runFor(1200);
+
+    // The template result still wins its way through the confirmation window; the
+    // disagreement only means it does not get the fast path.
+    expect(harness.saplings.map(s => s.geneString)).toEqual(['GGYHYX']);
+    expect(harness.states.every(state => state.diagnostics.lastSource !== 'agreed')).toBe(true);
+  });
+
+  it('still confirms an OCR-only read through the window when templates find nothing', async () => {
+    const ocr = new FakeSlotOcr();
+    ocr.letters = ['G', 'G', 'Y', 'H', 'Y', 'X'];
+
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [null],
+      ocr
+    );
+
+    await harness.runFor(2000);
+
+    expect(harness.saplings.map(s => s.geneString)).toEqual(['GGYHYX']);
+    expect(harness.states.some(state => state.diagnostics.lastSource === 'ocr')).toBe(true);
+  });
+
+  it('runs OCR far less often than template matching', async () => {
+    const ocr = new FakeSlotOcr();
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [null],
+      ocr
+    );
+
+    await harness.runFor(2000);
+
+    // The whole point of the throttle: the cheap recogniser runs every tracking frame, the
+    // expensive one only often enough to confirm a row within a glance.
+    expect(harness.recognizer.rowCalls).toBeGreaterThan(ocr.readCalls * 2);
+    expect(ocr.readCalls).toBeGreaterThan(0);
+    const spacing = 2000 / Math.max(1, ocr.readCalls);
+    expect(spacing).toBeGreaterThanOrEqual(CAMERA_SCANNER_CONFIG.recognition.ocrIntervalMs);
+  });
+
+  it('accepts a row the template gate refused once OCR independently confirms it', async () => {
+    // This is the real-device failure: the row is on screen and legible, the classifier
+    // picks the right letters, and the margin gate throws the whole read away. A second
+    // reader agreeing on all six makes that gate redundant.
+    const ocr = new FakeSlotOcr();
+    ocr.letters = ['G', 'H', 'Y', 'W', 'X', 'G'];
+
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: rowWithGenes('GHYWXG') }),
+      [null],
+      ocr
+    );
+
+    await harness.runFor(1200);
+
+    expect(harness.saplings.map(s => s.geneString)).toEqual(['GHYWXG']);
+    expect(harness.states.some(state => state.diagnostics.lastSource === 'agreed')).toBe(true);
+  });
+
   it('accepts once three of four samples agree', async () => {
     const { harness } = await startWith(
       () => ({ ...TRACKING, activeTarget: trackingTarget() }),
@@ -1036,6 +1196,8 @@ describe('Camera OCR confidence is independent of the desktop scanner', () => {
         sampleWindow: 4,
         componentCount: 6,
         slotInk: [],
+        slotReports: [],
+        ocrSlots: null,
         slotsWithinBounds: true,
         stripPreview: null
       }
@@ -1352,6 +1514,33 @@ describe('Camera manual capture', () => {
     // The analyzer offers the blocked row as a capture candidate.
     const blocked = harness.service.getState();
     expect(blocked.phase).toBe('quality-blocked');
+  });
+
+  it('reads the locked row even when the automatic recogniser refuses it', async () => {
+    // The fake recogniser never returns anything, so nothing is added automatically. Manual
+    // capture exists for exactly this case and must not go through the same gate.
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: rowWithGenes('GHYWXG') }),
+      [null]
+    );
+
+    await harness.runFor(300);
+    expect(harness.saplings).toHaveLength(0);
+
+    const captured = harness.service.captureNow();
+    expect(captured.status).toBe('read');
+    expect(captured.geneString).toBe('GHYWXG');
+  });
+
+  it('refuses to invent letters for a row whose cells are empty', async () => {
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [null]
+    );
+
+    await harness.runFor(300);
+
+    expect(harness.service.captureNow().status).toBe('unreadable');
   });
 
   it('reports when there is no row to capture', async () => {
