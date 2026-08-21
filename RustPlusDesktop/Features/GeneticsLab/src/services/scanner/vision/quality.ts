@@ -140,11 +140,34 @@ export interface RowQualityInput {
 }
 
 export interface RowQualityReport extends ExposureReport {
+  /** Everything worth telling the user about, blocking or not. */
   issues: CameraQualityIssue[];
+  /**
+   * Only the structural problems: the row is the wrong size, cut off, or geometrically
+   * unusable. These make a read meaningless no matter how good the recogniser is.
+   */
+  blocking: CameraQualityIssue[];
   sharpness: number;
   pixelsPerGene: number;
   perspectiveDegrees: number;
 }
+
+/**
+ * Problems that stop a read from being worth attempting.
+ *
+ * Blur, motion, glare and dim light deliberately are not here. They are proxies measured off
+ * the image, and gating on them rejected frames the classifier could read perfectly well --
+ * in testing a correctly detected row sat behind "blurred" for hundreds of frames without
+ * ever being attempted. Whether a row is legible is a question the recogniser answers
+ * directly, with a margin gate and agreement across frames; these measurements only inform
+ * the guidance shown to the user.
+ */
+const BLOCKING_ISSUES: CameraQualityIssue[] = [
+  'too-far',
+  'too-close',
+  'clipped',
+  'extreme-perspective'
+];
 
 /**
  * Produces the explicit list of reasons a row cannot be read right now. An empty list is the
@@ -177,6 +200,7 @@ export function assessRowQuality(
 
   return {
     issues,
+    blocking: issues.filter(issue => BLOCKING_ISSUES.includes(issue)),
     sharpness,
     pixelsPerGene: input.pixelsPerGene,
     perspectiveDegrees: input.perspectiveDegrees,

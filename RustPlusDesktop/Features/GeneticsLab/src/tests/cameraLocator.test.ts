@@ -327,8 +327,10 @@ describe('DynamicGeneLocator end to end', () => {
     expect(lost.overlay.target).toBeNull();
   });
 
-  it('needs the row to hold still before it is readable', async () => {
-    // Alternating positions never satisfy the stability window.
+  it('still offers a moving row, flagged as moving rather than withheld', async () => {
+    // Alternating positions never satisfy the stability window. That used to withhold the
+    // target entirely, which left a clearly legible row unread indefinitely on a hand-held
+    // phone. Motion is now reported as advice and the recogniser decides.
     const frames = [470, 520].map(cx => {
       const frame = createFrame();
       drawGeneRow(frame, { cx, cy: 270 });
@@ -348,13 +350,32 @@ describe('DynamicGeneLocator end to end', () => {
 
     const locator = new DynamicGeneLocator({ grabber, orientationAngle: () => 0 });
 
-    let sawReadableTarget = false;
+    let sawTarget = false;
+    let sawMovingAdvice = false;
     for (index = 0; index < 10; index++) {
       const result = await locator.analyze(VIDEO, index * 100);
-      if (result.activeTarget) sawReadableTarget = true;
+      if (result.activeTarget) sawTarget = true;
+      if (result.qualityIssues.includes('moving')) sawMovingAdvice = true;
     }
 
-    expect(sawReadableTarget).toBe(false);
+    expect(sawTarget).toBe(true);
+    expect(sawMovingAdvice).toBe(true);
+  });
+
+  it('keeps a blocked row available to manual capture', async () => {
+    // Too far to read automatically, but the geometry is sound, so a manual capture still
+    // has something to work with rather than reporting no row at all.
+    const frame = createFrame();
+    drawGeneRow(frame, { cx: 480, cy: 270, badgeWidth: 12, badgeHeight: 14, spacing: 16 });
+    const locator = new DynamicGeneLocator({
+      grabber: createFakeGrabber(frame),
+      orientationAngle: () => 0
+    });
+
+    const result = await run(locator, 8);
+
+    expect(result.phase).toBe('quality-blocked');
+    expect(result.activeTarget).toBeNull();
   });
 
   it('releases the grabber on dispose and stops analysing', async () => {
@@ -373,7 +394,7 @@ describe('DynamicGeneLocator end to end', () => {
     expect(afterDispose.activeTarget).toBeNull();
   });
 
-  it('forgets its lock when the discovery resolution changes', async () => {
+  it('re-establishes its lock from scratch when the discovery resolution changes', async () => {
     const frame = createFrame();
     drawGeneRow(frame, { cx: 480, cy: 270 });
     const locator = new DynamicGeneLocator({
@@ -381,11 +402,14 @@ describe('DynamicGeneLocator end to end', () => {
       orientationAngle: () => 0
     });
 
-    await run(locator, 6);
+    const before = await run(locator, 6);
+    expect(before.activeTarget).not.toBeNull();
+
     locator.setDiscoveryWidth(720);
 
-    // Stability has to be re-established from scratch against the new frame geometry.
-    const immediate = await locator.analyze(VIDEO, 700);
-    expect(immediate.activeTarget).toBeNull();
+    // Nothing measured against the old frame geometry carries over, but the row is found
+    // again rather than being withheld.
+    const after = await locator.analyze(VIDEO, 700);
+    expect(after.overlay.target).not.toBeNull();
   });
 });

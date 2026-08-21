@@ -235,7 +235,7 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       width: frameWidth,
       height: frameHeight
     });
-    if (!isCropped) this.lastComponentCount = components.length;
+    this.lastComponentCount = components.length;
     if (components.length < GENES_PER_ROW) return [];
 
     const options = {
@@ -456,7 +456,9 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       this.qualityThresholds
     );
 
-    if (quality.issues.length > 0) {
+    // Structural problems make a read meaningless. Everything else is advice: the row is
+    // still built and still offered, and the recogniser decides whether it can read it.
+    if (quality.blocking.length > 0) {
       return this.blocked(overlay, quality.issues);
     }
 
@@ -479,14 +481,17 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
         1,
         (this.tracked?.presence ?? 1) / CAMERA_SCANNER_CONFIG.tracking.persistenceFrames
       ),
-      qualityIssues: [],
+      qualityIssues: quality.issues,
       normalizedRow: warped,
       slots
     };
 
+    // Always available to manual capture, whatever the advisory issues say.
+    this.fallbackTarget = target;
+
     return {
       phase: 'tracking',
-      qualityIssues: [],
+      qualityIssues: quality.issues,
       candidateCount: 1,
       componentCount: this.lastComponentCount,
       activeTarget: target,

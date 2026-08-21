@@ -1082,3 +1082,72 @@ describe('Camera gene strip thresholding', () => {
     expect(inkCoverage(flat.strip)).toBeLessThan(0.02);
   });
 });
+
+describe('Quality gating separates structural problems from advice', () => {
+  function row(): RasterImage {
+    const frame = createFrame(120, 24, TOOLTIP);
+    for (let i = 0; i < 6; i++) fillRect(frame, 8 + i * 18, 6, 14 + i * 18, 18, WHITE);
+    return frame;
+  }
+
+  it('blocks only on problems that make a read meaningless', () => {
+    const tooFar = assessRowQuality({
+      normalized: row(),
+      pixelsPerGene: 10,
+      perspectiveDegrees: 5,
+      clipped: false,
+      isStable: true
+    });
+    expect(tooFar.blocking).toContain('too-far');
+
+    const clipped = assessRowQuality({
+      normalized: row(),
+      pixelsPerGene: 40,
+      perspectiveDegrees: 5,
+      clipped: true,
+      isStable: true
+    });
+    expect(clipped.blocking).toContain('clipped');
+  });
+
+  it('treats blur and motion as advice, not a veto', () => {
+    // A hand-held phone is always slightly moving and slightly soft. Gating on these
+    // measurements left a correctly detected row unread for hundreds of frames.
+    const blurry = createFrame(120, 24, TOOLTIP);
+    for (let x = 0; x < 120; x++) {
+      for (let y = 0; y < 24; y++) {
+        const soft = 30 + Math.round(60 * Math.sin(x / 9));
+        setPixel(blurry, x, y, [soft, soft, soft]);
+      }
+    }
+
+    const report = assessRowQuality({
+      normalized: blurry,
+      pixelsPerGene: 45,
+      perspectiveDegrees: 8,
+      clipped: false,
+      isStable: false
+    });
+
+    expect(report.issues).toContain('moving');
+    expect(report.blocking).not.toContain('moving');
+    expect(report.blocking).not.toContain('blurred');
+    expect(report.blocking).toEqual([]);
+  });
+
+  it('still reports advisory issues so the user gets guidance', () => {
+    const glared = createFrame(120, 24, TOOLTIP);
+    fillRect(glared, 0, 0, 110, 23, [252, 252, 252]);
+
+    const report = assessRowQuality({
+      normalized: glared,
+      pixelsPerGene: 45,
+      perspectiveDegrees: 8,
+      clipped: false,
+      isStable: true
+    });
+
+    expect(report.issues).toContain('glare');
+    expect(report.blocking).toEqual([]);
+  });
+});
