@@ -1,0 +1,862 @@
+import {
+  CameraAnalysisResult,
+  CameraFacingMode,
+  CameraFrameAnalyzer,
+  CameraScannerErrorCode,
+  CameraScannerEvent,
+  CameraScannerEventListener,
+  CameraScannerState,
+  CameraTarget,
+  CameraTrackCapabilities,
+  GeneRecognizer,
+  Point
+} from './scanner/scannerTypes.ts';
+import { CAMERA_SCANNER_CONFIG } from './scanner/cameraScannerConfig.ts';
+import {
+  createIdleCameraState,
+  isCameraCaptureSupported,
+  isCameraSecureContext
+} from './scanner/cameraSupport.ts';
+import { GeneImagePreprocessor } from './scanner/GeneImagePreprocessor.ts';
+import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
+import { CameraTargetRearm } from './scanner/CameraTargetRearm.ts';
+import { TesseractGeneRecognizer } from './scanner/TesseractGeneRecognizer.ts';
+
+export * from './scanner/cameraScannerConfig.ts';
+
+/** Vote history key. The camera path has exactly one target at a time. */
+const CAMERA_VOTE_KEY = 'camera';
+
+export interface WakeLockHandle {
+  release(): Promise<void> | void;
+  addEventListener?(type: 'release', handler: () => void): void;
+}
+
+/**
+ * Everything the camera scanner touches outside itself. Injected so the lifecycle can be
+ * tested without a DOM, and so the service never reaches for a global at an awkward moment.
+ */
+export interface CameraScannerEnvironment {
+  mediaDevices: MediaDevices | null;
+  isSecureContext: boolean;
+  isDocumentHidden: () => boolean;
+  addVisibilityListener: (handler: () => void) => () => void;
+  now: () => number;
+  requestWakeLock: () => Promise<WakeLockHandle | null>;
+}
+
+export interface CameraScannerOptions {
+  env?: Partial<CameraScannerEnvironment>;
+  recognizer?: GeneRecognizer;
+}
+
+function defaultEnvironment(): CameraScannerEnvironment {
+  const nav = typeof navigator !== 'undefined' ? navigator : undefined;
+  const doc = typeof document !== 'undefined' ? document : undefined;
+
+  return {
+    mediaDevices: nav?.mediaDevices ?? null,
+    isSecureContext: isCameraSecureContext(),
+    isDocumentHidden: () => doc?.visibilityState === 'hidden',
+    addVisibilityListener: (handler: () => void) => {
+      if (!doc) return () => {};
+      doc.addEventListener('visibilitychange', handler);
+      return () => doc.removeEventListener('visibilitychange', handler);
+    },
+    now: () => Date.now(),
+    requestWakeLock: async () => {
+      const wakeLock = (nav as unknown as { wakeLock?: { request(type: string): Promise<WakeLockHandle> } })
+        ?.wakeLock;
+      if (!wakeLock) return null;
+      try {
+        return await wakeLock.request('screen');
+      } catch {
+        return null;
+      }
+    }
+  };
+}
+
+/**
+ * Constraint ladder, tried in order. `exact` is never used: a phone that cannot deliver
+ * 1080p should still be allowed to scan at whatever it can produce.
+ */
+export function buildConstraintTiers(facingMode: CameraFacingMode): MediaStreamConstraints[] {
+  const { idealWidth, idealHeight, idealFrameRate, maxFrameRate } = CAMERA_SCANNER_CONFIG.capture;
+
+  return [
+    {
+      audio: false,
+      video: {
+        facingMode: { ideal: facingMode },
+        width: { ideal: idealWidth },
+        height: { ideal: idealHeight },
+        frameRate: { ideal: idealFrameRate, max: maxFrameRate }
+      }
+    },
+    {
+      audio: false,
+      video: { facingMode: { ideal: facingMode } }
+    },
+    {
+      audio: false,
+      video: true
+    }
+  ];
+}
+
+export function classifyCameraError(err: unknown): CameraScannerErrorCode {
+  const name = (err as { name?: string } | null)?.name;
+
+  switch (name) {
+    case 'NotAllowedError':
+    case 'PermissionDeniedError':
+    case 'SecurityError':
+      return 'permission-denied';
+    case 'NotFoundError':
+    case 'DevicesNotFoundError':
+      return 'no-camera';
+    case 'NotReadableError':
+    case 'TrackStartError':
+    case 'OverconstrainedError':
+    case 'ConstraintNotSatisfiedError':
+    case 'AbortError':
+      return 'stream-failed';
+    default:
+      return 'unknown';
+  }
+}
+
+/**
+ * Errors where retrying with looser constraints cannot help, and retrying would either
+ * re-prompt the user for permission or waste time on a device that does not exist.
+ */
+function isTerminalRequestError(err: unknown): boolean {
+  const code = classifyCameraError(err);
+  return code === 'permission-denied' || code === 'no-camera';
+}
+
+const CAMERA_ERROR_MESSAGES: Record<CameraScannerErrorCode, string> = {
+  'insecure-context': 'Camera scanning needs a secure (HTTPS) connection.',
+  unsupported: 'This browser cannot open a camera. Add clones manually, or use the desktop scanner.',
+  'permission-denied': 'Camera permission was denied. Allow camera access for this site, then try again.',
+  'no-camera': 'No camera was found on this device.',
+  'stream-failed': 'The camera could not be started. Close other apps using the camera and try again.',
+  'stream-ended': 'The camera stopped. Restart the camera to keep scanning.',
+  'vision-init-failed': 'Camera detection failed to start. Restart the camera to try again.',
+  unknown: 'The camera could not be started.'
+};
+
+/**
+ * Cadence and resolution steps used under thermal or performance pressure.
+ *
+ * Confidence gates are deliberately absent: the scanner may get slower, never less careful.
+ */
+const DEGRADATION_STEPS: Array<{ fps: number; discoveryWidth: number }> = [
+  { fps: CAMERA_SCANNER_CONFIG.cadence.trackingFps, discoveryWidth: CAMERA_SCANNER_CONFIG.analysis.maxDiscoveryWidth },
+  { fps: CAMERA_SCANNER_CONFIG.cadence.discoveryFps, discoveryWidth: CAMERA_SCANNER_CONFIG.analysis.maxDiscoveryWidth },
+  { fps: CAMERA_SCANNER_CONFIG.cadence.discoveryFps, discoveryWidth: CAMERA_SCANNER_CONFIG.analysis.minDiscoveryWidth },
+  { fps: CAMERA_SCANNER_CONFIG.cadence.minDiscoveryFps, discoveryWidth: CAMERA_SCANNER_CONFIG.analysis.minDiscoveryWidth }
+];
+
+const FRAME_COST_WINDOW = 20;
+
+/**
+ * Phone-camera scanner.
+ *
+ * Owns the camera stream lifecycle, the processing cadence, and the recognition gates. All
+ * computer vision lives behind a `CameraFrameAnalyzer`; recognition reuses the same
+ * preprocessor, Tesseract recogniser and temporal voting as the desktop path.
+ */
+export class CameraScannerService {
+  private readonly env: CameraScannerEnvironment;
+  private readonly recognizer: GeneRecognizer;
+  private readonly voting = new TemporalVotingService();
+  private readonly rearm = new CameraTargetRearm(CAMERA_SCANNER_CONFIG.confirmation.rearmAfterLossMs);
+
+  private listeners: CameraScannerEventListener[] = [];
+  private state: CameraScannerState = createIdleCameraState();
+
+  private mediaStream: MediaStream | null = null;
+  private videoElement: HTMLVideoElement | null = null;
+  private trackEndedCleanup: (() => void) | null = null;
+  private visibilityCleanup: (() => void) | null = null;
+  private wakeLock: WakeLockHandle | null = null;
+
+  private analyzerFactory: (() => CameraFrameAnalyzer) | null = null;
+  private analyzer: CameraFrameAnalyzer | null = null;
+  private analysisTimerId: ReturnType<typeof setInterval> | null = null;
+  private isAnalyzing = false;
+  private isRecognizing = false;
+
+  private degradationLevel = 0;
+  private frameCosts: number[] = [];
+
+  private isPaused = false;
+  private isHidden = false;
+
+  /** Invalidates in-flight async work (permission prompt, warm-up, OCR) after a stop. */
+  private sessionToken = 0;
+  private isSwitchingCamera = false;
+
+  constructor(options: CameraScannerOptions = {}) {
+    this.env = { ...defaultEnvironment(), ...options.env };
+    this.recognizer = options.recognizer || new TesseractGeneRecognizer();
+  }
+
+  public static isSupported(env?: Partial<CameraScannerEnvironment>): boolean {
+    return env && 'mediaDevices' in env
+      ? isCameraCaptureSupported(env.mediaDevices)
+      : isCameraCaptureSupported();
+  }
+
+  public static isSecureContext(env?: Partial<CameraScannerEnvironment>): boolean {
+    if (env && 'isSecureContext' in env) return env.isSecureContext === true;
+    return isCameraSecureContext();
+  }
+
+  public addEventListener(listener: CameraScannerEventListener): () => void {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== listener);
+    };
+  }
+
+  public getState(): CameraScannerState {
+    return this.state;
+  }
+
+  public isRunning(): boolean {
+    return this.mediaStream !== null;
+  }
+
+  /**
+   * Installs the detector. The service creates one analyzer per camera session and disposes
+   * it on stop, so vision resources never outlive the stream that needed them.
+   */
+  public setAnalyzerFactory(factory: (() => CameraFrameAnalyzer) | null): void {
+    this.analyzerFactory = factory;
+  }
+
+  /** Called by the mobile UI when its <video> mounts, which may be before or after start(). */
+  public attachVideo(element: HTMLVideoElement | null): void {
+    if (this.videoElement && this.videoElement !== element) {
+      this.videoElement.srcObject = null;
+    }
+    this.videoElement = element;
+    if (element && this.mediaStream) {
+      this.bindStreamToVideo(element, this.mediaStream);
+    }
+  }
+
+  /** Resolves an ambiguous scene from a tap, in analysis frame coordinates. */
+  public selectCandidateAt(point: Point): void {
+    this.analyzer?.selectAt?.(point);
+  }
+
+  public async start(): Promise<boolean> {
+    if (this.state.phase !== 'idle' && this.state.phase !== 'error') return false;
+
+    if (!CameraScannerService.isSecureContext(this.env)) {
+      this.failWith('insecure-context');
+      return false;
+    }
+
+    if (!CameraScannerService.isSupported(this.env)) {
+      this.failWith('unsupported');
+      return false;
+    }
+
+    const token = ++this.sessionToken;
+    this.isPaused = false;
+    this.isHidden = this.env.isDocumentHidden();
+    this.degradationLevel = 0;
+    this.frameCosts = [];
+    this.voting.reset();
+    this.rearm.reset();
+    this.setState({
+      phase: 'requesting-permission',
+      errorCode: undefined,
+      errorMessage: undefined,
+      qualityIssues: [],
+      candidateCount: 0,
+      overlay: null
+    });
+
+    // Warm-up runs alongside the permission prompt. A warm-up failure leaves the preview
+    // running and is surfaced as "OCR unavailable" rather than killing the camera.
+    void this.warmUpRecognizer(token);
+
+    let stream: MediaStream;
+    try {
+      stream = await this.requestStream(this.state.facingMode);
+    } catch (err) {
+      if (token !== this.sessionToken) return false;
+      this.failWith(classifyCameraError(err), (err as { message?: string } | null)?.message);
+      return false;
+    }
+
+    // The user can close the scanner while the permission prompt is still open.
+    if (token !== this.sessionToken) {
+      stopStreamTracks(stream);
+      return false;
+    }
+
+    const adopted = this.adoptStream(stream, token);
+    if (adopted) void this.acquireWakeLock(token);
+    return adopted;
+  }
+
+  private async requestStream(facingMode: CameraFacingMode): Promise<MediaStream> {
+    const mediaDevices = this.env.mediaDevices;
+    if (!mediaDevices) throw new DOMException('Camera unavailable', 'NotFoundError');
+
+    const tiers = buildConstraintTiers(facingMode);
+    let lastError: unknown = new DOMException('Camera unavailable', 'NotFoundError');
+
+    for (const constraints of tiers) {
+      try {
+        return await mediaDevices.getUserMedia(constraints);
+      } catch (err) {
+        lastError = err;
+        if (isTerminalRequestError(err)) throw err;
+      }
+    }
+
+    throw lastError;
+  }
+
+  private adoptStream(stream: MediaStream, token: number): boolean {
+    const track = stream.getVideoTracks()[0];
+    if (!track) {
+      stopStreamTracks(stream);
+      this.failWith('stream-failed', 'No video track was returned by the camera.');
+      return false;
+    }
+
+    this.mediaStream = stream;
+    this.setState({ phase: 'starting' });
+
+    const onEnded = () => this.handleStreamEnded(token);
+    track.addEventListener('ended', onEnded);
+    this.trackEndedCleanup = () => track.removeEventListener('ended', onEnded);
+
+    if (this.videoElement) {
+      this.bindStreamToVideo(this.videoElement, stream);
+    }
+
+    const settings = readTrackSettings(track);
+    this.setState({
+      phase: 'searching',
+      facingMode: settings.facingMode ?? this.state.facingMode,
+      captureResolution: settings.resolution,
+      capabilities: readTrackCapabilities(track)
+    });
+
+    this.visibilityCleanup?.();
+    this.visibilityCleanup = this.env.addVisibilityListener(() => this.handleVisibilityChange());
+
+    void this.refreshCameraSwitchAvailability(token);
+    this.startAnalysisLoop();
+    return true;
+  }
+
+  private bindStreamToVideo(element: HTMLVideoElement, stream: MediaStream): void {
+    element.srcObject = stream;
+    element.muted = true;
+    element.playsInline = true;
+    const played = element.play?.();
+    if (played && typeof played.catch === 'function') {
+      // Autoplay can be rejected until the user interacts; the visible controls recover it.
+      played.catch(() => {});
+    }
+  }
+
+  private async refreshCameraSwitchAvailability(token: number): Promise<void> {
+    const mediaDevices = this.env.mediaDevices;
+    if (!mediaDevices || typeof mediaDevices.enumerateDevices !== 'function') return;
+
+    try {
+      const devices = await mediaDevices.enumerateDevices();
+      if (token !== this.sessionToken) return;
+      const cameras = devices.filter(d => d.kind === 'videoinput');
+      this.setState({ canSwitchCamera: cameras.length > 1 });
+    } catch {
+      // Enumeration can be blocked; camera switching simply stays hidden.
+    }
+  }
+
+  private async warmUpRecognizer(token: number): Promise<void> {
+    if (this.recognizer.isWarm()) {
+      if (token === this.sessionToken) this.setState({ isOcrReady: true, isOcrUnavailable: false });
+      return;
+    }
+
+    try {
+      await this.recognizer.warmup();
+      if (token !== this.sessionToken) return;
+      const warm = this.recognizer.isWarm();
+      this.setState({ isOcrReady: warm, isOcrUnavailable: !warm });
+    } catch {
+      if (token !== this.sessionToken) return;
+      this.setState({ isOcrReady: false, isOcrUnavailable: true });
+    }
+  }
+
+  /** Retry after a warm-up failure without restarting the camera. */
+  public async retryOcrWarmup(): Promise<void> {
+    if (!this.isRunning()) return;
+    this.setState({ isOcrUnavailable: false });
+    await this.warmUpRecognizer(this.sessionToken);
+  }
+
+  public async switchCamera(): Promise<void> {
+    if (!this.isRunning() || this.isSwitchingCamera) return;
+
+    this.isSwitchingCamera = true;
+    const nextFacing: CameraFacingMode = this.state.facingMode === 'environment' ? 'user' : 'environment';
+    const token = ++this.sessionToken;
+
+    this.stopAnalysisLoop();
+    this.releaseStream();
+    this.discardPendingRecognition();
+    this.setState({
+      phase: 'starting',
+      facingMode: nextFacing,
+      qualityIssues: [],
+      candidateCount: 0,
+      overlay: null
+    });
+
+    try {
+      const stream = await this.requestStream(nextFacing);
+      if (token !== this.sessionToken) {
+        stopStreamTracks(stream);
+        return;
+      }
+      this.adoptStream(stream, token);
+    } catch (err) {
+      if (token === this.sessionToken) {
+        this.failWith(classifyCameraError(err), (err as { message?: string } | null)?.message);
+      }
+    } finally {
+      this.isSwitchingCamera = false;
+    }
+  }
+
+  public pause(): void {
+    if (!this.isRunning() || this.isPaused) return;
+    this.isPaused = true;
+    this.stopAnalysisLoop();
+    this.discardPendingRecognition();
+    this.setState({ phase: 'paused', qualityIssues: [], candidateCount: 0, overlay: null });
+  }
+
+  public resume(): void {
+    if (!this.isRunning() || !this.isPaused) return;
+    this.isPaused = false;
+    this.discardPendingRecognition();
+    this.setState({ phase: 'searching', qualityIssues: [], candidateCount: 0 });
+    this.startAnalysisLoop();
+  }
+
+  private handleVisibilityChange(): void {
+    const hidden = this.env.isDocumentHidden();
+    if (hidden === this.isHidden) return;
+    this.isHidden = hidden;
+
+    if (hidden) {
+      this.stopAnalysisLoop();
+      // A confirmation window that spanned a backgrounded app is not evidence of anything.
+      this.discardPendingRecognition();
+      void this.releaseWakeLock();
+      return;
+    }
+
+    if (this.isRunning() && !this.isPaused) {
+      this.setState({ phase: 'searching', qualityIssues: [], candidateCount: 0 });
+      this.startAnalysisLoop();
+      void this.acquireWakeLock(this.sessionToken);
+    }
+  }
+
+  private handleStreamEnded(token: number): void {
+    if (token !== this.sessionToken || !this.isRunning()) return;
+    this.teardown();
+    this.setState({
+      ...createIdleCameraState(),
+      phase: 'error',
+      errorCode: 'stream-ended',
+      errorMessage: CAMERA_ERROR_MESSAGES['stream-ended']
+    });
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Wake lock
+   * ---------------------------------------------------------------- */
+
+  private async acquireWakeLock(token: number): Promise<void> {
+    if (this.wakeLock) return;
+    try {
+      const lock = await this.env.requestWakeLock();
+      if (!lock) return;
+      if (token !== this.sessionToken || !this.isRunning()) {
+        void lock.release();
+        return;
+      }
+      this.wakeLock = lock;
+      // Losing the lock (the OS dims the screen, the tab is backgrounded) is normal and must
+      // never surface as a scanner failure.
+      lock.addEventListener?.('release', () => {
+        if (this.wakeLock === lock) this.wakeLock = null;
+      });
+    } catch {
+      // A screen that dims is a worse experience, not a broken scanner.
+    }
+  }
+
+  private async releaseWakeLock(): Promise<void> {
+    const lock = this.wakeLock;
+    this.wakeLock = null;
+    if (!lock) return;
+    try {
+      await lock.release();
+    } catch {
+      // ignore
+    }
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Analysis cadence
+   * ---------------------------------------------------------------- */
+
+  private startAnalysisLoop(): void {
+    if (this.analysisTimerId !== null) return;
+    if (!this.isRunning() || this.isPaused || this.isHidden) return;
+
+    if (!this.analyzer && this.analyzerFactory) {
+      try {
+        this.analyzer = this.analyzerFactory();
+      } catch (err) {
+        this.analyzer = null;
+        this.failWith('vision-init-failed', (err as { message?: string } | null)?.message);
+        return;
+      }
+    }
+
+    // Without a detector there is nothing to run per frame, and an empty loop would burn
+    // phone battery for no reason.
+    if (!this.analyzer) {
+      this.setState({ isDetectionAvailable: false });
+      return;
+    }
+
+    this.setState({ isDetectionAvailable: true });
+    const intervalMs = Math.round(1000 / DEGRADATION_STEPS[this.degradationLevel].fps);
+    this.analysisTimerId = setInterval(() => void this.analyzeFrame(), intervalMs);
+  }
+
+  private stopAnalysisLoop(): void {
+    if (this.analysisTimerId !== null) {
+      clearInterval(this.analysisTimerId);
+      this.analysisTimerId = null;
+    }
+  }
+
+  private async analyzeFrame(): Promise<void> {
+    if (this.isAnalyzing) return;
+    const analyzer = this.analyzer;
+    const video = this.videoElement;
+    if (!analyzer || !video || !this.isRunning() || this.isPaused || this.isHidden) return;
+    if (!video.videoWidth) return;
+
+    this.isAnalyzing = true;
+    const token = this.sessionToken;
+    const startedAt = this.env.now();
+
+    try {
+      const result = await analyzer.analyze(video, startedAt);
+      if (token !== this.sessionToken) return;
+
+      this.applyAnalysis(result);
+      this.recordFrameCost(this.env.now() - startedAt);
+
+      if (result.phase === 'tracking' && result.activeTarget) {
+        await this.recognizeTarget(result.activeTarget, token);
+      }
+    } catch {
+      if (token === this.sessionToken) {
+        this.discardPendingRecognition();
+        this.setState({ phase: 'searching', qualityIssues: [], candidateCount: 0 });
+      }
+    } finally {
+      this.isAnalyzing = false;
+    }
+  }
+
+  private applyAnalysis(result: CameraAnalysisResult): void {
+    const targetPresent = result.phase === 'tracking' || result.phase === 'quality-blocked';
+
+    if (targetPresent) {
+      this.rearm.markVisible();
+    } else {
+      this.rearm.markLost(this.env.now());
+    }
+
+    // The confirmation window is only meaningful while one row stays both present and
+    // readable. Anything else — loss, ambiguity, a quality block — invalidates it.
+    if (result.phase !== 'tracking') {
+      this.voting.reset(CAMERA_VOTE_KEY);
+    }
+
+    this.setState({
+      phase: result.phase,
+      qualityIssues: result.qualityIssues,
+      candidateCount: result.candidateCount,
+      overlay: result.overlay
+    });
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Recognition
+   * ---------------------------------------------------------------- */
+
+  private async recognizeTarget(target: CameraTarget, token: number): Promise<void> {
+    if (this.isRecognizing || !this.recognizer.isWarm()) return;
+
+    this.isRecognizing = true;
+    this.setState({ phase: 'reading' });
+
+    try {
+      const { slots, normalizedCanvas } = target;
+      const stitched = GeneImagePreprocessor.prepareStitchedGeneStrip(
+        normalizedCanvas,
+        slots.baseX,
+        slots.baseY,
+        slots.geneWidth,
+        slots.gapWidth,
+        slots.height
+      );
+
+      let result = await this.recognizer.recognizeRow(stitched);
+      if (token !== this.sessionToken) return;
+
+      if (!result) {
+        const crops = GeneImagePreprocessor.prepareSlotCrops(
+          normalizedCanvas,
+          slots.baseX,
+          slots.baseY,
+          slots.geneWidth,
+          slots.gapWidth,
+          slots.height
+        );
+        result = await this.recognizer.recognizeSlots(crops);
+        if (token !== this.sessionToken) return;
+      }
+
+      if (!result) return;
+
+      // 3-of-4 temporal confirmation, the same policy the desktop scanner uses.
+      const confirmed = this.voting.addCandidate(CAMERA_VOTE_KEY, result);
+      if (!confirmed) return;
+
+      if (!this.rearm.shouldEmit(confirmed.geneString)) return;
+      this.rearm.recordEmit(confirmed.geneString);
+      this.voting.reset(CAMERA_VOTE_KEY);
+
+      this.setState({
+        phase: 'accepted',
+        acceptedCount: this.state.acceptedCount + 1,
+        lastAcceptedGenes: confirmed.geneString,
+        qualityIssues: []
+      });
+
+      this.emit({
+        type: 'SAPLING-FOUND',
+        geneString: confirmed.geneString,
+        confidence: confirmed.confidence
+      });
+    } catch {
+      // A failed read is just a frame that produced nothing.
+    } finally {
+      this.isRecognizing = false;
+    }
+  }
+
+  private discardPendingRecognition(): void {
+    this.voting.reset(CAMERA_VOTE_KEY);
+    this.analyzer?.reset();
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Adaptive degradation
+   * ---------------------------------------------------------------- */
+
+  private recordFrameCost(durationMs: number): void {
+    this.frameCosts.push(durationMs);
+    if (this.frameCosts.length < FRAME_COST_WINDOW) return;
+
+    const sorted = [...this.frameCosts].sort((a, b) => a - b);
+    const p95 = sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.95))];
+    this.frameCosts = [];
+
+    const budgetMs = 1000 / DEGRADATION_STEPS[this.degradationLevel].fps;
+
+    if (p95 > budgetMs && this.degradationLevel < DEGRADATION_STEPS.length - 1) {
+      this.setDegradationLevel(this.degradationLevel + 1);
+    } else if (p95 < budgetMs * 0.4 && this.degradationLevel > 0) {
+      this.setDegradationLevel(this.degradationLevel - 1);
+    }
+  }
+
+  private setDegradationLevel(level: number): void {
+    this.degradationLevel = level;
+    const step = DEGRADATION_STEPS[level];
+
+    this.analyzer?.setDiscoveryWidth?.(step.discoveryWidth);
+    this.frameCosts = [];
+
+    // Reschedule at the new cadence. Confidence gates are untouched.
+    if (this.analysisTimerId !== null) {
+      this.stopAnalysisLoop();
+      this.startAnalysisLoop();
+    }
+  }
+
+  /** Current degradation step, for diagnostics and tests. */
+  public getDegradationLevel(): number {
+    return this.degradationLevel;
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Teardown
+   * ---------------------------------------------------------------- */
+
+  public stop(): void {
+    if (this.state.phase === 'idle') return;
+    this.teardown();
+    this.setState(createIdleCameraState());
+  }
+
+  /** Releases every resource without deciding what the resulting phase should be. */
+  private teardown(): void {
+    this.sessionToken++;
+    this.isPaused = false;
+    this.isHidden = false;
+    this.isSwitchingCamera = false;
+    this.isRecognizing = false;
+    this.degradationLevel = 0;
+    this.frameCosts = [];
+
+    this.stopAnalysisLoop();
+    this.voting.reset();
+    this.rearm.reset();
+
+    if (this.analyzer) {
+      try {
+        this.analyzer.dispose();
+      } catch {
+        // A failed dispose must not block the rest of the teardown.
+      }
+      this.analyzer = null;
+    }
+
+    this.visibilityCleanup?.();
+    this.visibilityCleanup = null;
+
+    void this.releaseWakeLock();
+    this.releaseStream();
+  }
+
+  private releaseStream(): void {
+    this.trackEndedCleanup?.();
+    this.trackEndedCleanup = null;
+
+    if (this.mediaStream) {
+      stopStreamTracks(this.mediaStream);
+      this.mediaStream = null;
+    }
+
+    if (this.videoElement) {
+      this.videoElement.srcObject = null;
+    }
+  }
+
+  /** Terminates the OCR worker. Only for app teardown; stop() keeps the worker warm. */
+  public async dispose(): Promise<void> {
+    this.stop();
+    this.listeners = [];
+    try {
+      await this.recognizer.terminate();
+    } catch {
+      // ignore
+    }
+  }
+
+  private failWith(code: CameraScannerErrorCode, message?: string): void {
+    this.teardown();
+    this.setState({
+      ...createIdleCameraState(),
+      phase: 'error',
+      errorCode: code,
+      errorMessage: message && code === 'unknown' ? message : CAMERA_ERROR_MESSAGES[code]
+    });
+  }
+
+  private setState(patch: Partial<CameraScannerState>): void {
+    this.state = { ...this.state, ...patch };
+    this.emit({ type: 'CAMERA_STATE', state: this.state });
+  }
+
+  private emit(event: CameraScannerEvent): void {
+    for (const listener of this.listeners) {
+      listener(event);
+    }
+  }
+}
+
+function stopStreamTracks(stream: MediaStream): void {
+  for (const track of stream.getTracks()) {
+    try {
+      track.stop();
+    } catch {
+      // ignore
+    }
+  }
+}
+
+function readTrackSettings(track: MediaStreamTrack): { resolution: string; facingMode?: CameraFacingMode } {
+  let settings: MediaTrackSettings = {};
+  try {
+    settings = track.getSettings?.() ?? {};
+  } catch {
+    settings = {};
+  }
+
+  const width = settings.width ?? 0;
+  const height = settings.height ?? 0;
+  const facing = settings.facingMode;
+
+  return {
+    resolution: width && height ? `${width}x${height}` : '',
+    facingMode: facing === 'environment' || facing === 'user' ? facing : undefined
+  };
+}
+
+function readTrackCapabilities(track: MediaStreamTrack): CameraTrackCapabilities {
+  let caps: Record<string, unknown> = {};
+  try {
+    caps = (track.getCapabilities?.() as Record<string, unknown>) ?? {};
+  } catch {
+    caps = {};
+  }
+
+  const focusModes = caps.focusMode;
+  return {
+    zoom: 'zoom' in caps,
+    torch: caps.torch === true || (Array.isArray(caps.torch) && caps.torch.includes(true)),
+    pointFocus:
+      'pointsOfInterest' in caps ||
+      (Array.isArray(focusModes) && (focusModes as string[]).includes('manual'))
+  };
+}

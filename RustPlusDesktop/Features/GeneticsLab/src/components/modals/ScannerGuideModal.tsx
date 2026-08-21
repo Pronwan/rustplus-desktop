@@ -138,6 +138,35 @@ export const ScannerGuideModal: React.FC = () => {
             5. Enjoy! If it doesn't work, let me know on Discord!
           </Typography>
         </Box>
+
+        {/* Phone camera scanner */}
+        <Box sx={{ borderTop: '1px solid var(--gl-border)', pt: 1.5 }}>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-primary)', fontWeight: 700, mb: 0.5 }}>
+            On a phone: Phone Camera Scanner <span style={{ color: 'var(--gl-primary)' }}>[BETA]</span>
+          </Typography>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--gl-text-secondary)', mb: 0.5 }}>
+            Screen capture is still the recommended flow on desktop. On a phone you can instead point the
+            rear camera at the monitor running Rust. Tap <strong>START</strong> on the camera banner below the
+            header, or use "Use phone camera" in the header menu.
+          </Typography>
+          <Box sx={{ pl: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
+              • Requires an <strong>HTTPS</strong> page and camera permission. Permission is asked only after you choose Open camera.
+            </Typography>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
+              • All six genes must be visible, in focus, and free of glare. Landscape orientation works best.
+            </Typography>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
+              • Hold the phone roughly facing the monitor — up to about a <strong>35°</strong> angle is supported.
+            </Typography>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
+              • Camera frames are processed on your device. Nothing from the camera is uploaded or saved.
+            </Typography>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-muted)' }}>
+              • The border locks onto the row automatically — no calibration. If two gene rows are visible, tap the one you want.
+            </Typography>
+          </Box>
+        </Box>
       </DialogContent>
 
       <DialogActions sx={{ p: '12px 24px', display: 'flex', justifyContent: 'flex-end', gap: 1.5, borderTop: '1px solid var(--gl-border)' }}>

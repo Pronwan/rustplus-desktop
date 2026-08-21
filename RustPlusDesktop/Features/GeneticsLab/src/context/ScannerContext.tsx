@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ScannerService, ScannerEvent } from '../services/scannerService.ts';
+import type { CameraScannerService } from '../services/cameraScannerService.ts';
+import type { CameraScannerEvent, CameraScannerState } from '../services/scanner/scannerTypes.ts';
+import {
+  createIdleCameraState,
+  isCameraCaptureSupported,
+  isCameraSecureContext
+} from '../services/scanner/cameraSupport.ts';
 import { StorageService, ScannerProfile, ScannerRegion, DEFAULT_SCANNER_REGIONS } from '../services/storageService.ts';
 import { CloneUtils } from '../domain/genetics/Clone.ts';
 import { AudioService } from '../services/audioService.ts';
@@ -36,6 +43,21 @@ export interface ScannerContextValue {
   acknowledgeGeneHandled: (geneString: string) => void;
   isStarved: boolean;
   starvationReason?: string;
+
+  /* Phone camera scanner (beta). Entirely separate from the desktop capture path above. */
+  isCameraScannerSupported: boolean;
+  isCameraSecureOrigin: boolean;
+  isCameraScannerOpen: boolean;
+  cameraState: CameraScannerState;
+  cameraLastResultKind: 'added' | 'duplicate' | null;
+  openCameraScanner: () => void;
+  closeCameraScanner: () => void;
+  startCameraScanner: () => Promise<void>;
+  pauseCameraScanner: () => void;
+  resumeCameraScanner: () => void;
+  switchCameraFacing: () => Promise<void>;
+  attachCameraVideo: (element: HTMLVideoElement | null) => void;
+  selectCameraCandidateAt: (point: { x: number; y: number }) => void;
 }
 
 const ScannerContext = createContext<ScannerContextValue | null>(null);
@@ -59,6 +81,23 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [starvationReason, setStarvationReason] = useState<string | undefined>(undefined);
 
   const scannerService = useMemo(() => new ScannerService(), []);
+
+  /* ---------------------------------------------------------------- *
+   * Phone camera scanner (beta)
+   *
+   * The service module is imported on demand so neither it nor the vision
+   * runtime it will later pull in ends up in the initial desktop bundle.
+   * ---------------------------------------------------------------- */
+  const [isCameraScannerOpen, setIsCameraScannerOpen] = useState(false);
+  const [cameraState, setCameraState] = useState<CameraScannerState>(createIdleCameraState);
+  const [cameraLastResultKind, setCameraLastResultKind] = useState<'added' | 'duplicate' | null>(null);
+
+  const cameraServiceRef = useRef<CameraScannerService | null>(null);
+  const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
+  const cameraHandlerRef = useRef<(event: CameraScannerEvent) => void>(() => {});
+
+  const isCameraScannerSupported = useMemo(() => isCameraCaptureSupported(), []);
+  const isCameraSecureOrigin = useMemo(() => isCameraSecureContext(), []);
 
   // Sound preference ref to avoid stale closures (Rule #28)
   const soundPrefRef = useRef(true);
@@ -284,6 +323,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Non-destructive startScanner (Rule #27: DO NOT DESTROY RESULTS ON START/CANCEL)
   const startScanner = useCallback(async () => {
     try {
+      // Desktop capture and camera capture must never own a stream at the same time.
+      cameraServiceRef.current?.stop();
+      setIsCameraScannerOpen(false);
       await scannerService.start();
     } catch (err: any) {
       setIsScannerActive(false);
@@ -357,6 +399,112 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     scannerService.acknowledgeGeneHandled(geneString);
   }, [scannerService]);
 
+  /* ---------------------------------------------------------------- *
+   * Phone camera scanner lifecycle
+   * ---------------------------------------------------------------- */
+
+  // Kept in a ref so the service subscription is made once, at creation, without going
+  // stale on the notification/clone callbacks it needs.
+  useEffect(() => {
+    cameraHandlerRef.current = (event: CameraScannerEvent) => {
+      if (event.type === 'CAMERA_STATE') {
+        setCameraState(event.state);
+        if (event.state.phase === 'idle') setCameraLastResultKind(null);
+        return;
+      }
+
+      if (event.type === 'SAPLING-FOUND' && event.geneString) {
+        // Rearm and per-target dedup live in the camera service, so one visible tooltip
+        // reaches this point at most once.
+        const added = addClone(event.geneString, { source: 'scanner', quantity: 1 });
+        if (added) {
+          setCameraLastResultKind('added');
+          AudioService.playPop(soundPrefRef.current);
+          notifySuccess(`Scanned Clone: ${event.geneString} (${Math.round(event.confidence || 0)}% conf)`);
+        } else {
+          setCameraLastResultKind('duplicate');
+          AudioService.playDuplicate(soundPrefRef.current);
+          notifyInfo(`Duplicate [${event.geneString}] — already in your list.`);
+        }
+      }
+    };
+  }, [addClone, notifySuccess, notifyInfo]);
+
+  const ensureCameraService = useCallback(async (): Promise<CameraScannerService> => {
+    if (cameraServiceRef.current) return cameraServiceRef.current;
+
+    // The detector is imported alongside the service so the vision code only reaches the
+    // device once camera mode is actually opened.
+    const [serviceModule, locatorModule] = await Promise.all([
+      import('../services/cameraScannerService.ts'),
+      import('../services/scanner/DynamicGeneLocator.ts')
+    ]);
+    // A second caller may have finished the same dynamic import while this one awaited.
+    if (cameraServiceRef.current) return cameraServiceRef.current;
+
+    const service = new serviceModule.CameraScannerService();
+    service.setAnalyzerFactory(() => new locatorModule.DynamicGeneLocator());
+    service.addEventListener(event => cameraHandlerRef.current(event));
+    cameraServiceRef.current = service;
+
+    if (cameraVideoRef.current) {
+      service.attachVideo(cameraVideoRef.current);
+    }
+    return service;
+  }, []);
+
+  const openCameraScanner = useCallback(() => {
+    // Desktop capture and camera capture must never own a stream at the same time.
+    if (isScannerActive || isScannerInitializing) {
+      scannerService.stop();
+    }
+    setCameraLastResultKind(null);
+    setIsCameraScannerOpen(true);
+  }, [scannerService, isScannerActive, isScannerInitializing]);
+
+  const closeCameraScanner = useCallback(() => {
+    cameraServiceRef.current?.stop();
+    setIsCameraScannerOpen(false);
+    setCameraLastResultKind(null);
+  }, []);
+
+  const startCameraScanner = useCallback(async () => {
+    try {
+      const service = await ensureCameraService();
+      await service.start();
+    } catch (err: any) {
+      notifyError(`Could not start the camera: ${err?.message || 'unknown error'}`);
+    }
+  }, [ensureCameraService, notifyError]);
+
+  const pauseCameraScanner = useCallback(() => {
+    cameraServiceRef.current?.pause();
+  }, []);
+
+  const resumeCameraScanner = useCallback(() => {
+    cameraServiceRef.current?.resume();
+  }, []);
+
+  const switchCameraFacing = useCallback(async () => {
+    await cameraServiceRef.current?.switchCamera();
+  }, []);
+
+  const attachCameraVideo = useCallback((element: HTMLVideoElement | null) => {
+    cameraVideoRef.current = element;
+    cameraServiceRef.current?.attachVideo(element);
+  }, []);
+
+  const selectCameraCandidateAt = useCallback((point: { x: number; y: number }) => {
+    cameraServiceRef.current?.selectCandidateAt(point);
+  }, []);
+
+  // Release the camera if the provider itself goes away.
+  useEffect(() => {
+    return () => {
+      cameraServiceRef.current?.stop();
+    };
+  }, []);
+
   return (
     <ScannerContext.Provider
       value={{
@@ -388,7 +536,20 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setScannerPreviewEnabled,
         acknowledgeGeneHandled,
         isStarved,
-        starvationReason
+        starvationReason,
+        isCameraScannerSupported,
+        isCameraSecureOrigin,
+        isCameraScannerOpen,
+        cameraState,
+        cameraLastResultKind,
+        openCameraScanner,
+        closeCameraScanner,
+        startCameraScanner,
+        pauseCameraScanner,
+        resumeCameraScanner,
+        switchCameraFacing,
+        attachCameraVideo,
+        selectCameraCandidateAt
       }}
     >
       {children}

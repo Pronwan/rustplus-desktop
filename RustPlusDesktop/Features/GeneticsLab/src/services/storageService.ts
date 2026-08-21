@@ -141,6 +141,8 @@ export interface ExtendedApplicationOptions extends ApplicationOptions {
   inventoryMode: 'ignore' | 'prefer' | 'require';
   targetStopMode: 'continue' | 'exact' | 'threshold';
   targetStopThresholdPercent: number;
+  /** The phone-camera banner has been dismissed and should not be shown again. */
+  hidePhoneCameraBanner: boolean;
 }
 
 export const DEFAULT_OPTIONS: ExtendedApplicationOptions = {
@@ -162,7 +164,8 @@ export const DEFAULT_OPTIONS: ExtendedApplicationOptions = {
   density: 'comfortable',
   inventoryMode: 'prefer',
   targetStopMode: 'continue',
-  targetStopThresholdPercent: 100
+  targetStopThresholdPercent: 100,
+  hidePhoneCameraBanner: false
 };
 
 const CONSENT_PREFIX = 'rb-cookie-pref-v1';
