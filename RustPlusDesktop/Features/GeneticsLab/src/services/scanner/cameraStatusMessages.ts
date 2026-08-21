@@ -102,8 +102,20 @@ export function describeCameraStatus(
     case 'tracking':
       return { tone: 'active', headline: 'Genetics found', instruction: 'Hold still', announce: false };
 
-    case 'reading':
+    case 'reading': {
+      // Many attempts with nothing confirmed is not "reading", it is failing. Saying so
+      // gives the user something to act on instead of a spinner that never resolves.
+      const stalled = state.diagnostics.readAttempts >= 25 && state.diagnostics.pendingSamples === 0;
+      if (stalled) {
+        return {
+          tone: 'warn',
+          headline: 'Cannot read the letters',
+          instruction: 'Move a little closer, or tilt to cut screen glare',
+          announce: false
+        };
+      }
       return { tone: 'active', headline: 'Reading genetics…', instruction: 'Keep the row in view', announce: false };
+    }
 
     case 'accepted':
       if (lastResultKind === 'duplicate') {

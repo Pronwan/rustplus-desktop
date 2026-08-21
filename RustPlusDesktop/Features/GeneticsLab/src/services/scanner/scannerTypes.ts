@@ -88,11 +88,21 @@ export interface ScannerDiagnostics {
 }
 
 export interface GeneRecognizer {
-  recognizeRow(canvas: HTMLCanvasElement): Promise<GeneRecognitionResult | null>;
-  recognizeSlots(canvases: HTMLCanvasElement[]): Promise<GeneRecognitionResult | null>;
+  /**
+   * `minConfidence` defaults to the desktop floor. The camera path passes a lower one:
+   * a photograph of a monitor never scores like a pixel-exact screen capture.
+   */
+  recognizeRow(canvas: HTMLCanvasElement, minConfidence?: number): Promise<GeneRecognitionResult | null>;
+  recognizeSlots(
+    canvases: HTMLCanvasElement[],
+    minGeneConfidence?: number,
+    minAverageConfidence?: number
+  ): Promise<GeneRecognitionResult | null>;
   warmup(): Promise<void>;
   terminate(): Promise<void>;
   isWarm(): boolean;
+  /** Last raw OCR attempt, including reads rejected by the confidence floor. */
+  getLastRawRead?(): { text: string; confidence: number } | null;
 }
 
 /* ------------------------------------------------------------------ *
@@ -204,6 +214,18 @@ export interface CameraScannerState {
   lastAcceptedGenes: string | null;
   /** Number of similarly scored candidates when phase is 'ambiguous'. */
   candidateCount: number;
+  /**
+   * Beta diagnostics. Without these a failing read is invisible: the surface just sits on
+   * "Reading genetics..." forever with no way to tell whether OCR is returning nothing,
+   * returning noise, or returning the right answer below the confidence floor.
+   */
+  diagnostics: {
+    readAttempts: number;
+    lastRawText: string | null;
+    lastConfidence: number | null;
+    /** Distinct strings currently in the confirmation window. */
+    pendingSamples: number;
+  };
 }
 
 export type CameraScannerEvent =

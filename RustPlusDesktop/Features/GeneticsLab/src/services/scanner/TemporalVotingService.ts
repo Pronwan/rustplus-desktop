@@ -4,9 +4,16 @@ import { SCANNER_CONFIG } from './scannerConfig.ts';
 export class TemporalVotingService {
   private history: Record<string | number, GeneRecognitionResult[]> = {};
 
+  /**
+   * @param minConfidence Confidence floor for accepting a sample. Defaults to the desktop
+   *   value; the camera path supplies its own, because camera OCR scores lower than a
+   *   pixel-exact screen capture even when it is completely correct.
+   */
+  constructor(private readonly minConfidence: number = SCANNER_CONFIG.recognition.minAverageConfidence) {}
+
   public addCandidate(key: string | number, result: GeneRecognitionResult): GeneRecognitionResult | null {
     if (!result.geneString || result.geneString.length !== 6) return null;
-    if (result.confidence < SCANNER_CONFIG.recognition.minAverageConfidence) return null;
+    if (result.confidence < this.minConfidence) return null;
 
     if (!this.history[key]) {
       this.history[key] = [];
@@ -71,6 +78,11 @@ export class TemporalVotingService {
     }
 
     return null;
+  }
+
+  /** Samples currently in the confirmation window for a key. */
+  public getSampleCount(key: string | number): number {
+    return this.history[key]?.length ?? 0;
   }
 
   public reset(key?: string | number): void {

@@ -8,6 +8,7 @@ import {
   CameraScannerState,
   CameraTarget,
   CameraTrackCapabilities,
+  GeneRecognitionResult,
   GeneRecognizer,
   Point
 } from './scanner/scannerTypes.ts';
@@ -171,7 +172,10 @@ const FRAME_COST_WINDOW = 20;
 export class CameraScannerService {
   private readonly env: CameraScannerEnvironment;
   private readonly recognizer: GeneRecognizer;
-  private readonly voting = new TemporalVotingService();
+  // Camera confidence floor, not the desktop one. See CAMERA_SCANNER_CONFIG.recognition.
+  private readonly voting = new TemporalVotingService(
+    CAMERA_SCANNER_CONFIG.recognition.minRowConfidence
+  );
   private readonly rearm = new CameraTargetRearm(CAMERA_SCANNER_CONFIG.confirmation.rearmAfterLossMs);
 
   private listeners: CameraScannerEventListener[] = [];
@@ -188,6 +192,7 @@ export class CameraScannerService {
   private analysisTimerId: ReturnType<typeof setInterval> | null = null;
   private isAnalyzing = false;
   private isRecognizing = false;
+  private readAttempts = 0;
 
   private degradationLevel = 0;
   private frameCosts: number[] = [];
@@ -625,20 +630,29 @@ export class CameraScannerService {
     if (this.isRecognizing || !this.recognizer.isWarm()) return;
 
     this.isRecognizing = true;
+    this.readAttempts++;
     this.setState({ phase: 'reading' });
 
     try {
       const { slots, normalizedCanvas } = target;
+      const recognition = CAMERA_SCANNER_CONFIG.recognition;
+
+      // The stitcher upscales each slot by `scale`. The normalised row is already an upscale
+      // of the camera pixels, so blindly reusing the desktop 4x would hand Tesseract a hugely
+      // magnified blur. Aim for a glyph height it actually reads well instead.
+      const stitchScale = clamp(recognition.targetGlyphHeight / Math.max(1, slots.height), 1, 4);
+
       const stitched = GeneImagePreprocessor.prepareStitchedGeneStrip(
         normalizedCanvas,
         slots.baseX,
         slots.baseY,
         slots.geneWidth,
         slots.gapWidth,
-        slots.height
+        slots.height,
+        stitchScale
       );
 
-      let result = await this.recognizer.recognizeRow(stitched);
+      let result = await this.recognizer.recognizeRow(stitched, recognition.minRowConfidence);
       if (token !== this.sessionToken) return;
 
       if (!result) {
@@ -648,12 +662,18 @@ export class CameraScannerService {
           slots.baseY,
           slots.geneWidth,
           slots.gapWidth,
-          slots.height
+          slots.height,
+          stitchScale
         );
-        result = await this.recognizer.recognizeSlots(crops);
+        result = await this.recognizer.recognizeSlots(
+          crops,
+          recognition.minSlotConfidence,
+          recognition.minAverageSlotConfidence
+        );
         if (token !== this.sessionToken) return;
       }
 
+      this.publishReadDiagnostics(result);
       if (!result) return;
 
       // 3-of-4 temporal confirmation, the same policy the desktop scanner uses.
@@ -681,6 +701,22 @@ export class CameraScannerService {
     } finally {
       this.isRecognizing = false;
     }
+  }
+
+  /**
+   * Surfaces what the recogniser actually saw. A read that is correct but below the
+   * confidence floor looks identical to a read that failed outright unless it is reported.
+   */
+  private publishReadDiagnostics(result: GeneRecognitionResult | null): void {
+    const raw = this.recognizer.getLastRawRead?.() ?? null;
+    this.setState({
+      diagnostics: {
+        readAttempts: this.readAttempts,
+        lastRawText: result?.geneString ?? raw?.text?.trim() ?? null,
+        lastConfidence: result?.confidence ?? raw?.confidence ?? null,
+        pendingSamples: this.voting.getSampleCount(CAMERA_VOTE_KEY)
+      }
+    });
   }
 
   private discardPendingRecognition(): void {
@@ -745,6 +781,7 @@ export class CameraScannerService {
     this.isHidden = false;
     this.isSwitchingCamera = false;
     this.isRecognizing = false;
+    this.readAttempts = 0;
     this.degradationLevel = 0;
     this.frameCosts = [];
 
@@ -813,6 +850,10 @@ export class CameraScannerService {
       listener(event);
     }
   }
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return value < min ? min : value > max ? max : value;
 }
 
 function stopStreamTracks(stream: MediaStream): void {

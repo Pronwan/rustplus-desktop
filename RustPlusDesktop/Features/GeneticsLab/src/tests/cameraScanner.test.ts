@@ -7,6 +7,8 @@ import {
 import { describeCameraStatus } from '../services/scanner/cameraStatusMessages.ts';
 import { createIdleCameraState } from '../services/scanner/cameraSupport.ts';
 import { CameraTargetRearm } from '../services/scanner/CameraTargetRearm.ts';
+import { TemporalVotingService } from '../services/scanner/TemporalVotingService.ts';
+import { CAMERA_SCANNER_CONFIG } from '../services/scanner/cameraScannerConfig.ts';
 import type {
   CameraAnalysisResult,
   CameraFrameAnalyzer,
@@ -108,11 +110,14 @@ class FakeRecognizer implements GeneRecognizer {
   public slotCalls = 0;
   /** Consumed in order; the last entry repeats once exhausted. */
   public rowResults: Array<GeneRecognitionResult | null> = [null];
+  /** Confidence floor the caller asked for, per call. */
+  public rowMinConfidences: Array<number | undefined> = [];
   private warm = false;
 
   constructor(private readonly shouldFail = false) {}
 
-  async recognizeRow(): Promise<GeneRecognitionResult | null> {
+  async recognizeRow(_canvas?: unknown, minConfidence?: number): Promise<GeneRecognitionResult | null> {
+    this.rowMinConfidences.push(minConfidence);
     const result = this.rowResults[Math.min(this.rowCalls, this.rowResults.length - 1)] ?? null;
     this.rowCalls++;
     return result;
@@ -344,6 +349,26 @@ function createHarness(options: {
       }
     }
   };
+}
+
+/** Boots a camera session with a scripted analyzer and scripted OCR results. */
+async function startCameraWith(
+  script: (call: number) => FakeAnalysis,
+  rowResults: Array<GeneRecognitionResult | null>
+): Promise<{ harness: Harness; analyzer: ScriptedAnalyzer }> {
+  const recognizer = new FakeRecognizer();
+  recognizer.rowResults = rowResults;
+
+  const harness = createHarness({ recognizer });
+  const analyzer = new ScriptedAnalyzer(script);
+  harness.service.attachVideo(createVideoElement());
+  harness.service.setAnalyzerFactory(() => analyzer);
+
+  await harness.service.start();
+  // The recogniser warms up alongside the permission prompt.
+  await vi.advanceTimersByTimeAsync(0);
+
+  return { harness, analyzer };
 }
 
 /* ------------------------------------------------------------------ *
@@ -759,24 +784,7 @@ describe('Camera recognition safety', () => {
     restoreDom();
   });
 
-  async function startWith(
-    script: (call: number) => FakeAnalysis,
-    rowResults: Array<GeneRecognitionResult | null>
-  ): Promise<{ harness: Harness; analyzer: ScriptedAnalyzer }> {
-    const recognizer = new FakeRecognizer();
-    recognizer.rowResults = rowResults;
-
-    const harness = createHarness({ recognizer });
-    const analyzer = new ScriptedAnalyzer(script);
-    harness.service.attachVideo(createVideoElement());
-    harness.service.setAnalyzerFactory(() => analyzer);
-
-    await harness.service.start();
-    // The recogniser warms up alongside the permission prompt.
-    await vi.advanceTimersByTimeAsync(0);
-
-    return { harness, analyzer };
-  }
+  const startWith = startCameraWith;
 
   it('never runs OCR while quality is blocking', async () => {
     const { harness, analyzer } = await startWith(
@@ -941,6 +949,100 @@ describe('Camera recognition safety', () => {
 
     expect(analyzer.resetCalls).toBeGreaterThan(0);
     expect(harness.saplings).toHaveLength(0);
+  });
+});
+
+describe('Camera OCR confidence is independent of the desktop scanner', () => {
+  let restoreDom: () => void;
+
+  beforeEach(() => {
+    restoreDom = installFakeCanvasHost();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+    restoreDom();
+  });
+
+  it('keeps the desktop voting floor at its original value', () => {
+    const desktop = new TemporalVotingService();
+    for (let i = 0; i < 4; i++) {
+      expect(desktop.addCandidate('inventory', geneResult('GGYHYX', 50))).toBeNull();
+    }
+  });
+
+  it('accepts camera-grade confidence that the desktop floor would reject', () => {
+    const camera = new TemporalVotingService(CAMERA_SCANNER_CONFIG.recognition.minRowConfidence);
+
+    expect(camera.addCandidate('camera', geneResult('GGYHYX', 50))).toBeNull();
+    expect(camera.addCandidate('camera', geneResult('GGYHYX', 47))).toBeNull();
+    const confirmed = camera.addCandidate('camera', geneResult('GGYHYX', 52));
+
+    expect(confirmed?.geneString).toBe('GGYHYX');
+  });
+
+  it('still rejects reads below even the camera floor', () => {
+    const camera = new TemporalVotingService(CAMERA_SCANNER_CONFIG.recognition.minRowConfidence);
+    for (let i = 0; i < 4; i++) {
+      expect(camera.addCandidate('camera', geneResult('GGYHYX', 20))).toBeNull();
+    }
+  });
+
+  it('adds a clone from reads a monitor photograph actually produces', async () => {
+    // 52% is a realistic camera score for a correct read, and is well under the desktop
+    // floor of 75 that previously discarded every one of them.
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [geneResult('GGGYYY', 52)]
+    );
+
+    await harness.runFor(600);
+
+    expect(harness.saplings.map(s => s.geneString)).toEqual(['GGGYYY']);
+  });
+
+  it('passes the camera floor down to the recogniser rather than the desktop one', async () => {
+    const recognizer = new FakeRecognizer();
+    recognizer.rowResults = [geneResult('GGGYYY', 52)];
+
+    const harness = createHarness({ recognizer });
+    harness.service.attachVideo(createVideoElement());
+    harness.service.setAnalyzerFactory(
+      () => new ScriptedAnalyzer(() => ({ ...TRACKING, activeTarget: trackingTarget() }))
+    );
+    await harness.service.start();
+    await harness.runFor(200);
+
+    expect(recognizer.rowMinConfidences[0]).toBe(CAMERA_SCANNER_CONFIG.recognition.minRowConfidence);
+    expect(recognizer.rowMinConfidences[0]).toBeLessThan(75);
+  });
+
+  it('reports what OCR saw so a failing read is diagnosable', async () => {
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [null]
+    );
+
+    await harness.runFor(400);
+    const diagnostics = harness.service.getState().diagnostics;
+
+    expect(diagnostics.readAttempts).toBeGreaterThan(0);
+    expect(diagnostics.pendingSamples).toBe(0);
+  });
+
+  it('stops claiming to be reading once attempts are clearly going nowhere', () => {
+    const base = createIdleCameraState();
+    const stalled = describeCameraStatus({
+      ...base,
+      phase: 'reading',
+      isDetectionAvailable: true,
+      diagnostics: { readAttempts: 40, lastRawText: '', lastConfidence: 12, pendingSamples: 0 }
+    });
+
+    expect(stalled.headline).toBe('Cannot read the letters');
+    expect(stalled.tone).toBe('warn');
   });
 });
 

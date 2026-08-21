@@ -29,9 +29,31 @@ export const CAMERA_SCANNER_CONFIG = {
     maxDiscoveryWidth: 960,
     minDiscoveryWidth: 720,
     normalizedRowWidth: 600,
-    normalizedRowHeight: 100,
+    /**
+     * Height bounds only. The actual height follows the detected row's aspect ratio, because
+     * squeezing a 4.6:1 row into a fixed 6:1 canvas stretches the letters sideways and the
+     * recogniser reads the distortion, not the gene.
+     */
+    minNormalizedRowHeight: 60,
+    maxNormalizedRowHeight: 200,
     /** Extra margin around the row when re-grabbing it at native resolution, as a row-height fraction. */
     regionMarginFactor: 0.35
+  },
+
+  recognition: {
+    /**
+     * Confidence floors for the camera path, deliberately below the desktop values.
+     *
+     * The desktop scanner reads pixel-exact screen captures and can demand 75%. A phone
+     * photographing a monitor fights defocus, moire and rolling shutter, so a correct read
+     * routinely scores in the 40s and 50s. Holding it to the desktop floor rejected every
+     * single read. Confidence in the *result* comes from 3-of-4 temporal agreement instead.
+     */
+    minRowConfidence: 40,
+    minSlotConfidence: 35,
+    minAverageSlotConfidence: 45,
+    /** Target glyph height handed to Tesseract, in pixels. */
+    targetGlyphHeight: 84
   },
 
   selection: {
@@ -55,7 +77,13 @@ export const CAMERA_SCANNER_CONFIG = {
   quality: {
     minPixelsPerGene: 24,
     maxPixelsPerGene: 110,
-    minStableMs: 400,
+    /**
+     * Handheld tolerance. A phone held in the hand never stops moving, so demanding a long
+     * perfectly still window made the scanner feel broken. The window is short and the drift
+     * allowance generous; wrong reads are caught by temporal agreement, not by stillness.
+     */
+    minStableMs: 150,
+    maxDriftFraction: 0.4,
     maxPerspectiveDegrees: 35
   },
 

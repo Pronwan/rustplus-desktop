@@ -115,7 +115,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
   private readonly grabber: CameraFrameGrabber;
   private readonly qualityThresholds: RowQualityThresholds;
   private readonly orientationAngle: () => number;
-  private readonly stability = new RowStabilityTracker(CAMERA_SCANNER_CONFIG.quality.minStableMs);
+  private readonly stability = new RowStabilityTracker(
+    CAMERA_SCANNER_CONFIG.quality.minStableMs,
+    CAMERA_SCANNER_CONFIG.quality.maxDriftFraction
+  );
 
   private discoveryWidth: number;
   private tracked: TrackedTarget | null = null;
@@ -402,13 +405,20 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
     if (!region) return this.blocked(overlay, ['moving']);
 
     const localQuad = translateQuad(cameraQuad, -bounds.x, -bounds.y) as Quad;
-    const warped = warpQuadToRect(
-      region,
-      localQuad,
-      CAMERA_SCANNER_CONFIG.analysis.normalizedRowWidth,
-      CAMERA_SCANNER_CONFIG.analysis.normalizedRowHeight,
-      this.warpBuffer
+    // Keep the row's own proportions. A fixed-height canvas would stretch the letters
+    // sideways by however much this particular row differs from 6:1.
+    const normalizedWidth = CAMERA_SCANNER_CONFIG.analysis.normalizedRowWidth;
+    const normalizedHeight = Math.round(
+      Math.min(
+        CAMERA_SCANNER_CONFIG.analysis.maxNormalizedRowHeight,
+        Math.max(
+          CAMERA_SCANNER_CONFIG.analysis.minNormalizedRowHeight,
+          (normalizedWidth * rowHeight) / Math.max(1, rowWidth)
+        )
+      )
     );
+
+    const warped = warpQuadToRect(region, localQuad, normalizedWidth, normalizedHeight, this.warpBuffer);
     if (!warped) return this.blocked(overlay, ['extreme-perspective']);
     this.warpBuffer = warped;
 
@@ -427,7 +437,15 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
       return this.blocked(overlay, quality.issues);
     }
 
-    const slots = this.measureSlots(candidate, frame.scale, bounds.x, bounds.y, localQuad);
+    const slots = this.measureSlots(
+      candidate,
+      frame.scale,
+      bounds.x,
+      bounds.y,
+      localQuad,
+      normalizedWidth,
+      normalizedHeight
+    );
     if (!slots) return this.blocked(overlay, ['extreme-perspective']);
 
     // Only now, with geometry and quality both satisfied, is a readable target produced.
@@ -465,11 +483,10 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
     frameScale: number,
     boundsX: number,
     boundsY: number,
-    localQuad: Quad
+    localQuad: Quad,
+    width: number,
+    height: number
   ): CameraRowSlots | null {
-    const width = CAMERA_SCANNER_CONFIG.analysis.normalizedRowWidth;
-    const height = CAMERA_SCANNER_CONFIG.analysis.normalizedRowHeight;
-
     const forward = solveHomography(localQuad, [
       { x: 0, y: 0 },
       { x: width, y: 0 },

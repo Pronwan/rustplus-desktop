@@ -190,7 +190,7 @@ export class RowStabilityTracker {
   constructor(
     private readonly minStableMs: number,
     /** Allowed corner drift, as a fraction of the row's own height. */
-    private readonly driftFraction = 0.18
+    private readonly driftFraction = 0.4
   ) {}
 
   update(quad: Quad, nowMs: number): boolean {

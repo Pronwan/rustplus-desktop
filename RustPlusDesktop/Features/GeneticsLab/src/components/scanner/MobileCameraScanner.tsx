@@ -17,6 +17,9 @@ import {
   elementToFrame,
   quadToSvgPoints
 } from '../../services/scanner/cameraOverlayGeometry.ts';
+import { CAMERA_SCANNER_CONFIG } from '../../services/scanner/cameraScannerConfig.ts';
+
+const CAMERA_CONFIRMATION_SAMPLES = CAMERA_SCANNER_CONFIG.confirmation.requiredMatches;
 
 const TONE_COLORS: Record<CameraStatusTone, string> = {
   neutral: '#9CA3AF',
@@ -363,6 +366,26 @@ export const MobileCameraScanner: React.FC = () => {
           {cameraState.isOcrUnavailable && (
             <Typography sx={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#F59E0B', mt: 0.5 }}>
               Text recognition is unavailable. The preview still works; close and reopen to retry.
+            </Typography>
+          )}
+
+          {/* Beta diagnostics. Without this a failing read is indistinguishable from a
+              hanging one, and there is nothing to report back for tuning. */}
+          {cameraState.diagnostics.readAttempts > 0 && (
+            <Typography
+              sx={{
+                fontFamily: 'monospace',
+                fontSize: '0.66rem',
+                color: '#6B7280',
+                mt: 0.5,
+                wordBreak: 'break-all'
+              }}
+            >
+              {`ocr "${cameraState.diagnostics.lastRawText ?? '—'}" `}
+              {cameraState.diagnostics.lastConfidence !== null
+                ? `${Math.round(cameraState.diagnostics.lastConfidence)}% `
+                : ''}
+              {`· ${cameraState.diagnostics.pendingSamples}/${CAMERA_CONFIRMATION_SAMPLES} agree · ${cameraState.diagnostics.readAttempts} reads`}
             </Typography>
           )}
         </Box>

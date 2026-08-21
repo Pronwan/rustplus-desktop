@@ -41,6 +41,7 @@ export function createIdleCameraState(): CameraScannerState {
     captureResolution: '',
     acceptedCount: 0,
     lastAcceptedGenes: null,
+    diagnostics: { readAttempts: 0, lastRawText: null, lastConfidence: null, pendingSamples: 0 },
     candidateCount: 0
   };
 }
