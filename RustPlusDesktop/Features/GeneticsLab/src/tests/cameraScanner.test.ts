@@ -9,6 +9,11 @@ import { createIdleCameraState } from '../services/scanner/cameraSupport.ts';
 import { CameraTargetRearm } from '../services/scanner/CameraTargetRearm.ts';
 import { TemporalVotingService } from '../services/scanner/TemporalVotingService.ts';
 import { CAMERA_SCANNER_CONFIG } from '../services/scanner/cameraScannerConfig.ts';
+import {
+  DEFAULT_ROW_QUALITY_THRESHOLDS,
+  assessRowQuality
+} from '../services/scanner/vision/quality.ts';
+import type { RasterImage } from '../services/scanner/scannerTypes.ts';
 import type {
   CameraAnalysisResult,
   CameraFrameAnalyzer,
@@ -1277,5 +1282,91 @@ describe('Camera status vocabulary', () => {
     expect(status.headline).toBe('Detection unavailable');
     expect(status.tone).toBe('warn');
     expect(status.announce).toBe(true);
+  });
+});
+
+describe('Camera quality thresholds have one source of truth', () => {
+  it('uses the camera config values, not a stale private copy', () => {
+    expect(DEFAULT_ROW_QUALITY_THRESHOLDS.maxPixelsPerGene).toBe(
+      CAMERA_SCANNER_CONFIG.quality.maxPixelsPerGene
+    );
+    expect(DEFAULT_ROW_QUALITY_THRESHOLDS.minPixelsPerGene).toBe(
+      CAMERA_SCANNER_CONFIG.quality.minPixelsPerGene
+    );
+    expect(DEFAULT_ROW_QUALITY_THRESHOLDS.maxPerspectiveDegrees).toBe(
+      CAMERA_SCANNER_CONFIG.quality.maxPerspectiveDegrees
+    );
+  });
+
+  it('accepts the pixel density a hand-held phone actually produces', () => {
+    const row: RasterImage = { data: new Uint8ClampedArray(40 * 10 * 4), width: 40, height: 10 };
+
+    // Around 200 px per gene is normal, well-framed hand-held distance. It was being
+    // reported as "too close" and blocking every read.
+    const report = assessRowQuality({
+      normalized: row,
+      pixelsPerGene: 208,
+      perspectiveDegrees: 6,
+      clipped: false,
+      isStable: true
+    });
+
+    expect(report.issues).not.toContain('too-close');
+  });
+});
+
+describe('Camera accepted confirmation', () => {
+  let restoreDom: () => void;
+
+  beforeEach(() => {
+    restoreDom = installFakeCanvasHost();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+    restoreDom();
+  });
+
+  it('keeps the accepted state on screen long enough to be seen', async () => {
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [geneResult('GGGYYY', 88)]
+    );
+
+    await harness.runFor(700);
+    expect(harness.saplings).toHaveLength(1);
+
+    // Several analysis frames later the confirmation is still the headline.
+    await harness.runFor(200);
+    expect(harness.service.getState().phase).toBe('accepted');
+    expect(harness.service.getState().lastAcceptedGenes).toBe('GGGYYY');
+  });
+
+  it('returns to tracking once the hold expires', async () => {
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [geneResult('GGGYYY', 88)]
+    );
+
+    await harness.runFor(700);
+    expect(harness.service.getState().phase).toBe('accepted');
+
+    await harness.runFor(CAMERA_SCANNER_CONFIG.confirmation.acceptedHoldMs + 300);
+    expect(harness.service.getState().phase).not.toBe('accepted');
+  });
+
+  it('keeps the overlay live while the confirmation is held', async () => {
+    const { harness } = await startCameraWith(
+      () => ({ ...TRACKING, activeTarget: trackingTarget() }),
+      [geneResult('GGGYYY', 88)]
+    );
+
+    await harness.runFor(700);
+    await harness.runFor(200);
+
+    expect(harness.service.getState().phase).toBe('accepted');
+    expect(harness.service.getState().overlay).not.toBeNull();
   });
 });

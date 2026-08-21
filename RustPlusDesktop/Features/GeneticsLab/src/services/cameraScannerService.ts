@@ -195,6 +195,7 @@ export class CameraScannerService {
   private isRecognizing = false;
   private readAttempts = 0;
   private lastReadAt = 0;
+  private acceptedUntil = 0;
 
   private degradationLevel = 0;
   private frameCosts: number[] = [];
@@ -602,12 +603,13 @@ export class CameraScannerService {
   }
 
   private applyAnalysis(result: CameraAnalysisResult): void {
+    const now = this.env.now();
     const targetPresent = result.phase === 'tracking' || result.phase === 'quality-blocked';
 
     if (targetPresent) {
       this.rearm.markVisible();
     } else {
-      this.rearm.markLost(this.env.now());
+      this.rearm.markLost(now);
     }
 
     // Only genuine loss of the target invalidates the window. A single blurred or shaky
@@ -617,6 +619,13 @@ export class CameraScannerService {
     // at all, and re-read the same row from scratch indefinitely.
     if (!targetPresent) {
       this.voting.reset(CAMERA_VOTE_KEY);
+    }
+
+    // Let a successful scan stay readable. The overlay and diagnostics keep updating
+    // underneath so tracking stays live; only the headline is held.
+    if (now < this.acceptedUntil) {
+      this.setState({ overlay: result.overlay, candidateCount: result.candidateCount });
+      return;
     }
 
     this.setState({
@@ -635,6 +644,8 @@ export class CameraScannerService {
     if (this.isRecognizing || !this.recognizer.isWarm()) return;
 
     const now = this.env.now();
+    // Nothing to gain from re-reading a row we just accepted.
+    if (now < this.acceptedUntil) return;
     if (now - this.lastReadAt < CAMERA_SCANNER_CONFIG.recognition.intervalMs) return;
     this.lastReadAt = now;
 
@@ -692,6 +703,7 @@ export class CameraScannerService {
       this.rearm.recordEmit(confirmed.geneString);
       this.voting.reset(CAMERA_VOTE_KEY);
 
+      this.acceptedUntil = this.env.now() + CAMERA_SCANNER_CONFIG.confirmation.acceptedHoldMs;
       this.setState({
         phase: 'accepted',
         acceptedCount: this.state.acceptedCount + 1,
@@ -796,6 +808,7 @@ export class CameraScannerService {
     this.isRecognizing = false;
     this.readAttempts = 0;
     this.lastReadAt = 0;
+    this.acceptedUntil = 0;
     releaseRasterCanvases();
     this.degradationLevel = 0;
     this.frameCosts = [];

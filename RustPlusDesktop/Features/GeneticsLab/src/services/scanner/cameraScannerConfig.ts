@@ -96,13 +96,22 @@ export const CAMERA_SCANNER_CONFIG = {
      */
     minStableMs: 150,
     maxDriftFraction: 0.4,
-    maxPerspectiveDegrees: 35
+    maxPerspectiveDegrees: 35,
+    minSharpness: 55,
+    maxGlareRatio: 0.35,
+    minMeanLuminance: 32
   },
 
   confirmation: {
     samples: 4,
     requiredMatches: 3,
     /** A target must be gone for this long before the same genes can be emitted again. */
-    rearmAfterLossMs: 600
+    rearmAfterLossMs: 600,
+    /**
+     * How long the "Clone added" confirmation stays on screen. Without a hold the next
+     * analysis frame overwrites it about 60ms later, so a successful scan looked identical
+     * to nothing happening.
+     */
+    acceptedHoldMs: 1200
   }
 } as const;

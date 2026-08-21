@@ -733,9 +733,19 @@ describe('Row quality measurement', () => {
     expect(tooFar.issues).toContain('too-far');
     expect(tooFar.issues).not.toContain('too-close');
 
+    // A normal hand-held framing lands near 200 px per gene and must be accepted.
+    const comfortable = assessRowQuality({
+      normalized: row,
+      pixelsPerGene: 200,
+      perspectiveDegrees: 5,
+      clipped: false,
+      isStable: true
+    });
+    expect(comfortable.issues).not.toContain('too-close');
+
     const tooClose = assessRowQuality({
       normalized: row,
-      pixelsPerGene: 180,
+      pixelsPerGene: DEFAULT_ROW_QUALITY_THRESHOLDS.maxPixelsPerGene + 50,
       perspectiveDegrees: 5,
       clipped: false,
       isStable: true

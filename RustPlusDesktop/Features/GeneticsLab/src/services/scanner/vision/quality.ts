@@ -1,4 +1,5 @@
 import { CameraQualityIssue } from '../scannerTypes.ts';
+import { CAMERA_SCANNER_CONFIG } from '../cameraScannerConfig.ts';
 import { Quad, quadDrift } from './geometry.ts';
 import { RasterImage } from './perspective.ts';
 
@@ -113,14 +114,20 @@ export interface RowQualityThresholds {
   minMeanLuminance: number;
 }
 
-/** Beta starting values. Phase 6 replaces these from labelled device fixtures. */
+/**
+ * Derived from CAMERA_SCANNER_CONFIG so there is exactly one place to tune.
+ *
+ * These numbers previously lived here as well as in the config, and the two drifted apart:
+ * the config was raised to stop a well-framed row being reported as "too close" while the
+ * locator went on reading the stale copy, so the fix did nothing at all.
+ */
 export const DEFAULT_ROW_QUALITY_THRESHOLDS: RowQualityThresholds = {
-  minPixelsPerGene: 24,
-  maxPixelsPerGene: 110,
-  maxPerspectiveDegrees: 35,
-  minSharpness: 55,
-  maxGlareRatio: 0.35,
-  minMeanLuminance: 32
+  minPixelsPerGene: CAMERA_SCANNER_CONFIG.quality.minPixelsPerGene,
+  maxPixelsPerGene: CAMERA_SCANNER_CONFIG.quality.maxPixelsPerGene,
+  maxPerspectiveDegrees: CAMERA_SCANNER_CONFIG.quality.maxPerspectiveDegrees,
+  minSharpness: CAMERA_SCANNER_CONFIG.quality.minSharpness,
+  maxGlareRatio: CAMERA_SCANNER_CONFIG.quality.maxGlareRatio,
+  minMeanLuminance: CAMERA_SCANNER_CONFIG.quality.minMeanLuminance
 };
 
 export interface RowQualityInput {
