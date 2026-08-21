@@ -3,6 +3,7 @@ import { StorageService, TargetConfiguration, BreedingSession, BreedingSessionSt
 import { SavedClone, CloneUtils } from '../domain/genetics/Clone.ts';
 import { Sapling } from '../domain/genetics/Sapling.ts';
 import { GeneticsMap } from '../domain/genetics/GeneticsMap.ts';
+import { buildBreedingPlan } from '../domain/genetics/breedingPlan.ts';
 import { useNotification } from './NotificationContext.tsx';
 
 const DEFAULT_SAMPLE_GENES: Record<string, string[]> = {
@@ -295,33 +296,12 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const startBreedingSession = useCallback(
     (routeMap: GeneticsMap, targetGenetics: string) => {
-      const steps: BreedingSessionStep[] = [];
-
-      function collectSteps(map: GeneticsMap) {
-        if (map.baseSapling && map.baseSapling.generationIndex > 0 && map.baseSaplingVariants?.mapList?.[0]) {
-          collectSteps(map.baseSaplingVariants.mapList[0]);
-        }
-        map.crossbreedingSaplings.forEach((parent, pIdx) => {
-          if (parent.generationIndex > 0 && map.crossbreedingSaplingsVariants?.[pIdx]?.mapList?.[0]) {
-            collectSteps(map.crossbreedingSaplingsVariants[pIdx].mapList[0]);
-          }
-        });
-
-        steps.push({
-          generationIndex: map.resultSapling.generationIndex || 1,
-          targetGeneString: map.resultSapling.toString(),
-          centerSaplingString: map.baseSapling ? map.baseSapling.toString() : undefined,
-          surroundingSaplingsStrings: map.crossbreedingSaplings.map(s => s.toString()),
-          priorityWinningIndices: map.tieWinningCrossbreedingSaplingIndexes,
-          priorityLosingIndices: map.tieLosingCrossbreedingSaplingIndexes,
-          chance: map.chance,
-          isCenterPlanted: false,
-          isSurroundingPlanted: false,
-          isCompleted: false
-        });
-      }
-
-      collectSteps(routeMap);
+      const steps: BreedingSessionStep[] = buildBreedingPlan(routeMap).map(step => ({
+        ...step,
+        isCenterPlanted: false,
+        isSurroundingPlanted: false,
+        isCompleted: false
+      }));
 
       const newSession: BreedingSession = {
         id: `session_${Date.now()}`,

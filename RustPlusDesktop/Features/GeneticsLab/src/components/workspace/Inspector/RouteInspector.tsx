@@ -1,37 +1,64 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Paper,
   Box,
-  Typography,
-  Tabs,
-  Tab,
   Button,
-  Chip,
+  ButtonBase,
+  FormControl,
   IconButton,
-  Tooltip
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Tab,
+  Tabs,
+  Tooltip,
+  Typography
 } from '@mui/material';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useNotification } from '../../../context/NotificationContext.tsx';
+import { buildBreedingPlan, BreedingPlanStep } from '../../../domain/genetics/breedingPlan.ts';
+import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
+import type { GeneticsMap } from '../../../domain/genetics/GeneticsMap.ts';
+import type { GeneticsMapGroup } from '../../../domain/genetics/GeneticsMapGroup.ts';
+import type { Sapling } from '../../../domain/genetics/Sapling.ts';
 import { GeneticsSequence } from '../../common/GeneticsSequence.tsx';
 import { generationVisual } from '../../../utils/generationStyle.ts';
-import { RouteTree } from './RouteTree.tsx';
-import { GeneExplanation } from './GeneExplanation.tsx';
-import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 import { buildPlanterSvg } from '../../../utils/planterExport.ts';
+import { GeneExplanation } from './GeneExplanation.tsx';
+
+type InspectorTab = 'steps' | 'why';
 
 export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
-  const { selectedGroup, selectedMap, setSelectedGroup, selectedMapIndex, setSelectedMapIndex } = useCalculation();
-  const { clones, startBreedingSession } = useWorkspace();
+  const { results, selectedGroup, selectedMap, setSelectedGroup, selectedMapIndex, setSelectedMapIndex } = useCalculation();
+  const { startBreedingSession } = useWorkspace();
   const { notifySuccess } = useNotification();
+  const [activeTab, setActiveTab] = useState<InspectorTab>('steps');
 
-  const [activeTab, setActiveTab] = useState<'tree' | 'planter' | 'genes'>('tree');
+  const targetGenes = selectedGroup?.resultSaplingGeneString ?? '';
+  const routeChance = selectedMap ? Math.round(selectedMap.getChanceProduct() * 100) : 0;
+  const planSteps = useMemo(
+    () => selectedMap ? buildBreedingPlan(selectedMap) : [],
+    [selectedMap]
+  );
+  const recipeOptions = useMemo(
+    () => selectedGroup?.mapList.map(map => {
+      return {
+        routeChance: Math.round(map.getChanceProduct() * 100),
+        runs: buildBreedingPlan(map).length
+      };
+    }) ?? [],
+    [selectedGroup]
+  );
+
+  const generationCount = selectedMap?.resultSapling.generationIndex || 1;
+  const selectedRecipeIndex = selectedGroup?.mapList[selectedMapIndex] ? selectedMapIndex : 0;
 
   if (!selectedGroup || !selectedMap) {
     return (
@@ -47,94 +74,59 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          textAlign: 'center',
-          color: 'var(--gl-text-muted)'
+          textAlign: 'center'
         }}
       >
         <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'var(--gl-text-muted)', mb: 1 }}>
           No Route Selected
         </Typography>
-        <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', maxWidth: 220 }}>
-          Select a route from the ranked list to view its planter, required clones, and breeding steps.
+        <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', maxWidth: 240 }}>
+          Select a route to see its source readiness and ordered breeding runs.
         </Typography>
       </Paper>
     );
   }
 
-  // Extract leaf required clones and check availability
-  const leafClones: { genetics: string; count: number; available: number }[] = [];
-  const mapCounts: Record<string, number> = {};
-
-  function extractLeaves(m: any) {
-    if (m.baseSapling) {
-      if (m.baseSapling.generationIndex > 0 && m.baseSaplingVariants?.mapList?.[0]) {
-        extractLeaves(m.baseSaplingVariants.mapList[0]);
-      } else {
-        const g = m.baseSapling.toString();
-        mapCounts[g] = (mapCounts[g] || 0) + 1;
-      }
-    }
-    m.crossbreedingSaplings.forEach((p: any, idx: number) => {
-      if (p.generationIndex > 0 && m.crossbreedingSaplingsVariants?.[idx]?.mapList?.[0]) {
-        extractLeaves(m.crossbreedingSaplingsVariants[idx].mapList[0]);
-      } else {
-        const g = p.toString();
-        mapCounts[g] = (mapCounts[g] || 0) + 1;
-      }
-    });
-  }
-
-  extractLeaves(selectedMap);
-
-  Object.entries(mapCounts).forEach(([genetics, count]) => {
-    const owned = clones.filter(c => c.genetics === genetics).reduce((sum, c) => sum + (c.quantity || 1), 0);
-    leafClones.push({ genetics, count, available: owned });
-  });
-
-  const generationCount = selectedMap.resultSapling.generationIndex || 1;
-  const probabilityPercent = Math.round((selectedMap.chance || 1) * 100);
-  const missingCloneCount = leafClones.reduce((total, leaf) => total + Math.max(0, leaf.count - leaf.available), 0);
+  const firstStep = planSteps[0];
 
   const handleCopyInstructions = () => {
-    const lines: string[] = [];
-    lines.push(`=== Rust Breeding Plan: ${selectedGroup.resultSaplingGeneString} ===`);
-    lines.push(`Target: ${selectedGroup.resultSaplingGeneString} (${Math.round((selectedMap.chance || 1) * 100)}% chance)`);
-    lines.push(`Generations: ${selectedMap.resultSapling.generationIndex || 1}`);
-    lines.push('');
-    lines.push('Required Base Clones:');
-    leafClones.forEach(c => {
-      lines.push(`  - [${c.genetics}] x${c.count} (In Bank: ${c.available})`);
-    });
-    lines.push('');
-    lines.push('Planting Setup (Large Planter):');
-    if (selectedMap.baseSapling) {
-      lines.push(`  Center: [${selectedMap.baseSapling.toString()}] (Plant 1st)`);
-    }
-    selectedMap.crossbreedingSaplings.forEach((s: any, idx: number) => {
-      lines.push(`  Surrounding #${idx + 1}: [${s.toString()}] (Plant 2nd)`);
+    const lines = [
+      `=== Rust Breeding Plan: ${targetGenes} ===`,
+      `Route chance: ${routeChance}%`,
+      `Generation depth: ${generationCount}`,
+      `Breeding runs: ${planSteps.length}`
+    ];
+
+    planSteps.forEach((step, index) => {
+      lines.push('', `Run ${index + 1}/${planSteps.length} · GEN.${step.generationIndex} · ${Math.round(step.chance * 100)}% run chance`);
+      lines.push(`  Result: [${step.targetGeneString}]`);
+      lines.push(
+        step.centerSaplingString
+          ? `  Center first: ${sourceLabel(step.centerSourceIndex)} [${step.centerSaplingString}]`
+          : '  Center first: any compatible receiver plant'
+      );
+      step.surroundingSaplingsStrings.forEach((genes, surroundingIndex) => {
+        lines.push(`  Surrounding ${surroundingIndex + 1}: ${sourceLabel(step.surroundingSourceIndexes[surroundingIndex])} [${genes}]`);
+      });
     });
 
     navigator.clipboard.writeText(lines.join('\n'));
-    notifySuccess('Breeding instructions copied to clipboard!');
+    notifySuccess('Complete breeding plan copied to clipboard!');
   };
 
-  const handleStartBreeding = () => {
-    startBreedingSession(selectedMap, selectedGroup.resultSaplingGeneString);
-  };
-
-  const handleExportPlanter = () => {
+  const handleExportFinalPlanter = () => {
     const svg = buildPlanterSvg({
-      target: selectedGroup.resultSaplingGeneString,
+      target: targetGenes,
       center: selectedMap.baseSapling?.toString(),
       surrounding: selectedMap.crossbreedingSaplings.map(plant => plant.toString())
     });
     const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = `rust-planter-${selectedGroup.resultSaplingGeneString}.svg`;
+    link.download = `rust-planter-${targetGenes}.svg`;
     link.click();
     URL.revokeObjectURL(url);
-    notifySuccess('Planter image exported.');
+    notifySuccess('Final planter image exported.');
   };
 
   return (
@@ -148,409 +140,372 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        gap: 1.5,
+        gap: 1.25,
         overflow: 'hidden'
       }}
     >
-      {/* Header Bar */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
-              fontSize: '0.85rem',
-              color: 'var(--gl-text-primary)',
-              letterSpacing: '0.5px'
-            }}
-          >
-            ROUTE INSPECTOR
-          </Typography>
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+        <Typography
+          variant="subtitle2"
+          sx={{ fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.85rem', letterSpacing: '0.5px' }}
+        >
+          ROUTE INSPECTOR
+        </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <Tooltip title="Copy step-by-step instructions" arrow>
-            <IconButton aria-label="Copy breeding instructions" size="small" onClick={handleCopyInstructions} sx={{ minWidth: 36, minHeight: 36, color: 'var(--gl-text-muted)' }}>
+          <Tooltip title="Copy the complete breeding plan" arrow>
+            <IconButton aria-label="Copy complete breeding plan" size="small" onClick={handleCopyInstructions} sx={headerActionSx}>
               <ContentCopyIcon sx={{ fontSize: 16 }} />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Export planter image" arrow>
-            <IconButton aria-label="Export planter image" size="small" onClick={handleExportPlanter} sx={{ minWidth: 36, minHeight: 36, color: 'var(--gl-text-muted)' }}>
+          <Tooltip title="Export the final planter image" arrow>
+            <IconButton aria-label="Export final planter image" size="small" onClick={handleExportFinalPlanter} sx={headerActionSx}>
               <DownloadIcon sx={{ fontSize: 18 }} />
             </IconButton>
           </Tooltip>
-          <IconButton aria-label="Close route inspector" size="small" onClick={() => (onClose ? onClose() : setSelectedGroup(null))} sx={{ minWidth: 36, minHeight: 36, color: 'var(--gl-text-muted)' }}>
+          <IconButton
+            aria-label="Close route inspector"
+            size="small"
+            onClick={() => (onClose ? onClose() : setSelectedGroup(null))}
+            sx={headerActionSx}
+          >
             <CloseIcon sx={{ fontSize: 16 }} />
           </IconButton>
         </Box>
       </Box>
 
-      {/* Target Outcome Card */}
-      <Paper
-        variant="outlined"
+      <Box
         sx={{
-          backgroundColor: 'var(--gl-card-bg)',
-          borderColor: 'var(--gl-surface)',
-          borderRadius: '4px',
-          p: 1.5,
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
+          pr: 0.5,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          gap: 1
+          gap: 1.25,
+          '& > *': { flexShrink: 0 },
+          '&::-webkit-scrollbar': { width: 5 },
+          '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface-hover)', borderRadius: 3 }
         }}
       >
-        <GeneticsSequence genes={selectedGroup.resultSaplingGeneString} size="medium" showConnectors={true} />
+        <RouteResultOverview map={selectedMap} results={results} />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="caption" sx={{ color: 'var(--gl-success)', fontWeight: 800, fontFamily: 'monospace' }}>
-            {probabilityPercent}% probability
-          </Typography>
-          {(() => {
-            const gv = generationVisual(generationCount);
-            return (
-              <Chip
-                size="small"
-                label={`${gv.icon} ${generationCount} generation${generationCount > 1 ? 's' : ''}`}
-                sx={{
-                  height: 24,
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  fontFamily: 'monospace',
-                  backgroundColor: gv.tint,
-                  color: gv.color,
-                  border: `1px solid ${gv.border}`
-                }}
-              />
-            );
-          })()}
-        </Box>
-        <Typography sx={{ color: missingCloneCount === 0 ? 'var(--gl-success)' : 'var(--gl-warning)', fontSize: '0.75rem', textAlign: 'center' }}>
-          {missingCloneCount === 0
-            ? `Ready now. ${generationCount === 1 ? 'One breeding cycle' : `Build the intermediate clones across ${generationCount} generations`}, then use the planter below.`
-            : `Missing ${missingCloneCount} clone${missingCloneCount === 1 ? '' : 's'}. Collect those first, then follow the planter below.`}
-        </Typography>
-      </Paper>
-
-      {/* Alternative Plans — same result, different plant layouts. Pick one to load it below. */}
-      {selectedGroup.mapList.length > 1 && (
-        <Box sx={{ backgroundColor: 'var(--gl-card-bg)', border: '1px solid var(--gl-surface)', borderRadius: '4px', p: 1.25 }}>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800, fontSize: '0.75rem', mb: 0.75, display: 'block' }}>
-            ALTERNATIVE PLANS ({selectedGroup.mapList.length}):
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-            {selectedGroup.mapList.map((variant: any, idx: number) => {
-              const isActive = idx === selectedMapIndex;
-              const chance = Math.round((variant.getChanceProduct?.() ?? variant.chance ?? 1) * 100);
-              const gens = variant.resultSapling?.generationIndex || 1;
-              return (
-                <Tooltip key={idx} title={`Plan ${idx + 1}: ${chance}% chance · ${gens} step${gens > 1 ? 's' : ''}`} arrow>
-                  <Chip
-                    size="small"
-                    clickable
-                    onClick={() => setSelectedMapIndex(idx)}
-                    label={`#${idx + 1} · ${chance}%`}
-                    sx={{
-                      height: 28,
-                      fontSize: '0.75rem',
-                      fontWeight: 800,
-                      fontFamily: 'monospace',
-                      // Active state is conveyed by border + glow + text colour only.
-                      // Background is held constant across states so MUI's clickable
-                      // focus/hover styles can't leave a highlight stuck on a
-                      // previously-selected chip.
-                      backgroundColor: 'var(--gl-elevated-bg)',
-                      color: isActive ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
-                      border: '1px solid',
-                      borderColor: isActive ? 'var(--gl-primary)' : 'var(--gl-surface-hover)',
-                      boxShadow: isActive ? '0 0 0 1px var(--gl-primary), 0 0 8px rgba(0, 229, 255, 0.4)' : 'none',
-                      '&:hover, &:focus, &.MuiChip-clickable:focus, &.MuiChip-clickable:hover': {
-                        backgroundColor: 'var(--gl-surface)'
-                      },
-                      '& .MuiChip-label': { px: 0.8 }
-                    }}
-                  />
-                </Tooltip>
-              );
-            })}
-          </Box>
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.75rem', mt: 0.5, display: 'block' }}>
-            Same result gene string — each plan uses a different mix of surrounding plants.
-          </Typography>
-        </Box>
-      )}
-
-      {/* Required Inventory Summary */}
-      <Box sx={{ backgroundColor: 'var(--gl-card-bg)', border: '1px solid var(--gl-surface)', borderRadius: '4px', p: 1.25 }}>
-        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 800, fontSize: '0.75rem', mb: 0.75, display: 'block' }}>
-          REQUIRED CLONES INVENTORY:
-        </Typography>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, maxHeight: 95, overflowY: 'auto' }}>
-          {leafClones.map((leaf) => {
-            const isReady = leaf.available >= leaf.count;
-            return (
-              <Box
-                key={leaf.genetics}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  py: 0.25,
-                  px: 0.5,
-                  backgroundColor: 'var(--gl-input-bg)',
-                  borderRadius: '3px'
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  {isReady ? (
-                    <CheckCircleIcon sx={{ fontSize: 13, color: 'var(--gl-success)' }} />
-                  ) : (
-                    <WarningAmberIcon sx={{ fontSize: 13, color: 'var(--gl-warning)' }} />
-                  )}
-                  <GeneticsSequence genes={leaf.genetics} size="small" showConnectors={false} />
-                </Box>
-
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    color: isReady ? 'var(--gl-success)' : 'var(--gl-warning)'
-                  }}
-                >
-                  Have {leaf.available} / Need {leaf.count}
-                </Typography>
-              </Box>
-            );
-          })}
-        </Box>
-      </Box>
-
-      {/* Tabs: start with the full breeding route, then execution detail. */}
-      <Box sx={{ borderBottom: '1px solid var(--gl-border)' }}>
-        <Tabs
-          value={activeTab}
-          onChange={(_, val) => setActiveTab(val)}
-          sx={{ minHeight: 40, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)', height: 2 } }}
-        >
-          <Tab
-            value="tree"
-            label="Breeding Tree"
-            sx={{ minHeight: 40, py: 0.25, px: 1, fontSize: '0.75rem', fontWeight: 800, color: activeTab === 'tree' ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}
-          />
-          <Tab
-            value="planter"
-            label="Planter & Steps"
-            sx={{ minHeight: 40, py: 0.25, px: 1, fontSize: '0.75rem', fontWeight: 800, color: activeTab === 'planter' ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}
-          />
-          <Tab
-            value="genes"
-            label="Gene Weights"
-            sx={{ minHeight: 40, py: 0.25, px: 1, fontSize: '0.75rem', fontWeight: 800, color: activeTab === 'genes' ? 'var(--gl-primary)' : 'var(--gl-text-muted)' }}
-          />
-        </Tabs>
-      </Box>
-
-      {/* Tab Content Container */}
-      <Box
-        role="region"
-        aria-label="Route inspector details"
-        tabIndex={0}
-        sx={{ flex: 1, overflowY: 'auto', pr: 0.5, '&::-webkit-scrollbar': { width: 5 }, '&::-webkit-scrollbar-thumb': { backgroundColor: 'var(--gl-surface-hover)', borderRadius: 3 } }}
-      >
-        {activeTab === 'tree' && <RouteTree map={selectedMap} />}
-
-        {activeTab === 'planter' && (
-          <Box sx={{ p: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', textAlign: 'center', display: 'block', fontSize: '0.75rem' }}>
-              Plant the center first, then place the surrounding clones.
-            </Typography>
-
-            {/* 3x3 Visual Grid (Fitted cleanly without overflow) */}
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: 0.75,
-                width: '100%',
-                maxWidth: 320,
-                mx: 'auto',
-                backgroundColor: 'var(--gl-app-bg)',
-                p: 1,
-                borderRadius: '6px',
-                border: '1px solid var(--gl-surface)'
-              }}
+        {recipeOptions.length > 1 && (
+          <FormControl size="small" fullWidth>
+            <InputLabel id="route-recipe-label">Recipe</InputLabel>
+            <Select
+              labelId="route-recipe-label"
+              value={selectedRecipeIndex}
+              label="Recipe"
+              onChange={event => setSelectedMapIndex(Number(event.target.value))}
+              sx={{ fontSize: '0.78rem', backgroundColor: 'var(--gl-card-bg)' }}
             >
-              {[
-                { row: 0, col: 0, sIdx: 0 },
-                { row: 0, col: 1, sIdx: 1 },
-                { row: 0, col: 2, sIdx: 2 },
-                { row: 1, col: 0, sIdx: 3 },
-                { row: 1, col: 1, isCenter: true },
-                { row: 1, col: 2, sIdx: 4 },
-                { row: 2, col: 0, sIdx: 5 },
-                { row: 2, col: 1, sIdx: 6 },
-                { row: 2, col: 2, sIdx: 7 }
-              ].map((cell, idx) => {
-                if (cell.isCenter) {
-                  const centerGeneStr = selectedMap.baseSapling ? selectedMap.baseSapling.toString() : '';
-                  return (
-                    <Box
-                      key={idx}
-                      sx={{
-                        backgroundColor: 'var(--gl-tint-cyan)',
-                        border: '1.5px solid var(--gl-primary)',
-                        borderRadius: '4px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        p: 0.5,
-                        minHeight: 52
-                      }}
-                    >
-                      <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontSize: '0.75rem', mb: 0.25 }}>
-                        CENTER
-                      </Typography>
-                      {centerGeneStr ? (
-                        <Box sx={{ display: 'flex', gap: '1px' }}>
-                          {centerGeneStr.split('').map((g, gi) => {
-                            const isGreen = (GREEN_GENES as readonly string[]).includes(g);
-                            return (
-                              <Box
-                                key={gi}
-                                sx={{
-                                  width: 16,
-                                  height: 16,
-                                  borderRadius: '50%',
-                                  backgroundColor: isGreen ? '#4A7C17' : '#8A2E22',
-                                  color: '#FFF',
-                                  fontSize: '0.65rem',
-                                  fontWeight: 800,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center'
-                                }}
-                              >
-                                {g}
-                              </Box>
-                            );
-                          })}
-                        </Box>
-                      ) : (
-                        <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.75rem' }}>Empty</Typography>
-                      )}
-                    </Box>
-                  );
-                }
-
-                const plant = cell.sIdx !== undefined ? selectedMap.crossbreedingSaplings[cell.sIdx] : undefined;
-                const geneStr = plant ? plant.toString() : '';
-
-                return (
-                  <Box
-                    key={idx}
-                    sx={{
-                      backgroundColor: plant ? 'var(--gl-panel-header-bg)' : 'var(--gl-app-bg)',
-                      border: '1px solid',
-                      borderColor: plant ? 'var(--gl-surface-hover)' : 'var(--gl-input-bg)',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      p: 0.5,
-                      minHeight: 52
-                    }}
-                  >
-                    {plant ? (
-                      <>
-                        <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontSize: '0.75rem', mb: 0.25 }}>
-                          #{plant.index !== undefined ? plant.index + 1 : (cell.sIdx !== undefined ? cell.sIdx + 1 : idx + 1)}
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: '1px' }}>
-                          {geneStr.split('').map((g, gi) => {
-                            const isGreen = (GREEN_GENES as readonly string[]).includes(g);
-                            return (
-                              <Box
-                                key={gi}
-                                sx={{
-                                  width: 16,
-                                  height: 16,
-                                  borderRadius: '50%',
-                                  backgroundColor: isGreen ? '#4A7C17' : '#8A2E22',
-                                  color: '#FFF',
-                                  fontSize: '0.65rem',
-                                  fontWeight: 800,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center'
-                                }}
-                              >
-                                {g}
-                              </Box>
-                            );
-                          })}
-                        </Box>
-                      </>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.75rem' }}>
-                        Empty
-                      </Typography>
-                    )}
-                  </Box>
-                );
-              })}
-            </Box>
-
-            {/* Clean Detailed Plant Breakdown List */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mt: 0.5 }}>
-              {selectedMap.baseSapling && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 0.75, backgroundColor: 'var(--gl-tint-cyan)', borderRadius: '4px', border: '1px solid rgba(0, 229, 255, 0.3)' }}>
-                  <Typography variant="caption" sx={{ color: 'var(--gl-primary)', fontWeight: 800, fontSize: '0.75rem' }}>
-                    CENTER (1st)
-                  </Typography>
-                  <GeneticsSequence genes={selectedMap.baseSapling.toString()} size="small" />
-                </Box>
-              )}
-
-              {selectedMap.crossbreedingSaplings.map((plant: any, pIdx: number) => (
-                <Box key={pIdx} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 0.75, backgroundColor: 'var(--gl-card-bg)', borderRadius: '4px', border: '1px solid var(--gl-border)' }}>
-                  <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', fontWeight: 700, fontSize: '0.75rem' }}>
-                    Surrounding #{pIdx + 1}
-                  </Typography>
-                  <GeneticsSequence genes={plant.toString()} size="small" />
-                </Box>
+              {recipeOptions.map((option, index) => (
+                <MenuItem key={index} value={index} sx={{ fontSize: '0.8rem' }}>
+                  Recipe {index + 1} · {option.routeChance}% · {option.runs} run{option.runs === 1 ? '' : 's'}
+                </MenuItem>
               ))}
-            </Box>
+            </Select>
+          </FormControl>
+        )}
+
+        {firstStep && (
+          <Box sx={{ px: 1, py: 0.9, backgroundColor: 'var(--gl-tint-cyan)', borderLeft: '3px solid var(--gl-primary)', borderRadius: '3px' }}>
+            <Typography sx={{ color: 'var(--gl-primary)', fontSize: '0.75rem', fontWeight: 800, mb: 0.2 }}>
+              NEXT
+            </Typography>
+            <Typography sx={{ color: 'var(--gl-text-primary)', fontSize: '0.8rem' }}>
+              {firstStep.centerSaplingString
+                ? `Plant ${sourceLabel(firstStep.centerSourceIndex)} in the center, then add ${firstStep.surroundingSaplingsStrings.length} surrounding clone${firstStep.surroundingSaplingsStrings.length === 1 ? '' : 's'}.`
+                : `Plant a compatible receiver in the center, then add ${firstStep.surroundingSaplingsStrings.length} surrounding clone${firstStep.surroundingSaplingsStrings.length === 1 ? '' : 's'}.`}
+            </Typography>
           </Box>
         )}
 
-        {activeTab === 'genes' && <GeneExplanation map={selectedMap} />}
+        <Box sx={{ borderBottom: '1px solid var(--gl-border)' }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, value: InspectorTab) => setActiveTab(value)}
+            aria-label="Route inspector views"
+            variant="fullWidth"
+            sx={{ minHeight: 42, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)', height: 2 } }}
+          >
+            <Tab id="route-inspector-tab-steps" aria-controls="route-inspector-panel-steps" value="steps" label="Steps" sx={tabSx} />
+            <Tab id="route-inspector-tab-why" aria-controls="route-inspector-panel-why" value="why" label="Why it works" sx={tabSx} />
+          </Tabs>
+        </Box>
+
+        <Box
+          id={`route-inspector-panel-${activeTab}`}
+          role="tabpanel"
+          aria-labelledby={`route-inspector-tab-${activeTab}`}
+          tabIndex={0}
+          sx={{ outline: 'none', '&:focus-visible': { boxShadow: '0 0 0 2px var(--gl-primary)', borderRadius: '4px' } }}
+        >
+          {activeTab === 'steps' && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
+              {planSteps.map((step, index) => (
+                <PlanStepPreview key={`${step.targetGeneString}-${index}`} step={step} index={index} total={planSteps.length} />
+              ))}
+            </Box>
+          )}
+          {activeTab === 'why' && <GeneExplanation map={selectedMap} />}
+        </Box>
       </Box>
 
-      {/* Bottom Action: Start Breeding */}
-      <Box sx={{ pt: 1, borderTop: '1px solid var(--gl-surface)' }}>
+      <Box sx={{ pt: 1, borderTop: '1px solid var(--gl-surface)', flexShrink: 0 }}>
         <Button
           variant="contained"
-          size="medium"
           fullWidth
-          onClick={handleStartBreeding}
-          startIcon={<PlayCircleIcon sx={{ fontSize: 16 }} />}
-          sx={{
-            fontWeight: 800,
-            py: 0.8,
-            backgroundColor: 'var(--gl-warning)',
-            color: 'var(--gl-on-accent)',
-            fontSize: '0.78rem',
-            '&:hover': { backgroundColor: 'var(--gl-warning)' }
-          }}
+          onClick={() => startBreedingSession(selectedMap, targetGenes)}
+          startIcon={<PlayCircleIcon sx={{ fontSize: 17 }} />}
+          sx={primaryActionSx}
         >
-          START BREEDING MODE
+          START GUIDED BREEDING
         </Button>
       </Box>
     </Paper>
   );
+};
+
+const PlanStepPreview: React.FC<{ step: BreedingPlanStep; index: number; total: number }> = ({ step, index, total }) => (
+  <Paper variant="outlined" sx={{ p: 1.25, backgroundColor: 'var(--gl-card-bg)', borderColor: 'var(--gl-border)', borderRadius: '5px' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, mb: 1.25 }}>
+      <Box>
+        <Typography sx={{ color: 'var(--gl-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+          RUN {index + 1} OF {total} · GEN.{step.generationIndex}
+        </Typography>
+        <Typography sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem' }}>
+          Produces [{step.targetGeneString}]
+        </Typography>
+      </Box>
+      <Typography sx={{ color: 'var(--gl-success)', fontSize: '0.75rem', fontWeight: 800, fontFamily: 'monospace' }}>
+        {Math.round(step.chance * 100)}% run chance
+      </Typography>
+    </Box>
+
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+        gap: 0.65,
+        p: 0.75,
+        backgroundColor: 'var(--gl-app-bg)',
+        border: '1px solid var(--gl-surface)',
+        borderRadius: '5px'
+      }}
+    >
+      {PLANTER_CELLS.map((surroundingIndex, cellIndex) => {
+        const isCenter = surroundingIndex === 'center';
+        const genes = isCenter ? step.centerSaplingString : step.surroundingSaplingsStrings[surroundingIndex];
+        const sourceIndex = isCenter ? step.centerSourceIndex : step.surroundingSourceIndexes[surroundingIndex];
+        const priority = !isCenter && step.priorityWinningIndices?.includes(surroundingIndex)
+          ? '1st batch'
+          : !isCenter && step.priorityLosingIndices?.includes(surroundingIndex)
+          ? '2nd batch'
+          : '';
+
+        if (!isCenter && !genes) {
+          return <Box key={cellIndex} aria-hidden="true" sx={{ minHeight: 58, border: '1px solid var(--gl-input-bg)', borderRadius: '4px' }} />;
+        }
+
+        const label = isCenter
+          ? genes ? `Center ${sourceLabel(sourceIndex)}` : 'Center receiver'
+          : `Surrounding ${surroundingIndex + 1} ${sourceLabel(sourceIndex)}`;
+
+        return (
+          <Box
+            key={cellIndex}
+            aria-label={`${label}${genes ? `, genetics ${genes}` : ''}${priority ? `, ${priority}` : ''}`}
+            sx={{
+              minHeight: 58,
+              p: 0.45,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 0.3,
+              backgroundColor: isCenter ? 'var(--gl-tint-cyan)' : 'var(--gl-panel-header-bg)',
+              border: '1px solid',
+              borderColor: isCenter ? 'var(--gl-primary)' : 'var(--gl-surface-hover)',
+              borderRadius: '4px'
+            }}
+          >
+            <Typography aria-hidden="true" sx={{ color: isCenter ? 'var(--gl-primary)' : 'var(--gl-text-muted)', fontSize: '0.68rem', fontWeight: 800 }}>
+              {label}
+            </Typography>
+            {genes ? <CompactGenes genes={genes} /> : (
+              <Typography aria-hidden="true" sx={{ color: 'var(--gl-text-secondary)', fontSize: '0.68rem', fontWeight: 700 }}>
+                ANY COMPATIBLE
+              </Typography>
+            )}
+            {priority && (
+              <Typography aria-hidden="true" sx={{ color: priority.startsWith('1') ? 'var(--gl-success)' : 'var(--gl-warning)', fontSize: '0.65rem', fontWeight: 800 }}>
+                {priority}
+              </Typography>
+            )}
+          </Box>
+        );
+      })}
+    </Box>
+
+    <Typography sx={{ color: 'var(--gl-text-muted)', fontSize: '0.75rem', mt: 1 }}>
+      Plant the center first, add the surrounding clones, wait for Crossbreeding, then take cuttings from the center.
+    </Typography>
+  </Paper>
+);
+
+const RouteResultOverview: React.FC<{ map: GeneticsMap; results: GeneticsMapGroup[] }> = ({ map, results }) => {
+  const [stack, setStack] = useState<GeneticsMap[]>([map]);
+
+  useEffect(() => setStack([map]), [map]);
+
+  const current = stack[stack.length - 1];
+  const previous = stack[stack.length - 2];
+  const currentGeneration = current.resultSapling.generationIndex || 1;
+  const generation = generationVisual(currentGeneration);
+  const score = Number.isInteger(current.score) ? current.score : Number(current.score.toFixed(1));
+  const routeChance = Math.round(current.getChanceProduct() * 100);
+  const openSubPlan = (subMap: GeneticsMap) => setStack(currentStack => [...currentStack, subMap]);
+  const findFallbackSubPlan = (plant: Sapling) =>
+    results.find(group => group.resultSaplingGeneString === plant.toString())?.mapList[0] ??
+    results.flatMap(group => group.mapList).find(candidate => candidate.resultSapling.toString() === plant.toString());
+
+  return (
+    <Paper
+      variant="outlined"
+      sx={{ flexShrink: 0, overflow: 'hidden', backgroundColor: 'var(--gl-card-bg)', borderColor: 'var(--gl-surface-hover)', borderRadius: '5px' }}
+    >
+      {previous && (
+        <ButtonBase
+          onClick={() => setStack(currentStack => currentStack.slice(0, -1))}
+          focusRipple
+          aria-label={`Back to generation ${previous.resultSapling.generationIndex || 1} result`}
+          sx={{ width: '100%', minHeight: 36, px: 1.5, justifyContent: 'flex-start', gap: 0.75, color: 'var(--gl-primary)', borderBottom: '1px solid var(--gl-surface)', fontFamily: 'monospace', fontSize: '0.72rem', fontWeight: 800, '&:hover': { backgroundColor: 'var(--gl-surface)' }, '&.Mui-focusVisible': { outline: '2px solid var(--gl-primary)', outlineOffset: -2 } }}
+        >
+          <ArrowBackIcon sx={{ fontSize: 16 }} />
+          BACK TO GEN.{previous.resultSapling.generationIndex || 1} RESULT
+        </ButtonBase>
+      )}
+
+      <Box sx={{ p: 1.5, backgroundColor: 'var(--gl-input-bg)', textAlign: 'center' }}>
+        <GeneticsSequence genes={current.resultSapling.toString()} size="medium" showConnectors />
+        <Typography
+          component="div"
+          sx={{ mt: 1.1, color: 'var(--gl-text-secondary)', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 800 }}
+        >
+          <Box component="span" sx={{ color: generation.color }}>GEN.{currentGeneration}</Box>
+          {' · Score: '}
+          <Box component="span" sx={{ color: 'var(--gl-text-primary)' }}>{score}</Box>
+          {' · Chance: '}
+          <Box component="span" sx={{ color: 'var(--gl-success)' }}>{routeChance}%</Box>
+        </Typography>
+      </Box>
+
+      <Box sx={{ p: 1.5, textAlign: 'center', borderTop: '1px solid var(--gl-surface)' }}>
+        <Typography sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.78rem', fontWeight: 700, mb: 0.75 }}>
+          Center Plant:
+        </Typography>
+        {current.baseSapling ? (
+          <OverviewPlantRow
+            plant={current.baseSapling}
+            subMap={current.baseSapling.generationIndex > 0 ? current.baseSaplingVariants?.mapList[0] ?? findFallbackSubPlan(current.baseSapling) : undefined}
+            onOpenSubPlan={openSubPlan}
+          />
+        ) : (
+          <Typography sx={{ color: 'var(--gl-text-primary)', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 800 }}>
+            any extra plant of same type
+          </Typography>
+        )}
+      </Box>
+
+      <Box sx={{ p: 1.5, borderTop: '1px solid var(--gl-surface)' }}>
+        <Typography sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.8rem', fontWeight: 700, textAlign: 'center', mb: 1 }}>
+          Surrounding Plants:
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.65 }}>
+          {current.crossbreedingSaplings.map((plant, index) => (
+            <OverviewPlantRow
+              key={index}
+              plant={plant}
+              subMap={plant.generationIndex > 0 ? current.crossbreedingSaplingsVariants?.[index]?.mapList[0] ?? findFallbackSubPlan(plant) : undefined}
+              onOpenSubPlan={openSubPlan}
+            />
+          ))}
+        </Box>
+      </Box>
+    </Paper>
+  );
+};
+
+const OverviewPlantRow: React.FC<{
+  plant: Sapling;
+  subMap?: GeneticsMap;
+  onOpenSubPlan?: (subMap: GeneticsMap) => void;
+}> = ({ plant, subMap, onOpenSubPlan }) => {
+  const canOpen = Boolean(subMap && onOpenSubPlan);
+  const content = (
+    <>
+      <Typography sx={{ width: 54, flexShrink: 0, color: canOpen ? 'var(--gl-warning)' : 'var(--gl-text-muted)', fontFamily: 'monospace', fontSize: '0.72rem', textAlign: 'right', pr: 1, fontWeight: canOpen ? 800 : 400 }}>
+        {plantLabel(plant.index, plant.generationIndex)}
+      </Typography>
+      <GeneticsSequence genes={plant.toString()} size="small" showConnectors />
+      {canOpen && <AccountTreeIcon aria-hidden="true" sx={{ ml: 0.75, fontSize: 15, color: 'var(--gl-primary)' }} />}
+    </>
+  );
+
+  const rowSx = { display: 'flex', alignItems: 'center', width: '100%', maxWidth: 280, minHeight: 28, borderRadius: '3px' };
+  return canOpen ? (
+    <ButtonBase
+      onClick={() => subMap && onOpenSubPlan?.(subMap)}
+      aria-label={`Open ${plantLabel(plant.index, plant.generationIndex)} sub-plan`}
+      focusRipple
+      sx={{ ...rowSx, border: '1px solid var(--gl-primary)', cursor: 'pointer', '& *': { cursor: 'pointer' }, '&:hover': { backgroundColor: 'var(--gl-tint-cyan)' }, '&.Mui-focusVisible': { outline: '2px solid var(--gl-primary)', outlineOffset: 2 } }}
+    >
+      {content}
+    </ButtonBase>
+  ) : (
+    <Box sx={rowSx}>{content}</Box>
+  );
+};
+
+const CompactGenes: React.FC<{ genes: string }> = ({ genes }) => (
+  <Box aria-hidden="true" sx={{ display: 'flex', gap: '1px' }}>
+    {genes.split('').map((gene, index) => (
+      <Box
+        key={index}
+        sx={{
+          width: 15,
+          height: 15,
+          borderRadius: '50%',
+          backgroundColor: (GREEN_GENES as readonly string[]).includes(gene) ? '#4A7C17' : '#8A2E22',
+          color: '#FFF',
+          fontSize: '0.6rem',
+          fontWeight: 800,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        {gene}
+      </Box>
+    ))}
+  </Box>
+);
+
+const sourceLabel = (index?: number) => index === undefined ? 'generated clone' : `#${index + 1}`;
+const plantLabel = (index: number | undefined, generationIndex: number) =>
+  generationIndex > 0 ? `GEN.${generationIndex}` : index === undefined ? 'SOURCE' : `#${index + 1}`;
+
+const PLANTER_CELLS = [0, 1, 2, 3, 'center', 4, 5, 6, 7] as const;
+
+const headerActionSx = { minWidth: 36, minHeight: 36, color: 'var(--gl-text-muted)' };
+const tabSx = { minHeight: 42, py: 0.25, px: 0.75, minWidth: 0, fontSize: '0.75rem', fontWeight: 800 };
+const primaryActionSx = {
+  minHeight: 40,
+  fontWeight: 800,
+  backgroundColor: 'var(--gl-warning)',
+  color: 'var(--gl-on-accent)',
+  fontSize: '0.78rem',
+  '&:hover': { backgroundColor: 'var(--gl-warning)' }
 };

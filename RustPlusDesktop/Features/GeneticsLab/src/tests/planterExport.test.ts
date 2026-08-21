@@ -9,4 +9,9 @@ describe('planter image export', () => {
     expect(svg).toContain('CENTER · PLANT 1ST');
     expect(svg).toContain('>H</text>');
   });
+
+  it('labels an unspecified center as a receiver plant', () => {
+    const svg = buildPlanterSvg({ target: 'GGGYYY', surrounding: ['YYYYYY'] });
+    expect(svg).toContain('ANY RECEIVER');
+  });
 });

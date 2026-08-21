@@ -1,6 +1,7 @@
 import { ApplicationOptions } from './orchestrator.ts';
 import { DEFAULT_GENE_SCORES, Sapling } from '../domain/genetics/Sapling.ts';
 import { SavedClone, CloneUtils } from '../domain/genetics/Clone.ts';
+import type { BreedingPlanStep } from '../domain/genetics/breedingPlan.ts';
 
 export interface CookieConsentState {
   isPreferenceDecided: boolean;
@@ -39,14 +40,7 @@ export interface TargetConfiguration {
   minHs?: number;
 }
 
-export interface BreedingSessionStep {
-  generationIndex: number;
-  targetGeneString: string;
-  centerSaplingString?: string;
-  surroundingSaplingsStrings: string[];
-  priorityWinningIndices?: number[];
-  priorityLosingIndices?: number[];
-  chance: number;
+export interface BreedingSessionStep extends BreedingPlanStep {
   isCenterPlanted: boolean;
   isSurroundingPlanted: boolean;
   isCompleted: boolean;

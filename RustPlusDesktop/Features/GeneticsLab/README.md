@@ -15,14 +15,14 @@ Turn a clone box into a breeding route. Size the farm, find its bottleneck, and 
 
 </div>
 
-![Rust Genetics Lab breeding workspace](docs/images/genetics-lab-workspace.png)
+![Rust Genetics Lab breeding workspace with the route inspector](docs/images/genetics-lab-workspace.png)
 
 <details>
 <summary>Additional screenshots</summary>
 
-![Rust Genetics Lab workspace overview](https://github.com/user-attachments/assets/dc633ec3-7c6d-41eb-a1d3-ea39b6b988c6)
+![Route Inspector showing a complete two-generation breeding plan](docs/images/route-inspector-plan.png)
 
-![Rust Genetics Lab route planning view](https://github.com/user-attachments/assets/9e9295db-3213-4d77-ac7b-01a4faf39ead)
+![Route Inspector showing an inline generated-parent sub-plan](docs/images/route-inspector-generation.png)
 
 </details>
 
@@ -37,7 +37,7 @@ Rust Genetics Lab combines clone inventory management, target design, route calc
 | --- | --- |
 | Inventory-aware solver | Ranks single-generation and multi-generation routes against the clones you own, including missing-clone requirements. |
 | Flexible breeding goals | Choose a preset, enter an exact six-gene target, require minimum genes, or search for the best available result. |
-| Actionable route inspector | Review probability, required clones, storage positions, source-row highlights, planter placement, breeding order, and lineage. |
+| Actionable route inspector | Review the result, recipe alternatives, source positions, clickable generated-parent sub-plans, ordered planter runs, and why each route works. |
 | Search controls | Switch between fast, balanced, and thorough calculation profiles, then sort, filter, group, or compare the results. |
 | OCR scanner | Capture genetics from Rust with calibration, correction, preview, and reusable scanner presets. |
 | Breeding Mode | Follow a route in game through a focused sequence of planting and confirmation steps. |
@@ -51,7 +51,7 @@ Rust Genetics Lab combines clone inventory management, target design, route calc
 1. Enter clone genetics manually, paste a list, restore a saved set, or scan from Rust.
 2. Select the plant type and define the breeding goal.
 3. Calculate routes and choose the best plan for the clones currently available.
-4. Check the breeding tree or planter layout, then start Breeding Mode.
+4. Review the result and ordered planter runs, then start guided Breeding Mode.
 
 The clone numbers shown in a route match their positions in the input list, which makes the list usable as a direct model of an in-game storage box.
 

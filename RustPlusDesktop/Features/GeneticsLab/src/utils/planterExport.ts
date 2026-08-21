@@ -19,7 +19,7 @@ export const buildPlanterSvg = ({ target, center, surrounding }: PlanterExportIn
       ? genes.split('').map((gene, geneIndex) =>
           `<text x="${x + 14 + geneIndex * 15}" y="${y + 48}" fill="${'GYH'.includes(gene) ? '#7cb342' : '#ef5350'}" font-size="13" font-weight="700">${gene}</text>`
         ).join('')
-      : `<text x="${x + 34}" y="${y + 48}" fill="#777" font-size="11">EMPTY</text>`;
+      : `<text x="${x + (isCenter ? 15 : 34)}" y="${y + 48}" fill="#777" font-size="11">${isCenter ? 'ANY RECEIVER' : 'EMPTY'}</text>`;
     const label = isCenter ? 'CENTER · PLANT 1ST' : `SURROUNDING #${index < 4 ? index + 1 : index}`;
     return `<rect x="${x}" y="${y}" width="108" height="72" rx="6" fill="${isCenter ? '#0d3338' : '#171717'}" stroke="${isCenter ? '#00e5ff' : '#444'}"/><text x="${x + 8}" y="${y + 20}" fill="#aaa" font-size="11">${label}</text>${dots}`;
   }).join('');
