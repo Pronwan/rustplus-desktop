@@ -1,5 +1,5 @@
 import { AnalysisFrame } from './rasterOps.ts';
-import { RasterImage } from './perspective.ts';
+import { RasterImage } from '../scannerTypes.ts';
 
 /**
  * The only part of the camera vision stack that touches the DOM.
@@ -129,4 +129,49 @@ export class CanvasFrameGrabber implements CameraFrameGrabber {
     this.regionCanvas = null;
     this.outputCanvas = null;
   }
+}
+
+
+/* ------------------------------------------------------------------ *
+ * Raster -> canvas
+ *
+ * The OCR modules take canvases, but everything upstream works on pixel buffers. These
+ * canvases are pooled by index and reused across frames, so a scanning session allocates a
+ * fixed handful rather than one per read.
+ * ------------------------------------------------------------------ */
+
+const rasterCanvasPool: HTMLCanvasElement[] = [];
+
+export function rasterToCanvas(image: RasterImage, poolIndex: number): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+  if (image.width <= 0 || image.height <= 0) return null;
+
+  let canvas = rasterCanvasPool[poolIndex];
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    rasterCanvasPool[poolIndex] = canvas;
+  }
+
+  if (canvas.width !== image.width || canvas.height !== image.height) {
+    canvas.width = image.width;
+    canvas.height = image.height;
+  }
+
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return null;
+
+  const imageData = ctx.createImageData(image.width, image.height);
+  imageData.data.set(image.data);
+  ctx.putImageData(imageData, 0, 0);
+  return canvas;
+}
+
+/** Drops the pooled canvases so a stopped scanner holds no backing stores. */
+export function releaseRasterCanvases(): void {
+  for (const canvas of rasterCanvasPool) {
+    if (!canvas) continue;
+    canvas.width = 0;
+    canvas.height = 0;
+  }
+  rasterCanvasPool.length = 0;
 }

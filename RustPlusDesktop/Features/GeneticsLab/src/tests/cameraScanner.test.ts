@@ -195,7 +195,11 @@ function trackingTarget(): CameraTarget {
     candidateScore: 0.82,
     trackingConfidence: 0.9,
     qualityIssues: [],
-    normalizedCanvas: {} as HTMLCanvasElement,
+    normalizedRow: {
+      data: new Uint8ClampedArray(600 * 100 * 4),
+      width: 600,
+      height: 100
+    },
     slots: { baseX: 10, baseY: 12, geneWidth: 84, gapWidth: 12, height: 76 }
   };
 }
@@ -843,24 +847,68 @@ describe('Camera recognition safety', () => {
       [geneResult('GGYHYX'), geneResult('GGYHYX'), geneResult('GGXHYW'), geneResult('GGXHYW'), null]
     );
 
-    await harness.runFor(600);
+    await harness.runFor(1200);
 
     expect(harness.recognizer.rowCalls).toBeGreaterThanOrEqual(4);
     expect(harness.saplings).toHaveLength(0);
   });
 
-  it('discards the pending window when the target is lost mid-read', async () => {
-    // Two agreeing reads, the row vanishes, then one more agreeing read.
-    const { harness } = await startWith(
-      call => (call === 2 ? SEARCHING : { ...TRACKING, activeTarget: trackingTarget() }),
-      [geneResult('GGYHYX')]
+  it('discards the pending window when the target is genuinely lost', async () => {
+    // Two agreeing reads, the row leaves the frame, then two more agreeing reads. The
+    // window restarts on the loss, so the total never reaches three in a row.
+    let visible = true;
+    const recognizer = new FakeRecognizer();
+    recognizer.rowResults = [geneResult('GGYHYX')];
+
+    const harness = createHarness({ recognizer });
+    harness.service.attachVideo(createVideoElement());
+    harness.service.setAnalyzerFactory(
+      () => new ScriptedAnalyzer(() => (visible ? { ...TRACKING, activeTarget: trackingTarget() } : SEARCHING))
     );
+    await harness.service.start();
+    await vi.advanceTimersByTimeAsync(0);
 
-    await harness.runFor(280);
-
-    expect(harness.recognizer.rowCalls).toBeGreaterThanOrEqual(3);
-    // Without the loss this would already have confirmed; the window restarted instead.
+    await harness.runFor(340);
+    const readsBeforeLoss = harness.recognizer.rowCalls;
+    expect(readsBeforeLoss).toBeGreaterThanOrEqual(2);
     expect(harness.saplings).toHaveLength(0);
+
+    visible = false;
+    await harness.runFor(200);
+    visible = true;
+    await harness.runFor(200);
+
+    expect(harness.recognizer.rowCalls).toBeGreaterThan(readsBeforeLoss);
+    expect(harness.saplings).toHaveLength(0);
+  });
+
+  it('keeps the pending window through a shaky frame', async () => {
+    // The row stays present but one frame fails a quality gate. The samples already banked
+    // are still good evidence, so acceptance still happens.
+    let shaky = false;
+    const recognizer = new FakeRecognizer();
+    recognizer.rowResults = [geneResult('GGYHYX')];
+
+    const harness = createHarness({ recognizer });
+    harness.service.attachVideo(createVideoElement());
+    harness.service.setAnalyzerFactory(
+      () =>
+        new ScriptedAnalyzer(() =>
+          shaky
+            ? { phase: 'quality-blocked', qualityIssues: ['moving'], candidateCount: 1, activeTarget: null }
+            : { ...TRACKING, activeTarget: trackingTarget() }
+        )
+    );
+    await harness.service.start();
+    await vi.advanceTimersByTimeAsync(0);
+
+    await harness.runFor(340);
+    shaky = true;
+    await harness.runFor(140);
+    shaky = false;
+    await harness.runFor(600);
+
+    expect(harness.saplings).toHaveLength(1);
   });
 
   it('emits once for a target that stays continuously visible', async () => {
@@ -901,7 +949,7 @@ describe('Camera recognition safety', () => {
       ]
     );
 
-    await harness.runFor(1000);
+    await harness.runFor(2400);
 
     expect(harness.saplings.map(s => s.geneString)).toEqual(['GGYHYX', 'WWXXYY']);
   });
@@ -1038,7 +1086,14 @@ describe('Camera OCR confidence is independent of the desktop scanner', () => {
       ...base,
       phase: 'reading',
       isDetectionAvailable: true,
-      diagnostics: { readAttempts: 40, lastRawText: '', lastConfidence: 12, pendingSamples: 0 }
+      diagnostics: {
+        readAttempts: 40,
+        lastRawText: '',
+        lastConfidence: 12,
+        lastSource: null,
+        pendingSamples: 0,
+        sampleWindow: 4
+      }
     });
 
     expect(stalled.headline).toBe('Cannot read the letters');

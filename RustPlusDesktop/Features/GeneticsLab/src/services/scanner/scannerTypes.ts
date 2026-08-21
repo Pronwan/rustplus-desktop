@@ -117,6 +117,13 @@ export interface Point {
   y: number;
 }
 
+/** Plain RGBA pixel buffer. Keeps the vision stack independent of canvas and DOM. */
+export interface RasterImage {
+  data: Uint8ClampedArray;
+  width: number;
+  height: number;
+}
+
 export type CameraScannerPhase =
   | 'idle'
   | 'requesting-permission'
@@ -159,7 +166,14 @@ export interface CameraTarget {
   candidateScore: number;
   trackingConfidence: number;
   qualityIssues: CameraQualityIssue[];
-  normalizedCanvas: HTMLCanvasElement;
+  /**
+   * The perspective-corrected row. Pixels rather than a canvas so the OCR strip can be
+   * built and tested without a DOM.
+   *
+   * Backed by a buffer the locator reuses between frames. It is valid only until the next
+   * `analyze()` call, which the service guarantees by awaiting recognition inline.
+   */
+  normalizedRow: RasterImage;
   slots: CameraRowSlots;
 }
 
@@ -223,8 +237,12 @@ export interface CameraScannerState {
     readAttempts: number;
     lastRawText: string | null;
     lastConfidence: number | null;
-    /** Distinct strings currently in the confirmation window. */
+    /** Which recognition path produced the last text. */
+    lastSource: 'row' | 'slots' | null;
+    /** Samples currently held in the confirmation window. */
     pendingSamples: number;
+    /** Samples needed before a result can be confirmed. */
+    sampleWindow: number;
   };
 }
 

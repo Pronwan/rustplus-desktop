@@ -52,8 +52,14 @@ export const CAMERA_SCANNER_CONFIG = {
     minRowConfidence: 40,
     minSlotConfidence: 35,
     minAverageSlotConfidence: 45,
-    /** Target glyph height handed to Tesseract, in pixels. */
-    targetGlyphHeight: 84
+    /** Height of one glyph cell handed to Tesseract, in pixels. */
+    cellHeight: 120,
+    /**
+     * Minimum gap between OCR attempts. Recognition ran on every tracking frame, which burnt
+     * roughly 170 reads a minute for no extra certainty; confirmation needs a handful of
+     * independent samples, not a flood.
+     */
+    intervalMs: 140
   },
 
   selection: {
@@ -76,7 +82,13 @@ export const CAMERA_SCANNER_CONFIG = {
 
   quality: {
     minPixelsPerGene: 24,
-    maxPixelsPerGene: 110,
+    /**
+     * Deliberately generous. Field testing showed a phone held at a natural, well-framed
+     * distance produces around 200 px per gene and was being told to "move farther" while
+     * looking at a perfectly readable row. Closer is better for OCR; the real upper limit is
+     * the row no longer fitting, which `clipped` already reports.
+     */
+    maxPixelsPerGene: 600,
     /**
      * Handheld tolerance. A phone held in the hand never stops moving, so demanding a long
      * perfectly still window made the scanner feel broken. The window is short and the drift

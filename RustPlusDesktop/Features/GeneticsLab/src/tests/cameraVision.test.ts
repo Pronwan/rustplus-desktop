@@ -31,6 +31,11 @@ import {
   warpQuadToRect
 } from '../services/scanner/vision/perspective.ts';
 import {
+  buildCameraGeneStrip,
+  inkCoverage
+} from '../services/scanner/vision/cameraGeneStrip.ts';
+import type { RasterImage } from '../services/scanner/scannerTypes.ts';
+import {
   computeContainRect,
   elementToFrame,
   frameToElement,
@@ -896,5 +901,108 @@ describe('Overlay mapping onto the letterboxed video', () => {
     );
 
     expect(points).toBe('0.0,0.0 200.0,0.0 200.0,100.0 0.0,100.0');
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Camera OCR strip
+ * ------------------------------------------------------------------ */
+
+describe('Camera gene strip', () => {
+  const SLOTS = { baseX: 10, baseY: 8, geneWidth: 40, gapWidth: 12, height: 48 };
+
+  /** A normalised row: dark panel, six green badges, a white bar glyph in each. */
+  function normalizedRow(options: { withLetters?: boolean } = {}): RasterImage {
+    const { withLetters = true } = options;
+    const width = SLOTS.baseX + 6 * (SLOTS.geneWidth + SLOTS.gapWidth);
+    const height = SLOTS.baseY * 2 + SLOTS.height;
+    const image: RasterImage = {
+      data: new Uint8ClampedArray(width * height * 4),
+      width,
+      height
+    };
+
+    const put = (x: number, y: number, c: [number, number, number]) => {
+      const i = (y * width + x) * 4;
+      image.data[i] = c[0];
+      image.data[i + 1] = c[1];
+      image.data[i + 2] = c[2];
+      image.data[i + 3] = 255;
+    };
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) put(x, y, TOOLTIP);
+    }
+
+    for (let slot = 0; slot < 6; slot++) {
+      const x0 = SLOTS.baseX + slot * (SLOTS.geneWidth + SLOTS.gapWidth);
+      for (let y = SLOTS.baseY; y < SLOTS.baseY + SLOTS.height; y++) {
+        for (let x = x0; x < x0 + SLOTS.geneWidth; x++) {
+          const isGlyph =
+            withLetters &&
+            Math.abs(x - (x0 + SLOTS.geneWidth / 2)) < SLOTS.geneWidth * 0.14 &&
+            Math.abs(y - (SLOTS.baseY + SLOTS.height / 2)) < SLOTS.height * 0.3;
+          put(x, y, isGlyph ? WHITE : GREEN);
+        }
+      }
+    }
+
+    return image;
+  }
+
+  it('puts black ink only where the glyphs are, never in the gaps', () => {
+    const built = buildCameraGeneStrip(normalizedRow(), SLOTS);
+    expect(built).not.toBeNull();
+
+    const { strip } = built!;
+    const at = (x: number, y: number) => strip.data[(y * strip.width + x) * 4];
+
+    // Padding corners and the strip's outer border stay white.
+    expect(at(2, 2)).toBe(255);
+    expect(at(strip.width - 3, strip.height - 3)).toBe(255);
+
+    // This is the defect that produced empty reads: the desktop stitcher's global threshold
+    // flipped the white background and every inter-glyph gap to black.
+    const cellWidth = Math.round((SLOTS.geneWidth / SLOTS.height) * 120);
+    const firstGapX = 16 + cellWidth + 8;
+    expect(at(firstGapX, Math.round(strip.height / 2))).toBe(255);
+  });
+
+  it('produces ink in a plausible range for six glyphs', () => {
+    const built = buildCameraGeneStrip(normalizedRow(), SLOTS)!;
+    const coverage = inkCoverage(built.strip);
+
+    expect(coverage).toBeGreaterThan(0.01);
+    expect(coverage).toBeLessThan(0.35);
+  });
+
+  it('emits six separately usable slot images', () => {
+    const built = buildCameraGeneStrip(normalizedRow(), SLOTS)!;
+
+    expect(built.slotImages).toHaveLength(6);
+    for (const slot of built.slotImages) {
+      expect(slot.width).toBeGreaterThan(0);
+      expect(inkCoverage(slot)).toBeGreaterThan(0.01);
+    }
+  });
+
+  it('stays blank rather than inventing strokes when a badge has no glyph', () => {
+    const built = buildCameraGeneStrip(normalizedRow({ withLetters: false }), SLOTS)!;
+    // A flat badge has no real contrast, so the fixed fallback cut must not turn the badge
+    // body itself into a letter.
+    expect(inkCoverage(built.strip)).toBeLessThan(0.02);
+  });
+
+  it('scales the cell to the badge aspect ratio', () => {
+    const wide = buildCameraGeneStrip(normalizedRow(), { ...SLOTS, geneWidth: 80 })!;
+    const narrow = buildCameraGeneStrip(normalizedRow(), { ...SLOTS, geneWidth: 20 })!;
+
+    expect(wide.strip.width).toBeGreaterThan(narrow.strip.width);
+    expect(wide.strip.height).toBe(narrow.strip.height);
+  });
+
+  it('rejects degenerate slot geometry', () => {
+    expect(buildCameraGeneStrip(normalizedRow(), { ...SLOTS, geneWidth: 0 })).toBeNull();
+    expect(buildCameraGeneStrip(normalizedRow(), { ...SLOTS, height: 0 })).toBeNull();
   });
 });

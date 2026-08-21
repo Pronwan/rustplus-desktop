@@ -19,7 +19,7 @@ import {
 } from '../../services/scanner/cameraOverlayGeometry.ts';
 import { CAMERA_SCANNER_CONFIG } from '../../services/scanner/cameraScannerConfig.ts';
 
-const CAMERA_CONFIRMATION_SAMPLES = CAMERA_SCANNER_CONFIG.confirmation.requiredMatches;
+const CAMERA_CONFIRMATION_SAMPLES = CAMERA_SCANNER_CONFIG.confirmation.samples;
 
 const TONE_COLORS: Record<CameraStatusTone, string> = {
   neutral: '#9CA3AF',
@@ -381,11 +381,10 @@ export const MobileCameraScanner: React.FC = () => {
                 wordBreak: 'break-all'
               }}
             >
-              {`ocr "${cameraState.diagnostics.lastRawText ?? '—'}" `}
-              {cameraState.diagnostics.lastConfidence !== null
-                ? `${Math.round(cameraState.diagnostics.lastConfidence)}% `
-                : ''}
-              {`· ${cameraState.diagnostics.pendingSamples}/${CAMERA_CONFIRMATION_SAMPLES} agree · ${cameraState.diagnostics.readAttempts} reads`}
+              {`ocr "${cameraState.diagnostics.lastRawText ?? '—'}"`}
+              {cameraState.diagnostics.lastSource ? ` (${cameraState.diagnostics.lastSource})` : ''}
+              {` · ${cameraState.diagnostics.pendingSamples}/${cameraState.diagnostics.sampleWindow || CAMERA_CONFIRMATION_SAMPLES} samples`}
+              {` · ${cameraState.diagnostics.readAttempts} reads`}
             </Typography>
           )}
         </Box>

@@ -449,9 +449,6 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
     if (!slots) return this.blocked(overlay, ['extreme-perspective']);
 
     // Only now, with geometry and quality both satisfied, is a readable target produced.
-    const normalizedCanvas = this.grabber.toCanvas(warped);
-    if (!normalizedCanvas) return this.blocked(overlay, ['moving']);
-
     const target: CameraTarget = {
       corners: toPointQuad(candidate.quad),
       candidateScore: candidate.score,
@@ -460,7 +457,7 @@ export class DynamicGeneLocator implements CameraFrameAnalyzer {
         (this.tracked?.presence ?? 1) / CAMERA_SCANNER_CONFIG.tracking.persistenceFrames
       ),
       qualityIssues: [],
-      normalizedCanvas,
+      normalizedRow: warped,
       slots
     };
 

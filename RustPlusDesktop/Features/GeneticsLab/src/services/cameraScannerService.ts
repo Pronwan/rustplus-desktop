@@ -18,7 +18,8 @@ import {
   isCameraCaptureSupported,
   isCameraSecureContext
 } from './scanner/cameraSupport.ts';
-import { GeneImagePreprocessor } from './scanner/GeneImagePreprocessor.ts';
+import { buildCameraGeneStrip } from './scanner/vision/cameraGeneStrip.ts';
+import { rasterToCanvas, releaseRasterCanvases } from './scanner/vision/frameGrabber.ts';
 import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
 import { CameraTargetRearm } from './scanner/CameraTargetRearm.ts';
 import { TesseractGeneRecognizer } from './scanner/TesseractGeneRecognizer.ts';
@@ -193,6 +194,7 @@ export class CameraScannerService {
   private isAnalyzing = false;
   private isRecognizing = false;
   private readAttempts = 0;
+  private lastReadAt = 0;
 
   private degradationLevel = 0;
   private frameCosts: number[] = [];
@@ -608,9 +610,12 @@ export class CameraScannerService {
       this.rearm.markLost(this.env.now());
     }
 
-    // The confirmation window is only meaningful while one row stays both present and
-    // readable. Anything else — loss, ambiguity, a quality block — invalidates it.
-    if (result.phase !== 'tracking') {
+    // Only genuine loss of the target invalidates the window. A single blurred or shaky
+    // frame does not: the samples already collected were each captured on a frame that
+    // passed every gate, and 3-of-4 agreement between them is the real safety property.
+    // Discarding on every quality blip meant a hand-held phone never accumulated a window
+    // at all, and re-read the same row from scratch indefinitely.
+    if (!targetPresent) {
       this.voting.reset(CAMERA_VOTE_KEY);
     }
 
@@ -629,51 +634,54 @@ export class CameraScannerService {
   private async recognizeTarget(target: CameraTarget, token: number): Promise<void> {
     if (this.isRecognizing || !this.recognizer.isWarm()) return;
 
+    const now = this.env.now();
+    if (now - this.lastReadAt < CAMERA_SCANNER_CONFIG.recognition.intervalMs) return;
+    this.lastReadAt = now;
+
     this.isRecognizing = true;
     this.readAttempts++;
     this.setState({ phase: 'reading' });
 
     try {
-      const { slots, normalizedCanvas } = target;
       const recognition = CAMERA_SCANNER_CONFIG.recognition;
+      const built = buildCameraGeneStrip(target.normalizedRow, target.slots, {
+        cellHeight: recognition.cellHeight,
+        padding: 16,
+        gap: 16
+      });
+      if (!built) return;
 
-      // The stitcher upscales each slot by `scale`. The normalised row is already an upscale
-      // of the camera pixels, so blindly reusing the desktop 4x would hand Tesseract a hugely
-      // magnified blur. Aim for a glyph height it actually reads well instead.
-      const stitchScale = clamp(recognition.targetGlyphHeight / Math.max(1, slots.height), 1, 4);
+      // Per-slot recognition comes first on the camera path.
+      //
+      // The locator has already measured exactly where each of the six badges sits, so
+      // reading them one at a time always yields six characters. Letting the recogniser
+      // segment a whole line instead lets it merge or drop a glyph -- observed in the field
+      // as a five-character read of a six-gene row, which was then discarded outright and
+      // the confirmation window restarted, forever.
+      const slotCanvases = built.slotImages.map((image, index) => rasterToCanvas(image, index));
+      let source: 'row' | 'slots' | null = null;
+      let result: GeneRecognitionResult | null = null;
 
-      const stitched = GeneImagePreprocessor.prepareStitchedGeneStrip(
-        normalizedCanvas,
-        slots.baseX,
-        slots.baseY,
-        slots.geneWidth,
-        slots.gapWidth,
-        slots.height,
-        stitchScale
-      );
-
-      let result = await this.recognizer.recognizeRow(stitched, recognition.minRowConfidence);
-      if (token !== this.sessionToken) return;
-
-      if (!result) {
-        const crops = GeneImagePreprocessor.prepareSlotCrops(
-          normalizedCanvas,
-          slots.baseX,
-          slots.baseY,
-          slots.geneWidth,
-          slots.gapWidth,
-          slots.height,
-          stitchScale
-        );
+      if (slotCanvases.every(Boolean)) {
         result = await this.recognizer.recognizeSlots(
-          crops,
+          slotCanvases as HTMLCanvasElement[],
           recognition.minSlotConfidence,
           recognition.minAverageSlotConfidence
         );
         if (token !== this.sessionToken) return;
+        if (result) source = 'slots';
       }
 
-      this.publishReadDiagnostics(result);
+      if (!result) {
+        const stripCanvas = rasterToCanvas(built.strip, 6);
+        if (stripCanvas) {
+          result = await this.recognizer.recognizeRow(stripCanvas, recognition.minRowConfidence);
+          if (token !== this.sessionToken) return;
+          if (result) source = 'row';
+        }
+      }
+
+      this.publishReadDiagnostics(result, source);
       if (!result) return;
 
       // 3-of-4 temporal confirmation, the same policy the desktop scanner uses.
@@ -707,14 +715,19 @@ export class CameraScannerService {
    * Surfaces what the recogniser actually saw. A read that is correct but below the
    * confidence floor looks identical to a read that failed outright unless it is reported.
    */
-  private publishReadDiagnostics(result: GeneRecognitionResult | null): void {
+  private publishReadDiagnostics(
+    result: GeneRecognitionResult | null,
+    source: 'row' | 'slots' | null
+  ): void {
     const raw = this.recognizer.getLastRawRead?.() ?? null;
     this.setState({
       diagnostics: {
         readAttempts: this.readAttempts,
         lastRawText: result?.geneString ?? raw?.text?.trim() ?? null,
-        lastConfidence: result?.confidence ?? raw?.confidence ?? null,
-        pendingSamples: this.voting.getSampleCount(CAMERA_VOTE_KEY)
+        lastConfidence: result?.confidence ?? (raw?.confidence || null),
+        lastSource: source,
+        pendingSamples: this.voting.getSampleCount(CAMERA_VOTE_KEY),
+        sampleWindow: CAMERA_SCANNER_CONFIG.confirmation.samples
       }
     });
   }
@@ -782,6 +795,8 @@ export class CameraScannerService {
     this.isSwitchingCamera = false;
     this.isRecognizing = false;
     this.readAttempts = 0;
+    this.lastReadAt = 0;
+    releaseRasterCanvases();
     this.degradationLevel = 0;
     this.frameCosts = [];
 

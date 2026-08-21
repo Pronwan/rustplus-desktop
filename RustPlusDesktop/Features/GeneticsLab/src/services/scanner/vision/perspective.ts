@@ -1,4 +1,7 @@
 import { Quad, Vec2 } from './geometry.ts';
+import { RasterImage } from '../scannerTypes.ts';
+
+export type { RasterImage };
 
 /**
  * Perspective normalisation.
@@ -7,12 +10,6 @@ import { Quad, Vec2 } from './geometry.ts';
  * vision and the existing OCR modules: downstream code never needs to know the phone
  * position, camera roll, or viewing angle.
  */
-
-export interface RasterImage {
-  data: Uint8ClampedArray;
-  width: number;
-  height: number;
-}
 
 /** Homography coefficients for `x' = (a x + b y + c) / (g x + h y + 1)`. */
 export type Homography = [number, number, number, number, number, number, number, number];
