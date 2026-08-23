@@ -17,6 +17,7 @@ describe('Breeding Sessions & Persistence', () => {
           generationIndex: 1,
           targetGeneString: 'GGGYYY',
           surroundingSaplingsStrings: ['GGYYHH', 'YYGGHH'],
+          surroundingSourceIndexes: [0, 1],
           chance: 1.0,
           isCenterPlanted: false,
           isSurroundingPlanted: false,

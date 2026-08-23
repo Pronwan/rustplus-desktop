@@ -19,6 +19,7 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
   private isInitializing = false;
   private warm = false;
   private initRetryCount = 0;
+  private lastRawRead: { text: string; confidence: number } | null = null;
   private readonly MAX_INIT_RETRIES = 2;
 
   private getAssetUrl(path: string): string {
@@ -132,19 +133,25 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
    * Primary Ultra-Fast Single-Line Recognition (~15ms - 25ms total).
    * Reads the preprocessed, stitched 6-glyph strip in ONE single OCR operation.
    */
-  public async recognizeRow(canvas: HTMLCanvasElement): Promise<GeneRecognitionResult | null> {
+  public async recognizeRow(
+    canvas: HTMLCanvasElement,
+    minConfidence: number = SCANNER_CONFIG.recognition.minAverageConfidence
+  ): Promise<GeneRecognitionResult | null> {
     if (!this.lineWorker) return null;
 
     try {
       const res = await this.lineWorker.recognize(TesseractGeneRecognizer.canvasToInput(canvas));
-      const raw = (res.data.text || '').trim().toUpperCase().replace(/[^GHYWX]/g, '');
+      const rawText = (res.data.text || '').trim();
+      const raw = rawText.toUpperCase().replace(/[^GHYWX]/g, '');
+      this.lastRawRead = { text: rawText, confidence: res.data.confidence || 0 };
 
       if (raw.length === 6 && /^[GHYWX]{6}$/.test(raw)) {
         const confidence = res.data.confidence || 88;
-        if (confidence >= SCANNER_CONFIG.recognition.minAverageConfidence) {
+        if (confidence >= minConfidence) {
           return {
             geneString: raw,
             confidence,
+            rawText,
             slotConfidences: [confidence, confidence, confidence, confidence, confidence, confidence]
           };
         }
@@ -156,11 +163,18 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
   }
 
   /**
-   * Fallback Slot Recognition using secondary worker if single-line was ambiguous.
+   * Last raw OCR attempt, for beta diagnostics on the camera path. Reads that fail the
+   * confidence floor are still recorded here so the failure reason is visible.
    */
-  public async recognizeSlots(canvases: HTMLCanvasElement[]): Promise<GeneRecognitionResult | null> {
-    if (canvases.length !== 6) return null;
+  public getLastRawRead(): { text: string; confidence: number } | null {
+    return this.lastRawRead;
+  }
 
+  /**
+   * Single-character worker, created on first use. Page segmentation mode 10 treats the
+   * image as exactly one character, so it cannot merge or drop glyphs the way line mode can.
+   */
+  private async ensureSlotWorker(): Promise<TesseractWorker | null> {
     if (!this.fallbackWorker) {
       try {
         const workerPath = this.getAssetUrl('tesseract/worker.min.js');
@@ -174,11 +188,53 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
           '10'
         );
       } catch {
-        if (!this.lineWorker) return null;
+        // Fall back to the line worker below rather than failing the read outright.
       }
     }
 
-    const worker = this.fallbackWorker || this.lineWorker;
+    return this.fallbackWorker || this.lineWorker;
+  }
+
+  /** Pre-creates the single-character worker so the first slot read is not the slow one. */
+  public async warmupSlotWorker(): Promise<void> {
+    await this.ensureSlotWorker();
+  }
+
+  /**
+   * Per-slot letters with no gating at all, for the camera path.
+   *
+   * `recognizeSlots` folds six answers into one nullable row result, so a row that read five
+   * letters and lost the sixth is indistinguishable from one that read nothing. The camera
+   * path cross-checks OCR against template matching and shows the user what it saw, so it
+   * needs the individual answers, blanks included.
+   */
+  public async readSlotLetters(canvases: HTMLCanvasElement[]): Promise<string[]> {
+    const worker = await this.ensureSlotWorker();
+    if (!worker) return canvases.map(() => '');
+
+    return Promise.all(
+      canvases.map(async canvas => {
+        try {
+          const res = await worker.recognize(TesseractGeneRecognizer.canvasToInput(canvas));
+          return normalizeGeneGlyph((res.data.text || '').trim());
+        } catch {
+          return '';
+        }
+      })
+    );
+  }
+
+  /**
+   * Fallback Slot Recognition using secondary worker if single-line was ambiguous.
+   */
+  public async recognizeSlots(
+    canvases: HTMLCanvasElement[],
+    minGeneConfidence: number = SCANNER_CONFIG.recognition.minGeneConfidence,
+    minAverageConfidence: number = SCANNER_CONFIG.recognition.minAverageConfidence
+  ): Promise<GeneRecognitionResult | null> {
+    if (canvases.length !== 6) return null;
+
+    const worker = await this.ensureSlotWorker();
     if (!worker) return null;
 
     const results = await Promise.all(canvases.map(async (canvas) => {
@@ -203,10 +259,7 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
       const avgConfidence = confidences.reduce((a, b) => a + b, 0) / confidences.length;
       const minConfidence = Math.min(...confidences);
 
-      if (
-        minConfidence >= SCANNER_CONFIG.recognition.minGeneConfidence &&
-        avgConfidence >= SCANNER_CONFIG.recognition.minAverageConfidence
-      ) {
+      if (minConfidence >= minGeneConfidence && avgConfidence >= minAverageConfidence) {
         return {
           geneString: candidate,
           confidence: avgConfidence,

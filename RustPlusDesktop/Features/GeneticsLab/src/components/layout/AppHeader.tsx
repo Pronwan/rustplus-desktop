@@ -26,6 +26,7 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import InfoIcon from '@mui/icons-material/Info';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useApp, PLANT_TYPES } from '../../context/AppContext.tsx';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../context/ScannerContext.tsx';
@@ -45,8 +46,18 @@ export const AppHeader: React.FC = () => {
     setIsProjectManagerOpen
   } = useApp();
   const { selectedPlant, setSelectedPlant } = useWorkspace();
-  const { isScannerActive, isScannerInitializing, startScanner, stopScanner } = useScanner();
+  const {
+    isScannerActive,
+    isScannerInitializing,
+    startScanner,
+    stopScanner,
+    isCameraScannerSupported,
+    openCameraScanner
+  } = useScanner();
   const scannerBusy = isScannerActive || isScannerInitializing;
+  // Phone camera mode is an explicit action offered on compact layouts only; the desktop
+  // screen scanner above stays exactly as it was.
+  const showPhoneCameraAction = isCompact && isCameraScannerSupported;
   const iconColor = themeMode === 'dark' ? '#AAA' : '#64748B';
   const closeMenuThen = (action: () => void) => () => {
     setMenuAnchor(null);
@@ -173,6 +184,7 @@ export const AppHeader: React.FC = () => {
             </IconButton>
           </Tooltip>
           <Menu id="header-actions-menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+            {showPhoneCameraAction && <MenuItem onClick={closeMenuThen(openCameraScanner)}><ListItemIcon><PhotoCameraIcon /></ListItemIcon><ListItemText>Use phone camera (Beta)</ListItemText></MenuItem>}
             {isCompact && <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>}
             <MenuItem onClick={closeMenuThen(toggleTheme)}><ListItemIcon>{themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon><ListItemText>{themeMode === 'dark' ? 'Light mode' : 'Dark mode'}</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>

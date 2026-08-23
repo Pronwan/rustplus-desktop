@@ -1,6 +1,7 @@
 import { ApplicationOptions } from './orchestrator.ts';
 import { DEFAULT_GENE_SCORES, Sapling } from '../domain/genetics/Sapling.ts';
 import { SavedClone, CloneUtils } from '../domain/genetics/Clone.ts';
+import type { BreedingPlanStep } from '../domain/genetics/breedingPlan.ts';
 
 export interface CookieConsentState {
   isPreferenceDecided: boolean;
@@ -39,14 +40,7 @@ export interface TargetConfiguration {
   minHs?: number;
 }
 
-export interface BreedingSessionStep {
-  generationIndex: number;
-  targetGeneString: string;
-  centerSaplingString?: string;
-  surroundingSaplingsStrings: string[];
-  priorityWinningIndices?: number[];
-  priorityLosingIndices?: number[];
-  chance: number;
+export interface BreedingSessionStep extends BreedingPlanStep {
   isCenterPlanted: boolean;
   isSurroundingPlanted: boolean;
   isCompleted: boolean;
@@ -147,6 +141,8 @@ export interface ExtendedApplicationOptions extends ApplicationOptions {
   inventoryMode: 'ignore' | 'prefer' | 'require';
   targetStopMode: 'continue' | 'exact' | 'threshold';
   targetStopThresholdPercent: number;
+  /** The phone-camera banner has been dismissed and should not be shown again. */
+  hidePhoneCameraBanner: boolean;
 }
 
 export const DEFAULT_OPTIONS: ExtendedApplicationOptions = {
@@ -168,7 +164,8 @@ export const DEFAULT_OPTIONS: ExtendedApplicationOptions = {
   density: 'comfortable',
   inventoryMode: 'prefer',
   targetStopMode: 'continue',
-  targetStopThresholdPercent: 100
+  targetStopThresholdPercent: 100,
+  hidePhoneCameraBanner: false
 };
 
 const CONSENT_PREFIX = 'rb-cookie-pref-v1';
@@ -188,6 +185,7 @@ const ACTIVE_PROFILE_ID_KEY = 'GL_ACTIVE_SCANNER_PROFILE_ID_V1';
 const PREVIOUS_GENE_SETS_KEY = 'PREVIOUS_GENE_SETS';
 const SCANNER_REGIONS_KEY = 'SCANNER_REGIONS';
 const SELECTED_PLANT_KEY = 'SELECTED_PLANT_TYPE';
+const FARM_PLANNER_DRAFT_KEY = 'GL_FARM_PLANNER_DRAFT_V1';
 
 export class StorageService {
   public static getConsent(): CookieConsentState {
@@ -237,8 +235,26 @@ export class StorageService {
       localStorage.removeItem(PREVIOUS_GENE_SETS_KEY);
       localStorage.removeItem(SCANNER_REGIONS_KEY);
       localStorage.removeItem(SELECTED_PLANT_KEY);
+      localStorage.removeItem(FARM_PLANNER_DRAFT_KEY);
     } catch {
       // ignore
+    }
+  }
+
+  public static getFarmPlannerDraft<T>(fallback: T): T {
+    try {
+      const raw = localStorage.getItem(FARM_PLANNER_DRAFT_KEY);
+      return raw ? JSON.parse(raw) as T : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  public static saveFarmPlannerDraft(draft: unknown): void {
+    try {
+      localStorage.setItem(FARM_PLANNER_DRAFT_KEY, JSON.stringify(draft));
+    } catch {
+      // storage unavailable
     }
   }
 

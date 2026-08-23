@@ -12,6 +12,8 @@ import { BreedingMode } from './components/breeding/BreedingMode.tsx';
 import { CompactScannerStatus } from './components/scanner/CompactScannerStatus.tsx';
 import { ScannerCalibrationModal } from './components/scanner/ScannerCalibrationModal.tsx';
 import { GeneCorrectionModal } from './components/scanner/GeneCorrectionModal.tsx';
+import { MobileCameraScannerHost } from './components/scanner/MobileCameraScannerHost.tsx';
+import { CameraScannerBanner } from './components/scanner/CameraScannerBanner.tsx';
 import { ProjectManagerModal } from './components/projects/ProjectManagerModal.tsx';
 import { KeyboardShortcutsModal } from './components/layout/KeyboardShortcutsModal.tsx';
 import { OptionsModal } from './components/modals/OptionsModal.tsx';
@@ -47,6 +49,9 @@ export const App: React.FC = () => {
         {/* Global Navigation Header */}
         <AppHeader />
 
+        {/* Compact phone-camera entry point, mobile layouts only */}
+        <CameraScannerBanner />
+
         {/* Main Content Body */}
         <Box component="main" sx={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
           {(activeTab === 'workspace' || (activeTab as any) === 'calculator') && <WorkspaceLayout />}
@@ -64,6 +69,9 @@ export const App: React.FC = () => {
         {/* Scanner Modals */}
         <ScannerCalibrationModal />
         <GeneCorrectionModal />
+
+        {/* Phone Camera Scanner (lazy-loaded, mobile entry only) */}
+        <MobileCameraScannerHost />
 
         {/* Project & Farm Data Manager */}
         <ProjectManagerModal
