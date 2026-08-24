@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Postgrest.Attributes;
 using Postgrest.Models;
@@ -244,6 +246,7 @@ namespace RustPlusDesk.Models
         [Column("allowed_command_role_ids")]
         [JsonProperty("allowed_command_role_ids")]
         [JsonPropertyName("allowed_command_role_ids")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(FlexibleRoleIdsConverter))]
         public string AllowedCommandRoleIds { get; set; } = "";
 
         [Column("created_at")]
@@ -255,6 +258,47 @@ namespace RustPlusDesk.Models
         [JsonProperty("updated_at")]
         [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
+    }
+
+    /// <summary>
+    /// Reads <c>allowed_command_role_ids</c> from either the legacy Supabase shape (a raw
+    /// comma-separated string) or the new cloud shape (a JSON array of role id strings/numbers),
+    /// normalising both to a comma-separated string. Writes back as a comma-separated string.
+    /// </summary>
+    public sealed class FlexibleRoleIdsConverter : System.Text.Json.Serialization.JsonConverter<string>
+    {
+        public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            switch (reader.TokenType)
+            {
+                case JsonTokenType.Null:
+                    return string.Empty;
+                case JsonTokenType.String:
+                    return reader.GetString() ?? string.Empty;
+                case JsonTokenType.StartArray:
+                    var ids = new List<string>();
+                    while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+                    {
+                        switch (reader.TokenType)
+                        {
+                            case JsonTokenType.String:
+                                var s = reader.GetString();
+                                if (!string.IsNullOrWhiteSpace(s)) ids.Add(s.Trim());
+                                break;
+                            case JsonTokenType.Number:
+                                ids.Add(reader.GetInt64().ToString(System.Globalization.CultureInfo.InvariantCulture));
+                                break;
+                        }
+                    }
+                    return string.Join(",", ids);
+                default:
+                    reader.Skip();
+                    return string.Empty;
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+            => writer.WriteStringValue(value ?? string.Empty);
     }
 
     public class DiscordBotRegistrationResult

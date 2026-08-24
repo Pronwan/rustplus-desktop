@@ -817,6 +817,16 @@ namespace RustPlusDesk.Services.Auth
             // Run for Discord OR Email auth (not anon/guest — they use handshake)
             if (!IsDiscordAuthenticated && !IsEmailAuthenticated) return false;
             if (!await EnsureFreshSessionAsync()) return false;
+
+            // Platform backend has no legacy Supabase Client — the profile/tier below is keyed
+            // off Client.Auth.CurrentUser, which is null under UsePlatform. Premium status comes
+            // from the plan-limits endpoint instead, so refresh those and return.
+            if (Cloud.CloudBackend.UsePlatform)
+            {
+                await FetchTierLimitsAsync(forceRefresh: true);
+                return true;
+            }
+
             string? discordId = null;
             if (Client.Auth.CurrentUser?.UserMetadata != null)
             {

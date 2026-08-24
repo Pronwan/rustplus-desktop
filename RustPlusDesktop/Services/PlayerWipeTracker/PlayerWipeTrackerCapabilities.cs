@@ -22,9 +22,6 @@ public sealed record PlayerWipeTrackerCapabilities(
     public static PlayerWipeTrackerCapabilities Free(DateTime? fetchedUtc = null) => new(
         "free", true, false, false, false, false, false, 1, 1, 0, fetchedUtc ?? DateTime.UtcNow);
 
-    public static PlayerWipeTrackerCapabilities Development(DateTime? fetchedUtc = null) => new(
-        "development", true, true, true, true, true, true, 32, 12, 365, fetchedUtc ?? DateTime.UtcNow);
-
     public bool CanTrackPlayer(ulong steamId, ulong ownSteamId)
         => steamId != 0 && (steamId == ownSteamId || CanTrackTeam) &&
            (steamId == ownSteamId || MaxTrackedPlayers > 1);
@@ -33,13 +30,6 @@ public sealed record PlayerWipeTrackerCapabilities(
 /// <summary>Fail-closed interpreter and 72-hour offline cache for backend limits.</summary>
 public sealed class PlayerWipeTrackerCapabilityService
 {
-    // TEMPORARY DEV OVERRIDE — the backend plan-limit rows for `player_wipe_tracker` are not
-    // merged to main yet, so production `client/bootstrap` reports the feature off and this
-    // service fails closed to the free tier. While set to true, every build (Debug *and*
-    // Release) reports the full premium capability set so the tracker can be developed.
-    // REVERT to false before shipping / once the backend seeder is merged.
-    public static bool ForceDevelopmentCapabilities = true;
-
     private const string CacheKey = "player_wipe_tracker_capabilities";
     private static readonly TimeSpan OfflineGrace = TimeSpan.FromHours(72);
     private PlayerWipeTrackerCapabilities _lastSuccessful = PlayerWipeTrackerCapabilities.Free();
@@ -49,23 +39,9 @@ public sealed class PlayerWipeTrackerCapabilityService
         _lastSuccessful = DataManager.LoadCache<PlayerWipeTrackerCapabilities>(CacheKey) ?? PlayerWipeTrackerCapabilities.Free();
     }
 
-    public PlayerWipeTrackerCapabilities Current
-    {
-        get
-        {
-            if (ForceDevelopmentCapabilities)
-                return PlayerWipeTrackerCapabilities.Development();
-#if DEBUG
-            var development = PlayerWipeTrackerCapabilities.Development();
-            System.Diagnostics.Debug.Assert(
-                development.IsTrackerAvailable && development.CanTrackTeam && development.CanUseCloudSync &&
-                development.CanUseAdvancedViews && development.CanUseRouteReplay && development.CanExport);
-            return development;
-#else
-            return Effective(DateTime.UtcNow);
-#endif
-        }
-    }
+    // Capabilities always resolve from the cloud backend's `client/bootstrap` entitlements
+    // (interpreted by Update/Effective). There is no build-time development unlock.
+    public PlayerWipeTrackerCapabilities Current => Effective(DateTime.UtcNow);
 
     public PlayerWipeTrackerCapabilities Update(JsonElement bootstrap)
     {
