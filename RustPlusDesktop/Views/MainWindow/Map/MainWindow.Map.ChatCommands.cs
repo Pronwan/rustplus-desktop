@@ -87,6 +87,10 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdVendor)) standardCmds.Add(prefix + profile.CmdVendor);
             if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
             if (!string.IsNullOrWhiteSpace(profile.CmdAfk)) standardCmds.Add(prefix + profile.CmdAfk);
+            // Only advertised once a code exists - listing it on a server with no codes set would
+            // send people to a command that answers with nothing.
+            if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && profile.HasBaseCodes)
+                standardCmds.Add(prefix + profile.CmdBaseCodes);
 
             string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
             if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
@@ -665,6 +669,39 @@ public partial class MainWindow
                 }
             }
             AppendLog($"[ChatCommand] UpkeepDetail executed by {m.Author}");
+            return;
+        }
+
+        // Command: Base Codes
+        if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && cmd == profile.CmdBaseCodes.ToLowerInvariant())
+        {
+            // Half-typed rows are skipped rather than shown: a three-digit code in team chat is
+            // worse than no answer, because someone will try it on a door.
+            var fallbackName = Properties.Resources.GetString("BaseCodesNameDefault") ?? "Doorcode";
+            var parts = profile.BaseCodes
+                .Where(c => c.IsComplete)
+                .Select(c => $"{(string.IsNullOrWhiteSpace(c.Label) ? fallbackName : c.Label.Trim())}: {c.Code}")
+                .ToList();
+
+            if (parts.Count == 0)
+            {
+                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdNoBaseCodes);
+            }
+            else
+            {
+                string msg = string.Join(" | ", parts);
+                // Team chat truncates at 128 characters. Five labelled codes fit comfortably, but a
+                // long custom name could push it over, so drop whole entries instead of letting the
+                // server cut a code in half.
+                while (msg.Length > 128 && parts.Count > 1)
+                {
+                    parts.RemoveAt(parts.Count - 1);
+                    msg = string.Join(" | ", parts) + " ...";
+                }
+                _ = SendChatCommandResponseAsync(msg);
+            }
+
+            AppendLog($"[ChatCommand] BaseCodes executed by {m.Author}");
             return;
         }
 

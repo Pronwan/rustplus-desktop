@@ -849,4 +849,28 @@
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>追蹤戰隊成員、他們的在線狀態、角色和備註</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>基地密碼</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>設定門密碼並分享給隊友（依伺服器分別儲存）。</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>顯示密碼</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>在隊伍聊天中列出所有密碼</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>門密碼</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>尚未設定基地密碼。</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>已儲存</value>
+  </data>
 </root>

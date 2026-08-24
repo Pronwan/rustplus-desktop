@@ -270,6 +270,65 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
+
+                        <!-- Base Codes Section -->
+                        <StackPanel Margin="0,15,0,0">
+                            <TextBlock Text="{DynamicResource BaseCodesCategory}" Foreground="{DynamicResource Accent}" Margin="0,0,0,2" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource BaseCodesDesc}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,6" />
+
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource BaseCodesCmdLabel}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                                <ui:TextBox Grid.Column="2" Text="{Binding CmdBaseCodes, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="{DynamicResource BaseCodesCmdHint}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontStyle="Italic" TextTrimming="CharacterEllipsis" />
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{Binding BaseCodes}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{DynamicResource BaseCodesRowLabel}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                            <ui:TextBox Grid.Column="2"
+                                                        Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}"
+                                                        MaxLength="4"
+                                                        Margin="0,0,10,0"
+                                                        VerticalAlignment="Center"
+                                                        PlaceholderText="0000" />
+                                            <ui:TextBox Grid.Column="3"
+                                                        Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}"
+                                                        MaxLength="24"
+                                                        Margin="0,0,8,0"
+                                                        VerticalAlignment="Center"
+                                                        PlaceholderText="{DynamicResource BaseCodesNameDefault}" />
+                                            <ui:Button Grid.Column="4"
+                                                       Click="BtnSaveBaseCode_Click"
+                                                       Appearance="Secondary"
+                                                       Padding="6"
+                                                       VerticalAlignment="Center"
+                                                       ToolTip="{DynamicResource Save}"
+                                                       AutomationProperties.Name="{DynamicResource Save}">
+                                                <ui:Button.Icon>
+                                                    <ui:SymbolIcon Symbol="Save24" />
+                                                </ui:Button.Icon>
+                                            </ui:Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Grid>

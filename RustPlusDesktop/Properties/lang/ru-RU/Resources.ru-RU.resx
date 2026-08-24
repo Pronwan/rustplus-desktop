@@ -5841,4 +5841,28 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>С прошлого вайпа — эти ID устройств больше не существуют</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Коды баз</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Сохраните коды от дверей и поделитесь с командой (хранятся отдельно для каждого сервера).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Показать коды</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>выводит все коды в чат команды</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Код двери</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>Коды баз не заданы.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Сохранено</value>
+  </data>
 </root>

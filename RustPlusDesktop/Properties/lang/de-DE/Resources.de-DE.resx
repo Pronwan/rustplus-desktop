@@ -5901,4 +5901,28 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>Aus einem früheren Wipe — diese Geräte-IDs existieren nicht mehr</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Basis-Codes</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Türcodes hinterlegen und mit dem Team teilen (pro Server gespeichert).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Codes zeigen</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>listet alle Codes im Team-Chat</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Türcode</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>Es sind keine Basis-Codes hinterlegt.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Gespeichert</value>
+  </data>
 </root>

@@ -5841,4 +5841,28 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>De un wipe anterior: estos ID de dispositivo ya no existen</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Códigos de base</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Guarda tus códigos de puerta y compártelos con el equipo (se guardan por servidor).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Mostrar códigos</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>muestra todos los códigos en el chat del equipo</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Código</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Código de puerta</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>No hay códigos de base configurados.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Guardado</value>
+  </data>
 </root>
