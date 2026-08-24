@@ -5841,4 +5841,28 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>D’un wipe précédent — ces identifiants d’appareil n’existent plus</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Codes de base</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Enregistrez vos codes de porte et partagez-les avec l'équipe (sauvegardés par serveur).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Afficher les codes</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>affiche tous les codes dans le chat d'équipe</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Code de porte</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>Aucun code de base n'est enregistré.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Enregistré</value>
+  </data>
 </root>

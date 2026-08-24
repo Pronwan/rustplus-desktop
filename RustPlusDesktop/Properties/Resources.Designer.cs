@@ -777,6 +777,14 @@ namespace RustPlusDesk.Properties {
         public static string ChatCmdOilRigCloudSeen => GetString("ChatCmdOilRigCloudSeen");
         public static string ChatCmdOilRigCloudNone => GetString("ChatCmdOilRigCloudNone");
         public static string EventNotTrackableOnServer => GetString("EventNotTrackableOnServer");
+        public static string BaseCodesCategory => GetString("BaseCodesCategory");
+        public static string BaseCodesDesc => GetString("BaseCodesDesc");
+        public static string BaseCodesCmdLabel => GetString("BaseCodesCmdLabel");
+        public static string BaseCodesCmdHint => GetString("BaseCodesCmdHint");
+        public static string BaseCodesRowLabel => GetString("BaseCodesRowLabel");
+        public static string BaseCodesNameDefault => GetString("BaseCodesNameDefault");
+        public static string ChatCmdNoBaseCodes => GetString("ChatCmdNoBaseCodes");
+        public static string Saved => GetString("Saved");
     }
 }
 

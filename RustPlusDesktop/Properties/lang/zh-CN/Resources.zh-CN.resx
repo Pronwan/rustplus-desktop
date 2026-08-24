@@ -5589,4 +5589,28 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>追踪战队成员、他们的在线状态、角色和备注</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>基地密码</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>设置门密码并分享给队友（按服务器分别保存）。</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>显示密码</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>在队伍聊天中列出所有密码</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>门密码</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>尚未设置基地密码。</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>已保存</value>
+  </data>
 </root>

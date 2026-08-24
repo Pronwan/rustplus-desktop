@@ -5569,4 +5569,28 @@ You can find more information on the server's official website:
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>No tutorial executes a rule or toggles a real smart device.</value>
   </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Base Codes</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Set your doorcodes and share with the team (saved per server).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Show codes</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>lists every code in team chat</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Doorcode</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>No base codes are set.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
 </root>
