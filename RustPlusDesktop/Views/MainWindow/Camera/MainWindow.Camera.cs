@@ -144,7 +144,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         }
     }
 
-    private async void BtnToggleMiniMap_Click(object sender, RoutedEventArgs e)
+    private async void BtnToggleMiniMap_Click(object? sender, RoutedEventArgs? e)
     {
         if (_vm.Selected?.IsFullConnected != true)
         {

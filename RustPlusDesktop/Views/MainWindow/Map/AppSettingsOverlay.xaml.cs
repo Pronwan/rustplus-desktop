@@ -2081,7 +2081,7 @@ namespace RustPlusDesk.Views
                         // 1. Link Alexa active server
                         var alexaModel = new RustPlusDesk.Models.UserAlexaSettingsModel
                         {
-                            UserId = userId,
+                            UserId = userId ?? string.Empty,
                             ActiveServerKey = serverKey,
                             SteamId = steamId,
                             UpdatedAt = DateTime.UtcNow
