@@ -942,4 +942,7 @@
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>無法載入指令清單，詳情見記錄檔。</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>搜尋物品…</value>
+  </data>
 </root>

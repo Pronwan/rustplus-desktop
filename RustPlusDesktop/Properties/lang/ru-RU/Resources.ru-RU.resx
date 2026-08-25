@@ -5931,4 +5931,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>Не удалось загрузить список команд. Подробности в журнале.</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Поиск предмета…</value>
+  </data>
 </root>

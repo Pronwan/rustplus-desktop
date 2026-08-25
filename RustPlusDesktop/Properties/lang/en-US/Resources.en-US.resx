@@ -5659,4 +5659,7 @@ You can find more information on the server's official website:
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>Could not load the command list. See the log for details.</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Search item…</value>
+  </data>
 </root>

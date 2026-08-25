@@ -5931,4 +5931,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>Impossible de charger la liste des commandes. Voir le journal.</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Rechercher un objet…</value>
+  </data>
 </root>

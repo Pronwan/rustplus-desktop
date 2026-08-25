@@ -5931,4 +5931,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>No se pudo cargar la lista de comandos. Consulta el registro.</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Buscar objeto…</value>
+  </data>
 </root>

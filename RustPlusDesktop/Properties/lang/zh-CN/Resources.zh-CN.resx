@@ -5679,4 +5679,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>无法加载命令列表，详情见日志。</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>搜索物品…</value>
+  </data>
 </root>

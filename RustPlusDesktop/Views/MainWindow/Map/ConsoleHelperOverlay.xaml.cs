@@ -184,6 +184,56 @@ public partial class ConsoleHelperOverlay : UserControl
             cmd.BindKey = dlg.CapturedKey ?? "";
     }
 
+    /// <summary>
+    /// A WPF Popup lives in its own top-level window, and that window is not topmost. Inside the
+    /// popout - which is Topmost so it can sit over the game - the suggestion list therefore
+    /// opens behind the panel and looks broken. Promoting the popup's own window fixes it, and
+    /// only ever runs when the host window is actually topmost.
+    /// </summary>
+    private void ItemPicker_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not DependencyObject box) return;
+        if (Window.GetWindow(this) is not { Topmost: true }) return;
+
+        // The template is applied by now, so the popup exists even though it is not open yet.
+        var popup = FindDescendant<System.Windows.Controls.Primitives.Popup>(box);
+        if (popup == null) return;
+
+        popup.Opened -= Popup_Opened;
+        popup.Opened += Popup_Opened;
+    }
+
+    private void Popup_Opened(object? sender, EventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Primitives.Popup popup) return;
+        if (popup.Child == null) return;
+
+        // The popup's HWND only exists once it has been rendered, so this has to wait a beat.
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            try
+            {
+                if (PresentationSource.FromVisual(popup.Child) is System.Windows.Interop.HwndSource src)
+                    NativeTopmost.Promote(src.Handle);
+            }
+            catch
+            {
+                // Worst case the list stays behind the panel, which is where it was before.
+            }
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+
+    private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
+    {
+        for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var child = System.Windows.Media.VisualTreeHelper.GetChild(root, i);
+            if (child is T hit) return hit;
+            if (FindDescendant<T>(child) is T nested) return nested;
+        }
+        return null;
+    }
+
     private void ItemPicker_SuggestionChosen(object sender, RoutedEventArgs e)
     {
         if (sender is not WpfUi.AutoSuggestBox box) return;

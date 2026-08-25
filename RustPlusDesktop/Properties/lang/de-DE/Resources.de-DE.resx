@@ -5991,4 +5991,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ConsoleHelperLoadFailed" xml:space="preserve">
     <value>Die Befehlsliste konnte nicht geladen werden. Details stehen im Log.</value>
   </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Item suchen…</value>
+  </data>
 </root>
