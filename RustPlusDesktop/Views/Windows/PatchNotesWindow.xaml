@@ -33,6 +33,90 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v9.0.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.0.0 | Cloud Sync, Wipe Tracker &amp; Genetics 2.0" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                Version 9.0.0 is a massive milestone release featuring an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
+                            </TextBlock>
+
+                            <!-- Genetics Lab 2.0 -->
+                            <TextBlock Text="🧬 Genetics Lab 2.0 &amp; Ultra-Fast Solver" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Pre-Allocation Admission Solver Engine:</Run>
+                                Ground-up rewrite of the crossbreeding solver using 18-bit bit-packed genotypes, integer weights, and zero-allocation candidate pruning. Delivers 24&#xD7; to 40&#xD7; faster calculation speeds (dropping complex 100+ plant searches from minutes down to seconds) while reducing UI thread blocking by 99%.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Phone Camera Scanner &amp; Gene OCR (Beta):</Run>
+                                Scan plant gene sequences directly from your screen or mobile camera. Features a dual-recognizer pipeline combining template classification with Otsu-thresholded OCR, handheld shake tolerance, and per-slot legibility confirmation.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Farm Operations Planner &amp; Route Inspector:</Run>
+                                Complete redesign of the route inspector and farm planning workflow with step-by-step crossbreeding guides, plant inventory tracking, and crop cycle management.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Fluid Animations &amp; Accessibility:</Run>
+                                Added smooth FLIP grid animations, staggered result entry, interpolated progress, and full WCAG accessibility support across the genetics suite.
+                            </TextBlock>
+
+                            <!-- Player Wipe Tracker & Death Stats -->
+                            <TextBlock Text="👥 Player Wipe Tracker &amp; Death Analytics" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Native Fluent WPF Redesign:</Run>
+                                Rebuilt Player Wipe Tracker and Death Stats into a responsive, high-performance pure WPF interface with smooth scrolling and modern typography.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Cloud Wipe Map &amp; Monument Sync:</Run>
+                                Server wipe map uploading is now decoupled from tracking and automatically syncs high-resolution maps, monuments, and metadata directly upon connecting to a server.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Offline Wipe Explorer &amp; Server Switcher:</Run>
+                                Easily switch between active and archived wipes, review historical player encounter counts, and inspect past maps completely offline.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Steam Profile Linking &amp; Friendly Names:</Run>
+                                Enriched player activity timelines with direct Steam profile integration, friendly server name resolution, and optimized grid columns.
+                            </TextBlock>
+
+                            <!-- Console Helper -->
+                            <TextBlock Text="⌨️ Rust Console Helper &amp; Overlays" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Command Browser &amp; Keybind Manager:</Run>
+                                Browse, edit, test, and bind Rust console commands and convars with built-in parameter guidance and key capture.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Live Item Suggestion Popout:</Run>
+                                Floating in-game suggestion window with live item autocomplete and parameter completion for rapid command entry.
+                            </TextBlock>
+
+                            <!-- Team Base Codes -->
+                            <TextBlock Text="🔑 Team Base Codes" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Shared Door &amp; Turret Codes:</Run>
+                                Centralized Base Codes vault allowing teams to organize door codes, airlock PINs, and turret auths, with one-click sharing directly to team chat.
+                            </TextBlock>
+
+                            <!-- Cloud Platform & Connection Resilience -->
+                            <TextBlock Text="🛡️ Cloud Platform &amp; Connection Resilience" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Next-Gen Cloud Platform:</Run>
+                                Migrated backend services to a unified Cloud platform for enhanced reliability, realtime sync, and streamlined role entitlements.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Access Denied &amp; HTTP 418 Handling:</Run>
+                                Intelligent detection of expired server credentials or revoked pairings with clear re-pairing prompts and responsive layout.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Startup Diagnostics &amp; Internationalization:</Run>
+                                Added startup crash telemetry diagnostics, resolved compiler warnings, and completed translation of internal services, comments, and logging to English.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v8.0.4 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

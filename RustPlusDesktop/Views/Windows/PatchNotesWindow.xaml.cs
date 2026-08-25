@@ -15,6 +15,8 @@ namespace RustPlusDesk.Views
 {
     public partial class PatchNotesWindow : Window
     {
+        public string CurrentVersionFormatted => $"v{RustPlusDesk.Helpers.VersionHelper.GetClientVersion()}";
+
         public PatchNotesWindow()
         {
             InitializeComponent();
