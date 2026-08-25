@@ -1,0 +1,42 @@
+name: Sync net10-upgrade with beta
+
+# Keeps the long-running net10-upgrade branch up to date with beta.
+# On every push to beta, merge beta into net10-upgrade and push it.
+# A merge conflict fails the job loudly (nothing is force-pushed) so it
+# can be resolved by hand instead of being silently clobbered.
+
+on:
+  push:
+    branches: [beta]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-net10-upgrade
+  cancel-in-progress: false
+
+jobs:
+  merge-beta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout net10-upgrade
+        uses: actions/checkout@v4
+        with:
+          ref: net10-upgrade
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge beta into net10-upgrade
+        run: |
+          git fetch origin beta
+          git merge --no-edit origin/beta
+
+      - name: Push net10-upgrade
+        run: git push origin net10-upgrade
