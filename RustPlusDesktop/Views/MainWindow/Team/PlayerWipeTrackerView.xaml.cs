@@ -144,9 +144,11 @@ public partial class PlayerWipeTrackerView : UserControl
 
         if (!string.IsNullOrWhiteSpace(currentWipeKey) && stored.All(s => s.WipeKey != currentWipeKey))
         {
+            var serverKey = _tracker.CurrentServerKey ?? "current";
+            var serverName = PlayerWipeTrackerStore.ResolveServerName(serverKey);
             var liveSummary = new StoredWipeSummary(
-                _tracker.CurrentServerKey ?? "current",
-                _tracker.CurrentServerKey ?? "Current Server",
+                serverKey,
+                serverName,
                 currentWipeKey,
                 _tracker.CurrentWipeStartedAtUtc,
                 DateTime.UtcNow,
@@ -1422,8 +1424,20 @@ public partial class PlayerWipeTrackerView : UserControl
 
         public StoredWipeSummary Summary { get; }
         public bool IsLive { get; }
-        public string ServerName => string.IsNullOrWhiteSpace(Summary.ServerName) ? Summary.ServerKey : Summary.ServerName;
-        public string WipeDateFormatted => Summary.WipeStartedAtUtc?.ToLocalTime().ToString("MMM d, yyyy") ?? "Unknown wipe";
+        public string ServerName => !string.IsNullOrWhiteSpace(Summary.ServerName) && !PlayerWipeTrackerStore.IsRawServerKey(Summary.ServerName)
+            ? Summary.ServerName
+            : PlayerWipeTrackerStore.ResolveServerName(Summary.ServerKey);
+        public string WipeDateFormatted
+        {
+            get
+            {
+                if (Summary.WipeStartedAtUtc.HasValue)
+                    return Summary.WipeStartedAtUtc.Value.ToLocalTime().ToString("MMM d, yyyy");
+                if (Summary.LastObservedAtUtc.HasValue)
+                    return Summary.LastObservedAtUtc.Value.ToLocalTime().ToString("MMM d, yyyy");
+                return "Saved Wipe";
+            }
+        }
         public string PlayerTracksFormatted => $"{Summary.PlayerCount} player(s)";
         public string DisplayText => IsLive
             ? $"● {ServerName} · {WipeDateFormatted} ({PlayerTracksFormatted} · Live)"
