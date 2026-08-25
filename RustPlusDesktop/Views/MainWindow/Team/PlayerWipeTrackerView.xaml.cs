@@ -142,7 +142,7 @@ public partial class PlayerWipeTrackerView : UserControl
 
         var items = new List<StoredWipeItem>();
 
-        if (!string.IsNullOrWhiteSpace(currentWipeKey) && stored.All(s => s.WipeKey != currentWipeKey))
+        if (!string.IsNullOrWhiteSpace(currentWipeKey) && _tracker.TrackedPlayers.Count > 0 && stored.All(s => s.WipeKey != currentWipeKey))
         {
             var serverKey = _tracker.CurrentServerKey ?? "current";
             var serverName = PlayerWipeTrackerStore.ResolveServerName(serverKey);
