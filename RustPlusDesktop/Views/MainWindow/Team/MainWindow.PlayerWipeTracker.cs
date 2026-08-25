@@ -149,23 +149,41 @@ public partial class MainWindow
             _worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0)
             return;
 
+        var serverKey = _playerWipeTracker.CurrentServerKey;
+        var wipeKey = _playerWipeTracker.CurrentWipeKey;
+
+        if (string.IsNullOrWhiteSpace(serverKey) && _vm?.Selected != null)
+        {
+            serverKey = $"{_vm.Selected.Host}-{_vm.Selected.Port}";
+        }
+
+        if (string.IsNullOrWhiteSpace(wipeKey) && _vm?.Selected?.WipeTime != null)
+        {
+            wipeKey = _vm.Selected.WipeTime.Value.ToString("yyyyMMdd_HHmmss");
+        }
+
+        if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey))
+            return;
+
         try
         {
             using var stream = new MemoryStream();
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmap));
             encoder.Save(stream);
-            _playerWipeTracker.SaveCurrentWipeMap(new TrackerWipeMap(
+            var mapData = new TrackerWipeMap(
                 stream.ToArray(),
                 _worldSizeS,
                 _worldRectPx.X,
                 _worldRectPx.Y,
                 _worldRectPx.Width,
-                _worldRectPx.Height));
+                _worldRectPx.Height);
+
+            _playerWipeTracker.SaveWipeMap(serverKey, wipeKey, mapData, _vm?.Selected?.WipeTime);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
         {
-            AppendLog($"[Player Wipe Tracker] Could not save wipe map: {ex.Message}");
+            AppendLog($"[Server Wipe Map] Could not process wipe map: {ex.Message}");
         }
     }
 

@@ -244,11 +244,19 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     {
         if (_serverKey is not null && _wipeKey is not null)
         {
-            if (!HasCurrentWipeMap)
-                _store.SaveWipeMap(_serverKey, _wipeKey, map);
-
-            _ = TryUploadWipeMapSilentlyAsync(_serverKey, _wipeKey, map, _wipeStartedAtUtc);
+            SaveWipeMap(_serverKey, _wipeKey, map, _wipeStartedAtUtc);
         }
+    }
+
+    public void SaveWipeMap(string serverKey, string wipeKey, TrackerWipeMap map, DateTime? wipeStartedAtUtc = null)
+    {
+        if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey))
+            return;
+
+        if (!_store.HasWipeMap(serverKey, wipeKey))
+            _store.SaveWipeMap(serverKey, wipeKey, map);
+
+        _ = TryUploadWipeMapSilentlyAsync(serverKey, wipeKey, map, wipeStartedAtUtc);
     }
 
     private async Task TryUploadWipeMapSilentlyAsync(string serverKey, string wipeKey, TrackerWipeMap map, DateTime? wipeStarted)
@@ -261,6 +269,15 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
 
         try
         {
+            // Check if cloud already has the wipe map uploaded and verified
+            var existingMap = await _cloudClient.DownloadWipeMapAsync(serverKey, wipeKey).ConfigureAwait(false);
+            if (existingMap is not null && existingMap.PngBytes.Length > 0)
+            {
+                _store.MarkWipeMapUploaded(serverKey, wipeKey);
+                return;
+            }
+
+            // Otherwise upload it
             var status = await _cloudClient.UploadWipeMapAsync(serverKey, wipeKey, map.PngBytes, map, wipeStarted).ConfigureAwait(false);
             if (status is 200 or 201 or 409)
             {
