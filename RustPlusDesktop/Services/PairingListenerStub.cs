@@ -11,8 +11,8 @@ using System.Text.RegularExpressions;
 namespace RustPlusDesk.Services;
 
 /// <summary>
-/// Platzhalter: simuliert eine eingehende Pairing-Nachricht.
-/// Später ersetzen durch echten Facepunch/FCM-Listener.
+/// Placeholder: simulates an incoming pairing message.
+/// Replace later with a real Facepunch/FCM listener.
 /// </summary>
 public class PairingListenerStub : IPairingListener
 {
@@ -25,6 +25,7 @@ public class PairingListenerStub : IPairingListener
     public event EventHandler? Stopped;
     public event EventHandler<string>? Failed { add { } remove { } }
 
+    // Alarm event
     public event EventHandler<AlarmNotification>? AlarmReceived;
     public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived { add { } remove { } }
     private volatile bool _running;
@@ -37,7 +38,7 @@ public class PairingListenerStub : IPairingListener
         _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         _running = true;
         Listening?.Invoke(this, EventArgs.Empty);
-        _log("Pairing-Listener: gestartet (Stub). Drücke STRG+P im Fenster, um Pairing zu simulieren.");
+        _log("Pairing listener: started (stub). Press CTRL+P in the window to simulate pairing.");
         return Task.CompletedTask;
     }
     private void FireAlarm(string? server, string? deviceName, uint? entityId, string message, DateTime ts)
@@ -72,11 +73,11 @@ public class PairingListenerStub : IPairingListener
         _cts = null;
         _running = false;
         Stopped?.Invoke(this, EventArgs.Empty);
-        _log("Pairing-Listener: gestoppt.");
+        _log("Pairing listener: stopped.");
         return Task.CompletedTask;
     }
 
-    // Hilfsmethode zum Simulieren
+    // Helper method for simulation
     public void SimulatePairing(PairingPayload p)
         => Paired?.Invoke(this, p);
 }

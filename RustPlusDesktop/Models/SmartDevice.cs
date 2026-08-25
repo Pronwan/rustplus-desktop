@@ -222,19 +222,19 @@ public class SmartDevice : INotifyPropertyChanged
         {
             if (!ReferenceEquals(_storage, value))
             {
-                // ggf. alten Handler lösen
+                // detach the old handler if any
                 if (_storage != null) _storage.Items.CollectionChanged -= StorageItemsChanged;
 
                 _storage = value;
                 OnProp(nameof(Storage));
                 OnProp(nameof(HasStorage));
-                OnProp(nameof(ItemsCount));      // Proxy: nützlich für XAML
-                OnProp(nameof(UpkeepSeconds));   // Proxy: nützlich für XAML
+                OnProp(nameof(ItemsCount));      // Proxy: useful for XAML
+                OnProp(nameof(UpkeepSeconds));   // Proxy: useful for XAML
                 OnProp(nameof(StorageSummary));  
 
                 if (_storage != null)
                 {
-                    // wenn sich die Items-Sammlung ändert → Count im UI aktualisieren
+                    // when the items collection changes → refresh Count in the UI
                     _storage.Items.CollectionChanged += StorageItemsChanged;
                 }
             }
@@ -246,7 +246,7 @@ public class SmartDevice : INotifyPropertyChanged
         OnProp(nameof(ItemsCount));
         OnProp(nameof(StorageSummary));
     }
-    // bequeme Proxy-Properties für’s Binding (OneWay):
+    // convenient proxy properties for binding (OneWay):
     public int ItemsCount => Storage?.ItemsCount ?? 0;     // nutzt deine ItemsCount aus StorageSnapshot
     public int? UpkeepSeconds
 {

@@ -9,13 +9,13 @@ namespace RustPlusDesk.Services
     {
         public string Name { get; init; } = "";
         public bool Primary { get; init; }
-        // Gerätepixel (nicht DPI-korrigiert)
+        // Device pixels (not DPI-corrected)
         public int Left { get; init; }
         public int Top { get; init; }
         public int Width { get; init; }
         public int Height { get; init; }
         public override string ToString() =>
-            $"{(Primary ? "Hauptmonitor" : "Monitor")} {Width}×{Height} @ {Left},{Top} ({Name})";
+            $"{(Primary ? "Primary monitor" : "Monitor")} {Width}×{Height} @ {Left},{Top} ({Name})";
     }
 
     public static class WinMonitors
@@ -43,7 +43,7 @@ namespace RustPlusDesk.Services
                     }
                     return true;
                 }, IntPtr.Zero);
-            // Primären nach oben sortieren, optional
+            // Sort the primary one to the top, optional
             list.Sort((a, b) => b.Primary.CompareTo(a.Primary));
             return list;
         }
