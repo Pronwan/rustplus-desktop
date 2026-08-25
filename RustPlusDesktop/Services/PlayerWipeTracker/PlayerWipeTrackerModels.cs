@@ -214,3 +214,22 @@ public sealed class CloudDayUploadRequest
     [JsonPropertyName("payload")] public CloudTrackerDayPayload Payload { get; init; } = new();
     [JsonPropertyName("checksum")] public string Checksum { get; init; } = string.Empty;
 }
+
+public sealed record StoredWipeMetadata(
+    string ServerKey,
+    string ServerName,
+    string WipeKey,
+    DateTime? WipeStartedAtUtc,
+    DateTime CreatedAtUtc);
+
+public sealed record StoredWipeSummary(
+    string ServerKey,
+    string ServerName,
+    string WipeKey,
+    DateTime? WipeStartedAtUtc,
+    DateTime? LastObservedAtUtc,
+    int PlayerCount,
+    long TotalObservations,
+    long StoredBytes,
+    bool HasMap);
+
