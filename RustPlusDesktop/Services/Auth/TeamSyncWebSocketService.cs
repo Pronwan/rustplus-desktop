@@ -50,6 +50,7 @@ namespace RustPlusDesk.Services.Auth
         public static void Initialize()
         {
             if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+            if (!CloudAuth.IsAuthenticated) return;
             if (_initialized) return;
             _initialized = true;
 
@@ -81,6 +82,7 @@ namespace RustPlusDesk.Services.Auth
         public static void NotifyTeamResolved(string? teamId)
         {
             if (!CloudBackend.UsePlatform) return;
+            if (!CloudAuth.IsAuthenticated) return;
             if (string.IsNullOrWhiteSpace(teamId)) return;
             if (_currentTeamId == teamId && IsActive) return;
 
@@ -103,13 +105,14 @@ namespace RustPlusDesk.Services.Auth
                 }
                 catch (Exception ex)
                 {
-                    AppendLog($"[TeamSyncWS/Error] Realtime handler error: {ex.Message}");
+                    AppendLog($"[TeamSyncWS/Error] Failed handling event {eventName}: {ex.Message}");
                 }
             };
         }
 
         private static async Task SubscribeToTeamChannelAsync(string teamId)
         {
+            if (!CloudAuth.IsAuthenticated) return;
             await BroadcastSubscriptionLock.WaitAsync();
             try
             {

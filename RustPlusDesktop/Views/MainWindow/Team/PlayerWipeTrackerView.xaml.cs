@@ -281,7 +281,7 @@ public partial class PlayerWipeTrackerView : UserControl
             Refresh();
     }
 
-    private void Refresh()
+    public void Refresh()
     {
         if (_tracker is null)
             return;

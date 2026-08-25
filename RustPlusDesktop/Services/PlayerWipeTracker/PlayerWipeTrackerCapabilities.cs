@@ -30,7 +30,7 @@ public sealed record PlayerWipeTrackerCapabilities(
 /// <summary>Fail-closed interpreter and 72-hour offline cache for backend limits.</summary>
 public sealed class PlayerWipeTrackerCapabilityService
 {
-    private const string CacheKey = "player_wipe_tracker_capabilities";
+    public const string CacheKey = "player_wipe_tracker_capabilities";
     private static readonly TimeSpan OfflineGrace = TimeSpan.FromHours(72);
     private PlayerWipeTrackerCapabilities _lastSuccessful = PlayerWipeTrackerCapabilities.Free();
 
@@ -78,8 +78,18 @@ public sealed class PlayerWipeTrackerCapabilityService
         return Current;
     }
 
+    public void Reset()
+    {
+        _lastSuccessful = PlayerWipeTrackerCapabilities.Free();
+        DataManager.SaveCache<PlayerWipeTrackerCapabilities?>(CacheKey, null);
+    }
+
     public PlayerWipeTrackerCapabilities Effective(DateTime nowUtc)
     {
+        // Unauthenticated sessions have no cloud identity or premium entitlement.
+        if (string.IsNullOrWhiteSpace(RustPlusDesk.Services.Cloud.CloudAuthManager.CurrentToken))
+            return PlayerWipeTrackerCapabilities.Free();
+
         if (_lastSuccessful.PlanCode.Equals("free", StringComparison.OrdinalIgnoreCase))
             return _lastSuccessful;
         return nowUtc - _lastSuccessful.FetchedUtc <= OfflineGrace

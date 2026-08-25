@@ -197,6 +197,7 @@ namespace RustPlusDesk.Services.Cloud
             TokenExpiresAt = null;
             _lastValidatedUtc = DateTime.MinValue;
             DataManager.SaveCache<TokenStore?>(TokenCacheKey, null);
+            DataManager.SaveCache<PlayerWipeTracker.PlayerWipeTrackerCapabilities?>(PlayerWipeTracker.PlayerWipeTrackerCapabilityService.CacheKey, null);
             AuthenticationChanged?.Invoke();
         }
 

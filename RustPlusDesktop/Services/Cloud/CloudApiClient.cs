@@ -63,6 +63,8 @@ namespace RustPlusDesk.Services.Cloud
             object? payload = null)
         {
             bearerToken ??= CloudAuthManager.CurrentToken;
+            if (string.IsNullOrEmpty(bearerToken))
+                return (401, "{\"message\":\"Unauthenticated.\"}");
 
             using var request = new HttpRequestMessage(method, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
@@ -99,6 +101,8 @@ namespace RustPlusDesk.Services.Cloud
 
             // Default to the signed-in desktop token when a caller doesn't pass one.
             bearerToken ??= CloudAuthManager.CurrentToken;
+            if (string.IsNullOrEmpty(bearerToken))
+                throw new InvalidOperationException("Cannot call authenticated Cloud API without being signed in.");
 
             var url = CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath);
             if (queryParams != null && queryParams.Count > 0)

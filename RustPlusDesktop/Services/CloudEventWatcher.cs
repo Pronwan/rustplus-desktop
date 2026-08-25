@@ -111,6 +111,7 @@ public sealed class CloudEventWatcher
         _serverKey = serverKey;
 
         HookListener();
+        if (!CloudAuth.IsAuthenticated) return;
         await RefreshAsync(firstFetch: true);
 
         if (CloudBackend.UsePlatform)
@@ -455,6 +456,7 @@ public sealed class CloudEventWatcher
 
     private async Task SubscribePlatformAsync(string serverKey)
     {
+        if (!CloudAuth.IsAuthenticated) return;
         await _subscribeLock.WaitAsync();
         try
         {
