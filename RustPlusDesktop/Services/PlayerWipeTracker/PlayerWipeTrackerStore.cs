@@ -176,6 +176,7 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         if (!Directory.Exists(_root))
             return Array.Empty<StoredWipeSummary>();
 
+        var profiles = LoadProfilesSafe();
         var results = new List<StoredWipeSummary>();
         foreach (var serverDir in Directory.EnumerateDirectories(_root))
         {
@@ -188,7 +189,21 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
                 if (jsonlFiles.Length == 0 && !File.Exists(Path.Combine(wipeDir, "map.png")))
                     continue;
 
-                var serverName = meta?.ServerName ?? serverKey;
+                var serverName = meta?.ServerName;
+                if (string.IsNullOrWhiteSpace(serverName) || IsRawServerKey(serverName))
+                {
+                    serverName = ResolveServerName(serverKey, profiles);
+                    if (!string.IsNullOrWhiteSpace(serverName) && !IsRawServerKey(serverName))
+                    {
+                        SaveWipeMetadata(serverKey, wipeKey, new StoredWipeMetadata(
+                            serverKey,
+                            serverName,
+                            wipeKey,
+                            meta?.WipeStartedAtUtc,
+                            meta?.CreatedAtUtc ?? DateTime.UtcNow));
+                    }
+                }
+
                 var wipeStarted = meta?.WipeStartedAtUtc;
                 var playerCount = jsonlFiles.Length;
                 var totalBytes = Directory.EnumerateFiles(wipeDir, "*").Sum(f => new FileInfo(f).Length);
@@ -201,7 +216,7 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
 
                 results.Add(new StoredWipeSummary(
                     serverKey,
-                    serverName,
+                    serverName ?? serverKey,
                     wipeKey,
                     wipeStarted,
                     lastObserved,
@@ -215,6 +230,41 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         return results
             .OrderByDescending(w => w.LastObservedAtUtc ?? w.WipeStartedAtUtc ?? DateTime.MinValue)
             .ToArray();
+    }
+
+    public static bool IsRawServerKey(string? name)
+        => string.IsNullOrWhiteSpace(name) ||
+           name.All(c => char.IsDigit(c) || c == '.' || c == ':' || c == '-' || c == '_') ||
+           name.StartsWith("unknown", StringComparison.OrdinalIgnoreCase);
+
+    public static List<RustPlusDesk.Models.ServerProfile> LoadProfilesSafe()
+    {
+        try { return RustPlusDesk.Services.Data.ProfileDataModule.LoadProfiles(); }
+        catch { return new List<RustPlusDesk.Models.ServerProfile>(); }
+    }
+
+    public static string ResolveServerName(string serverKey, List<RustPlusDesk.Models.ServerProfile>? profiles = null)
+    {
+        if (string.IsNullOrWhiteSpace(serverKey))
+            return "Server";
+
+        profiles ??= LoadProfilesSafe();
+        var cleanKey = serverKey.Replace(":", "-").Replace("_", "-").Trim();
+        foreach (var p in profiles)
+        {
+            if (string.IsNullOrWhiteSpace(p.Host))
+                continue;
+
+            var pHostKey = $"{p.Host}-{p.Port}".Replace(":", "-").Replace("_", "-").Trim();
+            if (string.Equals(cleanKey, pHostKey, StringComparison.OrdinalIgnoreCase) ||
+                cleanKey.StartsWith(p.Host, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.IsNullOrWhiteSpace(p.Name))
+                    return p.Name;
+            }
+        }
+
+        return serverKey;
     }
 
     public void DeleteWipe(string serverKey, string wipeKey)
