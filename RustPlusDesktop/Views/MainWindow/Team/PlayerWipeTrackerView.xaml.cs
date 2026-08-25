@@ -29,6 +29,7 @@ public partial class PlayerWipeTrackerView : UserControl
     private int _worldSize;
     private Rect _worldRectPixels;
     private string? _loadedWipeKey;
+    private string? _liveConnectedWipeKey;
     private readonly DispatcherTimer _replayTimer;
     private readonly DispatcherTimer _liveTimer;
     private IReadOnlyList<TrackerPoint> _points = Array.Empty<TrackerPoint>();
@@ -65,11 +66,13 @@ public partial class PlayerWipeTrackerView : UserControl
     {
         _tracker = tracker ?? throw new ArgumentNullException(nameof(tracker));
         _ownSteamId = ownSteamId;
+        _liveConnectedWipeKey = tracker.CurrentWipeKey;
         _wipeMapImage = wipeMapImage;
         _worldSize = worldSize;
         _worldRectPixels = worldRectPixels;
         _loadedWipeKey = tracker.CurrentWipeKey;
         ApplyWipeMapImage();
+        PopulateWipeSelector();
         if (IsLoaded)
         {
             _liveTimer.Start();
@@ -82,6 +85,7 @@ public partial class PlayerWipeTrackerView : UserControl
         if (_tracker is null)
             return;
         _liveTimer.Start();
+        PopulateWipeSelector();
         Refresh();
     }
 
@@ -92,6 +96,7 @@ public partial class PlayerWipeTrackerView : UserControl
         if (IsVisible)
         {
             _liveTimer.Start();
+            PopulateWipeSelector();
             LiveTimer_Tick(this, EventArgs.Empty);
         }
         else
@@ -111,6 +116,89 @@ public partial class PlayerWipeTrackerView : UserControl
     {
         if (_tracker is null || _replayTimer.IsEnabled || ReferenceEquals(TrackerTabs.SelectedItem, ReplayTab))
             return;
+
+        if (!string.Equals(_tracker.CurrentWipeKey, _liveConnectedWipeKey, StringComparison.Ordinal))
+        {
+            _liveConnectedWipeKey = _tracker.CurrentWipeKey;
+            PopulateWipeSelector();
+        }
+
+        var selectedItem = WipeSelector.SelectedItem as StoredWipeItem;
+        if (selectedItem is not null && !selectedItem.IsLive && !string.Equals(selectedItem.Summary.WipeKey, _tracker.CurrentWipeKey, StringComparison.Ordinal))
+            return;
+
+        Refresh();
+    }
+
+    private void PopulateWipeSelector()
+    {
+        if (_tracker is null)
+            return;
+
+        var currentWipeKey = _tracker.CurrentWipeKey;
+        var stored = _tracker.GetStoredWipes();
+        var selectedItem = WipeSelector.SelectedItem as StoredWipeItem;
+        var targetWipeKey = selectedItem?.Summary.WipeKey ?? currentWipeKey;
+
+        var items = new List<StoredWipeItem>();
+
+        if (!string.IsNullOrWhiteSpace(currentWipeKey) && stored.All(s => s.WipeKey != currentWipeKey))
+        {
+            var liveSummary = new StoredWipeSummary(
+                _tracker.CurrentServerKey ?? "current",
+                _tracker.CurrentServerKey ?? "Current Server",
+                currentWipeKey,
+                _tracker.CurrentWipeStartedAtUtc,
+                DateTime.UtcNow,
+                _tracker.TrackedPlayers.Count,
+                0,
+                0,
+                _tracker.HasCurrentWipeMap);
+            items.Add(new StoredWipeItem(liveSummary, isLive: true));
+        }
+
+        foreach (var s in stored)
+        {
+            var isLive = !string.IsNullOrWhiteSpace(currentWipeKey) && string.Equals(s.WipeKey, currentWipeKey, StringComparison.Ordinal);
+            items.Add(new StoredWipeItem(s, isLive));
+        }
+
+        _refreshing = true;
+        try
+        {
+            WipeSelector.ItemsSource = items;
+            var match = items.FirstOrDefault(i => string.Equals(i.Summary.WipeKey, targetWipeKey, StringComparison.Ordinal))
+                        ?? items.FirstOrDefault(i => i.IsLive)
+                        ?? items.FirstOrDefault();
+            WipeSelector.SelectedItem = match;
+
+            if (match is not null)
+            {
+                if (!string.Equals(match.Summary.WipeKey, _tracker.CurrentWipeKey, StringComparison.Ordinal))
+                {
+                    _tracker.SwitchWipe(match.Summary.ServerKey, match.Summary.WipeKey, match.Summary.WipeStartedAtUtc);
+                }
+                _loadedWipeKey = null;
+                ReloadWipeContextFromService();
+            }
+        }
+        finally
+        {
+            _refreshing = false;
+        }
+    }
+
+    private void WipeSelector_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        if (_refreshing || _tracker is null || WipeSelector.SelectedItem is not StoredWipeItem item)
+            return;
+
+        if (string.Equals(item.Summary.WipeKey, _tracker.CurrentWipeKey, StringComparison.Ordinal) && _loadedWipeKey is not null)
+            return;
+
+        _tracker.SwitchWipe(item.Summary.ServerKey, item.Summary.WipeKey, item.Summary.WipeStartedAtUtc);
+        _loadedWipeKey = null;
+        ReloadWipeContextFromService();
         Refresh();
     }
 
@@ -126,12 +214,16 @@ public partial class PlayerWipeTrackerView : UserControl
 
         var map = _tracker.LoadCurrentWipeMap();
         if (map is null)
-            return; // Map for this wipe not saved yet; retry on a later tick.
+        {
+            _loadedWipeKey = wipeKey;
+            _wipeMapImage = null;
+            _worldSize = 0;
+            _worldRectPixels = Rect.Empty;
+            ApplyWipeMapImage();
+            return;
+        }
 
         var image = DecodeMap(map.PngBytes);
-        if (image is null)
-            return;
-
         _loadedWipeKey = wipeKey;
         _wipeMapImage = image;
         _worldSize = map.WorldSize;
@@ -264,7 +356,13 @@ public partial class PlayerWipeTrackerView : UserControl
 
     private List<PlayerItem> BuildPlayerItems()
     {
-        var ids = new HashSet<ulong>(_tracker!.TrackedPlayers) { _ownSteamId };
+        if (_tracker is null)
+            return new List<PlayerItem>();
+
+        var ids = new HashSet<ulong>(_tracker.TrackedPlayers);
+        if (_tracker.GetObservations(_ownSteamId).Count > 0 || ids.Count == 0)
+            ids.Add(_ownSteamId);
+
         return ids.Where(id => id != 0)
             .Select(id => new PlayerItem(id, _tracker.GetPlayerName(id)))
             .OrderBy(item => item.SteamId != _ownSteamId)
@@ -1312,5 +1410,25 @@ public partial class PlayerWipeTrackerView : UserControl
                 return $"{Math.Max(1, (int)span.TotalMinutes)}m active";
             return $"{Math.Max(1, (int)span.TotalSeconds)}s active";
         }
+    }
+
+    private sealed class StoredWipeItem
+    {
+        public StoredWipeItem(StoredWipeSummary summary, bool isLive)
+        {
+            Summary = summary;
+            IsLive = isLive;
+        }
+
+        public StoredWipeSummary Summary { get; }
+        public bool IsLive { get; }
+        public string ServerName => string.IsNullOrWhiteSpace(Summary.ServerName) ? Summary.ServerKey : Summary.ServerName;
+        public string WipeDateFormatted => Summary.WipeStartedAtUtc?.ToLocalTime().ToString("MMM d, yyyy") ?? "Unknown wipe";
+        public string PlayerTracksFormatted => $"{Summary.PlayerCount} player(s)";
+        public string DisplayText => IsLive
+            ? $"● {ServerName} · {WipeDateFormatted} ({PlayerTracksFormatted} · Live)"
+            : $"{ServerName} · {WipeDateFormatted} ({PlayerTracksFormatted})";
+
+        public override string ToString() => DisplayText;
     }
 }

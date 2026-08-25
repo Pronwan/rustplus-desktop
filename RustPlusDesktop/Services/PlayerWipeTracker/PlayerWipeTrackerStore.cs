@@ -149,6 +149,74 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             .ToArray();
     }
 
+    public void SaveWipeMetadata(string serverKey, string wipeKey, StoredWipeMetadata metadata)
+    {
+        var directory = WipeDirectory(serverKey, wipeKey);
+        Directory.CreateDirectory(directory);
+        File.WriteAllText(Path.Combine(directory, "wipe_info.json"), JsonSerializer.Serialize(metadata, _json));
+    }
+
+    public StoredWipeMetadata? LoadWipeMetadata(string serverKey, string wipeKey)
+    {
+        var path = Path.Combine(WipeDirectory(serverKey, wipeKey), "wipe_info.json");
+        if (!File.Exists(path))
+            return null;
+        try
+        {
+            return JsonSerializer.Deserialize<StoredWipeMetadata>(File.ReadAllText(path), _json);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public IReadOnlyList<StoredWipeSummary> GetStoredWipes()
+    {
+        if (!Directory.Exists(_root))
+            return Array.Empty<StoredWipeSummary>();
+
+        var results = new List<StoredWipeSummary>();
+        foreach (var serverDir in Directory.EnumerateDirectories(_root))
+        {
+            var serverKey = Path.GetFileName(serverDir);
+            foreach (var wipeDir in Directory.EnumerateDirectories(serverDir))
+            {
+                var wipeKey = Path.GetFileName(wipeDir);
+                var meta = LoadWipeMetadata(serverKey, wipeKey);
+                var jsonlFiles = Directory.EnumerateFiles(wipeDir, "*.jsonl").ToArray();
+                if (jsonlFiles.Length == 0 && !File.Exists(Path.Combine(wipeDir, "map.png")))
+                    continue;
+
+                var serverName = meta?.ServerName ?? serverKey;
+                var wipeStarted = meta?.WipeStartedAtUtc;
+                var playerCount = jsonlFiles.Length;
+                var totalBytes = Directory.EnumerateFiles(wipeDir, "*").Sum(f => new FileInfo(f).Length);
+                DateTime? lastObserved = null;
+
+                if (jsonlFiles.Length > 0)
+                {
+                    lastObserved = jsonlFiles.Max(f => new FileInfo(f).LastWriteTimeUtc);
+                }
+
+                results.Add(new StoredWipeSummary(
+                    serverKey,
+                    serverName,
+                    wipeKey,
+                    wipeStarted,
+                    lastObserved,
+                    playerCount,
+                    0,
+                    totalBytes,
+                    HasWipeMap(serverKey, wipeKey)));
+            }
+        }
+
+        return results
+            .OrderByDescending(w => w.LastObservedAtUtc ?? w.WipeStartedAtUtc ?? DateTime.MinValue)
+            .ToArray();
+    }
+
     public void DeleteWipe(string serverKey, string wipeKey)
     {
         var directory = Path.Combine(_root, Safe(serverKey), Safe(wipeKey));
