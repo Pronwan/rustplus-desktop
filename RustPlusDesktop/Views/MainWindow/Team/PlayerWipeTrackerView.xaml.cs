@@ -906,12 +906,19 @@ public partial class PlayerWipeTrackerView : UserControl
     {
         if (_tracker is null || CloudArchiveSelector.SelectedItem is not CloudArchiveItem item)
         {
-            CloudArchiveDetailsText.Text = "Select an archive to inspect it.";
+            CloudArchiveDetailsPanel.Visibility = Visibility.Collapsed;
+            CloudArchiveEmptyPanel.Visibility = Visibility.Visible;
             RestoreCloudButton.IsEnabled = false;
             return;
         }
 
-        CloudArchiveDetailsText.Text = item.Details;
+        CloudArchiveDetailsPanel.Visibility = Visibility.Visible;
+        CloudArchiveEmptyPanel.Visibility = Visibility.Collapsed;
+        ArchiveServerNameText.Text = item.ServerName;
+        ArchiveWipeDateText.Text = item.WipeDateFormatted;
+        ArchiveObservedRangeText.Text = item.TrackingWindowFormatted;
+        ArchivePlayersText.Text = item.PlayerCountFormatted;
+        ArchiveStorageText.Text = item.StoredSizeFormatted;
         RestoreCloudButton.IsEnabled = _tracker.Capabilities.CanUseCloudSync;
     }
 
@@ -1252,7 +1259,15 @@ public partial class PlayerWipeTrackerView : UserControl
     {
         public CloudArchiveItem(CloudArchiveSummary archive) => Archive = archive;
         public CloudArchiveSummary Archive { get; }
-        public string Details => $"{Archive.ServerName}\nWipe: {Archive.WipeStartedAtUtc?.ToLocalTime().ToString("g") ?? "unknown"}\nObserved: {Archive.FirstObservedAtUtc?.ToLocalTime().ToString("g") ?? "unknown"} → {Archive.LastObservedAtUtc?.ToLocalTime().ToString("g") ?? "unknown"}\nPlayers: {Archive.PlayerCount?.ToString() ?? "unknown"} · Stored: {FormatBytes(Archive.StoredBytes ?? 0)}";
+        public string ServerName => string.IsNullOrWhiteSpace(Archive.ServerName) ? "Unknown Server" : Archive.ServerName;
+        public string WipeDateShortFormatted => Archive.WipeStartedAtUtc?.ToLocalTime().ToString("MMM d, yyyy") ?? "Unknown";
+        public string WipeDateFormatted => Archive.WipeStartedAtUtc?.ToLocalTime().ToString("f") ?? "Unknown wipe date";
+        public string FirstObservedFormatted => Archive.FirstObservedAtUtc?.ToLocalTime().ToString("g") ?? "—";
+        public string LastObservedFormatted => Archive.LastObservedAtUtc?.ToLocalTime().ToString("g") ?? "—";
+        public string TrackingWindowFormatted => $"{FirstObservedFormatted} → {LastObservedFormatted}";
+        public string PlayerCountFormatted => $"{Archive.PlayerCount ?? Archive.Players.Count} player(s)";
+        public string StoredSizeFormatted => FormatBytes(Archive.StoredBytes ?? 0);
+        public string Details => $"{Archive.ServerName}\nWipe: {Archive.WipeStartedAtUtc?.ToLocalTime():g}\nObserved: {Archive.FirstObservedAtUtc?.ToLocalTime():g} → {Archive.LastObservedAtUtc?.ToLocalTime():g}\nPlayers: {Archive.PlayerCount?.ToString() ?? "unknown"} · Stored: {StoredSizeFormatted}";
         public override string ToString() => $"{Archive.ServerName} · {Archive.WipeStartedAtUtc?.ToLocalTime():g} · {Archive.PlayerCount ?? 0} player(s)";
     }
 }
