@@ -5886,4 +5886,70 @@ You can find more information on the server&apos;s official website:
   <data name="Saved" xml:space="preserve">
     <value>Saved</value>
   </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>Console Helper</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>Useful console commands, ready to copy into the F1 console.</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>Client Commands</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>Admin Commands</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>Most useful</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>These only work if you are an owner or moderator on the server. Running them elsewhere does nothing.</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>Search commands…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>No command matches your search.</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>Copy command</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>Copy bind</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>Copy every bind you have set</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>Pop out as an overlay, to sit next to the game</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>Click, then press the key you want to bind this to</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>Pick a key</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>Press any key now. Escape cancels.</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>Mouse buttons and the scroll wheel cannot be captured by pressing them. Pick one here instead.</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>That key has no Rust equivalent. Pick another one.</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>Pick a key first, then the bind can be copied.</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>No keys bound yet. Pick a key on any command first.</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>Could not load the command list. See the log for details.</value>
+  </data>
 </root>

@@ -5925,4 +5925,70 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Saved" xml:space="preserve">
     <value>Gespeichert</value>
   </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>Konsolen-Helfer</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>Nützliche Konsolenbefehle, fertig zum Kopieren in die F1-Konsole.</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>Client-Befehle</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>Admin-Befehle</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>Am nützlichsten</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>Diese Befehle funktionieren nur, wenn du Besitzer oder Moderator des Servers bist. Sonst passiert nichts.</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>Befehle suchen…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>Kein Befehl passt zu deiner Suche.</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>Befehl kopieren</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>Bind kopieren</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>Alle gesetzten Binds kopieren</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>Als Overlay herauslösen, um es neben das Spiel zu legen</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>Taste</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>Klicken, dann die gewünschte Taste drücken</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>Taste wählen</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>Drücke jetzt eine beliebige Taste. Escape bricht ab.</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>Maustasten und Scrollrad lassen sich nicht durch Drücken erfassen. Wähle sie stattdessen hier aus.</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>Für diese Taste gibt es keine Entsprechung in Rust. Wähle eine andere.</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>Wähle erst eine Taste, dann lässt sich der Bind kopieren.</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>Noch keine Tasten belegt. Wähle zuerst bei einem Befehl eine Taste.</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>Die Befehlsliste konnte nicht geladen werden. Details stehen im Log.</value>
+  </data>
 </root>

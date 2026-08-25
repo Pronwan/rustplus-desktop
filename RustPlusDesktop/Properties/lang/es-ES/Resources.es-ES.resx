@@ -5865,4 +5865,70 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Saved" xml:space="preserve">
     <value>Guardado</value>
   </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>Asistente de consola</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>Comandos de consola útiles, listos para copiar en la consola F1.</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>Comandos de cliente</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>Comandos de administrador</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>Más útiles</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>Solo funcionan si eres propietario o moderador del servidor. En otro caso no hacen nada.</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>Buscar comandos…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>Ningún comando coincide con tu búsqueda.</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>Copiar comando</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>Copiar bind</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>Copiar todos los binds configurados</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>Extraer como superposición, para colocarlo junto al juego</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>Tecla</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>Haz clic y luego pulsa la tecla que quieras asignar</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>Elegir tecla</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>Pulsa cualquier tecla ahora. Escape cancela.</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>Los botones del ratón y la rueda no se pueden capturar pulsándolos. Selecciónalos aquí.</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>Esa tecla no tiene equivalente en Rust. Elige otra.</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>Elige primero una tecla y luego podrás copiar el bind.</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>Aún no hay teclas asignadas. Elige una tecla en algún comando primero.</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>No se pudo cargar la lista de comandos. Consulta el registro.</value>
+  </data>
 </root>

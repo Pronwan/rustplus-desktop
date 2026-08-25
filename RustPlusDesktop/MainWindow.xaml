@@ -3598,6 +3598,21 @@
                                 VerticalAlignment="Stretch"
                                 CloseRequested="RecyclerCalculator_CloseRequested" />
                         </TabItem>
+
+                        <TabItem x:Name="ConsoleHelperTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="WindowConsole20" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ConsoleHelperTitle}" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <views:ConsoleHelperOverlay
+                                x:Name="ConsoleHelperPanel"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                CloseRequested="ConsoleHelper_CloseRequested"
+                                PopoutRequested="ConsoleHelper_PopoutRequested" />
+                        </TabItem>
                     </TabControl>
 
                     </DockPanel>
@@ -3923,6 +3938,11 @@
                                 <ui:Button x:Name="RailRecyclerCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Update700Title3}" AutomationProperties.HelpText="{DynamicResource UiCalculateComponentYieldsForWildAndSafeZoneRecyclers}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Recycle32}" Tag="{Binding ElementName=RecyclerCalculatorTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRecyclerCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRecyclerCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRecyclerCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+
+                                <ui:Button x:Name="RailConsoleHelperButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource ConsoleHelperTitle}" AutomationProperties.HelpText="{DynamicResource ConsoleHelperSubtitle}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=WindowConsole20}" Tag="{Binding ElementName=ConsoleHelperTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailConsoleHelperButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailConsoleHelperButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailConsoleHelperButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                         </StackPanel>

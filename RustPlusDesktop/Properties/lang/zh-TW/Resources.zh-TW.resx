@@ -876,4 +876,70 @@
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
     <value>即使應用程式最小化，也會繼續直接向伺服器查詢線上人數。</value>
   </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>主控台助手</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>實用的主控台指令，可直接複製到 F1 主控台。</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>用戶端指令</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>管理員指令</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>最常用</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>這些指令僅在你是伺服器擁有者或管理員時有效，否則不會有任何作用。</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>搜尋指令…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>沒有符合的指令。</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>複製指令</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>複製按鍵綁定</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>複製所有已設定的綁定</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>彈出為浮動視窗，可放在遊戲旁邊</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>按鍵</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>點擊後按下要綁定的按鍵</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>選擇按鍵</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>現在按下任意鍵。按 Escape 取消。</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>滑鼠按鍵和滾輪無法透過按下擷取，請在此選擇。</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>該按鍵在 Rust 中沒有對應名稱，請另選一個。</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>請先選擇按鍵，然後才能複製綁定。</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>尚未綁定任何按鍵。請先為某個指令選擇按鍵。</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>無法載入指令清單，詳情見記錄檔。</value>
+  </data>
 </root>

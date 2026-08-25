@@ -785,6 +785,27 @@ namespace RustPlusDesk.Properties {
         public static string BaseCodesNameDefault => GetString("BaseCodesNameDefault");
         public static string ChatCmdNoBaseCodes => GetString("ChatCmdNoBaseCodes");
         public static string Saved => GetString("Saved");
+        public static string ConsoleHelperTitle => GetString("ConsoleHelperTitle");
+        public static string ConsoleHelperSubtitle => GetString("ConsoleHelperSubtitle");
+        public static string ConsoleHelperClientTab => GetString("ConsoleHelperClientTab");
+        public static string ConsoleHelperAdminTab => GetString("ConsoleHelperAdminTab");
+        public static string ConsoleHelperMostUseful => GetString("ConsoleHelperMostUseful");
+        public static string ConsoleHelperAdminNote => GetString("ConsoleHelperAdminNote");
+        public static string ConsoleHelperSearch => GetString("ConsoleHelperSearch");
+        public static string ConsoleHelperNoMatch => GetString("ConsoleHelperNoMatch");
+        public static string ConsoleHelperCopy => GetString("ConsoleHelperCopy");
+        public static string ConsoleHelperCopyBind => GetString("ConsoleHelperCopyBind");
+        public static string ConsoleHelperCopyAllBinds => GetString("ConsoleHelperCopyAllBinds");
+        public static string ConsoleHelperPopout => GetString("ConsoleHelperPopout");
+        public static string ConsoleHelperKey => GetString("ConsoleHelperKey");
+        public static string ConsoleHelperKeyHint => GetString("ConsoleHelperKeyHint");
+        public static string ConsoleHelperKeyTitle => GetString("ConsoleHelperKeyTitle");
+        public static string ConsoleHelperKeyPrompt => GetString("ConsoleHelperKeyPrompt");
+        public static string ConsoleHelperMouseHint => GetString("ConsoleHelperMouseHint");
+        public static string ConsoleHelperKeyUnsupported => GetString("ConsoleHelperKeyUnsupported");
+        public static string ConsoleHelperClearKey => GetString("ConsoleHelperClearKey");
+        public static string ConsoleHelperPickKeyFirst => GetString("ConsoleHelperPickKeyFirst");
+        public static string ConsoleHelperNoBindsYet => GetString("ConsoleHelperNoBindsYet");
     }
 }
 

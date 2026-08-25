@@ -5865,4 +5865,70 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Saved" xml:space="preserve">
     <value>Сохранено</value>
   </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>Помощник консоли</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>Полезные команды консоли, готовые к вставке в консоль F1.</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>Команды клиента</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>Команды администратора</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>Самые полезные</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>Работают только если вы владелец или модератор сервера. В остальных случаях ничего не произойдёт.</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>Поиск команд…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>Ни одна команда не соответствует запросу.</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>Копировать команду</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>Копировать бинд</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>Копировать все заданные бинды</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>Открепить как оверлей рядом с игрой</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>Клавиша</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>Нажмите, затем нажмите нужную клавишу</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>Выбор клавиши</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>Нажмите любую клавишу. Escape — отмена.</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>Кнопки мыши и колесо нельзя определить нажатием. Выберите их здесь.</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>У этой клавиши нет аналога в Rust. Выберите другую.</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>Сначала выберите клавишу, затем бинд можно будет скопировать.</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>Клавиши ещё не назначены. Сначала выберите клавишу для команды.</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>Не удалось загрузить список команд. Подробности в журнале.</value>
+  </data>
 </root>

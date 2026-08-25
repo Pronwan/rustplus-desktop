@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "note": "Console commands for the Console Helper. 'command' is a template; {name} placeholders are filled from 'params'. Descriptions are written for this app, not copied from the wiki.",
+  "commands": [
+
+    {
+      "id": "auto-attack-crouch",
+      "category": "client",
+      "group": "Combat",
+      "featured": true,
+      "title": "Auto-Attack + Crouch",
+      "description": "Fires continuously on full-auto weapons and crouches at the same time, without holding your mouse button or Ctrl.",
+      "command": "attack;duck",
+      "bindable": true,
+      "defaultBind": "kp1",
+      "params": []
+    },
+    {
+      "id": "auto-run",
+      "category": "client",
+      "group": "Movement",
+      "featured": true,
+      "title": "Auto-Run",
+      "description": "Move forward and sprint continuously without holding W or Shift. Tap the key again to stop.",
+      "command": "forward;sprint",
+      "bindable": true,
+      "defaultBind": "kp2",
+      "params": []
+    },
+    {
+      "id": "toggle-crouch",
+      "category": "client",
+      "group": "Movement",
+      "featured": false,
+      "title": "Toggle Crouch",
+      "description": "Stays crouched until you press the key again, instead of holding Ctrl down.",
+      "command": "duck",
+      "bindable": true,
+      "defaultBind": "z",
+      "params": []
+    },
+    {
+      "id": "duck-volume",
+      "category": "client",
+      "group": "Audio",
+      "featured": true,
+      "title": "Lower Master Volume (Toggle)",
+      "description": "Temporarily ducks the game's own volume without touching Windows or Discord. Built for exactly the moment a jackhammer or chainsaw is drowning out voice comms. Tap again to restore full volume.",
+      "command": "~audio.master {low};audio.master {full}",
+      "bindable": true,
+      "defaultBind": "kp3",
+      "params": [
+        { "name": "low",  "type": "float", "label": "Ducked", "default": "0.2", "min": 0, "max": 1 },
+        { "name": "full", "type": "float", "label": "Normal", "default": "1",   "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "id": "craft-item",
+      "category": "client",
+      "group": "Crafting",
+      "featured": true,
+      "title": "Instant Craft",
+      "description": "Crafts the chosen item straight from a key, skipping the crafting menu. Defaults to a single bandage.",
+      "command": "craft.add {item} {amount}",
+      "bindable": true,
+      "defaultBind": "kp4",
+      "params": [
+        { "name": "item",   "type": "item", "label": "Item",   "default": "-2072273936" },
+        { "name": "amount", "type": "int",  "label": "Amount", "default": "1", "min": 1, "max": 100 }
+      ]
+    },
+    {
+      "id": "craft-cancel",
+      "category": "client",
+      "group": "Crafting",
+      "featured": false,
+      "title": "Cancel Craft",
+      "description": "Removes queued crafts of the chosen item from your crafting queue.",
+      "command": "craft.cancel {item} {amount}",
+      "bindable": true,
+      "defaultBind": null,
+      "params": [
+        { "name": "item",   "type": "item", "label": "Item",   "default": "-2072273936" },
+        { "name": "amount", "type": "int",  "label": "Amount", "default": "1", "min": 1, "max": 100 }
+      ]
+    },
+    {
+      "id": "fov-zoom",
+      "category": "client",
+      "group": "Graphics",
+      "featured": true,
+      "title": "Quick FOV Zoom",
+      "description": "Punches the field of view in for better target identification at range, then snaps back when you tap again.",
+      "command": "~graphics.fov {zoomed};graphics.fov {normal}",
+      "bindable": true,
+      "defaultBind": "mouse3",
+      "params": [
+        { "name": "zoomed", "type": "int", "label": "Zoomed", "default": "70", "min": 50, "max": 90 },
+        { "name": "normal", "type": "int", "label": "Normal", "default": "90", "min": 50, "max": 90 }
+      ]
+    },
+    {
+      "id": "fov-set",
+      "category": "client",
+      "group": "Graphics",
+      "featured": false,
+      "title": "Field of View",
+      "description": "Sets the field of view once. 90 is the maximum the game accepts.",
+      "command": "graphics.fov {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "int", "label": "FOV", "default": "90", "min": 50, "max": 90 }
+      ]
+    },
+    {
+      "id": "disable-gibs",
+      "category": "client",
+      "group": "Performance",
+      "featured": true,
+      "title": "Disable Gibs",
+      "description": "Turns off the debris objects that spawn when a wall, vehicle or player is destroyed. Fewer objects during a raid means a steadier frame rate.",
+      "command": "effects.maxgibs {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "int", "label": "Max gibs", "default": "-1", "min": -1, "max": 500 }
+      ]
+    },
+    {
+      "id": "lookat-radius",
+      "category": "client",
+      "group": "Quality of life",
+      "featured": true,
+      "title": "Precise Look-At Radius",
+      "description": "Tightens the invisible interaction cone, so you don't accidentally grab, open or loot the wrong item when several are packed close together. 0.2 is the game default.",
+      "command": "client.lookatradius {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "float", "label": "Radius", "default": "0.01", "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "id": "head-inertia",
+      "category": "client",
+      "group": "Quality of life",
+      "featured": true,
+      "title": "Disable Head-Look Inertia",
+      "description": "Makes your view snap straight back to centre the instant you release alt-look, instead of drifting back with momentum.",
+      "command": "headlerp_inertia {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "bool", "label": "Inertia", "default": "false" }
+      ]
+    },
+    {
+      "id": "hitnotify-level",
+      "category": "client",
+      "group": "Combat",
+      "featured": true,
+      "title": "Hit Marker Detail",
+      "description": "Controls how much detail hit notifications carry. Higher values show more information about registered hits.",
+      "command": "hitnotify.notification_level {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "int", "label": "Level", "default": "2", "min": 0, "max": 2 }
+      ]
+    },
+    {
+      "id": "ads-sensitivity",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Lower Sensitivity While Aiming",
+      "description": "Drops mouse sensitivity the moment you aim down sights and restores it when you let go. Bind this to your aim button.",
+      "command": "+attack2;+input.sensitivity {ads};input.sensitivity {hip}",
+      "bindable": true,
+      "defaultBind": "mouse1",
+      "params": [
+        { "name": "ads", "type": "float", "label": "Aiming", "default": "0.45", "min": 0, "max": 5 },
+        { "name": "hip", "type": "float", "label": "Hip",    "default": "0.2",  "min": 0, "max": 5 }
+      ]
+    },
+    {
+      "id": "light-on-ads",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Light On While Aiming",
+      "description": "Switches your weapon light or laser on while you aim down sights.",
+      "command": "+lighttoggle;+attack2",
+      "bindable": true,
+      "defaultBind": "mouse1",
+      "params": []
+    },
+    {
+      "id": "sensitivity",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Mouse Sensitivity",
+      "description": "Sets mouse sensitivity directly, finer than the settings slider allows.",
+      "command": "input.sensitivity {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "float", "label": "Sensitivity", "default": "0.2", "min": 0, "max": 5 }
+      ]
+    },
+    {
+      "id": "console-combatlog",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Combat Log On Console Open",
+      "description": "Opens the console and prints your recent combat log in one keystroke, so you can check what actually hit you.",
+      "command": "consoletoggle;combatlog",
+      "bindable": true,
+      "defaultBind": "f1",
+      "params": []
+    },
+    {
+      "id": "combatlog",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Combat Log",
+      "description": "Prints your recent hits taken and dealt, with weapon, distance and damage.",
+      "command": "combatlog",
+      "bindable": true,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "chat-say",
+      "category": "client",
+      "group": "Chat",
+      "featured": false,
+      "title": "Say In Global Chat",
+      "description": "Sends a fixed message to global chat from a key.",
+      "command": "chat.say \"{text}\"",
+      "bindable": true,
+      "defaultBind": null,
+      "params": [
+        { "name": "text", "type": "text", "label": "Message", "default": "Hello everyone!" }
+      ]
+    },
+    {
+      "id": "chat-teamsay",
+      "category": "client",
+      "group": "Chat",
+      "featured": false,
+      "title": "Say In Team Chat",
+      "description": "Sends a fixed message to team chat from a key. Handy for a quick \"on my way\" during a fight.",
+      "command": "chat.teamsay \"{text}\"",
+      "bindable": true,
+      "defaultBind": null,
+      "params": [
+        { "name": "text", "type": "text", "label": "Message", "default": "On my way!" }
+      ]
+    },
+    {
+      "id": "disconnect",
+      "category": "client",
+      "group": "Quality of life",
+      "featured": false,
+      "title": "Disconnect",
+      "description": "Leaves the server immediately. Bound to a key it is faster than the menu, which matters when you are combat-logging out of a bad spot.",
+      "command": "client.disconnect",
+      "bindable": true,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "kill",
+      "category": "client",
+      "group": "Quality of life",
+      "featured": false,
+      "title": "Suicide",
+      "description": "Kills your character. Useful when you are stuck in terrain and would rather respawn than wait.",
+      "command": "kill",
+      "bindable": true,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "gc-collect",
+      "category": "client",
+      "group": "Performance",
+      "featured": false,
+      "title": "Force Garbage Collection",
+      "description": "Frees memory the game has finished with. Can smooth out a session that has been running for hours.",
+      "command": "gc.collect",
+      "bindable": true,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "audio-master",
+      "category": "client",
+      "group": "Audio",
+      "featured": false,
+      "title": "Master Volume",
+      "description": "Sets the game's master volume without leaving the console.",
+      "command": "audio.master {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "float", "label": "Volume", "default": "1", "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "id": "audio-voices",
+      "category": "client",
+      "group": "Audio",
+      "featured": false,
+      "title": "Voice Chat Volume",
+      "description": "Sets in-game voice chat volume separately from everything else.",
+      "command": "audio.voices {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "float", "label": "Volume", "default": "1", "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "id": "audio-music",
+      "category": "client",
+      "group": "Audio",
+      "featured": false,
+      "title": "Music Volume",
+      "description": "Turns the game's own music down or off while leaving effects alone.",
+      "command": "audio.music {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "float", "label": "Volume", "default": "0", "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "id": "craft-on-scroll",
+      "category": "client",
+      "group": "Crafting",
+      "featured": false,
+      "title": "Craft On Scroll Wheel",
+      "description": "Queues the chosen item every time you scroll up. Popular for keeping bandages topped up mid-fight.",
+      "command": "craft.add {item} {amount}",
+      "bindable": true,
+      "defaultBind": "mousewheelup",
+      "params": [
+        { "name": "item",   "type": "item", "label": "Item",   "default": "-2072273936" },
+        { "name": "amount", "type": "int",  "label": "Amount", "default": "2", "min": 1, "max": 100 }
+      ]
+    },
+
+
+    {
+      "id": "admin-players",
+      "category": "admin",
+      "group": "Players",
+      "featured": true,
+      "title": "List Players",
+      "description": "Prints everyone currently on the server with their Steam IDs.",
+      "command": "global.players",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "admin-status",
+      "category": "admin",
+      "group": "Players",
+      "featured": true,
+      "title": "Server Status",
+      "description": "Prints the player list together with the server's current status.",
+      "command": "global.status",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "admin-kick",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": true,
+      "title": "Kick Player",
+      "description": "Removes a player from the server. They can rejoin straight away.",
+      "command": "global.kick \"{player}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "player", "type": "text", "label": "Name or Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-ban",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": true,
+      "title": "Ban Player By Name",
+      "description": "Bans a player by name and records the reason.",
+      "command": "global.ban \"{player}\" \"{reason}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "player", "type": "text", "label": "Name",   "default": "" },
+        { "name": "reason", "type": "text", "label": "Reason", "default": "Cheating" }
+      ]
+    },
+    {
+      "id": "admin-banid",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": true,
+      "title": "Ban Player By Steam64",
+      "description": "Bans by Steam64 ID, which survives a name change.",
+      "command": "global.banid \"{steamid}\" \"{reason}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "steamid", "type": "text", "label": "Steam64", "default": "" },
+        { "name": "reason",  "type": "text", "label": "Reason",  "default": "Cheating" }
+      ]
+    },
+    {
+      "id": "admin-unban",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": false,
+      "title": "Unban Player",
+      "description": "Lifts a ban for the given Steam64 ID.",
+      "command": "global.unban \"{steamid}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "steamid", "type": "text", "label": "Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-banlist",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": false,
+      "title": "Ban List",
+      "description": "Prints every active ban. The extended form adds reasons and details.",
+      "command": "global.banlistex",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "admin-mutevoice",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": false,
+      "title": "Mute Voice",
+      "description": "Stops a player from using in-game voice chat.",
+      "command": "admin.mutevoice \"{player}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "player", "type": "text", "label": "Name or Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-unmutevoice",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": false,
+      "title": "Unmute Voice",
+      "description": "Gives a player their voice chat back.",
+      "command": "admin.unmutevoice \"{player}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "player", "type": "text", "label": "Name or Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-mutechat",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": false,
+      "title": "Mute Chat",
+      "description": "Stops a player from sending text chat messages.",
+      "command": "admin.mutechat \"{player}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "player", "type": "text", "label": "Name or Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-unmutechat",
+      "category": "admin",
+      "group": "Moderation",
+      "featured": false,
+      "title": "Unmute Chat",
+      "description": "Gives a player their text chat back.",
+      "command": "admin.unmutechat \"{player}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "player", "type": "text", "label": "Name or Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-say",
+      "category": "admin",
+      "group": "Players",
+      "featured": false,
+      "title": "Server Announcement",
+      "description": "Sends a message to every player through in-game chat.",
+      "command": "global.say \"{text}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "text", "type": "text", "label": "Message", "default": "Server restarting shortly" }
+      ]
+    },
+    {
+      "id": "admin-moderatorid",
+      "category": "admin",
+      "group": "Permissions",
+      "featured": false,
+      "title": "Grant Moderator",
+      "description": "Makes a player a server moderator.",
+      "command": "global.moderatorid \"{steamid}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "steamid", "type": "text", "label": "Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-removemoderator",
+      "category": "admin",
+      "group": "Permissions",
+      "featured": false,
+      "title": "Remove Moderator",
+      "description": "Takes moderator rights away again.",
+      "command": "global.removemoderator \"{steamid}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "steamid", "type": "text", "label": "Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-ownerid",
+      "category": "admin",
+      "group": "Permissions",
+      "featured": false,
+      "title": "Grant Owner",
+      "description": "Makes a player a server owner. This is the highest level of access.",
+      "command": "global.ownerid \"{steamid}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "steamid", "type": "text", "label": "Steam64", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-teleport",
+      "category": "admin",
+      "group": "World",
+      "featured": true,
+      "title": "Find Own Position",
+      "description": "Prints your own world position, which you need before spawning anything at a fixed spot.",
+      "command": "entity.find_self",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "admin-find-radius",
+      "category": "admin",
+      "group": "World",
+      "featured": false,
+      "title": "Find Entities In Radius",
+      "description": "Lists every entity within the given radius of you.",
+      "command": "entity.find_radius {radius}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "radius", "type": "int", "label": "Radius", "default": "20", "min": 1, "max": 500 }
+      ]
+    },
+    {
+      "id": "admin-spawn",
+      "category": "admin",
+      "group": "World",
+      "featured": false,
+      "title": "Spawn Entity",
+      "description": "Spawns an entity where you are looking.",
+      "command": "entity.spawn {entity}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "entity", "type": "text", "label": "Entity", "default": "" }
+      ]
+    },
+    {
+      "id": "admin-debug-lookat",
+      "category": "admin",
+      "group": "World",
+      "featured": false,
+      "title": "Debug What I Look At",
+      "description": "Turns on debug output for whatever entity is under your crosshair.",
+      "command": "entity.debug_lookat",
+      "bindable": true,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "admin-addtime",
+      "category": "admin",
+      "group": "World",
+      "featured": true,
+      "title": "Skip Time",
+      "description": "Jumps the in-game clock forward by the given number of hours.",
+      "command": "env.addtime {hours}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "hours", "type": "int", "label": "Hours", "default": "1", "min": 0, "max": 24 }
+      ]
+    },
+    {
+      "id": "admin-rain",
+      "category": "admin",
+      "group": "World",
+      "featured": false,
+      "title": "Set Rain",
+      "description": "Controls rainfall. 0 is dry, 1 is permanent rain.",
+      "command": "weather.rain {value}",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "value", "type": "float", "label": "Rain", "default": "0", "min": 0, "max": 1 }
+      ]
+    },
+    {
+      "id": "server-save",
+      "category": "admin",
+      "group": "Server",
+      "featured": true,
+      "title": "Force Save",
+      "description": "Writes a save immediately instead of waiting for the next automatic one. Worth running before anything risky.",
+      "command": "server.save",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "server-writecfg",
+      "category": "admin",
+      "group": "Server",
+      "featured": false,
+      "title": "Write Config",
+      "description": "Persists configuration changes made this session so they survive a restart.",
+      "command": "server.writecfg",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "server-readcfg",
+      "category": "admin",
+      "group": "Server",
+      "featured": false,
+      "title": "Read Config",
+      "description": "Reloads the server configuration from disk.",
+      "command": "server.readcfg",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "server-restart",
+      "category": "admin",
+      "group": "Server",
+      "featured": false,
+      "title": "Restart Server",
+      "description": "Restarts the server after a warning countdown shown to every player.",
+      "command": "global.restart",
+      "bindable": false,
+      "defaultBind": null,
+      "params": []
+    },
+    {
+      "id": "server-kickall",
+      "category": "admin",
+      "group": "Server",
+      "featured": false,
+      "title": "Kick Everyone",
+      "description": "Removes every player from the server with a shared reason.",
+      "command": "global.kickall \"{reason}\"",
+      "bindable": false,
+      "defaultBind": null,
+      "params": [
+        { "name": "reason", "type": "text", "label": "Reason", "default": "Maintenance" }
+      ]
+    }
+  ]
+}

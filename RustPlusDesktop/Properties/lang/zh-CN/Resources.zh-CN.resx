@@ -5613,4 +5613,70 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="Saved" xml:space="preserve">
     <value>已保存</value>
   </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>控制台助手</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>实用的控制台命令，可直接复制到 F1 控制台。</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>客户端命令</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>管理员命令</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>最常用</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>这些命令仅在你是服务器所有者或管理员时有效，否则不会有任何反应。</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>搜索命令…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>没有匹配的命令。</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>复制命令</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>复制按键绑定</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>复制所有已设置的绑定</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>弹出为浮窗，可放在游戏旁边</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>按键</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>点击后按下要绑定的按键</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>选择按键</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>现在按下任意键。按 Escape 取消。</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>鼠标按键和滚轮无法通过按下捕获，请在此选择。</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>该按键在 Rust 中没有对应名称，请另选一个。</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>请先选择按键，然后才能复制绑定。</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>尚未绑定任何按键。请先为某个命令选择按键。</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>无法加载命令列表，详情见日志。</value>
+  </data>
 </root>
