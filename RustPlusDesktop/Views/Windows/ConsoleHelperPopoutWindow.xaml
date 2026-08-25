@@ -12,6 +12,17 @@
         ShowInTaskbar="False"
         WindowStartupLocation="Manual">
 
+    <!-- Without this, WindowStyle=None plus CanResize still lets Windows draw its glass frame,
+         and a pale strip of it stays visible along the top edge. Zero caption height keeps the
+         header clickable; the resize border stays so the window can still be sized. -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      CornerRadius="0"
+                      GlassFrameThickness="0"
+                      ResizeBorderThickness="6"
+                      UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
     <!-- Frameless, but not layered: AllowsTransparency stays off. A layered window is the worse
          host for popups and buys nothing here, since the panel fills its own rounded shell. -->
     <Grid>
