@@ -151,8 +151,15 @@ public partial class MainWindow
     /// </summary>
     private void UploadExtraMonumentsToCloud(List<ExtraMonument> extras)
     {
-        var serverKey = _playerWipeTracker.CurrentServerKey;
+        var serverKey = _playerWipeTracker.CurrentServerKey ?? GetServerKey();
         var wipeKey = _playerWipeTracker.CurrentWipeKey;
+
+        if (string.IsNullOrWhiteSpace(wipeKey) && _vm?.Selected != null && !string.IsNullOrWhiteSpace(serverKey))
+        {
+            var wipeTime = (_vm.Selected.WipeTime ?? _vm.Selected.RustMapsWipeTime)?.ToUniversalTime();
+            wipeKey = PlayerWipeTrackerService.BuildWipeKey(serverKey, wipeTime, _vm.Selected.RustMapsMapId);
+        }
+
         if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey) || extras.Count == 0)
             return;
 
