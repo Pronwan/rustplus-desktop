@@ -57,7 +57,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListViewItem">
                                     <Border x:Name="Bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="4">
-                                        <ContentPresenter VerticalAlignment="Center" />
+                                        <GridViewRowPresenter VerticalAlignment="Center" />
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
