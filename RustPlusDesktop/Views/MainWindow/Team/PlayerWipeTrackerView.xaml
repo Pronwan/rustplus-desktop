@@ -57,7 +57,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListViewItem">
                                     <Border x:Name="Bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="4">
-                                        <GridViewRowPresenter VerticalAlignment="Center" Columns="{TemplateBinding GridView.ColumnCollection}" />
+                                        <ContentPresenter VerticalAlignment="Center" />
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
@@ -523,11 +523,12 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,10,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.2*" MinWidth="280" />
-                            <ColumnDefinition Width="12" />
-                            <ColumnDefinition Width="*" MinWidth="260" />
+                            <ColumnDefinition Width="1.1*" MinWidth="320" />
+                            <ColumnDefinition Width="14" />
+                            <ColumnDefinition Width="1.2*" MinWidth="340" />
                         </Grid.ColumnDefinitions>
 
+                        <!-- Left Column: Cloud Archives List -->
                         <ui:Card Grid.Column="0" Padding="14"
                                  Background="{DynamicResource ControlFillColorDefaultBrush}"
                                  BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
@@ -535,32 +536,192 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" MinHeight="220" />
+                                    <RowDefinition Height="*" MinHeight="260" />
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Margin="2,0,0,10">
-                                    <ui:SymbolIcon Symbol="Cloud24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="Cloud archives" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
-                                </StackPanel>
-                                <ListView Grid.Row="1" x:Name="CloudArchiveSelector" Style="{StaticResource TrackerListView}" SelectionChanged="CloudArchive_Changed" MaxHeight="340" />
+
+                                <Grid Grid.Row="0" Margin="2,0,2,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Cloud24" FontSize="18" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="Cloud Archives" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" Appearance="Secondary" Padding="8,5" Click="RefreshCloud_Click" ToolTip="Refresh archives from cloud" />
+                                </Grid>
+
+                                <ListView Grid.Row="1" x:Name="CloudArchiveSelector"
+                                          SelectionChanged="CloudArchive_Changed"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          MaxHeight="420"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Margin" Value="0,0,0,6" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListViewItem">
+                                                        <Border x:Name="ItemBorder"
+                                                                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                                                BorderThickness="1"
+                                                                CornerRadius="6"
+                                                                Padding="12,10">
+                                                            <ContentPresenter />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter TargetName="ItemBorder" Property="Background" Value="#1F60CDFF" />
+                                                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="36" Height="36" CornerRadius="6"
+                                                        Background="#1860CDFF" BorderBrush="#3360CDFF" BorderThickness="1"
+                                                        Margin="0,0,10,0" VerticalAlignment="Center">
+                                                    <ui:SymbolIcon Symbol="Server24" FontSize="16" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding ServerName}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                        <TextBlock Text="{Binding WipeDateShortFormatted}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Text=" · " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                        <TextBlock Text="{Binding PlayerCountFormatted}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Text=" · " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                        <TextBlock Text="{Binding StoredSizeFormatted}" FontSize="11" Foreground="{DynamicResource Accent}" FontWeight="SemiBold" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </Grid>
                         </ui:Card>
 
+                        <!-- Right Column: Archive Inspector & Restore -->
                         <ui:Card Grid.Column="2" Padding="16"
                                  Background="{DynamicResource ControlFillColorDefaultBrush}"
                                  BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                                  BorderThickness="1">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                     <ui:SymbolIcon Symbol="CloudArrowDown24" FontSize="18" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="Restore importer" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="Restore Importer" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
                                 </StackPanel>
-                                <TextBlock Text="Downloads the selected archive day by day and merges it into the same local JSONL store used by live tracking. Repeating a restore is safe." TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,16" />
-                                <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,16">
-                                    <TextBlock x:Name="CloudArchiveDetailsText" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontSize="12" />
+                                <TextBlock Text="Select a cloud archive to review and restore historical wipe data directly into your local database." TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,16" />
+
+                                <!-- Selected Archive Details Panel -->
+                                <Border x:Name="CloudArchiveDetailsPanel"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="14"
+                                        Margin="0,0,0,16">
+                                    <StackPanel>
+                                        <!-- Server Header -->
+                                        <Grid Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="SERVER" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock x:Name="ArchiveServerNameText" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                            </StackPanel>
+                                            <Border Grid.Column="1" Background="#1A60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" CornerRadius="12" Padding="8,3" VerticalAlignment="Top">
+                                                <TextBlock Text="Cloud Backup" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Structured Metadata Rows -->
+                                        <Border Height="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,0,0,12" />
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Wipe Start -->
+                                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,8">
+                                                <ui:SymbolIcon Symbol="CalendarLtr24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="Wipe Started:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="ArchiveWipeDateText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,0,8" />
+
+                                            <!-- Activity Window -->
+                                            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,8">
+                                                <ui:SymbolIcon Symbol="Timer24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="Observed Range:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ArchiveObservedRangeText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,8" />
+
+                                            <!-- Players Backed Up -->
+                                            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,8">
+                                                <ui:SymbolIcon Symbol="People24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="Tracked Players:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="ArchivePlayersText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,0,8" />
+
+                                            <!-- Storage Size -->
+                                            <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,0">
+                                                <ui:SymbolIcon Symbol="Database24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="Cloud Storage:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="ArchiveStorageText" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </StackPanel>
                                 </Border>
-                                <ui:Button x:Name="RestoreCloudButton" Content="Restore selected archive" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" Appearance="Primary" Click="RestoreCloud_Click" Margin="0,0,0,8" HorizontalAlignment="Left" />
-                                <ui:Button Content="Refresh cloud archives" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" Appearance="Secondary" Click="RefreshCloud_Click" HorizontalAlignment="Left" />
-                                <TextBlock x:Name="CloudStatusText" Foreground="{DynamicResource Accent}" TextWrapping="Wrap" Margin="0,14,0,0" FontSize="12" />
+
+                                <!-- Empty State when nothing selected -->
+                                <Border x:Name="CloudArchiveEmptyPanel"
+                                        Visibility="Collapsed"
+                                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="20"
+                                        Margin="0,0,0,16">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="CloudSync24" FontSize="32" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8" />
+                                        <TextBlock Text="No archive selected" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                                        <TextBlock Text="Pick a cloud archive from the list on the left to view its wipe summary." FontSize="11.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap" TextAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Restore Action Button -->
+                                <ui:Button x:Name="RestoreCloudButton" Content="Restore Selected Archive" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" Appearance="Primary" Click="RestoreCloud_Click" Margin="0,0,0,10" HorizontalAlignment="Left" />
+
+                                <!-- Status / Feedback Text -->
+                                <Border Background="#1260CDFF" BorderBrush="#2560CDFF" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,4,0,0">
+                                    <TextBlock x:Name="CloudStatusText" Foreground="{DynamicResource Accent}" TextWrapping="Wrap" FontSize="12" />
+                                </Border>
                             </StackPanel>
                         </ui:Card>
                     </Grid>
