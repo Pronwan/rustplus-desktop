@@ -39,6 +39,76 @@ public sealed class ConsoleCommandParam : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Supplies item matches for a query. Set once by the panel, so the parameter can filter
+    /// without the view having to reach into every row.
+    /// </summary>
+    public static Func<string, IEnumerable<string>>? ItemSearchProvider;
+
+    /// <summary>Resolves an id back to a readable name for display. Set alongside the search provider.</summary>
+    public static Func<string, string>? ItemNameResolver;
+
+    private string _itemQuery = "";
+
+    /// <summary>
+    /// What the user has typed into the item box. Drives an inline result list rather than a
+    /// popup: WPF popups do not render reliably from a second window, and an inline list behaves
+    /// the same wherever the panel is hosted.
+    /// </summary>
+    [JsonIgnore]
+    public string ItemQuery
+    {
+        get => _itemQuery;
+        set
+        {
+            var v = value ?? "";
+            if (_itemQuery == v) return;
+            _itemQuery = v;
+            OnProp();
+            RefreshMatches();
+        }
+    }
+
+    [JsonIgnore] public ObservableCollection<string> ItemMatches { get; } = new();
+
+    private bool _isItemListOpen;
+    [JsonIgnore]
+    public bool IsItemListOpen
+    {
+        get => _isItemListOpen;
+        private set { if (_isItemListOpen == value) return; _isItemListOpen = value; OnProp(); }
+    }
+
+    /// <summary>The chosen item's name, so the row reads "Bandage" instead of -2072273936.</summary>
+    [JsonIgnore]
+    public string ItemDisplay => ItemNameResolver?.Invoke(Value) ?? Value;
+
+    private void RefreshMatches()
+    {
+        ItemMatches.Clear();
+
+        var q = _itemQuery.Trim();
+        if (q.Length < 2 || ItemSearchProvider == null)
+        {
+            IsItemListOpen = false;
+            return;
+        }
+
+        foreach (var m in ItemSearchProvider(q).Take(40)) ItemMatches.Add(m);
+        IsItemListOpen = ItemMatches.Count > 0;
+    }
+
+    /// <summary>Accepts a picked entry: stores the id, clears the search and closes the list.</summary>
+    public void ChooseItem(string label, int id)
+    {
+        Value = id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        _itemQuery = "";
+        OnProp(nameof(ItemQuery));
+        ItemMatches.Clear();
+        IsItemListOpen = false;
+        OnProp(nameof(ItemDisplay));
+    }
+
     [JsonIgnore] public bool IsItem => string.Equals(Type, "item", StringComparison.OrdinalIgnoreCase);
     [JsonIgnore] public bool IsBool => string.Equals(Type, "bool", StringComparison.OrdinalIgnoreCase);
     [JsonIgnore] public bool IsPlainText => !IsItem && !IsBool;

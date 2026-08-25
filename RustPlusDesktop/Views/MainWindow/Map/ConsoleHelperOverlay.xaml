@@ -81,17 +81,38 @@
                                     <TextBlock Text="{Binding Label}" Foreground="{StaticResource ConMuted}"
                                                FontSize="11" VerticalAlignment="Center" />
 
-                                    <!-- Item picker: searchable, resolves to the numeric id -->
-                                    <Grid Grid.Column="1" Visibility="{Binding IsItem, Converter={StaticResource BoolToVis}}">
-                                        <!-- OriginalItemsSource is assigned in ItemPicker_Loaded, not bound. A
-                                             RelativeSource binding through the visual tree resolved differently
-                                             depending on which window hosted the panel. -->
-                                        <ui:AutoSuggestBox x:Name="ItemPicker"
-                                                           PlaceholderText="{DynamicResource ConsoleHelperSearchItem}"
-                                                           SuggestionChosen="ItemPicker_SuggestionChosen"
-                                                           Loaded="ItemPicker_Loaded"
-                                                           Tag="{Binding}" />
-                                    </Grid>
+                                    <!-- Item picker. The result list is laid out inline rather than in a
+                                         popup: a WPF popup opens with a valid handle and the right size
+                                         from a second window, and still does not render. Inline behaves
+                                         identically wherever the panel is hosted. -->
+                                    <StackPanel Grid.Column="1" Visibility="{Binding IsItem, Converter={StaticResource BoolToVis}}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <ui:TextBox Text="{Binding ItemQuery, UpdateSourceTrigger=PropertyChanged}"
+                                                        PlaceholderText="{DynamicResource ConsoleHelperSearchItem}"
+                                                        VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" Text="{Binding ItemDisplay}"
+                                                       Foreground="{StaticResource ConAccent}" FontSize="11"
+                                                       VerticalAlignment="Center" Margin="8,0,0,0"
+                                                       MaxWidth="150" TextTrimming="CharacterEllipsis"
+                                                       ToolTip="{Binding ItemDisplay}" />
+                                        </Grid>
+
+                                        <Border Visibility="{Binding IsItemListOpen, Converter={StaticResource BoolToVis}}"
+                                                Background="{StaticResource ConCode}"
+                                                BorderBrush="{StaticResource ConLine}" BorderThickness="1"
+                                                CornerRadius="5" Margin="0,4,0,0" MaxHeight="180">
+                                            <ListBox ItemsSource="{Binding ItemMatches}"
+                                                     Background="Transparent" BorderThickness="0"
+                                                     Foreground="{StaticResource ConText}"
+                                                     SelectionChanged="ItemMatch_SelectionChanged"
+                                                     Tag="{Binding}"
+                                                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                        </Border>
+                                    </StackPanel>
 
                                     <CheckBox Grid.Column="1" Content="on"
                                               Visibility="{Binding IsBool, Converter={StaticResource BoolToVis}}"

@@ -41,6 +41,12 @@ public partial class ConsoleHelperOverlay : UserControl
             ConsoleCommandLibrary.SetLogger(mw.AppendLog);
 
         BuildItemList();
+
+        // Every item parameter filters through here, so the catalogue is built once per panel
+        // rather than once per row.
+        ConsoleCommandParam.ItemSearchProvider = SearchItems;
+        ConsoleCommandParam.ItemNameResolver = ResolveItemLabel;
+
         ApplyFilter(string.Empty);
 
         if (ConsoleCommandLibrary.All.Count == 0)
@@ -185,148 +191,39 @@ public partial class ConsoleHelperOverlay : UserControl
     }
 
     /// <summary>
-    /// A WPF Popup lives in its own top-level window, and that window is not topmost. Inside the
-    /// popout - which is Topmost so it can sit over the game - the suggestion list therefore
-    /// opens behind the panel and looks broken. Promoting the popup's own window fixes it, and
-    /// only ever runs when the host window is actually topmost.
+    /// Matches anywhere in the label, which carries both the name and the id, so "bandage" and
+    /// -2072273936 find the same entry.
     /// </summary>
-    private bool _loggedPickerState;
-
-    private void ItemPicker_Loaded(object sender, RoutedEventArgs e)
+    private IEnumerable<string> SearchItems(string query)
     {
-        if (sender is not WpfUi.AutoSuggestBox box) return;
+        query = (query ?? "").Trim();
+        if (query.Length == 0) yield break;
 
-        // Assigned directly rather than bound. The RelativeSource binding this replaces resolved
-        // differently depending on which window hosted the panel, which is exactly the difference
-        // between the tab and the popout.
-        box.OriginalItemsSource = ItemNames;
-
-        if (!_loggedPickerState)
+        foreach (var label in ItemNames)
         {
-            _loggedPickerState = true;
-            Log($"[console-helper] item picker ready, {ItemNames.Count} items, " +
-                $"host={Window.GetWindow(this)?.GetType().Name ?? "none"}");
+            if (label.Contains(query, StringComparison.OrdinalIgnoreCase))
+                yield return label;
         }
-
-        HookSuggestionList(box);
     }
 
-    /// <summary>
-    /// Watches IsSuggestionListOpen instead of hunting for the popup at load time. The template
-    /// is not reliably applied when Loaded fires, so the earlier lookup could return nothing and
-    /// silently do no work. By the time the list reports itself open, the popup certainly exists.
-    /// </summary>
-    private void HookSuggestionList(WpfUi.AutoSuggestBox box)
+    private string ResolveItemLabel(string idText)
     {
-        var descriptor = System.ComponentModel.DependencyPropertyDescriptor.FromName(
-            "IsSuggestionListOpen", typeof(WpfUi.AutoSuggestBox), typeof(WpfUi.AutoSuggestBox));
-
-        if (descriptor == null)
-        {
-            Log("[console-helper] IsSuggestionListOpen not found - suggestion list left to WPF.");
-            return;
-        }
-
-        descriptor.RemoveValueChanged(box, OnSuggestionListToggled);
-        descriptor.AddValueChanged(box, OnSuggestionListToggled);
+        if (int.TryParse(idText, out var id) && MainWindow.sItemsById.TryGetValue(id, out var info)
+            && !string.IsNullOrWhiteSpace(info.Display))
+            return info.Display;
+        return idText;
     }
 
-    private void OnSuggestionListToggled(object? sender, EventArgs e)
+    private void ItemMatch_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is not WpfUi.AutoSuggestBox box) return;
+        if (sender is not ListBox list) return;
+        if (list.Tag is not ConsoleCommandParam param) return;
+        if (list.SelectedItem is not string label) return;
 
-        var popup = FindDescendant<System.Windows.Controls.Primitives.Popup>(box);
-        if (popup == null)
-        {
-            if (!_loggedPopupState)
-            {
-                _loggedPopupState = true;
-                Log("[console-helper] suggestion popup not found in the control template.");
-            }
-            return;
-        }
+        if (_itemIdByLabel.TryGetValue(label, out var id))
+            param.ChooseItem(label, id);
 
-        if (!_loggedPopupState)
-        {
-            _loggedPopupState = true;
-            Log($"[console-helper] suggestion popup found, host={Window.GetWindow(this)?.GetType().Name ?? "none"}");
-        }
-
-        // Reading Popup.IsOpen here is useless: this fires on IsSuggestionListOpen, and the
-        // binding onto the popup has not propagated yet, so it still reads false. Opened is the
-        // signal that actually means the popup window exists.
-        popup.Opened -= Popup_Opened;
-        popup.Opened += Popup_Opened;
-    }
-
-    private bool _loggedPopupState;
-    private bool _loggedPopupOpened;
-
-    private static void Log(string line)
-    {
-        if (Application.Current?.MainWindow is MainWindow mw) mw.AppendLog(line);
-    }
-
-    private void Popup_Opened(object? sender, EventArgs e)
-    {
-        if (sender is not System.Windows.Controls.Primitives.Popup popup) return;
-        if (popup.Child == null) return;
-
-        // The popup's HWND only exists once it has been rendered, so this has to wait a beat.
-        Dispatcher.BeginInvoke(new Action(() =>
-        {
-            try
-            {
-                var src = PresentationSource.FromVisual(popup.Child) as System.Windows.Interop.HwndSource;
-                if (src != null) NativeTopmost.Promote(src.Handle);
-
-                if (!_loggedPopupOpened)
-                {
-                    _loggedPopupOpened = true;
-                    Log($"[console-helper] suggestion popup opened, hwnd={(src?.Handle ?? IntPtr.Zero)}, " +
-                        $"size={popup.Child.RenderSize.Width:F0}x{popup.Child.RenderSize.Height:F0}, " +
-                        $"raised={(src != null)}");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!_loggedPopupOpened)
-                {
-                    _loggedPopupOpened = true;
-                    Log($"[console-helper] could not raise the suggestion popup: {ex.Message}");
-                }
-            }
-        }), System.Windows.Threading.DispatcherPriority.Loaded);
-    }
-
-    private static T? FindDescendant<T>(DependencyObject root) where T : DependencyObject
-    {
-        for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(root); i++)
-        {
-            var child = System.Windows.Media.VisualTreeHelper.GetChild(root, i);
-            if (child is T hit) return hit;
-            if (FindDescendant<T>(child) is T nested) return nested;
-        }
-        return null;
-    }
-
-    private void ItemPicker_SuggestionChosen(object sender, RoutedEventArgs e)
-    {
-        if (sender is not WpfUi.AutoSuggestBox box) return;
-        if (box.Tag is not ConsoleCommandParam param) return;
-
-        var chosen = box.Text;
-        if (string.IsNullOrWhiteSpace(chosen)) return;
-
-        if (_itemIdByLabel.TryGetValue(chosen, out var id))
-        {
-            param.Value = id.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            return;
-        }
-
-        // Someone typed a raw id instead of picking from the list - accept it, it is valid input.
-        if (int.TryParse(chosen.Trim(), out var typed))
-            param.Value = typed.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        list.SelectedItem = null;
     }
 
     private void BtnPopout_Click(object sender, RoutedEventArgs e) => PopoutRequested?.Invoke(this, e);
