@@ -28,7 +28,20 @@ public class ServerProfile : INotifyPropertyChanged
     public string Host { get; set; } = "";
     public int Port { get; set; } = 28082;
     public string SteamId64 { get; set; } = "";
-    public string PlayerToken { get; set; } = "";
+    private string _playerToken = "";
+    public string PlayerToken
+    {
+        get => _playerToken;
+        set
+        {
+            if (_playerToken != value)
+            {
+                _playerToken = value ?? "";
+                IsAccessDenied = false;
+                OnProp();
+            }
+        }
+    }
     public string? BattleMetricsId { get; set; } = null;
 
     // Stable identity used to remember the last selected server across restarts.
@@ -56,6 +69,20 @@ public class ServerProfile : INotifyPropertyChanged
         set { _customMapUrl = value; OnProp(); }
     }
 
+    private bool _isAccessDenied;
+    public bool IsAccessDenied
+    {
+        get => _isAccessDenied;
+        set
+        {
+            if (_isAccessDenied != value)
+            {
+                _isAccessDenied = value;
+                OnProp();
+            }
+        }
+    }
+
     private bool _isConnected;
     public bool IsConnected
     {
@@ -65,6 +92,7 @@ public class ServerProfile : INotifyPropertyChanged
             if (_isConnected != value)
             {
                 _isConnected = value; 
+                if (value) IsAccessDenied = false;
                 OnProp();
                 OnProp(nameof(IsFullConnected));
                 if (!value) IsFullConnected = false; 
@@ -81,6 +109,7 @@ public class ServerProfile : INotifyPropertyChanged
             if (_isFullConnected != value) 
             { 
                 _isFullConnected = value; 
+                if (value) IsAccessDenied = false;
                 OnProp(); 
                 OnProp(nameof(IsConnected));
             } 

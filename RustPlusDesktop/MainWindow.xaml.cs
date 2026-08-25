@@ -3949,19 +3949,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     Port = e.Port,
                     SteamId64 = keySteam,
                     PlayerToken = e.PlayerToken,
+                    IsAccessDenied = false,
                     UseFacepunchProxy = false,
                     Devices = new ObservableCollection<SmartDevice>()
                 };
                 _vm.AddServer(prof);
-                AppendLog($"Pairing received Ã¢â€ â€™ {prof.Name} ({prof.Host}:{prof.Port})");
+                AppendLog($"[pairing] Pairing received -> {prof.Name} ({prof.Host}:{prof.Port})");
             }
             else
             {
                 prof.Name = serverName;
                 prof.PlayerToken = e.PlayerToken;
                 prof.SteamId64 = keySteam;
+                prof.IsAccessDenied = false;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
-                AppendLog($"Pairing updated Ã¢â€ â€™ {prof.Name}");
+                AppendLog($"[pairing] Pairing updated -> {prof.Name}");
             }
 
             if (string.IsNullOrWhiteSpace(prof.Description) && !string.IsNullOrWhiteSpace(e.ServerDescription))
