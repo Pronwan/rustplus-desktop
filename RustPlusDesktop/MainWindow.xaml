@@ -762,11 +762,54 @@
                                 tutorials:Tutorial.TargetId="Servers.List"
                                 MinHeight="60"
                                 MaxHeight="100"
-                                DisplayMemberPath="Name"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 Foreground="White"
                                 ItemsSource="{Binding Servers}"
                                 SelectedItem="{Binding Selected, Mode=TwoWay}"
                                 SelectionChanged="ListServers_SelectionChanged">
+
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Text="{Binding Name}"
+                                                TextTrimming="CharacterEllipsis"
+                                                VerticalAlignment="Center"
+                                                Foreground="White" />
+                                            <Border
+                                                Grid.Column="1"
+                                                Margin="4,0,0,0"
+                                                Padding="4,1"
+                                                Background="#33EF5350"
+                                                BorderBrush="#EF5350"
+                                                BorderThickness="1"
+                                                CornerRadius="4"
+                                                VerticalAlignment="Center"
+                                                ToolTip="{DynamicResource StatusAccessDeniedHint}">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsAccessDenied}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock
+                                                    Text="{DynamicResource BadgeNeedsRePairing}"
+                                                    FontSize="9"
+                                                    FontWeight="Bold"
+                                                    Foreground="#FF8A80" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
 
                                 <ListBox.Resources>
                                     <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
@@ -858,6 +901,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -875,6 +919,9 @@
                                             <Style TargetType="Ellipse">
                                                 <Setter Property="Fill" Value="#EF5350" />
                                                 <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
+                                                        <Setter Property="Fill" Value="#FF7043" />
+                                                    </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                         <Setter Property="Fill" Value="#FFCA28" />
                                                     </DataTrigger>
@@ -917,23 +964,34 @@
                                         Visibility="{Binding IsChecked, ElementName=BtnAbbreviateNames, Converter={StaticResource BoolToVisibility}}" />
                                 </Grid>
 
-                                <DockPanel
+                                <Grid
                                     Grid.Row="1"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="2"
-                                    Margin="0,6,0,0"
-                                    LastChildFill="False">
+                                    Margin="0,6,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
                                     <TextBlock
-                                        DockPanel.Dock="Left"
+                                        Grid.Column="0"
                                         VerticalAlignment="Center"
                                         FontSize="9"
                                         FontWeight="Bold"
-                                        Opacity="0.7">
+                                        Opacity="0.8"
+                                        Margin="0,0,6,0"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap"
+                                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value="{DynamicResource StatusDisconnected}" />
                                                 <Setter Property="Foreground" Value="#EF5350" />
                                                 <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
+                                                        <Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" />
+                                                        <Setter Property="Foreground" Value="#FF7043" />
+                                                    </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                         <Setter Property="Text" Value="{DynamicResource StatusConnecting}" />
                                                         <Setter Property="Foreground" Value="#FFCA28" />
@@ -956,8 +1014,8 @@
                                     </TextBlock>
 
                                     <StackPanel
+                                    Grid.Column="1"
                                     tutorials:Tutorial.TargetId="Servers.ConnectionActions"
-                                    DockPanel.Dock="Right"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
@@ -1022,7 +1080,50 @@
 
 
                                     </StackPanel>
-                                </DockPanel>
+                                </Grid>
+
+                                <!--  Access Denied / Re-Pair Hint Banner  -->
+                                <Border
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,8,0,0"
+                                    Padding="8,6"
+                                    Background="#26EF5350"
+                                    BorderBrush="#80EF5350"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="⚠️"
+                                            FontSize="11"
+                                            VerticalAlignment="Top"
+                                            Margin="0,0,6,0" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="10"
+                                            FontWeight="SemiBold"
+                                            Foreground="#FF8A80"
+                                            Text="{DynamicResource StatusAccessDeniedHint}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
 

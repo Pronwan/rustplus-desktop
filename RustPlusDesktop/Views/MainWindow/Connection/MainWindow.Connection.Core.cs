@@ -195,6 +195,7 @@ public partial class MainWindow
             await _rust.ConnectAsync(profile);
             profile.IsConnected = true;
             profile.IsFullConnected = false;
+            profile.IsAccessDenied = false;
 
             if (_rust is RustPlusClientReal real)
             {
@@ -252,6 +253,11 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
+            if (RustPlusClientReal.IsAccessDeniedError(ex))
+            {
+                profile.IsAccessDenied = true;
+                _vm.Save();
+            }
             AppendLog($"Soft-connect failed: {ex.Message}");
         }
         finally
@@ -304,7 +310,7 @@ public partial class MainWindow
                     if (serverStatusFailCount >= 5)
                     {
                         serverStatusFailCount = 0;
-                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true))
+                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true) && _vm?.Selected?.IsAccessDenied != true)
                         {
                             AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
                             
@@ -570,6 +576,7 @@ public partial class MainWindow
 
             connectedProfile.IsConnected = true;
             connectedProfile.IsFullConnected = true;
+            connectedProfile.IsAccessDenied = false;
 
             _vm.NotifyDevicesChanged();
             _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
@@ -649,11 +656,14 @@ public partial class MainWindow
         catch (Exception ex)
         {
             var selectedOnError = _vm.Selected;
+            bool isAccessDenied = ex is RustPlusAccessDeniedException || RustPlusClientReal.IsAccessDeniedError(ex);
             if (selectedOnError != null)
             {
                 selectedOnError.IsConnected = false;
                 selectedOnError.IsFullConnected = false;
+                selectedOnError.IsAccessDenied = isAccessDenied;
                 _vm.NotifyDevicesChanged();
+                _vm.Save();
             }
             if (showBusy)
             {
@@ -662,10 +672,17 @@ public partial class MainWindow
                 _vm.IsConnectionLoading = false;
                 _vm.BusyText = "";
             }
-            AppendLog("Fehler: " + ex.Message);
+            AppendLog("Error: " + ex.Message);
             if (!silent)
             {
-                if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
+                if (isAccessDenied)
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.ConnectionFailedAccessDenied,
+                        Properties.Resources.ConnectionFailedAccessDeniedComment,
+                        WpfUi.ControlAppearance.Danger);
+                }
+                else if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
                 {
                     ShowInfoSnackbar(
                         Properties.Resources.ConnectionFailedRustPlusUnreachable,
@@ -691,17 +708,23 @@ public partial class MainWindow
         if (_vm.Selected is null) { AppendLog("No server selected."); return false; }
         if (_vm.Selected.IsConnected) return true;
 
-        AppendLog($"Verbinde zu ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
+        AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
         try
         {
             await _rust.ConnectAsync(_vm.Selected, cts.Token);
             _vm.Selected.IsConnected = true;
+            _vm.Selected.IsAccessDenied = false;
             AppendLog("Connected.");
             return true;
         }
         catch (Exception ex)
         {
+            if (RustPlusClientReal.IsAccessDeniedError(ex))
+            {
+                _vm.Selected.IsAccessDenied = true;
+                _vm.Save();
+            }
             AppendLog("Connect failed: " + ex.Message);
             return false;
         }

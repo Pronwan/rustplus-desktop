@@ -5880,9 +5880,11 @@ rp.connect();
         lock (_subscribed) _subscribed.Clear();
         _eventsHooked = false;
 
-        async Task<(bool ok, string? err)> TryAsync(bool useProxy)
+        async Task<(bool ok, string? err, bool isDenied)> TryAsync(bool useProxy)
         {
             _api = new RustPlus(new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken, useProxy));
+
+            bool connectDenied = false;
 
             // optionales ConnectAsync aufrufen, falls vorhanden
             try
@@ -5897,9 +5899,17 @@ rp.connect();
                     if (res is Task t) await t;
                 }
             }
-            catch (Exception ex) { _log("ConnectAsync-Call schlug fehl: " + ex.Message); }
+            catch (Exception ex)
+            {
+                _log("ConnectAsync call failed: " + ex.Message);
+                if (IsAccessDeniedError(ex))
+                {
+                    connectDenied = true;
+                    return (false, "418 (Access Denied / Invalid Player Token)", true);
+                }
+            }
 
-            // “Kontakt” prüfen
+            // Verify connection
             try
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -5907,40 +5917,82 @@ rp.connect();
 
                 var infoTask = _api.GetInfoAsync();
                 var done = await Task.WhenAny(infoTask, Task.Delay(7000, cts.Token));
-                if (done != infoTask) return (false, "Timeout");
+                if (done != infoTask) return (false, "Timeout", connectDenied);
 
                 var info = infoTask.Result;
                 if (info?.IsSuccess == true)
                 {
-                    _log($"Authentifiziert – {(useProxy ? "über Facepunch-Proxy" : "direkt")}.");
-                    return (true, null);
+                    _log($"Authenticated – {(useProxy ? "via Facepunch proxy" : "direct")}.");
+                    return (true, null, false);
                 }
-                return (false, info?.Error?.Message ?? "keine Antwort / Fehler");
+                var errStr = info?.Error?.Message ?? "No response / error";
+                bool isDenied = connectDenied || IsAccessDeniedError(errStr);
+                return (false, errStr, isDenied);
             }
-            catch (Exception ex) { return (false, ex.Message); }
+            catch (Exception ex)
+            {
+                bool isDenied = connectDenied || IsAccessDeniedError(ex);
+                return (false, ex.Message, isDenied);
+            }
         }
 
         var first = profile.UseFacepunchProxy;
 
-        var (ok1, err1) = await TryAsync(first);
+        var (ok1, err1, isDenied1) = await TryAsync(first);
         if (ok1)
         {
             _useProxyCurrent = first;
-            HookEventsIfNeeded();     // <— HIER
+            HookEventsIfNeeded();
             return;
         }
 
-        var (ok2, err2) = await TryAsync(!first);
+        var (ok2, err2, isDenied2) = await TryAsync(!first);
         if (ok2)
         {
             _useProxyCurrent = !first;
-            HookEventsIfNeeded();     // <— UND HIER
+            HookEventsIfNeeded();
             return;
         }
 
-        _log($"GetInfo (Pfad1: {(first ? "Proxy" : "Direkt")}): {err1}");
-        _log($"GetInfo (Pfad2: {(!first ? "Proxy" : "Direkt")}): {err2}");
-        throw new InvalidOperationException("Rust+ nicht erreichbar (direkt & Proxy).");
+        _log($"GetInfo (Path 1: {(first ? "Proxy" : "Direct")}): {err1}");
+        _log($"GetInfo (Path 2: {(!first ? "Proxy" : "Direct")}): {err2}");
+
+        if (isDenied1 || isDenied2)
+        {
+            _log("[connect] Rust+ Access Denied (418): Player token rejected. Server needs re-pairing from in-game.");
+            throw new RustPlusAccessDeniedException("Rust+ Access Denied (418): Player token rejected. Server needs re-pairing from in-game.");
+        }
+
+        throw new InvalidOperationException("Rust+ is unreachable (direct & proxy).");
+    }
+
+    public static bool IsAccessDeniedError(Exception? ex)
+    {
+        if (ex == null) return false;
+        if (ex is RustPlusAccessDeniedException) return true;
+        if (ex is System.Reflection.TargetInvocationException tie && tie.InnerException != null)
+        {
+            if (IsAccessDeniedError(tie.InnerException)) return true;
+        }
+        if (ex is AggregateException agg)
+        {
+            foreach (var inner in agg.InnerExceptions)
+            {
+                if (IsAccessDeniedError(inner)) return true;
+            }
+        }
+        return IsAccessDeniedError(ex.Message) || IsAccessDeniedError(ex.ToString());
+    }
+
+    public static bool IsAccessDeniedError(string? message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return false;
+        if (message.Contains("418")) return true;
+        if (message.Contains("Access Denied", StringComparison.OrdinalIgnoreCase)) return true;
+        if (message.Contains("Zugriff verweigert", StringComparison.OrdinalIgnoreCase)) return true;
+        if (message.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase)) return true;
+        if (message.Contains("Invalid Player Token", StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
     }
 
     public async Task DisconnectAsync()
