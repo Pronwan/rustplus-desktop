@@ -162,6 +162,7 @@ namespace RustPlusDesk.Views
             {
                 Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server", SectionGeneral),
                 Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
+                Section("server-events", "alerts", T("ServerEventsSection", "Server Events"), "server events audio detection listen oil rig cargo deep sea trust own detections confirm", SectionServerEvents),
                 Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
                 Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
