@@ -41,6 +41,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public PlayerWipeTrackerCapabilities Capabilities => _capabilities.Current;
 
     public PlayerWipeTrackerCapabilities UpdateCapabilities(JsonElement bootstrap) => _capabilities.Update(bootstrap);
+    public void ResetCapabilities() => _capabilities.Reset();
     public IReadOnlyList<StoredWipeSummary> GetStoredWipes() => _store.GetStoredWipes();
 
     public void StartConnection(string serverKey, DateTime? wipeTimeUtc, string? mapIdentity, ulong ownSteamId, string? sessionId = null, string? serverName = null)
