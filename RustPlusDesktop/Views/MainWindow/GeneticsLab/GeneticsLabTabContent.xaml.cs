@@ -142,7 +142,13 @@ namespace RustPlusDesk.Views
                 Directory.CreateDirectory(webViewDataFolder);
 
                 var envOptions = new CoreWebView2EnvironmentOptions(
-                    additionalBrowserArguments: "--disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding --disable-background-media-suspend");
+                    additionalBrowserArguments: "--disable-background-timer-throttling " +
+                                                "--disable-backgrounding-occluded-windows " +
+                                                "--disable-renderer-backgrounding " +
+                                                "--disable-background-media-suspend " +
+                                                "--disable-features=CalculateNativeWinOcclusion " +
+                                                "--force-high-performance-gpu " +
+                                                "--disable-gpu-vsync");
 
                 _sharedEnvironment ??= await CoreWebView2Environment.CreateAsync(
                     userDataFolder: webViewDataFolder,
