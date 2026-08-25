@@ -23,16 +23,16 @@ namespace RustPlusDesk.Services
             public bool ShowCrate { get; set; } = true;
         }
 
-        // Status eines Chinooks (um Spawn-Zeit und Ort zu tracken)
+        // State of a Chinook (to track spawn time and location)
         private class ChinookState
         {
             public DateTime FirstSeen { get; set; } // Wann tauchte er auf?
             public double FirstX { get; set; }      // Wo tauchte er auf?
             public double FirstY { get; set; }
 
-            public double LastX { get; set; }       // Letzte Position (für Vektor)
+            public double LastX { get; set; }       // Last position (for vector)
             public double LastY { get; set; }
-            public DateTime LastSeen { get; set; }  // Wann zuletzt gesehen?
+            public DateTime LastSeen { get; set; }  // When last seen?
             public int MissingCount { get; set; }
             public int TickCount { get; set; }
             public bool TrajectoryTriggered { get; set; }
@@ -49,15 +49,15 @@ namespace RustPlusDesk.Services
         // Wir tracken jetzt kompletten State pro Chinook-ID
         private Dictionary<uint, ChinookState> _chinookStates = new();
 
-        // Wann wurde welches Rig zuletzt getriggert (Session-Memory für !oilrig)
+        // When each rig was last triggered (session memory for !oilrig)
         private readonly Dictionary<string, DateTime> _lastTriggeredTimes = new();
 
         // --- KONFIGURATION ---
 
-        // 1. Maximale Distanz zum Rig für Trigger (Hover-Radius)
+        // 1. Maximum distance to the rig for a trigger (hover radius)
         private const double TriggerRadius = 300.0;
 
-        // 2. Maximale Geschwindigkeit für "Hover" (Einheiten pro Sekunde)
+        // 2. Maximum speed for "hover" (units per second)
         private const double MaxHoverSpeed = 4.0;
 
         // Timer: 14 Min 15 Sek (855s) - Standard for early hover trigger
@@ -116,7 +116,7 @@ namespace RustPlusDesk.Services
 
                     state.MissingCount = 0;
 
-                    // Trigger für jedes vorhandene Rig einzeln prüfen
+                    // Check the trigger for each existing rig individually
                     if (HasSmallOil && !_activeEvents.ContainsKey("Small Oil Rig"))
                     {
                         CheckAndTriggerHover(ch47, state, _smallOilPos, "Small Oil Rig", now);
@@ -141,7 +141,7 @@ namespace RustPlusDesk.Services
                 }
             }
 
-            // --- Events Updaten & Aufräumen (Timer Logic) ---
+            // --- Update & clean up events (timer logic) ---
             var toRemove = new List<string>();
 
             foreach (var kv in _activeEvents)
@@ -189,7 +189,7 @@ namespace RustPlusDesk.Services
                 // reason to go quiet.
                 if (!evt.ShowCrate) continue;
 
-                // Position für Marker
+                // Position for the marker
                 double x = 0, y = 0;
                 if (rigName == "Small Oil Rig" && _smallOilPos.HasValue) { x = _smallOilPos.Value.X; y = _smallOilPos.Value.Y; }
                 else if (rigName == "Large Oil Rig" && _largeOilPos.HasValue) { x = _largeOilPos.Value.X; y = _largeOilPos.Value.Y; }
@@ -220,23 +220,23 @@ namespace RustPlusDesk.Services
         {
             if (rigPos == null) return;
 
-            // 1. Distanz zum Rig
+            // 1. Distance to the rig
             double dx = rigPos.Value.X - chinook.X;
             double dy = rigPos.Value.Y - chinook.Y;
             double dist = Math.Sqrt(dx * dx + dy * dy);
 
-            // 2. Geschwindigkeit (Weg seit letztem Tick)
+            // 2. Speed (distance since last tick)
             double moveX = chinook.X - state.LastX;
             double moveY = chinook.Y - state.LastY;
             double moveDist = Math.Sqrt(moveX * moveX + moveY * moveY);
             
-            // Reale Geschwindigkeit berechnen (Units pro Sekunde), um Lags auszugleichen
+            // Compute real speed (units per second) to compensate for lag
             double elapsedSeconds = (now - state.LastSeen).TotalSeconds;
-            if (elapsedSeconds <= 0) elapsedSeconds = 1.0; // Fallback für selben Tick
+            if (elapsedSeconds <= 0) elapsedSeconds = 1.0; // Fallback for the same tick
 
             double speed = moveDist / elapsedSeconds;
 
-            // LOGIK: Wenn er nah ist (<200m) UND langsam (<2.0)
+            // LOGIC: When it is near (<200m) AND slow (<2.0)
             if (dist < TriggerRadius && speed < MaxHoverSpeed)
             {
                 TriggerEvent(rigName, HackDurationSeconds);
@@ -256,18 +256,18 @@ namespace RustPlusDesk.Services
         {
             if (rigPos == null || state.TrajectoryTriggered) return;
 
-            // 1. Distanz vom Rig beim Spawn
+            // 1. Distance from the rig at spawn
             double dxS = state.FirstX - rigPos.Value.X;
             double dyS = state.FirstY - rigPos.Value.Y;
             double spawnDist = Math.Sqrt(dxS * dxS + dyS * dyS);
 
-            // 2. Aktuelle Distanz zum Rig
+            // 2. Current distance to the rig
             double dxC = chinook.X - rigPos.Value.X;
             double dyC = chinook.Y - rigPos.Value.Y;
             double currentDist = Math.Sqrt(dxC * dxC + dyC * dyC);
 
-            // LOGIK: Chinook taucht in der Nähe des Rigs auf (erweiterter Radius bis ~8 Grids)
-            // und fliegt dann weg. Radius: zwischen 50m und 1200m beim Spawn.
+            // LOGIC: Chinook appears near the rig (extended radius up to ~8 grids)
+            // and then flies away. Radius: between 50m and 1200m at spawn.
             if (spawnDist > 50 && spawnDist < 1200)
             {
                 state.TickCount++;
@@ -278,21 +278,21 @@ namespace RustPlusDesk.Services
                     OnDebug?.Invoke(this, $"[MON] Evaluating Trajectory for {rigName}: SpawnDist={spawnDist:F0} Tick={state.TickCount} CurrentDist={currentDist:F0}");
                 }
 
-                // Wir warten ~3 Ticks (ca. 6-10 Sek), um die Flugrichtung zu bestätigen
+                // We wait ~3 ticks (approx. 6-10 sec) to confirm the flight direction
                 if (state.TickCount >= 3)
                 {
                     double moveX = chinook.X - state.FirstX;
                     double moveY = chinook.Y - state.FirstY;
                     double totalMoved = Math.Sqrt(moveX * moveX + moveY * moveY);
 
-                    // Er muss sich etwas vom Spawn wegbewegt haben 
-                    // UND die Distanz zum Rig muss zugenommen haben.
+                    // It must have moved somewhat away from the spawn
+                    // AND the distance to the rig must have increased.
                     if (totalMoved > 100 && currentDist > spawnDist + 50)
                     {
-                        // Winkelprüfung: Bewegt er sich weg vom Rig?
+                        // Angle check: is it moving away from the rig?
                         double angle = GetAngle(dxS, dyS, moveX, moveY);
                         
-                        if (Math.Abs(angle) < 35) // Innerhalb von 35 Grad Abweichung
+                        if (Math.Abs(angle) < 35) // Within 35 degrees deviation
                         {
                             state.TrajectoryTriggered = true;
                             TriggerEvent(rigName, 750); // 12 Minuten 30 Sekunden

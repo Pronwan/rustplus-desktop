@@ -51,7 +51,7 @@ namespace RustPlusDesk.Models
         public int Amount { get; init; }
         public int? MaxStack { get; init; }
 
-        // Diese zwei Properties füttern das UI; Auflösung übernimmt MainWindow (siehe Punkt 2)
+        // These two properties feed the UI; MainWindow handles resolution (see point 2)
         public string Display => MainWindow.ResolveItemName(ItemId, ShortName);
         [JsonIgnore]
         public System.Windows.Media.ImageSource? Icon => MainWindow.ResolveItemIcon(ItemId, ShortName, 32);
