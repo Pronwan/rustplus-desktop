@@ -110,6 +110,23 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         => File.Exists(Path.Combine(WipeDirectory(serverKey, wipeKey), "map.png"))
             && File.Exists(Path.Combine(WipeDirectory(serverKey, wipeKey), "map.json"));
 
+    public bool IsWipeMapUploaded(string serverKey, string wipeKey)
+        => File.Exists(Path.Combine(WipeDirectory(serverKey, wipeKey), ".map_uploaded"));
+
+    public void MarkWipeMapUploaded(string serverKey, string wipeKey)
+    {
+        try
+        {
+            var directory = WipeDirectory(serverKey, wipeKey);
+            Directory.CreateDirectory(directory);
+            File.WriteAllText(Path.Combine(directory, ".map_uploaded"), DateTime.UtcNow.ToString("o"));
+        }
+        catch
+        {
+            // Ignore marker write error
+        }
+    }
+
     public void SaveWipeMap(string serverKey, string wipeKey, TrackerWipeMap map)
     {
         var directory = WipeDirectory(serverKey, wipeKey);
