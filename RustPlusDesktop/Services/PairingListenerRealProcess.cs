@@ -15,19 +15,19 @@ namespace RustPlusDesk.Services
 {
 
     /// <summary>
-    /// Startet das rustplus.js-CLI (fcm-register/fcm-listen) als Hintergrundprozess
-    /// und leitet eingehende Pairing-Payloads an die App weiter.
+    /// Starts the rustplus.js CLI (fcm-register/fcm-listen) as a background process
+    /// and forwards incoming pairing payloads to the app.
     /// </summary>
     public class PairingListenerRealProcess : IPairingListener
     {
         public event EventHandler<PairingPayload>? Paired;
         private static readonly Regex Ansi = new(@"\x1B\[[0-9;]*[A-Za-z]", RegexOptions.Compiled);
         private static readonly Regex RustUrl = new(@"rustplus://[^\s'\"">]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        // in PairingListenerRealProcess (Feldebene)
+        // in PairingListenerRealProcess (field level)
         private string? _lastPairKey;
         private DateTime _lastPairAt;
 
-        // key/value-Zeilen (z.B. { key: 'gcm.notification.body', value: 'Your base is under attack!' })
+        // key/value lines (e.g. { key: 'gcm.notification.body', value: 'Your base is under attack!' })
         private static readonly Regex KvLine = new(@"\{\s*key:\s*'(?<k>[^']+)'\s*,\s*value:\s*(?:'|""|`)(?<v>.*?)(?:'|""|`)\s*\}", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex DeathTitleRegex = new(@"^(?:You were killed by|Du wurdest getötet von)\s+(?<attacker>.+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex TopLevelId = new(@"^\s*(?<type>id|persistentId):\s*[""'](?<id>[^""']+)[""']", RegexOptions.Compiled);
@@ -39,19 +39,19 @@ namespace RustPlusDesk.Services
         private string? _pendingDeathServer;
         private DateTime? _pendingDeathTs;
 
-        // body-JSON in der gleichen Zeile (klassisch)
+        // body JSON on the same line (classic)
         private static readonly Regex BodyJson =
     new(@"value:\s*(?:'|`)(?<json>\{.*?\})(?:'|`)", RegexOptions.Compiled | RegexOptions.Singleline);
 
-        // message-Zeilen (körper des Alarms)
+        // message lines (alarm body)
         private static readonly Regex MsgLine = new(@"\{\s*key:\s*'(?:message|gcm\.notification\.body)'\s*,\s*value:\s*'(?<msg>[^']+)'\s*\}", RegexOptions.Compiled);
         private readonly Action<string> _log;
         private CancellationTokenSource? _cts;
         private Process? _listenProc;
-        // Zusatz-Regex: fängt sowohl { key: 'message', ... } als auch { key: 'gcm.notification.body', ... }
+        // Extra regex: catches both { key: 'message', ... } and { key: 'gcm.notification.body', ... }
 
 
-        // Kontext für eine anstehende Alarm-Zeile
+        // Context for a pending alarm line
 
         private (string? server, string? entityName, uint? entityId, string? host, int? port)? _pendingAlarm;
         private string? _pendingAlarmMsg;
@@ -79,11 +79,11 @@ namespace RustPlusDesk.Services
             _log = log;
             VerifyServerDescriptionParser();
         }
-        public event EventHandler? Listening;                 // wenn "Listening for FCM Notifications" erscheint
+        public event EventHandler? Listening;                 // when "Listening for FCM Notifications" appears
         public event EventHandler? Stopped;
         public event EventHandler<string>? Failed;            // bei erkennbaren Fehlerzeilen
 
-        public event EventHandler<string>? Status;            // optional, für UI-Text
+        public event EventHandler<string>? Status;            // optional, for UI text
         public event EventHandler? RegistrationCompleted;
         private volatile bool _running;
         public bool IsRunning => _running;
@@ -132,7 +132,7 @@ namespace RustPlusDesk.Services
 
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
-            // 1) Registrierung nur, wenn keine/zu kleine Config
+            // 1) Register only when there is no/too-small config
             if (!File.Exists(ConfigPath) || new FileInfo(ConfigPath).Length < 50)
             {
                 _log("Starting one time registration (fcm-register) …");
@@ -279,7 +279,7 @@ namespace RustPlusDesk.Services
             _pendingFcmId = null;
         }
 
-        // Hilfsroutine zum Auslösen + Loggen der „schönen" Einzeile
+        // Helper to raise + log the nice one-liner
         private void FireAlarm(string? server, string? deviceName, uint? entityId, string message, DateTime ts)
         {
             var srv = server ?? "-";
@@ -336,7 +336,7 @@ namespace RustPlusDesk.Services
             p = null;
             try
             {
-                // Query-Teil holen
+                // Get the query part
                 var qIndex = url.IndexOf('?');
                 if (qIndex < 0) return false;
                 var query = url.Substring(qIndex + 1);
@@ -433,7 +433,7 @@ namespace RustPlusDesk.Services
 
 
 
-        // ---- ERSETZEN: komplette HandleListenOutput ----
+        // ---- Complete HandleListenOutput ----
         private void HandleListenOutput(string line)
         {
             if (string.IsNullOrWhiteSpace(line)) return;
@@ -475,7 +475,7 @@ namespace RustPlusDesk.Services
                 s.IndexOf("ERR!", StringComparison.OrdinalIgnoreCase) >= 0)
                 Failed?.Invoke(this, s);
 
-            // 0) rustplus:// Deep-Link (falls vorhanden)
+            // 0) rustplus:// deep link (if present)
             var lm = RustUrl.Match(s);
             if (lm.Success && TryParseRustPlusUrl(lm.Value, out var urlPayload) && urlPayload != null)
             {
@@ -495,8 +495,8 @@ namespace RustPlusDesk.Services
                 return;
             }
 
-            // ### A) raw key/value-Zeilen erkennen (channelId/title/body)
-            // Falls wir uns im multiline JSON-Modus befinden, sammeln wir die Zeilen
+            // ### A) detect raw key/value lines (channelId/title/body)
+            // If we are in multiline JSON mode, collect the lines
             if (_collectingJson)
             {
                 _jsonBuffer.AppendLine(s);
@@ -532,7 +532,7 @@ namespace RustPlusDesk.Services
                 var k = kv.Groups["k"].Value;
                 var v = kv.Groups["v"].Value;
 
-                // IP und Port extrahieren
+                // Extract IP and port
                 if (k.Equals("ip", StringComparison.OrdinalIgnoreCase) || k.Equals("gcm.notification.ip", StringComparison.OrdinalIgnoreCase))
                 {
                     _lastParsedIp = v;
@@ -616,7 +616,7 @@ namespace RustPlusDesk.Services
                     }
                 }
 
-                // Absender (title) – erst merken, später mit message flushen
+                // Sender (title) – remember first, flush later with the message
                 if (k.Equals("title", StringComparison.OrdinalIgnoreCase) ||
                     k.Equals("gcm.notification.title", StringComparison.OrdinalIgnoreCase))
                 {
@@ -637,7 +637,7 @@ namespace RustPlusDesk.Services
                 return;
             }
 
-            // ### B) message/body-Zeilen
+            // ### B) message/body lines
             var mm = MsgLine.Match(s);
             if (mm.Success)
             {
@@ -650,7 +650,7 @@ namespace RustPlusDesk.Services
                 }
             }
 
-            // ### C) JSON "value: '...'" – falls vorhanden, zusätzlich heuristisch chat erkennen
+            // ### C) JSON "value: '...'" – if present, additionally detect chat heuristically
             var m = BodyJson.Match(s);
             if (m.Success)
             {
@@ -747,7 +747,7 @@ namespace RustPlusDesk.Services
             var mm = MsgLine.Match(s);
             var m = BodyJson.Match(s);
 
-            // 1) ALARM: message-Zeilen (kommen manchmal vor/nach dem body)
+            // 1) ALARM: message lines (sometimes arrive before/after the body)
             if (mm.Success)
             {
                 _pendingAlarmMsg = mm.Groups["msg"].Value;
@@ -755,7 +755,7 @@ namespace RustPlusDesk.Services
 
                 if (_pendingAlarm is { } ctx)
                 {
-                    // sofort feuern (wir haben jetzt body + message)
+                    // fire immediately (we now have body + message)
                     BufferAlarm(
                         _pendingAlarmMsgTs ?? DateTime.Now,
                         ctx.server ?? "-",
@@ -771,7 +771,7 @@ namespace RustPlusDesk.Services
                 return; // message verarbeitet
             }
 
-            // 2) appData-body: JSON in der Zeile "value: '...'" ODER "value: `...`"
+            // 2) appData body: JSON on the line "value: '...'" OR "value: `...`"
             if (m.Success)
             {
                 var json = m.Groups["json"].Value;
@@ -809,7 +809,7 @@ namespace RustPlusDesk.Services
                         else if (entityName.Contains("Alarm", StringComparison.OrdinalIgnoreCase)) kind = "SmartAlarm";
                     }
 
-                    // === SERVER / ENTITY → Paired feuern ===
+                    // === SERVER / ENTITY → raise Paired ===
                     if (!string.IsNullOrWhiteSpace(host) &&
                         !string.IsNullOrWhiteSpace(playerId) &&
                         !string.IsNullOrWhiteSpace(playerToken) &&
@@ -848,7 +848,7 @@ namespace RustPlusDesk.Services
                         return;
                     }
 
-                    // === ALARM-Body → Kontext puffern und ggf. sofort feuern ===
+                    // === ALARM body → buffer context and fire immediately if possible ===
                     if (string.Equals(type, "alarm", StringComparison.OrdinalIgnoreCase))
                     {
                         _pendingAlarm = (name, entityName, entityId, host, port);
@@ -902,8 +902,8 @@ namespace RustPlusDesk.Services
                 }
                 catch (Exception ex)
                 {
-                    _log("[fcm-listen] body-JSON Parse-Fehler: " + ex.Message);
-                    // nicht returnen → unten normal loggen
+                    _log("[fcm-listen] body JSON parse error: " + ex.Message);
+                    // do not return → log normally below
                 }
             }
 
@@ -918,7 +918,7 @@ namespace RustPlusDesk.Services
 
 
 
-        // --- schlanke Prozessstarter (ohne cmd.exe) ---
+        // --- lean process starters (without cmd.exe) ---
         private static Process StartProcessDirect(
             string fileName, string args, string? workingDir = null,
             Action<string>? onOut = null, Action<string>? onErr = null,
@@ -954,7 +954,7 @@ namespace RustPlusDesk.Services
                 UseShellExecute = false,
                 RedirectStandardOutput = redirect,
                 RedirectStandardError = redirect,
-                CreateNoWindow = false,               // Browser darf aufgehen (fcm-register)
+                CreateNoWindow = false,               // allow the browser to open (fcm-register)
                 WorkingDirectory = string.IsNullOrEmpty(workingDir) ? "" : workingDir
             };
             var p = new Process { StartInfo = psi, EnableRaisingEvents = true };
@@ -973,31 +973,31 @@ namespace RustPlusDesk.Services
 
         // CLI PROPER ERROR LOGGING
 
-        // macht typische CLI-/Node-/Puppeteer-Fehler für Nutzer verständlich
+        // makes typical CLI/Node/Puppeteer errors understandable for users
         private static string HumanizeCli(string? s)
         {
             var l = s?.ToLowerInvariant() ?? "";
 
             if (l.Contains("fcm credentials missing"))
-                return "❌ FCM-Zugangsdaten fehlen. Bitte zuerst „fcm-register“ ausführen.";
+                return "❌ FCM credentials missing. Please run \"fcm-register\" first.";
 
             if ((l.Contains("could not find") || l.Contains("not found") || l.Contains("enoent")) && l.Contains("chrome"))
-                return "❌ Kein Chrome/Chromium gefunden. Bitte Google Chrome installieren (oder Edge/Chromium verfügbar machen).";
+                return "❌ No Chrome/Chromium found. Please install Google Chrome (or make Edge/Chromium available).";
 
             if (l.Contains("failed to launch") && l.Contains("chrome"))
-                return "❌ Chrome/Chromium ließ sich nicht starten (Antivirus/Policy/fehlende Rechte?).";
+                return "❌ Chrome/Chromium could not start (antivirus/policy/missing permissions?).";
 
             if ((l.Contains("getaddrinfo") || l.Contains("enotfound") || l.Contains("eai_again")) && l.Contains("mtalk.google.com"))
-                return "⚠️ Keine Verbindung zu mtalk.google.com (Port 5228). Firewall/Proxy/DNS prüfen.";
+                return "⚠️ No connection to mtalk.google.com (port 5228). Check firewall/proxy/DNS.";
 
             if (l.Contains("err_proxy") || l.Contains("proxy"))
-                return "⚠️ Proxy-Problem beim Start. Proxy-Konfiguration prüfen oder deaktivieren.";
+                return "⚠️ Proxy problem at startup. Check or disable the proxy configuration.";
 
             if (l.Contains("eacces") || l.Contains("eperm"))
-                return "⚠️ Zugriffsrechte-Problem. Als Benutzer mit ausreichenden Rechten starten.";
+                return "⚠️ Permissions problem. Start as a user with sufficient permissions.";
 
             if (l.Contains("node:internal") && l.Contains("modules") && l.Contains("cannot find module"))
-                return "❌ CLI-Module fehlen oder sind beschädigt. Bitte „rustplus-cli.zip“ korrekt entpacken.";
+                return "❌ CLI modules are missing or corrupted. Please extract \"rustplus-cli.zip\" correctly.";
 
             // Fallback: Originalzeile beibehalten
             return s ?? string.Empty;
@@ -1013,7 +1013,7 @@ namespace RustPlusDesk.Services
                 fileName, args, workingDir,
                 onOut: s => { if (!string.IsNullOrEmpty(s)) _log($"[{tag}] {HumanizeCli(s)}"); },
                 onErr: s => { if (!string.IsNullOrEmpty(s)) _log($"[{tag}:err] {HumanizeCli(s)}"); },
-                noWindow: false,           // wie zuvor beim Register: Browser darf aufgehen
+                noWindow: false,           // as before during register: allow the browser to open
                 redirect: true,
                 env: env
             );
@@ -1085,7 +1085,7 @@ namespace RustPlusDesk.Services
                 UseShellExecute = false,
                 RedirectStandardOutput = redirect,
                 RedirectStandardError = redirect,
-                CreateNoWindow = false,   // Register darf Browser öffnen
+                CreateNoWindow = false,   // register may open the browser
                 WorkingDirectory = string.IsNullOrEmpty(workingDir) ? "" : workingDir
             };
             foreach (var (k, v) in env) psi.Environment[k] = v;
@@ -1123,7 +1123,7 @@ namespace RustPlusDesk.Services
             var edge = FindEdge();
             if (edge == null)
             {
-                _log("❌ Microsoft Edge wurde nicht gefunden. Bitte Edge installieren oder normalen Start verwenden.");
+                _log("❌ Microsoft Edge was not found. Please install Edge or use the normal start.");
                 return;
             }
             var env = new (string key, string value)[] {
@@ -1132,7 +1132,7 @@ namespace RustPlusDesk.Services
     };
             _log($"Using Edge for Puppeteer: {edge}");
 
-            // Registrierung (nur falls nötig), aber via Edge
+            // Registration (only if needed), but via Edge
             if (!File.Exists(ConfigPath) || new FileInfo(ConfigPath).Length < 50)
             {
                 // Primary path: native registration, forced to Edge to match this button's intent.
@@ -1164,7 +1164,7 @@ namespace RustPlusDesk.Services
                 RegistrationCompleted?.Invoke(this, EventArgs.Empty);
             }
 
-            // Listener via Edge (mit ENV)
+            // Listener via Edge (with ENV)
             _log("Starting Listener (fcm-listen) via Edge …");
             _listenProc = StartProcessDirectWithEnv(
                 node,
