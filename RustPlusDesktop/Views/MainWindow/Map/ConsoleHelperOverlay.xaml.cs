@@ -190,17 +190,38 @@ public partial class ConsoleHelperOverlay : UserControl
     /// opens behind the panel and looks broken. Promoting the popup's own window fixes it, and
     /// only ever runs when the host window is actually topmost.
     /// </summary>
+    private bool _loggedPickerState;
+
     private void ItemPicker_Loaded(object sender, RoutedEventArgs e)
     {
-        if (sender is not DependencyObject box) return;
-        if (Window.GetWindow(this) is not { Topmost: true }) return;
+        if (sender is not WpfUi.AutoSuggestBox box) return;
 
-        // The template is applied by now, so the popup exists even though it is not open yet.
-        var popup = FindDescendant<System.Windows.Controls.Primitives.Popup>(box);
-        if (popup == null) return;
+        // Assigned directly rather than bound. The RelativeSource binding this replaces resolved
+        // differently depending on which window hosted the panel, which is exactly the difference
+        // between the tab and the popout.
+        box.OriginalItemsSource = ItemNames;
 
-        popup.Opened -= Popup_Opened;
-        popup.Opened += Popup_Opened;
+        if (!_loggedPickerState)
+        {
+            _loggedPickerState = true;
+            Log($"[console-helper] item picker ready, {ItemNames.Count} items, " +
+                $"host={Window.GetWindow(this)?.GetType().Name ?? "none"}");
+        }
+
+        if (Window.GetWindow(this) is { Topmost: true })
+        {
+            var popup = FindDescendant<System.Windows.Controls.Primitives.Popup>(box);
+            if (popup != null)
+            {
+                popup.Opened -= Popup_Opened;
+                popup.Opened += Popup_Opened;
+            }
+        }
+    }
+
+    private static void Log(string line)
+    {
+        if (Application.Current?.MainWindow is MainWindow mw) mw.AppendLog(line);
     }
 
     private void Popup_Opened(object? sender, EventArgs e)

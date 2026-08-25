@@ -83,9 +83,11 @@
 
                                     <!-- Item picker: searchable, resolves to the numeric id -->
                                     <Grid Grid.Column="1" Visibility="{Binding IsItem, Converter={StaticResource BoolToVis}}">
+                                        <!-- OriginalItemsSource is assigned in ItemPicker_Loaded, not bound. A
+                                             RelativeSource binding through the visual tree resolved differently
+                                             depending on which window hosted the panel. -->
                                         <ui:AutoSuggestBox x:Name="ItemPicker"
                                                            PlaceholderText="{DynamicResource ConsoleHelperSearchItem}"
-                                                           OriginalItemsSource="{Binding DataContext.ItemNames, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                            SuggestionChosen="ItemPicker_SuggestionChosen"
                                                            Loaded="ItemPicker_Loaded"
                                                            Tag="{Binding}" />
