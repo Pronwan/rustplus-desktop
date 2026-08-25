@@ -28,6 +28,7 @@ public class PairingListenerStub : IPairingListener
     // Alarm event
     public event EventHandler<AlarmNotification>? AlarmReceived;
     public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived { add { } remove { } }
+    public event EventHandler<PairingPayload>? ServerInfoReceived { add { } remove { } }
     private volatile bool _running;
     public bool IsRunning => _running;
     public bool IsConfigured => true;
