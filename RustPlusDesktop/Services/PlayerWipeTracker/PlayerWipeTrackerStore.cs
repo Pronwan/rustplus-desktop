@@ -184,11 +184,15 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             foreach (var wipeDir in Directory.EnumerateDirectories(serverDir))
             {
                 var wipeKey = Path.GetFileName(wipeDir);
-                var meta = LoadWipeMetadata(serverKey, wipeKey);
-                var jsonlFiles = Directory.EnumerateFiles(wipeDir, "*.jsonl").ToArray();
-                if (jsonlFiles.Length == 0 && !File.Exists(Path.Combine(wipeDir, "map.png")))
+                var jsonlFiles = Directory.EnumerateFiles(wipeDir, "*.jsonl")
+                    .Where(f => new FileInfo(f).Length > 0)
+                    .ToArray();
+
+                // Only show folders that have actual wipe tracking records
+                if (jsonlFiles.Length == 0)
                     continue;
 
+                var meta = LoadWipeMetadata(serverKey, wipeKey);
                 var serverName = meta?.ServerName;
                 if (string.IsNullOrWhiteSpace(serverName) || IsRawServerKey(serverName))
                 {
@@ -207,12 +211,7 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
                 var wipeStarted = meta?.WipeStartedAtUtc;
                 var playerCount = jsonlFiles.Length;
                 var totalBytes = Directory.EnumerateFiles(wipeDir, "*").Sum(f => new FileInfo(f).Length);
-                DateTime? lastObserved = null;
-
-                if (jsonlFiles.Length > 0)
-                {
-                    lastObserved = jsonlFiles.Max(f => new FileInfo(f).LastWriteTimeUtc);
-                }
+                var lastObserved = jsonlFiles.Max(f => new FileInfo(f).LastWriteTimeUtc);
 
                 results.Add(new StoredWipeSummary(
                     serverKey,
