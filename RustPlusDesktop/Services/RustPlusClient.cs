@@ -13,11 +13,11 @@ public class RustPlusClient
 
     public async Task ConnectAsync(ServerProfile profile, CancellationToken ct = default)
     {
-        // Für MVP: Stub-Verbindung (später echte Companion-URL + Auth)
+        // For MVP: stub connection (real companion URL + auth later)
         var uri = new Uri($"ws://{profile.Host}:{profile.Port}/");
         _ws = new ClientWebSocket();
 
-        // Beispiel für Header, wenn nötig:
+        // Example for a header if needed:
         // _ws.Options.SetRequestHeader("rusteam", profile.SteamId64);
         // _ws.Options.SetRequestHeader("token", profile.PlayerToken);
 
@@ -37,7 +37,7 @@ public class RustPlusClient
         _ws = null;
     }
 
-    // Platzhalter für spätere Funktionen:
+    // Placeholder for later functions:
     public Task ToggleSmartSwitchAsync(long entityId, bool on, CancellationToken ct = default)
         => Task.CompletedTask;
 

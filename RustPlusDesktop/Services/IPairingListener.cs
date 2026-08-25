@@ -15,7 +15,7 @@ public interface IPairingListener
     event EventHandler? Stopped;
     event EventHandler<string>? Failed;
 
-    // NEU: Alarm-Popups
+    // Alarm popups
     event EventHandler<AlarmNotification>? AlarmReceived;
     event EventHandler<TeamChatMessage>? ChatReceived;
     event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
@@ -24,6 +24,6 @@ public interface IPairingListener
     bool IsConfigured { get; }
     Task StartAsync(CancellationToken ct = default);
     Task StopAsync();
-    // NEU: optional – Standard fällt auf normalen Start zurück
+    // Optional – defaults to the normal start
     Task StartAsyncUsingEdge(CancellationToken ct = default) => StartAsync(ct);
 }
