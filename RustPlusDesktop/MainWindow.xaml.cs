@@ -700,18 +700,20 @@ public partial class MainWindow : WpfUi.FluentWindow
         
         // Einmal erzeugen (falls du den Stub behalten willst: try/fallback Ã¢â‚¬â€œ aber nur EINMAL zuweisen)
 
-        _pairing = new PairingListenerRealProcess(AppendLog);
+        _pairing = TrackingService.UseNativeFcmListener
+            ? new NativeFcmListener(AppendLog)
+            : new PairingListenerRealProcess(AppendLog);
+        AppendLog(TrackingService.UseNativeFcmListener
+            ? "[pairing] Using native (in-process) FCM listener."
+            : "[pairing] Using Node FCM listener.");
 
         _pairing.Paired += Pairing_Paired;
 
-        // EINMALIG auf AlarmReceived/Death/Chat/Pairing hören:
-        if (_pairing is PairingListenerRealProcess pr)
-        {
-            pr.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
-            pr.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
-            pr.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
-            pr.ServerInfoReceived += (_, info) => Dispatcher.BeginInvoke(new Action(() => CaptureFcmServerDescription(info)));
-        }
+        // Extra notification streams — exposed on both listener implementations via IPairingListener.
+        _pairing.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
+        _pairing.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
+        _pairing.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
+        _pairing.ServerInfoReceived += (_, info) => Dispatcher.BeginInvoke(new Action(() => CaptureFcmServerDescription(info)));
 
         NotificationCenterService.NotificationAdded -= OnNotificationAdded;
         NotificationCenterService.NotificationAdded += OnNotificationAdded;

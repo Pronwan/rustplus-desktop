@@ -19,6 +19,7 @@ public interface IPairingListener
     event EventHandler<AlarmNotification>? AlarmReceived;
     event EventHandler<TeamChatMessage>? ChatReceived;
     event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
+    event EventHandler<PairingPayload>? ServerInfoReceived;
     bool IsRunning { get; }
     bool IsConfigured { get; }
     Task StartAsync(CancellationToken ct = default);

@@ -84,6 +84,8 @@ public class TrackingSettings
     public bool AutoStartEnabled { get; set; } = false;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
+    // Opt-in: use the in-process native FCM listener instead of the bundled Node fcm-listen.
+    public bool UseNativeFcmListener { get; set; } = false;
     public double SidebarWidth { get; set; } = 420;
     public bool SidebarPinned { get; set; } = true;
     public double WindowWidth { get; set; } = 1280;
@@ -575,6 +577,13 @@ public static class TrackingService
     {
         get => _settings.CloseToTrayEnabled;
         set { _settings.CloseToTrayEnabled = value; SaveDB(); }
+    }
+
+    /// <summary>Opt-in: use the native in-process FCM listener instead of the Node fcm-listen.</summary>
+    public static bool UseNativeFcmListener
+    {
+        get => _settings.UseNativeFcmListener;
+        set { _settings.UseNativeFcmListener = value; SaveDB(); }
     }
 
     public static bool StartMinimizedEnabled
