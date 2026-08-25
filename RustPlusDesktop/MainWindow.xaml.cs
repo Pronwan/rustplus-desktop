@@ -829,6 +829,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         this.Closing += MainWindow_Closing;
         Services.Auth.SupabaseAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
+        Services.Cloud.CloudAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
         ContentRendered += MainWindow_ContentRendered;
         try { ClearAllToggleBusy(); } catch { }
         try { ResetAllBusyStates(); } catch { }
@@ -1406,6 +1407,7 @@ public partial class MainWindow : WpfUi.FluentWindow
     private void MainWindow_Closed(object? sender, EventArgs e)
     {
         Services.Auth.SupabaseAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
+        Services.Cloud.CloudAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
 
         // Holen Sie alle laufenden "node"-Prozesse
         var nodes = System.Diagnostics.Process.GetProcessesByName("node");
@@ -1481,6 +1483,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             UpdateRustMapsUi();
             UpdateCloudSyncUI();
+            _ = RefreshPlayerWipeTrackerCapabilitiesAsync();
         }
 
         if (Dispatcher.CheckAccess())

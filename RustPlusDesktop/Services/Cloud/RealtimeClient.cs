@@ -79,6 +79,7 @@ namespace RustPlusDesk.Services.Cloud
         /// </summary>
         public void Start()
         {
+            if (!CloudAuth.IsAuthenticated) return;
             if (_runLoop is { IsCompleted: false }) return;
 
             _cts = new CancellationTokenSource();
@@ -109,6 +110,7 @@ namespace RustPlusDesk.Services.Cloud
         public async Task SubscribeAsync(string channel)
         {
             if (string.IsNullOrWhiteSpace(channel)) return;
+            if (!CloudAuth.IsAuthenticated) return;
 
             var name = Normalize(channel);
             lock (_desiredChannels) _desiredChannels.Add(name);
@@ -148,6 +150,9 @@ namespace RustPlusDesk.Services.Cloud
 
             while (!ct.IsCancellationRequested)
             {
+                if (!CloudAuth.IsAuthenticated)
+                    break;
+
                 try
                 {
                     await ConnectAndPumpAsync(ct);
@@ -159,6 +164,9 @@ namespace RustPlusDesk.Services.Cloud
                 }
                 catch (Exception ex)
                 {
+                    if (!CloudAuth.IsAuthenticated || ex.Message.Contains("401") || ex.Message.Contains("Unauthenticated") || ex.Message.Contains("not signed in"))
+                        break;
+
                     Log($"[Realtime/Error] Connection failed: {ex.Message}");
                     attempt++;
                 }
@@ -168,7 +176,7 @@ namespace RustPlusDesk.Services.Cloud
                     lock (_confirmedChannels) _confirmedChannels.Clear();
                 }
 
-                if (ct.IsCancellationRequested) break;
+                if (ct.IsCancellationRequested || !CloudAuth.IsAuthenticated) break;
 
                 // Exponential backoff with jitter so a restarted server does not get
                 // hit by every client at the same instant.
@@ -357,11 +365,13 @@ namespace RustPlusDesk.Services.Cloud
 
         private async Task<RealtimeConnectionInfo?> EnsureConnectionInfoAsync()
         {
+            if (!CloudAuth.IsAuthenticated) return null;
             if (_connectionInfo != null) return _connectionInfo;
 
             await _stateLock.WaitAsync();
             try
             {
+                if (!CloudAuth.IsAuthenticated) return null;
                 if (_connectionInfo != null) return _connectionInfo;
 
                 var body = await CloudApiClient.CallApiAsync("broadcasting/config", HttpMethod.Get);
