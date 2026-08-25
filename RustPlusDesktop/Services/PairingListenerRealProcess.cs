@@ -138,73 +138,82 @@ namespace RustPlusDesk.Services
                 _log("Starting one time registration (fcm-register) …");
                 _log("IMPORTANT: Log into the SAME Steam account in your browser that you use in the Rust+ app!");
 
-                // Find the browser before starting, not after failing. Puppeteer only looks
-                // for Chrome where Chrome usually is; without it the run died before opening
-                // anything, which users saw as a console window flashing for two seconds.
-                var browser = FindChromiumBrowser(out var browserName);
-                if (browser == null)
-                {
-                    _log("❌ No Chromium-based browser found. Pairing needs one of: Google Chrome, "
-                       + "Microsoft Edge, Brave, Vivaldi, Opera or Chromium. Edge ships with Windows — "
-                       + "if it was removed, installing any of the others will do.");
-                    _running = false;
-                    Stopped?.Invoke(this, EventArgs.Empty);
-                    return;
-                }
+                // Primary path: native (Node-free) registration via RustPlusApi.Fcm.Registration.
+                // It writes the same rustplusjs-config.json the Node listener reads. On any
+                // failure we fall back to the original Node fcm-register CLI below.
+                bool registered = await NativeFcmRegistrationService.TryRegisterAsync(ConfigPath, _log, ct: _cts.Token);
 
-                _log($"Using {browserName} for the login window.");
-                var browserEnv = new (string key, string value)[]
+                if (!registered)
                 {
-                    ("PUPPETEER_EXECUTABLE_PATH", browser),
-                    ("CHROME_PATH", browser)
-                };
-
-                int regExitCode = await RunCliWithLoggingAsync(
-                    node,
-                    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
-                    wd,
-                    "fcm-register",
-                    _cts.Token,
-                    browserEnv
-                );
-
-                // A second browser, if the first one refuses to start. Antivirus, policies and
-                // a half-removed installation all produce a launch failure that has nothing to
-                // do with the browser being absent.
-                if (regExitCode != 0)
-                {
-                    var fallback = FindChromiumBrowser(out var fallbackName, "msedge.exe", "chrome.exe");
-                    if (fallback != null && !string.Equals(fallback, browser, StringComparison.OrdinalIgnoreCase))
+                    // Fallback: original Node fcm-register via Puppeteer.
+                    // Find the browser before starting, not after failing. Puppeteer only looks
+                    // for Chrome where Chrome usually is; without it the run died before opening
+                    // anything, which users saw as a console window flashing for two seconds.
+                    var browser = FindChromiumBrowser(out var browserName);
+                    if (browser == null)
                     {
-                        _log($"{browserName} did not start. Trying {fallbackName}…");
-                        regExitCode = await RunCliWithLoggingAsync(
-                            node,
-                            $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
-                            wd,
-                            "fcm-register",
-                            _cts.Token,
-                            new (string, string)[]
-                            {
-                                ("PUPPETEER_EXECUTABLE_PATH", fallback),
-                                ("CHROME_PATH", fallback)
-                            }
-                        );
+                        _log("❌ No Chromium-based browser found. Pairing needs one of: Google Chrome, "
+                           + "Microsoft Edge, Brave, Vivaldi, Opera or Chromium. Edge ships with Windows — "
+                           + "if it was removed, installing any of the others will do.");
+                        _running = false;
+                        Stopped?.Invoke(this, EventArgs.Empty);
+                        return;
                     }
+
+                    _log($"Using {browserName} for the login window.");
+                    var browserEnv = new (string key, string value)[]
+                    {
+                        ("PUPPETEER_EXECUTABLE_PATH", browser),
+                        ("CHROME_PATH", browser)
+                    };
+
+                    int regExitCode = await RunCliWithLoggingAsync(
+                        node,
+                        $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                        wd,
+                        "fcm-register",
+                        _cts.Token,
+                        browserEnv
+                    );
+
+                    // A second browser, if the first one refuses to start. Antivirus, policies and
+                    // a half-removed installation all produce a launch failure that has nothing to
+                    // do with the browser being absent.
+                    if (regExitCode != 0)
+                    {
+                        var fallback = FindChromiumBrowser(out var fallbackName, "msedge.exe", "chrome.exe");
+                        if (fallback != null && !string.Equals(fallback, browser, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _log($"{browserName} did not start. Trying {fallbackName}…");
+                            regExitCode = await RunCliWithLoggingAsync(
+                                node,
+                                $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                                wd,
+                                "fcm-register",
+                                _cts.Token,
+                                new (string, string)[]
+                                {
+                                    ("PUPPETEER_EXECUTABLE_PATH", fallback),
+                                    ("CHROME_PATH", fallback)
+                                }
+                            );
+                        }
+                    }
+
+                    if (regExitCode != 0)
+                    {
+                        _log($"❌ Registering failed. {browserName} was found at \"{browser}\" but could not "
+                           + "complete the login. Antivirus or a company policy blocking browser automation "
+                           + "is the usual cause.");
+                        _running = false;
+                        Stopped?.Invoke(this, EventArgs.Empty);
+                        return; // Stop here, do not start listener or loop
+                    }
+
+                    _log("Registering completed (Confirm login in browser if applicable).");
                 }
 
-                if (regExitCode != 0)
-                {
-                    _log($"❌ Registering failed. {browserName} was found at \"{browser}\" but could not "
-                       + "complete the login. Antivirus or a company policy blocking browser automation "
-                       + "is the usual cause.");
-                    _running = false;
-                    Stopped?.Invoke(this, EventArgs.Empty);
-                    return; // Stop here, do not start listener or loop
-                }
-
-                _log("Registering completed (Confirm login in browser if applicable).");
-
-                // Record FCM Token dates
+                // Shared post-registration (native or Node): record FCM token dates
                 var issuedAt  = DateTime.Now;
                 var expiresAt = issuedAt.AddDays(15); // FCM tokens expire after 15 days
                 TrackingService.FcmIssuedAt  = issuedAt;
@@ -1028,84 +1037,15 @@ namespace RustPlusDesk.Services
 
         // TRY PAIRING WITH EDGE
 
-        private static string? FindEdge() => FindChromiumBrowser(out _, "msedge.exe");
+        private static string? FindEdge() => ChromiumBrowserLocator.FindEdge();
 
         /// <summary>
         /// Any Chromium-family browser Puppeteer can drive, with the name of the one found.
-        ///
-        /// Puppeteer only looks for Chrome in its default location. Users without Chrome —
-        /// and there are many — saw a console window flash for two seconds and nothing else,
-        /// because the registration failed before any browser opened. Chrome installed
-        /// somewhere unusual failed the same way.
-        ///
-        /// Registry first: App Paths is where installers record themselves, so it finds
-        /// installations the hardcoded paths miss entirely.
+        /// Delegates to <see cref="ChromiumBrowserLocator"/>, shared with the native
+        /// registration path so both discover the same browsers.
         /// </summary>
         private static string? FindChromiumBrowser(out string browserName, params string[] onlyThese)
-        {
-            // Order is preference, not availability: Chrome is what the flow was written
-            // against, Edge is on every Windows machine, the rest are courtesy.
-            var candidates = new (string Exe, string Name, string[] Paths)[]
-            {
-                ("chrome.exe",  "Google Chrome",  new[] { @"Google\Chrome\Application\chrome.exe" }),
-                ("msedge.exe",  "Microsoft Edge", new[] { @"Microsoft\Edge\Application\msedge.exe" }),
-                ("brave.exe",   "Brave",          new[] { @"BraveSoftware\Brave-Browser\Application\brave.exe" }),
-                ("vivaldi.exe", "Vivaldi",        new[] { @"Vivaldi\Application\vivaldi.exe" }),
-                ("opera.exe",   "Opera",          new[] { @"Opera\opera.exe" }),
-                ("chrome.exe",  "Chromium",       new[] { @"Chromium\Application\chrome.exe" }),
-            };
-
-            var roots = new[]
-            {
-                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            };
-
-            foreach (var (exe, name, relatives) in candidates)
-            {
-                if (onlyThese.Length > 0 && !onlyThese.Contains(exe, StringComparer.OrdinalIgnoreCase))
-                    continue;
-
-                var fromRegistry = LookUpAppPath(exe);
-                if (fromRegistry != null) { browserName = name; return fromRegistry; }
-
-                foreach (var root in roots)
-                {
-                    if (string.IsNullOrEmpty(root)) continue;
-
-                    foreach (var relative in relatives)
-                    {
-                        var full = Path.Combine(root, relative);
-                        if (File.Exists(full)) { browserName = name; return full; }
-                    }
-                }
-            }
-
-            browserName = "";
-            return null;
-        }
-
-        /// <summary>Reads HKCU/HKLM App Paths, where Windows installers register executables.</summary>
-        private static string? LookUpAppPath(string exeName)
-        {
-            foreach (var hive in new[] { Microsoft.Win32.Registry.CurrentUser, Microsoft.Win32.Registry.LocalMachine })
-            {
-                try
-                {
-                    using var key = hive.OpenSubKey(
-                        $@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{exeName}");
-                    if (key?.GetValue(null) is string path)
-                    {
-                        path = path.Trim('"');
-                        if (File.Exists(path)) return path;
-                    }
-                }
-                catch { }
-            }
-
-            return null;
-        }
+            => ChromiumBrowserLocator.Find(out browserName, onlyThese);
 
         private static Process StartProcessDirectWithEnv(
     string fileName, string args, string? workingDir = null,
@@ -1195,19 +1135,27 @@ namespace RustPlusDesk.Services
             // Registrierung (nur falls nötig), aber via Edge
             if (!File.Exists(ConfigPath) || new FileInfo(ConfigPath).Length < 50)
             {
-                _log("Starting one time registration (fcm-register) via Edge …");
-                await RunProcessDirectAsyncWithEnv(
-                    node,
-                    $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
-                    workingDir: wd,
-                    waitForExit: true,
-                    redirect: true,
-                    token: _cts.Token,
-                    env: env
-                );
-                _log("Registering completed (Confirm login in browser if applicable).");
+                // Primary path: native registration, forced to Edge to match this button's intent.
+                // Falls back to the Node fcm-register CLI (also via Edge) on any failure.
+                bool registered = await NativeFcmRegistrationService.TryRegisterAsync(
+                    ConfigPath, _log, browserPath: edge, browserName: "Microsoft Edge", ct: _cts.Token);
 
-                // Persist dates into config file
+                if (!registered)
+                {
+                    _log("Starting one time registration (fcm-register) via Edge …");
+                    await RunProcessDirectAsyncWithEnv(
+                        node,
+                        $"\"{cli}\" fcm-register --config-file=\"{ConfigPath}\"",
+                        workingDir: wd,
+                        waitForExit: true,
+                        redirect: true,
+                        token: _cts.Token,
+                        env: env
+                    );
+                    _log("Registering completed (Confirm login in browser if applicable).");
+                }
+
+                // Persist dates into config file (native or Node)
                 var issuedAt2  = DateTime.Now;
                 var expiresAt2 = issuedAt2.AddDays(15);
                 TrackingService.FcmIssuedAt  = issuedAt2;

@@ -340,6 +340,7 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="RustPlusApi" Version="2.0.0-beta.6" />
+    <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.6" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
     <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
