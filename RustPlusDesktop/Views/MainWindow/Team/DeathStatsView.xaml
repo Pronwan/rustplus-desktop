@@ -3,52 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Background="{DynamicResource AppBg}"
-        Foreground="{DynamicResource TextPrimary}">
+        Foreground="{DynamicResource TextPrimary}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
-        <!-- Location-type colours. -->
-        <SolidColorBrush x:Key="MonumentBrush" Color="#EF6C33" />
+        <!-- Location-type colors and translucent fills -->
+        <SolidColorBrush x:Key="MonumentBrush" Color="#FF7A38" />
         <SolidColorBrush x:Key="BaseBrush" Color="#4ADE80" />
-        <SolidColorBrush x:Key="OpenBrush" Color="#9D9D9D" />
-        <SolidColorBrush x:Key="MonumentBg" Color="#33EF6C33" />
-        <SolidColorBrush x:Key="BaseBg" Color="#334ADE80" />
-        <SolidColorBrush x:Key="OpenBg" Color="#339D9D9D" />
+        <SolidColorBrush x:Key="OpenBrush" Color="#94A3B8" />
+        <SolidColorBrush x:Key="MonumentBg" Color="#22FF7A38" />
+        <SolidColorBrush x:Key="BaseBg" Color="#224ADE80" />
+        <SolidColorBrush x:Key="OpenBg" Color="#2294A3B8" />
 
+        <!-- Typography & Cell Styles -->
         <Style x:Key="ColHeader" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="FontSize" Value="11.5" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
+
         <Style x:Key="Cell" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontSize" Value="12.5" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource Accent}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,16,0,6" />
-        </Style>
-        <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Padding" Value="6" />
+
+        <Style x:Key="SectionHeading" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="0,18,0,8" />
         </Style>
 
-        <!-- Stat tile -->
-        <Style x:Key="Tile" TargetType="Border" BasedOn="{StaticResource Card}">
-            <Setter Property="Margin" Value="0,0,10,10" />
-            <Setter Property="Padding" Value="14,10" />
-        </Style>
-
-        <!-- Coloured dot keyed by the row's Type. -->
+        <!-- Coloured dot keyed by the row's Type -->
         <Style x:Key="TypeDot" TargetType="Ellipse">
-            <Setter Property="Width" Value="9" />
-            <Setter Property="Height" Value="9" />
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Fill" Value="{StaticResource OpenBrush}" />
             <Style.Triggers>
@@ -61,10 +53,10 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Coloured area chip keyed by Type. -->
+        <!-- Area Chip -->
         <Style x:Key="AreaChip" TargetType="Border">
-            <Setter Property="CornerRadius" Value="14" />
-            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Padding" Value="12,6" />
             <Setter Property="Margin" Value="0,0,8,8" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Background" Value="{StaticResource OpenBg}" />
@@ -89,230 +81,451 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Workspace header -->
-        <Grid Grid.Row="0" Margin="18,16,18,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal">
-                <Border Width="4" Height="34" Background="{DynamicResource Accent}" CornerRadius="2" Margin="0,0,12,0" />
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Death Stats" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
-                    <TextBlock Text="Where and when your team dies, from the local death log." FontSize="12" Foreground="{DynamicResource TextSubtle}" Margin="0,1,0,0" />
+        <!-- Fluent Workspace Header -->
+        <ui:Card Grid.Row="0" Margin="16,14,16,0" Padding="14,12"
+                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                 BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="40" Height="40" CornerRadius="8"
+                            Background="#22EF5350" BorderBrush="#44EF5350" BorderThickness="1"
+                            Margin="0,0,12,0" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="DismissCircle24" FontSize="20" Foreground="#EF5350" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="DEATH LOG &amp; ANALYTICS" FontSize="10.5" FontWeight="Bold" Foreground="#EF5350" Margin="0,0,0,2" />
+                        </StackPanel>
+                        <TextBlock Text="Death Stats" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Where and when your team dies, analyzed from the local death log." FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,1,0,0" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            <ui:Button Grid.Column="1" Content="Close" Appearance="Secondary" VerticalAlignment="Center" Click="Close_Click" />
-        </Grid>
+                <ui:Button Grid.Column="1" Content="Close" Icon="{ui:SymbolIcon Symbol=Dismiss24}" Appearance="Secondary" VerticalAlignment="Center" Click="Close_Click" />
+            </Grid>
+        </ui:Card>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="18">
+        <!-- Scrollable Workspace Body -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="16,12">
             <StackPanel>
-                <TextBlock Text="{Binding Headline}" FontSize="16" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" Margin="0,0,0,12" />
+                <!-- Filters & Search Toolbar -->
+                <ui:Card Padding="12" Margin="0,0,0,14"
+                         Background="{DynamicResource ControlFillColorDefaultBrush}"
+                         BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                         BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <!-- Filters (always visible so you can widen a search that matched nothing) -->
-                <Grid Margin="0,0,0,14">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="SearchBox" Grid.Column="0" Height="30" Margin="0,0,8,0"
-                             VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged"
-                             ToolTip="Search by victim, location or grid" />
-                    <!-- Populated in code from the team players in the log. -->
-                    <ComboBox x:Name="PlayerFilter" Grid.Column="1" Width="150" Height="30" Margin="0,0,8,0"
-                              Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed" />
-                    <ComboBox x:Name="TypeFilter" Grid.Column="2" Width="130" Height="30" Margin="0,0,8,0"
-                              Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed">
-                        <ComboBoxItem Content="All places" Tag="all" IsSelected="True" />
-                        <ComboBoxItem Content="Monument" Tag="monument" />
-                        <ComboBoxItem Content="Base" Tag="base" />
-                        <ComboBoxItem Content="Open" Tag="open" />
-                    </ComboBox>
-                    <ComboBox x:Name="RangeFilter" Grid.Column="3" Width="120" Height="30"
-                              Style="{DynamicResource DarkComboBox}" SelectionChanged="Filter_Changed">
-                        <ComboBoxItem Content="All time" Tag="all" IsSelected="True" />
-                        <ComboBoxItem Content="Last 24h" Tag="24h" />
-                        <ComboBoxItem Content="Last 7 days" Tag="7d" />
-                    </ComboBox>
-                </Grid>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
+                            <ui:TextBox x:Name="SearchBox" Grid.Column="0" Height="36" Margin="0,0,8,0"
+                                        PlaceholderText="Search by victim, location, or grid..."
+                                        Icon="{ui:SymbolIcon Symbol=Search24}"
+                                        ClearButtonEnabled="True"
+                                        VerticalContentAlignment="Center"
+                                        TextChanged="SearchBox_TextChanged"
+                                        ToolTip="Filter deaths by player name, monument name, or map grid" />
+
+                            <ComboBox x:Name="PlayerFilter" Grid.Column="1" Width="160" Height="36" Margin="0,0,8,0"
+                                      SelectionChanged="Filter_Changed" VerticalContentAlignment="Center" />
+
+                            <ComboBox x:Name="TypeFilter" Grid.Column="2" Width="140" Height="36" Margin="0,0,8,0"
+                                      SelectionChanged="Filter_Changed" VerticalContentAlignment="Center">
+                                <ComboBoxItem Content="All places" Tag="all" IsSelected="True" />
+                                <ComboBoxItem Content="Monument" Tag="monument" />
+                                <ComboBoxItem Content="Base" Tag="base" />
+                                <ComboBoxItem Content="Open" Tag="open" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="RangeFilter" Grid.Column="3" Width="130" Height="36"
+                                      SelectionChanged="Filter_Changed" VerticalContentAlignment="Center">
+                                <ComboBoxItem Content="All time" Tag="all" IsSelected="True" />
+                                <ComboBoxItem Content="Last 24h" Tag="24h" />
+                                <ComboBoxItem Content="Last 7 days" Tag="7d" />
+                            </ComboBox>
+                        </Grid>
+
+                        <TextBlock Grid.Row="1" Text="{Binding Headline}" FontSize="13.5" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="2,10,0,0" />
+                    </Grid>
+                </ui:Card>
+
+                <!-- Data Sections -->
                 <StackPanel Visibility="{Binding HasData, Converter={StaticResource BoolToVis}}">
 
-                    <!-- Stat tiles -->
-                    <UniformGrid Columns="3">
-                        <Border Style="{StaticResource Tile}">
-                            <StackPanel>
-                                <TextBlock Text="TOTAL DEATHS" Style="{StaticResource ColHeader}" />
-                                <TextBlock Text="{Binding Total}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource Tile}">
-                            <StackPanel>
-                                <TextBlock Text="AVG SURVIVAL" Style="{StaticResource ColHeader}" />
-                                <TextBlock Text="{Binding AvgSurvival}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource Tile}">
-                            <StackPanel>
-                                <TextBlock Text="LONGEST SURVIVAL" Style="{StaticResource ColHeader}" />
-                                <TextBlock Text="{Binding LongestSurvival}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource Tile}">
-                            <StackPanel>
-                                <TextBlock Text="DEADLIEST PLACE" Style="{StaticResource ColHeader}" />
-                                <TextBlock Text="{Binding DeadliestPlace}" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextPrimary}" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource Tile}">
-                            <StackPanel>
-                                <TextBlock Text="DEADLIEST GRID" Style="{StaticResource ColHeader}" />
-                                <TextBlock Text="{Binding DeadliestGrid}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource Tile}">
-                            <StackPanel>
-                                <TextBlock Text="PEAK HOUR" Style="{StaticResource ColHeader}" />
-                                <TextBlock Text="{Binding PeakHour}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
-                            </StackPanel>
-                        </Border>
+                    <!-- Stat Cards Grid -->
+                    <UniformGrid Columns="3" Margin="0,0,0,6">
+                        <!-- Total Deaths -->
+                        <ui:Card Margin="0,0,8,8" Padding="14,12"
+                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="TOTAL DEATHS" Style="{StaticResource ColHeader}" />
+                                    <TextBlock Text="{Binding Total}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#20EF5350" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="DismissCircle24" FontSize="18" Foreground="#EF5350" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </ui:Card>
+
+                        <!-- Avg Survival -->
+                        <ui:Card Margin="0,0,8,8" Padding="14,12"
+                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="AVG SURVIVAL" Style="{StaticResource ColHeader}" />
+                                    <TextBlock Text="{Binding AvgSurvival}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#2060CDFF" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Timer24" FontSize="18" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </ui:Card>
+
+                        <!-- Longest Survival -->
+                        <ui:Card Margin="0,0,0,8" Padding="14,12"
+                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="LONGEST SURVIVAL" Style="{StaticResource ColHeader}" />
+                                    <TextBlock Text="{Binding LongestSurvival}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#204ADE80" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Trophy24" FontSize="18" Foreground="#4ADE80" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </ui:Card>
+
+                        <!-- Deadliest Place -->
+                        <ui:Card Margin="0,0,8,8" Padding="14,12"
+                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="DEADLIEST PLACE" Style="{StaticResource ColHeader}" />
+                                    <TextBlock Text="{Binding DeadliestPlace}" FontSize="16" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#20FF7A38" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Location24" FontSize="18" Foreground="#FF7A38" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </ui:Card>
+
+                        <!-- Deadliest Grid -->
+                        <ui:Card Margin="0,0,8,8" Padding="14,12"
+                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="DEADLIEST GRID" Style="{StaticResource ColHeader}" />
+                                    <TextBlock Text="{Binding DeadliestGrid}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#20F59E0B" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Grid24" FontSize="18" Foreground="#F59E0B" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </ui:Card>
+
+                        <!-- Peak Hour -->
+                        <ui:Card Margin="0,0,0,8" Padding="14,12"
+                                 Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                 BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="PEAK HOUR" Style="{StaticResource ColHeader}" />
+                                    <TextBlock Text="{Binding PeakHour}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#20A855F7" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Clock24" FontSize="18" Foreground="#A855F7" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </ui:Card>
                     </UniformGrid>
 
-                    <!-- By area chips -->
-                    <TextBlock Text="Where you die" Style="{StaticResource SectionTitle}" />
-                    <ItemsControl ItemsSource="{Binding ByArea}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource AreaChip}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontWeight="SemiBold" />
-                                        <TextBlock Foreground="{DynamicResource TextSubtle}" Margin="8,0,0,0">
-                                            <Run Text="{Binding Deaths, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding Percent, Mode=OneWay}" /><Run Text="%" />
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <!-- Deaths-per-day sparkline (built in code from DeathsPerDay) -->
-                    <TextBlock Text="Deaths per day (last 14 days)" Style="{StaticResource SectionTitle}" />
-                    <Border Style="{StaticResource Card}">
-                        <StackPanel x:Name="SparklineHost" Orientation="Horizontal" Height="48"
-                                    Margin="6,4,6,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
-                    </Border>
-
-                    <!-- By location -->
-                    <TextBlock Text="By location" Style="{StaticResource SectionTitle}" />
-                    <Border Style="{StaticResource Card}">
-                        <ItemsControl ItemsSource="{Binding ByLocation}">
+                    <!-- Where You Die Chips -->
+                    <StackPanel Style="{StaticResource SectionHeading}">
+                        <ui:SymbolIcon Symbol="Map24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Where you die" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <ui:Card Padding="12" Margin="0,0,0,12"
+                             Background="{DynamicResource ControlFillColorDefaultBrush}"
+                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                             BorderThickness="1">
+                        <ItemsControl ItemsSource="{Binding ByArea}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="8,3">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="18" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="60" />
-                                        </Grid.ColumnDefinitions>
-                                        <Ellipse Grid.Column="0" Style="{StaticResource TypeDot}" HorizontalAlignment="Left" />
-                                        <TextBlock Grid.Column="1" Text="{Binding Location}" Style="{StaticResource Cell}" />
-                                        <TextBlock Grid.Column="2" Text="{Binding Deaths}" Style="{StaticResource Cell}" TextAlignment="Right" />
-                                    </Grid>
+                                    <Border Style="{StaticResource AreaChip}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Style="{StaticResource TypeDot}" Margin="0,0,6,0" />
+                                            <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" FontSize="12.5" />
+                                            <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" Margin="8,0,0,0">
+                                                <Run Text="{Binding Deaths, Mode=OneWay}" /><Run Text=" deaths · " /><Run Text="{Binding Percent, Mode=OneWay}" /><Run Text="%" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                    </Border>
+                    </ui:Card>
 
-                    <!-- By player -->
-                    <TextBlock Text="By player" Style="{StaticResource SectionTitle}" />
-                    <Border Style="{StaticResource Card}">
+                    <!-- Deaths per day Sparkline -->
+                    <StackPanel Style="{StaticResource SectionHeading}">
+                        <ui:SymbolIcon Symbol="DataHistogram24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Deaths per day (last 14 days)" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <ui:Card Padding="14,10" Margin="0,0,0,12"
+                             Background="{DynamicResource ControlFillColorDefaultBrush}"
+                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                             BorderThickness="1">
                         <StackPanel>
-                            <Grid Margin="8,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="90" />
-                                    <ColumnDefinition Width="140" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
-                                <TextBlock Grid.Column="1" Text="Deaths" Style="{StaticResource ColHeader}" />
-                                <TextBlock Grid.Column="2" Text="Avg survival" Style="{StaticResource ColHeader}" />
-                            </Grid>
-                            <ItemsControl ItemsSource="{Binding ByVictim}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="8,3">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="90" />
-                                                <ColumnDefinition Width="140" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Deaths}" Style="{StaticResource Cell}" />
-                                            <TextBlock Grid.Column="2" Text="{Binding AvgSurvival}" Style="{StaticResource Cell}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <StackPanel x:Name="SparklineHost" Orientation="Horizontal" Height="50"
+                                        Margin="4,6,4,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                            <TextBlock Text="Oldest → Today" FontSize="10.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="4,6,0,0" />
                         </StackPanel>
-                    </Border>
+                    </ui:Card>
 
-                    <!-- Recent -->
-                    <TextBlock Text="Recent" Style="{StaticResource SectionTitle}" />
-                    <Border Style="{StaticResource Card}">
+                    <!-- 2-Column Split: By Location & By Player -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- By Location -->
+                        <StackPanel Grid.Column="0">
+                            <StackPanel Style="{StaticResource SectionHeading}">
+                                <ui:SymbolIcon Symbol="Location24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock Text="By location" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <ui:Card Padding="10"
+                                     Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                     BorderThickness="1">
+                                <StackPanel>
+                                    <Grid Margin="8,4,8,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="18" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="70" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="1" Text="Location" Style="{StaticResource ColHeader}" />
+                                        <TextBlock Grid.Column="2" Text="Deaths" Style="{StaticResource ColHeader}" TextAlignment="Right" />
+                                    </Grid>
+                                    <Border Height="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,0,0,4" />
+                                    <ItemsControl ItemsSource="{Binding ByLocation}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="8,6" CornerRadius="4">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="Transparent" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="18" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="70" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse Grid.Column="0" Style="{StaticResource TypeDot}" HorizontalAlignment="Left" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding Location}" Style="{StaticResource Cell}" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding Deaths}" Style="{StaticResource Cell}" TextAlignment="Right" FontWeight="SemiBold" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ui:Card>
+                        </StackPanel>
+
+                        <!-- By Player -->
+                        <StackPanel Grid.Column="2">
+                            <StackPanel Style="{StaticResource SectionHeading}">
+                                <ui:SymbolIcon Symbol="People24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock Text="By player" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <ui:Card Padding="10"
+                                     Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                     BorderThickness="1">
+                                <StackPanel>
+                                    <Grid Margin="8,4,8,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="75" />
+                                            <ColumnDefinition Width="110" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
+                                        <TextBlock Grid.Column="1" Text="Deaths" Style="{StaticResource ColHeader}" TextAlignment="Right" />
+                                        <TextBlock Grid.Column="2" Text="Avg survival" Style="{StaticResource ColHeader}" TextAlignment="Right" />
+                                    </Grid>
+                                    <Border Height="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,0,0,4" />
+                                    <ItemsControl ItemsSource="{Binding ByVictim}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="8,6" CornerRadius="4">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="Transparent" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="75" />
+                                                            <ColumnDefinition Width="110" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" FontWeight="SemiBold" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding Deaths}" Style="{StaticResource Cell}" TextAlignment="Right" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding AvgSurvival}" Style="{StaticResource Cell}" TextAlignment="Right" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ui:Card>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Recent Deaths Table -->
+                    <StackPanel Style="{StaticResource SectionHeading}">
+                        <ui:SymbolIcon Symbol="History24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Recent deaths" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <ui:Card Padding="10" Margin="0,0,0,16"
+                             Background="{DynamicResource ControlFillColorDefaultBrush}"
+                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                             BorderThickness="1">
                         <StackPanel>
-                            <Grid Margin="8,4">
+                            <Grid Margin="8,4,8,8">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="18" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="55" />
+                                    <ColumnDefinition Width="70" />
                                     <ColumnDefinition Width="150" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Victim" Style="{StaticResource ColHeader}" />
                                 <TextBlock Grid.Column="2" Text="Location" Style="{StaticResource ColHeader}" />
                                 <TextBlock Grid.Column="3" Text="Grid" Style="{StaticResource ColHeader}" />
-                                <TextBlock Grid.Column="4" Text="Died" Style="{StaticResource ColHeader}" />
+                                <TextBlock Grid.Column="4" Text="Died" Style="{StaticResource ColHeader}" TextAlignment="Right" />
                             </Grid>
+                            <Border Height="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,0,0,4" />
                             <ItemsControl ItemsSource="{Binding Recent}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Margin="8,3">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="140" />
-                                                <ColumnDefinition Width="18" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="55" />
-                                                <ColumnDefinition Width="150" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" />
-                                            <Ellipse Grid.Column="1" Style="{StaticResource TypeDot}" HorizontalAlignment="Left" />
-                                            <TextBlock Grid.Column="2" Text="{Binding Location}" Style="{StaticResource Cell}" />
-                                            <TextBlock Grid.Column="3" Text="{Binding Grid}" Style="{StaticResource Cell}" />
-                                            <TextBlock Grid.Column="4" Text="{Binding Died}" Style="{StaticResource Cell}" />
-                                        </Grid>
+                                        <Border Padding="8,6" CornerRadius="4">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150" />
+                                                    <ColumnDefinition Width="18" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="70" />
+                                                    <ColumnDefinition Width="150" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Victim}" Style="{StaticResource Cell}" FontWeight="SemiBold" />
+                                                <Ellipse Grid.Column="1" Style="{StaticResource TypeDot}" HorizontalAlignment="Left" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Location}" Style="{StaticResource Cell}" />
+                                                <Border Grid.Column="3" Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                                                        CornerRadius="4" Padding="6,1" HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding Grid}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                </Border>
+                                                <TextBlock Grid.Column="4" Text="{Binding Died}" Style="{StaticResource Cell}" TextAlignment="Right" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11.5" />
+                                            </Grid>
+                                        </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
-                    </Border>
+                    </ui:Card>
+
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Row="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
-                BorderThickness="0,1,0,0" Padding="14,10">
+        <!-- Bottom Actions Bar -->
+        <Border Grid.Row="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,0" Padding="16,10">
             <Grid>
-                <ui:Button x:Name="BtnRefresh" Content="Refresh" Appearance="Secondary"
+                <ui:Button x:Name="BtnRefresh" Content="Refresh" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" Appearance="Secondary"
                            HorizontalAlignment="Left" Click="BtnRefresh_Click" />
-                <ui:Button x:Name="BtnClear" Content="Clear log" Appearance="Danger"
+                <ui:Button x:Name="BtnClear" Content="Clear log" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Danger"
                            HorizontalAlignment="Right" Click="BtnClear_Click" />
             </Grid>
         </Border>
