@@ -871,7 +871,7 @@ Rust+ Desktop registra la teva aplicacio local amb FCM per poder rebre aquestes 
     <value>Activa el seguiment del reproductor en segon pla</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Manté el seguiment dels jugadors mitjançant BattleMetrics fins i tot quan està minimitzat.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Amaga la consola del sistema (Desfer-te del desordre)</value>

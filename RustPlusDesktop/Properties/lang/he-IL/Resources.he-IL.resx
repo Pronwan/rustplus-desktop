@@ -871,7 +871,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>הפעל מעקב אחר נגן ברקע</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>ממשיך לעקוב אחר השחקנים באמצעות BattleMetrics גם כשהחלון ממוזער.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>הסתר את מסך הקונסולה של המערכת (לצמצום העומס)</value>

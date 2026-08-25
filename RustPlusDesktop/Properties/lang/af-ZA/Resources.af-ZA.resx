@@ -871,7 +871,7 @@ Rust+ Desktop registreer jou plaaslike app by FCM sodat dit dieselfde Rust+-kenn
     <value>Aktiveer agtergrondspeleropsporing</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Hou aan om spelers via BattleMetrics op te spoor, selfs wanneer dit verklein is.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Verberg stelselkonsole (ontklonter)</value>

@@ -871,7 +871,7 @@ Rust+ Desktop registrerer den lokale appen din hos FCM slik at den kan motta de 
     <value>Aktiver sporing av bakgrunnsspiller</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Holder deg spore spillere via BattleMetrics selv når de minimeres.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Skjul systemkonsollen (Deslutter)</value>

@@ -871,7 +871,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>Омогући праћење плејера у позадини</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Наставља да прати играче преко BattleMetrics чак и када је минимизовано.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Сакриј системску конзолу (Уклони неред)</value>

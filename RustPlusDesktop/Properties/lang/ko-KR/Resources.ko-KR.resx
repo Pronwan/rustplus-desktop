@@ -871,7 +871,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>백그라운드 플레이어 추적 활성화</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>최소화한 상태에서도 배틀메트릭스를 통해 플레이어를 계속 추적합니다.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>시스템 콘솔 숨기기(깔끔하게 정리)</value>

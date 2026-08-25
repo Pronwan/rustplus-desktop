@@ -849,4 +849,7 @@
   <data name="UiTrackClanMembers" xml:space="preserve">
     <value>追蹤戰隊成員、他們的在線狀態、角色和備註</value>
   </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>即使應用程式最小化，也會繼續直接向伺服器查詢線上人數。</value>
+  </data>
 </root>

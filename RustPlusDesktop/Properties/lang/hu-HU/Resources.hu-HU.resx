@@ -871,7 +871,7 @@ A Rust+ Desktop regisztralja a helyi alkalmazast az FCM-ben, hogy a hatterben fo
     <value>Háttérjátékos-követés engedélyezése</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Továbbra is nyomon követi a játékosokat a BattleMetrics segítségével, még akkor is, ha minimalizálva van.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Rendszerkonzol elrejtése (rendrakás)</value>

@@ -931,7 +931,7 @@ Rust+ Desktop registriert deine lokale App bei FCM, damit sie dieselben Rust+-Be
     <value>Aktiviere Spieler-Tracking im Hintergrund</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Spieler-Tracking über BattleMetrics auch wenn App minimiert.</value>
+    <value>Fragt die Spielerzahl weiterhin direkt beim Server ab, auch wenn die App minimiert ist.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Systemkonsole ausblenden (Declutter)</value>

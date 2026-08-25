@@ -871,7 +871,7 @@ Rust+ Desktop rekisteroi paikallisen sovelluksesi FCM:aan, jotta se voi vastaano
     <value>Ota Taustasoittimen Seuranta Käyttöön</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Pitää seurata pelaajia BattleMetricsin kautta myös minimoitaessa.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Piilota Järjestelmäkonsoli (Declutter)</value>

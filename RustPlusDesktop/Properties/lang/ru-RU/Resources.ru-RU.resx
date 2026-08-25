@@ -871,7 +871,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Включить отслеживание фонового плеера</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Отслеживать игроков с помощью BattleMetrics даже при минимизации.</value>
+    <value>Продолжает запрашивать количество игроков напрямую у сервера, даже когда приложение свёрнуто.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Скрыть системную консоль (загрязнитель)</value>

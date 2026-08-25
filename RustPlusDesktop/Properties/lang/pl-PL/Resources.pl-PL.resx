@@ -871,7 +871,7 @@ Rust+ Desktop rejestruje lokalna aplikacje w FCM, aby mogla odbierac te same pow
     <value>Włącz śledzenie w tle</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Zachowuje śledzenie graczy przez BattleMetrics nawet po zminimalizowaniu.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Ukryj konsolę systemową (Declutter)</value>

@@ -870,7 +870,7 @@
     <value>تفعيل تتبع اللاعبين في الخلفية</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>يضمن استمرار تتبع تحركات اللاعبين عبر BattleMetrics حتى عند تصغير التطبيق.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>إخفاء نافذة الأوامر البرمجية للنظام (لوحة الكونسول)</value>

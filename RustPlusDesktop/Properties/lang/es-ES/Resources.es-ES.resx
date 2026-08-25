@@ -871,7 +871,7 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
     <value>Habilitar seguimiento de reproducción en segundo plano</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Mantiene el rastreo de jugadores a través de BattleMetrics incluso cuando se minimiza.</value>
+    <value>Sigue consultando el número de jugadores directamente al servidor con la aplicación minimizada.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Ocultar consola del sistema (Declutter)</value>

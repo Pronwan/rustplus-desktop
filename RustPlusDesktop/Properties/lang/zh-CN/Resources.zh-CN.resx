@@ -871,7 +871,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>启用背景播放器跟踪</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>即使在最小化时也通过战斗计跟踪玩家。</value>
+    <value>即使应用最小化，也会继续直接向服务器查询在线人数。</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>隐藏系统控制台(去除)</value>

@@ -871,7 +871,7 @@ Rust+ Desktop inregistreaza aplicatia locala la FCM pentru a putea primi aceleas
     <value>Activează urmărirea jucătorului de fundal</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Menține jucători de urmărire prin BattleMetrics chiar și atunci când sunt minimizați.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Ascunde consola de sistem (Declutter)</value>

@@ -1101,4 +1101,7 @@
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>来自早先的清档 — 这些设备 ID 已不存在</value>
   </data>
+  <data name="BackgroundTrackingToolTip" xml:space="preserve">
+    <value>即使应用最小化，也会继续直接向服务器查询在线人数。</value>
+  </data>
 </root>
