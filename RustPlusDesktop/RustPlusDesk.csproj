@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -352,13 +352,13 @@
 
   <PropertyGroup>
     <MapParserProjectPath>$(MSBuildProjectDirectory)\..\MapParser\MapParser.csproj</MapParserProjectPath>
-    <MapParserPublishDir>$(MSBuildProjectDirectory)\..\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
+    <MapParserPublishDir>$(MSBuildProjectDirectory)\..\MapParser\bin\$(Configuration)\net10.0\win-x64\publish\</MapParserPublishDir>
     <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
   </PropertyGroup>
 
   <Target Name="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
-    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net10.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
     <ItemGroup>
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" />
