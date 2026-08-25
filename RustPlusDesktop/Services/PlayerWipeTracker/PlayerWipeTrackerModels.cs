@@ -142,13 +142,18 @@ public readonly record struct TrackerMapProjection(
     }
 }
 
+/// <summary>A single monument on the wipe map (world coordinates, optional size bucket).</summary>
+public sealed record TrackerMonument(string Name, double X, double Y, string? Size = null);
+
 public sealed record TrackerWipeMap(
     byte[] PngBytes,
     int WorldSize,
     double WorldRectX,
     double WorldRectY,
     double WorldRectWidth,
-    double WorldRectHeight);
+    double WorldRectHeight,
+    double OceanMargin = 0,
+    IReadOnlyList<TrackerMonument>? Monuments = null);
 
 public sealed record CloudArchivePlayer(
     string SteamId,

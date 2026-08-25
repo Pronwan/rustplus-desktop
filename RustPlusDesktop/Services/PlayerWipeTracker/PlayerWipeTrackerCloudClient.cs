@@ -137,51 +137,15 @@ public sealed class PlayerWipeTrackerCloudClient
     private static JsonElement UnwrapData(JsonDocument document)
         => document.RootElement.TryGetProperty("data", out var data) ? data : document.RootElement;
 
-    public async Task<int> UploadWipeMapAsync(
-        string serverKey,
-        string wipeKey,
-        byte[] mapPngBytes,
-        TrackerWipeMap mapMeta,
-        DateTime? wipeStartedAtUtc = null,
-        CancellationToken cancellationToken = default)
-    {
-        using var content = new MultipartFormDataContent();
-        content.Add(new StringContent(serverKey), "server_key");
-        content.Add(new StringContent(wipeKey), "wipe_key");
-        content.Add(new StringContent(mapMeta.WorldSize.ToString(CultureInfo.InvariantCulture)), "world_size");
-        content.Add(new StringContent(mapMeta.WorldRectX.ToString(CultureInfo.InvariantCulture)), "world_rect_x");
-        content.Add(new StringContent(mapMeta.WorldRectY.ToString(CultureInfo.InvariantCulture)), "world_rect_y");
-        content.Add(new StringContent(mapMeta.WorldRectWidth.ToString(CultureInfo.InvariantCulture)), "world_rect_width");
-        content.Add(new StringContent(mapMeta.WorldRectHeight.ToString(CultureInfo.InvariantCulture)), "world_rect_height");
-        if (wipeStartedAtUtc.HasValue)
-            content.Add(new StringContent(wipeStartedAtUtc.Value.ToString("o", CultureInfo.InvariantCulture)), "wipe_started_at");
-
-        if (mapPngBytes != null && mapPngBytes.Length > 0)
-        {
-            var imageContent = new ByteArrayContent(mapPngBytes);
-            imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
-            content.Add(imageContent, "map_image", "map.png");
-        }
-
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl.TrimEnd('/')}/player-wipe-tracker/maps")
-        {
-            Content = content,
-        };
-
-        var token = RustPlusDesk.Services.Cloud.CloudAuthManager.CurrentToken;
-        if (!string.IsNullOrWhiteSpace(token))
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
-
-        using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-        return (int)response.StatusCode;
-    }
 
     public async Task<TrackerWipeMap?> DownloadWipeMapAsync(string serverKey, string wipeKey, CancellationToken cancellationToken = default)
     {
+        // Reads from the decoupled /server-wipe-maps API (the old
+        // /player-wipe-tracker/maps routes were retired). Uploading lives in
+        // ServerWipeMapCloudClient; this stays here only for the archive restore.
         using var document = await SendJsonAsync(
             HttpMethod.Get,
-            $"player-wipe-tracker/maps/{Uri.EscapeDataString(serverKey)}/{Uri.EscapeDataString(wipeKey)}",
+            $"server-wipe-maps/{Uri.EscapeDataString(serverKey)}/{Uri.EscapeDataString(wipeKey)}",
             null,
             cancellationToken).ConfigureAwait(false);
         if (document is null)
@@ -196,11 +160,14 @@ public sealed class PlayerWipeTrackerCloudClient
         var ry = Double(data, "world_rect_y");
         var rw = Double(data, "world_rect_width");
         var rh = Double(data, "world_rect_height");
+        var oceanMargin = Double(data, "ocean_margin");
+        var monuments = ParseMonuments(data, "monuments");
+        monuments.AddRange(ParseMonuments(data, "extra_monuments"));
 
         byte[]? pngBytes = null;
         try
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl.TrimEnd('/')}/player-wipe-tracker/maps/{Uri.EscapeDataString(serverKey)}/{Uri.EscapeDataString(wipeKey)}/image");
+            using var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl.TrimEnd('/')}/server-wipe-maps/{Uri.EscapeDataString(serverKey)}/{Uri.EscapeDataString(wipeKey)}/image");
             var token = RustPlusDesk.Services.Cloud.CloudAuthManager.CurrentToken;
             if (!string.IsNullOrWhiteSpace(token))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -223,7 +190,30 @@ public sealed class PlayerWipeTrackerCloudClient
             rx,
             ry,
             rw,
-            rh);
+            rh,
+            oceanMargin,
+            monuments);
+    }
+
+    private static List<TrackerMonument> ParseMonuments(JsonElement data, string property)
+    {
+        var result = new List<TrackerMonument>();
+        if (!data.TryGetProperty(property, out var array) || array.ValueKind != JsonValueKind.Array)
+            return result;
+
+        foreach (var item in array.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var name = String(item, "name");
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            result.Add(new TrackerMonument(name, Double(item, "x"), Double(item, "y"), String(item, "size")));
+        }
+
+        return result;
     }
 
     private static CloudArchiveSummary? ParseArchive(JsonElement item)

@@ -248,6 +248,11 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Persist the wipe map locally (used by the tracker preview). Uploading is
+    /// intentionally NOT done here — that is owned by <see cref="ServerWipeMapService"/>,
+    /// which the caller invokes separately.
+    /// </summary>
     public void SaveWipeMap(string serverKey, string wipeKey, TrackerWipeMap map, DateTime? wipeStartedAtUtc = null)
     {
         if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey))
@@ -255,39 +260,6 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
 
         if (!_store.HasWipeMap(serverKey, wipeKey))
             _store.SaveWipeMap(serverKey, wipeKey, map);
-
-        _ = TryUploadWipeMapSilentlyAsync(serverKey, wipeKey, map, wipeStartedAtUtc);
-    }
-
-    private async Task TryUploadWipeMapSilentlyAsync(string serverKey, string wipeKey, TrackerWipeMap map, DateTime? wipeStarted)
-    {
-        if (_store.IsWipeMapUploaded(serverKey, wipeKey))
-            return;
-
-        if (!RustPlusDesk.Services.Cloud.CloudAuthManager.IsAuthenticated)
-            return;
-
-        try
-        {
-            // Check if cloud already has the wipe map uploaded and verified
-            var existingMap = await _cloudClient.DownloadWipeMapAsync(serverKey, wipeKey).ConfigureAwait(false);
-            if (existingMap is not null && existingMap.PngBytes.Length > 0)
-            {
-                _store.MarkWipeMapUploaded(serverKey, wipeKey);
-                return;
-            }
-
-            // Otherwise upload it
-            var status = await _cloudClient.UploadWipeMapAsync(serverKey, wipeKey, map.PngBytes, map, wipeStarted).ConfigureAwait(false);
-            if (status is 200 or 201 or 409)
-            {
-                _store.MarkWipeMapUploaded(serverKey, wipeKey);
-            }
-        }
-        catch
-        {
-            // Silently handle any network or upload failures
-        }
     }
 
     public TrackerWipeMap? LoadCurrentWipeMap()
