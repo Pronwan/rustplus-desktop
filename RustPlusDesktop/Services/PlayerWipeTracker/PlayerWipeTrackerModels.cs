@@ -150,7 +150,14 @@ public sealed record TrackerWipeMap(
     double WorldRectWidth,
     double WorldRectHeight);
 
-public sealed record CloudArchivePlayer(string SteamId, int DayCount);
+public sealed record CloudArchivePlayer(
+    string SteamId,
+    int DayCount,
+    string? PlayerName = null,
+    bool IsLinked = false,
+    string? UserId = null,
+    string? DisplayName = null,
+    string? AvatarUrl = null);
 
 public sealed record CloudArchiveSummary(
     string Id,
@@ -162,7 +169,9 @@ public sealed record CloudArchiveSummary(
     DateTime? LastObservedAtUtc,
     int? PlayerCount,
     long? StoredBytes,
-    IReadOnlyList<CloudArchivePlayer> Players);
+    IReadOnlyList<CloudArchivePlayer> Players,
+    bool HasMap = false,
+    string? MapUrl = null);
 
 public sealed record CloudRestoreDay(
     string PlayerSteamId,
