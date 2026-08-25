@@ -41,18 +41,44 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public PlayerWipeTrackerCapabilities Capabilities => _capabilities.Current;
 
     public PlayerWipeTrackerCapabilities UpdateCapabilities(JsonElement bootstrap) => _capabilities.Update(bootstrap);
+    public IReadOnlyList<StoredWipeSummary> GetStoredWipes() => _store.GetStoredWipes();
 
-    public void StartConnection(string serverKey, DateTime? wipeTimeUtc, string? mapIdentity, ulong ownSteamId, string? sessionId = null)
+    public void StartConnection(string serverKey, DateTime? wipeTimeUtc, string? mapIdentity, ulong ownSteamId, string? sessionId = null, string? serverName = null)
     {
         _serverKey = serverKey;
         _wipeKey = BuildWipeKey(serverKey, wipeTimeUtc, mapIdentity);
         _wipeStartedAtUtc = wipeTimeUtc?.ToUniversalTime();
         _sessionId = string.IsNullOrWhiteSpace(sessionId) ? Guid.NewGuid().ToString("N") : sessionId;
         _ownSteamId = ownSteamId;
+
+        if (!string.IsNullOrWhiteSpace(serverName) || _store.LoadWipeMetadata(serverKey, _wipeKey) is null)
+        {
+            _store.SaveWipeMetadata(serverKey, _wipeKey, new StoredWipeMetadata(
+                serverKey,
+                string.IsNullOrWhiteSpace(serverName) ? serverKey : serverName,
+                _wipeKey,
+                _wipeStartedAtUtc,
+                DateTime.UtcNow));
+        }
+
         _engines.Clear();
         foreach (var steamId in _store.LoadPlayerIds(serverKey, _wipeKey))
         {
             if (_capabilities.Current.CanTrackPlayer(steamId, ownSteamId))
+                _engines[steamId] = LoadEngine(steamId);
+        }
+    }
+
+    public void SwitchWipe(string serverKey, string wipeKey, DateTime? wipeStartedAtUtc = null)
+    {
+        _serverKey = serverKey;
+        _wipeKey = wipeKey;
+        _wipeStartedAtUtc = wipeStartedAtUtc?.ToUniversalTime();
+        _sessionId = null;
+        _engines.Clear();
+        foreach (var steamId in _store.LoadPlayerIds(serverKey, _wipeKey))
+        {
+            if (_capabilities.Current.CanTrackPlayer(steamId, _ownSteamId))
                 _engines[steamId] = LoadEngine(steamId);
         }
     }
@@ -171,6 +197,13 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
                 observations += await ImportCloudDayAsync(archive, steamId, day, cancellationToken).ConfigureAwait(false);
             }
         }
+
+        _store.SaveWipeMetadata(archive.ServerKey, archive.WipeKey, new StoredWipeMetadata(
+            archive.ServerKey,
+            string.IsNullOrWhiteSpace(archive.ServerName) ? archive.ServerKey : archive.ServerName,
+            archive.WipeKey,
+            archive.WipeStartedAtUtc,
+            DateTime.UtcNow));
 
         await _store.FlushAsync(cancellationToken).ConfigureAwait(false);
         var isCurrent = string.Equals(_serverKey, archive.ServerKey, StringComparison.Ordinal) &&

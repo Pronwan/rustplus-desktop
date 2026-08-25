@@ -29,7 +29,8 @@ public partial class MainWindow
             serverKey,
             (profile.WipeTime ?? profile.RustMapsWipeTime)?.ToUniversalTime(),
             profile.RustMapsMapId,
-            _mySteamId);
+            _mySteamId,
+            serverName: profile.Name ?? serverKey);
         SaveCurrentPlayerWipeMap();
     }
 

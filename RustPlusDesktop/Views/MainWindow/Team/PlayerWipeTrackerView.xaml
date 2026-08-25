@@ -155,7 +155,8 @@
                 <!-- Metrics Strip -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*" MinWidth="180" />
+                        <ColumnDefinition Width="2.2*" MinWidth="220" />
+                        <ColumnDefinition Width="1.6*" MinWidth="160" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -164,37 +165,42 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="SERVER / WIPE" Style="{StaticResource MetricLabel}" />
+                        <ComboBox x:Name="WipeSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="WipeSelector_Changed" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="4,0,10,0">
                         <TextBlock Text="PLAYER" Style="{StaticResource MetricLabel}" />
                         <ComboBox x:Name="PlayerSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="PlayerSelector_Changed" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                    <StackPanel Grid.Column="2" Margin="6,0,0,0">
                         <TextBlock Text="COVERAGE" Style="{StaticResource MetricLabel}" />
                         <TextBlock x:Name="CoverageText" Style="{StaticResource MetricValue}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                    <StackPanel Grid.Column="3" Margin="6,0,0,0">
                         <TextBlock Text="UNKNOWN" Style="{StaticResource MetricLabel}" />
                         <TextBlock x:Name="UnknownText" Style="{StaticResource MetricValue}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="3" Margin="8,0,0,0">
+                    <StackPanel Grid.Column="4" Margin="6,0,0,0">
                         <TextBlock Text="DISTANCE" Style="{StaticResource MetricLabel}" />
                         <TextBlock x:Name="DistanceText" Style="{StaticResource MetricValue}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="4" Margin="8,0,0,0">
+                    <StackPanel Grid.Column="5" Margin="6,0,0,0">
                         <TextBlock Text="DEATHS" Style="{StaticResource MetricLabel}" />
                         <TextBlock x:Name="DeathsText" Style="{StaticResource MetricValue}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="5" Margin="8,0,0,0">
+                    <StackPanel Grid.Column="6" Margin="6,0,0,0">
                         <TextBlock Text="POINTS" Style="{StaticResource MetricLabel}" />
                         <TextBlock x:Name="PointCountText" Style="{StaticResource MetricValue}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="6" Margin="8,0,0,0">
+                    <StackPanel Grid.Column="7" Margin="6,0,0,0">
                         <TextBlock Text="LOCAL STORE" Style="{StaticResource MetricLabel}" />
                         <TextBlock x:Name="StorageText" Style="{StaticResource MetricValue}" />
                     </StackPanel>
