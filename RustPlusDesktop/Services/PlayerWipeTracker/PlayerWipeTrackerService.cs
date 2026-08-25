@@ -331,13 +331,19 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public void DeleteWipe(string serverKey, string wipeKey) => _store.DeleteWipe(serverKey, wipeKey);
     public void DeleteAll() => _store.DeleteAll();
 
-    public static string BuildWipeKey(string serverKey, DateTime? wipeTimeUtc, string? mapIdentity)
+    public static string BuildWipeKey(string serverKey, DateTime? wipeTimeUtc, string? mapIdentity = null)
     {
-        var normalized = wipeTimeUtc.HasValue
-            ? wipeTimeUtc.Value.ToUniversalTime().ToString("O")
-            : "unknown";
-        var source = $"{serverKey.Trim()}|{normalized}|{mapIdentity?.Trim() ?? "unknown"}";
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(source))).ToLowerInvariant();
+        if (wipeTimeUtc.HasValue)
+        {
+            return wipeTimeUtc.Value.ToUniversalTime().ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+        }
+
+        if (!string.IsNullOrWhiteSpace(mapIdentity))
+        {
+            return mapIdentity.Trim();
+        }
+
+        return "unknown";
     }
 
     private PlayerWipeTrackerEngine LoadEngine(ulong steamId)

@@ -162,17 +162,13 @@ public partial class MainWindow
             _worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0)
             return;
 
-        var serverKey = _playerWipeTracker.CurrentServerKey;
+        var serverKey = _playerWipeTracker.CurrentServerKey ?? GetServerKey();
         var wipeKey = _playerWipeTracker.CurrentWipeKey;
 
-        if (string.IsNullOrWhiteSpace(serverKey) && _vm?.Selected != null)
+        if (string.IsNullOrWhiteSpace(wipeKey) && _vm?.Selected != null && !string.IsNullOrWhiteSpace(serverKey))
         {
-            serverKey = $"{_vm.Selected.Host}-{_vm.Selected.Port}";
-        }
-
-        if (string.IsNullOrWhiteSpace(wipeKey) && _vm?.Selected?.WipeTime != null)
-        {
-            wipeKey = _vm.Selected.WipeTime.Value.ToString("yyyyMMdd_HHmmss");
+            var wipeTime = (_vm.Selected.WipeTime ?? _vm.Selected.RustMapsWipeTime)?.ToUniversalTime();
+            wipeKey = PlayerWipeTrackerService.BuildWipeKey(serverKey, wipeTime, _vm.Selected.RustMapsMapId);
         }
 
         if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey))
