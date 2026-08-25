@@ -95,7 +95,7 @@ public partial class MainWindow
         try
         {
             var hasToken = !string.IsNullOrWhiteSpace(RustPlusDesk.Services.Cloud.CloudAuthManager.CurrentToken);
-            var client = new LaravelPlayerWipeTrackerClient();
+            var client = new PlayerWipeTrackerCloudClient();
             using var response = await client.GetBootstrapAsync().ConfigureAwait(false);
             if (response is null)
             {
@@ -145,7 +145,7 @@ public partial class MainWindow
 
     private void SaveCurrentPlayerWipeMap()
     {
-        if (_playerWipeTracker.HasCurrentWipeMap || ImgMap.Source is not BitmapSource bitmap ||
+        if (ImgMap.Source is not BitmapSource bitmap ||
             _worldSizeS <= 0 || _worldRectPx.Width <= 0 || _worldRectPx.Height <= 0)
             return;
 

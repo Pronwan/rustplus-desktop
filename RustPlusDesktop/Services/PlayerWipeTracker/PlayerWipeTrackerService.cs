@@ -15,7 +15,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
 {
     private readonly PlayerWipeTrackerStore _store;
     private readonly PlayerWipeTrackerCapabilityService _capabilities;
-    private readonly LaravelPlayerWipeTrackerClient _cloudClient = new();
+    private readonly PlayerWipeTrackerCloudClient _cloudClient = new();
     private readonly PlayerWipeTrackerCloudSyncQueue _cloudQueue;
     private readonly Dictionary<ulong, PlayerWipeTrackerEngine> _engines = new();
     private string? _serverKey;
@@ -198,6 +198,23 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             }
         }
 
+        if (!_store.HasWipeMap(archive.ServerKey, archive.WipeKey))
+        {
+            try
+            {
+                var cloudMap = await _cloudClient.DownloadWipeMapAsync(archive.ServerKey, archive.WipeKey, cancellationToken).ConfigureAwait(false);
+                if (cloudMap is not null && cloudMap.PngBytes.Length > 0)
+                {
+                    _store.SaveWipeMap(archive.ServerKey, archive.WipeKey, cloudMap);
+                    _store.MarkWipeMapUploaded(archive.ServerKey, archive.WipeKey);
+                }
+            }
+            catch
+            {
+                // Ignore map download error
+            }
+        }
+
         _store.SaveWipeMetadata(archive.ServerKey, archive.WipeKey, new StoredWipeMetadata(
             archive.ServerKey,
             string.IsNullOrWhiteSpace(archive.ServerName) ? archive.ServerKey : archive.ServerName,
@@ -225,8 +242,35 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
 
     public void SaveCurrentWipeMap(TrackerWipeMap map)
     {
-        if (_serverKey is not null && _wipeKey is not null && !HasCurrentWipeMap)
-            _store.SaveWipeMap(_serverKey, _wipeKey, map);
+        if (_serverKey is not null && _wipeKey is not null)
+        {
+            if (!HasCurrentWipeMap)
+                _store.SaveWipeMap(_serverKey, _wipeKey, map);
+
+            _ = TryUploadWipeMapSilentlyAsync(_serverKey, _wipeKey, map, _wipeStartedAtUtc);
+        }
+    }
+
+    private async Task TryUploadWipeMapSilentlyAsync(string serverKey, string wipeKey, TrackerWipeMap map, DateTime? wipeStarted)
+    {
+        if (_store.IsWipeMapUploaded(serverKey, wipeKey))
+            return;
+
+        if (!RustPlusDesk.Services.Cloud.CloudAuthManager.IsAuthenticated)
+            return;
+
+        try
+        {
+            var status = await _cloudClient.UploadWipeMapAsync(serverKey, wipeKey, map.PngBytes, map, wipeStarted).ConfigureAwait(false);
+            if (status is 200 or 201 or 409)
+            {
+                _store.MarkWipeMapUploaded(serverKey, wipeKey);
+            }
+        }
+        catch
+        {
+            // Silently handle any network or upload failures
+        }
     }
 
     public TrackerWipeMap? LoadCurrentWipeMap()
