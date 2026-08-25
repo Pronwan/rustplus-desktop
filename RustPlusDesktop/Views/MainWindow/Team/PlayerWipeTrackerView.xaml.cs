@@ -871,6 +871,21 @@ public partial class PlayerWipeTrackerView : UserControl
         _dragTranslate = null;
     }
 
+    private void TrackerTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, TrackerTabs) || _tracker is null)
+            return;
+
+        if (ReferenceEquals(TrackerTabs.SelectedItem, CloudTab))
+        {
+            _ = LoadCloudArchivesAsync();
+        }
+        else
+        {
+            RefreshSelectedPlayer();
+        }
+    }
+
     private void CloudRestoreTab_Click(object sender, RoutedEventArgs e)
     {
         TrackerTabs.SelectedItem = CloudTab;
@@ -1260,14 +1275,42 @@ public partial class PlayerWipeTrackerView : UserControl
         public CloudArchiveItem(CloudArchiveSummary archive) => Archive = archive;
         public CloudArchiveSummary Archive { get; }
         public string ServerName => string.IsNullOrWhiteSpace(Archive.ServerName) ? "Unknown Server" : Archive.ServerName;
-        public string WipeDateShortFormatted => Archive.WipeStartedAtUtc?.ToLocalTime().ToString("MMM d, yyyy") ?? "Unknown";
-        public string WipeDateFormatted => Archive.WipeStartedAtUtc?.ToLocalTime().ToString("f") ?? "Unknown wipe date";
-        public string FirstObservedFormatted => Archive.FirstObservedAtUtc?.ToLocalTime().ToString("g") ?? "—";
-        public string LastObservedFormatted => Archive.LastObservedAtUtc?.ToLocalTime().ToString("g") ?? "—";
-        public string TrackingWindowFormatted => $"{FirstObservedFormatted} → {LastObservedFormatted}";
+        public string WipeDateShortFormatted => Archive.WipeStartedAtUtc?.ToLocalTime().ToString("MMM d, yyyy") ?? "Unknown wipe";
+        public string WipeDateFormatted => Archive.WipeStartedAtUtc?.ToLocalTime().ToString("MMM d, yyyy · h:mm tt") ?? "Unknown wipe date";
+        public string TrackingWindowFormatted
+        {
+            get
+            {
+                if (!Archive.FirstObservedAtUtc.HasValue || !Archive.LastObservedAtUtc.HasValue)
+                    return "No observations recorded";
+
+                var first = Archive.FirstObservedAtUtc.Value.ToLocalTime();
+                var last = Archive.LastObservedAtUtc.Value.ToLocalTime();
+                var duration = last - first;
+
+                if (duration < TimeSpan.FromSeconds(30))
+                    return $"{first:MMM d, yyyy · h:mm tt} (snapshot)";
+
+                if (first.Date == last.Date)
+                    return $"{first:MMM d, yyyy} · {first:h:mm tt} → {last:h:mm tt} ({FormatDuration(duration)})";
+
+                return $"{first:MMM d, yyyy · h:mm tt} → {last:MMM d, yyyy · h:mm tt} ({FormatDuration(duration)})";
+            }
+        }
         public string PlayerCountFormatted => $"{Archive.PlayerCount ?? Archive.Players.Count} player(s)";
         public string StoredSizeFormatted => FormatBytes(Archive.StoredBytes ?? 0);
-        public string Details => $"{Archive.ServerName}\nWipe: {Archive.WipeStartedAtUtc?.ToLocalTime():g}\nObserved: {Archive.FirstObservedAtUtc?.ToLocalTime():g} → {Archive.LastObservedAtUtc?.ToLocalTime():g}\nPlayers: {Archive.PlayerCount?.ToString() ?? "unknown"} · Stored: {StoredSizeFormatted}";
-        public override string ToString() => $"{Archive.ServerName} · {Archive.WipeStartedAtUtc?.ToLocalTime():g} · {Archive.PlayerCount ?? 0} player(s)";
+        public string Details => $"{Archive.ServerName}\nWipe: {WipeDateFormatted}\nObserved: {TrackingWindowFormatted}\nPlayers: {PlayerCountFormatted} · Stored: {StoredSizeFormatted}";
+        public override string ToString() => $"{Archive.ServerName} · {WipeDateShortFormatted} · {PlayerCountFormatted}";
+
+        private static string FormatDuration(TimeSpan span)
+        {
+            if (span.TotalDays >= 1)
+                return $"{span.TotalDays:0.#}d active";
+            if (span.TotalHours >= 1)
+                return $"{(int)span.TotalHours}h {span.Minutes}m active";
+            if (span.TotalMinutes >= 1)
+                return $"{Math.Max(1, (int)span.TotalMinutes)}m active";
+            return $"{Math.Max(1, (int)span.TotalSeconds)}s active";
+        }
     }
 }

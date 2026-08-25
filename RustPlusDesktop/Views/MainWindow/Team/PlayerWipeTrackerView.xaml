@@ -203,9 +203,9 @@
         </ui:Card>
 
         <!-- Main Workspace Tabs -->
-        <TabControl Grid.Row="2" x:Name="TrackerTabs">
+        <TabControl Grid.Row="2" x:Name="TrackerTabs" SelectionChanged="TrackerTabs_SelectionChanged">
             <!-- Overview Tab -->
-            <TabItem Header="Overview">
+            <TabItem x:Name="OverviewTab" Header="Overview">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,10,6,0">
                     <StackPanel>
                         <!-- Activity Ribbon Card -->
