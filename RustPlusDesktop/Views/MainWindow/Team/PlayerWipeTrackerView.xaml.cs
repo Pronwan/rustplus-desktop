@@ -33,6 +33,7 @@ public partial class PlayerWipeTrackerView : UserControl
     private readonly DispatcherTimer _replayTimer;
     private readonly DispatcherTimer _liveTimer;
     private IReadOnlyList<TrackerPoint> _points = Array.Empty<TrackerPoint>();
+    private IReadOnlyList<TrackerMonument> _monuments = Array.Empty<TrackerMonument>();
     private double _replaySpeed = 1;
     private int _replayIndex;
     private bool _refreshing;
@@ -62,7 +63,8 @@ public partial class PlayerWipeTrackerView : UserControl
         ulong ownSteamId,
         ImageSource? wipeMapImage,
         int worldSize,
-        Rect worldRectPixels)
+        Rect worldRectPixels,
+        IReadOnlyList<TrackerMonument>? monuments = null)
     {
         _tracker = tracker ?? throw new ArgumentNullException(nameof(tracker));
         _ownSteamId = ownSteamId;
@@ -70,6 +72,7 @@ public partial class PlayerWipeTrackerView : UserControl
         _wipeMapImage = wipeMapImage;
         _worldSize = worldSize;
         _worldRectPixels = worldRectPixels;
+        _monuments = monuments ?? Array.Empty<TrackerMonument>();
         _loadedWipeKey = tracker.CurrentWipeKey;
         ApplyWipeMapImage();
         PopulateWipeSelector();
@@ -221,6 +224,7 @@ public partial class PlayerWipeTrackerView : UserControl
             _wipeMapImage = null;
             _worldSize = 0;
             _worldRectPixels = Rect.Empty;
+            _monuments = Array.Empty<TrackerMonument>();
             ApplyWipeMapImage();
             return;
         }
@@ -230,6 +234,7 @@ public partial class PlayerWipeTrackerView : UserControl
         _wipeMapImage = image;
         _worldSize = map.WorldSize;
         _worldRectPixels = new Rect(map.WorldRectX, map.WorldRectY, map.WorldRectWidth, map.WorldRectHeight);
+        _monuments = map.Monuments ?? Array.Empty<TrackerMonument>();
         ApplyWipeMapImage();
     }
 
@@ -438,6 +443,7 @@ public partial class PlayerWipeTrackerView : UserControl
         }
 
         DrawWipeGrid(ReplayCanvas, projection);
+        DrawMonuments(ReplayCanvas, projection);
         if (_points.Count == 0)
         {
             AddEmptyState(ReplayCanvas, "No valid coordinates recorded yet.");
@@ -476,6 +482,7 @@ public partial class PlayerWipeTrackerView : UserControl
         }
 
         DrawWipeGrid(HeatmapCanvas, projection);
+        DrawMonuments(HeatmapCanvas, projection);
         if (_points.Count == 0)
         {
             AddEmptyState(HeatmapCanvas, "No coordinates recorded yet.");
@@ -1271,6 +1278,55 @@ public partial class PlayerWipeTrackerView : UserControl
                 Panel.SetZIndex(label, 1);
                 canvas.Children.Add(label);
             }
+        }
+    }
+
+    /// <summary>Overlays the wipe map's monuments (dot + name) onto a preview canvas.</summary>
+    private void DrawMonuments(Canvas canvas, TrackerMapProjection projection)
+    {
+        if (_monuments.Count == 0)
+            return;
+
+        var dotBrush = new SolidColorBrush(Color.FromRgb(255, 138, 76));
+        var textBrush = new SolidColorBrush(Color.FromArgb(235, 255, 255, 255));
+
+        foreach (var monument in _monuments)
+        {
+            var position = Project(projection, monument.X, monument.Y);
+
+            var dot = new Ellipse
+            {
+                Width = 5,
+                Height = 5,
+                Fill = dotBrush,
+                Stroke = Brushes.Black,
+                StrokeThickness = 0.8,
+                IsHitTestVisible = false,
+            };
+            Canvas.SetLeft(dot, position.X - 2.5);
+            Canvas.SetTop(dot, position.Y - 2.5);
+            Panel.SetZIndex(dot, 3);
+            canvas.Children.Add(dot);
+
+            var label = new TextBlock
+            {
+                Text = monument.Name,
+                Foreground = textBrush,
+                FontSize = 8.5,
+                FontWeight = FontWeights.SemiBold,
+                IsHitTestVisible = false,
+                Effect = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Colors.Black,
+                    BlurRadius = 3,
+                    ShadowDepth = 0,
+                    Opacity = 0.95,
+                },
+            };
+            Canvas.SetLeft(label, position.X + 4);
+            Canvas.SetTop(label, position.Y - 6);
+            Panel.SetZIndex(label, 3);
+            canvas.Children.Add(label);
         }
     }
 

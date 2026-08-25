@@ -16,6 +16,10 @@ public partial class MainWindow
         new PlayerWipeTrackerStore(Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "player-wipes")),
         new PlayerWipeTrackerCapabilityService());
 
+    // Wipe-map uploading is decoupled from the player wipe tracker: this owns the
+    // network upload of the base map + monuments and the 3D-parsed extra monuments.
+    private readonly ServerWipeMapService _serverWipeMaps = new();
+
     private void StartPlayerWipeTrackerSession()
     {
         var profile = _vm?.Selected;
@@ -138,7 +142,8 @@ public partial class MainWindow
                 _mySteamId,
                 mapImage,
                 worldSize,
-                worldRect);
+                worldRect,
+                storedMap?.Monuments);
         }
         catch { }
     }
@@ -171,15 +176,25 @@ public partial class MainWindow
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmap));
             encoder.Save(stream);
+            var monuments = _monData
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                .Select(m => new TrackerMonument(m.Name, m.X, m.Y))
+                .ToList();
+
             var mapData = new TrackerWipeMap(
                 stream.ToArray(),
                 _worldSizeS,
                 _worldRectPx.X,
                 _worldRectPx.Y,
                 _worldRectPx.Width,
-                _worldRectPx.Height);
+                _worldRectPx.Height,
+                GetCurrentMapPaddingWorld() / 2.0,
+                monuments);
 
+            // Persist locally (feeds the tracker preview), then upload via the
+            // dedicated, decoupled service (base map + monuments).
             _playerWipeTracker.SaveWipeMap(serverKey, wipeKey, mapData, _vm?.Selected?.WipeTime);
+            _serverWipeMaps.QueueUploadWipeMap(serverKey, wipeKey, mapData, _vm?.Selected?.WipeTime);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
         {
