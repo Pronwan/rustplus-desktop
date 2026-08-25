@@ -1,18 +1,20 @@
 using System;
 using System.Windows;
-using System.Windows.Input;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views.Windows;
 
 /// <summary>
-/// The Console Helper detached into its own always-on-top window, so it can sit beside Rust while
-/// the F1 console is open. It takes focus on purpose - the panel has buttons and text fields, so
-/// the click-through style used by the crosshair overlay would make it useless here.
+/// The Console Helper in its own window, so it can sit beside Rust while the F1 console is open.
 ///
-/// Rust has to be running borderless or windowed. Nothing can draw over exclusive fullscreen, and
-/// that is a property of the game's display mode, not something this window can work around.
+/// This is a normal chromed window on purpose. The first version was borderless with
+/// AllowsTransparency, which made it a layered window - and WPF popups inside a layered, topmost
+/// window are unreliable, which is what stopped the item suggestion list from appearing. A plain
+/// window also gets dragging, resizing and snapping from Windows instead of hand-rolled code.
+///
+/// Rust has to be running borderless or windowed. Nothing can draw over exclusive fullscreen.
 /// </summary>
-public partial class ConsoleHelperPopoutWindow : Window
+public partial class ConsoleHelperPopoutWindow : WpfUi.FluentWindow
 {
     public ConsoleHelperPopoutWindow()
     {
@@ -22,21 +24,25 @@ public partial class ConsoleHelperPopoutWindow : Window
         Helper.SetPopoutAvailable(false);
         Helper.CloseRequested += (_, __) => Close();
 
-        Loaded += (_, __) => PlaceOnRightEdge();
+        Loaded += (_, __) =>
+        {
+            PlaceOnRightEdge();
+            UpdatePinVisual();
+        };
     }
 
     /// <summary>
-    /// Parks the window against the right edge of the screen Rust is most likely on, which is
-    /// where it stays clear of the console's own input line at the bottom left.
+    /// Parks the window against the right edge on first open, clear of the console's own input
+    /// line at the bottom left. It is freely movable from there.
     /// </summary>
     private void PlaceOnRightEdge()
     {
         try
         {
             var area = SystemParameters.WorkArea;
+            Height = Math.Min(Height, area.Height - 24);
             Left = area.Right - Width - 12;
             Top = area.Top + 12;
-            Height = Math.Min(Height, area.Height - 24);
         }
         catch
         {
@@ -45,11 +51,22 @@ public partial class ConsoleHelperPopoutWindow : Window
         }
     }
 
-    private void DragStrip_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    /// <summary>
+    /// Lets the user drop the window out of the always-on-top band. Useful when it is in the way,
+    /// and the quickest way to tell whether a rendering oddity is caused by Topmost at all.
+    /// </summary>
+    private void BtnPin_Click(object sender, RoutedEventArgs e)
     {
-        if (e.ButtonState == MouseButtonState.Pressed)
-        {
-            try { DragMove(); } catch { }
-        }
+        Topmost = !Topmost;
+        UpdatePinVisual();
+    }
+
+    private void UpdatePinVisual()
+    {
+        if (BtnPin == null) return;
+        BtnPin.Icon = new WpfUi.SymbolIcon(Topmost ? WpfUi.SymbolRegular.Pin24 : WpfUi.SymbolRegular.PinOff24);
+        BtnPin.ToolTip = Topmost
+            ? RustPlusDesk.Properties.Resources.GetString("ConsoleHelperKeepOnTop")
+            : RustPlusDesk.Properties.Resources.GetString("ConsoleHelperNotOnTop");
     }
 }

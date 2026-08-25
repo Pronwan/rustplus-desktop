@@ -945,4 +945,10 @@
   <data name="ConsoleHelperSearchItem" xml:space="preserve">
     <value>搜尋物品…</value>
   </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>永遠置頂 — 點擊取消</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>一般視窗 — 點擊置頂</value>
+  </data>
 </root>

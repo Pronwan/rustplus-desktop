@@ -5934,4 +5934,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ConsoleHelperSearchItem" xml:space="preserve">
     <value>Поиск предмета…</value>
   </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>Поверх всех окон — нажмите, чтобы отключить</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>Обычное окно — нажмите, чтобы закрепить поверх</value>
+  </data>
 </root>

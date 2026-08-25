@@ -5934,4 +5934,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ConsoleHelperSearchItem" xml:space="preserve">
     <value>Buscar objeto…</value>
   </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>Siempre visible — haz clic para soltar</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>Ventana normal — haz clic para fijar arriba</value>
+  </data>
 </root>

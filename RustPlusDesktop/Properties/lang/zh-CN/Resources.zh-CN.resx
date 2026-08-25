@@ -5682,4 +5682,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ConsoleHelperSearchItem" xml:space="preserve">
     <value>搜索物品…</value>
   </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>始终置顶 — 点击取消</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>普通窗口 — 点击置顶</value>
+  </data>
 </root>

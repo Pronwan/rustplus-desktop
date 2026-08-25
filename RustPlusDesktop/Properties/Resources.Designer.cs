@@ -808,6 +808,8 @@ namespace RustPlusDesk.Properties {
         public static string ConsoleHelperNoBindsYet => GetString("ConsoleHelperNoBindsYet");
         public static string ConsoleHelperSearchItem => GetString("ConsoleHelperSearchItem");
         public static string ConsoleHelperLoadFailed => GetString("ConsoleHelperLoadFailed");
+        public static string ConsoleHelperNotOnTop => GetString("ConsoleHelperNotOnTop");
+        public static string ConsoleHelperKeepOnTop => GetString("ConsoleHelperKeepOnTop");
     }
 }
 

@@ -5994,4 +5994,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ConsoleHelperSearchItem" xml:space="preserve">
     <value>Item suchen…</value>
   </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>Immer im Vordergrund — zum Lösen klicken</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>Normales Fenster — zum Anheften klicken</value>
+  </data>
 </root>

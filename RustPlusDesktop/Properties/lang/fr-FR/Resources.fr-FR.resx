@@ -5934,4 +5934,10 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ConsoleHelperSearchItem" xml:space="preserve">
     <value>Rechercher un objet…</value>
   </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>Toujours au premier plan — cliquez pour libérer</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>Fenêtre normale — cliquez pour épingler au premier plan</value>
+  </data>
 </root>
