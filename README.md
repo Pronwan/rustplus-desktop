@@ -52,6 +52,118 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# v9.0.0 — Cloud Platform, Clan 2.0, Wipe Tracker & Genetics 2.0
+
+A milestone release. The backend has moved to a unified cloud platform, the
+CCTV and FCM subsystems were rebuilt natively, and two new tools ship with it.
+
+> **This release requires an update if you use cloud features.** The new
+> backend only talks to the new client.
+
+---
+
+## Migration notes
+
+**Alexa.** The Smart Home skill is under review at Amazon while its new
+authorization endpoints are certified. Existing account links continue to
+work; new links are unavailable until certification completes. Should Alexa
+misbehave after that, unlink and relink the skill once.
+
+**Discord bot.** No action expected — settings, channels and role
+configuration were carried over unchanged. If commands stop responding,
+reconnect your account from the app.
+
+---
+
+## 🌐 Cloud Platform
+
+- **Next-Gen Cloud Platform** — backend services migrated to a unified
+  platform for better reliability, realtime sync and streamlined role
+  entitlements.
+- **Cloud Portal** at `rustplusdesktop.cloud` — servers, paired smart devices
+  with reachability checks, wipe archives, death statistics and a full server
+  map with monument filters and search, all in the browser.
+- **Access Denied & HTTP 418 handling** — expired server credentials and
+  revoked pairings are now detected and explained, with a clear re-pairing
+  prompt instead of a silent failure.
+
+## 📹 CCTV Cameras — rebuilt
+
+- **Native camera engine.** Streaming, control and rendering were rebuilt on
+  the native Rust+ camera API. The external Node.js process is gone entirely:
+  lower latency, lower memory use, faster startup.
+- **Multiple live cameras** — several windows at once, each on its own
+  dedicated connection.
+- **Analog joystick** replaces the arrow pad. Look and drone movement scale
+  with how far the ball is pushed: fine control near the center, fast sweeps
+  at the edge.
+- **Capability-aware HUD** — auto-detects drones, auto-turrets, PTZ and static
+  cameras and shows only the movement, mouse-look, zoom, fire and reload
+  controls each one actually supports.
+- **Add, name, edit and delete cameras** from a full-width list with inline
+  popovers, saved per server.
+
+## 🏰 Clan System 2.0
+
+- **Accurate banner colors.** Banner color unpacking was re-engineered to
+  match Facepunch's `0xRRGGBBAA` wire format, rendering all eight in-game
+  cloth colors without tint distortion.
+- **Large banner showcase** on hover — 270×170 with the true background
+  color, drawn insignia, MOTD card and full clan statistics.
+- **Pure native WPF context menus** across Clan, Team, Player Tracker and
+  Server Manager, with vector icons for opening Steam profiles, copying Steam
+  IDs and tracking players.
+- **Clan chat** — fixed timestamp parsing and hardened history polling against
+  phantom duplicates.
+
+## 🧬 Genetics Lab 2.0
+
+- **Pre-allocation admission solver.** Ground-up rewrite using 18-bit
+  bit-packed genotypes, integer weights and zero-allocation candidate pruning.
+  **24× to 40× faster**, dropping complex 100+ plant searches from minutes to
+  seconds, with 99% less UI thread blocking.
+- **Phone camera scanner & gene OCR (beta)** — scan gene sequences from screen
+  or phone camera through a dual-recognizer pipeline combining template
+  classification with Otsu-thresholded OCR, with shake tolerance and per-slot
+  legibility confirmation.
+- **Farm Operations Planner & Route Inspector** — step-by-step crossbreeding
+  guides, plant inventory tracking and crop cycle management.
+- **Fluid animations & accessibility** — FLIP grid animations, staggered result
+  entry, interpolated progress and full WCAG support.
+- Also available at `genetics.rustplusdesktop.cloud`.
+
+## 👥 Player Wipe Tracker & Death Analytics
+
+- **Native Fluent WPF redesign** of both the tracker and Death Stats, with
+  smooth scrolling and modern typography.
+- **Cloud wipe map & monument sync** — map upload is decoupled from tracking
+  and syncs high-resolution maps, monuments and metadata on connect.
+- **Offline wipe explorer** — switch between active and archived wipes, review
+  historical encounter counts and inspect past maps with no connection.
+- **Steam profile linking** and friendly server name resolution in activity
+  timelines.
+
+## ⌨️ Console Helper *(new)*
+
+- **Command browser & keybind manager** — browse, edit, test and bind Rust
+  console commands and convars, with built-in parameter guidance and key
+  capture.
+- **Item suggestions** with live autocomplete and parameter completion for
+  rapid command entry.
+
+## 🔑 Team Base Codes *(new)*
+
+- Centralized vault for door codes and airlock PINs, stored per server and
+  shared to team chat with `!code`.
+
+## ⚡ Platform & stability
+
+- **Native in-process FCM listener**, enabled by default. Instant pairing
+  notifications, reduced memory use and no external Node process.
+- **Startup diagnostics** — crash telemetry for failures during startup.
+- Compiler warnings resolved; internal services, comments and logging fully
+  translated to English
+
 ## RustPlusDesk 8.0.3 — Smart Alarm & Oil Rig hotfix
 
 ### Fixed
