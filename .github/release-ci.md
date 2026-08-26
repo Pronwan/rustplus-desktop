@@ -34,11 +34,12 @@ The workflow caches NuGet packages from `~/.nuget/packages` with a key derived f
 
 Do not add `.env`, generated secret files, tokens, or release outputs to cache paths.
 
-## Secrets
+## Secrets & Variables
 
 - `MAP_PARSER_TOKEN`: required when `MapParser` is private or belongs to a different account/org. Use a fine-grained GitHub token with read-only Contents access to the MapParser repository.
 - `OVERLAY_SYNC_SECRET_HEX`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - `OVERLAY_SYNC_BASEURL`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - `SUPABASE_URL`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - `SUPABASE_ANON_KEY`: used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
+- `CLOUD_API_BASEURL`: optional secret/variable override (defaults to `https://rustplusdesktop.cloud`) used to generate `RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs` during CI builds.
 - GitHub Releases use the workflow `GITHUB_TOKEN`.
