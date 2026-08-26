@@ -53,6 +53,7 @@ namespace RustPlusDesk.Services
         private RawFcmClient? _client;
         private List<string>? _persistentIds;
         private volatile bool _running;
+        private int _reconnecting;
 
         // De-duplicates the same pairing bounced twice in quick succession, matching the
         // Node listener's 20-second window.
@@ -130,7 +131,17 @@ namespace RustPlusDesk.Services
                     _log("[fcm-native] Listening for FCM Notifications");
                     Listening?.Invoke(this, EventArgs.Empty);
                 };
-                client.ErrorOccurred += (_, ex) => _log("[fcm-native:err] " + ex.Message);
+                client.ErrorOccurred += (_, ex) =>
+                {
+                    if (IsSocketResetOrDisconnect(ex))
+                    {
+                        _log("[fcm-native] Connection reset by remote host.");
+                    }
+                    else
+                    {
+                        _log("[fcm-native:err] " + ex.Message);
+                    }
+                };
                 client.PersistentIdReceived += (_, __) => SavePersistentIds();
                 client.Disconnected += (_, __) => OnSocketDown();
                 client.SocketClosed += (_, __) => OnSocketDown();
@@ -147,8 +158,15 @@ namespace RustPlusDesk.Services
             catch (Exception ex)
             {
                 _running = false;
-                _log("[fcm-native:err] connect failed: " + ex.Message);
-                Failed?.Invoke(this, ex.Message);
+                if (IsSocketResetOrDisconnect(ex))
+                {
+                    _log("[fcm-native] Connection dropped by remote host.");
+                }
+                else
+                {
+                    _log("[fcm-native:err] connect failed: " + ex.Message);
+                    Failed?.Invoke(this, ex.Message);
+                }
                 OnSocketDown();
             }
         }
@@ -163,6 +181,9 @@ namespace RustPlusDesk.Services
             var cts = _cts;
             if (cts is null || cts.IsCancellationRequested) return;
 
+            // Debounce so Disconnected + SocketClosed don't spawn duplicate reconnect tasks
+            if (Interlocked.CompareExchange(ref _reconnecting, 1, 0) != 0) return;
+
             _ = Task.Run(async () =>
             {
                 try
@@ -170,16 +191,33 @@ namespace RustPlusDesk.Services
                     await Task.Delay(3000, cts.Token).ConfigureAwait(false);
                     if (cts.IsCancellationRequested) return;
                     if (!TryLoadCredentials(out var creds)) return;
+
+                    RawFcmClient? oldClient;
+                    lock (_gate)
+                    {
+                        oldClient = _client;
+                        _client = null;
+                    }
+                    if (oldClient != null)
+                    {
+                        try { await oldClient.DisposeAsync().ConfigureAwait(false); } catch { }
+                    }
+
                     _log("[fcm-native] Reconnecting …");
                     await ConnectAsync(creds!, cts.Token).ConfigureAwait(false);
                 }
                 catch { /* cancelled */ }
+                finally
+                {
+                    Interlocked.Exchange(ref _reconnecting, 0);
+                }
             });
         }
 
         public async Task StopAsync()
         {
             try { _cts?.Cancel(); } catch { }
+            Interlocked.Exchange(ref _reconnecting, 0);
 
             RawFcmClient? client;
             lock (_gate) { client = _client; _client = null; }
@@ -196,6 +234,41 @@ namespace RustPlusDesk.Services
             _cts = null;
             if (wasRunning) Stopped?.Invoke(this, EventArgs.Empty);
             _log("[fcm-native] Listener stopped.");
+        }
+
+        private static bool IsSocketResetOrDisconnect(Exception? ex)
+        {
+            while (ex != null)
+            {
+                if (ex is System.Net.Sockets.SocketException se)
+                {
+                    if (se.SocketErrorCode is System.Net.Sockets.SocketError.ConnectionReset
+                        or System.Net.Sockets.SocketError.ConnectionAborted
+                        or System.Net.Sockets.SocketError.Shutdown
+                        or System.Net.Sockets.SocketError.TimedOut
+                        or System.Net.Sockets.SocketError.NetworkReset)
+                    {
+                        return true;
+                    }
+                }
+
+                if (ex is IOException or TimeoutException or OperationCanceledException)
+                {
+                    var msg = ex.Message;
+                    if (msg.Contains("transport connection", StringComparison.OrdinalIgnoreCase)
+                        || msg.Contains("closed", StringComparison.OrdinalIgnoreCase)
+                        || msg.Contains("geschlossen", StringComparison.OrdinalIgnoreCase)
+                        || msg.Contains("reset", StringComparison.OrdinalIgnoreCase)
+                        || msg.Contains("10054", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+
+                ex = ex.InnerException;
+            }
+
+            return false;
         }
 
         // ---- Dispatch: one uniform parse of the full FcmMessage into app events ----
