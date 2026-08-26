@@ -44,6 +44,7 @@ namespace RustPlusDesk.Properties {
         public static string CheckForUpdates => GetString("CheckForUpdates");
         public static string Downloading => GetString("Downloading");
         public static string JoinDiscord => GetString("JoinDiscord");
+        public static string OpenCloudPortal => GetString("OpenCloudPortal");
         public static string PatchNotes => GetString("PatchNotes");
         public static string Settings => GetString("Settings");
         public static string PairedServers => GetString("PairedServers");

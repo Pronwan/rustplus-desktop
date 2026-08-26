@@ -5688,4 +5688,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ConsoleHelperNotOnTop" xml:space="preserve">
     <value>普通窗口 — 点击置顶</value>
   </data>
+  <data name="OpenCloudPortal" xml:space="preserve">
+    <value>打开云端门户</value>
+  </data>
 </root>

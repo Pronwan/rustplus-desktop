@@ -7366,6 +7366,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private void BtnCloudPortal_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("https://rustplusdesktop.cloud") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Could not open the Cloud Portal: " + ex.Message);
+        }
+    }
+
     private void BtnPatchNotes_Click(object sender, RoutedEventArgs e)
     {
         try
