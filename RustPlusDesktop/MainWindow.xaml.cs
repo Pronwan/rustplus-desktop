@@ -5118,60 +5118,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return img;
     }
     private static string Beautify(string s)
-    {
-        if (string.IsNullOrWhiteSpace(s)) return s;
-
-        string lower = s.ToLowerInvariant();
-        if (lower.Contains("underwater") || lower.Contains("under water") || lower.Contains("underwaterlab") || lower.Contains("moonpool"))
-        {
-            return "Underwater Labs";
-        }
-        if (lower.Contains("dome") || lower.Contains("dome monument"))
-        {
-            return "Dome";
-        }
-        if (lower.Contains("launch facility") || lower.Contains("launch_facility"))
-        {
-            return "Launch Site";
-        }
-        if (lower.Contains("missile silo monument") || lower.Contains("missile_silo_monument") ||
-            lower.Contains("missle silo monument") || lower.Contains("missle_silo_monument"))
-        {
-            return "Missile Silo";
-        }
-        if (lower.Contains("mining quarry sulfur") || lower.Contains("mining_quarry_sulfur"))
-        {
-            return "Sulfur Quarry";
-        }
-        if (lower.Contains("mining quarry stone") || lower.Contains("mining_quarry_stone"))
-        {
-            return "Stone Quarry";
-        }
-        if (lower.Contains("mining quarry hqm") || lower.Contains("mining_quarry_hqm"))
-        {
-            return "HQM Quarry";
-        }
-        if (lower.Contains("arctic base") || lower.Contains("arctic_base"))
-        {
-            return "Arctic Research Base";
-        }
-        if (lower.Contains("launchsite"))
-        {
-            return "Launch Site";
-        }
-        if (lower.Contains("supermarket") || lower.Contains("supermarket_1")) return "Abandoned Supermarket";
-        if (lower.Contains("harbor_2") || lower.Contains("harbor 2")) return "Harbor";
-        if (lower.Contains("stables a") || lower.Contains("stables_a")) return "Ranch";
-        if (lower.Contains("stables b") || lower.Contains("stables_b")) return "Large Barn";
-        if (lower.Contains("excavator")) return "Large Excavator Pit";
-        if (lower.Contains("gas station") || lower.Contains("gas_station")) return "Oxum's Gas Station";
-        if (lower.Contains("sewer")) return "Sewer Branch";
-        if (lower.Contains("apartment complex") || lower.Contains("apartmentcomplex") || lower.Contains("apartment_complex")) return "Apartments Complex";
-        s = s.Replace('\\', '/');
-        var last = s.LastIndexOf('/');
-        var token = last >= 0 ? s[(last + 1)..] : s;
-        return token.Replace(".prefab", "").Replace('_', ' ').Replace("display name", "", StringComparison.OrdinalIgnoreCase).Trim();
-    }
+        => RustPlusDesk.Services.MonumentFormatter.Beautify(s);
 
 
     // From worldSize and image size compute the centered playable square in IMAGE PIXELS.

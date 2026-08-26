@@ -38,6 +38,7 @@ public partial class PlayerWipeTrackerView : UserControl
     private int _replayIndex;
     private bool _refreshing;
     private bool _showUnknown;
+    private bool _showMonuments = true;
     private Grid? _dragViewport;
     private TranslateTransform? _dragTranslate;
     private Point _dragStart;
@@ -339,11 +340,13 @@ public partial class PlayerWipeTrackerView : UserControl
                 Start = segment.StartUtc.ToLocalTime().ToString("g"),
                 Duration = Format(segment.EndUtc - segment.StartUtc),
                 State = segment.State.ToString(),
-                Location = segment.LocationName ?? segment.LocationType.ToString(),
+                Location = segment.LocationName is not null
+                    ? (segment.LocationType == TrackerLocationType.Monument ? RustPlusDesk.Services.MonumentFormatter.Beautify(segment.LocationName) : segment.LocationName)
+                    : segment.LocationType.ToString(),
             }).ToArray();
         VisitsList.ItemsSource = summary.MonumentVisits
             .OrderByDescending(visit => visit.StartUtc)
-            .Select(visit => new { visit.Name, Duration = Format(visit.EstimatedDuration) })
+            .Select(visit => new { Name = RustPlusDesk.Services.MonumentFormatter.Beautify(visit.Name), Duration = Format(visit.EstimatedDuration) })
             .ToArray();
 
         RenderActivityRibbon(steamId);
@@ -554,6 +557,7 @@ public partial class PlayerWipeTrackerView : UserControl
             return;
         }
         DrawWipeGrid(CompareCanvas, projection);
+        DrawMonuments(CompareCanvas, projection);
         var a = SelectedPlayerId(CompareASelector) ?? _ownSteamId;
         var b = SelectedPlayerId(CompareBSelector) ?? a;
         var pointsA = ToPoints(_tracker.GetObservations(a));
@@ -585,6 +589,23 @@ public partial class PlayerWipeTrackerView : UserControl
         var steamId = SelectedPlayerId(PlayerSelector) ?? _ownSteamId;
         RenderActivityRibbon(steamId);
         RenderStateBreakdown(_tracker.GetSummary(steamId));
+    }
+
+    private void ToggleMonuments_Click(object sender, RoutedEventArgs e)
+    {
+        _showMonuments = !_showMonuments;
+        UpdateMonumentsToggleButtons();
+        RenderReplay();
+        RenderHeatmap();
+        RenderComparison();
+    }
+
+    private void UpdateMonumentsToggleButtons()
+    {
+        var text = _showMonuments ? "Hide monuments" : "Show monuments";
+        if (ReplayToggleMonumentsButton != null) ReplayToggleMonumentsButton.Content = text;
+        if (HeatmapToggleMonumentsButton != null) HeatmapToggleMonumentsButton.Content = text;
+        if (CompareToggleMonumentsButton != null) CompareToggleMonumentsButton.Content = text;
     }
 
     private void RenderActivityRibbon(ulong steamId)
@@ -772,7 +793,7 @@ public partial class PlayerWipeTrackerView : UserControl
         AddInsightRow("Play sessions", insights.SessionCount.ToString("N0"));
         AddInsightRow("Favourite spot", insights.TopMonument is null
             ? "—"
-            : $"{insights.TopMonument} · {Format(insights.TopMonumentDuration)} over {insights.TopMonumentVisits} visit(s)");
+            : $"{RustPlusDesk.Services.MonumentFormatter.Beautify(insights.TopMonument)} · {Format(insights.TopMonumentDuration)} over {insights.TopMonumentVisits} visit(s)");
         AddInsightRow("Peak hours", insights.PeakHourLocal is null
             ? "—"
             : $"{insights.PeakHourLocal:00}:00–{(insights.PeakHourLocal + 1) % 24:00}:00 local ({Format(insights.PeakHourActive)})");
@@ -1284,7 +1305,7 @@ public partial class PlayerWipeTrackerView : UserControl
     /// <summary>Overlays the wipe map's monuments (dot + name) onto a preview canvas.</summary>
     private void DrawMonuments(Canvas canvas, TrackerMapProjection projection)
     {
-        if (_monuments.Count == 0)
+        if (!_showMonuments || _monuments.Count == 0)
             return;
 
         var dotBrush = new SolidColorBrush(Color.FromRgb(255, 138, 76));
@@ -1310,7 +1331,7 @@ public partial class PlayerWipeTrackerView : UserControl
 
             var label = new TextBlock
             {
-                Text = monument.Name,
+                Text = RustPlusDesk.Services.MonumentFormatter.Beautify(monument.Name),
                 Foreground = textBrush,
                 FontSize = 8.5,
                 FontWeight = FontWeights.SemiBold,

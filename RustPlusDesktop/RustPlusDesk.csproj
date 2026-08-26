@@ -16,6 +16,7 @@
 	  
 	  <Compile Remove="RustPlusClientStub.cs" />
 	  <Compile Remove="Services\Data\ObfuscatedSecrets.cs" />
+	  <InternalsVisibleTo Include="RustPlusDesktop.Tests" />
 	</ItemGroup>
 
 	<ItemGroup>
