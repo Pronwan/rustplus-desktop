@@ -93,7 +93,7 @@ export const App: React.FC = () => {
         <AboutModal />
         <ScannerGuideModal />
         <ReflexNoticeModal
-          open={isReflexNoticeOpen ? true : undefined}
+          open={isReflexNoticeOpen}
           onClose={() => setIsReflexNoticeOpen(false)}
         />
         <CookieConsentBanner />
