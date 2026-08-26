@@ -159,6 +159,18 @@
                                 <Run FontWeight="Bold">&#x2022; Startup Diagnostics &amp; Internationalization:</Run>
                                 Added startup crash telemetry diagnostics, resolved compiler warnings, and completed translation of internal services, comments, and logging to English.
                             </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Cloud-Portal1.png" Description="The new Cloud Portal on rustplusdesktop.cloud — your paired servers, smart devices and reachability checks in the browser, no desktop app needed"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Cloud-Portal2.png" Description="Cloud Portal server map with every monument, category filters, grid overlay and monument search by name or grid"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/PlayerWipeTracker.png" Description="Player Wipe Tracker rebuilt in native Fluent WPF: route replay over the synced wipe map, with coverage, distance, deaths and monument toggles"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/DeathTracker.png" Description="Death Stats analytics — deadliest place and grid, peak hour, average survival, and a per-day breakdown by location and player"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/ptzCamera.png" Description="CCTV rebuilt on the native camera engine: live rendering with an analog joystick, zoom and adjustable frame rate for PTZ cameras"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/ClanManagement.png" Description="Clan System 2.0 with accurate in-game banner colors, a large banner showcase, member roles, last-seen stats and clan score"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Genetics-Lab1.png" Description="Genetics Lab 2.0 breeding workspace — the new solver ranks crossbreeding routes by generations and clone cost, with a step-by-step route inspector"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Genetics-Lab2.png" Description="Built-in Genetics Guide covering growth stages, gene weights, the 3x3 planter layout and multi-generation breeding"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Console-Helper.png" Description="Console Helper: browse client and admin console commands, edit their values, bind them to a key and copy the ready-made line into F1"/>
+                            </views:ImageGallery>
                         </StackPanel>
                     </Border>
 
