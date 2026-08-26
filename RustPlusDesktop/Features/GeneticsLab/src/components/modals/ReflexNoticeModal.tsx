@@ -226,7 +226,7 @@ export const ReflexNoticeModal: React.FC<{
         {/* Extra Pro Tip */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 0.5 }}>
           <Typography variant="caption" sx={{ color: '#9CA3AF', fontSize: '0.75rem', lineHeight: 1.4 }}>
-            💡 <em>Pro Tip:</em> Running Rust in <strong>Borderless/Windowed</strong> mode with <strong>fps.limit 60</strong> while scanning guarantees smooth, instant recognition.
+            💡 <em>Pro Tip:</em> Running Rust in <strong>Borderless/Windowed</strong> mode with <strong>fps.limit (30 -&gt; 50)</strong> while scanning guarantees smooth, instant recognition.
           </Typography>
         </Box>
       </DialogContent>
