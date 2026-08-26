@@ -208,6 +208,8 @@ public partial class MainWindow
                 real.TeamChatReceived += Real_TeamChatReceived;
                 real.ClanChatReceived -= Real_ClanChatReceived;
                 real.ClanChatReceived += Real_ClanChatReceived;
+                real.ClanChanged -= OnClanChangedReal;
+                real.ClanChanged += OnClanChangedReal;
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
                 try { await real.PrimeClanChatAsync(); }
@@ -481,6 +483,8 @@ public partial class MainWindow
                 real.TeamChatReceived += Real_TeamChatReceived;
                 real.ClanChatReceived -= Real_ClanChatReceived;
                 real.ClanChatReceived += Real_ClanChatReceived;
+                real.ClanChanged -= OnClanChangedReal;
+                real.ClanChanged += OnClanChangedReal;
 
                 real.EnsureEventsHooked();
             }
@@ -728,5 +732,10 @@ public partial class MainWindow
             AppendLog("Connect failed: " + ex.Message);
             return false;
         }
+    }
+
+    private void OnClanChangedReal(object? sender, EventArgs e)
+    {
+        _ = Dispatcher.InvokeAsync(LoadClanAsync);
     }
 }

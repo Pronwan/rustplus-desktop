@@ -167,6 +167,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
     public event EventHandler<TeamChatMessage>? TeamChatReceived;
     public event EventHandler<TeamChatMessage>? ClanChatReceived;
+    public event EventHandler? ClanChanged;
 
     // Overload ohne Token (falls irgendwo so aufgerufen wird)
     public Task ConnectAsync(ServerProfile profile) =>
@@ -2479,16 +2480,15 @@ rp.connect();
             string text = TryGetStringProp(e, "Message", "Body", "Text") ?? string.Empty;
 
             long? unix = TryGetLongishProp(e, "Time", "Timestamp");
-
-            // NEU: SteamId holen
-            // TryGetLongishProp ist super dafür, wir casten einfach auf ulong
             ulong steamId = (ulong)(TryGetLongishProp(e, "SteamId", "UserId", "PlayerId") ?? 0);
 
-            var tsUtc = unix.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).UtcDateTime
+            var tsUtc = unix.HasValue && unix.Value > 0
+                ? ParseUnixToUtc(unix.Value)
                 : DateTime.UtcNow;
 
-            // Hier übergeben wir jetzt die SteamId
+            if (tsUtc == default || tsUtc < new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                tsUtc = DateTime.UtcNow;
+
             TeamChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
         }
         catch
@@ -2509,13 +2509,27 @@ rp.connect();
             var tsUtc = e.Time.Kind == DateTimeKind.Unspecified
                 ? DateTime.SpecifyKind(e.Time, DateTimeKind.Utc)
                 : e.Time.ToUniversalTime();
-            if (tsUtc == default) tsUtc = DateTime.UtcNow;
+
+            if (tsUtc == default || tsUtc < new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                tsUtc = DateTime.UtcNow;
 
             ClanChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
         }
         catch
         {
             // Chat darf nichts reißen
+        }
+    }
+
+    private void Api_OnClanChanged(object? sender, ClanChangedEventArg e)
+    {
+        try
+        {
+            _log?.Invoke("[clan] Clan info changed on server, notifying...");
+            ClanChanged?.Invoke(this, EventArgs.Empty);
+        }
+        catch
+        {
         }
     }
 
@@ -2546,7 +2560,8 @@ rp.connect();
             if (v is int i) return i;
             if (v is double d) return (long)d;
             if (v is ulong ul) return (long)ul; // fallback cast
-            if (v is DateTime dt) return new DateTimeOffset(dt).ToUnixTimeSeconds();
+            if (v is DateTime dt) return dt.Kind == DateTimeKind.Utc ? new DateTimeOffset(dt).ToUnixTimeSeconds() : new DateTimeOffset(DateTime.SpecifyKind(dt, DateTimeKind.Utc)).ToUnixTimeSeconds();
+            if (v is DateTimeOffset dto) return dto.ToUnixTimeSeconds();
             if (v is string s && long.TryParse(s, out var lp)) return lp;
         }
         return null;
@@ -3180,6 +3195,8 @@ rp.connect();
         // Wire the strongly-typed event directly (no reflection needed).
         _api.OnClanChatReceived -= Api_OnClanChatReceived;
         _api.OnClanChatReceived += Api_OnClanChatReceived;
+        _api.OnClanChanged -= Api_OnClanChanged;
+        _api.OnClanChanged += Api_OnClanChanged;
 
         try
         {
@@ -3243,7 +3260,7 @@ rp.connect();
 
             var mapped = ExtractChatCandidates(chatRoot);
             var filtered = sinceUtc.HasValue
-                ? mapped.Where(m => m.Timestamp > sinceUtc.Value).ToList()
+                ? mapped.Where(m => (m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp : m.Timestamp.ToUniversalTime()) > (sinceUtc.Value.Kind == DateTimeKind.Utc ? sinceUtc.Value : sinceUtc.Value.ToUniversalTime())).ToList()
                 : mapped;
 
             _log($"[clan-chat-history] mapped={mapped.Count} afterFilter={filtered.Count} since={(sinceUtc?.ToString("u") ?? "null")}");
@@ -3287,12 +3304,13 @@ rp.connect();
                 Creator = Read<ulong>(root, "Creator"),
                 MotdTimestamp = Read<DateTime?>(root, "MotdTimestamp"),
                 MotdAuthor = Read<ulong?>(root, "MotdAuthor"),
+                Logo = Read<byte[]>(root, "Logo"),
+                Color = Read<int?>(root, "Color"),
                 MaxMemberCount = Read<int?>(root, "MaxMemberCount"),
                 Score = Read<long?>(root, "Score")
             };
 
             // Roles Mapping
-            var rolesList = new List<(int roleId, string name, int rank)>();
             var roles = Read<System.Collections.IEnumerable>(root, "Roles");
             if (roles != null)
             {
@@ -3301,7 +3319,22 @@ rp.connect();
                     int roleId = Read<int>(r, "RoleId");
                     string name = Read<string>(r, "Name") ?? "";
                     int rank = Read<int>(r, "Rank");
-                    rolesList.Add((roleId, name, rank));
+                    var roleModel = new ClanRoleModel
+                    {
+                        RoleId = roleId,
+                        Rank = rank,
+                        Name = name,
+                        CanSetMotd = Read<bool>(r, "CanSetMotd"),
+                        CanSetLogo = Read<bool>(r, "CanSetLogo"),
+                        CanInvite = Read<bool>(r, "CanInvite"),
+                        CanKick = Read<bool>(r, "CanKick"),
+                        CanPromote = Read<bool>(r, "CanPromote"),
+                        CanDemote = Read<bool>(r, "CanDemote"),
+                        CanSetPlayerNotes = Read<bool>(r, "CanSetPlayerNotes"),
+                        CanAccessLogs = Read<bool>(r, "CanAccessLogs"),
+                        CanAccessScoreEvents = Read<bool>(r, "CanAccessScoreEvents"),
+                    };
+                    model.Roles.Add(roleModel);
                 }
             }
 
@@ -3313,20 +3346,38 @@ rp.connect();
                 {
                     ulong steamId = Read<ulong>(m, "SteamId");
                     int roleId = Read<int>(m, "RoleId");
-                    var role = rolesList.FirstOrDefault(x => x.roleId == roleId);
+                    var role = model.Roles.FirstOrDefault(x => x.RoleId == roleId);
 
                     var member = new ClanMemberModel
                     {
                         SteamId = steamId,
                         RoleId = roleId,
-                        RoleName = role.name ?? $"Role {roleId}",
-                        Rank = role.rank,
+                        RoleName = !string.IsNullOrEmpty(role?.Name) ? role.Name : $"Role {roleId}",
+                        Rank = role?.Rank ?? 0,
                         Joined = Read<DateTime>(m, "Joined"),
                         LastSeen = Read<DateTime>(m, "LastSeen"),
                         Notes = Read<string>(m, "Notes") ?? "",
                         IsOnline = Read<bool>(m, "Online")
                     };
                     model.Members.Add(member);
+                }
+            }
+
+            // Invites Mapping
+            var invites = Read<System.Collections.IEnumerable>(root, "Invites");
+            if (invites != null)
+            {
+                foreach (var inv in invites)
+                {
+                    ulong steamId = Read<ulong>(inv, "SteamId");
+                    ulong recruiter = Read<ulong>(inv, "Recruiter");
+                    var timestamp = Read<DateTime>(inv, "Timestamp");
+                    model.Invites.Add(new ClanInviteModel
+                    {
+                        SteamId = steamId,
+                        Recruiter = recruiter,
+                        Timestamp = timestamp
+                    });
                 }
             }
 
@@ -3403,6 +3454,56 @@ rp.connect();
 
     // ==== Helper: Chat-Mapping für beliebige Lib-Versionen ====
 
+    private static DateTime ParseTimestampToUtc(object? timeObj)
+    {
+        if (timeObj is null)
+            return DateTime.UtcNow;
+
+        if (timeObj is DateTime dt)
+        {
+            return dt.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(dt, DateTimeKind.Utc)
+                : dt.ToUniversalTime();
+        }
+
+        if (timeObj is DateTimeOffset dto)
+            return dto.UtcDateTime;
+
+        if (timeObj is string s && !string.IsNullOrWhiteSpace(s))
+        {
+            if (DateTimeOffset.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var parsedDto))
+                return parsedDto.UtcDateTime;
+
+            if (long.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedNum) && parsedNum > 0)
+                return ParseUnixToUtc(parsedNum);
+        }
+
+        try
+        {
+            long num = Convert.ToInt64(timeObj);
+            if (num > 0)
+                return ParseUnixToUtc(num);
+        }
+        catch { }
+
+        return DateTime.UtcNow;
+    }
+
+    private static DateTime ParseUnixToUtc(long unix)
+    {
+        try
+        {
+            if (unix > 100_000_000_000L)
+                return DateTimeOffset.FromUnixTimeMilliseconds(unix).UtcDateTime;
+
+            return DateTimeOffset.FromUnixTimeSeconds(unix).UtcDateTime;
+        }
+        catch
+        {
+            return DateTime.UtcNow;
+        }
+    }
+
     private static IEnumerable<TeamChatMessage> TryMapChatEnumerable(object? listObj)
     {
         if (listObj is not System.Collections.IEnumerable en)
@@ -3416,7 +3517,7 @@ rp.connect();
         {
             if (it is null) continue;
 
-            // Falls es ein Dictionary ist (kommt bei manchen Wrappers/JSON vor)
+            // 1. Falls es ein Dictionary ist (z. B. JSON/Wrapper)
             if (it is System.Collections.IDictionary dict)
             {
                 string? dictText =
@@ -3431,66 +3532,81 @@ rp.connect();
                     dict["Name"] as string ??
                     dict["Username"] as string ??
                     dict["User"] as string ??
+                    dict["Author"] as string ??
                     "Unbekannt";
 
-                long? dictUnix = null;
-                var dictTimeObj = dict["Time"] ?? dict["time"] ?? dict["Timestamp"] ?? dict["timestamp"];
-                if (dictTimeObj != null)
-                {
-                    try { dictUnix = Convert.ToInt64(dictTimeObj); } catch { }
-                }
-                if (dictUnix == 0) dictUnix = null;
+                var dictTimeObj = dict["Time"] ?? dict["time"] ?? dict["Timestamp"] ?? dict["timestamp"] ?? dict["CreatedAt"] ?? dict["createdAt"];
+                var dictTsUtc = ParseTimestampToUtc(dictTimeObj);
 
                 ulong dictSteamId = 0;
-                var dictIdObj = dict["SteamId"] ?? dict["steamId"] ?? dict["UserId"] ?? dict["PlayerId"];
+                var dictIdObj = dict["SteamId"] ?? dict["steamId"] ?? dict["UserId"] ?? dict["userId"] ?? dict["PlayerId"] ?? dict["playerId"];
                 if (dictIdObj != null)
                 {
                     try { dictSteamId = Convert.ToUInt64(dictIdObj); } catch { }
                 }
 
-                var dictTsLocal = dictUnix.HasValue
-                    ? DateTimeOffset.FromUnixTimeSeconds(dictUnix.Value).LocalDateTime
-                    : DateTime.Now;
-
-                yield return new TeamChatMessage(dictTsLocal, dictAuthor, dictSteamId, dictText);
+                yield return new TeamChatMessage(dictTsUtc, dictAuthor, dictSteamId, dictText);
                 continue;
             }
 
             var t = it.GetType();
 
+            // 2. Prüfen ob it ein Wrapper ist (z. B. AppNewClanMessage mit .Message als eigenem Objekt)
+            object? innerMsg = t.GetProperty("Message", flags)?.GetValue(it);
+            object src = (innerMsg != null && innerMsg is not string) ? innerMsg : it;
+            var st = src.GetType();
+
             // Text
-            string? text =
-                (t.GetProperty("Message", flags)?.GetValue(it) as string) ??
-                (t.GetProperty("Body", flags)?.GetValue(it) as string) ??
-                (t.GetProperty("Text", flags)?.GetValue(it) as string);
+            string? text = null;
+            if (innerMsg is string sText)
+            {
+                text = sText;
+            }
+            else
+            {
+                text =
+                    (st.GetProperty("Message", flags)?.GetValue(src) as string) ??
+                    (st.GetProperty("Body", flags)?.GetValue(src) as string) ??
+                    (st.GetProperty("Text", flags)?.GetValue(src) as string) ??
+                    (t.GetProperty("Body", flags)?.GetValue(it) as string) ??
+                    (t.GetProperty("Text", flags)?.GetValue(it) as string);
+            }
 
             if (string.IsNullOrWhiteSpace(text))
                 continue;
 
             // Author
             string author =
+                (st.GetProperty("Name", flags)?.GetValue(src) as string) ??
+                (st.GetProperty("Username", flags)?.GetValue(src) as string) ??
+                (st.GetProperty("User", flags)?.GetValue(src) as string) ??
+                (st.GetProperty("Author", flags)?.GetValue(src) as string) ??
                 (t.GetProperty("Name", flags)?.GetValue(it) as string) ??
                 (t.GetProperty("Username", flags)?.GetValue(it) as string) ??
                 (t.GetProperty("User", flags)?.GetValue(it) as string) ??
+                (t.GetProperty("Author", flags)?.GetValue(it) as string) ??
                 "Unbekannt";
 
-            // Zeitstempel (auch verschachtelt: it.Message.Time)
-            object? src = t.GetProperty("Message", flags)?.GetValue(it) ?? it;
-            var st = src.GetType();
-
+            // Zeitstempel
             object? timeObj =
                 st.GetProperty("Time", flags)?.GetValue(src) ??
-                st.GetProperty("Timestamp", flags)?.GetValue(src);
+                st.GetProperty("Timestamp", flags)?.GetValue(src) ??
+                st.GetProperty("TimeUtc", flags)?.GetValue(src) ??
+                st.GetProperty("Date", flags)?.GetValue(src) ??
+                st.GetProperty("CreatedAt", flags)?.GetValue(src) ??
+                t.GetProperty("Time", flags)?.GetValue(it) ??
+                t.GetProperty("Timestamp", flags)?.GetValue(it) ??
+                t.GetProperty("TimeUtc", flags)?.GetValue(it) ??
+                t.GetProperty("Date", flags)?.GetValue(it) ??
+                t.GetProperty("CreatedAt", flags)?.GetValue(it);
 
-            long? unix = null;
-            if (timeObj != null)
-            {
-                try { unix = Convert.ToInt64(timeObj); } catch { }
-            }
-            if (unix == 0) unix = null;
+            var tsUtc = ParseTimestampToUtc(timeObj);
 
             // SteamId
             object? idVal =
+                st.GetProperty("SteamId", flags)?.GetValue(src) ??
+                st.GetProperty("UserId", flags)?.GetValue(src) ??
+                st.GetProperty("PlayerId", flags)?.GetValue(src) ??
                 t.GetProperty("SteamId", flags)?.GetValue(it) ??
                 t.GetProperty("UserId", flags)?.GetValue(it) ??
                 t.GetProperty("PlayerId", flags)?.GetValue(it);
@@ -3501,11 +3617,7 @@ rp.connect();
                 try { steamId = Convert.ToUInt64(idVal); } catch { }
             }
 
-            var tsLocal = unix.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).LocalDateTime
-                : DateTime.Now;
-
-            yield return new TeamChatMessage(tsLocal, author, steamId, text);
+            yield return new TeamChatMessage(tsUtc, author, steamId, text);
         }
     }
 
@@ -3597,7 +3709,7 @@ rp.connect();
 
             var mapped = ExtractChatCandidates(chatRoot); // deine vorhandene Rekursion
             var filtered = sinceUtc.HasValue
-                ? mapped.Where(m => m.Timestamp > sinceUtc.Value).ToList()
+                ? mapped.Where(m => (m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp : m.Timestamp.ToUniversalTime()) > (sinceUtc.Value.Kind == DateTimeKind.Utc ? sinceUtc.Value : sinceUtc.Value.ToUniversalTime())).ToList()
                 : mapped;
 
             _log($"[chat-history] mapped={mapped.Count} afterFilter={filtered.Count} since={(sinceUtc?.ToString("u") ?? "null")}");
