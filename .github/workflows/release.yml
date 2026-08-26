@@ -126,12 +126,14 @@ jobs:
           OVERLAY_SYNC_BASEURL: ${{ secrets.OVERLAY_SYNC_BASEURL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          CLOUD_API_BASEURL: ${{ vars.CLOUD_API_BASEURL || secrets.CLOUD_API_BASEURL || 'https://rustplusdesktop.cloud' }}
         run: |
           $required = @(
             "OVERLAY_SYNC_SECRET_HEX",
             "OVERLAY_SYNC_BASEURL",
             "SUPABASE_URL",
-            "SUPABASE_ANON_KEY"
+            "SUPABASE_ANON_KEY",
+            "CLOUD_API_BASEURL"
           )
 
           $missing = $required | Where-Object { [string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($_)) }
@@ -144,6 +146,7 @@ jobs:
           OVERLAY_SYNC_BASEURL=$env:OVERLAY_SYNC_BASEURL
           SUPABASE_URL=$env:SUPABASE_URL
           SUPABASE_ANON_KEY=$env:SUPABASE_ANON_KEY
+          CLOUD_API_BASEURL=$env:CLOUD_API_BASEURL
           "@.Trim() | Set-Content -LiteralPath ".env" -Encoding UTF8
 
       - name: Build
