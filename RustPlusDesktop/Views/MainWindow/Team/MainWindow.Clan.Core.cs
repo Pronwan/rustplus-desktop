@@ -22,6 +22,13 @@ namespace RustPlusDesk.Views
         }
 
         // --- Clan Info Properties ---
+        private long _clanId;
+        public long ClanId
+        {
+            get => _clanId;
+            set { if (_clanId == value) return; _clanId = value; OnPropertyChanged(nameof(ClanId)); }
+        }
+
         private string _clanName = "";
         public string ClanName
         {
@@ -33,8 +40,16 @@ namespace RustPlusDesk.Views
         public string ClanMotd
         {
             get => _clanMotd;
-            set { if (_clanMotd == value) return; _clanMotd = value; OnPropertyChanged(nameof(ClanMotd)); }
+            set 
+            { 
+                if (_clanMotd == value) return; 
+                _clanMotd = value; 
+                OnPropertyChanged(nameof(ClanMotd)); 
+                OnPropertyChanged(nameof(HasClanMotd));
+            }
         }
+
+        public bool HasClanMotd => !string.IsNullOrWhiteSpace(_clanMotd);
 
         private string _clanCreatedText = "";
         public string ClanCreatedText
@@ -57,6 +72,28 @@ namespace RustPlusDesk.Views
             set { if (_clanMotdAuthorText == value) return; _clanMotdAuthorText = value; OnPropertyChanged(nameof(ClanMotdAuthorText)); }
         }
 
+        private ImageSource? _clanLogoImage;
+        public ImageSource? ClanLogoImage
+        {
+            get => _clanLogoImage;
+            set 
+            { 
+                if (_clanLogoImage == value) return; 
+                _clanLogoImage = value; 
+                OnPropertyChanged(nameof(ClanLogoImage)); 
+                OnPropertyChanged(nameof(HasClanLogo));
+            }
+        }
+
+        public bool HasClanLogo => ClanLogoImage != null;
+
+        private SolidColorBrush _clanColorBrush = new(Color.FromRgb(30, 90, 180));
+        public SolidColorBrush ClanColorBrush
+        {
+            get => _clanColorBrush;
+            set { if (_clanColorBrush == value) return; _clanColorBrush = value; OnPropertyChanged(nameof(ClanColorBrush)); }
+        }
+
         private int _clanMaxMemberCount;
         public int ClanMaxMemberCount
         {
@@ -69,6 +106,13 @@ namespace RustPlusDesk.Views
         {
             get => _clanMemberCount;
             set { if (_clanMemberCount == value) return; _clanMemberCount = value; OnPropertyChanged(nameof(ClanMemberCount)); }
+        }
+
+        private int _clanOnlineCount;
+        public int ClanOnlineCount
+        {
+            get => _clanOnlineCount;
+            set { if (_clanOnlineCount == value) return; _clanOnlineCount = value; OnPropertyChanged(nameof(ClanOnlineCount)); }
         }
 
         private string _clanMembersRatio = "";
@@ -84,6 +128,28 @@ namespace RustPlusDesk.Views
             get => _clanScoreText;
             set { if (_clanScoreText == value) return; _clanScoreText = value; OnPropertyChanged(nameof(ClanScoreText)); }
         }
+
+        private string _clanRolesSummary = "";
+        public string ClanRolesSummary
+        {
+            get => _clanRolesSummary;
+            set { if (_clanRolesSummary == value) return; _clanRolesSummary = value; OnPropertyChanged(nameof(ClanRolesSummary)); }
+        }
+
+        private int _clanInvitesCount;
+        public int ClanInvitesCount
+        {
+            get => _clanInvitesCount;
+            set 
+            { 
+                if (_clanInvitesCount == value) return; 
+                _clanInvitesCount = value; 
+                OnPropertyChanged(nameof(ClanInvitesCount)); 
+                OnPropertyChanged(nameof(HasClanInvites));
+            }
+        }
+
+        public bool HasClanInvites => ClanInvitesCount > 0;
 
         private string _lastClanPullTime = "";
         public string LastClanPullTime
@@ -107,6 +173,8 @@ namespace RustPlusDesk.Views
         }
 
         public ObservableCollection<ClanMemberVM> ClanMembers { get; } = new();
+        public ObservableCollection<ClanRoleVM> ClanRoles { get; } = new();
+        public ObservableCollection<ClanInviteVM> ClanInvites { get; } = new();
 
         private DateTime _lastClanPoll = DateTime.MinValue;
 
@@ -143,15 +211,91 @@ namespace RustPlusDesk.Views
                 var clan = await _real.GetClanInfoAsync();
                 if (clan is null) return;
 
+                ClanId = clan.ClanId;
                 ClanName = clan.Name;
                 ClanMotd = clan.Motd;
                 ClanCreatedText = clan.Created != default ? clan.Created.ToString("dd/MM/yyyy") : "-";
                 ClanMaxMemberCount = clan.MaxMemberCount ?? 100;
                 ClanMemberCount = clan.Members.Count;
-                ClanMembersRatio = $"{ClanMemberCount} / {ClanMaxMemberCount}";
+                int onlineCount = clan.Members.Count(m => m.IsOnline);
+                ClanOnlineCount = onlineCount;
+                ClanMembersRatio = $"{onlineCount} Online · {ClanMemberCount} / {ClanMaxMemberCount}";
                 ClanScoreText = clan.Score?.ToString() ?? "-";
                 LastClanPullTime = DateTime.Now.ToString("HH:mm:ss");
                 HasClanInfo = true;
+
+                // Logo
+                if (clan.Logo != null && clan.Logo.Length > 0)
+                {
+                    ClanLogoImage = BytesToImage(clan.Logo);
+                }
+                else
+                {
+                    ClanLogoImage = null;
+                }
+
+                // Clan Banner Color (Facepunch RGBA hex uint32: byte3=R, byte2=G, byte1=B, byte0=A)
+                if (clan.Color.HasValue && clan.Color.Value != 0)
+                {
+                    uint c = (uint)clan.Color.Value;
+                    byte r = (byte)((c >> 24) & 0xFF);
+                    byte g = (byte)((c >> 16) & 0xFF);
+                    byte b = (byte)((c >> 8) & 0xFF);
+                    byte a = (byte)(c & 0xFF);
+                    if (a == 0) a = 255;
+                    ClanColorBrush = new SolidColorBrush(Color.FromArgb(a, r, g, b));
+                }
+                else
+                {
+                    ClanColorBrush = new SolidColorBrush(Color.FromRgb(30, 90, 180));
+                }
+
+                // Roles
+                ClanRoles.Clear();
+                foreach (var r in clan.Roles.OrderBy(r => r.Rank))
+                {
+                    ClanRoles.Add(new ClanRoleVM
+                    {
+                        RoleId = r.RoleId,
+                        Rank = r.Rank,
+                        Name = r.Name,
+                        CanSetMotd = r.CanSetMotd,
+                        CanSetLogo = r.CanSetLogo,
+                        CanInvite = r.CanInvite,
+                        CanKick = r.CanKick,
+                        CanPromote = r.CanPromote,
+                        CanDemote = r.CanDemote,
+                        CanSetPlayerNotes = r.CanSetPlayerNotes,
+                        CanAccessLogs = r.CanAccessLogs,
+                        CanAccessScoreEvents = r.CanAccessScoreEvents
+                    });
+                }
+                ClanRolesSummary = string.Join(", ", ClanRoles.Select(r => r.Name));
+
+                // Invites
+                ClanInvites.Clear();
+                foreach (var inv in clan.Invites)
+                {
+                    var invVm = new ClanInviteVM
+                    {
+                        SteamId = inv.SteamId,
+                        Recruiter = inv.Recruiter,
+                        Timestamp = inv.Timestamp
+                    };
+                    ClanInvites.Add(invVm);
+
+                    _ = Task.Run(async () =>
+                    {
+                        var name = await GetSteamNameAsync(inv.SteamId);
+                        var recName = await GetSteamNameAsync(inv.Recruiter);
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            invVm.Name = name;
+                            invVm.RecruiterName = recName;
+                        });
+                    });
+                }
+                ClanInvitesCount = ClanInvites.Count;
 
                 // Load Creator / Founder Name
                 _ = Task.Run(async () =>
@@ -199,6 +343,8 @@ namespace RustPlusDesk.Views
                         ClanMembers.Add(vm);
                     }
 
+                    var role = clan.Roles.FirstOrDefault(r => r.RoleId == m.RoleId);
+
                     vm.RoleId = m.RoleId;
                     vm.RoleName = m.RoleName;
                     vm.Rank = m.Rank;
@@ -207,6 +353,21 @@ namespace RustPlusDesk.Views
                     vm.Notes = m.Notes;
                     vm.IsOnline = m.IsOnline;
                     vm.IsInTeam = TeamMembers.Any(tm => tm.SteamId == sid);
+
+                    if (role != null)
+                    {
+                        var perms = new List<string>();
+                        if (role.CanSetMotd) perms.Add("MOTD");
+                        if (role.CanSetLogo) perms.Add("Logo");
+                        if (role.CanInvite) perms.Add("Invite");
+                        if (role.CanKick) perms.Add("Kick");
+                        if (role.CanPromote) perms.Add("Promote");
+                        if (role.CanDemote) perms.Add("Demote");
+                        if (role.CanSetPlayerNotes) perms.Add("Notes");
+                        if (role.CanAccessLogs) perms.Add("Logs");
+                        if (role.CanAccessScoreEvents) perms.Add("Score");
+                        vm.RolePermissions = perms.Count > 0 ? string.Join(", ", perms) : "None";
+                    }
 
                     // Fetch avatar and SteamID name in the background
                     if (vm.Avatar == null || vm.Name == "(player)")
@@ -279,6 +440,7 @@ namespace RustPlusDesk.Views
                 AppendLog($"[clan-avatar] {vm.SteamId}: {ex.Message}");
             }
         }
+
         private void Clan_OpenProfile_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if ((sender as System.Windows.FrameworkElement)?.DataContext is ClanMemberVM vm)
@@ -375,6 +537,13 @@ namespace RustPlusDesk.Views
             set { if (_rank == value) return; _rank = value; OnChanged(nameof(Rank)); }
         }
 
+        private string _rolePermissions = "";
+        public string RolePermissions
+        {
+            get => _rolePermissions;
+            set { if (_rolePermissions == value) return; _rolePermissions = value; OnChanged(nameof(RolePermissions)); }
+        }
+
         private bool _isOnline;
         public bool IsOnline
         {
@@ -386,8 +555,10 @@ namespace RustPlusDesk.Views
         public DateTime Joined
         {
             get => _joined;
-            set { if (_joined == value) return; _joined = value; OnChanged(nameof(Joined)); }
+            set { if (_joined == value) return; _joined = value; OnChanged(nameof(Joined)); OnChanged(nameof(JoinedText)); }
         }
+
+        public string JoinedText => (Joined == default || Joined == DateTime.MinValue) ? "-" : Joined.ToString("d");
 
         private DateTime _lastSeen;
         public DateTime LastSeen
@@ -425,5 +596,68 @@ namespace RustPlusDesk.Views
             get => _avatar;
             set { if (_avatar == value) return; _avatar = value; OnChanged(nameof(Avatar)); }
         }
+    }
+
+    public sealed class ClanRoleVM : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        public int RoleId { get; init; }
+        public int Rank { get; init; }
+        public string Name { get; init; } = "";
+        public bool CanSetMotd { get; init; }
+        public bool CanSetLogo { get; init; }
+        public bool CanInvite { get; init; }
+        public bool CanKick { get; init; }
+        public bool CanPromote { get; init; }
+        public bool CanDemote { get; init; }
+        public bool CanSetPlayerNotes { get; init; }
+        public bool CanAccessLogs { get; init; }
+        public bool CanAccessScoreEvents { get; init; }
+
+        public string PermissionsSummary
+        {
+            get
+            {
+                var perms = new List<string>();
+                if (CanSetMotd) perms.Add("MOTD");
+                if (CanSetLogo) perms.Add("Logo");
+                if (CanInvite) perms.Add("Invite");
+                if (CanKick) perms.Add("Kick");
+                if (CanPromote) perms.Add("Promote");
+                if (CanDemote) perms.Add("Demote");
+                if (CanSetPlayerNotes) perms.Add("Notes");
+                if (CanAccessLogs) perms.Add("Logs");
+                if (CanAccessScoreEvents) perms.Add("Score");
+                return perms.Count > 0 ? string.Join(", ", perms) : "None";
+            }
+        }
+    }
+
+    public sealed class ClanInviteVM : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        public ulong SteamId { get; init; }
+        public ulong Recruiter { get; init; }
+        public DateTime Timestamp { get; init; }
+
+        private string _name = "(player)";
+        public string Name
+        {
+            get => _name;
+            set { if (_name == value) return; _name = value; OnChanged(nameof(Name)); }
+        }
+
+        private string _recruiterName = "";
+        public string RecruiterName
+        {
+            get => _recruiterName;
+            set { if (_recruiterName == value) return; _recruiterName = value; OnChanged(nameof(RecruiterName)); }
+        }
+
+        public string TimestampText => Timestamp != default ? Timestamp.ToString("g") : "-";
     }
 }
