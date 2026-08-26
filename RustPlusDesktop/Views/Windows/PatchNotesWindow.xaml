@@ -37,14 +37,37 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v9.0.0 | Cloud Sync, Wipe Tracker &amp; Genetics 2.0" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v9.0.0 | Cloud Sync, Clan 2.0, Wipe Tracker &amp; Genetics 2.0" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
-                                Version 9.0.0 is a massive milestone release featuring an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
+                                Version 9.0.0 is a massive milestone release featuring an overhauled Clan System with accurate in-game banner rendering and large banner showcase, native in-process FCM notifications, an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
+                            </TextBlock>
+
+                            <!-- Clan System & Banner Overhaul -->
+                            <TextBlock Text="🏰 Clan System &amp; In-Game Banner Overhaul" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Accurate In-Game Banner Colors:</Run>
+                                Re-engineered clan banner color unpacking to match Facepunch's 0xRRGGBBAA wire format. Accurately renders all 8 in-game cloth banner colors (Red, Orange, Yellow, Light Blue, Olive Green, Purple, White, and Black) with zero tint distortion.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Large Clan Banner Showcase Tooltip:</Run>
+                                Hovering over clan details now presents a high-resolution 270&#xD7;170px clan banner showcase with the true banner background color, drawn clan insignia, MOTD announcement card, and full clan statistics.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Pure Native WPF Context Menus:</Run>
+                                Replaced all context menus across the app (Clan tab, Team tab, Player Tracker, and Server Manager) with pure WPF vector SVG icons for opening Steam profiles, copying Steam IDs, and player tracking.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Clan Chat History &amp; Duplicate Filter:</Run>
+                                Fixed clan chat message timestamp parsing and hardened history polling against phantom duplicate messages.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Native In-Process FCM Listener:</Run>
+                                Introduced a high-performance in-process FCM listener enabled by default, reducing memory usage and delivering instant pairing notifications without requiring external Node processes.
                             </TextBlock>
 
                             <!-- Genetics Lab 2.0 -->
-                            <TextBlock Text="🧬 Genetics Lab 2.0 &amp; Ultra-Fast Solver" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="🧬 Genetics Lab 2.0 &amp; Ultra-Fast Solver" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Pre-Allocation Admission Solver Engine:</Run>
                                 Ground-up rewrite of the crossbreeding solver using 18-bit bit-packed genotypes, integer weights, and zero-allocation candidate pruning. Delivers 24&#xD7; to 40&#xD7; faster calculation speeds (dropping complex 100+ plant searches from minutes down to seconds) while reducing UI thread blocking by 99%.
