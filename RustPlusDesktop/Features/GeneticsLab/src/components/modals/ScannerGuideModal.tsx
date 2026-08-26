@@ -99,6 +99,12 @@ export const ScannerGuideModal: React.FC = () => {
               in Rust console to turn it off.
             </Typography>
             <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
+              • NVIDIA REFLEX MODE: <strong>ON + BOOST</strong>. Prevents the game from starving background screen capture. In console (F1):{' '}
+              <code style={{ backgroundColor: 'var(--gl-input-bg)', padding: '2px 6px', borderRadius: '3px', border: '1px solid var(--gl-surface-hover)', color: 'var(--gl-primary)' }}>
+                graphics.reflexmode 2
+              </code>
+            </Typography>
+            <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--gl-text-secondary)' }}>
               • Windows <strong>HDR mode</strong> is not supported.
             </Typography>
           </Box>

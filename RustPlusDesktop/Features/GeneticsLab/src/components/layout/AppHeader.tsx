@@ -27,6 +27,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useApp, PLANT_TYPES } from '../../context/AppContext.tsx';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../context/ScannerContext.tsx';
@@ -42,6 +43,7 @@ export const AppHeader: React.FC = () => {
     toggleTheme,
     setIsOptionsModalOpen,
     setIsAboutModalOpen,
+    setIsReflexNoticeOpen,
     setIsKeyboardShortcutsOpen,
     setIsProjectManagerOpen
   } = useApp();
@@ -188,6 +190,7 @@ export const AppHeader: React.FC = () => {
             {isCompact && <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>}
             <MenuItem onClick={closeMenuThen(toggleTheme)}><ListItemIcon>{themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon><ListItemText>{themeMode === 'dark' ? 'Light mode' : 'Dark mode'}</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsReflexNoticeOpen(true))}><ListItemIcon><FlashOnIcon sx={{ color: '#F59E0B' }} /></ListItemIcon><ListItemText>Scanner &amp; Reflex Guide</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsAboutModalOpen(true))}><ListItemIcon><InfoIcon /></ListItemIcon><ListItemText>About</ListItemText></MenuItem>
             <MenuItem component="a" href="https://github.com/JawadYzbk/rust-genetics-lab" target="_blank" rel="noopener noreferrer" onClick={() => setMenuAnchor(null)}><ListItemIcon><GitHubIcon /></ListItemIcon><ListItemText>GitHub repository</ListItemText></MenuItem>

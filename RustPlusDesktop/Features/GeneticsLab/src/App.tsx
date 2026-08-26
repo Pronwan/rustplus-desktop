@@ -19,6 +19,7 @@ import { KeyboardShortcutsModal } from './components/layout/KeyboardShortcutsMod
 import { OptionsModal } from './components/modals/OptionsModal.tsx';
 import { AboutModal } from './components/modals/AboutModal.tsx';
 import { ScannerGuideModal } from './components/modals/ScannerGuideModal.tsx';
+import { ReflexNoticeModal } from './components/modals/ReflexNoticeModal.tsx';
 import { CookieConsentBanner } from './components/modals/CookieConsentBanner.tsx';
 
 export const App: React.FC = () => {
@@ -29,7 +30,9 @@ export const App: React.FC = () => {
     isKeyboardShortcutsOpen,
     setIsKeyboardShortcutsOpen,
     isProjectManagerOpen,
-    setIsProjectManagerOpen
+    setIsProjectManagerOpen,
+    isReflexNoticeOpen,
+    setIsReflexNoticeOpen
   } = useApp();
 
   const muiTheme = useMemo(() => getMuiTheme(themeMode, density), [themeMode, density]);
@@ -89,6 +92,10 @@ export const App: React.FC = () => {
         <OptionsModal />
         <AboutModal />
         <ScannerGuideModal />
+        <ReflexNoticeModal
+          open={isReflexNoticeOpen ? true : undefined}
+          onClose={() => setIsReflexNoticeOpen(false)}
+        />
         <CookieConsentBanner />
       </Box>
     </ThemeProvider>

@@ -393,7 +393,7 @@ export const ScannerWidget: React.FC = () => {
                   lineHeight: 1.4
                 }}
               >
-                Rust is starving screen capture and OCR threads. Open Rust F1 console and type <strong>fps.limit 50</strong> (or switch to <strong>Borderless/Windowed</strong> mode) to restore real-time recognition.
+                Rust is starving screen capture and OCR threads. In Rust, set <strong>NVIDIA Reflex Mode</strong> to <strong>ON + BOOST</strong> (F1: <code>graphics.reflexmode 2</code>) or cap in-game FPS (F1: <code>fps.limit 50</code>) to restore real-time recognition.
               </Typography>
             </Box>
           </Box>
@@ -414,7 +414,7 @@ export const ScannerWidget: React.FC = () => {
               variant="caption"
               sx={{ color: 'var(--gl-gold)', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
             >
-              Scanning feels slow or laggy? Run Rust in <strong>Borderless/Windowed</strong> and <strong>cap your in-game FPS to ≤ 50</strong> (F1: <code>fps.limit 50</code>). Uncapped game FPS starves background capture and stalls recognition.
+              Scanning feels slow or laggy? Set Rust <strong>NVIDIA Reflex Mode</strong> to <strong>ON + BOOST</strong> (F1: <code>graphics.reflexmode 2</code>) and run in <strong>Borderless/Windowed</strong> mode.
             </Typography>
           </Box>
         )}
