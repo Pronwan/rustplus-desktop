@@ -177,6 +177,27 @@ public partial class MainWindow
                 }
 
                 content.Add(new StringContent(guildId), "guild_id");
+
+                // The platform requires a channel and offers no interaction path. The channel the
+                // command was typed in is the right answer, but it only reaches us once the
+                // platform puts channel_id into the command payload. Until then fall back to the
+                // configured chat/events channel, so the map arrives somewhere rather than failing
+                // with "The channel id field is required".
+                if (string.IsNullOrEmpty(channelId))
+                {
+                    channelId = await ResolveDiscordChannelIdAsync(guildId);
+                    if (!string.IsNullOrEmpty(channelId))
+                    {
+                        AppendLog("[DiscordBot] Map upload: no channel on the interaction, using the configured one.");
+                        content.Add(new StringContent(channelId), "channel_id");
+                    }
+                    else
+                    {
+                        AppendLog("[DiscordBot] Map upload skipped: no channel on the interaction and none configured.");
+                        return false;
+                    }
+                }
+
                 return await RustPlusDesk.Services.Cloud.CloudApiClient.PostMultipartAsync("discord/send-map", content);
             }
 

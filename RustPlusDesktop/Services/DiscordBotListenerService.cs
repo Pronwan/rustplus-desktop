@@ -482,6 +482,10 @@ public class DiscordBotListenerService
                         result.Message = mainWindow.GetSmartSwitchListForDiscord();
                         break;
 
+                    // The platform posts a map into a named channel and has no interaction
+                    // path, unlike the old backend which replied through interaction_token
+                    // alone. The channel the command was typed in therefore has to travel
+                    // with the command; passing null gave "The channel id field is required".
                     case "map":
                         result.Success = true;
                         result.Message = Properties.Resources.GetString("DiscordRenderingMap");
@@ -491,7 +495,8 @@ public class DiscordBotListenerService
                             var base64 = await mainWindow.GetCurrentMapScreenshotBase64Async();
                             await mainWindow.UploadMapScreenshotToDiscordAsync(base64, 
                                 record.Payload?["interaction_token"]?.ToString(),
-                                record.Payload?["application_id"]?.ToString(), null);
+                                record.Payload?["application_id"]?.ToString(),
+                                record.Payload?["channel_id"]?.ToString());
                         });
                         break;
 
@@ -503,7 +508,8 @@ public class DiscordBotListenerService
                             var base64 = await mainWindow.GetFullMapScreenshotBase64Async();
                             await mainWindow.UploadMapScreenshotToDiscordAsync(base64, 
                                 record.Payload?["interaction_token"]?.ToString(),
-                                record.Payload?["application_id"]?.ToString(), null);
+                                record.Payload?["application_id"]?.ToString(),
+                                record.Payload?["channel_id"]?.ToString());
                         });
                         break;
 
