@@ -1377,7 +1377,7 @@ namespace RustPlusDesk.Views
         {
             if (!Services.Cloud.CloudAuth.IsCloudAvailable) return;
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            var steamId = vm?.SteamId64;
+            var steamId = vm?.SteamId64 ?? TrackingService.SteamId64;
             if (string.IsNullOrEmpty(steamId)) return;
 
             var guildId = TxtDiscordGuildId.Text?.Trim();
@@ -1424,11 +1424,47 @@ namespace RustPlusDesk.Views
                 };
 
                 var resultStr = await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Post, payload);
-                var resultList = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordBotRegistrationResult>>(resultStr, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                var registration = resultList?.FirstOrDefault();
-                if (registration == null || !registration.Success)
+                bool isSuccess = false;
+                string? errorMessage = null;
+
+                try
                 {
-                    MessageBox.Show(registration?.Message ?? RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToLinkDiscordServer"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    using var doc = JsonDocument.Parse(resultStr);
+                    var root = doc.RootElement;
+                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+                    {
+                        var first = root[0];
+                        if (first.TryGetProperty("success", out var succProp))
+                            isSuccess = succProp.GetBoolean();
+                        else if (first.TryGetProperty("guild_id", out var gidProp) && !string.IsNullOrEmpty(gidProp.GetString()))
+                            isSuccess = true;
+                        else if (first.TryGetProperty("id", out var idProp) && !string.IsNullOrEmpty(idProp.GetString()))
+                            isSuccess = true;
+
+                        if (first.TryGetProperty("message", out var msgProp))
+                            errorMessage = msgProp.GetString();
+                    }
+                    else if (root.ValueKind == JsonValueKind.Object)
+                    {
+                        if (root.TryGetProperty("success", out var succProp))
+                            isSuccess = succProp.GetBoolean();
+                        else if (root.TryGetProperty("guild_id", out var gidProp) && !string.IsNullOrEmpty(gidProp.GetString()))
+                            isSuccess = true;
+                        else if (root.TryGetProperty("id", out var idProp) && !string.IsNullOrEmpty(idProp.GetString()))
+                            isSuccess = true;
+
+                        if (root.TryGetProperty("message", out var msgProp))
+                            errorMessage = msgProp.GetString();
+                    }
+                }
+                catch
+                {
+                    isSuccess = true;
+                }
+
+                if (!isSuccess)
+                {
+                    MessageBox.Show(errorMessage ?? RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToLinkDiscordServer"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -1464,13 +1500,7 @@ namespace RustPlusDesk.Views
                 var queryParams = new Dictionary<string, string> { ["guild_id"] = guildId };
                 var body = await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Get, null, queryParams);
                 
-                List<RustPlusDesk.Models.DiscordChannelsConfigModel> existingList = new();
-                using var doc = JsonDocument.Parse(body);
-                var root = doc.RootElement;
-                if (root.TryGetProperty("discord_channels_config", out var configEl) && configEl.ValueKind == JsonValueKind.Array)
-                {
-                    existingList = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(configEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-                }
+                var existingList = Services.Cloud.CloudDiscordAdapter.ExtractChannelsConfig(body, guildId);
 
                 async Task SaveChannelAsync(string type, string channelId, bool tts, string mentionText)
                 {
@@ -1534,7 +1564,7 @@ namespace RustPlusDesk.Views
             try
             {
                 var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-                var steamId = vm?.SteamId64;
+                var steamId = vm?.SteamId64 ?? TrackingService.SteamId64;
                 if (string.IsNullOrEmpty(steamId)) return;
 
                 var queryParams = new Dictionary<string, string> { ["owner_steam_id"] = steamId };
@@ -1551,17 +1581,7 @@ namespace RustPlusDesk.Views
                         TxtDiscordAllowedRoleIds.Text = guildSetting.AllowedCommandRoleIds ?? string.Empty;
                     });
 
-                    List<RustPlusDesk.Models.DiscordChannelsConfigModel> channelsList = new();
-                    using var doc = JsonDocument.Parse(body);
-                    var root = doc.RootElement;
-                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
-                    {
-                        var firstRow = root[0];
-                        if (firstRow.TryGetProperty("discord_channels_config", out var configEl) && configEl.ValueKind == JsonValueKind.Array)
-                        {
-                            channelsList = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(configEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-                        }
-                    }
+                    var channelsList = Services.Cloud.CloudDiscordAdapter.ExtractChannelsConfig(body, guildSetting.GuildId);
 
                     Dispatcher.Invoke(() =>
                     {
@@ -1627,13 +1647,12 @@ namespace RustPlusDesk.Views
         private async Task SaveDiscordCommandPermissionsAsync(string guildId)
         {
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            var steamId = vm?.SteamId64;
-            if (string.IsNullOrWhiteSpace(steamId)) return;
+            var steamId = vm?.SteamId64 ?? TrackingService.SteamId64;
 
             var payload = new
             {
                 guild_id = guildId,
-                owner_steam_id = steamId,
+                owner_steam_id = steamId ?? string.Empty,
                 commands_enabled = ChkDiscordCommandsEnabled.IsChecked != false,
                 allowed_command_role_ids = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text)
             };
