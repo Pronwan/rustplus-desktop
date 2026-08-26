@@ -175,6 +175,9 @@ public class ServerProfile : INotifyPropertyChanged
     }
     public ObservableCollection<string> CameraIds { get; set; } = new();
 
+    /// <summary>Optional friendly display names, keyed by camera identifier.</summary>
+    public Dictionary<string, string> CameraNames { get; set; } = new();
+
     [JsonPropertyName("deathMarkers")]
     public List<DeathMarkerData> DeathMarkers { get; set; } = new();
 

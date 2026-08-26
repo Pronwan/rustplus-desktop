@@ -3712,19 +3712,85 @@
                                     HorizontalAlignment="Right"
                                     DockPanel.Dock="Bottom"
                                     Orientation="Horizontal">
-                                    <Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add" Style="{StaticResource PrimaryButton}">
-                                        <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock VerticalAlignment="Center" Text="&#x1F4F7;" />
-                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
-                                        </StackPanel>
-                                    </Button>                                </StackPanel>
+                                    <ui:Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add"
+                                               Appearance="Primary" Padding="14,8"
+                                               Icon="{ui:SymbolIcon Symbol=CameraAdd24}"
+                                               Content="{DynamicResource AddCamera}" />
+
+                                    <!-- Add-camera popover, anchored above the button -->
+                                    <Popup x:Name="AddCamPopup" PlacementTarget="{Binding ElementName=BtnAddCam}"
+                                           Placement="Top" StaysOpen="False" AllowsTransparency="True"
+                                           PopupAnimation="Fade" VerticalOffset="-8" HorizontalOffset="0">
+                                        <Border Width="330" Margin="10" CornerRadius="12"
+                                                Background="{DynamicResource ApplicationBackgroundBrush}"
+                                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel Margin="16">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                    <ui:SymbolIcon Symbol="CameraAdd24" FontSize="16" Margin="0,0,8,0"
+                                                                   VerticalAlignment="Center" Foreground="{DynamicResource Accent}" />
+                                                    <TextBlock Text="{DynamicResource AddCamera}" FontWeight="SemiBold" FontSize="14"
+                                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                                </StackPanel>
+                                                <TextBlock Text="Camera identifier from the in-game computer station (case-sensitive)."
+                                                           TextWrapping="Wrap" FontSize="11.5" Margin="0,0,0,10"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <ui:TextBox x:Name="AddCamText" PlaceholderText="e.g. CAM01, DOOR1, TURRET_N"
+                                                            Icon="{ui:SymbolIcon Symbol=CameraDome24}" KeyDown="AddCamText_KeyDown" />
+                                                <ui:TextBox x:Name="AddCamName" Margin="0,8,0,0" PlaceholderText="Display name (optional)"
+                                                            Icon="{ui:SymbolIcon Symbol=Rename24}" KeyDown="AddCamText_KeyDown" />
+                                                <ui:InfoBar x:Name="AddCamErr" Margin="0,10,0,0" Severity="Error" IsClosable="False" IsOpen="False" />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="82" Margin="0,0,8,0" Click="AddCamCancel_Click" />
+                                                    <ui:Button Content="{DynamicResource AddCamera}" Appearance="Primary" MinWidth="110"
+                                                               Icon="{ui:SymbolIcon Symbol=AddCircle24}" Click="AddCamConfirm_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+
+                                    <!-- Edit-camera popover (anchored to the clicked tile's edit button) -->
+                                    <Popup x:Name="EditCamPopup" Placement="Top" StaysOpen="False" AllowsTransparency="True"
+                                           PopupAnimation="Fade" VerticalOffset="-8" HorizontalOffset="0">
+                                        <Border Width="330" Margin="10" CornerRadius="12"
+                                                Background="{DynamicResource ApplicationBackgroundBrush}"
+                                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel Margin="16">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                                    <ui:SymbolIcon Symbol="Rename24" FontSize="16" Margin="0,0,8,0"
+                                                                   VerticalAlignment="Center" Foreground="{DynamicResource Accent}" />
+                                                    <TextBlock Text="Edit camera" FontWeight="SemiBold" FontSize="14"
+                                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                                </StackPanel>
+                                                <TextBlock Text="Camera identifier (case-sensitive)" FontSize="11.5" Margin="0,0,0,4"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <ui:TextBox x:Name="EditCamText" Icon="{ui:SymbolIcon Symbol=CameraDome24}" KeyDown="EditCamText_KeyDown" />
+                                                <TextBlock Text="Display name (optional)" FontSize="11.5" Margin="0,10,0,4"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <ui:TextBox x:Name="EditCamName" Icon="{ui:SymbolIcon Symbol=Rename24}" KeyDown="EditCamText_KeyDown" />
+                                                <ui:InfoBar x:Name="EditCamErr" Margin="0,10,0,0" Severity="Error" IsClosable="False" IsOpen="False" />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="82" Margin="0,0,8,0" Click="EditCamCancel_Click" />
+                                                    <ui:Button Content="Save" Appearance="Primary" MinWidth="90"
+                                                               Icon="{ui:SymbolIcon Symbol=Rename24}" Click="EditCamConfirm_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+                                </StackPanel>
 
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid>
-                                        <ItemsControl x:Name="CamItems" tutorials:Tutorial.TargetId="Cameras.List">
+                                        <ItemsControl x:Name="CamItems" tutorials:Tutorial.TargetId="Cameras.List"
+                                                      HorizontalContentAlignment="Stretch">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <WrapPanel ItemHeight="180" ItemWidth="220" />
+                                                    <StackPanel Orientation="Vertical" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>

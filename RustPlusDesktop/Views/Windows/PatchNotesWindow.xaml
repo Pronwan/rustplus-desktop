@@ -40,7 +40,7 @@
                             <TextBlock Text="v9.0.0 | Cloud Sync, Clan 2.0, Wipe Tracker &amp; Genetics 2.0" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
-                                Version 9.0.0 is a massive milestone release featuring an overhauled Clan System with accurate in-game banner rendering and large banner showcase, native in-process FCM notifications, an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
+                                Version 9.0.0 is a massive milestone release featuring an overhauled Clan System with accurate in-game banner rendering and large banner showcase, native in-process FCM notifications, an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, fully rebuilt native CCTV camera controls with an analog joystick, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
                             </TextBlock>
 
                             <!-- Clan System & Banner Overhaul -->
@@ -120,6 +120,29 @@
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Shared Door &amp; Turret Codes:</Run>
                                 Centralized Base Codes vault allowing teams to organize door codes, airlock PINs, and turret auths, with one-click sharing directly to team chat.
+                            </TextBlock>
+
+                            <!-- CCTV Cameras -->
+                            <TextBlock Text="📹 CCTV Cameras Rebuilt" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Native Camera Engine:</Run>
+                                Camera streaming, controlling, and rendering were rebuilt from scratch on the native Rust+ camera API, removing the external Node.js process entirely for lower latency, lower memory use, and faster startup.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Multiple Live Cameras:</Run>
+                                Open several camera windows at the same time &#x2014; each one streams over its own dedicated connection.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Analog Joystick Control:</Run>
+                                A draggable joystick replaces the arrow pad. Look and drone-movement speed scale with how far you push the ball, giving fine control near the center and fast sweeps at the edge.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Capability-Aware Fluent HUD:</Run>
+                                The camera window is a premium Fluent design that auto-detects drones, auto-turrets, PTZ, and static cameras, showing only the movement, mouse-look, zoom, fire, and reload controls each one actually supports.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Add, Name, Edit &amp; Delete Cameras:</Run>
+                                Manage cameras from a responsive full-width list with inline popovers &#x2014; add cameras with optional friendly display names, rename their identifier, and delete them, all saved per server.
                             </TextBlock>
 
                             <!-- Cloud Platform & Connection Resilience -->
