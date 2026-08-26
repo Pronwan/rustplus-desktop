@@ -174,5 +174,93 @@ namespace RustPlusDesk.Services.Cloud
                 return null;
             }
         }
+
+        /// <summary>
+        /// Safely extracts channel configurations from arbitrary JSON formats
+        /// (array of guilds with 'channels' or 'discord_channels_config', direct array of channels, or single object).
+        /// </summary>
+        public static List<RustPlusDesk.Models.DiscordChannelsConfigModel> ExtractChannelsConfig(string? json, string? targetGuildId = null)
+        {
+            var list = new List<RustPlusDesk.Models.DiscordChannelsConfigModel>();
+            if (string.IsNullOrWhiteSpace(json)) return list;
+
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                if (root.ValueKind == JsonValueKind.Array)
+                {
+                    // Check if array items are directly channel config objects (have "notification_type")
+                    bool isDirectChannelList = false;
+                    foreach (var el in root.EnumerateArray())
+                    {
+                        if (el.ValueKind == JsonValueKind.Object && el.TryGetProperty("notification_type", out _))
+                        {
+                            isDirectChannelList = true;
+                            break;
+                        }
+                    }
+
+                    if (isDirectChannelList)
+                    {
+                        return JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(
+                            json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? list;
+                    }
+
+                    // Otherwise elements are guild objects
+                    foreach (var guildEl in root.EnumerateArray())
+                    {
+                        if (guildEl.ValueKind != JsonValueKind.Object) continue;
+
+                        if (!string.IsNullOrEmpty(targetGuildId) &&
+                            guildEl.TryGetProperty("guild_id", out var gId) &&
+                            gId.GetString() != targetGuildId)
+                        {
+                            continue;
+                        }
+
+                        ExtractChannelsFromGuildElement(guildEl, list);
+                        if (list.Count > 0 || !string.IsNullOrEmpty(targetGuildId))
+                            break;
+                    }
+                }
+                else if (root.ValueKind == JsonValueKind.Object)
+                {
+                    if (root.TryGetProperty("notification_type", out _))
+                    {
+                        var single = JsonSerializer.Deserialize<RustPlusDesk.Models.DiscordChannelsConfigModel>(
+                            root.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (single != null) list.Add(single);
+                    }
+                    else
+                    {
+                        ExtractChannelsFromGuildElement(root, list);
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                // Unparseable JSON — treat as empty.
+            }
+
+            return list;
+        }
+
+        private static void ExtractChannelsFromGuildElement(JsonElement guildEl, List<RustPlusDesk.Models.DiscordChannelsConfigModel> list)
+        {
+            if (guildEl.TryGetProperty("channels", out var channelsEl) && channelsEl.ValueKind == JsonValueKind.Array)
+            {
+                var items = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(
+                    channelsEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (items != null) list.AddRange(items);
+            }
+            else if (guildEl.TryGetProperty("discord_channels_config", out var configEl) && configEl.ValueKind == JsonValueKind.Array)
+            {
+                var items = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordChannelsConfigModel>>(
+                    configEl.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (items != null) list.AddRange(items);
+            }
+        }
     }
 }
