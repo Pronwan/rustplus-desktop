@@ -160,35 +160,19 @@ export const ReflexNoticeModal: React.FC<{
             In Rust, go to <strong>Options &rarr; Graphics</strong> and set:
           </Typography>
           <Box
+            component="img"
+            src="./img/Nvidia-Reflex.png"
+            alt="NVIDIA Reflex Mode : ON + BOOST"
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: '#0F172A',
-              border: '1px solid #334155',
+              width: '100%',
+              height: 'auto',
               borderRadius: '4px',
-              p: '8px 12px',
-              mt: 0.5
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              mt: 0.5,
+              objectFit: 'contain'
             }}
-          >
-            <Typography variant="body2" sx={{ fontWeight: 700, letterSpacing: '0.5px', color: '#E2E8F0', fontSize: '0.82rem' }}>
-              NVIDIA REFLEX MODE
-            </Typography>
-            <Box
-              sx={{
-                backgroundColor: '#0284C7',
-                color: '#FFFFFF',
-                px: 1.2,
-                py: 0.3,
-                borderRadius: '3px',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                letterSpacing: '0.5px'
-              }}
-            >
-              ON + BOOST
-            </Box>
-          </Box>
+            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+          />
         </Paper>
 
         {/* Setting Card: Console Command */}
