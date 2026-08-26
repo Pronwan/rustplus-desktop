@@ -363,6 +363,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ui:Button x:Name="ReplayPlayButton" Content="Play" Icon="{ui:SymbolIcon Symbol=Play24}" Appearance="Primary" Click="ReplayPlay_Click" Margin="0,0,12,0" VerticalAlignment="Center" />
                             <Slider Grid.Column="1" x:Name="ReplayProgress" Minimum="0" Maximum="0" ValueChanged="ReplayProgress_ValueChanged" VerticalAlignment="Center" />
@@ -372,6 +373,7 @@
                                 <ComboBoxItem Content="2×" Tag="2" />
                                 <ComboBoxItem Content="4×" Tag="4" />
                             </ComboBox>
+                            <ui:Button Grid.Column="4" x:Name="ReplayToggleMonumentsButton" Content="Hide monuments" Icon="{ui:SymbolIcon Symbol=Building24}" Appearance="Secondary" Click="ToggleMonuments_Click" Margin="10,0,0,0" VerticalAlignment="Center" ToolTip="Toggle monument markers on the map" />
                         </Grid>
                     </ui:Card>
 
@@ -379,7 +381,7 @@
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
                              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                              BorderThickness="1">
-                        <Grid Background="#0C1015" ClipToBounds="True" Cursor="SizeAll" ToolTip="Mouse wheel to zoom · drag to pan · double-click to reset" MouseWheel="MapViewport_MouseWheel" MouseLeftButtonDown="MapViewport_MouseLeftButtonDown" MouseLeftButtonUp="MapViewport_MouseLeftButtonUp" MouseMove="MapViewport_MouseMove">
+                        <Grid Background="#0B3A4A" ClipToBounds="True" Cursor="SizeAll" ToolTip="Mouse wheel to zoom · drag to pan · double-click to reset" MouseWheel="MapViewport_MouseWheel" MouseLeftButtonDown="MapViewport_MouseLeftButtonDown" MouseLeftButtonUp="MapViewport_MouseLeftButtonUp" MouseMove="MapViewport_MouseMove">
                             <Grid x:Name="ReplayMapSurface">
                                 <Grid.RenderTransform>
                                     <TransformGroup>
@@ -387,7 +389,7 @@
                                         <TranslateTransform />
                                     </TransformGroup>
                                 </Grid.RenderTransform>
-                                <Image x:Name="ReplayMapImage" Stretch="Uniform" Opacity="0.80" IsHitTestVisible="False" />
+                                <Image x:Name="ReplayMapImage" Stretch="Uniform" Opacity="1.0" IsHitTestVisible="False" />
                                 <Canvas x:Name="ReplayCanvas" Background="Transparent" SizeChanged="Canvas_SizeChanged" />
                             </Grid>
                             <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#DD10151C" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="12">
@@ -414,7 +416,7 @@
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
                              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                              BorderThickness="1">
-                        <Grid Background="#0C1015" ClipToBounds="True" Cursor="SizeAll" ToolTip="Mouse wheel to zoom · drag to pan · double-click to reset" MouseWheel="MapViewport_MouseWheel" MouseLeftButtonDown="MapViewport_MouseLeftButtonDown" MouseLeftButtonUp="MapViewport_MouseLeftButtonUp" MouseMove="MapViewport_MouseMove">
+                        <Grid Background="#0B3A4A" ClipToBounds="True" Cursor="SizeAll" ToolTip="Mouse wheel to zoom · drag to pan · double-click to reset" MouseWheel="MapViewport_MouseWheel" MouseLeftButtonDown="MapViewport_MouseLeftButtonDown" MouseLeftButtonUp="MapViewport_MouseLeftButtonUp" MouseMove="MapViewport_MouseMove">
                             <Grid x:Name="HeatmapMapSurface">
                                 <Grid.RenderTransform>
                                     <TransformGroup>
@@ -422,7 +424,7 @@
                                         <TranslateTransform />
                                     </TransformGroup>
                                 </Grid.RenderTransform>
-                                <Image x:Name="HeatmapMapImage" Stretch="Uniform" Opacity="0.75" IsHitTestVisible="False" />
+                                <Image x:Name="HeatmapMapImage" Stretch="Uniform" Opacity="0.85" IsHitTestVisible="False" />
                                 <Canvas x:Name="HeatmapCanvas" Background="Transparent" SizeChanged="Canvas_SizeChanged" />
                             </Grid>
                         </Grid>
@@ -450,6 +452,7 @@
                                 <Border Grid.Column="4" Background="#FF5A36" CornerRadius="0,3,3,0" />
                             </Grid>
                             <TextBlock x:Name="HeatmapText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11.5" Margin="0,10,0,0" />
+                            <ui:Button x:Name="HeatmapToggleMonumentsButton" Content="Hide monuments" Icon="{ui:SymbolIcon Symbol=Building24}" Appearance="Secondary" Click="ToggleMonuments_Click" Margin="0,16,0,0" HorizontalAlignment="Stretch" ToolTip="Toggle monument markers on the map" />
                         </StackPanel>
                     </ui:Card>
                 </Grid>
@@ -468,13 +471,20 @@
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
                              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                              BorderThickness="1">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="PLAYER A" Style="{StaticResource MetricLabel}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                            <ComboBox x:Name="CompareASelector" Width="190" Height="34" SelectionChanged="CompareSelector_Changed" VerticalContentAlignment="Center" />
-                            <TextBlock Text="PLAYER B" Style="{StaticResource MetricLabel}" VerticalAlignment="Center" Margin="20,0,8,0" />
-                            <ComboBox x:Name="CompareBSelector" Width="190" Height="34" SelectionChanged="CompareSelector_Changed" VerticalContentAlignment="Center" />
-                            <TextBlock x:Name="CompareSummaryText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" VerticalAlignment="Center" Margin="20,0,0,0" />
-                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="PLAYER A" Style="{StaticResource MetricLabel}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <ComboBox x:Name="CompareASelector" Width="190" Height="34" SelectionChanged="CompareSelector_Changed" VerticalContentAlignment="Center" />
+                                <TextBlock Text="PLAYER B" Style="{StaticResource MetricLabel}" VerticalAlignment="Center" Margin="20,0,8,0" />
+                                <ComboBox x:Name="CompareBSelector" Width="190" Height="34" SelectionChanged="CompareSelector_Changed" VerticalContentAlignment="Center" />
+                                <TextBlock x:Name="CompareSummaryText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" VerticalAlignment="Center" Margin="20,0,0,0" />
+                            </StackPanel>
+                            <ui:Button Grid.Column="1" x:Name="CompareToggleMonumentsButton" Content="Hide monuments" Icon="{ui:SymbolIcon Symbol=Building24}" Appearance="Secondary" Click="ToggleMonuments_Click" Margin="16,0,0,0" VerticalAlignment="Center" ToolTip="Toggle monument markers on the map" />
+                        </Grid>
                     </ui:Card>
 
                     <Border Grid.Row="1" Background="#1260CDFF" BorderBrush="#2560CDFF" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,0,0,8">
@@ -485,7 +495,7 @@
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
                              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                              BorderThickness="1">
-                        <Grid Background="#0C1015" ClipToBounds="True" Cursor="SizeAll" ToolTip="Mouse wheel to zoom · drag to pan · double-click to reset" MouseWheel="MapViewport_MouseWheel" MouseLeftButtonDown="MapViewport_MouseLeftButtonDown" MouseLeftButtonUp="MapViewport_MouseLeftButtonUp" MouseMove="MapViewport_MouseMove">
+                        <Grid Background="#0B3A4A" ClipToBounds="True" Cursor="SizeAll" ToolTip="Mouse wheel to zoom · drag to pan · double-click to reset" MouseWheel="MapViewport_MouseWheel" MouseLeftButtonDown="MapViewport_MouseLeftButtonDown" MouseLeftButtonUp="MapViewport_MouseLeftButtonUp" MouseMove="MapViewport_MouseMove">
                             <Grid x:Name="CompareMapSurface">
                                 <Grid.RenderTransform>
                                     <TransformGroup>
@@ -493,7 +503,7 @@
                                         <TranslateTransform />
                                     </TransformGroup>
                                 </Grid.RenderTransform>
-                                <Image x:Name="CompareMapImage" Stretch="Uniform" Opacity="0.78" IsHitTestVisible="False" />
+                                <Image x:Name="CompareMapImage" Stretch="Uniform" Opacity="0.95" IsHitTestVisible="False" />
                                 <Canvas x:Name="CompareCanvas" Background="Transparent" SizeChanged="Canvas_SizeChanged" />
                             </Grid>
                         </Grid>

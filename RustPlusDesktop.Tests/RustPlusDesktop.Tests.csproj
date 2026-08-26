@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -16,27 +16,6 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.6.4" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\RustPlusDesktop\Models\DeviceAutomationRule.cs" Link="Production\DeviceAutomationRule.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\DeviceAutomationEvaluator.cs" Link="Production\DeviceAutomationEvaluator.cs" />
-    <Compile Include="..\RustPlusDesktop\Models\Raid\RaidDataModels.cs" Link="Production\RaidDataModels.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\Raid\RaidCalculatorEngine.cs" Link="Production\RaidCalculatorEngine.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\Raid\RaidDataService.cs" Link="Production\RaidDataService.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\Raid\RaidPlanStore.cs" Link="Production\RaidPlanStore.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\CloudTrafficPolicy.cs" Link="Production\CloudTrafficPolicy.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\Cloud\CloudBackend.cs" Link="Production\CloudBackend.cs" />
-    <Compile Include="..\RustPlusDesktop\Views\MainWindow\Map\SettingsSearchMatcher.cs" Link="Production\SettingsSearchMatcher.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerModels.cs" Link="Production\PlayerWipeTrackerModels.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerEngine.cs" Link="Production\PlayerWipeTrackerEngine.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerStore.cs" Link="Production\PlayerWipeTrackerStore.cs" />
-    <Compile Include="..\RustPlusDesktop\Services\PlayerWipeTracker\PlayerWipeTrackerInsights.cs" Link="Production\PlayerWipeTrackerInsights.cs" />
-    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialModels.cs" Link="Production\TutorialModels.cs" />
-    <Compile Include="..\RustPlusDesktop\Features\Tutorials\Tutorial.cs" Link="Production\Tutorial.cs" />
-    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialRegistry.cs" Link="Production\TutorialRegistry.cs" />
-    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialProgressStore.cs" Link="Production\TutorialProgressStore.cs" />
-    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialTargetResolver.cs" Link="Production\TutorialTargetResolver.cs" />
-    <Compile Include="..\RustPlusDesktop\Features\Tutorials\TutorialService.cs" Link="Production\TutorialService.cs" />
-    <Compile Include="..\RustPlusDesktop\Properties\Resources.Designer.cs" Link="Production\Resources.Designer.cs" />
-    <EmbeddedResource Include="..\RustPlusDesktop\Assets\Data\raid-data.json" Link="Assets\Data\raid-data.json" />
-    <EmbeddedResource Include="..\RustPlusDesktop\Properties\Resources.resx" Link="Properties\Resources.resx" LogicalName="RustPlusDesk.Properties.Resources.resources" />
+    <ProjectReference Include="..\RustPlusDesktop\RustPlusDesk.csproj" />
   </ItemGroup>
 </Project>
