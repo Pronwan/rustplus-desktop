@@ -33,7 +33,32 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v9.0.1 HOTFIX PATCH NOTES -->
+                    <!-- NEW v9.0.2 HOTFIX PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.0.2 | Alexa, Discord Map &amp; Push Notification Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Push Notifications Stopped After a Dropped Connection:</Run>
+                                When the connection to Google's push servers was reset, the listener kept believing it was still connected and quietly stopped delivering pairings and alarms until the app was restarted. It now notices the drop and reconnects on its own within seconds. Two related faults were fixed alongside: the previous connection was never released, and a single drop could leave two listeners running and deliver every notification twice.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Alexa PIN Rejected as Invalid:</Run>
+                                A PIN generated in the app was always refused when linking the Alexa skill, because the upload lost its contents on the way to the cloud. Linking works again.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; /map and /mapfull in Discord:</Run>
+                                Both commands failed with a missing-channel error after the cloud migration. The map is posted again, in the channel the command was used in where the platform provides it, and in your configured chat channel otherwise.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+
+                    <!-- ============================================== -->
+                    <!-- v9.0.1 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
