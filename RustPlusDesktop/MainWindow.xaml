@@ -3782,6 +3782,33 @@
                                             </StackPanel>
                                         </Border>
                                     </Popup>
+
+                                    <!-- Delete-confirmation popover (anchored to the clicked tile's delete button) -->
+                                    <Popup x:Name="DeleteCamPopup" Placement="Top" StaysOpen="False" AllowsTransparency="True"
+                                           PopupAnimation="Fade" VerticalOffset="-8" HorizontalOffset="0">
+                                        <Border Width="300" Margin="10" CornerRadius="12"
+                                                Background="{DynamicResource ApplicationBackgroundBrush}"
+                                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel Margin="16">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                    <ui:SymbolIcon Symbol="Warning24" FontSize="16" Margin="0,0,8,0"
+                                                                   VerticalAlignment="Center" Foreground="#E6A23C" />
+                                                    <TextBlock Text="Delete camera" FontWeight="SemiBold" FontSize="14"
+                                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                                </StackPanel>
+                                                <TextBlock x:Name="DeleteCamText" TextWrapping="Wrap" FontSize="12"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="82" Margin="0,0,8,0" Click="DeleteCamCancel_Click" />
+                                                    <ui:Button Content="Delete" Appearance="Danger" MinWidth="90"
+                                                               Icon="{ui:SymbolIcon Symbol=DeleteDismiss24}" Click="DeleteCamConfirm_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
                                 </StackPanel>
 
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">

@@ -35,6 +35,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     private ObservableCollection<string> _cameraIds = new();
     private Dictionary<string, string> _cameraNames = new();
     private string? _editingCamId;
+    private string? _deletingCamId;
     private DispatcherTimer? _camThumbTimer;
 
     /// <summary>Friendly display name for a camera id, falling back to the id itself.</summary>
@@ -151,6 +152,31 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         // Close before rebuild — the popover is anchored to a tile button that RebuildCameraTiles destroys.
         EditCamPopup.IsOpen = false;
         _editingCamId = null;
+        RebuildCameraTiles();
+    }
+
+    // ----- Delete camera (with confirmation) -----
+
+    private void OpenDeleteCam(string id, FrameworkElement anchor)
+    {
+        _deletingCamId = id;
+        DeleteCamText.Text = $"Delete “{CamDisplayName(id)}”? This removes it from this server.";
+        DeleteCamPopup.PlacementTarget = anchor;
+        DeleteCamPopup.IsOpen = true;
+    }
+
+    private void DeleteCamCancel_Click(object sender, RoutedEventArgs e) { DeleteCamPopup.IsOpen = false; _deletingCamId = null; }
+
+    private void DeleteCamConfirm_Click(object sender, RoutedEventArgs e)
+    {
+        var id = _deletingCamId;
+        DeleteCamPopup.IsOpen = false;
+        _deletingCamId = null;
+        if (string.IsNullOrEmpty(id)) return;
+
+        _cameraIds.Remove(id);
+        _cameraNames.Remove(id);
+        _vm.Save();
         RebuildCameraTiles();
     }
 
@@ -371,13 +397,45 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
         var subtle = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray;
 
-        // Full-width row: flexible thumbnail on the left, fixed-width details on the right so the
-        // name, id and action buttons are always visible no matter how narrow the panel gets.
-        var grid = new Grid();
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        var root = new Grid();
+        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // header (name + id / type)
+        root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // thumbnail + controls
 
-        // Thumbnail (fills the leftover width, shrinks on narrow panels)
+        // ---- Header: name, then id and camera type, above the thumbnail ----
+        var header = new StackPanel { Margin = new Thickness(2, 0, 2, 8) };
+
+        var display = CamDisplayName(id);
+        var nameLine = new DockPanel { LastChildFill = true };
+        var camIcon = new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Controls.SymbolRegular.CameraDome24,
+            FontSize = 16, Margin = new Thickness(0, 0, 8, 0), Foreground = subtle, VerticalAlignment = VerticalAlignment.Center
+        };
+        DockPanel.SetDock(camIcon, Dock.Left);
+        nameLine.Children.Add(camIcon);
+        nameLine.Children.Add(new TextBlock
+        {
+            Text = display, FontWeight = FontWeights.SemiBold, FontSize = 14,
+            TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center
+        });
+
+        var idLine = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(24, 2, 0, 0) };
+        idLine.Children.Add(new TextBlock { Text = id, FontSize = 11.5, Foreground = subtle, Opacity = 0.9, TextTrimming = TextTrimming.CharacterEllipsis, MaxWidth = 160 });
+        var sep = new TextBlock { Text = "  \u2022  ", FontSize = 11.5, Foreground = subtle, Opacity = 0.55 };
+        var typeText = new TextBlock { FontSize = 11.5, Foreground = subtle, Opacity = 0.9 };
+        typeText.Tag = id + "|type";
+        idLine.Children.Add(sep);
+        idLine.Children.Add(typeText);
+
+        header.Children.Add(nameLine);
+        header.Children.Add(idLine);
+        Grid.SetRow(header, 0);
+
+        // ---- Content: thumbnail (fills) + vertical control stack with resolution under ----
+        var content = new Grid();
+        content.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        content.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
         var img = new Image
         {
             Stretch = Stretch.UniformToFill,
@@ -388,7 +446,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         img.Tag = id; // the thumb refresher locates the target via this tag
         var imgBorder = new Border
         {
-            Height = 112,
+            Height = 150,
             MinWidth = 56,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             CornerRadius = new CornerRadius(8),
@@ -400,87 +458,47 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         imgBorder.MouseDown += (s, ev) => { if (ev.ChangedButton == System.Windows.Input.MouseButton.Left) OpenCam(); };
         Grid.SetColumn(imgBorder, 0);
 
-        // Details (fixed width — always shows buttons + name + id)
-        var details = new Grid { Width = 178, Margin = new Thickness(12, 2, 2, 2) };
-        details.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });               // buttons
-        details.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });               // name + id
-        details.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // spacer
-        details.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });               // status
+        var controls = new StackPanel { Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Top };
 
-        var spBtns = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-
-        var btnEdit = new Wpf.Ui.Controls.Button
-        {
-            Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Rename24 },
-            Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent,
-            Padding = new Thickness(6), Margin = new Thickness(4, 0, 0, 0), ToolTip = "Edit id / name"
-        };
-        btnEdit.Click += (_, __) => OpenEditCam(id, btnEdit);
-
-        var btnOpen = new Wpf.Ui.Controls.Button
-        {
-            Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.WindowNew24 },
-            Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent,
-            Padding = new Thickness(6), Margin = new Thickness(4, 0, 0, 0), ToolTip = "Open"
-        };
-        btnOpen.Click += (_, __) => OpenCam();
-
-        var btnDel = new Wpf.Ui.Controls.Button
-        {
-            Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.DeleteDismiss24 },
-            Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent,
-            Padding = new Thickness(6), Margin = new Thickness(4, 0, 0, 0), ToolTip = "Delete"
-        };
-        btnDel.Click += (_, __) => { _cameraIds.Remove(id); _cameraNames.Remove(id); _vm.Save(); RebuildCameraTiles(); };
-
-        spBtns.Children.Add(btnEdit);
-        spBtns.Children.Add(btnOpen);
-        spBtns.Children.Add(btnDel);
-        Grid.SetRow(spBtns, 0);
-
-        // Name + id (icon docked left, text fills and ellipsizes within the fixed details width)
-        var display = CamDisplayName(id);
-        var iconAndName = new DockPanel { Margin = new Thickness(0, 4, 0, 0), LastChildFill = true };
-        var camIcon = new Wpf.Ui.Controls.SymbolIcon
-        {
-            Symbol = Wpf.Ui.Controls.SymbolRegular.CameraDome24,
-            FontSize = 16, Margin = new Thickness(0, 0, 8, 0), Foreground = subtle, VerticalAlignment = VerticalAlignment.Center
-        };
-        DockPanel.SetDock(camIcon, Dock.Left);
-        var nameCol = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-        nameCol.Children.Add(new TextBlock
-        {
-            Text = display, FontWeight = FontWeights.SemiBold, FontSize = 14,
-            TextTrimming = TextTrimming.CharacterEllipsis
-        });
-        if (!string.Equals(display, id, StringComparison.Ordinal))
-            nameCol.Children.Add(new TextBlock
+        Wpf.Ui.Controls.Button MakeBtn(Wpf.Ui.Controls.SymbolRegular sym, string tip, double topMargin)
+            => new Wpf.Ui.Controls.Button
             {
-                Text = id, FontSize = 11, Foreground = subtle, Opacity = 0.85,
-                TextTrimming = TextTrimming.CharacterEllipsis
-            });
-        iconAndName.Children.Add(camIcon);
-        iconAndName.Children.Add(nameCol);
-        Grid.SetRow(iconAndName, 1);
+                Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = sym },
+                Appearance = Wpf.Ui.Controls.ControlAppearance.Transparent,
+                Width = 40, Height = 36, Padding = new Thickness(0),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, topMargin, 0, 0), ToolTip = tip
+            };
 
-        var status = new TextBlock
+        var btnEdit = MakeBtn(Wpf.Ui.Controls.SymbolRegular.Rename24, "Edit id / name", 0);
+        btnEdit.Click += (_, __) => OpenEditCam(id, btnEdit);
+        var btnOpen = MakeBtn(Wpf.Ui.Controls.SymbolRegular.WindowNew24, "Open", 4);
+        btnOpen.Click += (_, __) => OpenCam();
+        var btnDel = MakeBtn(Wpf.Ui.Controls.SymbolRegular.DeleteDismiss24, "Delete", 4);
+        btnDel.Click += (_, __) => OpenDeleteCam(id, btnDel);
+
+        var resText = new TextBlock
         {
-            Opacity = 0.7, FontSize = 12, Foreground = subtle,
-            VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 6, 0, 0),
-            TextTrimming = TextTrimming.CharacterEllipsis
+            FontSize = 11, Foreground = subtle, Opacity = 0.8,
+            HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 8, 0, 0),
+            TextAlignment = TextAlignment.Center
         };
-        status.Tag = id + "|status";
-        Grid.SetRow(status, 3);
+        resText.Tag = id + "|status";
 
-        details.Children.Add(spBtns);
-        details.Children.Add(iconAndName);
-        details.Children.Add(status);
-        Grid.SetColumn(details, 1);
+        controls.Children.Add(btnEdit);
+        controls.Children.Add(btnOpen);
+        controls.Children.Add(btnDel);
+        controls.Children.Add(resText);
+        Grid.SetColumn(controls, 1);
 
-        grid.Children.Add(imgBorder);
-        grid.Children.Add(details);
+        content.Children.Add(imgBorder);
+        content.Children.Add(controls);
+        Grid.SetRow(content, 1);
 
-        return new Wpf.Ui.Controls.Card { Margin = new Thickness(0, 0, 0, 10), Padding = new Thickness(10), Content = grid };
+        root.Children.Add(header);
+        root.Children.Add(content);
+
+        return new Wpf.Ui.Controls.Card { Margin = new Thickness(0, 0, 0, 10), Padding = new Thickness(10), Content = root };
     }
 
     private void EnsureCamThumbPolling()
@@ -493,7 +511,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
     // Grabs a single thumbnail by briefly opening a native camera session, letting a few frames
     // accumulate (the image sharpens over successive frames), then disposing it.
-    private static async Task<(byte[]? png, int w, int h)> GrabCameraSnapshotAsync(RustPlusClientReal real, string id)
+    private static async Task<(byte[]? png, int w, int h, string kind)> GrabCameraSnapshotAsync(RustPlusClientReal real, string id)
     {
         CameraSession? session = null;
         try
@@ -501,6 +519,11 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(12));
             session = await real.CreateCameraSessionAsync(id, cts.Token);
             session.TargetFps = 15;
+
+            var kind = session.IsDrone ? "Drone"
+                     : session.IsAutoTurret ? "Auto-turret"
+                     : session.IsPtzCamera ? "PTZ"
+                     : session.IsStaticCamera ? "Static" : "Camera";
 
             byte[]? latest = null;
             int frames = 0;
@@ -513,9 +536,9 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             try { await ready.Task.WaitAsync(TimeSpan.FromSeconds(8)); } catch { /* use whatever accumulated */ }
             session.FrameRendered -= OnFrame;
 
-            return (latest, session.Width, session.Height);
+            return (latest, session.Width, session.Height, kind);
         }
-        catch { return (null, 0, 0); }
+        catch { return (null, 0, 0, string.Empty); }
         finally
         {
             if (session != null) { try { await session.DisposeAsync(); } catch { } }
@@ -544,21 +567,20 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             var id = img.Tag as string;
             if (string.IsNullOrWhiteSpace(id)) return;
             if (_camBusy.Contains(id)) return;   // hier pausieren, wenn live
-            var status = FindStatus(cont, id);
+            var status = FindTagged(cont, id + "|status");
+            var typeTb = FindTagged(cont, id + "|type");
 
-            var (png, fw, fh) = await GrabCameraSnapshotAsync(real, id);
+            var (png, fw, fh, kind) = await GrabCameraSnapshotAsync(real, id);
             if (png != null)
             {
                 var bi = new BitmapImage();
                 using var ms = new MemoryStream(png);
                 bi.BeginInit(); bi.CacheOption = BitmapCacheOption.OnLoad; bi.StreamSource = ms; bi.EndInit(); bi.Freeze();
                 img.Source = bi;
-                if (status != null) status.Text = (fw > 0 && fh > 0) ? $"{fw}×{fh}" : Properties.Resources.Snapshot.TrimEnd(':', ' ');
             }
-            else
-            {
-                if (status != null) status.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoFrame");
-            }
+            // Resolution shows whenever the camera reported dimensions (even for a black frame).
+            if (status != null) status.Text = (fw > 0 && fh > 0) ? $"{fw}×{fh}" : RustPlusDesk.Properties.Resources.GetString("CodeUiNoFrame");
+            if (typeTb != null && !string.IsNullOrEmpty(kind)) typeTb.Text = kind;
         }
         catch (Exception ex)
         {
@@ -578,14 +600,14 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 if (VisualTreeHelper.GetChild(root, k) is FrameworkElement fe && FindDescImage(fe) is Image hit) return hit;
             return null;
         }
-        static TextBlock? FindStatus(FrameworkElement root, string id)
+        static TextBlock? FindTagged(FrameworkElement root, string tag)
         {
             var q = new Queue<DependencyObject>();
             q.Enqueue(root);
             while (q.Count > 0)
             {
                 var x = q.Dequeue();
-                if (x is TextBlock tb && (tb.Tag as string) == id + "|status") return tb;
+                if (x is TextBlock tb && (tb.Tag as string) == tag) return tb;
                 int n = VisualTreeHelper.GetChildrenCount(x);
                 for (int i = 0; i < n; i++) q.Enqueue(VisualTreeHelper.GetChild(x, i));
             }
