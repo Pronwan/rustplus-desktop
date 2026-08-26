@@ -1,0 +1,49 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.AddCameraDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Add camera" Width="440" SizeToContent="Height"
+        MinHeight="250"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ExtendsContentIntoTitleBar="True"
+        WindowCornerPreference="Round"
+        WindowBackdropType="Mica"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimary}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Height="40" Title="Add camera"
+                     ShowMinimize="False" ShowMaximize="False"
+                     Background="Transparent" Foreground="{DynamicResource TextPrimary}">
+            <ui:TitleBar.Icon>
+                <ui:SymbolIcon Symbol="CameraAdd24" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <StackPanel Grid.Row="1" Margin="24,8,24,20">
+            <TextBlock Text="Add a Rust+ camera" FontSize="18" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}"/>
+            <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="12.5"
+                       Text="Enter the camera identifier configured on the in-game computer station. It is case-sensitive."/>
+
+            <ui:TextBox x:Name="TxtId" Margin="0,18,0,0"
+                        PlaceholderText="e.g. CAM01, DOOR1, TURRET_N"
+                        FontSize="14"
+                        Icon="{ui:SymbolIcon Symbol=CameraDome24}"/>
+
+            <ui:InfoBar x:Name="Err" Margin="0,10,0,0" Severity="Error" IsClosable="False" IsOpen="False"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="92" Margin="0,0,10,0" Click="Cancel_Click"/>
+                <ui:Button x:Name="BtnAdd" Content="Add camera" Appearance="Primary" MinWidth="120"
+                           Icon="{ui:SymbolIcon Symbol=AddCircle24}" Click="Add_Click" IsDefault="True"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

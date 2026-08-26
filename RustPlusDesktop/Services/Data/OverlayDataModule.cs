@@ -62,7 +62,7 @@ namespace RustPlusDesk.Services.Data
         /// <param name="explicitWipe">If true, an empty overlay is intentionally uploaded (e.g. trash button).</param>
         public static async Task<bool> UploadOverlayAsync(string serverKey, ulong steamId, OverlaySaveData data, bool explicitWipe = false)
         {
-            if (Auth.SupabaseAuthManager.Client == null) return false;
+            if (!Cloud.CloudAuth.IsCloudAvailable) return false;
             if (!TrackingService.CloudSyncEnabled || !TrackingService.UploadConsentGiven) return false;
             if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return false;
             if (!await Auth.SupabaseAuthManager.EnsureCloudSyncConsentAsync()) return false;
@@ -204,6 +204,11 @@ namespace RustPlusDesk.Services.Data
             }
             catch (Exception ex)
             {
+                // A conflict means the account has no Steam link, which retrying
+                // cannot fix — it is reported once and sync pauses.
+                if (Cloud.CloudSteamLink.HandleSyncConflict(ex))
+                    return false;
+
                 AppendLog($"[overlay/cloud/err] UploadOverlay failed for {steamId}: {ex.Message}");
                 return false;
             }
@@ -249,7 +254,7 @@ namespace RustPlusDesk.Services.Data
         /// </summary>
         public static async Task<OverlaySaveData?> FetchOverlayFromServerAsync(string serverKey, ulong steamId)
         {
-            if (Auth.SupabaseAuthManager.Client == null) return null;
+            if (!Cloud.CloudAuth.IsCloudAvailable) return null;
             if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return null;
             LastFetchHadError = false;
 
@@ -264,7 +269,17 @@ namespace RustPlusDesk.Services.Data
                     ["steam_id"] = steamId.ToString()
                 };
 
-                var body = await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", HttpMethod.Get, null, queryParams);
+                // The platform's plain "overlay" GET is scoped to the caller and
+                // ignores steam_id, so fetching a teammate needs the team-authorized
+                // endpoint. Legacy (Supabase) keeps "overlay", which honoured steam_id.
+                var edgeFunction = "overlay";
+                if (Cloud.CloudBackend.UsePlatform
+                    && steamId.ToString() != Services.TrackingService.SteamId64)
+                {
+                    edgeFunction = "team-member-overlay";
+                }
+
+                var body = await Auth.SupabaseAuthManager.CallEdgeFunctionAsync(edgeFunction, HttpMethod.Get, null, queryParams);
                 using var doc = JsonDocument.Parse(body);
                 var root = doc.RootElement;
 

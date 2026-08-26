@@ -871,7 +871,7 @@ Open Releases page?</value>
     <value>Ενεργοποίηση Παρακολούθησης Παρασκηνίου Παίκτη</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Διατηρεί τους παίκτες παρακολούθησης μέσω BattleMetrics ακόμη και όταν ελαχιστοποιείται.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Απόκρυψη Κονσόλας Συστήματος (Declutter)</value>

@@ -185,40 +185,38 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-
-        <!-- ITEM-TEMPLATE (Leaf) bleibt ein einzelnes Root-Element, alles gut) -->
+        <!-- ITEM-TEMPLATE (Leaf) bleibt ein einzelnes Root-Element, alles gut) -->
         <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
             <Border x:Name="Bd"
-         Background="{TemplateBinding Background}"
-         CornerRadius="6"
-         SnapsToDevicePixels="True"
-         Padding="{TemplateBinding Padding}">
+                    Background="{TemplateBinding Background}"
+                    CornerRadius="6"
+                    SnapsToDevicePixels="True"
+                    Padding="{TemplateBinding Padding}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="22"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="16"/>
                     </Grid.ColumnDefinitions>
 
-                    <ui:SymbolIcon
-                        x:Name="CheckIcon"
-                        Grid.Column="0"
-                        Symbol="Checkmark20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Foreground="{DynamicResource Accent}"
-                        Visibility="Collapsed" />
+                    <Path x:Name="CheckIcon"
+                          Grid.Column="0"
+                          Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                          Fill="{DynamicResource Accent}"
+                          Width="13" Height="13" Stretch="Uniform"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Visibility="Collapsed" />
 
                     <ContentPresenter Grid.Column="0"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
-                           ContentSource="Icon"/>
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      ContentSource="Icon"/>
 
                     <ContentPresenter Grid.Column="1"
-                           Margin="0,0,6,0"
-                           VerticalAlignment="Center"
-                           RecognizesAccessKey="True"
-                           ContentSource="Header"/>
+                                      Margin="6,0,6,0"
+                                      VerticalAlignment="Center"
+                                      RecognizesAccessKey="True"
+                                      ContentSource="Header"/>
                 </Grid>
             </Border>
 
@@ -228,7 +226,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource Accent}" />
                 </Trigger>
                 <Trigger Property="IsHighlighted" Value="True">
-                    <Setter TargetName="Bd" Property="Background" Value="#141A22"/>
+                    <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Foreground" Value="{DynamicResource TextSubtle}"/>
@@ -255,76 +253,20 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}" />
+
         <!-- dunkler Separator -->
         <Style x:Key="DarkSeparator" TargetType="Separator">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Separator">
-                        <Border Height="1" Background="#22FFFFFF" Margin="6,6,6,6"/>
+                        <Border Height="1" Background="#22FFFFFF" Margin="6,4,6,4"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-
-        <Style TargetType="MenuItem">
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="6,3"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="MenuItem">
-                        <Border x:Name="Bd"
-                        Background="{TemplateBinding Background}"
-                        CornerRadius="6"
-                        SnapsToDevicePixels="True">
-                            <Grid Background="{TemplateBinding Background}">
-                                <Grid.ColumnDefinitions>
-                                    <!-- Icon/Checkmark -->
-                                    <ColumnDefinition Width="22"/>
-                                    <!-- Text -->
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Icon / Checkmark -->
-                                <ContentPresenter x:Name="Icon"
-                                          Margin="2,0,4,0"
-                                          VerticalAlignment="Center"
-                                          ContentSource="Icon" />
-
-                                <!-- Header -->
-                                <ContentPresenter Grid.Column="1"
-                                          Margin="2,2,4,2"
-                                          RecognizesAccessKey="True"
-                                          ContentSource="Header" />
-
-                            </Grid>
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <!-- Hover -->
-                            <Trigger Property="IsHighlighted" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#1F242B"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-
-                            <!-- Disabled -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Separator auch dunkel -->
-        <Style TargetType="Separator">
-            <Setter Property="Margin" Value="6,3"/>
-            <Setter Property="Background" Value="{DynamicResource CardBorder}"/>
-            <Setter Property="Height" Value="1"/>
-        </Style>
-
+        <Style TargetType="Separator" BasedOn="{StaticResource DarkSeparator}" />
 
         <!-- dunkles ContextMenu-Gehäuse -->
         <Style x:Key="DarkContextMenu" TargetType="ContextMenu">
@@ -335,17 +277,19 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ContextMenu">
                         <Border Background="{TemplateBinding Background}"
-                     BorderBrush="{DynamicResource CardBorder}"
-                     BorderThickness="1"
-                     CornerRadius="{DynamicResource Radius}"
-                     Padding="6"
-                     SnapsToDevicePixels="True">
+                                BorderBrush="{DynamicResource CardBorder}"
+                                BorderThickness="1"
+                                CornerRadius="{DynamicResource Radius}"
+                                Padding="6"
+                                SnapsToDevicePixels="True">
                             <StackPanel IsItemsHost="True"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="ContextMenu" BasedOn="{StaticResource DarkContextMenu}" />
 
         <!-- TabItem: echte „Reiter“-Optik mit eckigem Fuß, bündig zur Card -->
         <Style x:Key="PrettyTabItem" TargetType="TabItem">

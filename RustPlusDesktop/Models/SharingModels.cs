@@ -10,6 +10,17 @@ namespace RustPlusDesk.Models
     public class OverlaySaveData
     {
         public long LastUpdatedUnix { get; set; } = 0; // Unix seconds
+
+        /// <summary>
+        /// The server wipe these entity IDs belong to, in Unix seconds. Zero for snapshots
+        /// written before this was recorded.
+        ///
+        /// Rust hands out a fresh net ID to every deployable on a wipe, so a snapshot from an
+        /// earlier one lists devices that no longer exist. The server key is ip-port and does
+        /// not change across a wipe, so nothing else distinguishes the two — the devices import
+        /// happily and then sit there red, which is what sent us looking for a bug in sharing.
+        /// </summary>
+        public long WipeTimeUnix { get; set; } = 0;
         public List<SavedStroke> Strokes { get; set; } = new();
         public List<SavedIcon> Icons { get; set; } = new();
         public List<SavedText> Texts { get; set; } = new();

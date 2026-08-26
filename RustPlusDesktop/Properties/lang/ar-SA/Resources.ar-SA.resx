@@ -870,7 +870,7 @@
     <value>تفعيل تتبع اللاعبين في الخلفية</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>يضمن استمرار تتبع تحركات اللاعبين عبر BattleMetrics حتى عند تصغير التطبيق.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>إخفاء نافذة الأوامر البرمجية للنظام (لوحة الكونسول)</value>
@@ -5834,5 +5834,8 @@
   </data>
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>بعد الإقتران، شغّل الإنذار مرة واحدة والتطبيق يعمل. سيرى الإشعار وحدث الجهاز في اللحظة نفسها ويسجّل الاسم تلقائياً. لا تريد الانتظار؟ انقر بزر الفأرة الأيمن على الإنذار في هذه القائمة واكتبه. وفي الحالتين هو مستقل عن الاسم الذي تمنحه للجهاز هنا — فذلك اختيارك ولا يؤثر على Alexa.</value>
+  </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>من مسح سابق — معرّفات هذه الأجهزة لم تعد موجودة</value>
   </data>
 </root>

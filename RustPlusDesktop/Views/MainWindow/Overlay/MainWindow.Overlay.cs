@@ -1126,7 +1126,7 @@ private bool _overlayToolsVisible = false;
         SaveOwnOverlayToJson();
 
         // 4. Expliziten Wipe in die Cloud pushen (explicitWipe=true umgeht den Wipe-Schutz)
-        if (TrackingService.CloudSyncEnabled && Services.Auth.SupabaseAuthManager.Client != null)
+        if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
         {
             var sk  = GetServerKey();
             var sid = _mySteamId;
@@ -2401,7 +2401,7 @@ private bool _overlayToolsVisible = false;
             var overlayByteSize = OverlayDataModule.CalculateUncompressedSize(data);
 
             // 4) Debounced Cloud upload if enabled (anon key works, no Discord needed)
-            if (TrackingService.CloudSyncEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.Client != null)
+            if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
             {
                 if (IsOverlaySyncLimitExceeded(overlayByteSize))
                     return;
@@ -2438,6 +2438,17 @@ private bool _overlayToolsVisible = false;
         {
             AppendLog("[overlay] SaveOwnOverlayToJson error: " + ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Server key and player token for the connected server, which the cloud
+    /// needs as evidence when moving a Steam link onto this account.
+    /// </summary>
+    public (string ServerKey, string? PlayerToken) GetCloudLinkEvidence()
+    {
+        var profile = _vm?.Selected;
+
+        return (GetServerKey(), profile?.PlayerToken);
     }
 
     private string GetServerKey()
@@ -2811,7 +2822,7 @@ private bool _overlayToolsVisible = false;
                  || (localData.Devices?.Count ?? 0) > 0);
 
             OverlaySaveData? cloudData = null;
-            if (TrackingService.CloudSyncEnabled && Services.Auth.SupabaseAuthManager.Client != null)
+            if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
             {
                 try { cloudData = await OverlayDataModule.FetchOverlayFromServerAsync(serverKey, _mySteamId); }
                 catch { /* offline or error – ignore */ }
@@ -2831,7 +2842,7 @@ private bool _overlayToolsVisible = false;
             if (cloudData == null
                 && OverlayDataModule.LastFetchHadError
                 && TrackingService.CloudSyncEnabled
-                && Services.Auth.SupabaseAuthManager.Client != null)
+                && Services.Cloud.CloudAuth.IsCloudAvailable)
             {
                 AppendLog("[overlay/init] Cloud fetch failed; device autosync stays paused to avoid overwriting cloud data.");
                 return;
@@ -2903,7 +2914,7 @@ private bool _overlayToolsVisible = false;
         }
         finally
         {
-            if (!TrackingService.CloudSyncEnabled || Services.Auth.SupabaseAuthManager.Client == null)
+            if (!TrackingService.CloudSyncEnabled || !Services.Cloud.CloudAuth.IsCloudAvailable)
                 _ownCloudRestoreReady = true;
         }
     }
@@ -3142,28 +3153,24 @@ private bool _overlayToolsVisible = false;
     private async Task FetchSteamIdsWithOverlaysAsync()
     {
         if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
-        if (SupabaseAuthManager.Client == null) return;
         try
         {
             var serverKey = GetServerKey();
             var ids = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
             if (ids.Count == 0) return;
 
-            var response = await SupabaseAuthManager.Client
-                .From<MapOverlayModel>()
-                .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
-                .Filter("steam_id", Postgrest.Constants.Operator.In, ids)
-                .Get();
+            var steamIds = RustPlusDesk.Services.Cloud.CloudBackend.UsePlatform
+                ? await FetchOverlayOwnersFromApiAsync(serverKey)
+                : await FetchOverlayOwnersFromSupabaseAsync(serverKey, ids);
+
+            if (steamIds == null) return;
 
             _steamIdsWithOverlays.Clear();
-            if (response.Models != null)
+            foreach (var steamId in steamIds)
             {
-                foreach (var m in response.Models)
+                if (ulong.TryParse(steamId, out ulong sid))
                 {
-                    if (ulong.TryParse(m.SteamId, out ulong sid))
-                    {
-                        _steamIdsWithOverlays.Add(sid);
-                    }
+                    _steamIdsWithOverlays.Add(sid);
                 }
             }
         }
@@ -3171,6 +3178,51 @@ private bool _overlayToolsVisible = false;
         {
             AppendLog("[overlay/db] Error checking who has overlays: " + ex.Message);
         }
+    }
+
+    /// <summary>
+    /// The API scopes this to teams the caller is actually on, so the local roster
+    /// does not need to be sent along.
+    /// </summary>
+    private static async Task<List<string>?> FetchOverlayOwnersFromApiAsync(string serverKey)
+    {
+        var body = await RustPlusDesk.Services.Cloud.CloudApiClient.CallApiAsync(
+            "sync/team-overlays",
+            System.Net.Http.HttpMethod.Get,
+            queryParams: new Dictionary<string, string> { ["server_key"] = serverKey });
+
+        using var doc = System.Text.Json.JsonDocument.Parse(body);
+        if (!doc.RootElement.TryGetProperty("data", out var data) ||
+            !data.TryGetProperty("steam_ids", out var steamIds) ||
+            steamIds.ValueKind != System.Text.Json.JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        var result = new List<string>();
+        foreach (var steamId in steamIds.EnumerateArray())
+        {
+            if (steamId.ValueKind == System.Text.Json.JsonValueKind.String && steamId.GetString() is { Length: > 0 } value)
+                result.Add(value);
+        }
+
+        return result;
+    }
+
+    private static async Task<List<string>?> FetchOverlayOwnersFromSupabaseAsync(string serverKey, List<string> ids)
+    {
+        if (SupabaseAuthManager.Client == null) return null;
+
+        var response = await SupabaseAuthManager.Client
+            .From<MapOverlayModel>()
+            .Filter("server_key", Postgrest.Constants.Operator.Equals, serverKey)
+            .Filter("steam_id", Postgrest.Constants.Operator.In, ids)
+            .Get();
+
+        return response.Models?
+            .Select(m => m.SteamId)
+            .Where(id => !string.IsNullOrEmpty(id))
+            .ToList();
     }
 
     private void UpdateSavedSubscriptionsInProfile()

@@ -57,4 +57,26 @@ public partial class ChatCommandsOverlay : UserControl
     {
         CommandsEnabledChanged?.Invoke(this, e);
     }
+
+    /// <summary>
+    /// Writes the profile straight away. Everything else on this page is saved when the settings
+    /// close, but a door code is the kind of thing people type in and then alt-tab away from, so
+    /// it gets an explicit button that confirms the write happened.
+    /// </summary>
+    private void BtnSaveBaseCode_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = System.Windows.Application.Current?.MainWindow?.DataContext
+                 as RustPlusDesk.ViewModels.MainViewModel;
+        if (vm == null) return;
+
+        // Trailing blank row bookkeeping runs here too: saving a freshly filled row is exactly
+        // when the next empty one should appear.
+        vm.Selected?.EnsureBaseCodeRows();
+        vm.Save();
+
+        if (sender is FrameworkElement fe)
+        {
+            fe.ToolTip = RustPlusDesk.Properties.Resources.GetString("Saved") ?? "Saved";
+        }
+    }
 }

@@ -28,8 +28,25 @@ public class ServerProfile : INotifyPropertyChanged
     public string Host { get; set; } = "";
     public int Port { get; set; } = 28082;
     public string SteamId64 { get; set; } = "";
-    public string PlayerToken { get; set; } = "";
+    private string _playerToken = "";
+    public string PlayerToken
+    {
+        get => _playerToken;
+        set
+        {
+            if (_playerToken != value)
+            {
+                _playerToken = value ?? "";
+                IsAccessDenied = false;
+                OnProp();
+            }
+        }
+    }
     public string? BattleMetricsId { get; set; } = null;
+
+    // Stable identity used to remember the last selected server across restarts.
+    // PlayerToken is deliberately excluded so a re-pair on the same server still matches.
+    public string MatchKey => $"{Host}:{Port}|{SteamId64}";
 
     private string? _localMapFilePath;
     public string? LocalMapFilePath
@@ -52,6 +69,20 @@ public class ServerProfile : INotifyPropertyChanged
         set { _customMapUrl = value; OnProp(); }
     }
 
+    private bool _isAccessDenied;
+    public bool IsAccessDenied
+    {
+        get => _isAccessDenied;
+        set
+        {
+            if (_isAccessDenied != value)
+            {
+                _isAccessDenied = value;
+                OnProp();
+            }
+        }
+    }
+
     private bool _isConnected;
     public bool IsConnected
     {
@@ -61,6 +92,7 @@ public class ServerProfile : INotifyPropertyChanged
             if (_isConnected != value)
             {
                 _isConnected = value; 
+                if (value) IsAccessDenied = false;
                 OnProp();
                 OnProp(nameof(IsFullConnected));
                 if (!value) IsFullConnected = false; 
@@ -77,6 +109,7 @@ public class ServerProfile : INotifyPropertyChanged
             if (_isFullConnected != value) 
             { 
                 _isFullConnected = value; 
+                if (value) IsAccessDenied = false;
                 OnProp(); 
                 OnProp(nameof(IsConnected));
             } 
@@ -99,6 +132,9 @@ public class ServerProfile : INotifyPropertyChanged
     public ServerProfile()
     {
         _devices.CollectionChanged += Devices_CollectionChanged;
+        // A profile loaded from JSON without a baseCodes entry keeps this first blank row, so the
+        // section is usable straight away instead of appearing empty.
+        EnsureBaseCodeRows();
     }
 
     private ObservableCollection<SmartDevice> _devices = new();
@@ -138,6 +174,9 @@ public class ServerProfile : INotifyPropertyChanged
         OnProp(nameof(Devices));
     }
     public ObservableCollection<string> CameraIds { get; set; } = new();
+
+    /// <summary>Optional friendly display names, keyed by camera identifier.</summary>
+    public Dictionary<string, string> CameraNames { get; set; } = new();
 
     [JsonPropertyName("deathMarkers")]
     public List<DeathMarkerData> DeathMarkers { get; set; } = new();
@@ -290,6 +329,82 @@ public class ServerProfile : INotifyPropertyChanged
         get => _cmdUpkeepDetail;
         set { _cmdUpkeepDetail = ValidateCommand(value, "upkeepdetail"); OnProp(); }
     }
+
+    private string _cmdBaseCodes = "code";
+    public string CmdBaseCodes
+    {
+        get => _cmdBaseCodes;
+        set { _cmdBaseCodes = ValidateCommand(value, "code"); OnProp(); }
+    }
+
+    public const int MaxBaseCodes = 5;
+
+    private ObservableCollection<BaseCode> _baseCodes = new();
+    public ObservableCollection<BaseCode> BaseCodes
+    {
+        get => _baseCodes;
+        set
+        {
+            DetachBaseCodes();
+            _baseCodes = value ?? new();
+            AttachBaseCodes();
+            EnsureBaseCodeRows();
+            OnProp();
+        }
+    }
+
+    private void DetachBaseCodes()
+    {
+        if (_baseCodes == null) return;
+        foreach (var c in _baseCodes) c.PropertyChanged -= BaseCode_PropertyChanged;
+    }
+
+    private void AttachBaseCodes()
+    {
+        if (_baseCodes == null) return;
+        foreach (var c in _baseCodes) c.PropertyChanged += BaseCode_PropertyChanged;
+    }
+
+    private void BaseCode_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(BaseCode.Code)) EnsureBaseCodeRows();
+    }
+
+    /// <summary>
+    /// Keeps exactly one empty row at the end, so a filled row always reveals the next one and an
+    /// emptied row takes its spare away again. Capped at <see cref="MaxBaseCodes"/>; at the cap no
+    /// spare row is offered, otherwise the list would promise a slot it cannot accept.
+    /// </summary>
+    public void EnsureBaseCodeRows()
+    {
+        if (_baseCodes == null) return;
+
+        // Trailing blanks collapse to none first; the single spare is added back below.
+        for (int i = _baseCodes.Count - 1; i >= 0; i--)
+        {
+            if (!_baseCodes[i].IsEmpty) break;
+            _baseCodes[i].PropertyChanged -= BaseCode_PropertyChanged;
+            _baseCodes.RemoveAt(i);
+        }
+
+        if (_baseCodes.Count < MaxBaseCodes)
+        {
+            var spare = new BaseCode();
+            // The very first row arrives named, so a player who only ever sets one code gets
+            // "Doorcode: 4465" without having to think about naming. Later rows stay blank -
+            // they exist to be told apart, so a repeated default would defeat the purpose.
+            if (_baseCodes.Count == 0)
+                spare.Label = Properties.Resources.GetString("BaseCodesNameDefault") ?? "Doorcode";
+            spare.PropertyChanged += BaseCode_PropertyChanged;
+            _baseCodes.Add(spare);
+        }
+
+        OnProp(nameof(BaseCodes));
+        OnProp(nameof(HasBaseCodes));
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasBaseCodes => _baseCodes != null && _baseCodes.Any(c => !c.IsEmpty);
 
     private int _chatCommandDelaySeconds = 2;
     public int ChatCommandDelaySeconds
@@ -487,6 +602,25 @@ public class ServerProfile : INotifyPropertyChanged
     protected void OnProp([CallerMemberName] string? n = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 
+    /// <summary>
+    /// Lowest index whose command name is still free. Using Count + 1 collided after a deletion:
+    /// removing the middle of [upkeep, upkeep2, upkeep3] leaves Count = 2, so the next device
+    /// would claim "upkeep3" a second time and both would answer the same chat command.
+    /// </summary>
+    private static int NextFreeCommandIndex(
+        ObservableCollection<ChatCommandMapping> mappings,
+        Func<int, string> nameFor)
+    {
+        var taken = new HashSet<string>(
+            mappings.Select(m => m.Command ?? string.Empty),
+            StringComparer.OrdinalIgnoreCase);
+
+        for (int i = 1; ; i++)
+        {
+            if (!taken.Contains(nameFor(i))) return i;
+        }
+    }
+
     public void SyncChatCommands()
     {
         // Sync Switches
@@ -504,12 +638,12 @@ public class ServerProfile : INotifyPropertyChanged
         {
             if (!SwitchCommandMappings.Any(m => m.EntityId == sw.EntityId))
             {
-                int next = SwitchCommandMappings.Count + 1;
-                SwitchCommandMappings.Add(new ChatCommandMapping 
-                { 
-                    Label = $"Switch {next}", 
-                    Command = $"switch{next}", 
-                    EntityId = sw.EntityId 
+                int next = NextFreeCommandIndex(SwitchCommandMappings, i => $"switch{i}");
+                SwitchCommandMappings.Add(new ChatCommandMapping
+                {
+                    Label = $"Switch {next}",
+                    Command = $"switch{next}",
+                    EntityId = sw.EntityId
                 });
             }
         }
@@ -529,19 +663,21 @@ public class ServerProfile : INotifyPropertyChanged
         {
             if (!UpkeepCommandMappings.Any(m => m.EntityId == tc.EntityId))
             {
-                int next = UpkeepCommandMappings.Count + 1;
-                string cmd = next == 1 ? "upkeep" : $"upkeep{next}";
-                UpkeepCommandMappings.Add(new ChatCommandMapping 
-                { 
-                    Label = next == 1 ? "Upkeep" : $"Upkeep {next}", 
-                    Command = cmd, 
-                    EntityId = tc.EntityId 
+                int next = NextFreeCommandIndex(UpkeepCommandMappings, i => i == 1 ? "upkeep" : $"upkeep{i}");
+                UpkeepCommandMappings.Add(new ChatCommandMapping
+                {
+                    Label = next == 1 ? "Upkeep" : $"Upkeep {next}",
+                    Command = next == 1 ? "upkeep" : $"upkeep{next}",
+                    EntityId = tc.EntityId
                 });
             }
         }
         
         OnProp(nameof(SwitchCommandMappings));
         OnProp(nameof(UpkeepCommandMappings));
+        // The dropdowns bind to SmartSwitches/TcMonitors, which are computed on demand. Callers
+        // now sync while the page is already visible, so those have to be refreshed as well.
+        NotifySmartSwitchesChanged();
     }
 
     private string? _rustMapsMapId;
@@ -667,6 +803,50 @@ public class ChatCommandMapping : INotifyPropertyChanged
 
     private uint _entityId;
     public uint EntityId { get => _entityId; set { _entityId = value; OnProp(); } }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnProp([CallerMemberName] string? n = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+}
+
+/// <summary>
+/// One door code and the name it is shared under. Stored per server profile, so codes follow the
+/// base they belong to rather than the machine.
+/// </summary>
+public class BaseCode : INotifyPropertyChanged
+{
+    private string _label = "";
+    public string Label { get => _label; set { _label = value ?? ""; OnProp(); } }
+
+    private string _code = "";
+    public string Code
+    {
+        get => _code;
+        set
+        {
+            // Rust door codes are exactly four digits. Anything else is dropped as it is typed,
+            // which keeps the field honest without needing a validation message.
+            var digits = new string((value ?? "").Where(char.IsDigit).ToArray());
+            if (digits.Length > 4) digits = digits.Substring(0, 4);
+            if (_code == digits) return;
+            _code = digits;
+            OnProp();
+            OnProp(nameof(IsEmpty));
+            OnProp(nameof(IsComplete));
+        }
+    }
+
+    /// <summary>
+    /// A row counts as unused when it has no code, whatever the name says. The name alone carries
+    /// no information, and the first row ships with a default one filled in - treating that as
+    /// "used" would open a second row before anyone typed anything.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsEmpty => string.IsNullOrWhiteSpace(_code);
+
+    /// <summary>Only complete rows go into the chat reply; a half-typed code would mislead the team.</summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsComplete => _code.Length == 4;
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnProp([CallerMemberName] string? n = null)

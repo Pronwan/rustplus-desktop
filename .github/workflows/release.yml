@@ -79,7 +79,15 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: MapParser/package-lock.json
+          cache-dependency-path: |
+            MapParser/package-lock.json
+            RustPlusDesktop/Features/GeneticsLab/package-lock.json
+
+      - name: Build GeneticsLab frontend
+        working-directory: RustPlusDesktop/Features/GeneticsLab
+        run: |
+          npm ci
+          npm run build
 
       - name: Resolve release version
         id: version

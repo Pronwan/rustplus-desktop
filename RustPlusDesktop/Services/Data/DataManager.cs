@@ -17,6 +17,7 @@ namespace RustPlusDesk.Services.Data
         public static string OVERLAY_SYNC_BASEURL => Decrypt(ObfuscatedSecrets.ObfuscatedUrl);
         public static string SUPABASE_URL => Decrypt(ObfuscatedSecrets.ObfuscatedSupabaseUrl);
         public static string SUPABASE_ANON_KEY => Decrypt(ObfuscatedSecrets.ObfuscatedSupabaseAnonKey);
+        public static string CLOUD_API_BASEURL => Decrypt(ObfuscatedSecrets.ObfuscatedCloudUrl);
         public const int OVERLAY_MAX_BYTES = 350_000;
 
         private static string Decrypt(byte[] encrypted)
@@ -79,7 +80,7 @@ namespace RustPlusDesk.Services.Data
         public static async Task UploadPayloadAsync(ulong steamId, string serverKey, string overlayB64)
         {
             // If offline / no Supabase keys / not logged in -> Skip cloud sync or fallback
-            if (SupabaseAuthManager.Client == null || !SupabaseAuthManager.IsAuthenticated)
+            if (!Cloud.CloudAuth.IsCloudAvailable || !SupabaseAuthManager.IsAuthenticated)
             {
                 return;
             }
@@ -115,7 +116,7 @@ namespace RustPlusDesk.Services.Data
 
         public static async Task<string?> FetchPayloadAsync(ulong steamId, string serverKey)
         {
-            if (SupabaseAuthManager.Client == null)
+            if (!Cloud.CloudAuth.IsCloudAvailable)
             {
                 return null;
             }

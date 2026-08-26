@@ -1,4 +1,5 @@
 using RustPlusDesk.Services;
+using RustPlusDesk.Services.PlayerWipeTracker;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -139,6 +140,35 @@ public partial class MainWindow
             _extraMonumentNames.Add(e.Name);
 
         MergeExtraMonuments(extras);
+        UploadExtraMonumentsToCloud(extras);
+    }
+
+    /// <summary>
+    /// Uploads the freshly 3D-parsed extra monuments to the cloud, once, via the
+    /// decoupled wipe-map service. Safe to call after the base map is already
+    /// uploaded — the server accepts extras separately and the service skips if
+    /// they are already present, so no quota is wasted.
+    /// </summary>
+    private void UploadExtraMonumentsToCloud(List<ExtraMonument> extras)
+    {
+        var serverKey = _playerWipeTracker.CurrentServerKey ?? GetServerKey();
+        var wipeKey = _playerWipeTracker.CurrentWipeKey;
+
+        if (string.IsNullOrWhiteSpace(wipeKey) && _vm?.Selected != null && !string.IsNullOrWhiteSpace(serverKey))
+        {
+            var wipeTime = (_vm.Selected.WipeTime ?? _vm.Selected.RustMapsWipeTime)?.ToUniversalTime();
+            wipeKey = PlayerWipeTrackerService.BuildWipeKey(serverKey, wipeTime, _vm.Selected.RustMapsMapId);
+        }
+
+        if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey) || extras.Count == 0)
+            return;
+
+        var payload = extras
+            .Where(e => !string.IsNullOrWhiteSpace(e.Name))
+            .Select(e => new TrackerMonument(e.Name, e.X, e.Y))
+            .ToList();
+
+        _serverWipeMaps.QueueUploadExtraMonuments(serverKey, wipeKey, payload);
     }
 
     private void MergeExtraMonuments(IEnumerable<ExtraMonument> extras)

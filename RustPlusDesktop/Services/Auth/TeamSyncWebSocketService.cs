@@ -6,12 +6,24 @@ using System.Windows;
 using Newtonsoft.Json.Linq;
 using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
+using RustPlusDesk.Services.Cloud;
 using Supabase.Realtime;
 using Supabase.Realtime.Models;
 using Supabase.Realtime.PostgresChanges;
 
 namespace RustPlusDesk.Services.Auth
 {
+    /// <summary>
+    /// Live team sync: teammates' overlay/marker/device changes and master election.
+    ///
+    /// Two transports sit behind the same event handlers. Supabase Realtime discovers
+    /// the current team by subscribing to postgres changes on the caller's presence
+    /// row, then joins <c>team_sync:{serverKey}:{teamKey}</c>. The platform has no
+    /// database-change feed, so the team is instead learned from the heartbeat
+    /// response (which returns the resolved team id) and the client subscribes to the
+    /// private channel <c>team-sync.{teamId}</c>. Both deliver the same event names
+    /// and payload keys, so <see cref="HandleBroadcastEvent"/> is shared.
+    /// </summary>
     public static class TeamSyncWebSocketService
     {
         private static RealtimeChannel? _broadcastChannel;
@@ -26,13 +38,29 @@ namespace RustPlusDesk.Services.Auth
         private static readonly SemaphoreSlim BroadcastSubscriptionLock = new(1, 1);
         private static bool _initialized;
 
-        public static bool IsActive => _broadcastSubscribed;
+        // Platform realtime state.
+        private static string? _currentTeamId;
+        private static string? _realtimeChannel;
+        private static bool _realtimeHandlerAttached;
+
+        public static bool IsActive => CloudBackend.UsePlatform
+            ? _realtimeChannel != null && RealtimeClient.Shared.IsSubscribed(_realtimeChannel)
+            : _broadcastSubscribed;
 
         public static void Initialize()
         {
             if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+            if (!CloudAuth.IsAuthenticated) return;
             if (_initialized) return;
             _initialized = true;
+
+            if (CloudBackend.UsePlatform)
+            {
+                AttachRealtimeHandler();
+                RealtimeClient.Shared.Start();
+                AppendLog("[TeamSyncWS] Service initialized (realtime). Awaiting team heartbeat.");
+                return;
+            }
 
             _ = SubscribeToPresenceAsync();
             AppendLog("[TeamSyncWS] Service initialized (direct Supabase Realtime).");
@@ -43,6 +71,100 @@ namespace RustPlusDesk.Services.Auth
             _initialized = false;
             UnsubscribeAll();
             AppendLog("[TeamSyncWS] Service shut down.");
+        }
+
+        /// <summary>
+        /// Called from the team-feature heartbeat once the server has resolved which
+        /// team the local player is on. On cloud this is the only source of team
+        /// identity — the heartbeat returns the team id that names the realtime channel.
+        /// A no-op when the team has not changed, so it is safe to call every beat.
+        /// </summary>
+        public static void NotifyTeamResolved(string? teamId)
+        {
+            if (!CloudBackend.UsePlatform) return;
+            if (!CloudAuth.IsAuthenticated) return;
+            if (string.IsNullOrWhiteSpace(teamId)) return;
+            if (_currentTeamId == teamId && IsActive) return;
+
+            _ = SubscribeToTeamChannelAsync(teamId);
+        }
+
+        private static void AttachRealtimeHandler()
+        {
+            if (_realtimeHandlerAttached) return;
+            _realtimeHandlerAttached = true;
+
+            RealtimeClient.Shared.EventReceived += (channel, eventName, data) =>
+            {
+                // Ignore traffic for a channel we have since moved off of.
+                if (_realtimeChannel != null && channel != _realtimeChannel) return;
+
+                try
+                {
+                    HandleBroadcastEvent(eventName, data);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[TeamSyncWS/Error] Failed handling event {eventName}: {ex.Message}");
+                }
+            };
+        }
+
+        private static async Task SubscribeToTeamChannelAsync(string teamId)
+        {
+            if (!CloudAuth.IsAuthenticated) return;
+            await BroadcastSubscriptionLock.WaitAsync();
+            try
+            {
+                var channel = $"private-team-sync.{teamId}";
+                if (_realtimeChannel == channel && RealtimeClient.Shared.IsSubscribed(channel))
+                    return;
+
+                if (_realtimeChannel != null && _realtimeChannel != channel)
+                {
+                    var previous = _realtimeChannel;
+                    _realtimeChannel = null;
+                    await RealtimeClient.Shared.UnsubscribeAsync(previous);
+                    AppendLog($"[TeamSyncWS] Left team channel: {previous}");
+                }
+
+                // Master state from the previous team must not leak into the new one.
+                _hasBroadcastMasterState = false;
+                _lastBroadcastMasterSteamId = null;
+
+                _currentTeamId = teamId;
+                _realtimeChannel = channel;
+
+                AttachRealtimeHandler();
+                await RealtimeClient.Shared.SubscribeAsync(channel);
+                AppendLog($"[TeamSyncWS] Subscribing to team channel: {channel}");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[TeamSyncWS/Error] Failed to subscribe to team channel: {ex.Message}");
+                _realtimeChannel = null;
+                _currentTeamId = null;
+            }
+            finally
+            {
+                BroadcastSubscriptionLock.Release();
+            }
+        }
+
+        private static void UnsubscribeRealtime()
+        {
+            var channel = _realtimeChannel;
+            _realtimeChannel = null;
+            _currentTeamId = null;
+            _hasBroadcastMasterState = false;
+            _lastBroadcastMasterSteamId = null;
+
+            if (channel != null)
+            {
+                try { _ = RealtimeClient.Shared.UnsubscribeAsync(channel); } catch { }
+            }
+
+            RealtimeClient.Shared.Stop();
         }
 
         private static async Task SubscribeToPresenceAsync()
@@ -246,6 +368,12 @@ namespace RustPlusDesk.Services.Auth
 
         private static void UnsubscribeAll()
         {
+            if (CloudBackend.UsePlatform)
+            {
+                UnsubscribeRealtime();
+                return;
+            }
+
             UnsubscribeBroadcast();
             UnsubscribePresence();
         }
@@ -357,6 +485,11 @@ namespace RustPlusDesk.Services.Auth
                     break;
 
                 case "presence_changed":
+                    // On cloud the channel follows the team id from the heartbeat, so
+                    // there is nothing to re-derive here; only Supabase needs to switch
+                    // channels off the presence row.
+                    if (CloudBackend.UsePlatform) break;
+
                     string? presenceSteamId = payload["steam_id"]?.ToString();
                     if (presenceSteamId == mySteamId)
                     {

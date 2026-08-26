@@ -195,6 +195,7 @@ public partial class MainWindow
             await _rust.ConnectAsync(profile);
             profile.IsConnected = true;
             profile.IsFullConnected = false;
+            profile.IsAccessDenied = false;
 
             if (_rust is RustPlusClientReal real)
             {
@@ -207,6 +208,8 @@ public partial class MainWindow
                 real.TeamChatReceived += Real_TeamChatReceived;
                 real.ClanChatReceived -= Real_ClanChatReceived;
                 real.ClanChatReceived += Real_ClanChatReceived;
+                real.ClanChanged -= OnClanChangedReal;
+                real.ClanChanged += OnClanChangedReal;
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
                 try { await real.PrimeClanChatAsync(); }
@@ -252,6 +255,11 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
+            if (RustPlusClientReal.IsAccessDeniedError(ex))
+            {
+                profile.IsAccessDenied = true;
+                _vm.Save();
+            }
             AppendLog($"Soft-connect failed: {ex.Message}");
         }
         finally
@@ -304,7 +312,7 @@ public partial class MainWindow
                     if (serverStatusFailCount >= 5)
                     {
                         serverStatusFailCount = 0;
-                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true))
+                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true) && _vm?.Selected?.IsAccessDenied != true)
                         {
                             AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
                             
@@ -475,6 +483,8 @@ public partial class MainWindow
                 real.TeamChatReceived += Real_TeamChatReceived;
                 real.ClanChatReceived -= Real_ClanChatReceived;
                 real.ClanChatReceived += Real_ClanChatReceived;
+                real.ClanChanged -= OnClanChangedReal;
+                real.ClanChanged += OnClanChangedReal;
 
                 real.EnsureEventsHooked();
             }
@@ -570,12 +580,35 @@ public partial class MainWindow
 
             connectedProfile.IsConnected = true;
             connectedProfile.IsFullConnected = true;
+            connectedProfile.IsAccessDenied = false;
 
             _vm.NotifyDevicesChanged();
             _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
             AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
 
             _ = StartServerEventTrackingAsync();
+
+
+
+            // Report what this server said about itself, so its cloud record carries
+            // a name and map details rather than just the key it is filed under.
+            _ = Services.Cloud.CloudServerInfo.ReportOnceAsync(
+                GetServerKey(),
+                connectedProfile.Name,
+                _worldSizeS,
+                connectedProfile.WipeTime);
+
+            // Register the per-user pairing (encrypted player token) for this server so
+            // it appears in the web dashboard and its smart devices are controllable
+            // from the cloud. Previously this only happened via the Alexa link flow, so
+            // servers paired after the cloud migration never became controllable.
+            _ = Services.Cloud.CloudServerInfo.EnsurePairedOnceAsync(
+                GetServerKey(),
+                connectedProfile.Host,
+                connectedProfile.Port,
+                connectedProfile.Name,
+                connectedProfile.PlayerToken,
+                _mySteamId);
 
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
@@ -627,11 +660,14 @@ public partial class MainWindow
         catch (Exception ex)
         {
             var selectedOnError = _vm.Selected;
+            bool isAccessDenied = ex is RustPlusAccessDeniedException || RustPlusClientReal.IsAccessDeniedError(ex);
             if (selectedOnError != null)
             {
                 selectedOnError.IsConnected = false;
                 selectedOnError.IsFullConnected = false;
+                selectedOnError.IsAccessDenied = isAccessDenied;
                 _vm.NotifyDevicesChanged();
+                _vm.Save();
             }
             if (showBusy)
             {
@@ -640,10 +676,17 @@ public partial class MainWindow
                 _vm.IsConnectionLoading = false;
                 _vm.BusyText = "";
             }
-            AppendLog("Fehler: " + ex.Message);
+            AppendLog("Error: " + ex.Message);
             if (!silent)
             {
-                if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
+                if (isAccessDenied)
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.ConnectionFailedAccessDenied,
+                        Properties.Resources.ConnectionFailedAccessDeniedComment,
+                        WpfUi.ControlAppearance.Danger);
+                }
+                else if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
                 {
                     ShowInfoSnackbar(
                         Properties.Resources.ConnectionFailedRustPlusUnreachable,
@@ -669,19 +712,30 @@ public partial class MainWindow
         if (_vm.Selected is null) { AppendLog("No server selected."); return false; }
         if (_vm.Selected.IsConnected) return true;
 
-        AppendLog($"Verbinde zu ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
+        AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
         try
         {
             await _rust.ConnectAsync(_vm.Selected, cts.Token);
             _vm.Selected.IsConnected = true;
+            _vm.Selected.IsAccessDenied = false;
             AppendLog("Connected.");
             return true;
         }
         catch (Exception ex)
         {
+            if (RustPlusClientReal.IsAccessDeniedError(ex))
+            {
+                _vm.Selected.IsAccessDenied = true;
+                _vm.Save();
+            }
             AppendLog("Connect failed: " + ex.Message);
             return false;
         }
+    }
+
+    private void OnClanChangedReal(object? sender, EventArgs e)
+    {
+        _ = Dispatcher.InvokeAsync(LoadClanAsync);
     }
 }

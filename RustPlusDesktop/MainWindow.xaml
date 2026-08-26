@@ -163,10 +163,14 @@
                     <ContextMenu Style="{StaticResource DarkContextMenu}">
                         <MenuItem
                             Click="BtnViewTracked_Click"
-                            Header="{DynamicResource ViewProfile}"
-                            Icon="{ui:SymbolIcon Symbol=Eye24}">
+                            Header="{DynamicResource ViewProfile}">
+                            <MenuItem.Icon>
+                                <Path Data="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" 
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" 
+                                      Width="13" Height="13" Stretch="Uniform" />
+                            </MenuItem.Icon>
                             <MenuItem.Style>
-                                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsBMOnly}" Value="True">
                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -178,18 +182,33 @@
 
                         <MenuItem
                             Click="BtnGroupTracked_Click"
-                            Header="{DynamicResource ChangeGroup}"
-                            Icon="{ui:SymbolIcon Symbol=Folder24}" />
+                            Header="{DynamicResource ChangeGroup}">
+                            <MenuItem.Icon>
+                                <Path Data="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" 
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" 
+                                      Width="13" Height="13" Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <MenuItem
                             Click="BtnRenameTracked_Click"
-                            Header="{DynamicResource Rename}"
-                            Icon="{ui:SymbolIcon Symbol=Edit24}" />
+                            Header="{DynamicResource Rename}">
+                            <MenuItem.Icon>
+                                <Path Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" 
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" 
+                                      Width="13" Height="13" Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <Separator />
                         <MenuItem
                             Click="BtnRemoveTracked_Click"
                             Foreground="{DynamicResource SystemFillColorCriticalBrush}"
-                            Header="{DynamicResource RemoveTracked}"
-                            Icon="{ui:SymbolIcon Symbol=Delete24}" />
+                            Header="{DynamicResource RemoveTracked}">
+                            <MenuItem.Icon>
+                                <Path Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" 
+                                      Fill="{DynamicResource SystemFillColorCriticalBrush}" 
+                                      Width="13" Height="13" Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </ContextMenu>
                 </Grid.ContextMenu>
                 <Grid.ColumnDefinitions>
@@ -320,6 +339,21 @@
                             Source="pack://application:,,,/Assets/icons/discord.png" />
                     </ui:Button>
                     <ui:Button
+                        x:Name="BtnCloudPortal"
+                        Width="36"
+                        Height="36"
+                        Margin="2,6"
+                        Padding="0"
+                        Appearance="Transparent"
+                        Click="BtnCloudPortal_Click"
+                        ToolTip="{DynamicResource OpenCloudPortal}">
+                        <Image
+                            Width="16"
+                            Height="16"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            Source="pack://application:,,,/Assets/icons/r+desktop-icon.png" />
+                    </ui:Button>
+                    <ui:Button
                         x:Name="BtnPatchNotes"
                         Width="36"
                         Height="36"
@@ -329,16 +363,6 @@
                         Click="BtnPatchNotes_Click"
                         Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
                         ToolTip="{DynamicResource PatchNotes}" />
-                    <ui:Button
-                        x:Name="BtnDeaths"
-                        Width="36"
-                        Height="36"
-                        Margin="2,6"
-                        Padding="0"
-                        Appearance="Transparent"
-                        Click="BtnDeaths_Click"
-                        Icon="{ui:SymbolIcon Symbol=DataHistogram24}"
-                        ToolTip="Death stats" />
                     <ui:Button
                         x:Name="BtnSettings"
                         tutorials:Tutorial.TargetId="Navigation.Settings"
@@ -772,34 +796,81 @@
                                 tutorials:Tutorial.TargetId="Servers.List"
                                 MinHeight="60"
                                 MaxHeight="100"
-                                DisplayMemberPath="Name"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 Foreground="White"
                                 ItemsSource="{Binding Servers}"
                                 SelectedItem="{Binding Selected, Mode=TwoWay}"
                                 SelectionChanged="ListServers_SelectionChanged">
 
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Text="{Binding Name}"
+                                                TextTrimming="CharacterEllipsis"
+                                                VerticalAlignment="Center"
+                                                Foreground="White" />
+                                            <Border
+                                                Grid.Column="1"
+                                                Margin="4,0,0,0"
+                                                Padding="4,1"
+                                                Background="#33EF5350"
+                                                BorderBrush="#EF5350"
+                                                BorderThickness="1"
+                                                CornerRadius="4"
+                                                VerticalAlignment="Center"
+                                                ToolTip="{DynamicResource StatusAccessDeniedHint}">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsAccessDenied}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock
+                                                    Text="{DynamicResource BadgeNeedsRePairing}"
+                                                    FontSize="9"
+                                                    FontWeight="Bold"
+                                                    Foreground="#FF8A80" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
                                 <ListBox.Resources>
                                     <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                     <ContextMenu
                                         x:Key="ServerCtx"
-                                        Foreground="White"
                                         Style="{StaticResource DarkContextMenu}">
                                         <MenuItem
                                             Click="Server_Delete_Click"
-                                            Foreground="Black"
+                                            Header="{DynamicResource DeleteServerEllipsis}"
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                            <MenuItem.Header>
-                                                <TextBlock>
-                                                    <Run Text="🗑️ " /><Run Text="{DynamicResource DeleteServerEllipsis}" />
-                                                </TextBlock>
-                                            </MenuItem.Header>
+                                            <MenuItem.Icon>
+                                                <Path Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" 
+                                                      Fill="{DynamicResource SystemFillColorCriticalBrush}" 
+                                                      Width="13" Height="13" Stretch="Uniform" />
+                                            </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem
                                             Click="Server_CopyMap_Click"
-                                            Foreground="Black"
+                                            Header="{DynamicResource UiCopyMapToServer}"
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Icon>
+                                                <Path Data="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" 
+                                                      Fill="{DynamicResource TextPrimary}" 
+                                                      Width="13" Height="13" Stretch="Uniform" />
+                                            </MenuItem.Icon>
                                             <MenuItem.Style>
-                                                <Style TargetType="MenuItem">
+                                                <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding PlacementTarget.DataContext.LocalMapFilePath, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource LocalNotNull}}" Value="True">
@@ -808,11 +879,6 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </MenuItem.Style>
-                                            <MenuItem.Header>
-                                                <TextBlock>
-                                                    <Run Text="🗺️ " /><Run Text="{DynamicResource UiCopyMapToServer}" />
-                                                </TextBlock>
-                                            </MenuItem.Header>
                                         </MenuItem>
                                     </ContextMenu>
                                 </ListBox.Resources>
@@ -868,6 +934,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -885,6 +952,9 @@
                                             <Style TargetType="Ellipse">
                                                 <Setter Property="Fill" Value="#EF5350" />
                                                 <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
+                                                        <Setter Property="Fill" Value="#FF7043" />
+                                                    </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                         <Setter Property="Fill" Value="#FFCA28" />
                                                     </DataTrigger>
@@ -927,23 +997,34 @@
                                         Visibility="{Binding IsChecked, ElementName=BtnAbbreviateNames, Converter={StaticResource BoolToVisibility}}" />
                                 </Grid>
 
-                                <DockPanel
+                                <Grid
                                     Grid.Row="1"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="2"
-                                    Margin="0,6,0,0"
-                                    LastChildFill="False">
+                                    Margin="0,6,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
                                     <TextBlock
-                                        DockPanel.Dock="Left"
+                                        Grid.Column="0"
                                         VerticalAlignment="Center"
                                         FontSize="9"
                                         FontWeight="Bold"
-                                        Opacity="0.7">
+                                        Opacity="0.8"
+                                        Margin="0,0,6,0"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap"
+                                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value="{DynamicResource StatusDisconnected}" />
                                                 <Setter Property="Foreground" Value="#EF5350" />
                                                 <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
+                                                        <Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" />
+                                                        <Setter Property="Foreground" Value="#FF7043" />
+                                                    </DataTrigger>
                                                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                                                         <Setter Property="Text" Value="{DynamicResource StatusConnecting}" />
                                                         <Setter Property="Foreground" Value="#FFCA28" />
@@ -966,8 +1047,8 @@
                                     </TextBlock>
 
                                     <StackPanel
+                                    Grid.Column="1"
                                     tutorials:Tutorial.TargetId="Servers.ConnectionActions"
-                                    DockPanel.Dock="Right"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
@@ -1032,7 +1113,50 @@
 
 
                                     </StackPanel>
-                                </DockPanel>
+                                </Grid>
+
+                                <!--  Access Denied / Re-Pair Hint Banner  -->
+                                <Border
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,8,0,0"
+                                    Padding="8,6"
+                                    Background="#26EF5350"
+                                    BorderBrush="#80EF5350"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="⚠️"
+                                            FontSize="11"
+                                            VerticalAlignment="Top"
+                                            Margin="0,0,6,0" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="10"
+                                            FontWeight="SemiBold"
+                                            Foreground="#FF8A80"
+                                            Text="{DynamicResource StatusAccessDeniedHint}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
 
@@ -2812,11 +2936,31 @@
                                         <!--  KontextmenÃ¼  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem Click="Team_Center_Click" Header="{DynamicResource CenterOnMap}" />
-                                                <MenuItem Click="Team_Follow_Click" Header="{DynamicResource FollowOnMap}" />
-                                                <MenuItem Click="Team_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}" />
+                                                <MenuItem Click="Team_Center_Click" Header="{DynamicResource CenterOnMap}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" 
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Click="Team_Follow_Click" Header="{DynamicResource FollowOnMap}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" 
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Click="Team_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" 
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                                 <Separator />
-                                                <MenuItem Click="Team_Promote_Click" Header="{DynamicResource PromoteToLeader}" />
+                                                <MenuItem Click="Team_Promote_Click" Header="{DynamicResource PromoteToLeader}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                             </ContextMenu>
                                         </ListBox.Resources>
 
@@ -3104,8 +3248,10 @@
                             Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <ui:SymbolIcon Symbol="Shield24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ClanTab}" />
+                                    <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
+                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" 
+                                          Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                    <TextBlock VerticalAlignment="Center" Text="Clan" />
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid>
@@ -3119,44 +3265,114 @@
                                     <Grid.Resources>
                                         <conv:BoolToVisibilityConverter x:Key="Vis" />
                                         <conv:BoolToVisibilityConverter x:Key="VisInv" Invert="True" />
+                                        
+                                        <!-- Clan Member Card Style -->
                                         <Style x:Key="ClanCard" TargetType="Border">
-                                            <Setter Property="CornerRadius" Value="10" />
+                                            <Setter Property="CornerRadius" Value="8" />
                                             <Setter Property="Background" Value="#FF141F2D" />
+                                            <Setter Property="BorderBrush" Value="#FF1F2F45" />
+                                            <Setter Property="BorderThickness" Value="1" />
                                             <Setter Property="Padding" Value="8" />
-                                            <Setter Property="Margin" Value="6" />
+                                            <Setter Property="Margin" Value="4" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF1A2A3E" />
+                                                    <Setter Property="BorderBrush" Value="#FF2B4160" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+
+                                        <!-- Pure WPF Modern Icon Button Style -->
+                                        <Style x:Key="ClanIconButton" TargetType="Button">
+                                            <Setter Property="Background" Value="#FF1A2737" />
+                                            <Setter Property="BorderBrush" Value="#FF2A3F5D" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <Setter Property="Foreground" Value="#FF8E9AA7" />
+                                            <Setter Property="Cursor" Value="Hand" />
+                                            <Setter Property="Width" Value="30" />
+                                            <Setter Property="Height" Value="30" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="border" Property="Background" Value="#FF24374E" />
+                                                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource SystemAccentBrush}" />
+                                                                <Setter Property="Foreground" Value="White" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="border" Property="Background" Value="#FF162231" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Style>
                                     </Grid.Resources>
 
                                     <!-- Header Hover Details -->
-                                    <Grid Grid.Row="0" Margin="10,10,10,5">
+                                    <Grid Grid.Row="0" Margin="10,10,10,6">
                                         <Border x:Name="ClanHeaderBorder" 
-                                                Background="#FF1A2737" 
+                                                Background="#FF162231" 
+                                                BorderBrush="#FF283D59"
+                                                BorderThickness="1"
                                                 CornerRadius="8" 
-                                                Padding="10,8" 
+                                                Padding="12,10" 
                                                 Cursor="Hand"
                                                 Tag="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                                                 ToolTipService.InitialShowDelay="0"
                                                 ToolTipService.ShowDuration="60000">
                                             <Border.ToolTip>
-                                                <ToolTip Background="#FF141F2D" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="15"
+                                                <ToolTip Background="#FF101824" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="14"
                                                          DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                    <StackPanel Width="250">
-                                                        <TextBlock Text="{Binding ClanName}" 
-                                                                   FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,0,0,10" />
+                                                    <StackPanel Width="270">
+                                                        <!-- Large Clan Banner / Logo Showcase -->
+                                                        <Border Width="270" Height="170" 
+                                                                CornerRadius="8" 
+                                                                ClipToBounds="True" 
+                                                                Margin="0,0,0,12"
+                                                                Background="{Binding ClanColorBrush}"
+                                                                BorderBrush="#40FFFFFF" 
+                                                                BorderThickness="1.5"
+                                                                Visibility="{Binding HasClanLogo, Converter={StaticResource Vis}}">
+                                                            <Image Source="{Binding ClanLogoImage}" 
+                                                                   Stretch="Uniform" 
+                                                                   Margin="8" 
+                                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                                        </Border>
+
+                                                        <!-- Header with Clan Name & Shield (if no logo) -->
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
+                                                            <Border Width="32" Height="32" CornerRadius="6" Margin="0,0,8,0"
+                                                                    Background="{Binding ClanColorBrush}"
+                                                                    BorderBrush="#40FFFFFF" BorderThickness="1"
+                                                                    Visibility="{Binding HasClanLogo, Converter={StaticResource VisInv}}">
+                                                                <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
+                                                                      Fill="White" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                            <TextBlock Text="{Binding ClanName}" FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="260" />
+                                                        </StackPanel>
                                                         
-                                                        <!-- MOTD Card -->
-                                                        <Border Background="#FF1E2D42" CornerRadius="6" Padding="10" Margin="0,0,0,12">
+                                                        <!-- MOTD Card (Only visible when MOTD exists - NO empty space) -->
+                                                        <Border Background="#FF1A2739" BorderBrush="#FF283D59" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,4,0,10"
+                                                                Visibility="{Binding HasClanMotd, Converter={StaticResource Vis}}">
                                                             <StackPanel>
                                                                 <TextBlock Text="{Binding ClanMotd}" 
-                                                                           Foreground="White" FontSize="12" TextWrapping="Wrap" FontStyle="Italic" />
+                                                                           Foreground="#FFE6ECF2" FontSize="12" TextWrapping="Wrap" FontStyle="Italic" LineHeight="16" />
                                                                 <TextBlock Text="{Binding ClanMotdAuthorText}" 
-                                                                           Foreground="#FF8E9AA7" FontSize="10" Margin="0,6,0,0" />
+                                                                           Foreground="#FF8E9AA7" FontSize="10" Margin="0,5,0,0" />
                                                             </StackPanel>
                                                         </Border>
                                                         
                                                         <!-- Details Grid -->
-                                                        <Grid>
+                                                        <Grid Margin="0,2,0,0">
                                                             <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="Auto" />
@@ -3168,24 +3384,34 @@
                                                             </Grid.ColumnDefinitions>
                                                             
                                                             <!-- Score -->
-                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Score" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Score" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ClanScoreText}" 
-                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                             
                                                             <!-- Members -->
-                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Members" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Members" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ClanMembersRatio}" 
-                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                             
+                                                            <!-- Roles -->
+                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Roles" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ClanRolesSummary}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" TextTrimming="CharacterEllipsis" MaxWidth="170" />
+
+                                                            <!-- Pending Invites -->
+                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Invites" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ClanInvitesCount, StringFormat='{}{0} Pending'}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
+
                                                             <!-- Created -->
-                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Created" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
-                                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ClanCreatedText}" 
-                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Created" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ClanCreatedText}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                             
                                                             <!-- Founder -->
-                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Founder" Foreground="#FF8E9AA7" FontSize="11" Margin="0,2,10,2" />
-                                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ClanCreatorText}" 
-                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,2,0,2" />
+                                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Founder" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ClanCreatorText}" 
+                                                                       Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                         </Grid>
                                                     </StackPanel>
                                                 </ToolTip>
@@ -3197,14 +3423,31 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <ui:SymbolIcon Grid.Column="0" Symbol="Shield24" Foreground="{DynamicResource SystemAccentBrush}" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="18" />
+                                                <!-- Logo or Shield with in-game Banner Color Background -->
+                                                <Border Grid.Column="0" Width="34" Height="34" CornerRadius="6" ClipToBounds="True" Margin="0,0,10,0" VerticalAlignment="Center"
+                                                        Background="{Binding ClanColorBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        BorderBrush="#40FFFFFF" BorderThickness="1"
+                                                        Visibility="{Binding HasClanLogo, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}">
+                                                    <Image Source="{Binding ClanLogoImage, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                           Stretch="Uniform" Margin="2" RenderOptions.BitmapScalingMode="HighQuality" />
+                                                </Border>
+                                                <Border Grid.Column="0" Width="34" Height="34" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center"
+                                                        Background="{Binding ClanColorBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        BorderBrush="#40FFFFFF" BorderThickness="1"
+                                                        Visibility="{Binding HasClanLogo, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisInv}}">
+                                                    <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
+                                                          Fill="White" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding ClanName, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='Clan Loading...'}" 
                                                                Foreground="White" FontWeight="Bold" FontSize="14" TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Text="{Binding ClanMotd, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='No Announcement'}" 
-                                                               Foreground="#FF8E9AA7" FontSize="11" FontStyle="Italic" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                                    <TextBlock Text="{Binding ClanMotd, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                               Foreground="#FF8E9AA7" FontSize="11" FontStyle="Italic" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
+                                                               Visibility="{Binding HasClanMotd, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}" />
                                                 </StackPanel>
-                                                <ui:SymbolIcon Grid.Column="2" Symbol="Info24" Foreground="#FF8E9AA7" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                <!-- Info Icon -->
+                                                <Path Grid.Column="2" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" 
+                                                      Fill="#FF8E9AA7" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="6,0,2,0" />
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -3219,8 +3462,18 @@
                                         <!--  Context Menu  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="ClanContextMenu" Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem Click="Clan_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}" />
-                                                <MenuItem Click="Clan_CopySteamId_Click" Header="Copy Steam ID" />
+                                                <MenuItem Click="Clan_OpenProfile_Click" Header="{DynamicResource OpenSteamProfile}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" 
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Click="Clan_CopySteamId_Click" Header="Copy Steam ID">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" 
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                             </ContextMenu>
                                         </ListBox.Resources>
 
@@ -3251,11 +3504,13 @@
                                                             <Border Style="{StaticResource ClanCard}" Padding="6">
                                                                 <!-- ToolTip for full info on hover -->
                                                                 <Border.ToolTip>
-                                                                    <ToolTip Background="#FF141F2D" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="12">
-                                                                        <StackPanel Width="220">
+                                                                    <ToolTip Background="#FF101824" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="12">
+                                                                        <StackPanel Width="230">
                                                                             <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Foreground="White" />
                                                                             <TextBlock Text="{Binding RoleName, StringFormat='Role: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" />
+                                                                            <TextBlock Text="{Binding RolePermissions, StringFormat='Permissions: {0}'}" Foreground="#FF6C7A89" FontSize="10" Margin="0,2,0,0" TextWrapping="Wrap" />
                                                                             <TextBlock Text="{Binding SteamId, StringFormat='Steam ID: {0}'}" Foreground="#FF8E9AA7" FontSize="10" Margin="0,2,0,0" />
+                                                                            <TextBlock Text="{Binding JoinedText, StringFormat='Joined: {0}'}" Foreground="#FF8E9AA7" FontSize="10" Margin="0,2,0,0" />
                                                                             <TextBlock Text="{Binding Notes, StringFormat='Note: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap" FontStyle="Italic" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}" />
                                                                             <TextBlock Text="{Binding LastSeenText, StringFormat='Last Seen: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" />
                                                                         </StackPanel>
@@ -3285,7 +3540,8 @@
                                                                         <!-- Name & Team Icon -->
                                                                         <StackPanel Orientation="Horizontal" MaxWidth="120">
                                                                             <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="11" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                                                                            <ui:SymbolIcon Symbol="People20" FontSize="10" Foreground="{DynamicResource SystemAccentBrush}" Margin="4,0,0,0" VerticalAlignment="Center" ToolTip="In your team" Visibility="{Binding IsInTeam, Converter={StaticResource Vis}}" />
+                                                                            <Path Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" 
+                                                                                  Fill="{DynamicResource SystemAccentBrush}" Width="10" Height="10" Stretch="Uniform" Margin="4,0,0,0" VerticalAlignment="Center" ToolTip="In your team" Visibility="{Binding IsInTeam, Converter={StaticResource Vis}}" />
                                                                         </StackPanel>
                                                                         
                                                                         <!-- Role (Trimmed) -->
@@ -3343,12 +3599,14 @@
                                                                                 <Ellipse Grid.Column="0" Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0" Fill="#666" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
                                                                                 
                                                                                 <!-- Rank Icon (shield) -->
-                                                                                <ui:SymbolIcon Grid.Column="1" Symbol="Shield20" FontSize="11" Foreground="#FF9BA4B5" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                                                <Path Grid.Column="1" Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
+                                                                                      Fill="#FF9BA4B5" Width="11" Height="11" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
                                                                                 
                                                                                 <!-- Name & Team Icon -->
                                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                                                                     <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
-                                                                                    <ui:SymbolIcon Symbol="People20" FontSize="10" Foreground="{DynamicResource SystemAccentBrush}" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="In your team" Visibility="{Binding IsInTeam, Converter={StaticResource Vis}}" />
+                                                                                    <Path Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" 
+                                                                                          Fill="{DynamicResource SystemAccentBrush}" Width="10" Height="10" Stretch="Uniform" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="In your team" Visibility="{Binding IsInTeam, Converter={StaticResource Vis}}" />
                                                                                 </StackPanel>
                                                                                 
                                                                                 <!-- Role -->
@@ -3363,6 +3621,16 @@
                                                                                     <Grid Margin="0,2,0,2">
                                                                                         <TextBlock Text="Steam ID:" Foreground="#FF6C7A89" FontSize="9" />
                                                                                         <TextBlock Text="{Binding SteamId}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                    </Grid>
+                                                                                    <!-- Joined -->
+                                                                                    <Grid Margin="0,2,0,2">
+                                                                                        <TextBlock Text="Joined:" Foreground="#FF6C7A89" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding JoinedText}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                    </Grid>
+                                                                                    <!-- Permissions -->
+                                                                                    <Grid Margin="0,2,0,2">
+                                                                                        <TextBlock Text="Permissions:" Foreground="#FF6C7A89" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding RolePermissions}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" MaxWidth="160" />
                                                                                     </Grid>
                                                                                     <!-- Last Seen -->
                                                                                     <Grid Margin="0,2,0,2" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}">
@@ -3388,7 +3656,7 @@
                                     </ListBox>
 
                                     <!-- Footer (Refresh & Mode Toggle) -->
-                                    <Grid Grid.Row="2" Margin="10,5,10,10">
+                                    <Grid Grid.Row="2" Margin="10,6,10,10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
@@ -3402,35 +3670,42 @@
                                         
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                             <!-- Toggle view button -->
-                                            <ui:Button Click="BtnToggleClanView_Click" 
-                                                       Width="28" Height="28" Padding="0" Margin="0,0,6,0" 
-                                                       Appearance="Secondary"
-                                                       ToolTip="Toggle List/Tile View">
-                                                <ui:Button.Content>
-                                                    <Grid>
-                                                        <!-- Grid icon -->
-                                                        <ui:SymbolIcon Symbol="Grid24" FontSize="14" Visibility="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}" />
-                                                        <!-- List icon -->
-                                                        <ui:SymbolIcon Symbol="List24" FontSize="14" Visibility="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisInv}}" />
-                                                    </Grid>
-                                                </ui:Button.Content>
-                                            </ui:Button>
+                                            <Button Style="{StaticResource ClanIconButton}" 
+                                                    Click="BtnToggleClanView_Click" 
+                                                    Margin="0,0,6,0" 
+                                                    ToolTip="Toggle List/Tile View">
+                                                <Grid>
+                                                    <!-- Grid icon -->
+                                                    <Path Data="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z" 
+                                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" 
+                                                          Width="14" Height="14" Stretch="Uniform" 
+                                                          Visibility="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}" />
+                                                    <!-- List icon -->
+                                                    <Path Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" 
+                                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" 
+                                                          Width="14" Height="14" Stretch="Uniform" 
+                                                          Visibility="{Binding IsClanListView, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisInv}}" />
+                                                </Grid>
+                                            </Button>
                                             
                                             <!-- Refresh button -->
-                                            <ui:Button Click="BtnRefreshClan_Click" 
-                                                       Width="28" Height="28" Padding="0" Margin="0,0,6,0"
-                                                       Appearance="Secondary"
-                                                       ToolTip="Refresh Clan Info">
-                                                <ui:SymbolIcon Symbol="ArrowCounterclockwise24" FontSize="14" />
-                                            </ui:Button>
+                                            <Button Style="{StaticResource ClanIconButton}" 
+                                                    Click="BtnRefreshClan_Click" 
+                                                    Margin="0,0,6,0"
+                                                    ToolTip="Refresh Clan Info">
+                                                <Path Data="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" 
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" 
+                                                      Width="14" Height="14" Stretch="Uniform" />
+                                            </Button>
                                             
                                             <!-- Chat button -->
-                                            <ui:Button Click="BtnOpenClanChat_Click" 
-                                                       Width="28" Height="28" Padding="0"
-                                                       Appearance="Secondary"
-                                                       ToolTip="Open Clan Chat">
-                                                <ui:SymbolIcon Symbol="Chat24" FontSize="14" />
-                                            </ui:Button>
+                                            <Button Style="{StaticResource ClanIconButton}" 
+                                                    Click="BtnOpenClanChat_Click" 
+                                                    ToolTip="Open Clan Chat">
+                                                <Path Data="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" 
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" 
+                                                      Width="14" Height="14" Stretch="Uniform" />
+                                            </Button>
                                         </StackPanel>
                                     </Grid>
                                 </Grid>
@@ -3452,19 +3727,112 @@
                                     HorizontalAlignment="Right"
                                     DockPanel.Dock="Bottom"
                                     Orientation="Horizontal">
-                                    <Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add" Style="{StaticResource PrimaryButton}">
-                                        <StackPanel Margin="6,1" Orientation="Horizontal">
-                                            <TextBlock VerticalAlignment="Center" Text="&#x1F4F7;" />
-                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource AddCamera}" />
-                                        </StackPanel>
-                                    </Button>                                </StackPanel>
+                                    <ui:Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add"
+                                               Appearance="Primary" Padding="14,8"
+                                               Icon="{ui:SymbolIcon Symbol=CameraAdd24}"
+                                               Content="{DynamicResource AddCamera}" />
+
+                                    <!-- Add-camera popover, anchored above the button -->
+                                    <Popup x:Name="AddCamPopup" PlacementTarget="{Binding ElementName=BtnAddCam}"
+                                           Placement="Top" StaysOpen="False" AllowsTransparency="True"
+                                           PopupAnimation="Fade" VerticalOffset="-8" HorizontalOffset="0">
+                                        <Border Width="330" Margin="10" CornerRadius="12"
+                                                Background="{DynamicResource ApplicationBackgroundBrush}"
+                                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel Margin="16">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                    <ui:SymbolIcon Symbol="CameraAdd24" FontSize="16" Margin="0,0,8,0"
+                                                                   VerticalAlignment="Center" Foreground="{DynamicResource Accent}" />
+                                                    <TextBlock Text="{DynamicResource AddCamera}" FontWeight="SemiBold" FontSize="14"
+                                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                                </StackPanel>
+                                                <TextBlock Text="Camera identifier from the in-game computer station (case-sensitive)."
+                                                           TextWrapping="Wrap" FontSize="11.5" Margin="0,0,0,10"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <ui:TextBox x:Name="AddCamText" PlaceholderText="e.g. CAM01, DOOR1, TURRET_N"
+                                                            Icon="{ui:SymbolIcon Symbol=CameraDome24}" KeyDown="AddCamText_KeyDown" />
+                                                <ui:TextBox x:Name="AddCamName" Margin="0,8,0,0" PlaceholderText="Display name (optional)"
+                                                            Icon="{ui:SymbolIcon Symbol=Rename24}" KeyDown="AddCamText_KeyDown" />
+                                                <ui:InfoBar x:Name="AddCamErr" Margin="0,10,0,0" Severity="Error" IsClosable="False" IsOpen="False" />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="82" Margin="0,0,8,0" Click="AddCamCancel_Click" />
+                                                    <ui:Button Content="{DynamicResource AddCamera}" Appearance="Primary" MinWidth="110"
+                                                               Icon="{ui:SymbolIcon Symbol=AddCircle24}" Click="AddCamConfirm_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+
+                                    <!-- Edit-camera popover (anchored to the clicked tile's edit button) -->
+                                    <Popup x:Name="EditCamPopup" Placement="Top" StaysOpen="False" AllowsTransparency="True"
+                                           PopupAnimation="Fade" VerticalOffset="-8" HorizontalOffset="0">
+                                        <Border Width="330" Margin="10" CornerRadius="12"
+                                                Background="{DynamicResource ApplicationBackgroundBrush}"
+                                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel Margin="16">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                                    <ui:SymbolIcon Symbol="Rename24" FontSize="16" Margin="0,0,8,0"
+                                                                   VerticalAlignment="Center" Foreground="{DynamicResource Accent}" />
+                                                    <TextBlock Text="Edit camera" FontWeight="SemiBold" FontSize="14"
+                                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                                </StackPanel>
+                                                <TextBlock Text="Camera identifier (case-sensitive)" FontSize="11.5" Margin="0,0,0,4"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <ui:TextBox x:Name="EditCamText" Icon="{ui:SymbolIcon Symbol=CameraDome24}" KeyDown="EditCamText_KeyDown" />
+                                                <TextBlock Text="Display name (optional)" FontSize="11.5" Margin="0,10,0,4"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <ui:TextBox x:Name="EditCamName" Icon="{ui:SymbolIcon Symbol=Rename24}" KeyDown="EditCamText_KeyDown" />
+                                                <ui:InfoBar x:Name="EditCamErr" Margin="0,10,0,0" Severity="Error" IsClosable="False" IsOpen="False" />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="82" Margin="0,0,8,0" Click="EditCamCancel_Click" />
+                                                    <ui:Button Content="Save" Appearance="Primary" MinWidth="90"
+                                                               Icon="{ui:SymbolIcon Symbol=Rename24}" Click="EditCamConfirm_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+
+                                    <!-- Delete-confirmation popover (anchored to the clicked tile's delete button) -->
+                                    <Popup x:Name="DeleteCamPopup" Placement="Top" StaysOpen="False" AllowsTransparency="True"
+                                           PopupAnimation="Fade" VerticalOffset="-8" HorizontalOffset="0">
+                                        <Border Width="300" Margin="10" CornerRadius="12"
+                                                Background="{DynamicResource ApplicationBackgroundBrush}"
+                                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel Margin="16">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                    <ui:SymbolIcon Symbol="Warning24" FontSize="16" Margin="0,0,8,0"
+                                                                   VerticalAlignment="Center" Foreground="#E6A23C" />
+                                                    <TextBlock Text="Delete camera" FontWeight="SemiBold" FontSize="14"
+                                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                                </StackPanel>
+                                                <TextBlock x:Name="DeleteCamText" TextWrapping="Wrap" FontSize="12"
+                                                           Foreground="{DynamicResource TextSubtle}" />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                                                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="82" Margin="0,0,8,0" Click="DeleteCamCancel_Click" />
+                                                    <ui:Button Content="Delete" Appearance="Danger" MinWidth="90"
+                                                               Icon="{ui:SymbolIcon Symbol=DeleteDismiss24}" Click="DeleteCamConfirm_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+                                </StackPanel>
 
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid>
-                                        <ItemsControl x:Name="CamItems" tutorials:Tutorial.TargetId="Cameras.List">
+                                        <ItemsControl x:Name="CamItems" tutorials:Tutorial.TargetId="Cameras.List"
+                                                      HorizontalContentAlignment="Stretch">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <WrapPanel ItemHeight="180" ItemWidth="220" />
+                                                    <StackPanel Orientation="Vertical" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
@@ -3551,6 +3919,40 @@
                             <views:NotificationsTabContent x:Name="NotificationsTabControl" />
                         </TabItem>
 
+                        <!--  ===== GENETICS LAB =====  -->
+                        <TabItem x:Name="GeneticsLabTab" Style="{StaticResource PrettyTabItem}" tutorials:Tutorial.TargetId="Navigation.GeneticsLab">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="LeafTwo24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Genetics Lab" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid />
+                        </TabItem>
+
+                        <TabItem x:Name="PlayerWipeTrackerTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="History24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Player Wipe Tracker" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid />
+                        </TabItem>
+
+                        <TabItem x:Name="DeathStatsTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="14" Height="14" Margin="0,0,6,0" VerticalAlignment="Center">
+                                        <Path Data="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z"
+                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    </Viewbox>
+                                    <TextBlock VerticalAlignment="Center" Text="Death Stats" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid />
+                        </TabItem>
+
                         <TabItem x:Name="RaidCalculatorTab" Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
@@ -3573,6 +3975,21 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 CloseRequested="RecyclerCalculator_CloseRequested" />
+                        </TabItem>
+
+                        <TabItem x:Name="ConsoleHelperTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="WindowConsole20" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource ConsoleHelperTitle}" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <views:ConsoleHelperOverlay
+                                x:Name="ConsoleHelperPanel"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                CloseRequested="ConsoleHelper_CloseRequested"
+                                PopoutRequested="ConsoleHelper_PopoutRequested" />
                         </TabItem>
                     </TabControl>
 
@@ -3867,6 +4284,29 @@
                                 </Popup>
                             </Grid>
                             <Grid>
+                                <ui:Button x:Name="RailGeneticsLabButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Genetics Lab" AutomationProperties.HelpText="Calculate plant genetics, crossbreeding, and recipes" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=LeafTwo24}" Tag="{Binding ElementName=GeneticsLabTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailGeneticsLabButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailGeneticsLabButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailGeneticsLabButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailPlayerWipeTrackerButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Player Wipe Tracker" AutomationProperties.HelpText="Track teammate routes, activity, and history for the current wipe" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=History24}" Tag="{Binding ElementName=PlayerWipeTrackerTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayerWipeTrackerButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayerWipeTrackerButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailPlayerWipeTrackerButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
+                                <ui:Button x:Name="RailDeathStatsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Death stats" AutomationProperties.HelpText="View death statistics for the current server" Click="CompactSidebarTab_Click" Tag="{Binding ElementName=DeathStatsTab}">
+                                    <Viewbox Width="16" Height="16">
+                                        <Path Data="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z"
+                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ui:Button}}}" />
+                                    </Viewbox>
+                                </ui:Button>
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDeathStatsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDeathStatsButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailDeathStatsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <Grid>
                                 <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource UiRaidCalculator}" AutomationProperties.HelpText="{DynamicResource UiCalculateRaidCostsAndRequiredMaterials}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Rocket24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRaidCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRaidCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRaidCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
@@ -3876,6 +4316,11 @@
                                 <ui:Button x:Name="RailRecyclerCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Update700Title3}" AutomationProperties.HelpText="{DynamicResource UiCalculateComponentYieldsForWildAndSafeZoneRecyclers}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Recycle32}" Tag="{Binding ElementName=RecyclerCalculatorTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRecyclerCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRecyclerCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRecyclerCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+
+                                <ui:Button x:Name="RailConsoleHelperButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource ConsoleHelperTitle}" AutomationProperties.HelpText="{DynamicResource ConsoleHelperSubtitle}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=WindowConsole20}" Tag="{Binding ElementName=ConsoleHelperTab}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailConsoleHelperButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailConsoleHelperButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailConsoleHelperButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                         </StackPanel>
@@ -6774,7 +7219,7 @@
                                                 Text="&#xE70D;" />
                                         </StackPanel>
                                         <ui:Button.ContextMenu>
-                                            <ContextMenu x:Name="MenuFollowPlayer">
+                                            <ContextMenu x:Name="MenuFollowPlayer" Style="{StaticResource DarkContextMenu}">
                                                 <!--  Dynamically filled  -->
                                             </ContextMenu>
                                         </ui:Button.ContextMenu>
@@ -8335,7 +8780,28 @@
                 </Border>
             </Grid>
 
-            <!--  Delete Confirmation Overlay  -->
+            <!--  Player Wipe Tracker Overlay  -->
+            <Border
+                x:Name="PlayerWipeTrackerPanel"
+                Grid.ColumnSpan="3"
+                Padding="12"
+                Background="{DynamicResource AppBg}"
+                Panel.ZIndex="9000"
+                Visibility="Collapsed">
+                <views:PlayerWipeTrackerView x:Name="PlayerWipeTrackerControl" CloseRequested="PlayerWipeTracker_CloseRequested" />
+            </Border>
+
+            <!--  Death Stats Overlay  -->
+            <Border
+                x:Name="DeathStatsPanel"
+                Grid.ColumnSpan="3"
+                Background="{DynamicResource AppBg}"
+                Panel.ZIndex="9000"
+                Visibility="Collapsed">
+                <views:DeathStatsView x:Name="DeathStatsControl" CloseRequested="DeathStats_CloseRequested" />
+            </Border>
+
+            <!--  Raid Calculator Overlay  -->
             <Border
                 x:Name="RaidCalculatorPanel"
                 Grid.ColumnSpan="3"
@@ -8344,6 +8810,17 @@
                 Panel.ZIndex="9000"
                 Visibility="Collapsed">
                 <views:RaidCalculatorView CloseRequested="RaidCalculator_CloseRequested" />
+            </Border>
+
+            <!--  Genetics Lab Overlay  -->
+            <Border
+                x:Name="GeneticsLabPanel"
+                Grid.ColumnSpan="3"
+                Padding="12"
+                Background="{DynamicResource AppBg}"
+                Panel.ZIndex="9000"
+                Visibility="Collapsed">
+                <views:GeneticsLabTabContent x:Name="GeneticsLabTabControl" CloseRequested="GeneticsLab_CloseRequested" />
             </Border>
 
             <!--  Delete Confirmation Overlay  -->

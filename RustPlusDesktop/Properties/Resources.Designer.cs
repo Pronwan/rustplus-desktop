@@ -44,6 +44,7 @@ namespace RustPlusDesk.Properties {
         public static string CheckForUpdates => GetString("CheckForUpdates");
         public static string Downloading => GetString("Downloading");
         public static string JoinDiscord => GetString("JoinDiscord");
+        public static string OpenCloudPortal => GetString("OpenCloudPortal");
         public static string PatchNotes => GetString("PatchNotes");
         public static string Settings => GetString("Settings");
         public static string PairedServers => GetString("PairedServers");
@@ -698,6 +699,11 @@ namespace RustPlusDesk.Properties {
         public static string TimerNameMustStartWithLetter => GetString("TimerNameMustStartWithLetter");
         public static string ConnectionFailedRustPlusUnreachable => GetString("ConnectionFailedRustPlusUnreachable");
         public static string ConnectionFailedRustPlusUnreachableComment => GetString("ConnectionFailedRustPlusUnreachableComment");
+        public static string ConnectionFailedAccessDenied => GetString("ConnectionFailedAccessDenied");
+        public static string ConnectionFailedAccessDeniedComment => GetString("ConnectionFailedAccessDeniedComment");
+        public static string StatusAccessDenied => GetString("StatusAccessDenied");
+        public static string StatusAccessDeniedHint => GetString("StatusAccessDeniedHint");
+        public static string BadgeNeedsRePairing => GetString("BadgeNeedsRePairing");
         public static string WordYou => GetString("WordYou");
         public static string StateOn => GetString("StateOn");
         public static string StateOff => GetString("StateOff");
@@ -777,6 +783,39 @@ namespace RustPlusDesk.Properties {
         public static string ChatCmdOilRigCloudSeen => GetString("ChatCmdOilRigCloudSeen");
         public static string ChatCmdOilRigCloudNone => GetString("ChatCmdOilRigCloudNone");
         public static string EventNotTrackableOnServer => GetString("EventNotTrackableOnServer");
+        public static string BaseCodesCategory => GetString("BaseCodesCategory");
+        public static string BaseCodesDesc => GetString("BaseCodesDesc");
+        public static string BaseCodesCmdLabel => GetString("BaseCodesCmdLabel");
+        public static string BaseCodesCmdHint => GetString("BaseCodesCmdHint");
+        public static string BaseCodesRowLabel => GetString("BaseCodesRowLabel");
+        public static string BaseCodesNameDefault => GetString("BaseCodesNameDefault");
+        public static string ChatCmdNoBaseCodes => GetString("ChatCmdNoBaseCodes");
+        public static string Saved => GetString("Saved");
+        public static string ConsoleHelperTitle => GetString("ConsoleHelperTitle");
+        public static string ConsoleHelperSubtitle => GetString("ConsoleHelperSubtitle");
+        public static string ConsoleHelperClientTab => GetString("ConsoleHelperClientTab");
+        public static string ConsoleHelperAdminTab => GetString("ConsoleHelperAdminTab");
+        public static string ConsoleHelperMostUseful => GetString("ConsoleHelperMostUseful");
+        public static string ConsoleHelperAdminNote => GetString("ConsoleHelperAdminNote");
+        public static string ConsoleHelperSearch => GetString("ConsoleHelperSearch");
+        public static string ConsoleHelperNoMatch => GetString("ConsoleHelperNoMatch");
+        public static string ConsoleHelperCopy => GetString("ConsoleHelperCopy");
+        public static string ConsoleHelperCopyBind => GetString("ConsoleHelperCopyBind");
+        public static string ConsoleHelperCopyAllBinds => GetString("ConsoleHelperCopyAllBinds");
+        public static string ConsoleHelperPopout => GetString("ConsoleHelperPopout");
+        public static string ConsoleHelperKey => GetString("ConsoleHelperKey");
+        public static string ConsoleHelperKeyHint => GetString("ConsoleHelperKeyHint");
+        public static string ConsoleHelperKeyTitle => GetString("ConsoleHelperKeyTitle");
+        public static string ConsoleHelperKeyPrompt => GetString("ConsoleHelperKeyPrompt");
+        public static string ConsoleHelperMouseHint => GetString("ConsoleHelperMouseHint");
+        public static string ConsoleHelperKeyUnsupported => GetString("ConsoleHelperKeyUnsupported");
+        public static string ConsoleHelperClearKey => GetString("ConsoleHelperClearKey");
+        public static string ConsoleHelperPickKeyFirst => GetString("ConsoleHelperPickKeyFirst");
+        public static string ConsoleHelperNoBindsYet => GetString("ConsoleHelperNoBindsYet");
+        public static string ConsoleHelperSearchItem => GetString("ConsoleHelperSearchItem");
+        public static string ConsoleHelperLoadFailed => GetString("ConsoleHelperLoadFailed");
+        public static string ConsoleHelperNotOnTop => GetString("ConsoleHelperNotOnTop");
+        public static string ConsoleHelperKeepOnTop => GetString("ConsoleHelperKeepOnTop");
     }
 }
 

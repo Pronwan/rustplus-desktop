@@ -167,6 +167,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
     public event EventHandler<TeamChatMessage>? TeamChatReceived;
     public event EventHandler<TeamChatMessage>? ClanChatReceived;
+    public event EventHandler? ClanChanged;
 
     // Overload ohne Token (falls irgendwo so aufgerufen wird)
     public Task ConnectAsync(ServerProfile profile) =>
@@ -781,1690 +782,30 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         }
     }
 
-    private static void PatchNearPlaneIfNeeded(string rustplusPkgDir, Action<string>? log = null)
+    /// <summary>
+    /// Opens a dedicated live camera session on its own connection (reusing the current server
+    /// credentials and proxy setting). Each session owns one connection because the server allows a
+    /// single camera subscription per connection — this is what lets several cameras stream at once.
+    /// </summary>
+    public async Task<RustPlusDesk.Services.Camera.CameraSession> CreateCameraSessionAsync(string cameraId, CancellationToken ct = default)
     {
-        try
-        {
-            // Wir suchen die generierten Protobuf-Dateien nach der "nearPlane"-Pflichtprüfung ab
-            var files = Directory.GetFiles(rustplusPkgDir, "*.js", SearchOption.AllDirectories);
-            foreach (var f in files)
-            {
-                var text = File.ReadAllText(f);
-                if (!text.Contains("missing required 'nearPlane'")) continue;
-                if (text.Contains("/*RPD_PATCH_NEARPLANE*/"))
-                {
-                    log?.Invoke("[cam-node] nearPlane patch already present: " + Path.GetFileName(f));
-                    return;
-                }
-
-                // harte, aber robuste Ersetzung: die Throw-Stelle durch Default ersetzen
-                var patched = text.Replace(
-                    "throw util.ProtocolError(\"missing required 'nearPlane'\",{instance:m})",
-                    "/*RPD_PATCH_NEARPLANE*/ if(m.nearPlane==null) m.nearPlane=0"
-                );
-
-                if (!ReferenceEquals(patched, text))
-                {
-                    File.WriteAllText(f, patched);
-                    log?.Invoke("[cam-node] patched nearPlane in: " + f);
-                    return;
-                }
-            }
-
-           // log?.Invoke("[cam-node] nearPlane check not found; no patch applied");
-        }
-        catch (Exception ex)
-        {
-            log?.Invoke("[cam-node] patch failed: " + ex.Message);
-        }
-    }
-
-    public event Action<string /*cameraId*/, double /*vFovDeg*/, int /*w*/, int /*h*/, List<CameraEntity> /*(x,y,z,name)*/>? CameraEntities;
-    public event Action<string /*cameraId*/, int /*controlFlags*/>? CameraControlFlagsChanged;
-
-    private string? _currentCamId;  // setzen, wenn wir subscriben
-    private (int w, int h, double vfov) _lastCamInfo = (160, 90, 65);
-
-
-    public async Task<CameraFrame?> GetCameraFrameViaNodeAsync(string cameraId, int timeoutMs = 5000, CancellationToken ct = default)
-    {
-
-
-
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
-        void L(string s) => _log?.Invoke("[cam-node] " + s);
-
-        // --- statt der Reflection auf _api aus Helper ziehen:
-        GetConnForCamera(out var host, out var port, out var playerId, out var token);
-
-        // kurzes Debug ohne Geheimnisse:
-      //  _log?.Invoke($"[cam] conn host={(string.IsNullOrWhiteSpace(host) ? "-" : host)} port={(port > 0 ? port : 0)} pidLen={playerId?.Length ?? 0} tokLen={token?.Length ?? 0}");
-
-        if (string.IsNullOrWhiteSpace(host) || port <= 0 ||
-            string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token))
-        {
-            throw new InvalidOperationException("Connection data for camera snapshot incomplete.");
-        }
-
-        // ---- Node + rustplus.js Verzeichnis finden ----
-        string? nodeExe = RuntimeHelper.FindBundledNode();
-        if (nodeExe == null) throw new FileNotFoundException(RuntimeHelper.GetNodeNotFoundMessage());
-
-        string? pkgRoot = FindRustplusJsPackageRoot(); // Ordner, der *node_modules* enthält
-        if (pkgRoot == null) throw new DirectoryNotFoundException("rustplus.js Package not found (runtime/rustplus-cli/node_modules).");
-
-
-
-        // One-shot JS: lädt Paket *aus dem Working-Dir* (pkgRoot) und schreibt Base64 auf STDOUT
-        var js = """
-// CLI-Args
-const host   = process.argv[2];
-const port   = parseInt(process.argv[3], 10);
-const pid    = process.argv[4];
-const tok    = process.argv[5];
-const cam    = process.argv[6];
-const tmo    = parseInt(process.argv[7], 10) || 5000;
-// rustplus.js rejects sendRequestAsync with the server's AppError protobuf, not an Error.
-// That object carries .error ("not_found", "wrong_type", ...) and no .message, so the usual
-// String(e) turns the one piece of information we need into "[object Object]".
-function errText(e){
-  if (e === null || e === undefined) return "unknown";
-  if (typeof e === "string") return e;
-  if (e.error) return (typeof e.error === "string") ? e.error : JSON.stringify(e.error);
-  if (e.message) return String(e.message);
-  if (e.code) return String(e.code);
-  try { const j = JSON.stringify(e); if (j && j !== "{}") return j; } catch {}
-  return String(e);
-}
-
-// --- progressive camera renderer -------------------------------------------------
-// camera.js renders each frame from a sliding window of exactly 10 ray packets. That
-// number was chosen when cameras were 160x90; at 320x180 the same ten packets cover
-// only 52% of the pixels and the rest stay black, which is the speckled picture.
-//
-// Widening the window would fix the holes at the cost of latency: at ~10 packets per
-// second, twenty packets means two seconds of ray history smeared over anything that
-// moves. So instead the pixel buffer persists — every ray updates its own pixel and
-// the others keep their last known value, the way the official app does it. Gaps fill
-// in progressively, nothing is ever black, and each frame decodes one packet instead
-// of ten.
-function installProgressiveRenderer(camera, Jimp) {
-  // Verbatim from camera.js — it is a specific PRNG and has to match the server's
-  // shuffle exactly. It is not exported, so it cannot be borrowed.
-  class IndexGenerator {
-    constructor(e) { this.state = 0 | e; this.nextState(); }
-    nextInt(e) {
-      let t = ((this.nextState() * (0 | e)) / 4294967295) | 0;
-      if (t < 0) t = e + t - 1;
-      return 0 | t;
-    }
-    nextState() {
-      let e = this.state, t = e;
-      e = ((e = ((e = (e ^ ((e << 13) | 0)) | 0) ^ ((e >>> 17) | 0)) | 0) ^ ((e << 5) | 0)) | 0;
-      this.state = e;
-      return t >= 0 ? t : 4294967295 + t - 1;
-    }
-  }
-
-  const COLOURS = [
-    [0.5, 0.5, 0.5], [0.8, 0.7, 0.7], [0.3, 0.7, 1], [0.6, 0.6, 0.6],
-    [0.7, 0.7, 0.7], [0.8, 0.6, 0.4], [1, 0.4, 0.4], [1, 0.1, 0.1],
-  ];
-
-  // Deterministic for a given size, and it was rebuilt on every single frame —
-  // 57600 Fisher-Yates iterations per image for a constant result.
-  let cachedBuffer = null, cachedW = 0, cachedH = 0;
-  function sampleBuffer(width, height) {
-    if (cachedBuffer && cachedW === width && cachedH === height) return cachedBuffer;
-
-    const buf = new Int16Array(width * height * 2);
-    for (let w = 0, _ = 0; _ < height; _++)
-      for (let g = 0; g < width; g++) { buf[w] = g; buf[++w] = _; w++; }
-
-    for (let B = new IndexGenerator(1337), R = width * height - 1; R >= 1; R--) {
-      const C = 2 * R, I = 2 * B.nextInt(R + 1);
-      const P = buf[C], k = buf[C + 1], A = buf[I], F = buf[I + 1];
-      buf[I] = P; buf[I + 1] = k; buf[C] = A; buf[C + 1] = F;
-    }
-
-    cachedBuffer = buf; cachedW = width; cachedH = height;
-    return buf;
-  }
-
-  let output = null, outW = 0, outH = 0, raysSinceReset = 0, warmedUp = false;
-
-  function reset(width, height) {
-    output = new Array(width * height);
-    outW = width; outH = height;
-    raysSinceReset = 0; warmedUp = false;
-  }
-
-  // Returns how many rays were written, so the warm-up can be judged on real coverage
-  // rather than a fixed packet count that only held for one resolution.
-  function decodeInto(frame, width, height) {
-    const positions = sampleBuffer(width, height);
-    const rayData = frame.rayData;
-    let sampleOffset = 2 * frame.sampleOffset;
-    let dataPointer = 0, written = 0;
-
-    const rayLookback = new Array(64);
-    for (let r = 0; r < 64; r++) rayLookback[r] = [0, 0, 0];
-
-    while (dataPointer < rayData.length - 1) {
-      let t, r, i;
-      const n = rayData[dataPointer++];
-
-      if (n === 255) {
-        const l = rayData[dataPointer++], o = rayData[dataPointer++], s = rayData[dataPointer++];
-        const u = (3 * (((t = (l << 2) | (o >> 6)) / 128) | 0) + 5 * (((r = 63 & o) / 16) | 0) + 7 * (i = s)) & 63;
-        const f = rayLookback[u];
-        f[0] = t; f[1] = r; f[2] = i;
-      } else {
-        const c = 192 & n;
-        if (c === 0) {
-          const y = rayLookback[63 & n];
-          t = y[0]; r = y[1]; i = y[2];
-        } else if (c === 64) {
-          const v = rayLookback[63 & n], g = rayData[dataPointer++];
-          t = v[0] + ((g >> 3) - 15); r = v[1] + ((7 & g) - 3); i = v[2];
-        } else if (c === 128) {
-          const C = rayLookback[63 & n];
-          t = C[0] + (rayData[dataPointer++] - 127); r = C[1]; i = C[2];
-        } else {
-          const A = rayData[dataPointer++], F = rayData[dataPointer++];
-          const D = (3 * (((t = (A << 2) | (F >> 6)) / 128) | 0) + 5 * (((r = 63 & F) / 16) | 0) + 7 * (i = 63 & n)) & 63;
-          const E = rayLookback[D];
-          E[0] = t; E[1] = r; E[2] = i;
-        }
-      }
-
-      sampleOffset %= 2 * width * height;
-      const index = positions[sampleOffset++] + positions[sampleOffset++] * width;
-      output[index] = [t / 1023, r / 63, i];
-      written++;
-    }
-
-    return written;
-  }
-
-  async function render(width, height) {
-    const image = new Jimp(width, height);
-    for (let i = 0; i < output.length; i++) {
-      const ray = output[i];
-      if (!ray) continue;
-
-      const distance = ray[0], alignment = ray[1], material = ray[2];
-      let colour;
-      if (distance === 1 && alignment === 0 && material === 0) colour = [208, 230, 252];
-      else {
-        const c = COLOURS[material] || COLOURS[0];
-        colour = [alignment * c[0] * 255, alignment * c[1] * 255, alignment * c[2] * 255];
-      }
-
-      image.setPixelColor(Jimp.rgbaToInt(colour[0], colour[1], colour[2], 255), i % width, height - 1 - Math.floor(i / width));
-    }
-    return image.getBufferAsync(Jimp.MIME_PNG);
-  }
-
-  camera._onCameraRays = async function (cameraRays) {
-    if (!this.isSubscribed) return;
-
-    const info = this.cameraSubscribeInfo;
-    if (!info || !info.width || !info.height) return;
-
-    const width = info.width, height = info.height;
-    if (!output || outW !== width || outH !== height) reset(width, height);
-
-    raysSinceReset += decodeInto(cameraRays, width, height);
-
-    // Hold the first image back until the buffer has been filled about once over.
-    // Derived from actual rays against actual pixels, so it adapts to whatever
-    // resolution and packet size the server happens to use — which is exactly what
-    // the hardcoded ten packets could not do.
-    if (!warmedUp) {
-      if (raysSinceReset < width * height) return;
-      warmedUp = true;
-    }
-
-    this.emit('render', await render(width, height));
-  };
-}
-const pkgDir = process.argv[8]; // ...\node_modules\@liamcottle\rustplus.js
-const useProxy = process.argv[9] === "true";
-// console.error("using pkg dir: " + pkgDir);
-
-function reqFrom(base, id){
-  return require(require.resolve(id, { paths: [base] }));
-}
-
-// === wir hooken *genau* die protobufjs-Instanz, die rustplus.js nutzen wird
-function hookProtobuf(pb){
-  if (!pb) return;
-  const RELAX_ALL = true;              // <- global alles ‚required‘ -> ‚optional‘
-  const RELAX = new Set([              // falls du einschränken willst: Felder hier benennen
-    "nearPlane","controlFlags","sampleOffset","sampleCount","horizontalFov","verticalFov","fov"
-  ]);
-
-  const shouldRelax = (fname) => RELAX_ALL || RELAX.has(fname);
-
-  function relaxFieldsObj(obj){
-    if (!obj || typeof obj !== "object") return;
-    if (obj.fields && typeof obj.fields === "object"){
-      for (const [fname, f] of Object.entries(obj.fields)){
-        if (!f) continue;
-        if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
-          f.rule = "optional";
-          f.required = false;
-        }
-      }
-    }
-    for (const k of Object.keys(obj)) relaxFieldsObj(obj[k]);
-  }
-
-  // Hook: Root.fromJSON
-  if (pb.Root && typeof pb.Root.fromJSON === "function"){
-    const orig = pb.Root.fromJSON;
-    pb.Root.fromJSON = function(json, root){
-      try{ relaxFieldsObj(json); }catch{}
-      return orig.call(this, json, root);
-    };
-  }
-  // Hook: Type.fromJSON
-  if (pb.Type && typeof pb.Type.fromJSON === "function"){
-    const orig = pb.Type.fromJSON;
-    pb.Type.fromJSON = function(name, json){
-      try{
-        if (json && json.fields){
-          for (const [fname, f] of Object.entries(json.fields)){
-            if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
-              f.rule = "optional";
-              f.required = false;
-            }
-          }
-        }
-      }catch{}
-      return orig.call(this, name, json);
-    };
-  }
-  // Hook: Type.prototype.add (für dynamisch erzeugte Felder)
-  if (pb.Type && pb.Type.prototype){
-    const origAdd = pb.Type.prototype.add;
-    pb.Type.prototype.add = function(field){
-      try{
-        if (field && (field.rule === "required" || field.required === true) && shouldRelax(field.name)){
-          field.rule = "optional";
-          field.required = false;
-        }
-      }catch{}
-      return origAdd.call(this, field);
-    };
-  }
-
-  // Safety-Net: bereits geladene Typen nachträglich entspannen
-  function relaxAlreadyBuilt(){
-    try{
-      const roots = pb.roots ? Object.values(pb.roots) : [];
-      for (const root of roots){
-        if (!root) continue;
-        try { root.resolveAll(); } catch {}
-        (function walk(ns){
-          if (!ns) return;
-          if (ns.fields && typeof ns.fields === "object"){
-            for (const [fname, f] of Object.entries(ns.fields)){
-              if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
-                f.rule = "optional";
-                f.required = false;
-              }
-            }
-          }
-          if (ns.nested){
-            for (const v of Object.values(ns.nested)) walk(v);
-          }
-        })(root);
-      }
-    }catch{}
-  }
-
-  // console.error(`protobufjs hook ready (global relax=${RELAX_ALL})`);
-  return { relaxAlreadyBuilt };
-}
-
-// 1) protobufjs laden & hooken
-let pb = null;
-try { pb = reqFrom(pkgDir, "protobufjs"); }
-catch { try { pb = reqFrom(pkgDir, "protobufjs/minimal"); } catch {} }
-const hook = hookProtobuf(pb);
-
-// 2) jetzt rustplus.js laden (damit unser Hook greift)
-const RustPlus = reqFrom(pkgDir, "@liamcottle/rustplus.js");
-
-// 3) Safety-Net: falls Types schon gebaut wurden, nochmals entschärfen
-try { hook && hook.relaxAlreadyBuilt && hook.relaxAlreadyBuilt(); } catch {}
-
-// 4) Kamera benutzen
-const rp = new RustPlus(host, port, pid, tok, useProxy);
-let timer = null;
-
-rp.on("connected", async () => {
- // console.error("CONNECTED");
-  try {
-    const c = rp.getCamera(cam);
-
-    // Progressive rendering. Without it the picture is roughly half black at 320x180,
-    // because camera.js fills each frame from a fixed ten packets — a number chosen when
-    // cameras were 160x90 and never scaled with them.
-    try {
-      installProgressiveRenderer(c, reqFrom(pkgDir, "jimp"));
-    } catch (e) {
-      console.error("DIAG progressive renderer unavailable, using the built-in one: " + errText(e));
-    }
-
-    // ---- Message-Handler (beide Ebenen) ----
-    const onMsg = (m) => {
-      try {
-        // Tolerant über mögliche Pfade gehen
-        const resp = (m && (m.response || m.appMessage || m.data)) || m || {};
-        const broadcast = resp.broadcast || resp.appBroadcast || {};
-        const rays = broadcast.cameraRays || broadcast.appCameraRays || resp.cameraRays || null;
-
-        if (rays && Array.isArray(rays.entities)) {
-          const ents = rays.entities.map(e => ({
-            id:  e.entityId || 0,
-            type: e.type || 0,
-            name: e.name || "",
-            x: (e.position && e.position.x) || 0,
-            y: (e.position && e.position.y) || 0,
-            z: (e.position && e.position.z) || 0,
-            sid:    (e.steamId || e.playerId || 0),
-            sidStr: (e.steamId || e.playerId) ? String(e.steamId || e.playerId) : ""
-          }));
-          const payload = { cam, ents, fov: rays.verticalFov || rays.fov || 65 };
-          process.stdout.write("ENTS:" + Buffer.from(JSON.stringify(payload), "utf8").toString("base64") + "\n");
-          // console.error(`RAYS n=${ents.length}`);
-        }
-
-        const info = resp.cameraSubscribeInfo || resp.cameraInfo || resp.appCameraInfo || null;
-        if (info && (info.width || info.height)) {
-          const w = info.width || 0, h = info.height || 0;
-          const cf = info.controlFlags || 0;
-          process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h, cf }), "utf8").toString("base64") + "\n");
-        }
-      } catch { /* schlucken */ }
-    };
-
-    rp.on("message", onMsg);
-    c .on("message", onMsg);
-
-    // ---- Frame-Listener ----
-    c.on("render", async (frame) => {
-     // console.error("RENDER");
-      try {
-        process.stdout.write("FRAME:" + Buffer.from(frame).toString("base64") + "\n");
-      } finally {
-        // Gib Broadcasts Zeit anzukommen (fix 400ms)
-        setTimeout(async () => {
-          try { await c.unsubscribe(); } catch {}
-          try { rp.disconnect(); } catch {}
-        }, 400);
-      }
-    });
-
-    await c.subscribe();
-  //  console.error("SUBSCRIBED");
-
-    // Sicherheitsnetz
-    timer = setTimeout(() => { console.error("TIMEOUT"); try { rp.disconnect(); } catch {} }, Math.max(1000, tmo));
-  } catch (e) {
-    console.error("ERR:" + errText(e));
-    try { rp.disconnect(); } catch {}
-  }
-});
-
-rp.on("error", (e) => {
-  try {
-    console.error("ERR:" + errText(e));
-  } catch { console.error("ERR:unknown"); }
-});
-rp.connect();
-""";
-
-        var rustplusPkgDir = Path.Combine(pkgRoot, "node_modules", "@liamcottle", "rustplus.js");
-        PatchNearPlaneIfNeeded(rustplusPkgDir, _log);
-        if (!Directory.Exists(rustplusPkgDir))
-            throw new DirectoryNotFoundException("[cam-node] rustplus.js package not found at: " + rustplusPkgDir);
-        // _log?.Invoke("[cam-node] using pkg dir: " + rustplusPkgDir);
-
-        var tempDir = Path.Combine(Path.GetTempPath(), "RustPlusDesk");
-        Directory.CreateDirectory(tempDir);
-        var jsFile = Path.Combine(tempDir, "camera_once.js");
-        File.WriteAllText(jsFile, js);
-
-        var useProxyStr = _useProxyCurrent.ToString().ToLowerInvariant();
-        var psi = new ProcessStartInfo(nodeExe,
-    $"\"{jsFile}\" {host} {port} {playerId} {token} {cameraId} {timeoutMs} \"{rustplusPkgDir}\" {useProxyStr}")
-        {
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true,
-            WorkingDirectory = pkgRoot
-        };
-
-        // optional: NODE_PATH setzen (hilft, falls WorkingDirectory doch mal nicht greift)
-       // psi.Environment["NODE_PATH"] = pkgRoot;
-
-        var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-        using var p = new System.Diagnostics.Process { StartInfo = psi };
-        var lastEnts = new List<CameraEntity>();
-        int widthHint = 0, heightHint = 0;
-
-        p.OutputDataReceived += (_, e) =>
-        {
-            if (e.Data == null) return;
-
-            // FRAME:<b64>
-            if (e.Data.StartsWith("FRAME:"))
-            {
-                try
-                {
-                    var b64 = e.Data.Substring("FRAME:".Length);
-                    tcs.TrySetResult(Convert.FromBase64String(b64));
-                }
-                catch (Exception ex) { tcs.TrySetException(ex); }
-                return;
-            }
-
-            // ENTS:<b64 json>
-            if (e.Data.StartsWith("ENTS:"))
-            {
-                try
-                {
-                    var b = Convert.FromBase64String(e.Data.Substring(5));
-                    var json = System.Text.Encoding.UTF8.GetString(b);
-                    using var doc = System.Text.Json.JsonDocument.Parse(json);
-                    lastEnts.Clear();
-
-                    double vFov = 65.0;
-                    if (doc.RootElement.TryGetProperty("fov", out var vf) && vf.ValueKind == System.Text.Json.JsonValueKind.Number)
-                        vFov = vf.GetDouble();
-
-                    if (doc.RootElement.TryGetProperty("ents", out var arr) && arr.ValueKind == System.Text.Json.JsonValueKind.Array)
-                    {
-                        foreach (var it in arr.EnumerateArray())
-                        {
-                            double x = it.TryGetProperty("x", out var vx) ? vx.GetDouble() : 0;
-                            double y = it.TryGetProperty("y", out var vy) ? vy.GetDouble() : 0;
-                            double z = it.TryGetProperty("z", out var vz) ? vz.GetDouble() : 0;
-                            int entityId = it.TryGetProperty("id", out var vi) ? (vi.ValueKind == System.Text.Json.JsonValueKind.Number ? vi.GetInt32() : 0) : 0;
-                            int type = it.TryGetProperty("type", out var vt) ? (vt.ValueKind == System.Text.Json.JsonValueKind.Number ? vt.GetInt32() : 0) : 0;
-                            ulong sid = 0;
-
-                            // bevorzugt: String-sichere ID (falls im JS ausgegeben)
-                            if (it.TryGetProperty("sidStr", out var vss) && vss.ValueKind == System.Text.Json.JsonValueKind.String)
-                            {
-                                _ = ulong.TryParse(vss.GetString(), out sid);
-                            }
-                            else if (it.TryGetProperty("sid", out var vs) && vs.ValueKind == System.Text.Json.JsonValueKind.Number)
-                            {
-                                try { sid = vs.GetUInt64(); } catch { sid = 0; } // falls out of range / falsches Format
-                            }
-
-                            string name = it.TryGetProperty("name", out var vn) ? (vn.GetString() ?? "") : "";
-
-                            lastEnts.Add(new CameraEntity(x, y, z, name, entityId, type, sid));
-                            
-                        }
-                    }
-
-                    // kleines Histogramm zur Typ-Erkundung
-                    var byType = lastEnts.GroupBy(en => en.Type)
-                                         .Select(g => $"{g.Key}={g.Count()}");
-                    //_log?.Invoke($"[cam-node] ents={lastEnts.Count} vfov={vFov} wHint={widthHint} hHint={heightHint} types=[{string.Join(", ", byType)}]");
-
-                    // -> UI
-
-                    CameraEntities?.Invoke(cameraId, vFov, widthHint, heightHint, lastEnts.ToList());
-                }
-                catch { /* ignore */ }
-                return;
-            }
-
-            // INFO:<b64 json>
-            if (e.Data.StartsWith("INFO:"))
-            {
-                try
-                {
-                    var b = Convert.FromBase64String(e.Data.Substring(5));
-                    var json = System.Text.Encoding.UTF8.GetString(b);
-                    var doc = System.Text.Json.JsonDocument.Parse(json);
-                    widthHint = doc.RootElement.TryGetProperty("w", out var w) ? w.GetInt32() : 0;
-                    heightHint = doc.RootElement.TryGetProperty("h", out var h) ? h.GetInt32() : 0;
-                    int cf = doc.RootElement.TryGetProperty("cf", out var vcf) ? vcf.GetInt32() : 0;
-                    CameraControlFlagsChanged?.Invoke(cameraId, cf);
-                }
-                catch { /* ignore */ }
-                return;
-            }
-
-            // sonstiges Log wie gehabt
-            L(e.Data);
-        };
-        p.ErrorDataReceived += (_, e) =>
-        {
-            if (string.IsNullOrEmpty(e.Data)) return;
-            L(e.Data); // alles loggen
-            if (e.Data.StartsWith("ERR:"))
-                tcs.TrySetException(new Exception(e.Data));
-            if (e.Data.IndexOf("Cannot find module", StringComparison.OrdinalIgnoreCase) >= 0)
-                tcs.TrySetException(new FileNotFoundException(e.Data));
-            if (e.Data.StartsWith("TIMEOUT"))
-                tcs.TrySetCanceled();
-        };
-
-        p.Start();
-        p.BeginOutputReadLine();
-        p.BeginErrorReadLine();
-
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        cts.CancelAfter(timeoutMs + 2000);
-
-        try
-        {
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs + 1500, cts.Token));
-            if (completed != tcs.Task) return null;
-
-            try
-            {
-                var bytes = await tcs.Task.ConfigureAwait(false); // may throw
-                return new CameraFrame(bytes, null, widthHint, heightHint, lastEnts);
-            }
-            catch (OperationCanceledException)
-            {
-                _log?.Invoke("[cam-node] cancelled");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                _log?.Invoke("[cam-node] exception: " + ex.Message);
-                return null;
-            }
-        }
-        finally
-        {
-            try { if (!p.HasExited) p.Kill(true); } catch { }
-        }
-
-        // --- lokale Finder ---
-        static string? FindRustplusJsPackageRoot() => RuntimeHelper.FindRustplusJsPackageRoot();
-    }
-
-    private static Delegate BuildWildcardHandler(EventInfo ev, Action<object, object> onInvoke)
-    {
-        var handlerType = ev.EventHandlerType!;
-        var invoke = handlerType.GetMethod("Invoke")!;
-        var ps = invoke.GetParameters();
-        if (ps.Length != 2) throw new NotSupportedException("Only EventHandler-like delegates supported");
-
-        var senderParam = System.Linq.Expressions.Expression.Parameter(ps[0].ParameterType, "s");
-        var argsParam = System.Linq.Expressions.Expression.Parameter(ps[1].ParameterType, "e");
-
-        var call = System.Linq.Expressions.Expression.Call(
-            System.Linq.Expressions.Expression.Constant(onInvoke),
-            typeof(Action<object, object>).GetMethod(nameof(Action<object, object>.Invoke))!,
-            System.Linq.Expressions.Expression.Convert(senderParam, typeof(object)),
-            System.Linq.Expressions.Expression.Convert(argsParam, typeof(object))
-        );
-
-        var lambda = System.Linq.Expressions.Expression.Lambda(handlerType, call, senderParam, argsParam);
-        return lambda.Compile();
-    }
-
-    private static EventInfo? FindMessageEvent(object api)
-    {
-        // grab an event that *sounds* like "message"
-        foreach (var ev in api.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-        {
-            var n = ev.Name.ToLowerInvariant();
-            if (n.Contains("message") || n.Contains("received") || n.Contains("app"))
-                return ev;
-        }
-        return null;
-    }
-
-    private static object? P(object? o, string name) =>
-        o?.GetType().GetProperty(name,
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)?.GetValue(o);
-
-    private static byte[]? ReadBytesFlexible(object? obj)
-    {
-        if (obj is null) return null;
-        if (obj is byte[] b) return b;
-
-        foreach (var prop in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        {
-            var n = prop.Name.ToLowerInvariant();
-            if (!(n.Contains("png") || n.Contains("jpg") || n.Contains("jpeg") ||
-                  n.Contains("image") || n.Contains("bytes") || n.Contains("data") || n.Contains("frame")))
-                continue;
-
-            var v = prop.GetValue(obj);
-            if (v is byte[] bb) return bb;
-            if (v is string s)
-            {
-                try { return Convert.FromBase64String(s); } catch { }
-            }
-            if (v != null)
-            {
-                // one more level deep
-                if (v is byte[] b2) return b2;
-                if (v is string s2) { try { return Convert.FromBase64String(s2); } catch { } }
-            }
-        }
-        return null;
-    }
-
-    private static (PropertyInfo reqProp, PropertyInfo idProp)? FindCameraReq(object appRequestInstance, string kind /*"subscribe"/"unsubscribe"*/)
-    {
-        var reqType = appRequestInstance.GetType();
-        // look for AppRequest.{CameraSubscribe}/{CameraUnsubscribe} or similar
-        foreach (var p in reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        {
-            var n = p.Name.ToLowerInvariant();
-            if (!(n.Contains("camera") || n.Contains("cctv"))) continue;
-            if (!(n.Contains("sub") == (kind == "subscribe") || n.Contains("unsub") == (kind == "unsubscribe")))
-                continue;
-
-            var child = Activator.CreateInstance(p.PropertyType)!;
-            // find string id/name prop on the child
-            var idProp = child.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .FirstOrDefault(pp =>
-                    pp.PropertyType == typeof(string) &&
-                    (pp.Name.Contains("identifier", StringComparison.OrdinalIgnoreCase) ||
-                     pp.Name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
-                     pp.Name.Contains("name", StringComparison.OrdinalIgnoreCase) ||
-                     pp.Name.Contains("camera", StringComparison.OrdinalIgnoreCase) ||
-                     pp.Name.Contains("cctv", StringComparison.OrdinalIgnoreCase)));
-
-            if (idProp != null) return (p, idProp);
-        }
-        return null;
-    }
-
-
-
-    public event Action<string, byte[]>? CameraFrame; // (cameraId, jpeg/png bytes)
-
-    private bool _camPushHooked;
-    private readonly Dictionary<string, TaskCompletionSource<byte[]>> _camAwaitOnce
-        = new(StringComparer.OrdinalIgnoreCase);
-
-   
-
-    private void EnsureCameraPushHooked()
-    {
-        if (_camPushHooked || _api is null) return;
-        _camPushHooked = true;
-
-        // Wir hängen uns "breit" an Events vom _api. Der Handler prüft dann auf CameraFrames.
-        foreach (var ev in _api.GetType().GetEvents(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public))
-        {
-            // Wir akzeptieren EventHandler oder EventHandler<T>
-            var ehType = ev.EventHandlerType;
-            if (ehType is null) continue;
-            var invoke = ehType.GetMethod("Invoke");
-            if (invoke is null) continue;
-            var pars = invoke.GetParameters();
-            if (pars.Length != 2) continue; // (sender, args)
-
-            // dynamisch: (object? s, object e) => OnAnyApiEvent(e);
-            var method = GetType().GetMethod(nameof(OnAnyApiEvent),
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            var d = Delegate.CreateDelegate(ehType, this, method!);
-            ev.AddEventHandler(_api, d);
-        }
-    }
-
-    private static object? RProp2(object? o, string name) =>
-    o?.GetType().GetProperty(name,
-        System.Reflection.BindingFlags.Instance |
-        System.Reflection.BindingFlags.Public |
-        System.Reflection.BindingFlags.IgnoreCase)?.GetValue(o);
-
-    private static string? RStr(object? o, params string[] names)
-    {
-        foreach (var n in names)
-        {
-            var v = RProp2(o, n);
-            if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
-        }
-        return null;
-    }
-
-    private static byte[]? RBytes(object? o, params string[] names)
-    {
-        foreach (var n in names)
-        {
-            var v = RProp2(o, n);
-            if (v is byte[] b && b.Length > 0) return b;
-            if (v is string s && s.Length > 0)
-            {
-                try { return Convert.FromBase64String(s); } catch { }
-            }
-        }
-        return null;
-    }
-
-    // universeller Event-Slot: wir versuchen, CameraFrames aus beliebigen EventArgs zu lesen
-    private void OnAnyApiEvent(object? sender, object e)
-    {
-        try
-        {
-            // typische Kette: e -> Message/Response/AppMessage -> Camera/CCTV -> bytes
-            var msg = RProp2(e, "Message") ?? RProp2(e, "AppMessage") ?? e;
-            var resp = RProp2(msg, "Response") ?? RProp2(msg, "Data") ?? msg;
-
-            // Mögliche Containernamen für Camera-Frames
-            var cam = RProp2(resp, "CameraFrame") ??
-                      RProp2(resp, "CCTVFrame") ??
-                      RProp2(resp, "CCTV") ??
-                      RProp2(resp, "Camera");
-
-            // Kamera-Info (Breite/Höhe/FOV) mitnehmen, wenn vorhanden
-            var info = RProp2(resp, "CameraSubscribeInfo") ?? RProp2(resp, "CameraInfo") ?? RProp2(resp, "AppCameraInfo");
-            if (info != null)
-            {
-                int w = (int)(RProp2(info, "Width") ?? 160);
-                int h = (int)(RProp2(info, "Height") ?? 90);
-                double vf = 0;
-                double.TryParse(RProp2(info, "VerticalFov")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out vf);
-                if (vf <= 0) vf = _lastCamInfo.vfov;
-                _lastCamInfo = (w, h, vf);
-
-                int controlFlags = (int)(RProp2(info, "ControlFlags") ?? 0);
-                CameraControlFlagsChanged?.Invoke(_currentCamId ?? "", controlFlags);
-            }
-
-            // Rays/Entities
-            var rays = RProp2(resp, "CameraRays") ?? RProp2(resp, "AppCameraRays") ?? RProp2(resp, "Rays");
-            if (rays != null)
-            {
-                double vf = _lastCamInfo.vfov;
-                double.TryParse(RProp2(rays, "VerticalFov")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out vf);
-                if (vf <= 0) vf = _lastCamInfo.vfov;
-
-                var entsNode = RProp2(rays, "Entities") ?? RProp2(rays, "Entity");
-                var list = new List<CameraEntity>();
-                if (entsNode is System.Collections.IEnumerable en)
-                {
-                    foreach (var it in en)
-                    {
-                        var name = RStr(it, "Name", "Label", "UserName", "DisplayName") ?? "";
-                        var pos = RProp2(it, "Position") ?? it;
-                        double.TryParse(RProp2(pos, "X")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ex);
-                        double.TryParse(RProp2(pos, "Y")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ey);
-                        double.TryParse(RProp2(pos, "Z")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ez);
-                        // optional: id/type mitgeben, falls vorhanden
-                        int id2 = 0, type = 0;
-                        if (int.TryParse(RProp2(en, "entityId")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var eid)) id2 = eid;
-                        if (int.TryParse(RProp2(en, "type")?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var et)) type = et;
-                    }
-                }
-                CameraEntities?.Invoke(_currentCamId ?? "", vf, _lastCamInfo.w, _lastCamInfo.h, list);
-            }
-
-            if (cam == null) return;
-
-            var id = RStr(cam, "CameraId", "Identifier", "Id", "Name") ?? "";
-            var bytes = RBytes(cam, "JpegImage", "PngImage", "Frame", "Image", "Bytes", "Data");
-            if (bytes is null || bytes.Length == 0) return;
-
-            // Event an UI weiterreichen
-            CameraFrame?.Invoke(id, bytes);
-
-            // Warten auf "einmaliges" Snapshot erfüllen?
-            if (!string.IsNullOrEmpty(id) && _camAwaitOnce.TryGetValue(id, out var tcs) && !tcs.Task.IsCompleted)
-            {
-                tcs.TrySetResult(bytes);
-            }
-        }
-        catch
-        {
-            // still – wir sniffen hier generisch
-        }
-    }
-
-    private (object? req, object? idProp) MakeCamSubscribeRequest(string cameraId)
-    {
-        var asm = typeof(RustPlus).Assembly;
-        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
-        if (reqType == null) return (null, null);
-
-        // Kandidaten: CameraSubscribe / CCTVSubscribe / SubscribeCamera / GetCCTVStatic / GetCameraFrame
-        // Wir hier bauen explizit ein Subscribe – Frames kommen per Push.
-        var subProp = reqType.GetProperty("CameraSubscribe",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-            ?? reqType.GetProperty("CCTVSubscribe",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-            ?? reqType.GetProperty("SubscribeCamera",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
-
-        if (subProp == null) return (null, null);
-
-        var subType = subProp.PropertyType;
-        var subObj = Activator.CreateInstance(subType)!;
-
-        // Id-Feld finden
-        var idP = subType.GetProperty("CameraId", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-                 ?? subType.GetProperty("Identifier", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-                 ?? subType.GetProperty("Id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-                 ?? subType.GetProperty("Name", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
-        if (idP == null) return (null, null);
-
-        idP.SetValue(subObj, cameraId);
-
-        var req = Activator.CreateInstance(reqType)!;
-        subProp.SetValue(req, subObj);
-        return (req, idP);
-    }
-
-    private (object? req, System.Reflection.PropertyInfo? idProp) MakeCamUnsubscribeRequest(string cameraId)
-    {
-        var asm = typeof(RustPlus).Assembly;
-        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
-        if (reqType == null) return (null, null);
-
-        var unsubProp = reqType.GetProperty("CameraUnsubscribe",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-            ?? reqType.GetProperty("CCTVUnsubscribe",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-            ?? reqType.GetProperty("UnsubscribeCamera",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
-        if (unsubProp == null) return (null, null);
-
-        var subType = unsubProp.PropertyType;
-        var subObj = Activator.CreateInstance(subType)!;
-
-        var idP = subType.GetProperty("CameraId", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-                 ?? subType.GetProperty("Identifier", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-                 ?? subType.GetProperty("Id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase)
-                 ?? subType.GetProperty("Name", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
-        if (idP == null) return (null, null);
-
-        idP.SetValue(subObj, cameraId);
-
-        var req = Activator.CreateInstance(reqType)!;
-        unsubProp.SetValue(req, subObj);
-        return (req, idP);
-    }
-
-    /// <summary>Startet Streaming (Subscribe) und liefert optional direkt das erste Frame (Snapshot) innerhalb Timeout.</summary>
-    public async Task<byte[]?> StartCameraStreamAsync(string cameraId, int firstFrameTimeoutMs = 2000, CancellationToken ct = default)
-    {
-        _currentCamId = cameraId;
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
-
-        EnsureCameraPushHooked();
-
-        // First-frame TCS einrichten
-        var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
-        _camAwaitOnce[cameraId] = tcs;
-
-        var (req, _) = MakeCamSubscribeRequest(cameraId);
-        if (req == null)
-        {
-            _log?.Invoke("[cam] no subscribe property found on AppRequest");
-            _camAwaitOnce.Remove(cameraId);
-            return null;
-        }
-
-        try
-        {
-            var send = FindSendRequestAsync(_api.GetType(), req.GetType());
-            if (send == null) { _log?.Invoke("[cam] SendRequestAsync not found"); _camAwaitOnce.Remove(cameraId); return null; }
-
-            var taskObj = send.Invoke(_api, BuildSendRequestArgs(send, req));
-            if (taskObj is Task t) await t.ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _log?.Invoke("[cam] subscribe error: " + ex.Message);
-            _camAwaitOnce.Remove(cameraId);
-            return null;
-        }
-
-        // Auf erstes Frame warten (optional)
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(firstFrameTimeoutMs);
-            var frame = await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
-            return frame;
-        }
-        catch
-        {
-            _log?.Invoke("[cam] subscribed, but no pushed frame arrived in time");
-            _camAwaitOnce.Remove(cameraId);
-            return null; // UI kann trotzdem weiter auf CameraFrame-Event hören
-        }
-        finally
-        {
-            _camAwaitOnce.Remove(cameraId);
-        }
-    }
-
-    public async Task StopCameraStreamAsync(string cameraId)
-    {
-        if (_api is null) return;
-        var (req, _) = MakeCamUnsubscribeRequest(cameraId);
-        if (req == null) return;
-        try
-        {
-            var send = FindSendRequestAsync(_api.GetType(), req.GetType());
-            if (send == null) return;
-            var taskObj = send.Invoke(_api, BuildSendRequestArgs(send, req));
-            if (taskObj is Task t) await t.ConfigureAwait(false);
-        }
-        catch { /* tolerant */ }
-    }
-
-    public async Task SendCameraInputAsync(CameraButtons buttons, float mouseDeltaX, float mouseDeltaY)
-    {
-        if (_api is null) return;
-        void L(string s) => _log?.Invoke("[cam-input] " + s);
-        try
-        {
-            var asm = typeof(RustPlus).Assembly;
-            var appReqType = asm.GetType("RustPlusContracts.AppRequest");
-            if (appReqType == null) { L("AppRequest type not found"); return; }
-
-            var inputType = asm.GetType("RustPlusContracts.AppCameraInput");
-            if (inputType == null) { L("AppCameraInput type not found"); return; }
-
-            var vectorType = asm.GetType("RustPlusContracts.Vector2");
-            if (vectorType == null) { L("Vector2 type not found"); return; }
-
-            // 1) Create AppRequest instance
-            var req = Activator.CreateInstance(appReqType)!;
-
-            // 2) Create AppCameraInput instance
-            var camInput = Activator.CreateInstance(inputType)!;
-
-            // Set buttons (int)
-            var buttonsProp = inputType.GetProperty("Buttons");
-            if (buttonsProp != null)
-            {
-                buttonsProp.SetValue(camInput, (int)buttons);
-            }
-
-            // 3) Create Vector2 instance for mouseDelta
-            var mouseDelta = Activator.CreateInstance(vectorType)!;
-            var xProp = vectorType.GetProperty("X");
-            var yProp = vectorType.GetProperty("Y");
-            if (xProp != null && yProp != null)
-            {
-                xProp.SetValue(mouseDelta, mouseDeltaX);
-                yProp.SetValue(mouseDelta, mouseDeltaY);
-            }
-
-            // Set MouseDelta property on AppCameraInput
-            var mouseDeltaProp = inputType.GetProperty("MouseDelta");
-            if (mouseDeltaProp != null)
-            {
-                mouseDeltaProp.SetValue(camInput, mouseDelta);
-            }
-
-            // Set CameraInput property on AppRequest
-            var camInputProp = appReqType.GetProperty("CameraInput");
-            if (camInputProp != null)
-            {
-                camInputProp.SetValue(req, camInput);
-            }
-
-            // Send via SendRequestAsync
-            var send = FindSendRequestAsync(_api.GetType(), appReqType);
-            if (send != null)
-            {
-                var taskObj = send.Invoke(_api, BuildSendRequestArgs(send, req));
-                if (taskObj is Task t) await t.ConfigureAwait(false);
-            }
-        }
-        catch (Exception ex)
-        {
-            L("Error sending camera input: " + ex.Message);
-        }
-    }
-
-    private readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCase);
-    public async Task<CameraFrame?> GetCameraFrameAsync(string identifier, CancellationToken ct = default)
-    {
-        if (string.IsNullOrWhiteSpace(identifier)) throw new ArgumentException("identifier required");
-        if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
-        void L(string s) => _log?.Invoke("[cam] " + s);
-
-        // 1) build and send AppRequest.CameraSubscribe
-        var appReqType = typeof(RustPlus).Assembly
-            .GetTypes().FirstOrDefault(t => t.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
-        if (appReqType is null) { L("AppRequest type not found"); return null; }
-
-        var req = Activator.CreateInstance(appReqType)!;
-        var sub = FindCameraReq(req, "subscribe");
-        if (sub == null) { L("no camera subscribe property on AppRequest"); return null; }
-
-        var child = Activator.CreateInstance(sub.Value.reqProp.PropertyType)!;
-        sub.Value.idProp.SetValue(child, identifier);
-        sub.Value.reqProp.SetValue(req, child);
-
-        var send = FindSendRequestAsync(_api.GetType(), appReqType);
-        if (send == null) { L("SendRequestAsync not found"); return null; }
-
-        // 2) attach a one-shot tap to the websocket "message" event
-        var ev = FindMessageEvent(_api);
-        if (ev == null) { L("no message event on api"); return null; }
-
-        var tcs = new TaskCompletionSource<CameraFrame?>(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        cts.CancelAfter(TimeSpan.FromSeconds(5));
-
-        void OnAny(object _, object argsObj)
-        {
-            try
-            {
-                // try common shapes:
-                // argsObj.Message.Response.CameraFrame.*  OR  argsObj.Response.CameraFrame.*  OR  argsObj.CameraFrame
-                object? root = argsObj;
-
-                var msg = P(root, "Message") ?? root;
-                var resp = P(msg, "Response") ?? msg;
-
-                object? cameraNode =
-                    P(resp, "CameraFrame") ??
-                    P(resp, "Camera") ??
-                    P(resp, "Cctv") ??
-                    P(resp, "Frame") ??
-                    resp;
-
-                var bytes = ReadBytesFlexible(cameraNode) ?? ReadBytesFlexible(P(cameraNode, "Data"));
-                if (bytes == null) return;
-
-                // optional dimensions
-                int w = 0, h = 0;
-                int TryInt(object? o, string n)
-                {
-                    var v = P(o, n);
-                    if (v is int i) return i;
-                    if (int.TryParse(v?.ToString(), out var ii)) return ii;
-                    return 0;
-                }
-                w = TryInt(cameraNode, "Width"); if (w == 0) w = TryInt(P(cameraNode, "Data"), "Width");
-                h = TryInt(cameraNode, "Height"); if (h == 0) h = TryInt(P(cameraNode, "Data"), "Height");
-
-                tcs.TrySetResult(new CameraFrame(bytes, null, w, h, new List<CameraEntity>()));
-            }
-            catch { /* ignore and keep waiting */ }
-        }
-
-        var handler = BuildWildcardHandler(ev, OnAny);
-        ev.AddEventHandler(_api, handler);
-
-        try
-        {
-            // send subscribe (push frames will follow)
-            var call = send.Invoke(_api, BuildSendRequestArgs(send, req));
-            if (call is Task t) await t.ConfigureAwait(false);
-
-            using (cts.Token.Register(() => tcs.TrySetResult(null)))
-            {
-                var frame = await tcs.Task.ConfigureAwait(false);
-                if (frame == null) _log?.Invoke("[cam] subscribed, but no pushed frame arrived in time");
-                return frame;
-            }
-        }
-        finally
-        {
-            // detach handler
-            try { ev.RemoveEventHandler(_api, handler); } catch { }
-
-            // best-effort unsubscribe
-            try
-            {
-                var un = FindCameraReq(Activator.CreateInstance(appReqType)!, "unsubscribe");
-                if (un != null)
-                {
-                    var ch = Activator.CreateInstance(un.Value.reqProp.PropertyType)!;
-                    un.Value.idProp.SetValue(ch, identifier);
-                    un.Value.reqProp.SetValue(req, ch);
-                    var ucall = send.Invoke(_api, new object[] { req });
-                    if (ucall is Task ut) await ut.ConfigureAwait(false);
-                }
-            }
-            catch { /* ignore */ }
-        }
-    }
-
-    public System.Diagnostics.Process? StartPersistentCameraStream(
-        string cameraId, 
-        Action<string> onLineReceived, 
-        Action<string> onErrorReceived)
-    {
-        if (_api is null) return null;
+        if (string.IsNullOrWhiteSpace(cameraId)) throw new ArgumentException("cameraId required", nameof(cameraId));
+        if (_api is null) throw new InvalidOperationException("Not connected.");
 
         GetConnForCamera(out var host, out var port, out var playerId, out var token);
-        if (string.IsNullOrWhiteSpace(host) || port <= 0 ||
-            string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token))
-        {
-            return null;
-        }
+        if (string.IsNullOrWhiteSpace(host) || port <= 0)
+            throw new InvalidOperationException("No server connection details available for camera.");
+        if (!ulong.TryParse(playerId, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var steamId))
+            throw new InvalidOperationException("Invalid player id for camera connection.");
+        if (!int.TryParse(token, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var playerToken))
+            throw new InvalidOperationException("Invalid player token for camera connection.");
 
-        string? nodeExe = RuntimeHelper.FindBundledNode();
-        if (nodeExe == null) return null;
-
-        string? pkgRoot = RuntimeHelper.FindRustplusJsPackageRoot();
-        if (pkgRoot == null) return null;
-
-        var js = """
-const host   = process.argv[2];
-const port   = parseInt(process.argv[3], 10);
-const pid    = process.argv[4];
-const tok    = process.argv[5];
-const cam    = process.argv[6];
-const pkgDir = process.argv[7];
-const useProxy = process.argv[8] === "true";
-// --- resolution / coverage diagnostics -------------------------------------------
-// camera.js renders from a sliding window of exactly 10 ray packets, a number fixed
-// when cameras were 160x90. Facepunch is doubling that to 320x180, which is four times
-// the pixels for the same ten packets. Whether that matters depends entirely on whether
-// the server also sends proportionally more rays per packet — so measure it instead of
-// assuming. Coverage below ~100% means each rendered frame is only partly filled.
-const DIAG_WINDOW = 10;
-let diagW = 0, diagH = 0, diagSeen = 0, diagLast = null;
-const diagRays = [], diagBytes = [];
-
-// One iteration of this loop consumes exactly one ray, mirroring the decoder in
-// camera.js — same break condition, same pointer advances per prefix.
-function countRays(rayData){
-  if (!rayData || !rayData.length) return 0;
-  let p = 0, n = 0;
-  while (p < rayData.length - 1) {
-    const b = rayData[p++];
-    if (b === 255) { p += 3; }
-    else {
-      const c = b & 192;
-      if (c === 64 || c === 128) p += 1;
-      else if (c === 192) p += 2;
-    }
-    n++;
-  }
-  return n;
-}
-
-function noteRays(rayData){
-  diagRays.push(countRays(rayData));
-  diagBytes.push(rayData.length);
-  if (diagRays.length > DIAG_WINDOW) { diagRays.shift(); diagBytes.shift(); }
-  diagSeen++;
-
-  if (diagRays.length < DIAG_WINDOW) return;
-
-  const px = diagW * diagH;
-  const rays = diagRays.reduce((a, b) => a + b, 0);
-  const bytes = diagBytes.reduce((a, b) => a + b, 0);
-  const pct = px ? (100 * rays / px) : 0;
-
-  // Say it once per camera, then only when the answer actually changes. Repeating an
-  // unchanged measurement every few seconds buries everything else in the log, and this
-  // number is near-constant by nature — the server chunks by ray count, so it only moves
-  // when the resolution or the chunk size does. Which is exactly the event worth catching.
-  if (diagLast !== null && Math.abs(pct - diagLast) < 5) return;
-  diagLast = pct;
-
-  console.error("DIAG res=" + diagW + "x" + diagH + " px=" + px
-              + " pkts=" + diagRays.length + " rays=" + rays
-              + " coverage=" + pct.toFixed(1) + "%"
-              + " bytes/pkt=" + Math.round(bytes / diagBytes.length));
-}
-// rustplus.js rejects sendRequestAsync with the server's AppError protobuf, not an Error.
-// That object carries .error ("not_found", "wrong_type", ...) and no .message, so the usual
-// String(e) turns the one piece of information we need into "[object Object]".
-function errText(e){
-  if (e === null || e === undefined) return "unknown";
-  if (typeof e === "string") return e;
-  if (e.error) return (typeof e.error === "string") ? e.error : JSON.stringify(e.error);
-  if (e.message) return String(e.message);
-  if (e.code) return String(e.code);
-  try { const j = JSON.stringify(e); if (j && j !== "{}") return j; } catch {}
-  return String(e);
-}
-
-// --- progressive camera renderer -------------------------------------------------
-// camera.js renders each frame from a sliding window of exactly 10 ray packets. That
-// number was chosen when cameras were 160x90; at 320x180 the same ten packets cover
-// only 52% of the pixels and the rest stay black, which is the speckled picture.
-//
-// Widening the window would fix the holes at the cost of latency: at ~10 packets per
-// second, twenty packets means two seconds of ray history smeared over anything that
-// moves. So instead the pixel buffer persists — every ray updates its own pixel and
-// the others keep their last known value, the way the official app does it. Gaps fill
-// in progressively, nothing is ever black, and each frame decodes one packet instead
-// of ten.
-function installProgressiveRenderer(camera, Jimp) {
-  // Verbatim from camera.js — it is a specific PRNG and has to match the server's
-  // shuffle exactly. It is not exported, so it cannot be borrowed.
-  class IndexGenerator {
-    constructor(e) { this.state = 0 | e; this.nextState(); }
-    nextInt(e) {
-      let t = ((this.nextState() * (0 | e)) / 4294967295) | 0;
-      if (t < 0) t = e + t - 1;
-      return 0 | t;
-    }
-    nextState() {
-      let e = this.state, t = e;
-      e = ((e = ((e = (e ^ ((e << 13) | 0)) | 0) ^ ((e >>> 17) | 0)) | 0) ^ ((e << 5) | 0)) | 0;
-      this.state = e;
-      return t >= 0 ? t : 4294967295 + t - 1;
-    }
-  }
-
-  const COLOURS = [
-    [0.5, 0.5, 0.5], [0.8, 0.7, 0.7], [0.3, 0.7, 1], [0.6, 0.6, 0.6],
-    [0.7, 0.7, 0.7], [0.8, 0.6, 0.4], [1, 0.4, 0.4], [1, 0.1, 0.1],
-  ];
-
-  // Deterministic for a given size, and it was rebuilt on every single frame —
-  // 57600 Fisher-Yates iterations per image for a constant result.
-  let cachedBuffer = null, cachedW = 0, cachedH = 0;
-  function sampleBuffer(width, height) {
-    if (cachedBuffer && cachedW === width && cachedH === height) return cachedBuffer;
-
-    const buf = new Int16Array(width * height * 2);
-    for (let w = 0, _ = 0; _ < height; _++)
-      for (let g = 0; g < width; g++) { buf[w] = g; buf[++w] = _; w++; }
-
-    for (let B = new IndexGenerator(1337), R = width * height - 1; R >= 1; R--) {
-      const C = 2 * R, I = 2 * B.nextInt(R + 1);
-      const P = buf[C], k = buf[C + 1], A = buf[I], F = buf[I + 1];
-      buf[I] = P; buf[I + 1] = k; buf[C] = A; buf[C + 1] = F;
+        return await RustPlusDesk.Services.Camera.CameraSession
+            .StartAsync(host, port, steamId, playerToken, _useProxyCurrent, cameraId, ct)
+            .ConfigureAwait(false);
     }
 
-    cachedBuffer = buf; cachedW = width; cachedH = height;
-    return buf;
-  }
 
-  let output = null, outW = 0, outH = 0, raysSinceReset = 0, warmedUp = false;
-
-  function reset(width, height) {
-    output = new Array(width * height);
-    outW = width; outH = height;
-    raysSinceReset = 0; warmedUp = false;
-  }
-
-  // Returns how many rays were written, so the warm-up can be judged on real coverage
-  // rather than a fixed packet count that only held for one resolution.
-  function decodeInto(frame, width, height) {
-    const positions = sampleBuffer(width, height);
-    const rayData = frame.rayData;
-    let sampleOffset = 2 * frame.sampleOffset;
-    let dataPointer = 0, written = 0;
-
-    const rayLookback = new Array(64);
-    for (let r = 0; r < 64; r++) rayLookback[r] = [0, 0, 0];
-
-    while (dataPointer < rayData.length - 1) {
-      let t, r, i;
-      const n = rayData[dataPointer++];
-
-      if (n === 255) {
-        const l = rayData[dataPointer++], o = rayData[dataPointer++], s = rayData[dataPointer++];
-        const u = (3 * (((t = (l << 2) | (o >> 6)) / 128) | 0) + 5 * (((r = 63 & o) / 16) | 0) + 7 * (i = s)) & 63;
-        const f = rayLookback[u];
-        f[0] = t; f[1] = r; f[2] = i;
-      } else {
-        const c = 192 & n;
-        if (c === 0) {
-          const y = rayLookback[63 & n];
-          t = y[0]; r = y[1]; i = y[2];
-        } else if (c === 64) {
-          const v = rayLookback[63 & n], g = rayData[dataPointer++];
-          t = v[0] + ((g >> 3) - 15); r = v[1] + ((7 & g) - 3); i = v[2];
-        } else if (c === 128) {
-          const C = rayLookback[63 & n];
-          t = C[0] + (rayData[dataPointer++] - 127); r = C[1]; i = C[2];
-        } else {
-          const A = rayData[dataPointer++], F = rayData[dataPointer++];
-          const D = (3 * (((t = (A << 2) | (F >> 6)) / 128) | 0) + 5 * (((r = 63 & F) / 16) | 0) + 7 * (i = 63 & n)) & 63;
-          const E = rayLookback[D];
-          E[0] = t; E[1] = r; E[2] = i;
-        }
-      }
-
-      sampleOffset %= 2 * width * height;
-      const index = positions[sampleOffset++] + positions[sampleOffset++] * width;
-      output[index] = [t / 1023, r / 63, i];
-      written++;
-    }
-
-    return written;
-  }
-
-  async function render(width, height) {
-    const image = new Jimp(width, height);
-    for (let i = 0; i < output.length; i++) {
-      const ray = output[i];
-      if (!ray) continue;
-
-      const distance = ray[0], alignment = ray[1], material = ray[2];
-      let colour;
-      if (distance === 1 && alignment === 0 && material === 0) colour = [208, 230, 252];
-      else {
-        const c = COLOURS[material] || COLOURS[0];
-        colour = [alignment * c[0] * 255, alignment * c[1] * 255, alignment * c[2] * 255];
-      }
-
-      image.setPixelColor(Jimp.rgbaToInt(colour[0], colour[1], colour[2], 255), i % width, height - 1 - Math.floor(i / width));
-    }
-    return image.getBufferAsync(Jimp.MIME_PNG);
-  }
-
-  camera._onCameraRays = async function (cameraRays) {
-    if (!this.isSubscribed) return;
-
-    const info = this.cameraSubscribeInfo;
-    if (!info || !info.width || !info.height) return;
-
-    const width = info.width, height = info.height;
-    if (!output || outW !== width || outH !== height) reset(width, height);
-
-    raysSinceReset += decodeInto(cameraRays, width, height);
-
-    // Hold the first image back until the buffer has been filled about once over.
-    // Derived from actual rays against actual pixels, so it adapts to whatever
-    // resolution and packet size the server happens to use — which is exactly what
-    // the hardcoded ten packets could not do.
-    if (!warmedUp) {
-      if (raysSinceReset < width * height) return;
-      warmedUp = true;
-    }
-
-    this.emit('render', await render(width, height));
-  };
-}
-
-function reqFrom(base, id){
-  return require(require.resolve(id, { paths: [base] }));
-}
-
-function hookProtobuf(pb){
-  if (!pb) return;
-  const RELAX_ALL = true;
-  const RELAX = new Set(["nearPlane","controlFlags","sampleOffset","sampleCount","horizontalFov","verticalFov","fov"]);
-  const shouldRelax = (fname) => RELAX_ALL || RELAX.has(fname);
-  function relaxFieldsObj(obj){
-    if (!obj || typeof obj !== "object") return;
-    if (obj.fields && typeof obj.fields === "object"){
-      for (const [fname, f] of Object.entries(obj.fields)){
-        if (!f) continue;
-        if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
-          f.rule = "optional";
-          f.required = false;
-        }
-      }
-    }
-    for (const k of Object.keys(obj)) relaxFieldsObj(obj[k]);
-  }
-  if (pb.Root && typeof pb.Root.fromJSON === "function"){
-    const orig = pb.Root.fromJSON;
-    pb.Root.fromJSON = function(json, root){
-      try{ relaxFieldsObj(json); }catch{}
-      return orig.call(this, json, root);
-    };
-  }
-  if (pb.Type && typeof pb.Type.fromJSON === "function"){
-    const orig = pb.Type.fromJSON;
-    pb.Type.fromJSON = function(name, json){
-      try{
-        if (json && json.fields){
-          for (const [fname, f] of Object.entries(json.fields)){
-            if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
-              f.rule = "optional";
-              f.required = false;
-            }
-          }
-        }
-      }catch{}
-      return orig.call(this, name, json);
-    };
-  }
-  if (pb.Type && pb.Type.prototype){
-    const origAdd = pb.Type.prototype.add;
-    pb.Type.prototype.add = function(field){
-      try{
-        if (field && (field.rule === "required" || field.required === true) && shouldRelax(field.name)){
-          field.rule = "optional";
-          field.required = false;
-        }
-      }catch{}
-      return origAdd.call(this, field);
-    };
-  }
-  function relaxAlreadyBuilt(){
-    try{
-      const roots = pb.roots ? Object.values(pb.roots) : [];
-      for (const root of roots){
-        if (!root) continue;
-        try { root.resolveAll(); } catch {}
-        (function walk(ns){
-          if (!ns) return;
-          if (ns.fields && typeof ns.fields === "object"){
-            for (const [fname, f] of Object.entries(ns.fields)){
-              if ((f.rule === "required" || f.required === true) && shouldRelax(fname)){
-                f.rule = "optional";
-                f.required = false;
-              }
-            }
-          }
-          if (ns.nested){
-            for (const v of Object.values(ns.nested)) walk(v);
-          }
-        })(root);
-      }
-    }catch{}
-  }
-  return { relaxAlreadyBuilt };
-}
-
-let pb = null;
-try { pb = reqFrom(pkgDir, "protobufjs"); }
-catch { try { pb = reqFrom(pkgDir, "protobufjs/minimal"); } catch {} }
-const hook = hookProtobuf(pb);
-const RustPlus = reqFrom(pkgDir, "@liamcottle/rustplus.js");
-try { hook && hook.relaxAlreadyBuilt && hook.relaxAlreadyBuilt(); } catch {}
-
-const rp = new RustPlus(host, port, pid, tok, useProxy);
-
-rp.on("connected", async () => {
-  try {
-    const c = rp.getCamera(cam);
-
-    // Progressive rendering. Without it the picture is roughly half black at 320x180,
-    // because camera.js fills each frame from a fixed ten packets — a number chosen when
-    // cameras were 160x90 and never scaled with them.
-    try {
-      installProgressiveRenderer(c, reqFrom(pkgDir, "jimp"));
-    } catch (e) {
-      console.error("DIAG progressive renderer unavailable, using the built-in one: " + errText(e));
-    }
-    const onMsg = (m) => {
-      try {
-        const resp = (m && (m.response || m.appMessage || m.data)) || m || {};
-        const broadcast = resp.broadcast || resp.appBroadcast || {};
-        const rays = broadcast.cameraRays || broadcast.appCameraRays || resp.cameraRays || null;
-        if (rays && rays.rayData) noteRays(rays.rayData);
-        if (rays && Array.isArray(rays.entities)) {
-          const ents = rays.entities.map(e => ({
-            id:  e.entityId || 0,
-            type: e.type || 0,
-            name: e.name || "",
-            x: (e.position && e.position.x) || 0,
-            y: (e.position && e.position.y) || 0,
-            z: (e.position && e.position.z) || 0,
-            sid:    (e.steamId || e.playerId || 0),
-            sidStr: (e.steamId || e.playerId) ? String(e.steamId || e.playerId) : ""
-          }));
-          const payload = { cam, ents, fov: rays.verticalFov || rays.fov || 65 };
-          process.stdout.write("ENTS:" + Buffer.from(JSON.stringify(payload), "utf8").toString("base64") + "\n");
-        }
-        const info = resp.cameraSubscribeInfo || resp.cameraInfo || resp.appCameraInfo || null;
-        if (info && (info.width || info.height)) {
-          const w = info.width || 0, h = info.height || 0;
-          const cf = info.controlFlags || 0;
-          if (w !== diagW || h !== diagH) {
-            console.error("DIAG resolution now " + w + "x" + h);
-            diagW = w; diagH = h; diagSeen = 0; diagLast = null;
-            diagRays.length = 0; diagBytes.length = 0;
-          }
-          process.stdout.write("INFO:" + Buffer.from(JSON.stringify({ cam, w, h, cf }), "utf8").toString("base64") + "\n");
-        }
-      } catch (ex) {
-        // quiet
-      }
-    };
-    rp.on("message", onMsg);
-    c.on("message", onMsg);
-    c.on("render", (frame) => {
-      process.stdout.write("FRAME:" + Buffer.from(frame).toString("base64") + "\n");
-    });
-    await c.subscribe();
-    
-    process.stdin.setEncoding('utf-8');
-    process.stdin.on('data', (data) => {
-      const lines = data.trim().split('\n');
-      for (const line of lines) {
-        if (line.startsWith("INPUT:")) {
-          const parts = line.split(':');
-          if (parts.length >= 4) {
-            const buttons = parseInt(parts[1], 10);
-            const dx = parseFloat(parts[2]);
-            const dy = parseFloat(parts[3]);
-            rp.sendRequest({
-              cameraInput: {
-                buttons: buttons,
-                mouseDelta: { x: dx, y: dy }
-              }
-            }, (m) => {
-              // quiet
-            });
-          }
-        }
-      }
-    });
-    process.stdin.resume();
-  } catch (e) {
-    console.error("ERR:" + errText(e));
-    process.exit(1);
-  }
-});
-rp.on("error", (e) => {
-  try {
-    console.error("ERR:" + errText(e));
-  } catch { console.error("ERR:unknown"); }
-});
-rp.connect();
-""";
-
-        var rustplusPkgDir = Path.Combine(pkgRoot, "node_modules", "@liamcottle", "rustplus.js");
-        PatchNearPlaneIfNeeded(rustplusPkgDir, _log);
-        if (!Directory.Exists(rustplusPkgDir)) return null;
-
-        var tempDir = Path.Combine(Path.GetTempPath(), "RustPlusDesk");
-        Directory.CreateDirectory(tempDir);
-        var jsFile = Path.Combine(tempDir, "camera_persistent.js");
-        File.WriteAllText(jsFile, js);
-
-        var useProxyStr = _useProxyCurrent.ToString().ToLowerInvariant();
-        var psi = new ProcessStartInfo(nodeExe,
-            $"\"{jsFile}\" {host} {port} {playerId} {token} {cameraId} \"{rustplusPkgDir}\" {useProxyStr}")
-        {
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            RedirectStandardInput = true,
-            CreateNoWindow = true,
-            WorkingDirectory = pkgRoot
-        };
-
-        var p = new System.Diagnostics.Process { StartInfo = psi };
-        p.OutputDataReceived += (_, e) => { if (e.Data != null) onLineReceived(e.Data); };
-        p.ErrorDataReceived += (_, e) => { if (e.Data != null) onErrorReceived(e.Data); };
-
-        p.Start();
-        try { p.StandardInput.AutoFlush = true; } catch { }
-        p.BeginOutputReadLine();
-        p.BeginErrorReadLine();
-
-        return p;
-    }
-
-    private static void DumpTree(object? o, Action<string> log, string prefix = "[cam-dump] ", int depth = 0, int maxDepth = 5)
-    {
-        if (o == null || depth > maxDepth) return;
-        var t = o.GetType();
-        string indent = new string(' ', depth * 2);
-        log($"{prefix}{indent}{t.Name}");
-
-        foreach (var p in t.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        {
-            object? v = null;
-            try { v = p.GetValue(o); } catch { }
-            var vt = v?.GetType();
-
-            if (v == null)
-            {
-                log($"{prefix}{indent}- {p.Name} = <null>");
-            }
-            else if (v is string s)
-            {
-                log($"{prefix}{indent}- {p.Name} (string) = \"{(s.Length > 80 ? s[..80] + "…" : s)}\"");
-            }
-            else if (v is System.Collections.IEnumerable en && v is not byte[] && v is not string)
-            {
-                int i = 0;
-                log($"{prefix}{indent}- {p.Name} = [IEnumerable] {vt?.Name}");
-                foreach (var it in en)
-                {
-                    if (i++ > 20) { log($"{prefix}{indent}  …"); break; }
-                    DumpTree(it, log, prefix, depth + 2, maxDepth);
-                }
-            }
-            else if (v is byte[] bb)
-            {
-                log($"{prefix}{indent}- {p.Name} (byte[]) len={bb.Length}");
-            }
-            else if (vt != null && vt.FullName!.StartsWith("System."))
-            {
-                log($"{prefix}{indent}- {p.Name} ({vt.Name}) = {v}");
-            }
-            else
-            {
-                log($"{prefix}{indent}- {p.Name} -> {vt?.Name}");
-                DumpTree(v, log, prefix, depth + 1, maxDepth);
-            }
-        }
-    }
-
-    // ----- END CAMERA STUFF -----
-
-
-    public void DebugDumpAppRequestShape()
-    {
-        var asm = typeof(RustPlus).Assembly;
-        var reqType = asm.GetTypes().FirstOrDefault(x => x.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
-        if (reqType == null) { _log?.Invoke("[cam] AppRequest type not found"); return; }
-        _log?.Invoke("[cam] AppRequest properties:");
-        foreach (var p in reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            _log?.Invoke("  - " + p.Name);
-    }
-
-    // ---------- END DUMP MAP INFO BUTTON -------------- //
 
     private bool _eventsHooked;
     private bool _isChatPrimed;
@@ -2479,16 +820,15 @@ rp.connect();
             string text = TryGetStringProp(e, "Message", "Body", "Text") ?? string.Empty;
 
             long? unix = TryGetLongishProp(e, "Time", "Timestamp");
-
-            // NEU: SteamId holen
-            // TryGetLongishProp ist super dafür, wir casten einfach auf ulong
             ulong steamId = (ulong)(TryGetLongishProp(e, "SteamId", "UserId", "PlayerId") ?? 0);
 
-            var tsUtc = unix.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).UtcDateTime
+            var tsUtc = unix.HasValue && unix.Value > 0
+                ? ParseUnixToUtc(unix.Value)
                 : DateTime.UtcNow;
 
-            // Hier übergeben wir jetzt die SteamId
+            if (tsUtc == default || tsUtc < new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                tsUtc = DateTime.UtcNow;
+
             TeamChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
         }
         catch
@@ -2509,13 +849,27 @@ rp.connect();
             var tsUtc = e.Time.Kind == DateTimeKind.Unspecified
                 ? DateTime.SpecifyKind(e.Time, DateTimeKind.Utc)
                 : e.Time.ToUniversalTime();
-            if (tsUtc == default) tsUtc = DateTime.UtcNow;
+
+            if (tsUtc == default || tsUtc < new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                tsUtc = DateTime.UtcNow;
 
             ClanChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
         }
         catch
         {
             // Chat darf nichts reißen
+        }
+    }
+
+    private void Api_OnClanChanged(object? sender, ClanChangedEventArg e)
+    {
+        try
+        {
+            _log?.Invoke("[clan] Clan info changed on server, notifying...");
+            ClanChanged?.Invoke(this, EventArgs.Empty);
+        }
+        catch
+        {
         }
     }
 
@@ -2546,7 +900,8 @@ rp.connect();
             if (v is int i) return i;
             if (v is double d) return (long)d;
             if (v is ulong ul) return (long)ul; // fallback cast
-            if (v is DateTime dt) return new DateTimeOffset(dt).ToUnixTimeSeconds();
+            if (v is DateTime dt) return dt.Kind == DateTimeKind.Utc ? new DateTimeOffset(dt).ToUnixTimeSeconds() : new DateTimeOffset(DateTime.SpecifyKind(dt, DateTimeKind.Utc)).ToUnixTimeSeconds();
+            if (v is DateTimeOffset dto) return dto.ToUnixTimeSeconds();
             if (v is string s && long.TryParse(s, out var lp)) return lp;
         }
         return null;
@@ -2820,6 +1175,17 @@ rp.connect();
 
             if (hp == true)
                 isTc = true;
+
+            // Fallback: wenn wir es früher schon als TC gesehen haben, bleibt es TC.
+            // Dieselbe Absicherung wie in BuildAndStoreSnapshotFromStorageNode. Ohne sie macht ein
+            // einzelnes Event ohne das optionale HasProtection-Feld den TC wieder zur Kiste, und
+            // der überschriebene Cache kostet den Upkeep und das !upkeep-Mapping.
+            if (!isTc &&
+                _storageCache.TryGetValue(entityId, out var oldSnap) &&
+                oldSnap.IsToolCupboard)
+            {
+                isTc = true;
+            }
 
             if (!isTc)
                 upkeep = null; // Boxen: kein Upkeep
@@ -3169,6 +1535,8 @@ rp.connect();
         // Wire the strongly-typed event directly (no reflection needed).
         _api.OnClanChatReceived -= Api_OnClanChatReceived;
         _api.OnClanChatReceived += Api_OnClanChatReceived;
+        _api.OnClanChanged -= Api_OnClanChanged;
+        _api.OnClanChanged += Api_OnClanChanged;
 
         try
         {
@@ -3232,7 +1600,7 @@ rp.connect();
 
             var mapped = ExtractChatCandidates(chatRoot);
             var filtered = sinceUtc.HasValue
-                ? mapped.Where(m => m.Timestamp > sinceUtc.Value).ToList()
+                ? mapped.Where(m => (m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp : m.Timestamp.ToUniversalTime()) > (sinceUtc.Value.Kind == DateTimeKind.Utc ? sinceUtc.Value : sinceUtc.Value.ToUniversalTime())).ToList()
                 : mapped;
 
             _log($"[clan-chat-history] mapped={mapped.Count} afterFilter={filtered.Count} since={(sinceUtc?.ToString("u") ?? "null")}");
@@ -3276,12 +1644,13 @@ rp.connect();
                 Creator = Read<ulong>(root, "Creator"),
                 MotdTimestamp = Read<DateTime?>(root, "MotdTimestamp"),
                 MotdAuthor = Read<ulong?>(root, "MotdAuthor"),
+                Logo = Read<byte[]>(root, "Logo"),
+                Color = Read<int?>(root, "Color"),
                 MaxMemberCount = Read<int?>(root, "MaxMemberCount"),
                 Score = Read<long?>(root, "Score")
             };
 
             // Roles Mapping
-            var rolesList = new List<(int roleId, string name, int rank)>();
             var roles = Read<System.Collections.IEnumerable>(root, "Roles");
             if (roles != null)
             {
@@ -3290,7 +1659,22 @@ rp.connect();
                     int roleId = Read<int>(r, "RoleId");
                     string name = Read<string>(r, "Name") ?? "";
                     int rank = Read<int>(r, "Rank");
-                    rolesList.Add((roleId, name, rank));
+                    var roleModel = new ClanRoleModel
+                    {
+                        RoleId = roleId,
+                        Rank = rank,
+                        Name = name,
+                        CanSetMotd = Read<bool>(r, "CanSetMotd"),
+                        CanSetLogo = Read<bool>(r, "CanSetLogo"),
+                        CanInvite = Read<bool>(r, "CanInvite"),
+                        CanKick = Read<bool>(r, "CanKick"),
+                        CanPromote = Read<bool>(r, "CanPromote"),
+                        CanDemote = Read<bool>(r, "CanDemote"),
+                        CanSetPlayerNotes = Read<bool>(r, "CanSetPlayerNotes"),
+                        CanAccessLogs = Read<bool>(r, "CanAccessLogs"),
+                        CanAccessScoreEvents = Read<bool>(r, "CanAccessScoreEvents"),
+                    };
+                    model.Roles.Add(roleModel);
                 }
             }
 
@@ -3302,20 +1686,38 @@ rp.connect();
                 {
                     ulong steamId = Read<ulong>(m, "SteamId");
                     int roleId = Read<int>(m, "RoleId");
-                    var role = rolesList.FirstOrDefault(x => x.roleId == roleId);
+                    var role = model.Roles.FirstOrDefault(x => x.RoleId == roleId);
 
                     var member = new ClanMemberModel
                     {
                         SteamId = steamId,
                         RoleId = roleId,
-                        RoleName = role.name ?? $"Role {roleId}",
-                        Rank = role.rank,
+                        RoleName = !string.IsNullOrEmpty(role?.Name) ? role.Name : $"Role {roleId}",
+                        Rank = role?.Rank ?? 0,
                         Joined = Read<DateTime>(m, "Joined"),
                         LastSeen = Read<DateTime>(m, "LastSeen"),
                         Notes = Read<string>(m, "Notes") ?? "",
                         IsOnline = Read<bool>(m, "Online")
                     };
                     model.Members.Add(member);
+                }
+            }
+
+            // Invites Mapping
+            var invites = Read<System.Collections.IEnumerable>(root, "Invites");
+            if (invites != null)
+            {
+                foreach (var inv in invites)
+                {
+                    ulong steamId = Read<ulong>(inv, "SteamId");
+                    ulong recruiter = Read<ulong>(inv, "Recruiter");
+                    var timestamp = Read<DateTime>(inv, "Timestamp");
+                    model.Invites.Add(new ClanInviteModel
+                    {
+                        SteamId = steamId,
+                        Recruiter = recruiter,
+                        Timestamp = timestamp
+                    });
                 }
             }
 
@@ -3392,6 +1794,56 @@ rp.connect();
 
     // ==== Helper: Chat-Mapping für beliebige Lib-Versionen ====
 
+    private static DateTime ParseTimestampToUtc(object? timeObj)
+    {
+        if (timeObj is null)
+            return DateTime.UtcNow;
+
+        if (timeObj is DateTime dt)
+        {
+            return dt.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(dt, DateTimeKind.Utc)
+                : dt.ToUniversalTime();
+        }
+
+        if (timeObj is DateTimeOffset dto)
+            return dto.UtcDateTime;
+
+        if (timeObj is string s && !string.IsNullOrWhiteSpace(s))
+        {
+            if (DateTimeOffset.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var parsedDto))
+                return parsedDto.UtcDateTime;
+
+            if (long.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedNum) && parsedNum > 0)
+                return ParseUnixToUtc(parsedNum);
+        }
+
+        try
+        {
+            long num = Convert.ToInt64(timeObj);
+            if (num > 0)
+                return ParseUnixToUtc(num);
+        }
+        catch { }
+
+        return DateTime.UtcNow;
+    }
+
+    private static DateTime ParseUnixToUtc(long unix)
+    {
+        try
+        {
+            if (unix > 100_000_000_000L)
+                return DateTimeOffset.FromUnixTimeMilliseconds(unix).UtcDateTime;
+
+            return DateTimeOffset.FromUnixTimeSeconds(unix).UtcDateTime;
+        }
+        catch
+        {
+            return DateTime.UtcNow;
+        }
+    }
+
     private static IEnumerable<TeamChatMessage> TryMapChatEnumerable(object? listObj)
     {
         if (listObj is not System.Collections.IEnumerable en)
@@ -3405,7 +1857,7 @@ rp.connect();
         {
             if (it is null) continue;
 
-            // Falls es ein Dictionary ist (kommt bei manchen Wrappers/JSON vor)
+            // 1. Falls es ein Dictionary ist (z. B. JSON/Wrapper)
             if (it is System.Collections.IDictionary dict)
             {
                 string? dictText =
@@ -3420,66 +1872,81 @@ rp.connect();
                     dict["Name"] as string ??
                     dict["Username"] as string ??
                     dict["User"] as string ??
+                    dict["Author"] as string ??
                     "Unbekannt";
 
-                long? dictUnix = null;
-                var dictTimeObj = dict["Time"] ?? dict["time"] ?? dict["Timestamp"] ?? dict["timestamp"];
-                if (dictTimeObj != null)
-                {
-                    try { dictUnix = Convert.ToInt64(dictTimeObj); } catch { }
-                }
-                if (dictUnix == 0) dictUnix = null;
+                var dictTimeObj = dict["Time"] ?? dict["time"] ?? dict["Timestamp"] ?? dict["timestamp"] ?? dict["CreatedAt"] ?? dict["createdAt"];
+                var dictTsUtc = ParseTimestampToUtc(dictTimeObj);
 
                 ulong dictSteamId = 0;
-                var dictIdObj = dict["SteamId"] ?? dict["steamId"] ?? dict["UserId"] ?? dict["PlayerId"];
+                var dictIdObj = dict["SteamId"] ?? dict["steamId"] ?? dict["UserId"] ?? dict["userId"] ?? dict["PlayerId"] ?? dict["playerId"];
                 if (dictIdObj != null)
                 {
                     try { dictSteamId = Convert.ToUInt64(dictIdObj); } catch { }
                 }
 
-                var dictTsLocal = dictUnix.HasValue
-                    ? DateTimeOffset.FromUnixTimeSeconds(dictUnix.Value).LocalDateTime
-                    : DateTime.Now;
-
-                yield return new TeamChatMessage(dictTsLocal, dictAuthor, dictSteamId, dictText);
+                yield return new TeamChatMessage(dictTsUtc, dictAuthor, dictSteamId, dictText);
                 continue;
             }
 
             var t = it.GetType();
 
+            // 2. Prüfen ob it ein Wrapper ist (z. B. AppNewClanMessage mit .Message als eigenem Objekt)
+            object? innerMsg = t.GetProperty("Message", flags)?.GetValue(it);
+            object src = (innerMsg != null && innerMsg is not string) ? innerMsg : it;
+            var st = src.GetType();
+
             // Text
-            string? text =
-                (t.GetProperty("Message", flags)?.GetValue(it) as string) ??
-                (t.GetProperty("Body", flags)?.GetValue(it) as string) ??
-                (t.GetProperty("Text", flags)?.GetValue(it) as string);
+            string? text = null;
+            if (innerMsg is string sText)
+            {
+                text = sText;
+            }
+            else
+            {
+                text =
+                    (st.GetProperty("Message", flags)?.GetValue(src) as string) ??
+                    (st.GetProperty("Body", flags)?.GetValue(src) as string) ??
+                    (st.GetProperty("Text", flags)?.GetValue(src) as string) ??
+                    (t.GetProperty("Body", flags)?.GetValue(it) as string) ??
+                    (t.GetProperty("Text", flags)?.GetValue(it) as string);
+            }
 
             if (string.IsNullOrWhiteSpace(text))
                 continue;
 
             // Author
             string author =
+                (st.GetProperty("Name", flags)?.GetValue(src) as string) ??
+                (st.GetProperty("Username", flags)?.GetValue(src) as string) ??
+                (st.GetProperty("User", flags)?.GetValue(src) as string) ??
+                (st.GetProperty("Author", flags)?.GetValue(src) as string) ??
                 (t.GetProperty("Name", flags)?.GetValue(it) as string) ??
                 (t.GetProperty("Username", flags)?.GetValue(it) as string) ??
                 (t.GetProperty("User", flags)?.GetValue(it) as string) ??
+                (t.GetProperty("Author", flags)?.GetValue(it) as string) ??
                 "Unbekannt";
 
-            // Zeitstempel (auch verschachtelt: it.Message.Time)
-            object? src = t.GetProperty("Message", flags)?.GetValue(it) ?? it;
-            var st = src.GetType();
-
+            // Zeitstempel
             object? timeObj =
                 st.GetProperty("Time", flags)?.GetValue(src) ??
-                st.GetProperty("Timestamp", flags)?.GetValue(src);
+                st.GetProperty("Timestamp", flags)?.GetValue(src) ??
+                st.GetProperty("TimeUtc", flags)?.GetValue(src) ??
+                st.GetProperty("Date", flags)?.GetValue(src) ??
+                st.GetProperty("CreatedAt", flags)?.GetValue(src) ??
+                t.GetProperty("Time", flags)?.GetValue(it) ??
+                t.GetProperty("Timestamp", flags)?.GetValue(it) ??
+                t.GetProperty("TimeUtc", flags)?.GetValue(it) ??
+                t.GetProperty("Date", flags)?.GetValue(it) ??
+                t.GetProperty("CreatedAt", flags)?.GetValue(it);
 
-            long? unix = null;
-            if (timeObj != null)
-            {
-                try { unix = Convert.ToInt64(timeObj); } catch { }
-            }
-            if (unix == 0) unix = null;
+            var tsUtc = ParseTimestampToUtc(timeObj);
 
             // SteamId
             object? idVal =
+                st.GetProperty("SteamId", flags)?.GetValue(src) ??
+                st.GetProperty("UserId", flags)?.GetValue(src) ??
+                st.GetProperty("PlayerId", flags)?.GetValue(src) ??
                 t.GetProperty("SteamId", flags)?.GetValue(it) ??
                 t.GetProperty("UserId", flags)?.GetValue(it) ??
                 t.GetProperty("PlayerId", flags)?.GetValue(it);
@@ -3490,11 +1957,7 @@ rp.connect();
                 try { steamId = Convert.ToUInt64(idVal); } catch { }
             }
 
-            var tsLocal = unix.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(unix.Value).LocalDateTime
-                : DateTime.Now;
-
-            yield return new TeamChatMessage(tsLocal, author, steamId, text);
+            yield return new TeamChatMessage(tsUtc, author, steamId, text);
         }
     }
 
@@ -3586,7 +2049,7 @@ rp.connect();
 
             var mapped = ExtractChatCandidates(chatRoot); // deine vorhandene Rekursion
             var filtered = sinceUtc.HasValue
-                ? mapped.Where(m => m.Timestamp > sinceUtc.Value).ToList()
+                ? mapped.Where(m => (m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp : m.Timestamp.ToUniversalTime()) > (sinceUtc.Value.Kind == DateTimeKind.Utc ? sinceUtc.Value : sinceUtc.Value.ToUniversalTime())).ToList()
                 : mapped;
 
             _log($"[chat-history] mapped={mapped.Count} afterFilter={filtered.Count} since={(sinceUtc?.ToString("u") ?? "null")}");
@@ -5869,9 +4332,11 @@ rp.connect();
         lock (_subscribed) _subscribed.Clear();
         _eventsHooked = false;
 
-        async Task<(bool ok, string? err)> TryAsync(bool useProxy)
+        async Task<(bool ok, string? err, bool isDenied)> TryAsync(bool useProxy)
         {
             _api = new RustPlus(new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken, useProxy));
+
+            bool connectDenied = false;
 
             // optionales ConnectAsync aufrufen, falls vorhanden
             try
@@ -5886,9 +4351,17 @@ rp.connect();
                     if (res is Task t) await t;
                 }
             }
-            catch (Exception ex) { _log("ConnectAsync-Call schlug fehl: " + ex.Message); }
+            catch (Exception ex)
+            {
+                _log("ConnectAsync call failed: " + ex.Message);
+                if (IsAccessDeniedError(ex))
+                {
+                    connectDenied = true;
+                    return (false, "418 (Access Denied / Invalid Player Token)", true);
+                }
+            }
 
-            // “Kontakt” prüfen
+            // Verify connection
             try
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -5896,40 +4369,82 @@ rp.connect();
 
                 var infoTask = _api.GetInfoAsync();
                 var done = await Task.WhenAny(infoTask, Task.Delay(7000, cts.Token));
-                if (done != infoTask) return (false, "Timeout");
+                if (done != infoTask) return (false, "Timeout", connectDenied);
 
                 var info = infoTask.Result;
                 if (info?.IsSuccess == true)
                 {
-                    _log($"Authentifiziert – {(useProxy ? "über Facepunch-Proxy" : "direkt")}.");
-                    return (true, null);
+                    _log($"Authenticated – {(useProxy ? "via Facepunch proxy" : "direct")}.");
+                    return (true, null, false);
                 }
-                return (false, info?.Error?.Message ?? "keine Antwort / Fehler");
+                var errStr = info?.Error?.Message ?? "No response / error";
+                bool isDenied = connectDenied || IsAccessDeniedError(errStr);
+                return (false, errStr, isDenied);
             }
-            catch (Exception ex) { return (false, ex.Message); }
+            catch (Exception ex)
+            {
+                bool isDenied = connectDenied || IsAccessDeniedError(ex);
+                return (false, ex.Message, isDenied);
+            }
         }
 
         var first = profile.UseFacepunchProxy;
 
-        var (ok1, err1) = await TryAsync(first);
+        var (ok1, err1, isDenied1) = await TryAsync(first);
         if (ok1)
         {
             _useProxyCurrent = first;
-            HookEventsIfNeeded();     // <— HIER
+            HookEventsIfNeeded();
             return;
         }
 
-        var (ok2, err2) = await TryAsync(!first);
+        var (ok2, err2, isDenied2) = await TryAsync(!first);
         if (ok2)
         {
             _useProxyCurrent = !first;
-            HookEventsIfNeeded();     // <— UND HIER
+            HookEventsIfNeeded();
             return;
         }
 
-        _log($"GetInfo (Pfad1: {(first ? "Proxy" : "Direkt")}): {err1}");
-        _log($"GetInfo (Pfad2: {(!first ? "Proxy" : "Direkt")}): {err2}");
-        throw new InvalidOperationException("Rust+ nicht erreichbar (direkt & Proxy).");
+        _log($"GetInfo (Path 1: {(first ? "Proxy" : "Direct")}): {err1}");
+        _log($"GetInfo (Path 2: {(!first ? "Proxy" : "Direct")}): {err2}");
+
+        if (isDenied1 || isDenied2)
+        {
+            _log("[connect] Rust+ Access Denied (418): Player token rejected. Server needs re-pairing from in-game.");
+            throw new RustPlusAccessDeniedException("Rust+ Access Denied (418): Player token rejected. Server needs re-pairing from in-game.");
+        }
+
+        throw new InvalidOperationException("Rust+ is unreachable (direct & proxy).");
+    }
+
+    public static bool IsAccessDeniedError(Exception? ex)
+    {
+        if (ex == null) return false;
+        if (ex is RustPlusAccessDeniedException) return true;
+        if (ex is System.Reflection.TargetInvocationException tie && tie.InnerException != null)
+        {
+            if (IsAccessDeniedError(tie.InnerException)) return true;
+        }
+        if (ex is AggregateException agg)
+        {
+            foreach (var inner in agg.InnerExceptions)
+            {
+                if (IsAccessDeniedError(inner)) return true;
+            }
+        }
+        return IsAccessDeniedError(ex.Message) || IsAccessDeniedError(ex.ToString());
+    }
+
+    public static bool IsAccessDeniedError(string? message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return false;
+        if (message.Contains("418")) return true;
+        if (message.Contains("Access Denied", StringComparison.OrdinalIgnoreCase)) return true;
+        if (message.Contains("Zugriff verweigert", StringComparison.OrdinalIgnoreCase)) return true;
+        if (message.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase)) return true;
+        if (message.Contains("Invalid Player Token", StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
     }
 
     public async Task DisconnectAsync()
@@ -5962,9 +4477,6 @@ rp.connect();
             _subOnce.Clear();
             _seqToEntity.Clear();
 
-            // CRITICAL: Unfreeze any hanging camera streams
-            foreach (var tcs in _camAwaitOnce.Values) tcs.TrySetCanceled();
-            _camAwaitOnce.Clear();
 
             // CRITICAL: Unfreeze hanging entity pollers
             lock (_entityPullTimers)

@@ -33,6 +33,148 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v9.0.0 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.0.0 | Cloud Sync, Clan 2.0, Wipe Tracker &amp; Genetics 2.0" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                Version 9.0.0 is a massive milestone release featuring an overhauled Clan System with accurate in-game banner rendering and large banner showcase, native in-process FCM notifications, an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, fully rebuilt native CCTV camera controls with an analog joystick, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
+                            </TextBlock>
+
+                            <!-- Clan System & Banner Overhaul -->
+                            <TextBlock Text="🏰 Clan System &amp; In-Game Banner Overhaul" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Accurate In-Game Banner Colors:</Run>
+                                Re-engineered clan banner color unpacking to match Facepunch's 0xRRGGBBAA wire format. Accurately renders all 8 in-game cloth banner colors (Red, Orange, Yellow, Light Blue, Olive Green, Purple, White, and Black) with zero tint distortion.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Large Clan Banner Showcase Tooltip:</Run>
+                                Hovering over clan details now presents a high-resolution 270&#xD7;170px clan banner showcase with the true banner background color, drawn clan insignia, MOTD announcement card, and full clan statistics.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Pure Native WPF Context Menus:</Run>
+                                Replaced all context menus across the app (Clan tab, Team tab, Player Tracker, and Server Manager) with pure WPF vector SVG icons for opening Steam profiles, copying Steam IDs, and player tracking.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Clan Chat History &amp; Duplicate Filter:</Run>
+                                Fixed clan chat message timestamp parsing and hardened history polling against phantom duplicate messages.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Native In-Process FCM Listener:</Run>
+                                Introduced a high-performance in-process FCM listener enabled by default, reducing memory usage and delivering instant pairing notifications without requiring external Node processes.
+                            </TextBlock>
+
+                            <!-- Genetics Lab 2.0 -->
+                            <TextBlock Text="🧬 Genetics Lab 2.0 &amp; Ultra-Fast Solver" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Pre-Allocation Admission Solver Engine:</Run>
+                                Ground-up rewrite of the crossbreeding solver using 18-bit bit-packed genotypes, integer weights, and zero-allocation candidate pruning. Delivers 24&#xD7; to 40&#xD7; faster calculation speeds (dropping complex 100+ plant searches from minutes down to seconds) while reducing UI thread blocking by 99%.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Phone Camera Scanner &amp; Gene OCR (Beta):</Run>
+                                Scan plant gene sequences directly from your screen or mobile camera. Features a dual-recognizer pipeline combining template classification with Otsu-thresholded OCR, handheld shake tolerance, and per-slot legibility confirmation.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Farm Operations Planner &amp; Route Inspector:</Run>
+                                Complete redesign of the route inspector and farm planning workflow with step-by-step crossbreeding guides, plant inventory tracking, and crop cycle management.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Fluid Animations &amp; Accessibility:</Run>
+                                Added smooth FLIP grid animations, staggered result entry, interpolated progress, and full WCAG accessibility support across the genetics suite.
+                            </TextBlock>
+
+                            <!-- Player Wipe Tracker & Death Stats -->
+                            <TextBlock Text="👥 Player Wipe Tracker &amp; Death Analytics" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Native Fluent WPF Redesign:</Run>
+                                Rebuilt Player Wipe Tracker and Death Stats into a responsive, high-performance pure WPF interface with smooth scrolling and modern typography.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Cloud Wipe Map &amp; Monument Sync:</Run>
+                                Server wipe map uploading is now decoupled from tracking and automatically syncs high-resolution maps, monuments, and metadata directly upon connecting to a server.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Offline Wipe Explorer &amp; Server Switcher:</Run>
+                                Easily switch between active and archived wipes, review historical player encounter counts, and inspect past maps completely offline.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Steam Profile Linking &amp; Friendly Names:</Run>
+                                Enriched player activity timelines with direct Steam profile integration, friendly server name resolution, and optimized grid columns.
+                            </TextBlock>
+
+                            <!-- Console Helper -->
+                            <TextBlock Text="⌨️ Rust Console Helper &amp; Overlays" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Command Browser &amp; Keybind Manager:</Run>
+                                Browse, edit, test, and bind Rust console commands and convars with built-in parameter guidance and key capture.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Live Item Suggestion Popout:</Run>
+                                Floating in-game suggestion window with live item autocomplete and parameter completion for rapid command entry.
+                            </TextBlock>
+
+                            <!-- Team Base Codes -->
+                            <TextBlock Text="🔑 Team Base Codes" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Shared Door &amp; Base Codes:</Run>
+                                Centralized Base Codes vault allowing teams to organize door codes, airlock PINs, etc, with sharing directly to team chat via !code.
+                            </TextBlock>
+
+                            <!-- CCTV Cameras -->
+                            <TextBlock Text="📹 CCTV Cameras Rebuilt" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Native Camera Engine:</Run>
+                                Camera streaming, controlling, and rendering were rebuilt from scratch on the native Rust+ camera API, removing the external Node.js process entirely for lower latency, lower memory use, and faster startup.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Multiple Live Cameras:</Run>
+                                Open several camera windows at the same time &#x2014; each one streams over its own dedicated connection.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Analog Joystick Control:</Run>
+                                A draggable joystick replaces the arrow pad. Look and drone-movement speed scale with how far you push the ball, giving fine control near the center and fast sweeps at the edge.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Capability-Aware Fluent HUD:</Run>
+                                The camera window is a premium Fluent design that auto-detects drones, auto-turrets, PTZ, and static cameras, showing only the movement, mouse-look, zoom, fire, and reload controls each one actually supports.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Add, Name, Edit &amp; Delete Cameras:</Run>
+                                Manage cameras from a responsive full-width list with inline popovers &#x2014; add cameras with optional friendly display names, rename their identifier, and delete them, all saved per server.
+                            </TextBlock>
+
+                            <!-- Cloud Platform & Connection Resilience -->
+                            <TextBlock Text="🛡️ Cloud Platform &amp; Connection Resilience" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Next-Gen Cloud Platform:</Run>
+                                Migrated backend services to a unified Cloud platform for enhanced reliability, realtime sync, and streamlined role entitlements.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Access Denied &amp; HTTP 418 Handling:</Run>
+                                Intelligent detection of expired server credentials or revoked pairings with clear re-pairing prompts and responsive layout.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Startup Diagnostics &amp; Internationalization:</Run>
+                                Added startup crash telemetry diagnostics, resolved compiler warnings, and completed translation of internal services, comments, and logging to English.
+                            </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Cloud-Portal1.png" Description="The new Cloud Portal on rustplusdesktop.cloud — your paired servers, smart devices and reachability checks in the browser, no desktop app needed"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Cloud-Portal2.png" Description="Cloud Portal server map with every monument, category filters, grid overlay and monument search by name or grid"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/PlayerWipeTracker.png" Description="Player Wipe Tracker rebuilt in native Fluent WPF: route replay over the synced wipe map, with coverage, distance, deaths and monument toggles"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/DeathTracker.png" Description="Death Stats analytics — deadliest place and grid, peak hour, average survival, and a per-day breakdown by location and player"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/ptzCamera.png" Description="CCTV rebuilt on the native camera engine: live rendering with an analog joystick, zoom and adjustable frame rate for PTZ cameras"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/ClanManagement.png" Description="Clan System 2.0 with accurate in-game banner colors, a large banner showcase, member roles, last-seen stats and clan score"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Genetics-Lab1.png" Description="Genetics Lab 2.0 breeding workspace — the new solver ranks crossbreeding routes by generations and clone cost, with a step-by-step route inspector"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Genetics-Lab2.png" Description="Built-in Genetics Guide covering growth stages, gene weights, the 3x3 planter layout and multi-generation breeding"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v9.0.0/Console-Helper.png" Description="Console Helper: browse client and admin console commands, edit their values, bind them to a key and copy the ready-made line into F1"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v8.0.4 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

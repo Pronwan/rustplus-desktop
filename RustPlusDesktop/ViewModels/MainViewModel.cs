@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 
@@ -466,8 +467,10 @@ public class MainViewModel : INotifyPropertyChanged
         {
             if (_selected == value) return;
             if (_selected != null) _selected.PropertyChanged -= SelectedProfile_PropertyChanged;
-            _selected = value; 
+            _selected = value;
             if (_selected != null) _selected.PropertyChanged += SelectedProfile_PropertyChanged;
+            // Remember this choice so the next startup restores it instead of the first profile.
+            if (_selected != null) TrackingService.LastSelectedServerKey = _selected.MatchKey;
             OnPropertyChanged();                   // "Selected"
             OnPropertyChanged(nameof(CurrentDevices));
             UpdateServerWipe();
@@ -710,13 +713,20 @@ public class MainViewModel : INotifyPropertyChanged
         {
             p.Devices ??= new ObservableCollection<SmartDevice>(); // niemals null
             p.CameraIds ??= new ObservableCollection<string>();      // NEU: ebenso niemals null
+            p.CameraNames ??= new Dictionary<string, string>();
             p.IsConnected = false; // Reset connection state on load
             Servers.Add(p);
         }
 
         // WICHTIG: Vorauswahl, sonst bleibt CurrentDevices=null
+        // Restore the last selected server across restarts; fall back to the first profile.
         if (Servers.Count > 0 && Selected == null)
-            Selected = Servers[0];
+        {
+            var lastKey = TrackingService.LastSelectedServerKey;
+            Selected = (!string.IsNullOrEmpty(lastKey)
+                ? Servers.FirstOrDefault(s => s.MatchKey == lastKey)
+                : null) ?? Servers[0];
+        }
     }
 
 

@@ -44,9 +44,19 @@ namespace RustPlusDesk.Views.Windows
         {
             try
             {
-                if (SupabaseAuthManager.Client == null) return;
-                
+                if (!Services.Cloud.CloudBackend.UsePlatform && SupabaseAuthManager.Client == null) return;
+
                 var body = await SupabaseAuthManager.CallEdgeFunctionAsync("admin/users", System.Net.Http.HttpMethod.Get);
+
+                // cloud wraps collections in a `data` envelope; Supabase returned a bare array.
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    using var envelope = JsonDocument.Parse(body);
+                    body = envelope.RootElement.TryGetProperty("data", out var data)
+                        ? data.GetRawText()
+                        : "[]";
+                }
+
                 var profiles = JsonSerializer.Deserialize<List<UserProfileModel>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 _users.Clear();

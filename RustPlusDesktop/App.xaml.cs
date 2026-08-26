@@ -109,7 +109,7 @@ public partial class App : Application
             }
 
             UpdateSplashStatus(splash, splashDispatcher, "Initializing…");
-            _ = SupabaseAuthManager.InitializeAsync();
+            _ = Services.Cloud.CloudAuth.InitializeAsync();
 
             UpdateSplashStatus(splash, splashDispatcher, "Setting up tray…");
             SetupTrayIcon();
@@ -193,6 +193,7 @@ public partial class App : Application
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[Startup] Exception during startup: {ex}");
+            try { System.IO.File.WriteAllText(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "rp_startup_error.txt"), DateTime.Now + "\n" + ex); } catch { }
             FadeAndCloseSplash(splash, splashDispatcher);
             if (_main != null)
             {

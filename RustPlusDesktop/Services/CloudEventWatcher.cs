@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using RustPlusDesk.Services.Audio;
 using RustPlusDesk.Services.Auth;
+using RustPlusDesk.Services.Cloud;
 using Supabase.Realtime;
 using Supabase.Realtime.Models;
 
@@ -40,6 +41,11 @@ public sealed record CloudEventState(
 /// and a synthetic marker carries no position, so it would draw at the map origin and claim a
 /// location that does not exist. Consumers read this state directly instead; the map stays
 /// honest about knowing nothing.
+///
+/// Two realtime transports sit behind the same refresh logic. Supabase uses its broadcast
+/// channel; the platform uses <see cref="RealtimeClient"/> (Pusher protocol) on a private
+/// channel. Both trigger <see cref="RefreshAsync"/> on any inbound event, so the parsing and
+/// diffing path is shared.
 /// </summary>
 public sealed class CloudEventWatcher
 {
@@ -65,8 +71,14 @@ public sealed class CloudEventWatcher
     private readonly Dictionary<RustEventKind, CloudEventState> _events = new();
     private readonly SemaphoreSlim _subscribeLock = new(1, 1);
 
+    // Supabase realtime state.
     private RealtimeChannel? _channel;
     private RealtimeBroadcast<BaseBroadcast<JObject>>? _broadcast;
+
+    // Platform realtime state.
+    private string? _realtimeChannel;
+    private bool _realtimeHandlerAttached;
+
     private string? _serverKey;
     private bool _hooked;
 
@@ -94,19 +106,36 @@ public sealed class CloudEventWatcher
     {
         if (string.IsNullOrWhiteSpace(serverKey)) return;
 
-        if (_serverKey == serverKey && _channel != null) return;
+        if (_serverKey == serverKey && IsSubscribed()) return;
         Detach();
         _serverKey = serverKey;
 
         HookListener();
+        if (!CloudAuth.IsAuthenticated) return;
         await RefreshAsync(firstFetch: true);
-        await SubscribeAsync(serverKey);
+
+        if (CloudBackend.UsePlatform)
+            await SubscribePlatformAsync(serverKey);
+        else
+            await SubscribeSupabaseAsync(serverKey);
+    }
+
+    private bool IsSubscribed()
+    {
+        if (CloudBackend.UsePlatform)
+            return _realtimeChannel != null && RealtimeClient.Shared.IsSubscribed(_realtimeChannel);
+        return _channel != null;
     }
 
     public void Detach()
     {
         UnhookListener();
-        UnsubscribeBroadcast();
+
+        if (CloudBackend.UsePlatform)
+            UnsubscribePlatform();
+        else
+            UnsubscribeSupabase();
+
         _serverKey = null;
         lock (_gate)
         {
@@ -139,12 +168,12 @@ public sealed class CloudEventWatcher
     public async Task RefreshAsync(bool firstFetch = false)
     {
         string? serverKey = _serverKey;
-        if (serverKey == null || !SupabaseAuthManager.IsAuthenticated) return;
+        if (serverKey == null || !CloudAuth.IsAuthenticated) return;
 
         try
         {
-            string json = await SupabaseAuthManager.CallEdgeFunctionAsync(
-                "server-events", HttpMethod.Get, null,
+            string json = await CallServerEventsAsync(
+                HttpMethod.Get, null,
                 new Dictionary<string, string> { ["server_key"] = serverKey });
 
             using var doc = JsonDocument.Parse(json);
@@ -157,9 +186,6 @@ public sealed class CloudEventWatcher
                 if (state != null) parsed[state.Kind] = state;
             }
 
-            // Diff before overwriting. A refresh happens on every broadcast and on connect,
-            // but an alert must only fire when something actually happened — otherwise
-            // reconnecting would re-announce an event that started an hour ago.
             var changed = new List<CloudEventState>();
             lock (_gate)
             {
@@ -173,18 +199,11 @@ public sealed class CloudEventWatcher
                 {
                     bool known = before.TryGetValue(kind, out var previous);
 
-                    // The server's own row arriving for something we already trusted from our
-                    // own ears is the same occurrence, timed from when the report landed
-                    // rather than from when the sound began. Without this it would be
-                    // announced a second time, seconds after the first.
                     bool supersedesLocal =
                         known && previous!.LocalOnly
                         && Math.Abs((state.StartedAtUtc - previous.StartedAtUtc).TotalSeconds)
                            <= LocalTrustToleranceSeconds;
 
-                    // A new occurrence (different start), or one that just crossed from a
-                    // single unverified report to corroborated. Both are news; a mere
-                    // confirmation count going up is not.
                     bool isNews = !known
                                   || (!supersedesLocal
                                       && (previous!.StartedAtUtc != state.StartedAtUtc
@@ -194,8 +213,6 @@ public sealed class CloudEventWatcher
                 }
             }
 
-            // On the very first fetch after connecting, everything looks new — report it as a
-            // refresh only, so joining a server does not replay its history into team chat.
             if (!firstFetch)
                 foreach (var state in changed) EventChanged?.Invoke(state);
 
@@ -286,9 +303,6 @@ public sealed class CloudEventWatcher
             bool wasConfirmed = _events.TryGetValue(kind.Value, out var previous) && previous.IsConfirmed;
             ApplyLocalTrustLocked();
 
-            // Announce now rather than waiting for a refresh. When the backend refuses the
-            // report there is no broadcast and no refresh to wait for, which is exactly the
-            // case this covers.
             if (!wasConfirmed
                 && _events.TryGetValue(kind.Value, out var now)
                 && now.IsConfirmed && now.IsActive)
@@ -339,7 +353,6 @@ public sealed class CloudEventWatcher
             }
             else
             {
-                // Nothing stored at all: the report was refused, or never left the machine.
                 _events[kind] = new CloudEventState(
                     kind, cue, expires, 1, true, Array.Empty<DateTime>(), LocalOnly: true);
             }
@@ -349,44 +362,33 @@ public sealed class CloudEventWatcher
     private async Task ReportAsync(GameAudioDetection detection)
     {
         string? serverKey = _serverKey;
-        if (serverKey == null || !SupabaseAuthManager.IsAuthenticated) return;
+        if (serverKey == null || !CloudAuth.IsAuthenticated) return;
 
         try
         {
-            // Make the backend's freshness check pass before asking it anything.
             if (PresenceRefresh != null)
             {
                 try { await PresenceRefresh(); }
                 catch (Exception ex) { Log($"[cloud-events] Presence refresh failed: {ex.Message}"); }
             }
 
-            string json = await SupabaseAuthManager.CallEdgeFunctionAsync(
-                "server-events/report", HttpMethod.Post,
+            string json = await CallServerEventsAsync(
+                HttpMethod.Post,
                 new
                 {
                     server_key = serverKey,
                     event_type = detection.EventType,
                     capture_mode = detection.CaptureMode,
                     score = detection.Score,
-                    // When the sound began, not when we noticed it. The backend corroborates
-                    // on this rather than on arrival time — otherwise two cues eight seconds
-                    // apart merge into one, while two clients hearing the same cue fall
-                    // outside any window narrow enough to prevent that.
                     cue_started_at = detection.CueStartedAtUtc.ToString("o"),
-                });
+                },
+                routeSuffix: "report");
 
             using var doc = JsonDocument.Parse(json);
             string result = doc.RootElement.TryGetProperty("result", out var r) ? r.GetString() ?? "" : "";
 
-            // Rejections are expected outcomes, not failures — reporting while not actually
-            // in-game, or on a different server, is exactly what the backend is meant to
-            // refuse. Worth logging, not worth alarming anyone.
             Log($"[cloud-events] Reported {detection.EventType} (score {detection.Score:F0}) → {result}");
 
-            // Raw codes are unreadable for anyone who did not write the backend, and every one
-            // of these took real investigation to identify. Say what actually happened.
-            //
-            // StartsWith on the first: that rejection carries the compared values appended.
             string? explanation = result switch
             {
                 _ when result.StartsWith("rejected_wrong_server", StringComparison.Ordinal) =>
@@ -425,13 +427,107 @@ public sealed class CloudEventWatcher
         }
     }
 
-    // ---------------------------------------------------------------- broadcast
+    // ---------------------------------------------------------------- HTTP helpers
+
+    /// <summary>
+    /// Routes server-events calls through the appropriate backend. On Platform mode this goes
+    /// directly to <see cref="CloudApiClient"/>; on Supabase it goes through the edge function
+    /// bridge.
+    /// </summary>
+    private static async Task<string> CallServerEventsAsync(
+        HttpMethod method,
+        object? payload,
+        Dictionary<string, string>? queryParams = null,
+        string? routeSuffix = null)
+    {
+        string function = routeSuffix != null ? $"server-events/{routeSuffix}" : "server-events";
+
+        if (CloudBackend.UsePlatform)
+        {
+            string route = CloudBackend.MapEdgeFunctionToRoute(function, method.Method)
+                           ?? function;
+            return await CloudApiClient.CallApiAsync(route, method, null, payload, queryParams);
+        }
+
+        return await SupabaseAuthManager.CallEdgeFunctionAsync(function, method, payload, queryParams);
+    }
+
+    // ---------------------------------------------------------------- platform realtime (Pusher)
+
+    private async Task SubscribePlatformAsync(string serverKey)
+    {
+        if (!CloudAuth.IsAuthenticated) return;
+        await _subscribeLock.WaitAsync();
+        try
+        {
+            var channelKey = serverKey.Replace('.', '_');
+            var channel = $"private-server-events.{channelKey}";
+
+            if (_realtimeChannel == channel && RealtimeClient.Shared.IsSubscribed(channel))
+                return;
+
+            if (_realtimeChannel != null && _realtimeChannel != channel)
+            {
+                await RealtimeClient.Shared.UnsubscribeAsync(_realtimeChannel);
+                _realtimeChannel = null;
+            }
+
+            AttachRealtimeHandler();
+            _realtimeChannel = channel;
+
+            RealtimeClient.Shared.Start();
+            await RealtimeClient.Shared.SubscribeAsync(channel);
+            Log($"[cloud-events] Subscribed to {channel} (platform).");
+        }
+        catch (Exception ex)
+        {
+            Log($"[cloud-events] Could not subscribe (platform): {ex.Message}");
+            _realtimeChannel = null;
+        }
+        finally
+        {
+            _subscribeLock.Release();
+        }
+    }
+
+    private void AttachRealtimeHandler()
+    {
+        if (_realtimeHandlerAttached) return;
+        _realtimeHandlerAttached = true;
+
+        RealtimeClient.Shared.EventReceived += (channel, eventName, data) =>
+        {
+            if (_realtimeChannel != null && channel != _realtimeChannel) return;
+
+            try
+            {
+                _ = RefreshAsync();
+            }
+            catch (Exception ex)
+            {
+                Log($"[cloud-events] Platform realtime handler error: {ex.Message}");
+            }
+        };
+    }
+
+    private void UnsubscribePlatform()
+    {
+        var channel = _realtimeChannel;
+        _realtimeChannel = null;
+
+        if (channel != null)
+        {
+            try { _ = RealtimeClient.Shared.UnsubscribeAsync(channel); } catch { }
+        }
+    }
+
+    // ---------------------------------------------------------------- supabase realtime (broadcast)
 
     /// <summary>
     /// Same mechanism team presence uses. Push rather than polling, and without putting
     /// server_events into the realtime publication.
     /// </summary>
-    private async Task SubscribeAsync(string serverKey)
+    private async Task SubscribeSupabaseAsync(string serverKey)
     {
         await _subscribeLock.WaitAsync();
         try
@@ -446,9 +542,6 @@ public sealed class CloudEventWatcher
             {
                 try
                 {
-                    // The payload carries the new state, but re-reading is cheap and keeps a
-                    // single parsing path — a broadcast that arrives out of order or partially
-                    // cannot then leave us with a state the backend never had.
                     _ = RefreshAsync();
                 }
                 catch (Exception ex)
@@ -458,11 +551,11 @@ public sealed class CloudEventWatcher
             });
 
             await _channel.Subscribe();
-            Log($"[cloud-events] Subscribed to {channelName}.");
+            Log($"[cloud-events] Subscribed to {channelName} (supabase).");
         }
         catch (Exception ex)
         {
-            Log($"[cloud-events] Could not subscribe: {ex.Message}");
+            Log($"[cloud-events] Could not subscribe (supabase): {ex.Message}");
             _channel = null;
             _broadcast = null;
         }
@@ -472,7 +565,7 @@ public sealed class CloudEventWatcher
         }
     }
 
-    private void UnsubscribeBroadcast()
+    private void UnsubscribeSupabase()
     {
         if (_channel != null)
         {

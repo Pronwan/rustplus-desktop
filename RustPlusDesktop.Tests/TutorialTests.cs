@@ -50,7 +50,7 @@ public sealed class TutorialTests
         Assert.IsTrue(registry.Find("bases-screenshots")!.Steps.All(x => x.TargetId == "Map.Canvas"));
         Assert.IsTrue(registry.Find("updates-diagnostics")!.Steps.All(x => x.Placement == TutorialPlacement.Center));
         CollectionAssert.AreEqual(
-            new[] { "raid-calculator", "device-automation" },
+            new[] { "raid-calculator", "oilrig-crate-alerts", "device-automation", "offline-alerts-smarthome" },
             registry.Tutorials.Where(x => x.IsNewFeature).Select(x => x.Id).ToArray());
         Assert.AreEqual("Shops.Panel", registry.Find("shops-vending")!.Steps.Single(x => x.Id == "shops.panel").TargetId);
     }

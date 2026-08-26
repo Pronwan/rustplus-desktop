@@ -84,6 +84,8 @@ public class TrackingSettings
     public bool AutoStartEnabled { get; set; } = false;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
+    // Default on: use the in-process native FCM listener instead of the bundled Node fcm-listen.
+    public bool UseNativeFcmListener { get; set; } = true;
     public double SidebarWidth { get; set; } = 420;
     public bool SidebarPinned { get; set; } = true;
     public double WindowWidth { get; set; } = 1280;
@@ -92,6 +94,7 @@ public class TrackingSettings
     public double WindowTop { get; set; } = double.NaN;
     public bool WindowMaximized { get; set; } = false;
     public string SteamId64 { get; set; } = string.Empty;
+    public string LastSelectedServerKey { get; set; } = string.Empty;
     public bool AnnounceCargo { get; set; } = false;
     public bool AnnounceHeli { get; set; } = false;
     public bool AnnounceChinook { get; set; } = false;
@@ -168,6 +171,8 @@ public class TrackingSettings
     public bool TranslationConsentGiven { get; set; } = false;
     public bool UploadConsentGiven { get; set; } = false;
     public bool CloudSyncEnabled { get; set; } = false;
+    public bool PlayerWipeTrackerEnabled { get; set; } = false;
+    public bool PlayerWipeTrackerCloudBackupEnabled { get; set; } = false;
     // Key = "host:port|entityId", value = true if that device should send a chat alert when toggled via hotkey
     public Dictionary<string, bool> HotkeyTriggerChatAlertEnabled { get; set; } = new();
     public bool HotkeyTriggerChatAlertsEnabled { get; set; } = true;
@@ -574,6 +579,13 @@ public static class TrackingService
         set { _settings.CloseToTrayEnabled = value; SaveDB(); }
     }
 
+    /// <summary>Opt-in: use the native in-process FCM listener instead of the Node fcm-listen.</summary>
+    public static bool UseNativeFcmListener
+    {
+        get => _settings.UseNativeFcmListener;
+        set { _settings.UseNativeFcmListener = value; SaveDB(); }
+    }
+
     public static bool StartMinimizedEnabled
     {
         get => _settings.StartMinimizedEnabled;
@@ -642,6 +654,14 @@ public static class TrackingService
     {
         get => _settings.SteamId64;
         set { _settings.SteamId64 = value; SaveDB(); }
+    }
+
+    // Stable identity of the server the user last had selected, so startup restores it
+    // instead of always defaulting to the first profile in the list.
+    public static string LastSelectedServerKey
+    {
+        get => _settings.LastSelectedServerKey;
+        set { _settings.LastSelectedServerKey = value; SaveDB(); }
     }
 
     public static DateTime? FcmIssuedAt
@@ -857,6 +877,18 @@ public static class TrackingService
     {
         get => _settings.CloudSyncEnabled;
         set { _settings.CloudSyncEnabled = value; SaveDB(); }
+    }
+
+    public static bool PlayerWipeTrackerEnabled
+    {
+        get => _settings.PlayerWipeTrackerEnabled;
+        set { _settings.PlayerWipeTrackerEnabled = value; SaveDB(); }
+    }
+
+    public static bool PlayerWipeTrackerCloudBackupEnabled
+    {
+        get => _settings.PlayerWipeTrackerCloudBackupEnabled;
+        set { _settings.PlayerWipeTrackerCloudBackupEnabled = value; SaveDB(); }
     }
 
     private static string HotkeyAlertKey(string serverKey, long entityId) => $"{serverKey}|{entityId}";

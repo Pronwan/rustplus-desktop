@@ -199,21 +199,24 @@ public partial class MainWindow
             return true;
         }
 
+        bool sentOk = false;
         try
         {
             await SendOnceAsync();
+            sentOk = true;
         }
         catch (Exception ex)
         {
             AppendLog($"[{tag}] Fail to send: {ex.Message}");
+            lock (pending) { pending.Remove(trackKey); }
             return false;
         }
 
-        // Wir warten passiv darauf, dass die WebSocket-Event-Schleife (Real_TeamChatReceived/Real_ClanChatReceived)
+        // Wir warten bis zu 2 Sekunden darauf, dass die WebSocket-Event-Schleife (Real_TeamChatReceived/Real_ClanChatReceived)
         // die Nachricht als Echo zurückbekommt. Wenn sie ankommt, entfernt die Schleife den trackKey.
         int waitMs = 0;
-        int intervalMs = 150;
-        int timeoutMs = 4000; // max 4 Sekunden warten pro Versuch
+        int intervalMs = 100;
+        int timeoutMs = 2000;
 
         while (waitMs < timeoutMs)
         {
@@ -224,40 +227,22 @@ public partial class MainWindow
             {
                 if (!pending.Contains(trackKey))
                 {
-                    return true; // Bestätigt!
+                    return true; // Bestätigt über WebSocket Echo!
                 }
             }
         }
 
-        // --- RETRY LOGIC (Sanfter Ansatz, max 2 Versuche um Lags nicht zu verschlimmern) ---
-        AppendLog($"[{tag}] Send unconfirmed (Attempt 2), retrying once...");
-        try
-        {
-            await SendOnceAsync();
-        }
-        catch (Exception ex)
-        {
-            AppendLog($"[{tag}] Fail to send on retry: {ex.Message}");
-            return false;
-        }
-
-        waitMs = 0;
-        while (waitMs < timeoutMs)
-        {
-            await Task.Delay(intervalMs);
-            waitMs += intervalMs;
-
-            lock (pending)
-            {
-                if (!pending.Contains(trackKey))
-                {
-                    return true; // Bestätigt beim zweiten Versuch!
-                }
-            }
-        }
-
-        AppendLog($"[{tag}] Failed to verify message delivery after 2 attempts: \"{text}\"");
+        // Falls kein WebSocket-Echo zurückkam, aber der API-Aufruf erfolgreich war:
+        // Nachricht trotzdem lokal persistieren, damit sie beim Tab-Wechsel nicht verschwindet!
         lock (pending) { pending.Remove(trackKey); }
+        if (sentOk)
+        {
+            string myName = _vm?.Selected?.Name ?? "Me";
+            var selfMsg = new TeamChatMessage(DateTime.UtcNow, myName, _mySteamId, text);
+            AppendChatIfNew(selfMsg, channel, isHistorical: false);
+            return true;
+        }
+
         return false;
     }
 
@@ -301,12 +286,19 @@ public partial class MainWindow
         // Bot commands are only recognised on Team chat for now.
         bool isCommand = channel == ChatChannel.Team && m.Text.TrimStart().StartsWith(prefix);
 
+        // Normalize incoming timestamp to UTC for consistent comparison and storage
+        var mUtc = m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp : m.Timestamp.ToUniversalTime();
+
         lock (log)
         {
             bool isDuplicate = false;
-            foreach (var ext in log.AsEnumerable().Reverse().Take(10))
+            int thresholdSec = isHistorical ? 30 : 5;
+            foreach (var ext in log.AsEnumerable().Reverse().Take(100))
             {
-                if (ext.SteamId == m.SteamId && ext.Text == m.Text && Math.Abs((ext.Timestamp - m.Timestamp).TotalSeconds) < 2)
+                var extUtc = ext.Timestamp.Kind == DateTimeKind.Utc ? ext.Timestamp : ext.Timestamp.ToUniversalTime();
+                if ((ext.SteamId == m.SteamId || ext.SteamId == 0 || m.SteamId == 0) &&
+                    string.Equals(ext.Text.Trim(), m.Text.Trim(), StringComparison.Ordinal) &&
+                    Math.Abs((extUtc - mUtc).TotalSeconds) <= thresholdSec)
                 {
                     isDuplicate = true;
                     break;
@@ -314,7 +306,8 @@ public partial class MainWindow
             }
             if (!isDuplicate)
             {
-                log.Add(m);
+                var msgToStore = m.Timestamp.Kind == DateTimeKind.Utc ? m : new TeamChatMessage(mUtc, m.Author, m.SteamId, m.Text);
+                log.Add(msgToStore);
             }
             else
             {
@@ -342,7 +335,7 @@ public partial class MainWindow
         {
             if (channel == _activeChatChannel)
             {
-                Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: true));
+                Dispatcher.InvokeAsync(() => AddIncomingChatMessage(m.Author, m.Text, mUtc.ToLocalTime(), m.SteamId, autoScroll: true));
             }
             if (!isCommand)
             {
@@ -360,16 +353,16 @@ public partial class MainWindow
             }
         }
         
-        // Timestamp für History-Anfragen aktuell halten
+        // Timestamp für History-Anfragen aktuell halten (in UTC)
         if (channel == ChatChannel.Clan)
         {
-            if (!_lastClanChatTsForCurrentServer.HasValue || m.Timestamp > _lastClanChatTsForCurrentServer.Value)
-                _lastClanChatTsForCurrentServer = m.Timestamp;
+            if (!_lastClanChatTsForCurrentServer.HasValue || mUtc > _lastClanChatTsForCurrentServer.Value)
+                _lastClanChatTsForCurrentServer = mUtc;
         }
         else
         {
-            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
-                _lastChatTsForCurrentServer = m.Timestamp;
+            if (!_lastChatTsForCurrentServer.HasValue || mUtc > _lastChatTsForCurrentServer.Value)
+                _lastChatTsForCurrentServer = mUtc;
         }
 
         return true;
@@ -400,14 +393,15 @@ public partial class MainWindow
         lock (log)
         {
             toDisplay = log
-                .OrderBy(x => x.Timestamp)
+                .OrderBy(x => x.Timestamp.Kind == DateTimeKind.Utc ? x.Timestamp : x.Timestamp.ToUniversalTime())
                 .Skip(Math.Max(0, log.Count - displayCount))
                 .ToList();
         }
 
         foreach (var m in toDisplay)
         {
-            AddIncomingChatMessage(m.Author, m.Text, m.Timestamp.ToLocalTime(), m.SteamId, autoScroll: false);
+            var localTs = m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp.ToLocalTime() : m.Timestamp;
+            AddIncomingChatMessage(m.Author, m.Text, localTs, m.SteamId, autoScroll: false);
         }
     }
 
@@ -470,16 +464,20 @@ public partial class MainWindow
             var history = await real.GetClanChatHistoryAsync(_lastClanChatTsForCurrentServer, limit: 120);
             if (history != null && history.Count > 0)
             {
-                history.Reverse();
+                bool anyNew = false;
                 foreach (var m in history)
                 {
-                    AppendChatIfNew(m, ChatChannel.Clan, isHistorical: true);
+                    if (AppendChatIfNew(m, ChatChannel.Clan, isHistorical: true))
+                        anyNew = true;
                 }
 
-                if (_activeChatChannel == ChatChannel.Clan)
+                if (anyNew && _activeChatChannel == ChatChannel.Clan)
                 {
-                    RebuildChatMessages();
-                    ScrollChatToBottom();
+                    Dispatcher.Invoke(() =>
+                    {
+                        RebuildChatMessages();
+                        ScrollChatToBottom();
+                    });
                 }
             }
         }
@@ -552,16 +550,17 @@ public partial class MainWindow
         try
         {
             var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
-            if (history != null)
+            if (history != null && history.Count > 0)
             {
-                history.Reverse(); // Älteste zuerst
+                bool anyNew = false;
                 foreach (var m in history)
                 {
-                    AppendChatIfNew(m, ChatChannel.Team, isHistorical: true);
+                    if (AppendChatIfNew(m, ChatChannel.Team, isHistorical: true))
+                        anyNew = true;
                 }
                 
                 // Refresh list with any new historical items
-                if (_activeChatChannel == ChatChannel.Team)
+                if (anyNew && _activeChatChannel == ChatChannel.Team)
                 {
                     RebuildChatMessages();
                     ScrollChatToBottom();

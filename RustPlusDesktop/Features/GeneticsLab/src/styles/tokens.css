@@ -1,0 +1,166 @@
+:root {
+  /* Common Colors */
+  --color-primary: #0097a7;
+  --color-primary-hover: #00acc1;
+  --color-primary-active: #00838f;
+  --color-primary-light: rgba(0, 151, 167, 0.15);
+  
+  --color-good: #00c853;
+  --color-good-bg: rgba(0, 200, 83, 0.15);
+  --color-good-border: rgba(0, 200, 83, 0.4);
+
+  --color-danger: #e53935;
+  --color-danger-hover: #d32f2f;
+  --color-danger-bg: rgba(229, 57, 53, 0.15);
+  --color-danger-border: rgba(229, 57, 53, 0.4);
+
+  --color-warning: #fb8c00;
+  --color-warning-hover: #f57c00;
+  --color-warning-bg: rgba(251, 140, 0, 0.15);
+
+  --color-info: #0288d1;
+
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-mono: 'Consolas', 'Courier New', Courier, monospace;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Borders & Radius */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.2), 0 2px 4px -1px rgba(0,0,0,0.12);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.15);
+
+  /* Inventory slot behind item icons. Item art is mostly dark (teas, wood mugs),
+     so the slot must be LIGHTER than the art to keep it legible. Overridden
+     per-theme below — a light slot in light mode, a lighter-than-panel slate in
+     dark mode. This :root value is only a fallback. */
+  --gl-item-slot-bg: #e4e8ee;
+  --gl-item-slot-border: rgba(0, 0, 0, 0.12);
+}
+
+/* Dark Theme (Default) */
+[data-theme='dark'] {
+  --color-bg: #121418;
+  --color-bg-alt: #181b20;
+  --color-surface: #1e2229;
+  --color-surface-raised: #282d36;
+  --color-surface-hover: #2f3540;
+  --color-border: #333a46;
+  --color-border-subtle: #252b35;
+
+  --color-text-primary: #f0f3f6;
+  --color-text-secondary: #9aa5b5;
+  --color-text-muted: #6b7787;
+
+  --color-card-highlight: #ffffff;
+  --color-card-highlight-glow: rgba(255, 255, 255, 0.25);
+  --article-highlight-color: #00acc1;
+
+  /* Genetics Lab semantic palette (dark) — consumed by component sx/style props.
+     A matching light block lives under [data-theme='light']. These let inline
+     colors follow the active theme without per-component hooks. */
+  --gl-app-bg: #0E0E0E;
+  --gl-panel-bg: #141414;
+  --gl-panel-header-bg: #181818;
+  --gl-card-bg: #161616;
+  --gl-card-hover-bg: #1C1C1C;
+  --gl-elevated-bg: #1E1E1E;
+  --gl-input-bg: #111111;
+  --gl-surface: #262626;
+  --gl-surface-hover: #333333;
+  --gl-surface-active: #3A3A3A;
+  --gl-border: #282828;
+  --gl-border-strong: #383838;
+  --gl-border-subtle: #202020;
+  --gl-text-primary: #ECECEC;
+  --gl-text-secondary: #AAAAAA;
+  --gl-text-muted: #888888;
+  --gl-text-faint: #808080;
+  --gl-primary: #00E5FF;
+  --gl-primary-hover: #33EBFF;
+  --gl-error: #E53935;
+  --gl-error-hover: #D32F2F;
+  --gl-warning: #FF9800;
+  --gl-warning-hover: #FB8C00;
+  --gl-success: #4CAF50;
+  --gl-gold: #FFD700;
+  --gl-on-accent: #000000;
+  --gl-tint-green: #141E16;
+  --gl-tint-cyan: #101A1C;
+  /* Lighter-than-panel slate so dark item art (teas) reads against it. */
+  --gl-item-slot-bg: #3a424c;
+  --gl-item-slot-border: rgba(255, 255, 255, 0.12);
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --color-bg: #f4f6f8;
+  --color-bg-alt: #e9ecf0;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f8fafc;
+  --color-surface-hover: #f0f3f6;
+  --color-border: #d0d7de;
+  --color-border-subtle: #e2e8f0;
+
+  --color-text-primary: #1a1f26;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+
+  --color-card-highlight: #00c853;
+  --color-card-highlight-glow: rgba(0, 200, 83, 0.3);
+  --article-highlight-color: #0097a7;
+
+  /* Genetics Lab semantic palette (light) */
+  --gl-app-bg: #F4F6F8;
+  --gl-panel-bg: #FFFFFF;
+  --gl-panel-header-bg: #F8FAFC;
+  --gl-card-bg: #FFFFFF;
+  --gl-card-hover-bg: #F1F5F9;
+  --gl-elevated-bg: #FFFFFF;
+  --gl-input-bg: #F1F5F9;
+  --gl-surface: #EEF2F6;
+  --gl-surface-hover: #E2E8F0;
+  --gl-surface-active: #D6DEE7;
+  --gl-border: #E2E8F0;
+  --gl-border-strong: #CBD5E1;
+  --gl-border-subtle: #EDF2F7;
+  --gl-text-primary: #1E293B;
+  --gl-text-secondary: #475569;
+  --gl-text-muted: #526174;
+  --gl-text-faint: #526174;
+  --gl-primary: #0369A1;
+  --gl-primary-hover: #075985;
+  --gl-error: #DC2626;
+  --gl-error-hover: #B91C1C;
+  --gl-warning: #B45309;
+  --gl-warning-hover: #92400E;
+  --gl-success: #166534;
+  --gl-gold: #92400E;
+  --gl-on-accent: #FFFFFF;
+  --gl-tint-green: #ECFDF3;
+  --gl-tint-cyan: #ECFEFF;
+  /* Light slot so inherently dark tea/food art contrasts in light mode. */
+  --gl-item-slot-bg: #E4E8EE;
+  --gl-item-slot-border: rgba(0, 0, 0, 0.12);
+}

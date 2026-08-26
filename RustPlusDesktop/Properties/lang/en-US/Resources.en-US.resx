@@ -871,7 +871,7 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
     <value>Enable Background Player Tracking</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Keeps tracking players via BattleMetrics even when minimized.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Hide System Console (Declutter)</value>
@@ -2140,6 +2140,21 @@ Are you sure you want to continue?</value>
   </data>
   <data name="ConnectionFailedRustPlusUnreachableComment" xml:space="preserve">
     <value>Either your firewall is blocking the connection or the Rust+ API on the server is not running properly.</value>
+  </data>
+  <data name="ConnectionFailedAccessDenied" xml:space="preserve">
+    <value>Connection failed: Access Denied (418)</value>
+  </data>
+  <data name="ConnectionFailedAccessDeniedComment" xml:space="preserve">
+    <value>The server rejected your player token. Please refresh your token by re-pairing this server from the in-game Rust+ menu.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>ACCESS DENIED</value>
+  </data>
+  <data name="StatusAccessDeniedHint" xml:space="preserve">
+    <value>Player token expired. Re-pair server from in-game Rust+ menu.</value>
+  </data>
+  <data name="BadgeNeedsRePairing" xml:space="preserve">
+    <value>Re-pair needed</value>
   </data>
   <data name="WordYou" xml:space="preserve">
     <value>you</value>
@@ -5568,5 +5583,107 @@ You can find more information on the server's official website:
   </data>
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>No tutorial executes a rule or toggles a real smart device.</value>
+  </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Base Codes</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Set your doorcodes and share with the team (saved per server).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Show codes</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>lists every code in team chat</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Doorcode</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>No base codes are set.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>Console Helper</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>Useful console commands, ready to copy into the F1 console.</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>Client Commands</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>Admin Commands</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>Most useful</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>These only work if you are an owner or moderator on the server. Running them elsewhere does nothing.</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>Search commands…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>No command matches your search.</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>Copy command</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>Copy bind</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>Copy every bind you have set</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>Pop out as an overlay, to sit next to the game</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>Click, then press the key you want to bind this to</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>Pick a key</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>Press any key now. Escape cancels.</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>Mouse buttons and the scroll wheel cannot be captured by pressing them. Pick one here instead.</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>That key has no Rust equivalent. Pick another one.</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>Pick a key first, then the bind can be copied.</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>No keys bound yet. Pick a key on any command first.</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>Could not load the command list. See the log for details.</value>
+  </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Search item…</value>
+  </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>Always on top — click to release</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>Normal window — click to keep on top</value>
+  </data>
+  <data name="OpenCloudPortal" xml:space="preserve">
+    <value>Open the Cloud Portal</value>
   </data>
 </root>

@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services.Auth;
+using RustPlusDesk.Services.Cloud;
 using Supabase.Realtime;
 using static Postgrest.Constants;
 
@@ -18,6 +19,11 @@ public class DiscordBotListenerService
 
     private readonly List<RealtimeChannel> _activeChannels = new();
     private readonly HashSet<string> _subscribedGuildIds = new();
+
+    /// <summary>realtime channel names currently joined (cloud platform).</summary>
+    private readonly HashSet<string> _realtimeChannels = new();
+    private bool _realtimeHandlerAttached;
+
     private bool _isListening;
     private bool _isNotificationMaster;
     private List<string> _teamSteamIds = new();
@@ -62,6 +68,17 @@ public class DiscordBotListenerService
 
         try
         {
+            if (CloudBackend.UsePlatform)
+            {
+                // The API scopes both the guild list and the command queue to the
+                // signed-in owner, so a client serves its own guilds only. Under
+                // Supabase any teammate's client could pick up another's commands.
+                foreach (var guildId in await FetchOwnedGuildIdsAsync())
+                    await SubscribeToGuildQueueAsync(guildId);
+
+                return;
+            }
+
             // Fetch guild IDs for all team members (including ourselves)
             var response = await SupabaseAuthManager.Client
                 .From<DiscordBotSettingsModel>()
@@ -86,9 +103,38 @@ public class DiscordBotListenerService
         }
     }
 
+    /// <summary>Internal guild ids (UUIDs) owned by the signed-in account.</summary>
+    private static async Task<List<string>> FetchOwnedGuildIdsAsync()
+    {
+        var ids = new List<string>();
+
+        var body = await CloudApiClient.CallApiAsync("discord/guilds", System.Net.Http.HttpMethod.Get);
+        using var doc = JsonDocument.Parse(body);
+
+        if (!doc.RootElement.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.Array)
+            return ids;
+
+        foreach (var guild in data.EnumerateArray())
+        {
+            if (guild.TryGetProperty("id", out var id) && id.ValueKind == JsonValueKind.String &&
+                id.GetString() is { Length: > 0 } value)
+            {
+                ids.Add(value);
+            }
+        }
+
+        return ids;
+    }
+
     private async Task SubscribeToGuildQueueAsync(string guildId)
     {
         if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
+
+        if (CloudBackend.UsePlatform)
+        {
+            await SubscribeToGuildQueueViaRealtimeAsync(guildId);
+            return;
+        }
 
         try
         {
@@ -137,6 +183,89 @@ public class DiscordBotListenerService
         }
     }
 
+    /// <summary>
+    /// Realtime equivalent of the postgres-changes subscription: the API broadcasts
+    /// `command_queued` on the owning guild's private channel.
+    /// </summary>
+    private async Task SubscribeToGuildQueueViaRealtimeAsync(string guildId)
+    {
+        try
+        {
+            AttachRealtimeHandler();
+
+            var channel = $"private-discord-guilds.{guildId}";
+            lock (_subscribedGuildIds) { _subscribedGuildIds.Add(guildId); }
+            lock (_realtimeChannels) { _realtimeChannels.Add(channel); }
+
+            await RealtimeClient.Shared.SubscribeAsync(channel);
+            Log($"[DiscordBotListener] Subscribed to command queue for Guild: {guildId}");
+
+            await ProcessRecentPendingCommandsAsync(guildId);
+        }
+        catch (Exception ex)
+        {
+            lock (_subscribedGuildIds) { _subscribedGuildIds.Remove(guildId); }
+            Log($"[DiscordBotListener] Failed to subscribe to Guild {guildId}: {ex.Message}");
+        }
+    }
+
+    private void AttachRealtimeHandler()
+    {
+        if (_realtimeHandlerAttached) return;
+        _realtimeHandlerAttached = true;
+
+        RealtimeClient.Shared.EventReceived += (channel, eventName, data) =>
+        {
+            if (eventName != "command_queued") return;
+
+            lock (_realtimeChannels)
+            {
+                if (!_realtimeChannels.Contains(channel)) return;
+            }
+
+            try
+            {
+                var record = ParseQueuedCommand(data);
+                if (record == null) return;
+
+                Log($"[DiscordBotListener] Received command: id={record.Id}, guild={record.GuildId}, type={record.CommandType}, status={record.Status}");
+                _ = ProcessIncomingCommandAsync(record);
+            }
+            catch (Exception ex)
+            {
+                Log($"[DiscordBotListener] Error in change handler: {ex.Message}");
+            }
+        };
+    }
+
+    /// <summary>
+    /// Map a broadcast payload (or a queue-poll row) onto the existing queue model
+    /// so command execution stays backend-agnostic.
+    /// </summary>
+    private static BotCommandsQueueModel? ParseQueuedCommand(Newtonsoft.Json.Linq.JObject data)
+    {
+        var id = data["id"]?.ToString();
+        if (string.IsNullOrEmpty(id)) return null;
+
+        return new BotCommandsQueueModel
+        {
+            Id = id,
+            GuildId = data["discord_guild_id"]?.ToString() ?? "",
+            CommandType = data["command_type"]?.ToString() ?? "",
+            Status = data["status"]?.ToString() ?? "pending",
+            Payload = data["payload"] as Newtonsoft.Json.Linq.JObject,
+            // Broadcast payloads carry no created_at; treat those as "just now" so
+            // the recovery cutoff never discards a live event.
+            CreatedAt = data["created_at"] is { } createdAt && DateTime.TryParse(
+                createdAt.ToString(),
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.AdjustToUniversal | System.Globalization.DateTimeStyles.AssumeUniversal,
+                out var parsed)
+                ? parsed
+                : DateTime.UtcNow,
+        };
+    }
+
     private async Task ProcessIncomingCommandAsync(BotCommandsQueueModel record)
     {
         if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
@@ -168,18 +297,10 @@ public class DiscordBotListenerService
                 }
             }
 
-            // Try to acquire the command lock by changing status to 'processing'
-            var updateResponse = await SupabaseAuthManager.Client
-                .From<BotCommandsQueueModel>()
-                .Filter("id", Operator.Equals, id)
-                .Filter("status", Operator.Equals, "pending")
-                .Set(x => x.Status, "processing")
-                .Update();
-
-            if (updateResponse.Models == null || updateResponse.Models.Count == 0)
+            if (!await TryClaimCommandAsync(id))
             {
                 // Lock acquisition failed (another client picked it up)
-                Log($"[DiscordBotListener] Command {id} was not claimed (already handled or rejected by RLS).");
+                Log($"[DiscordBotListener] Command {id} was not claimed (already handled or rejected).");
                 return;
             }
 
@@ -188,14 +309,7 @@ public class DiscordBotListenerService
             // Execute command & prepare response
             var reply = await ExecuteCommandActionAsync(commandType, record);
 
-            // Update database with final response (ResponsePayload is JSONB, serialize via JObject)
-            var replyJson = Newtonsoft.Json.Linq.JObject.FromObject(reply);
-            await SupabaseAuthManager.Client
-                .From<BotCommandsQueueModel>()
-                .Filter("id", Operator.Equals, id)
-                .Set(x => x.Status, reply.Success ? "completed" : "failed")
-                .Set(x => x.ResponsePayload!, replyJson)
-                .Update();
+            await ReportCommandResultAsync(id, reply);
 
             Log($"[DiscordBotListener] Command {id} completed with status: {(reply.Success ? "completed" : "failed")}");
         }
@@ -209,6 +323,65 @@ public class DiscordBotListenerService
     {
         public bool Success { get; set; }
         public string Message { get; set; } = "";
+    }
+
+    /// <summary>
+    /// Take exclusive ownership of a pending command. Every subscribed client sees
+    /// the same queue, so losing the race is normal and simply means another client
+    /// is running it.
+    /// </summary>
+    private static async Task<bool> TryClaimCommandAsync(string id)
+    {
+        if (CloudBackend.UsePlatform)
+        {
+            var body = await CloudApiClient.CallApiAsync(
+                $"discord/commands/{id}/claim", System.Net.Http.HttpMethod.Post);
+
+            using var doc = JsonDocument.Parse(body);
+
+            return doc.RootElement.TryGetProperty("data", out var data)
+                   && data.TryGetProperty("claimed", out var claimed)
+                   && claimed.ValueKind == JsonValueKind.True;
+        }
+
+        var updateResponse = await SupabaseAuthManager.Client
+            .From<BotCommandsQueueModel>()
+            .Filter("id", Operator.Equals, id)
+            .Filter("status", Operator.Equals, "pending")
+            .Set(x => x.Status, "processing")
+            .Update();
+
+        return updateResponse.Models is { Count: > 0 };
+    }
+
+    private static async Task ReportCommandResultAsync(string id, CommandResult reply)
+    {
+        if (CloudBackend.UsePlatform)
+        {
+            if (reply.Success)
+            {
+                await CloudApiClient.CallApiAsync(
+                    $"discord/commands/{id}/complete", System.Net.Http.HttpMethod.Post,
+                    payload: new { response = new { success = true, message = reply.Message } });
+            }
+            else
+            {
+                await CloudApiClient.CallApiAsync(
+                    $"discord/commands/{id}/fail", System.Net.Http.HttpMethod.Post,
+                    payload: new { error = reply.Message });
+            }
+
+            return;
+        }
+
+        // ResponsePayload is JSONB, serialize via JObject
+        var replyJson = Newtonsoft.Json.Linq.JObject.FromObject(reply);
+        await SupabaseAuthManager.Client
+            .From<BotCommandsQueueModel>()
+            .Filter("id", Operator.Equals, id)
+            .Set(x => x.Status, reply.Success ? "completed" : "failed")
+            .Set(x => x.ResponsePayload!, replyJson)
+            .Update();
     }
 
     private Task<CommandResult> ExecuteCommandActionAsync(string? commandType, BotCommandsQueueModel record)
@@ -376,6 +549,18 @@ public class DiscordBotListenerService
             try { SupabaseAuthManager.Client?.Realtime?.Remove(channel); } catch { }
         }
 
+        string[] realtimeChannels;
+        lock (_realtimeChannels)
+        {
+            realtimeChannels = _realtimeChannels.ToArray();
+            _realtimeChannels.Clear();
+        }
+
+        foreach (var channel in realtimeChannels)
+        {
+            try { _ = RealtimeClient.Shared.UnsubscribeAsync(channel); } catch { }
+        }
+
         _activeChannels.Clear();
         lock (_subscribedGuildIds) { _subscribedGuildIds.Clear(); }
         _teamSteamIds.Clear();
@@ -433,6 +618,12 @@ public class DiscordBotListenerService
         if (ownerSteamIds.Count == 0)
         {
             Log($"[DiscordBotListener] {notificationType} notification skipped: no owner Steam IDs.");
+            return;
+        }
+
+        if (CloudBackend.UsePlatform)
+        {
+            await SendNotificationViaApiAsync(notificationType, message, ownerSteamIds);
             return;
         }
 
@@ -559,11 +750,59 @@ public class DiscordBotListenerService
         }
     }
 
+    /// <summary>
+    /// Channel resolution, premium gating and team eligibility all live server-side,
+    /// so the client only states what happened and who it is speaking for.
+    /// </summary>
+    private static async Task SendNotificationViaApiAsync(
+        string notificationType,
+        string message,
+        List<string> ownerSteamIds)
+    {
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync(
+                "discord/notify", System.Net.Http.HttpMethod.Post,
+                payload: new
+                {
+                    notification_type = notificationType,
+                    message,
+                    steam_ids = ownerSteamIds,
+                });
+
+            using var doc = JsonDocument.Parse(body);
+            var sent = doc.RootElement.TryGetProperty("data", out var data)
+                       && data.TryGetProperty("sent", out var sentEl)
+                ? sentEl.GetInt32()
+                : 0;
+
+            Log($"[DiscordBotListener] Sent {notificationType} notification to {sent} configured channel(s).");
+        }
+        catch (Exception ex)
+        {
+            Log($"[DiscordBotListener] Failed to send notification: {ex.Message}");
+        }
+    }
+
     private async Task ProcessRecentPendingCommandsAsync(string guildId)
     {
         try
         {
             var cutoff = DateTime.UtcNow.AddSeconds(-15);
+
+            if (CloudBackend.UsePlatform)
+            {
+                foreach (var command in await FetchPendingCommandsAsync(guildId))
+                {
+                    if (command.CreatedAt < cutoff) continue;
+
+                    Log($"[DiscordBotListener] Recovering pending command {command.Id} ({command.CommandType}).");
+                    await ProcessIncomingCommandAsync(command);
+                }
+
+                return;
+            }
+
             var response = await SupabaseAuthManager.Client
                 .From<BotCommandsQueueModel>()
                 .Filter("guild_id", Operator.Equals, guildId)
@@ -580,6 +819,27 @@ public class DiscordBotListenerService
         {
             Log($"[DiscordBotListener] Failed to recover pending commands for Guild {guildId}: {ex.Message}");
         }
+    }
+
+    /// <summary>Pending commands for one guild. The API already scopes to owned guilds.</summary>
+    private static async Task<List<BotCommandsQueueModel>> FetchPendingCommandsAsync(string guildId)
+    {
+        var commands = new List<BotCommandsQueueModel>();
+
+        var body = await CloudApiClient.CallApiAsync("discord/commands", System.Net.Http.HttpMethod.Get);
+        var parsed = Newtonsoft.Json.Linq.JObject.Parse(body)["data"] as Newtonsoft.Json.Linq.JArray;
+        if (parsed == null) return commands;
+
+        foreach (var entry in parsed)
+        {
+            if (entry is not Newtonsoft.Json.Linq.JObject obj) continue;
+
+            var command = ParseQueuedCommand(obj);
+            if (command != null && command.GuildId == guildId)
+                commands.Add(command);
+        }
+
+        return commands;
     }
 
     private static void WarnMissingChannelPermission(string channelId)

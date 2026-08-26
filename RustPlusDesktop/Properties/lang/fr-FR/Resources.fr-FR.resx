@@ -871,7 +871,7 @@ Rust+ Desktop enregistre votre application locale aupres de FCM afin de recevoir
     <value>Activer le suivi des joueurs en arrière-plan</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Garde le suivi des joueurs via les métriques de bataille, même lorsqu'il est minimisé.</value>
+    <value>Continue d'interroger le serveur pour connaître le nombre de joueurs, même une fois l'application réduite.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Cacher la console système (dégraissant)</value>
@@ -5837,5 +5837,110 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   </data>
   <data name="Tutorials.Step.offlinealerts.alarmlearn.Description" xml:space="preserve">
     <value>Après l’appairage, déclenchez l’alarme une fois pendant que l’application tourne. Elle voit la notification et l’événement de l’appareil au même instant et enregistre le nom toute seule. Vous préférez ne pas attendre ? Clic droit sur l’alarme dans cette liste et saisissez-le. Dans les deux cas, c’est indépendant du nom que vous donnez à l’appareil ici : celui-là est libre et sans effet sur Alexa.</value>
+  </data>
+  <data name="ImportFromPreviousWipe" xml:space="preserve">
+    <value>D’un wipe précédent — ces identifiants d’appareil n’existent plus</value>
+  </data>
+  <data name="BaseCodesCategory" xml:space="preserve">
+    <value>Codes de base</value>
+  </data>
+  <data name="BaseCodesDesc" xml:space="preserve">
+    <value>Enregistrez vos codes de porte et partagez-les avec l'équipe (sauvegardés par serveur).</value>
+  </data>
+  <data name="BaseCodesCmdLabel" xml:space="preserve">
+    <value>Afficher les codes</value>
+  </data>
+  <data name="BaseCodesCmdHint" xml:space="preserve">
+    <value>affiche tous les codes dans le chat d'équipe</value>
+  </data>
+  <data name="BaseCodesRowLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="BaseCodesNameDefault" xml:space="preserve">
+    <value>Code de porte</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>Aucun code de base n'est enregistré.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Enregistré</value>
+  </data>
+  <data name="ConsoleHelperTitle" xml:space="preserve">
+    <value>Assistant console</value>
+  </data>
+  <data name="ConsoleHelperSubtitle" xml:space="preserve">
+    <value>Commandes de console utiles, prêtes à coller dans la console F1.</value>
+  </data>
+  <data name="ConsoleHelperClientTab" xml:space="preserve">
+    <value>Commandes client</value>
+  </data>
+  <data name="ConsoleHelperAdminTab" xml:space="preserve">
+    <value>Commandes admin</value>
+  </data>
+  <data name="ConsoleHelperMostUseful" xml:space="preserve">
+    <value>Les plus utiles</value>
+  </data>
+  <data name="ConsoleHelperAdminNote" xml:space="preserve">
+    <value>Ces commandes ne fonctionnent que si vous êtes propriétaire ou modérateur du serveur. Sinon, rien ne se passe.</value>
+  </data>
+  <data name="ConsoleHelperSearch" xml:space="preserve">
+    <value>Rechercher des commandes…</value>
+  </data>
+  <data name="ConsoleHelperNoMatch" xml:space="preserve">
+    <value>Aucune commande ne correspond à votre recherche.</value>
+  </data>
+  <data name="ConsoleHelperCopy" xml:space="preserve">
+    <value>Copier la commande</value>
+  </data>
+  <data name="ConsoleHelperCopyBind" xml:space="preserve">
+    <value>Copier le bind</value>
+  </data>
+  <data name="ConsoleHelperCopyAllBinds" xml:space="preserve">
+    <value>Copier tous les binds définis</value>
+  </data>
+  <data name="ConsoleHelperPopout" xml:space="preserve">
+    <value>Détacher en superposition, à placer à côté du jeu</value>
+  </data>
+  <data name="ConsoleHelperKey" xml:space="preserve">
+    <value>Touche</value>
+  </data>
+  <data name="ConsoleHelperKeyHint" xml:space="preserve">
+    <value>Cliquez, puis appuyez sur la touche à assigner</value>
+  </data>
+  <data name="ConsoleHelperKeyTitle" xml:space="preserve">
+    <value>Choisir une touche</value>
+  </data>
+  <data name="ConsoleHelperKeyPrompt" xml:space="preserve">
+    <value>Appuyez sur une touche. Échap annule.</value>
+  </data>
+  <data name="ConsoleHelperMouseHint" xml:space="preserve">
+    <value>Les boutons de souris et la molette ne peuvent pas être capturés en les pressant. Choisissez-les ici.</value>
+  </data>
+  <data name="ConsoleHelperKeyUnsupported" xml:space="preserve">
+    <value>Cette touche n'a pas d'équivalent dans Rust. Choisissez-en une autre.</value>
+  </data>
+  <data name="ConsoleHelperClearKey" xml:space="preserve">
+    <value>Effacer</value>
+  </data>
+  <data name="ConsoleHelperPickKeyFirst" xml:space="preserve">
+    <value>Choisissez d'abord une touche, le bind pourra ensuite être copié.</value>
+  </data>
+  <data name="ConsoleHelperNoBindsYet" xml:space="preserve">
+    <value>Aucune touche assignée pour l'instant. Choisissez d'abord une touche sur une commande.</value>
+  </data>
+  <data name="ConsoleHelperLoadFailed" xml:space="preserve">
+    <value>Impossible de charger la liste des commandes. Voir le journal.</value>
+  </data>
+  <data name="ConsoleHelperSearchItem" xml:space="preserve">
+    <value>Rechercher un objet…</value>
+  </data>
+  <data name="ConsoleHelperKeepOnTop" xml:space="preserve">
+    <value>Toujours au premier plan — cliquez pour libérer</value>
+  </data>
+  <data name="ConsoleHelperNotOnTop" xml:space="preserve">
+    <value>Fenêtre normale — cliquez pour épingler au premier plan</value>
+  </data>
+  <data name="OpenCloudPortal" xml:space="preserve">
+    <value>Ouvrir le portail Cloud</value>
   </data>
 </root>

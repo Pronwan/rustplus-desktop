@@ -243,16 +243,19 @@
             SnapsToDevicePixels="True">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="22" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ui:SymbolIcon
+                <Path
                     x:Name="CheckIcon"
                     Grid.Column="0"
-                    Symbol="Checkmark20"
+                    Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                    Fill="{DynamicResource Accent}"
+                    Width="13"
+                    Height="13"
+                    Stretch="Uniform"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Foreground="{DynamicResource Accent}"
                     Visibility="Collapsed" />
                 <ContentPresenter
                     Grid.Column="0"
@@ -295,18 +298,22 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}" />
+
     <Style x:Key="DarkSeparator" TargetType="Separator">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Separator">
                     <Border
                         Height="1"
-                        Margin="6,6,6,6"
+                        Margin="6,4,6,4"
                         Background="#22FFFFFF" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="Separator" BasedOn="{StaticResource DarkSeparator}" />
 
     <Style x:Key="DarkContextMenu" TargetType="ContextMenu">
         <Setter Property="Background" Value="{DynamicResource Surface}" />
@@ -328,6 +335,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="ContextMenu" BasedOn="{StaticResource DarkContextMenu}" />
 
     <Style x:Key="PrettyTabItem" TargetType="TabItem">
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />

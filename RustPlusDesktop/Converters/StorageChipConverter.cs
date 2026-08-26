@@ -13,16 +13,16 @@ namespace RustPlusDesk.Converters
             if (value is not StorageSnapshot snap)
                 return string.Empty;
 
-            // TC: immer Upkeep – egal ob 0 oder >0
+            // TC: always upkeep – regardless of whether 0 or >0
             if (snap.IsToolCupboard)
             {
                 var secs = snap.UpkeepSeconds ?? 0;
 
-                // Sonderfall: 0 → mit Prefix "Upkeep: 0s"
+                // Special case: 0 → with prefix "Upkeep: 0s"
                 if (secs <= 0)
                     return "Upkeep: 0s";
 
-                // Ab hier: nur noch kompakte Dauer ohne "Upkeep:"
+                // From here: just the compact duration without "Upkeep:"
                 int days = secs / 86400;
                 int rem = secs % 86400;
                 int hours = rem / 3600;
@@ -39,11 +39,11 @@ namespace RustPlusDesk.Converters
                 if (mins > 0)
                     parts.Add($"{mins}m");
 
-                // Falls alles auf 0, aber >0 Sekunden übrig, z. B. 45s
+                // If everything is 0 but >0 seconds remain, e.g. 45s
                 if (parts.Count == 0 && secsLeft > 0)
                     parts.Add($"{secsLeft}s");
 
-                // Sicherstellen, dass wir überhaupt etwas anzeigen
+                // Make sure we display something at all
                 if (parts.Count == 0)
                     parts.Add("0s");
 

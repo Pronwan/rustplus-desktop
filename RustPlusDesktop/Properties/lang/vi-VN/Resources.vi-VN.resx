@@ -871,7 +871,7 @@ Rust+ Desktop dang ky ung dung cuc bo cua ban voi FCM de co the nhan cung cac th
     <value>Bật tính năng theo dõi người chơi ở chế độ nền</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Tiếp tục theo dõi người chơi qua BattleMetrics ngay cả khi ứng dụng đang ở chế độ thu nhỏ.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Ẩn Bảng điều khiển hệ thống (Giảm bớt lộn xộn)</value>

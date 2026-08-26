@@ -25,11 +25,21 @@ public partial class CloudAccountWindow : Window
         bool hasEmail = SupabaseAuthManager.HasAuthProvider("email");
         string tier = FriendlyTier(SupabaseAuthManager.CurrentTier);
 
+        // Identity fields come from whichever backend is active. Under the platform
+        // backend the Supabase client is null, so read the cached platform user
+        // instead — otherwise display name / email / id fall back to placeholders.
+        var platformUser = RustPlusDesk.Services.Cloud.CloudBackend.UsePlatform
+            ? RustPlusDesk.Services.Cloud.CloudAuthManager.CurrentUser
+            : null;
+        string? displayName = platformUser != null ? platformUser.DisplayName : GetDisplayName(user?.UserMetadata);
+        string? email = platformUser != null ? platformUser.Email : user?.Email;
+        string? userId = platformUser != null ? platformUser.Id : user?.Id;
+
         TxtPlanBadge.Text = string.Format(Properties.Resources.GetString(SupabaseAuthManager.IsPremium ? "FormatPremiumPlan" : "FormatFreePlan"), tier);
         TxtAccountSummary.Text = TrackingService.CloudSyncEnabled ? RustPlusDesk.Properties.Resources.GetString("CodeUiConnectedCloudSyncEnabled") : RustPlusDesk.Properties.Resources.GetString("CodeUiConnectedCloudSyncPaused");
-        TxtDisplayName.Text = GetDisplayName(user?.UserMetadata) ?? user?.Email ?? RustPlusDesk.Properties.Resources.GetString("CodeUiCloudUser");
-        TxtEmail.Text = string.IsNullOrWhiteSpace(user?.Email) ? RustPlusDesk.Properties.Resources.GetString("CodeUiNotLinked") : user.Email;
-        TxtUserId.Text = user?.Id ?? RustPlusDesk.Properties.Resources.GetString("CodeUiUnavailable");
+        TxtDisplayName.Text = displayName ?? email ?? RustPlusDesk.Properties.Resources.GetString("CodeUiCloudUser");
+        TxtEmail.Text = string.IsNullOrWhiteSpace(email) ? RustPlusDesk.Properties.Resources.GetString("CodeUiNotLinked") : email;
+        TxtUserId.Text = userId ?? RustPlusDesk.Properties.Resources.GetString("CodeUiUnavailable");
         TxtSteamAccount.Text = string.IsNullOrWhiteSpace(_owner.ViewModel.SteamId64)
             ? "Not connected"
             : $"{_owner.SteamDisplayName} · {_owner.ViewModel.SteamId64}";
@@ -41,8 +51,8 @@ public partial class CloudAccountWindow : Window
         TxtEmailState.Text = hasEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiEmailLoginEnabled") : RustPlusDesk.Properties.Resources.GetString("CodeUiAddAnEmailAndPasswordToThisAccount");
         BtnShowEmailLink.Content = hasEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiEnabled") : RustPlusDesk.Properties.Resources.GetString("UiAddLogin");
         BtnShowEmailLink.IsEnabled = !hasEmail;
-        if (!hasEmail && !string.IsNullOrWhiteSpace(user?.Email))
-            TxtLinkEmail.Text = user.Email;
+        if (!hasEmail && !string.IsNullOrWhiteSpace(email))
+            TxtLinkEmail.Text = email;
 
         SetUsage(TxtDevicesUsage, ProgressDevices, _owner.GetCurrentDevicesCount(), SupabaseAuthManager.GetMaxDevices(), value => value.ToString());
         SetUsage(TxtBasesUsage, ProgressBases, _owner.GetCurrentBaseCount(), SupabaseAuthManager.GetMaxBases(), value => value.ToString());
@@ -106,7 +116,7 @@ public partial class CloudAccountWindow : Window
     private async void BtnLogout_Click(object sender, RoutedEventArgs e)
     {
         SetBusy(true, "Signing out...");
-        await SupabaseAuthManager.LogoutAsync();
+        await Services.Cloud.CloudAuth.LogoutAsync();
         _owner.UpdateCloudSyncUI();
         DialogResult = true;
         Close();

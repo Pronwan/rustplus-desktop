@@ -14,6 +14,8 @@ namespace RustPlusDesk.Services
     /// </summary>
     public static class RustApiFeatures
     {
-        public const bool EventsAndShopsRemoved = false;
+        // static readonly (not const) so flag-guarded branches are not compiled away as
+        // unreachable while this is false — that would raise CS0162 across the call sites.
+        public static readonly bool EventsAndShopsRemoved = false;
     }
 }

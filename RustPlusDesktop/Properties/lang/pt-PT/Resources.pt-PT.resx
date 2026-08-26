@@ -871,7 +871,7 @@ O Rust+ Desktop regista a sua aplicacao local no FCM para receber essas mesmas n
     <value>Habilitar Rastreamento do Jogador de Fundo</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Mantém o monitoramento de jogadores através de métricas de batalha mesmo que minimizado.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Ocultar Console do Sistema (Decriente)</value>

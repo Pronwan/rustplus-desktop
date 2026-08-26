@@ -48,11 +48,11 @@ namespace RustPlusDesk.Helpers
                 var p = Path.Combine(baseDir, "runtime", "node-win-x64", "node.exe");
                 if (File.Exists(p)) return p;
 
-                // Try "node-win-x64/node.exe" (falls runtime-Ordner weggelassen wurde)
+                // Try "node-win-x64/node.exe" (if the runtime folder was omitted)
                 var p2 = Path.Combine(baseDir, "node-win-x64", "node.exe");
                 if (File.Exists(p2)) return p2;
 
-                // Try "node.exe" directly (falls alles flach liegt)
+                // Try "node.exe" directly (if everything is flat)
                 var p3 = Path.Combine(baseDir, "node.exe");
                 if (File.Exists(p3)) return p3;
             }
@@ -137,10 +137,10 @@ namespace RustPlusDesk.Helpers
                                       "RustPlusDesk", "runtime", "rustplus-cli");
             Directory.CreateDirectory(target);
 
-            // 1) Suche nach ZIP
+            // 1) Look for the ZIP
             var zip = Path.Combine(AppContext.BaseDirectory, "runtime", "rustplus-cli.zip");
             
-            // Fallback für Single-File
+            // Fallback for single-file
             if (!File.Exists(zip))
             {
                 try
@@ -173,7 +173,7 @@ namespace RustPlusDesk.Helpers
                 return target;
             }
 
-            // 2) Debug-Fallback: ungezippter Ordner im Projekt
+            // 2) Debug fallback: unzipped folder in the project
             var dev = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..",
                                                     "runtime", "rustplus-cli"));
             if (Directory.Exists(dev)) return dev;
@@ -200,7 +200,7 @@ namespace RustPlusDesk.Helpers
 
         public static string? FindRustplusJsPackageRoot()
         {
-            // wir brauchen den Ordner, der die *node_modules* enthält
+            // we need the folder that contains the *node_modules*
             var root = EnsureCliUnpackedRoot();
             
             if (Directory.Exists(Path.Combine(root, "node_modules", "@liamcottle", "rustplus.js")))

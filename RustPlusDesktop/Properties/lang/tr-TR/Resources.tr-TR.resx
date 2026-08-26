@@ -871,7 +871,7 @@ Rust+ Desktop, ayni Rust+ bildirimlerini arka planda alabilmesi icin yerel uygul
     <value>Arka Planda Oyuncu İzlemeyi Etkinleştir</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Simge durumuna küçültüldüğünde bile BattleMetrics aracılığıyla oyuncuları izlemeye devam eder.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Sistem Konsolunu Gizle (Declutter)</value>

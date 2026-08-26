@@ -871,7 +871,7 @@ Rust+ Desktop registra la tua app locale con FCM cosi puo ricevere le stesse not
     <value>Abilita Il Tracciamento Del Giocatore In Sfondo</value>
   </data>
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
-    <value>Mantiene il monitoraggio dei giocatori tramite BattleMetrics anche quando minimizzato.</value>
+    <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Nascondi Console Di Sistema (Declutter)</value>

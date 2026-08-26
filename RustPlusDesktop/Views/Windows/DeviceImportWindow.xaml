@@ -164,6 +164,9 @@
                                                         <DataTrigger Binding="{Binding AlreadyPresent}" Value="True">
                                                             <Setter Property="Opacity" Value="0.55"/>
                                                         </DataTrigger>
+                                                        <DataTrigger Binding="{Binding FromPreviousWipe}" Value="True">
+                                                            <Setter Property="Opacity" Value="0.55"/>
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </ui:Card.Style>
@@ -236,6 +239,18 @@
                                                         <TextBlock Text="{Binding Tagline}"
                                                                    Foreground="{DynamicResource TextSubtle}"
                                                                    FontSize="11"
+                                                                   VerticalAlignment="Center"/>
+                                                    </StackPanel>
+
+                                                    <!--  Says why these are unselected, instead of leaving
+                                                          the user to import them and find out later.  -->
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0"
+                                                                Visibility="{Binding FromPreviousWipe, Converter={StaticResource BoolToVisConverter}}">
+                                                        <ui:SymbolIcon Symbol="Warning20" FontSize="12" Foreground="#E8A33D" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{DynamicResource ImportFromPreviousWipe}"
+                                                                   Foreground="#E8A33D"
+                                                                   FontSize="11"
+                                                                   TextWrapping="Wrap"
                                                                    VerticalAlignment="Center"/>
                                                     </StackPanel>
                                                 </StackPanel>
