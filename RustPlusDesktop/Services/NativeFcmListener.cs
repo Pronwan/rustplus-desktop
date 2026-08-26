@@ -59,6 +59,10 @@ namespace RustPlusDesk.Services
         private string? _lastPairKey;
         private DateTime _lastPairAt;
 
+        // One reconnect at a time. Disconnected and SocketClosed can both fire for a single
+        // drop, and two reconnects would leave two live clients delivering every push twice.
+        private int _reconnecting;
+
         public NativeFcmListener(Action<string> log) => _log = log;
 
         public bool IsRunning => _running;
@@ -130,12 +134,27 @@ namespace RustPlusDesk.Services
                     _log("[fcm-native] Listening for FCM Notifications");
                     Listening?.Invoke(this, EventArgs.Empty);
                 };
-                client.ErrorOccurred += (_, ex) => _log("[fcm-native:err] " + ex.Message);
+                client.ErrorOccurred += (_, ex) =>
+                {
+                    _log("[fcm-native:err] " + ex.Message);
+
+                    // A reset socket surfaces here and, on that path, without a following
+                    // Disconnected. Left alone the listener stays up with a dead socket and
+                    // silently stops delivering pushes until the app is restarted.
+                    if (LooksFatal(ex)) OnSocketDown();
+                };
                 client.PersistentIdReceived += (_, __) => SavePersistentIds();
                 client.Disconnected += (_, __) => OnSocketDown();
                 client.SocketClosed += (_, __) => OnSocketDown();
 
-                lock (_gate) _client = client;
+                // Hand the old client its retirement before replacing it. Otherwise its socket
+                // and handlers stay alive and keep driving reconnects of their own.
+                RawFcmClient? previous;
+                lock (_gate) { previous = _client; _client = client; }
+                if (previous is not null)
+                {
+                    try { await previous.DisposeAsync().ConfigureAwait(false); } catch { }
+                }
 
                 await client.ConnectAsync(ct).ConfigureAwait(false);
             }
@@ -154,14 +173,35 @@ namespace RustPlusDesk.Services
         }
 
         // Bounded auto-reconnect, mirroring the Node listener's restart-on-exit behaviour.
+        /// <summary>
+        /// Socket-level failures worth reconnecting for. Parse and config errors are not:
+        /// dropping the connection over those would turn one bad message into a reconnect loop.
+        /// </summary>
+        private static bool LooksFatal(Exception ex)
+        {
+            for (var e = ex; e is not null; e = e.InnerException!)
+            {
+                if (e is System.Net.Sockets.SocketException or System.IO.IOException
+                    or ObjectDisposedException) return true;
+            }
+            return false;
+        }
+
         private void OnSocketDown()
         {
+            // Single-flight: the first caller wins, later ones return immediately.
+            if (Interlocked.Exchange(ref _reconnecting, 1) == 1) return;
+
             var wasRunning = _running;
             _running = false;
             if (wasRunning) Stopped?.Invoke(this, EventArgs.Empty);
 
             var cts = _cts;
-            if (cts is null || cts.IsCancellationRequested) return;
+            if (cts is null || cts.IsCancellationRequested)
+            {
+                Interlocked.Exchange(ref _reconnecting, 0);
+                return;
+            }
 
             _ = Task.Run(async () =>
             {
@@ -174,6 +214,10 @@ namespace RustPlusDesk.Services
                     await ConnectAsync(creds!, cts.Token).ConfigureAwait(false);
                 }
                 catch { /* cancelled */ }
+                finally
+                {
+                    Interlocked.Exchange(ref _reconnecting, 0);
+                }
             });
         }
 
