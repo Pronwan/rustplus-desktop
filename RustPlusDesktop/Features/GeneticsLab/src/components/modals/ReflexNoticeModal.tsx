@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -24,30 +24,11 @@ const STORAGE_KEY = 'genetics_reflex_notice_dismissed';
 const REFLEX_COMMAND = 'graphics.reflexmode 2';
 
 export const ReflexNoticeModal: React.FC<{
-  open?: boolean;
-  onClose?: () => void;
-}> = ({ open: externalOpen, onClose: externalClose }) => {
-  const [internalOpen, setInternalOpen] = useState(false);
+  open: boolean;
+  onClose: () => void;
+}> = ({ open, onClose }) => {
   const [copied, setCopied] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(true);
-
-  useEffect(() => {
-    // If not controlled externally, check localStorage for one-time display
-    if (externalOpen === undefined) {
-      try {
-        const dismissed = localStorage.getItem(STORAGE_KEY);
-        if (!dismissed) {
-          // Show automatically on first visit after a slight delay
-          const timer = setTimeout(() => setInternalOpen(true), 600);
-          return () => clearTimeout(timer);
-        }
-      } catch {
-        // Tolerant to storage restrictions
-      }
-    }
-  }, [externalOpen]);
-
-  const isOpen = externalOpen !== undefined ? externalOpen : internalOpen;
 
   const handleClose = () => {
     if (dontShowAgain) {
@@ -55,11 +36,7 @@ export const ReflexNoticeModal: React.FC<{
         localStorage.setItem(STORAGE_KEY, 'true');
       } catch { }
     }
-    if (externalClose) {
-      externalClose();
-    } else {
-      setInternalOpen(false);
-    }
+    onClose();
   };
 
   const handleCopyCommand = async () => {
@@ -76,7 +53,7 @@ export const ReflexNoticeModal: React.FC<{
 
   return (
     <Dialog
-      open={isOpen}
+      open={open}
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
