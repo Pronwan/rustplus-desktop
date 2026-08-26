@@ -5940,4 +5940,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ConsoleHelperNotOnTop" xml:space="preserve">
     <value>Fenêtre normale — cliquez pour épingler au premier plan</value>
   </data>
+  <data name="OpenCloudPortal" xml:space="preserve">
+    <value>Ouvrir le portail Cloud</value>
+  </data>
 </root>

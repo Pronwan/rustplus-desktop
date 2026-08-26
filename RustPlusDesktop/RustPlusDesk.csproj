@@ -186,6 +186,7 @@
 	  <None Remove="Assets\Data\raid-data.json" />
 
 	  <None Remove="Assets\icons\discord.png" />
+	  <None Remove="Assets\icons\r+desktop-icon.png" />
 	  <None Remove="Assets\icq-message.wav" />
 	  <None Remove="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
 	  <None Remove="Assets\Images\5.5.0\Account-needed.png" />
@@ -545,6 +546,7 @@
     <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
     <EmbeddedResource Include="Assets\Data\raid-data.json" />
     <Resource Include="Assets\icons\discord.png" />
+    <Resource Include="Assets\icons\r+desktop-icon.png" />
     <Resource Include="Assets\icq-message.wav" />
     <Resource Include="Assets\Images\5.3.0\LoopAudio_StopLogic.png" />
     <Resource Include="Assets\Images\5.5.0\Account-needed.png" />

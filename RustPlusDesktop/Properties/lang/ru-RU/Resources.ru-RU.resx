@@ -5940,4 +5940,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ConsoleHelperNotOnTop" xml:space="preserve">
     <value>Обычное окно — нажмите, чтобы закрепить поверх</value>
   </data>
+  <data name="OpenCloudPortal" xml:space="preserve">
+    <value>Открыть облачный портал</value>
+  </data>
 </root>

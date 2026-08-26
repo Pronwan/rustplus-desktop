@@ -6015,4 +6015,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ConsoleHelperNotOnTop" xml:space="preserve">
     <value>Normales Fenster — zum Anheften klicken</value>
   </data>
+  <data name="OpenCloudPortal" xml:space="preserve">
+    <value>Cloud-Portal öffnen</value>
+  </data>
 </root>
