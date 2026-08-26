@@ -107,12 +107,21 @@ namespace RustPlusDesk.Services.Cloud
 
             var config = JObject.Parse(await File.ReadAllTextAsync(FcmSyncService.ConfigPath));
             config["alexa_pin"] = pin;
-            config["alexa_pin_expires"] = expiresUtc.ToString("O");
+            config["alexa_pin_expires"] = expiresUtc.ToString("yyyy-MM-ddTHH:mm:ssZ");
+
+            // The config is a Newtonsoft JObject, but CloudApiClient serialises with
+            // System.Text.Json. That combination silently destroys the payload: JObject looks
+            // like an IDictionary<string, JToken>, so every value is written as the empty array
+            // its JToken reflects to. The upload succeeded with 200 OK while the server stored
+            // {"alexa_pin":[], ...} - which is why a generated PIN was always rejected.
+            // Re-parsing into a JsonDocument hands System.Text.Json something it writes verbatim.
+            using var configJson = System.Text.Json.JsonDocument.Parse(
+                config.ToString(Newtonsoft.Json.Formatting.None));
 
             await CloudApiClient.CallApiAsync("me/fcm", HttpMethod.Put, payload: new
             {
                 steam_id = steamId,
-                fcm_config = config,
+                fcm_config = configJson.RootElement,
             });
 
             return true;
