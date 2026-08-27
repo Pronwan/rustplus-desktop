@@ -35,6 +35,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public bool CloudBackupEnabled { get; set; }
     public string? CurrentServerKey => _serverKey;
     public string? CurrentWipeKey => _wipeKey;
+    public ulong CurrentOwnSteamId => _ownSteamId;
     public DateTime? CurrentWipeStartedAtUtc => _wipeStartedAtUtc;
     public string? CurrentSessionId => _sessionId;
     public IReadOnlyCollection<ulong> TrackedPlayers => _engines.Keys.ToArray();
