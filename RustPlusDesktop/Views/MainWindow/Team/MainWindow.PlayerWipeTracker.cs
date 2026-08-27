@@ -43,6 +43,35 @@ public partial class MainWindow
         try { _playerWipeTracker.Disconnect(); } catch { }
     }
 
+    /// <summary>
+    /// Re-syncs the tracker with the current settings after the user flips the
+    /// setting mid-session. The session identity (server/wipe/session id and the
+    /// local Steam id) is otherwise only captured at connect time, so enabling the
+    /// tracker after connecting would leave it with no live session — or a session
+    /// whose own-Steam-id was still unresolved (0) at connect, which silently drops
+    /// every observation on the free plan. In those cases we rebuild the session.
+    /// </summary>
+    internal void RefreshPlayerWipeTrackerSession()
+    {
+        _playerWipeTracker.Enabled = Services.TrackingService.PlayerWipeTrackerEnabled;
+        _playerWipeTracker.CloudBackupEnabled = Services.TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+
+        if (!Services.TrackingService.PlayerWipeTrackerEnabled)
+            return;
+
+        // Only (re)establish while actually connected — otherwise the next connect
+        // will start the session as usual.
+        var connected = _vm?.Servers.Any(s => s.IsConnected || s.IsFullConnected) == true;
+        if (!connected)
+            return;
+
+        if (_playerWipeTracker.CurrentSessionId is null ||
+            (_playerWipeTracker.CurrentOwnSteamId == 0 && _mySteamId != 0))
+        {
+            StartPlayerWipeTrackerSession();
+        }
+    }
+
     private async Task DisposePlayerWipeTrackerAsync()
     {
         await _playerWipeTracker.DisposeAsync().ConfigureAwait(false);
@@ -52,6 +81,16 @@ public partial class MainWindow
     {
         if (!Services.TrackingService.PlayerWipeTrackerEnabled || _playerWipeTracker.CurrentSessionId is null)
             return;
+
+        // Self-heal the connect-time race: if the local Steam id wasn't resolved
+        // when the session started (own-id captured as 0), every observation is
+        // silently dropped on the free plan. Re-snapshot once the id is known.
+        if (_playerWipeTracker.CurrentOwnSteamId == 0 && _mySteamId != 0)
+        {
+            StartPlayerWipeTrackerSession();
+            if (_playerWipeTracker.CurrentSessionId is null)
+                return;
+        }
 
         _playerWipeTracker.Enabled = true;
         _playerWipeTracker.CloudBackupEnabled = Services.TrackingService.PlayerWipeTrackerCloudBackupEnabled;

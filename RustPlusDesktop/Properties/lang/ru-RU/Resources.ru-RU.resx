@@ -2877,7 +2877,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Расширенные Discord Настройки бота</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Сельское хозяйство и продовольствие</value>
@@ -3219,10 +3219,10 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Повторяющаяся цель</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>например ИМЯ2</value>
@@ -4179,7 +4179,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Данные 3D-карты</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Доступ отозван</value>
@@ -5942,5 +5942,14 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>Открыть облачный портал</value>
+  </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Требуется повторное сопряжение Rust+</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>Push-уведомления перестали приходить, и обновить их автоматически не удалось. Выполните повторное сопряжение, чтобы снова получать сопряжения и сигналы тревоги.</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>Сопрячь заново</value>
   </data>
 </root>

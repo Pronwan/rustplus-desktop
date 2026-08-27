@@ -2877,7 +2877,7 @@ Primero empareje este servidor.</value>
     <value>Configuración avanzada del bot Discord</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Agricultura y Alimentación</value>
@@ -3219,10 +3219,10 @@ Primero empareje este servidor.</value>
     <value>Objetivo duplicado</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>por ej. NOMBRE2</value>
@@ -4179,7 +4179,7 @@ Primero empareje este servidor.</value>
     <value>Datos de mapas 3D</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Acceso revocado</value>
@@ -5942,5 +5942,14 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   </data>
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>Abrir el portal Cloud</value>
+  </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Rust+ necesita vincularse de nuevo</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>Las notificaciones push han dejado de llegar y no se han podido renovar automáticamente. Vuelve a vincular para recibir emparejamientos y alarmas de nuevo.</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>Vincular de nuevo</value>
   </data>
 </root>

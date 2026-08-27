@@ -221,8 +221,8 @@
 
                         <ui:ToggleSwitch x:Name="ChkHideConsole" Content="{DynamicResource HideSystemConsole}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource HideConsoleToolTip}" />
                         <ui:ToggleSwitch x:Name="ChkCloudSync" Content="{DynamicResource CloudSync}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource CloudSyncDesc}" />
-                        <ui:ToggleSwitch x:Name="ChkPlayerWipeTracker" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
-                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloud" Content="Player Wipe Tracker cloud backup" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Uploads compact daily tracker documents only after you enable this setting." />
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeTracker" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloud" Content="Player Wipe Tracker cloud backup" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." />
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>

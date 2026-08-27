@@ -2874,7 +2874,7 @@ Please pair this server first.</value>
     <value>Advanced Discord Bot Settings</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Agriculture &amp; Food</value>
@@ -3216,10 +3216,10 @@ Please pair this server first.</value>
     <value>Duplicate target</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>e.g. NAME2</value>
@@ -4176,7 +4176,7 @@ Please pair this server first.</value>
     <value>3D Map Data</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Access Revoked</value>
@@ -5685,5 +5685,14 @@ You can find more information on the server's official website:
   </data>
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>Open the Cloud Portal</value>
+  </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Rust+ pairing needs renewing</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>Push notifications stopped arriving and could not be renewed automatically. Re-pair to receive pairings and alarms again.</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>Re-pair now</value>
   </data>
 </root>

@@ -608,7 +608,7 @@ Télécharger et installer maintenant ?</value>
     <value>Navire cargo</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Å’uf</value>
+    <value>Œuf</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
     <value>Ancrage du port</value>
@@ -5942,5 +5942,14 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   </data>
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>Ouvrir le portail Cloud</value>
+  </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Rust+ doit être ré-appairé</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>Les notifications push n'arrivent plus et n'ont pas pu être renouvelées automatiquement. Ré-appairez pour recevoir à nouveau les appairages et les alarmes.</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>Ré-appairer maintenant</value>
   </data>
 </root>

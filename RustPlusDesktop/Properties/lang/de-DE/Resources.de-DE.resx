@@ -2952,7 +2952,7 @@ Bitte koppeln Sie diesen Server zuerst.</value>
     <value>Erweiterte Discord Bot-Einstellungen</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€“</value>
+    <value>Ö</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Landwirtschaft und Ernährung</value>
@@ -3294,10 +3294,10 @@ Bitte koppeln Sie diesen Server zuerst.</value>
     <value>Doppeltes Ziel</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>z.B. NAME2</value>
@@ -4254,7 +4254,7 @@ Bitte koppeln Sie diesen Server zuerst.</value>
     <value>3D-Kartendaten</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Zugriff widerrufen</value>
@@ -6017,5 +6017,14 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>Cloud-Portal öffnen</value>
+  </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Rust+ muss neu gekoppelt werden</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>Es kommen keine Push-Benachrichtigungen mehr an, und die automatische Erneuerung war nicht möglich. Koppele neu, um wieder Pairings und Alarme zu erhalten.</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>Jetzt neu koppeln</value>
   </data>
 </root>

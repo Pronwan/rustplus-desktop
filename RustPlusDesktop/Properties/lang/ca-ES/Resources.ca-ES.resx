@@ -2859,7 +2859,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Configuració de bot avançada Discord.</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Agricultura i Alimentació</value>
@@ -3201,10 +3201,10 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Objectiu duplicat</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>p. ex. NOM2</value>
@@ -4161,7 +4161,7 @@ Si us plau, emparellar aquest servidor primer.</value>
     <value>Dades del mapa 3D</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Accés revocat</value>
