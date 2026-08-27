@@ -954,4 +954,13 @@
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>開啟雲端入口</value>
   </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Rust+ 需要重新配對</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>推播通知已停止送達，且無法自動更新。請重新配對以再次接收配對與警報。</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>立即重新配對</value>
+  </data>
 </root>

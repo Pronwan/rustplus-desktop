@@ -37,19 +37,41 @@
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v9.0.3 | Wipe Tracker Recording &amp; Dashboard Portal Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v9.0.3 | Pairing Reliability, Wipe Tracker &amp; Splash Refresh" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; "I Can't Pair Servers" Should Now Fix Itself:</Run>
+                                A push token can stop working while everything still looks healthy &#x2014; the connection is up and the stored expiry date is still days away, but pairings and alarms quietly never arrive. The only cure was Reset + Re-pair. The app now checks shortly after start whether notifications actually reach it, by sending itself one, and renews the registration on its own when they do not. No browser, no Steam login, nothing to click. If the renewal is not possible, a notification appears with a button that re-pairs for you.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Fewer Dropped Push Connections:</Run>
+                                The connection to Google's push servers sat silent for five minutes at a time, long enough for many home routers to quietly discard it. It is now kept alive every minute, which removes most of these drops &#x2014; along with the connection error that used to appear in the console after a router cleaned up the idle connection.
+                            </TextBlock>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Player Wipe Tracker Now Records When Enabled Mid-Session:</Run>
                                 Fixed an issue where enabling the Player Wipe Tracker in Settings while already connected would not start recording. The tracker session now re-syncs the moment the setting is toggled on.
                             </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Wipe Tracker No Longer Turns Itself Off:</Run>
+                                The tracker and its cloud backup are now controlled only by their own toggles, so changing another setting or reloading the settings panel can no longer switch them off behind your back.
+                            </TextBlock>
+
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Steam Identity Race Fix:</Run>
                                 The tracker now self-heals when your Steam ID resolves a moment after connecting, so observations are no longer silently dropped for the local player.
                             </TextBlock>
+
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Dashboard Portal Button:</Run>
                                 The Cloud Portal button in the top bar now opens your account dashboard directly at rustplusdesktop.cloud/dashboard.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Refreshed Splash Screen:</Run>
+                                A new startup splash with fresh artwork, a brighter progress sweep, and clearer status messages that tell you what the app is actually doing while it loads.
                             </TextBlock>
                         </StackPanel>
                     </Border>

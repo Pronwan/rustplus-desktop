@@ -5943,4 +5943,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="OpenCloudPortal" xml:space="preserve">
     <value>Открыть облачный портал</value>
   </data>
+  <data name="FcmRepairTitle" xml:space="preserve">
+    <value>Требуется повторное сопряжение Rust+</value>
+  </data>
+  <data name="FcmRepairMessage" xml:space="preserve">
+    <value>Push-уведомления перестали приходить, и обновить их автоматически не удалось. Выполните повторное сопряжение, чтобы снова получать сопряжения и сигналы тревоги.</value>
+  </data>
+  <data name="FcmRepairButton" xml:space="preserve">
+    <value>Сопрячь заново</value>
+  </data>
 </root>
