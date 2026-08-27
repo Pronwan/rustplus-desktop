@@ -67,12 +67,16 @@ public partial class MainWindow
         var repair = await FcmRepairService.TryRepairAsync(Log, ct).ConfigureAwait(false);
         if (repair.Outcome != FcmRepairService.RepairOutcome.Repaired)
         {
-            // Reset + Re-pair is the manual equivalent, and it needs the Steam login window, so it
-            // has to be the user's decision rather than something we spring on them.
+            // Re-pairing needs the Steam login window, so it stays the user's decision rather than
+            // something we spring on them.
             Log(repair.Outcome == FcmRepairService.RepairOutcome.NeedsFullRePair
-                ? "[fcm-health] Automatic renewal is not possible — please use Reset + Listen (re-pair)."
+                ? "[fcm-health] Automatic renewal is not possible — prompting for a re-pair."
                 : $"[fcm-health] Automatic renewal failed ({repair.Detail}).");
-            await Dispatcher.InvokeAsync(() => _vm.NotifyFcmChanged());
+            await Dispatcher.InvokeAsync(() =>
+            {
+                _vm.NotifyFcmChanged();
+                PromptForRePair();
+            });
             return false;
         }
 
@@ -97,8 +101,29 @@ public partial class MainWindow
             return true;
         }
 
-        Log($"[fcm-health] Still no push notifications after renewal ({again.Detail}). " +
-            "Please use Reset + Listen (re-pair).");
+        Log($"[fcm-health] Still no push notifications after renewal ({again.Detail}). Prompting for a re-pair.");
+        await Dispatcher.InvokeAsync(PromptForRePair);
         return false;
+    }
+
+    /// <summary>
+    /// Offers the one repair we cannot perform on the user's behalf, in the same corner as update
+    /// and alarm notifications. Pressing the button is the whole interaction — it does what the
+    /// Reset + Listen context-menu entry does, without asking a second time.
+    /// </summary>
+    private void PromptForRePair()
+    {
+        ShowActionSnackbar(
+            Properties.Resources.GetString("FcmRepairTitle"),
+            Properties.Resources.GetString("FcmRepairMessage"),
+            Properties.Resources.GetString("FcmRepairButton"),
+            () => _ = RePairFromPromptAsync(),
+            Wpf.Ui.Controls.ControlAppearance.Caution);
+    }
+
+    private async Task RePairFromPromptAsync()
+    {
+        if (await ResetPairingConfigAsync(stopListenerFirst: true).ConfigureAwait(true))
+            await StartPairingListenerUiAsync().ConfigureAwait(true);
     }
 }
