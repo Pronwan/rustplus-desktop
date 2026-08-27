@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RustPlusDesk"
-        Width="620" Height="380"
+        Width="688" Height="408"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -20,7 +20,7 @@
         <Storyboard x:Key="ProgressStory" RepeatBehavior="Forever">
             <DoubleAnimation Storyboard.TargetName="ProgressFill"
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                             From="-160" To="548" Duration="0:0:1.3">
+                             From="-160" To="568" Duration="0:0:1.3">
                 <DoubleAnimation.EasingFunction>
                     <SineEase EasingMode="EaseInOut" />
                 </DoubleAnimation.EasingFunction>
@@ -61,17 +61,21 @@
         </EventTrigger>
     </Window.Triggers>
 
-    <!-- Root card: rounded corners, hairline border, deep shadow -->
-    <Border x:Name="RootBorder" CornerRadius="16" Opacity="0" ClipToBounds="True"
-            BorderThickness="1" BorderBrush="#22FFFFFF">
+    <!-- Root card: square corners, soft drop shadow. The 24px window padding gives the
+         DropShadowEffect room to render so the card reads cleanly against bright
+         wallpapers (a borderless AllowsTransparency window has no native OS shadow). -->
+    <Border x:Name="RootBorder" Margin="24" Opacity="0" ClipToBounds="True">
         <Border.Effect>
-            <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10" Opacity="0.65" Direction="270" />
+            <DropShadowEffect Color="#000000" BlurRadius="28" ShadowDepth="6" Opacity="0.55" Direction="270" />
         </Border.Effect>
 
-        <Grid>
-            <!-- Background image (TitleScreen) -->
-            <Image Source="pack://application:,,,/Assets/TitleScreen-rust-plus-desktop.png"
-                   Stretch="UniformToFill" />
+        <Grid x:Name="CardRoot">
+            <!-- Background image (splash). The window matches the image's 16:9 aspect
+                 so UniformToFill fills the card without cropping any of the image.
+                 HighQuality scaling keeps the downscale from the 1672px source crisp. -->
+            <Image Source="pack://application:,,,/Assets/Images/splash-screen.png"
+                   Stretch="UniformToFill"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
 
             <!-- Legibility gradient -->
             <Border>
@@ -116,7 +120,7 @@
                     <Border Width="4" Height="34" CornerRadius="2"
                             Background="{StaticResource AccentBrush}"
                             VerticalAlignment="Center" Margin="0,0,14,0" />
-                    <TextBlock Text="Rust+ Desk"
+                    <TextBlock Text="Rust+ Desktop"
                                FontFamily="Segoe UI"
                                FontSize="30"
                                FontWeight="SemiBold"
@@ -128,7 +132,9 @@
                     </TextBlock>
                 </StackPanel>
 
-                <!-- Status row: pulsing dot + message -->
+                <!-- Status row: pulsing dot + message.
+                     Left margin 18 = accent stripe width (4) + its right margin (14), so the
+                     dot's left edge is flush with the "R" of the title, not the accent bar. -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="18,0,0,0">
                     <Ellipse x:Name="StatusDot" Width="7" Height="7"
                              Fill="{StaticResource AccentBrush}"
@@ -138,20 +144,32 @@
                                FontFamily="Segoe UI"
                                FontSize="13"
                                Foreground="#D9FFFFFF"
-                               VerticalAlignment="Center" />
+                               VerticalAlignment="Center">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.4" />
+                        </TextBlock.Effect>
+                    </TextBlock>
                 </StackPanel>
 
-                <!-- Progress track -->
+                <!-- Progress track: subtle fill + hairline outline so the full width
+                     (total loading span) is perceptible even when the fill is elsewhere. -->
                 <Border Grid.Row="4"
-                        Height="4"
-                        CornerRadius="2"
+                        Height="6"
+                        CornerRadius="3"
                         Background="#26FFFFFF"
+                        BorderThickness="1"
+                        BorderBrush="#3DFFFFFF"
                         ClipToBounds="True">
-                    <!-- Moving fill -->
+                    <!-- Moving fill: an indeterminate sweep (see ProgressStory) so the bar
+                         always reads as active even when load time varies. The accent glow
+                         makes the sweep shimmer like moving light. -->
                     <Border x:Name="ProgressFill"
-                            Width="160" Height="4"
-                            CornerRadius="2"
+                            Width="160" Height="6"
+                            CornerRadius="3"
                             HorizontalAlignment="Left">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#FFCE4022" BlurRadius="9" ShadowDepth="0" Opacity="0.65" />
+                        </Border.Effect>
                         <Border.RenderTransform>
                             <TranslateTransform X="-160" />
                         </Border.RenderTransform>
@@ -166,16 +184,8 @@
                     </Border>
                 </Border>
 
-                <!-- Footer: brand tag + version pill -->
+                <!-- Footer: version pill (brand tag removed as redundant with the title) -->
                 <Grid Grid.Row="6">
-                    <TextBlock Text="RUST+ DESKTOP"
-                               FontFamily="Segoe UI"
-                               FontSize="10"
-                               FontWeight="SemiBold"
-                               Foreground="#59FFFFFF"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center" />
-
                     <Border HorizontalAlignment="Right"
                             CornerRadius="10"
                             Background="#1AFFFFFF"
@@ -186,10 +196,19 @@
                                    Text="v0.0.0"
                                    FontFamily="Segoe UI"
                                    FontSize="11"
-                                   Foreground="#B3FFFFFF" />
+                                   Foreground="#B3FFFFFF">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#000000" BlurRadius="8" ShadowDepth="0" Opacity="0.4" />
+                            </TextBlock.Effect>
+                        </TextBlock>
                     </Border>
                 </Grid>
             </Grid>
+
+            <!-- Hairline border overlay: drawn on top so its 1px stroke sits inside
+                 the card without insetting the layers beneath it. -->
+            <Border BorderThickness="1" BorderBrush="#22FFFFFF"
+                    IsHitTestVisible="False" />
         </Grid>
     </Border>
 </Window>

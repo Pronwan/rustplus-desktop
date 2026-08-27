@@ -258,6 +258,7 @@
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
+	  <None Remove="Assets\Images\splash-screen.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Resource Include="Assets\icons\animat-Icons\chinook_animate.png" />

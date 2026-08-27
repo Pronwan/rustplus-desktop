@@ -108,10 +108,10 @@ public partial class App : Application
                 return;
             }
 
-            UpdateSplashStatus(splash, splashDispatcher, "Initializing…");
+            UpdateSplashStatus(splash, splashDispatcher, "Connecting to Rust+…");
             _ = Services.Cloud.CloudAuth.InitializeAsync();
 
-            UpdateSplashStatus(splash, splashDispatcher, "Setting up tray…");
+            UpdateSplashStatus(splash, splashDispatcher, "Preparing system tray…");
             SetupTrayIcon();
 
             if (TrackingService.IsBackgroundTrackingEnabled)
@@ -121,7 +121,7 @@ public partial class App : Application
             }
 
             // ── Load MainWindow invisibly on the main thread ─────────────────────────
-            UpdateSplashStatus(splash, splashDispatcher, "Loading app…");
+            UpdateSplashStatus(splash, splashDispatcher, "Loading your servers…");
 
             bool shouldShowMain = !isBackgroundArg
                 || !TrackingService.StartMinimizedEnabled
