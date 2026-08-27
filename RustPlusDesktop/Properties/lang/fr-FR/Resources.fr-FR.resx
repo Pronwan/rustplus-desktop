@@ -608,7 +608,7 @@ Télécharger et installer maintenant ?</value>
     <value>Navire cargo</value>
   </data>
   <data name="CargoSpawn" xml:space="preserve">
-    <value>Å’uf</value>
+    <value>Œuf</value>
   </data>
   <data name="CargoDock" xml:space="preserve">
     <value>Ancrage du port</value>

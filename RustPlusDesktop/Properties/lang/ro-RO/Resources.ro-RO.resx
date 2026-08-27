@@ -2859,7 +2859,7 @@ Vă rugăm mai întâi să asociați acest server.</value>
     <value>Avansate Discord Setări bot</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Agricultura și alimentația</value>
@@ -3201,10 +3201,10 @@ Vă rugăm mai întâi să asociați acest server.</value>
     <value>Țintă duplicat</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>de ex. NUME2</value>
@@ -4161,7 +4161,7 @@ Vă rugăm mai întâi să asociați acest server.</value>
     <value>Date de hartă 3D</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Acces revocat</value>

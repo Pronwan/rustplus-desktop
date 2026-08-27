@@ -2859,7 +2859,7 @@ Koppel deze server eerst.</value>
     <value>Geavanceerde Discord Bot-instellingen</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Landbouw en voeding</value>
@@ -3201,10 +3201,10 @@ Koppel deze server eerst.</value>
     <value>Dubbel doel</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>bijv. NAAM2</value>
@@ -4161,7 +4161,7 @@ Koppel deze server eerst.</value>
     <value>3D-kaartgegevens</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Toegang ingetrokken</value>
