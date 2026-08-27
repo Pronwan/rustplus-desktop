@@ -467,10 +467,23 @@ namespace RustPlusDesk.Services
         /// </summary>
         private sealed class RawFcmClient : RustPlusFcm
         {
+            /// <summary>
+            /// The library defaults to a five-minute heartbeat, which leaves the socket silent
+            /// long enough for a home router to drop its NAT mapping - every observed drop was
+            /// noticed exactly a multiple of five minutes after connecting. A minute of traffic
+            /// keeps the mapping alive and costs a few bytes. The Node listener avoided this a
+            /// different way, by turning on TCP keep-alive, which this library does not expose.
+            /// </summary>
+            private static readonly RustPlusFcmSocketOptions SocketOptions = new()
+            {
+                HeartbeatInterval = TimeSpan.FromSeconds(60),
+                InactivityTimeout = TimeSpan.FromMinutes(3),
+            };
+
             private readonly Action<FcmMessage> _onMessage;
 
             public RawFcmClient(Credentials credentials, ICollection<string>? persistentIds, Action<FcmMessage> onMessage)
-                : base(credentials, persistentIds) => _onMessage = onMessage;
+                : base(credentials, persistentIds, SocketOptions) => _onMessage = onMessage;
 
             protected override void ParseNotification(FcmMessage message) => _onMessage(message);
         }
