@@ -6810,6 +6810,54 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         ApplyShopDataAvailability();
     }
 
+    /// <summary>
+    /// A snackbar the user can act on, for the cases where telling them is not enough. It lingers
+    /// far longer than an ordinary toast, because it asks for a decision and eight seconds would
+    /// make it no better than the log line it replaces. Not indefinitely, though: the presenter
+    /// reads Timeout as a delay before hiding, so TimeSpan.Zero would dismiss it instantly.
+    /// </summary>
+    internal void ShowActionSnackbar(
+        string title, string message, string buttonText, Action onClick, WpfUi.ControlAppearance appearance)
+    {
+        if (RootSnackbar == null) return;
+
+        var panel = new System.Windows.Controls.StackPanel();
+        panel.Children.Add(new System.Windows.Controls.TextBlock
+        {
+            Text = message,
+            TextWrapping = System.Windows.TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 10),
+        });
+
+        var button = new WpfUi.Button
+        {
+            Content = buttonText,
+            Appearance = WpfUi.ControlAppearance.Primary,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+        panel.Children.Add(button);
+
+        var snackbar = new WpfUi.Snackbar(RootSnackbar)
+        {
+            Title = title,
+            Content = panel,
+            Appearance = appearance,
+            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.PlugDisconnected24),
+            Timeout = TimeSpan.FromMinutes(10),
+            MaxWidth = 500,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+
+        button.Click += (_, _) =>
+        {
+            // Through the presenter, which also cancels the pending timeout.
+            _ = RootSnackbar.HideCurrent();
+            onClick();
+        };
+
+        snackbar.Show();
+    }
+
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
         if (RootSnackbar == null) return;
