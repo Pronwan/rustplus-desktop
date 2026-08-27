@@ -911,8 +911,10 @@ namespace RustPlusDesk.Views
                 TrackingService.CloudSyncEnabled = ChkCloudSync.IsChecked == true;
             }
 
-            TrackingService.PlayerWipeTrackerEnabled = ChkPlayerWipeTracker.IsChecked == true;
-            TrackingService.PlayerWipeTrackerCloudBackupEnabled = ChkPlayerWipeCloud.IsChecked == true;
+            // NOTE: PlayerWipeTracker flags are intentionally NOT written here. They have a
+            // dedicated handler (OnPlayerWipeTrackerToggled) so the global setting can only
+            // change when the user clicks those toggles — never as a side effect of another
+            // setting changing or a panel reload firing this bulk rewrite from stale state.
 
             TrackingService.ListenForServerEvents = ChkListenForServerEvents.IsChecked == true;
             TrackingService.TrustOwnDetections = ChkTrustOwnDetections.IsChecked == true;
@@ -929,6 +931,20 @@ namespace RustPlusDesk.Views
 
             ParentWindow?.ApplySettings();
             ParentWindow?.UpdateCloudSyncUI();
+            ParentWindow?.RefreshPlayerWipeTrackerSession();
+        }
+
+        // Dedicated handler for the Player Wipe Tracker toggles. Kept separate from the bulk
+        // OnSettingChanged rewrite so these global flags only change when the user actually
+        // clicks the toggles — never as a side effect of another setting or a panel reload.
+        // This is why the tracker no longer switches itself off on wipe/server changes.
+        private void OnPlayerWipeTrackerToggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            TrackingService.PlayerWipeTrackerEnabled = ChkPlayerWipeTracker.IsChecked == true;
+            TrackingService.PlayerWipeTrackerCloudBackupEnabled = ChkPlayerWipeCloud.IsChecked == true;
+
             ParentWindow?.RefreshPlayerWipeTrackerSession();
         }
 
