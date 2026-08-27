@@ -64,6 +64,10 @@ public partial class MainWindow
 
         Log($"[fcm-health] Push notifications are not arriving ({report.Detail}). Renewing the registration …");
 
+        // The renewal ends in a listener restart, which has no business landing in the middle of a
+        // connect. Same wait the full connect already does before claiming the socket.
+        await WaitForSoftConnectAsync(Log).ConfigureAwait(false);
+
         var repair = await FcmRepairService.TryRepairAsync(Log, ct).ConfigureAwait(false);
         if (repair.Outcome != FcmRepairService.RepairOutcome.Repaired)
         {
@@ -104,6 +108,29 @@ public partial class MainWindow
         Log($"[fcm-health] Still no push notifications after renewal ({again.Detail}). Prompting for a re-pair.");
         await Dispatcher.InvokeAsync(PromptForRePair);
         return false;
+    }
+
+    /// <summary>
+    /// Holds off while a soft-connect is running. The flag lives on the UI thread, so it is read
+    /// there. Bounded, and deliberately generous: unlike a user-initiated connect, nothing here is
+    /// waiting on us, and giving up early would defeat the point of waiting at all.
+    /// </summary>
+    private async Task WaitForSoftConnectAsync(Action<string> log)
+    {
+        if (!await Dispatcher.InvokeAsync(() => _isSoftConnecting)) return;
+
+        log("[fcm-health] Soft-connect in progress, holding the renewal back …");
+
+        var waited = 0;
+        while (waited < 15000 && await Dispatcher.InvokeAsync(() => _isSoftConnecting))
+        {
+            await Task.Delay(250).ConfigureAwait(false);
+            waited += 250;
+        }
+
+        log(await Dispatcher.InvokeAsync(() => _isSoftConnecting)
+            ? "[fcm-health] Soft-connect is taking too long. Renewing anyway."
+            : "[fcm-health] Soft-connect finished, continuing.");
     }
 
     /// <summary>

@@ -33,7 +33,27 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v9.0.2 HOTFIX PATCH NOTES -->
+                    <!-- NEW v9.0.3 HOTFIX PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.0.3 | Pairing Reliability" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; "I Can't Pair Servers" Should Now Fix Itself:</Run>
+                                A push token can stop working while everything still looks healthy &#x2014; the connection is up and the stored expiry date is still days away, but pairings and alarms quietly never arrive. The only cure was Reset + Re-pair. The app now checks shortly after start whether notifications actually reach it, by sending itself one, and renews the registration on its own when they do not. No browser, no Steam login, nothing to click. If the renewal is not possible, a notification appears with a button that re-pairs for you.
+                            </TextBlock>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Fewer Dropped Push Connections:</Run>
+                                The connection to Google's push servers sat silent for five minutes at a time, long enough for many home routers to quietly discard it. It is now kept alive every minute, which removes most of these drops &#x2014; along with the connection error that used to appear in the console after a router cleaned up the idle connection.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+
+                    <!-- ============================================== -->
+                    <!-- v9.0.2 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
