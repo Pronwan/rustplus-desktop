@@ -203,8 +203,10 @@ namespace RustPlusDesk.Services
 
         private void OnSocketDown()
         {
-            // Single-flight: the first caller wins, later ones return immediately.
-            if (Interlocked.Exchange(ref _reconnecting, 1) == 1) return;
+            // Single-flight: the first caller wins, later ones return immediately. Claimed only
+            // when the flag is still clear, so the guard can be checked exactly once - taking it
+            // unconditionally here and testing it again below would block the reconnect forever.
+            if (Interlocked.CompareExchange(ref _reconnecting, 1, 0) != 0) return;
 
             var wasRunning = _running;
             _running = false;
@@ -216,9 +218,6 @@ namespace RustPlusDesk.Services
                 Interlocked.Exchange(ref _reconnecting, 0);
                 return;
             }
-
-            // Debounce so Disconnected + SocketClosed don't spawn duplicate reconnect tasks
-            if (Interlocked.CompareExchange(ref _reconnecting, 1, 0) != 0) return;
 
             _ = Task.Run(async () =>
             {
