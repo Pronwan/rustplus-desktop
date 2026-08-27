@@ -2859,7 +2859,7 @@ Najpierw sparuj ten serwer.</value>
     <value>Zaawansowane Discord Ustawienia bota</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Rolnictwo i żywność</value>
@@ -3201,10 +3201,10 @@ Najpierw sparuj ten serwer.</value>
     <value>Zduplikowany cel</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ”·</value>
+    <value>🔷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>np. NAZWA2</value>

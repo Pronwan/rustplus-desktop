@@ -606,7 +606,7 @@ namespace RustPlusDesk.Properties {
         public static string TrackingGuideEnglishOnlyNotice => GetString("TrackingGuideEnglishOnlyNotice");
         
         /// <summary>
-        ///   Looks up a localized string similar to Close this window at any time â€” you can reopen it with the  â“ How to Track  button..
+        ///   Looks up a localized string similar to Close this window at any time — you can reopen it with the  ❓ How to Track  button..
         /// </summary>
         public static string HowToTrackCloseHint => GetString("HowToTrackCloseHint");
 

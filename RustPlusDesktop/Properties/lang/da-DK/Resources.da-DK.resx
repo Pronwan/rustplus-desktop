@@ -2859,7 +2859,7 @@ Venligst parre denne server først.</value>
     <value>Avanceret Discord Botindstillinger</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>Landbrug &amp; Fødevarer</value>
@@ -3201,10 +3201,10 @@ Venligst parre denne server først.</value>
     <value>Dublet mål</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>f.eks. NAVN2</value>
@@ -4161,7 +4161,7 @@ Venligst parre denne server først.</value>
     <value>3D kortdata</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>Adgang tilbagekaldt</value>

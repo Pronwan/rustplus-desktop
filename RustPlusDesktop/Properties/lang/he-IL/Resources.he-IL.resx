@@ -2859,7 +2859,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>מתקדמות Discord הגדרות בוט</value>
   </data>
   <data name="UiÃƒâ" xml:space="preserve">
-    <value>Ãƒâ€”</value>
+    <value>×</value>
   </data>
   <data name="UiAgricultureFood" xml:space="preserve">
     <value>חקלאות ומזון</value>
@@ -3201,10 +3201,10 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>יעד כפול</value>
   </data>
   <data name="UiÐŸ" xml:space="preserve">
-    <value>ðŸ’¤</value>
+    <value>💤</value>
   </data>
   <data name="UiÐŸ2" xml:space="preserve">
-    <value>ðŸ“·</value>
+    <value>📷</value>
   </data>
   <data name="UiEGNAME2" xml:space="preserve">
     <value>למשל NAME2</value>
@@ -4161,7 +4161,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>נתוני מפה תלת מימדיים</value>
   </data>
   <data name="CodeUiÃÂÂ" xml:space="preserve">
-    <value>Ã¢â‚¬Â¦</value>
+    <value>…</value>
   </data>
   <data name="CodeUiAccessRevoked" xml:space="preserve">
     <value>הגישה בוטלה</value>
