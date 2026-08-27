@@ -929,6 +929,7 @@ namespace RustPlusDesk.Views
 
             ParentWindow?.ApplySettings();
             ParentWindow?.UpdateCloudSyncUI();
+            ParentWindow?.RefreshPlayerWipeTrackerSession();
         }
 
         private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)

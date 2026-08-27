@@ -53,7 +53,6 @@ namespace RustPlusDesk.Services
         private RawFcmClient? _client;
         private List<string>? _persistentIds;
         private volatile bool _running;
-        private int _reconnecting;
 
         // De-duplicates the same pairing bounced twice in quick succession, matching the
         // Node listener's 20-second window.

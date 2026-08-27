@@ -7370,7 +7370,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         try
         {
-            Process.Start(new ProcessStartInfo("https://rustplusdesktop.cloud") { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo("https://rustplusdesktop.cloud/dashboard") { UseShellExecute = true });
         }
         catch (Exception ex)
         {

@@ -33,7 +33,29 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v9.0.2 HOTFIX PATCH NOTES -->
+                    <!-- NEW v9.0.3 HOTFIX PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.0.3 | Wipe Tracker Recording &amp; Dashboard Portal Hotfix" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Player Wipe Tracker Now Records When Enabled Mid-Session:</Run>
+                                Fixed an issue where enabling the Player Wipe Tracker in Settings while already connected would not start recording. The tracker session now re-syncs the moment the setting is toggled on.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Steam Identity Race Fix:</Run>
+                                The tracker now self-heals when your Steam ID resolves a moment after connecting, so observations are no longer silently dropped for the local player.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Dashboard Portal Button:</Run>
+                                The Cloud Portal button in the top bar now opens your account dashboard directly at rustplusdesktop.cloud/dashboard.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- v9.0.2 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
@@ -55,7 +77,6 @@
                             </TextBlock>
                         </StackPanel>
                     </Border>
-
 
                     <!-- ============================================== -->
                     <!-- v9.0.1 HOTFIX PATCH NOTES -->
