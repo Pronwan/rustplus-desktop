@@ -69,7 +69,7 @@ namespace RustPlusDesk.Services
 
         public bool IsConfigured => File.Exists(ConfigPath) && new FileInfo(ConfigPath).Length > 50;
 
-        private static string ConfigPath => Path.Combine(
+        internal static string ConfigPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RustPlusDesk", "rustplusjs-config.json");
 
@@ -250,6 +250,10 @@ namespace RustPlusDesk.Services
             {
                 var data = message.Data;
                 var body = data.Body;
+
+                // Our own probe coming back. Claimed first so it can never be mistaken for a
+                // pairing, an alarm, or an unhandled channel.
+                if (FcmSelfTestService.TryConsume(data.Title)) return;
 
                 // Offline death is title-driven and not tied to a single channel.
                 var deathMatch = DeathTitleRegex.Match(data.Title ?? string.Empty);
@@ -436,30 +440,8 @@ namespace RustPlusDesk.Services
         /// Reads rustplusjs-config.json, injects issue_date / expiry_date / steam_id, and writes
         /// it back — same shape the Node path persists, so the rest of the app is unaffected.
         /// </summary>
-        private void EnrichFcmConfig(DateTime issuedAt, DateTime expiresAt, string? steamId)
-        {
-            try
-            {
-                if (!File.Exists(ConfigPath)) return;
-                var json = File.ReadAllText(ConfigPath);
-                using var doc = JsonDocument.Parse(json);
-                using var ms = new MemoryStream();
-                using var wtr = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true });
-                wtr.WriteStartObject();
-                foreach (var prop in doc.RootElement.EnumerateObject()) prop.WriteTo(wtr);
-                wtr.WriteString("steam_id", steamId ?? "");
-                wtr.WriteString("issue_date", issuedAt.ToString("o"));
-                wtr.WriteString("expiry_date", expiresAt.ToString("o"));
-                wtr.WriteEndObject();
-                wtr.Flush();
-                File.WriteAllBytes(ConfigPath, ms.ToArray());
-                _ = FcmSyncService.SyncFcmCredentialsAsync();
-            }
-            catch (Exception ex)
-            {
-                _log($"[fcm-native] could not enrich config: {ex.Message}");
-            }
-        }
+        private void EnrichFcmConfig(DateTime issuedAt, DateTime expiresAt, string? steamId) =>
+            NativeFcmRegistrationService.StampConfigMetadata(ConfigPath, issuedAt, expiresAt, steamId, _log);
 
         /// <summary>
         /// Subclasses RustPlusFcm so we receive the fully-typed <see cref="FcmMessage"/> directly

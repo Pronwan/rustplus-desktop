@@ -100,7 +100,7 @@ namespace RustPlusDesk.Services
         /// <c>PushReceiverClient</c> is given by the original <c>fcm-register</c>. steam_id and
         /// issue/expiry dates are added afterwards by the caller (EnrichFcmConfig).
         /// </summary>
-        private static void WriteNodeCompatibleConfig(string configPath, Credentials credentials, string rustPlusAuthToken)
+        internal static void WriteNodeCompatibleConfig(string configPath, Credentials credentials, string rustPlusAuthToken)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(configPath)!);
 
@@ -124,6 +124,37 @@ namespace RustPlusDesk.Services
 
             var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(configPath, json);
+        }
+
+        /// <summary>
+        /// Adds steam_id / issue_date / expiry_date to an existing config and pushes the result to
+        /// the cloud. Split out from the listener so the repair path stamps its renewed credentials
+        /// exactly the way a fresh registration does.
+        /// </summary>
+        internal static void StampConfigMetadata(
+            string configPath, DateTime issuedAt, DateTime expiresAt, string? steamId, Action<string> log)
+        {
+            try
+            {
+                if (!File.Exists(configPath)) return;
+                var json = File.ReadAllText(configPath);
+                using var doc = JsonDocument.Parse(json);
+                using var ms = new MemoryStream();
+                using var wtr = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true });
+                wtr.WriteStartObject();
+                foreach (var prop in doc.RootElement.EnumerateObject()) prop.WriteTo(wtr);
+                wtr.WriteString("steam_id", steamId ?? "");
+                wtr.WriteString("issue_date", issuedAt.ToString("o"));
+                wtr.WriteString("expiry_date", expiresAt.ToString("o"));
+                wtr.WriteEndObject();
+                wtr.Flush();
+                File.WriteAllBytes(configPath, ms.ToArray());
+                _ = FcmSyncService.SyncFcmCredentialsAsync();
+            }
+            catch (Exception ex)
+            {
+                log($"[fcm-native] could not enrich config: {ex.Message}");
+            }
         }
 
         /// <summary>Binds a loopback TCP socket to port 0 to obtain a free port for the Steam login callback.</summary>

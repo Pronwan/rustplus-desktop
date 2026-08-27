@@ -725,6 +725,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             _vm.IsPairingBusy = true; // Update UI button state
             TxtPairingState.Text = "";
             UpdatePairingGuideSnackbar();
+            ScheduleFcmHealthCheck();
         }));
         _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
