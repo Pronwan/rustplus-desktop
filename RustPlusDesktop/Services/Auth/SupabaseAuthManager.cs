@@ -416,6 +416,11 @@ namespace RustPlusDesk.Services.Auth
         {
             _keepAliveTimer ??= new System.Threading.Timer(async _ =>
             {
+                // A soft upgrade block left this timer running precisely so it can detect the
+                // cooldown lapse and bring the torn-down cloud services back without a restart.
+                if (_cloudSuspendedForUpgrade && !IsUpgradeRequiredSnackbarShown)
+                    ResumeCloudAfterUpgradeCooldown();
+
                 if (Cloud.CloudAuth.IsAuthenticated)
                 {
                     try { await EnsureFreshSessionAsync(); } catch { }
@@ -1755,11 +1760,54 @@ namespace RustPlusDesk.Services.Auth
             DataManager.LoadCache<UpgradeRequiredCache>(UpgradeRequiredCacheKey);
         private static readonly object UpgradeRequirementLock = new();
 
-        public static bool IsUpgradeRequiredSnackbarShown { get; private set; } =
-            CloudTrafficPolicy.IsUpgradeBlockedVersion(
-                CachedUpgradeRequirement?.MinimumVersion,
-                CachedUpgradeRequirement?.ClientVersion,
+        /// <summary>How long an ambiguous (no concrete minimum) upgrade_required signal
+        /// suppresses cloud traffic before the app retries. A genuine below-minimum block
+        /// ignores this and holds for the whole session — retrying can never succeed.</summary>
+        private static readonly TimeSpan UpgradeRetryCooldown = TimeSpan.FromMinutes(5);
+
+        /// <summary>The running build is genuinely below the server's minimum version.
+        /// Retrying is futile, so this holds until the app is updated/restarted.</summary>
+        private static bool _upgradeHardBlocked = RevalidateCachedUpgradeRequirement();
+
+        /// <summary>Suppression window for a transient upgrade_required with no comparable
+        /// minimum. Once it lapses the next cloud call is allowed through, so the backend
+        /// gets a fresh chance to confirm or clear the requirement without a restart.</summary>
+        private static DateTime? _upgradeSoftBlockedUntilUtc;
+
+        /// <summary>
+        /// True while cloud traffic should be suppressed for a required upgrade. A hard
+        /// (below-minimum) block holds for the session; a soft (transient) block only holds
+        /// until <see cref="UpgradeRetryCooldown"/> lapses, after which traffic retries.
+        /// </summary>
+        public static bool IsUpgradeRequiredSnackbarShown =>
+            _upgradeHardBlocked ||
+            (_upgradeSoftBlockedUntilUtc is { } until && DateTime.UtcNow < until);
+
+        /// <summary>
+        /// Decide, at launch, whether a persisted <c>upgrade_required</c> flag should still
+        /// block cloud traffic. A stale cache must never latch a rebuilt or test build: the
+        /// block is only honoured when the cache carries a concrete minimum version this build
+        /// is genuinely below. Otherwise the cache is treated as stale, deleted from disk, and
+        /// the app starts unblocked so the live handshake can re-assert the requirement if it
+        /// still applies.
+        /// </summary>
+        private static bool RevalidateCachedUpgradeRequirement()
+        {
+            var cache = CachedUpgradeRequirement;
+            if (cache == null) return false;
+
+            bool stillBlocked = CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion(
+                cache.MinimumVersion,
                 Helpers.VersionHelper.GetClientVersion());
+
+            if (!stillBlocked)
+            {
+                CachedUpgradeRequirement = null;
+                DataManager.DeleteCache(UpgradeRequiredCacheKey);
+            }
+
+            return stillBlocked;
+        }
 
         private static readonly HttpClient Http = new();
 
@@ -2001,6 +2049,7 @@ namespace RustPlusDesk.Services.Auth
 
         private static void CacheUpgradeRequirement(JsonElement root)
         {
+            bool hardBlock;
             lock (UpgradeRequirementLock)
             {
                 if (IsUpgradeRequiredSnackbarShown) return;
@@ -2018,16 +2067,67 @@ namespace RustPlusDesk.Services.Auth
                 };
 
                 DataManager.SaveCache(UpgradeRequiredCacheKey, CachedUpgradeRequirement);
-                IsUpgradeRequiredSnackbarShown = true;
+
+                // A concrete minimum this build is below can never be satisfied by retrying,
+                // so it holds for the session. Anything else is treated as transient and only
+                // suppresses cloud traffic for UpgradeRetryCooldown before the app retries.
+                hardBlock = CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion(
+                    CachedUpgradeRequirement.MinimumVersion,
+                    Helpers.VersionHelper.GetClientVersion());
+
+                if (hardBlock)
+                    _upgradeHardBlocked = true;
+                else
+                    _upgradeSoftBlockedUntilUtc = DateTime.UtcNow + UpgradeRetryCooldown;
+
+                _cloudSuspendedForUpgrade = true;
             }
 
-            _keepAliveTimer?.Dispose();
-            _keepAliveTimer = null;
-            _profileUpdateTimer?.Dispose();
-            _profileUpdateTimer = null;
+            // Tear down the heavier realtime services either way. RealtimeClient self-heals
+            // (its loop keeps retrying and succeeds once the block lifts); TeamSync and the
+            // Discord listener are resurrected by ResumeCloudAfterUpgradeCooldown when a soft
+            // block lapses. On a hard block the periodic timers are stopped for the session;
+            // on a soft block the keepalive timer is left running so it can drive the resume.
             TeamSyncWebSocketService.Shutdown();
             DiscordBotListenerService.Instance.StopListening();
+
+            if (hardBlock)
+            {
+                _keepAliveTimer?.Dispose();
+                _keepAliveTimer = null;
+                _profileUpdateTimer?.Dispose();
+                _profileUpdateTimer = null;
+            }
+
             ShowUpgradeRequiredWarning();
+        }
+
+        /// <summary>Set while cloud services are torn down for a soft (transient) upgrade
+        /// block, so the keepalive timer knows to resurrect them once the cooldown lapses.</summary>
+        private static volatile bool _cloudSuspendedForUpgrade;
+
+        /// <summary>Raised on the pool thread when a soft upgrade block lapses and cloud
+        /// traffic resumes, so UI-side timers and watches (cloud sync, team-master, overlay
+        /// polling) can be restarted by the window.</summary>
+        public static event Action? UpgradeBlockLifted;
+
+        /// <summary>
+        /// Bring cloud services back after a soft upgrade block lapses. Re-initialises the
+        /// realtime team-sync connection and signals the window to restart its cloud timers
+        /// and watches (which in turn re-establishes the Discord listener via team-master
+        /// state). No-ops if the block is still in force or was never a soft block.
+        /// </summary>
+        private static void ResumeCloudAfterUpgradeCooldown()
+        {
+            if (!_cloudSuspendedForUpgrade || IsUpgradeRequiredSnackbarShown) return;
+            _cloudSuspendedForUpgrade = false;
+
+            AppendLog("[Cloud] Upgrade cooldown lapsed — resuming cloud services.");
+            try { TeamSyncWebSocketService.Initialize(); }
+            catch (Exception ex) { AppendLog($"[Cloud] TeamSync resume failed: {ex.Message}"); }
+
+            try { UpgradeBlockLifted?.Invoke(); }
+            catch (Exception ex) { AppendLog($"[Cloud] Cloud resume handler failed: {ex.Message}"); }
         }
 
         private static string GetMinimumVersion(JsonElement root)
