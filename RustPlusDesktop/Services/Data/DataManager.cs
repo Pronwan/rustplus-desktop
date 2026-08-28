@@ -184,5 +184,21 @@ namespace RustPlusDesk.Services.Data
                 }
             }
         }
+
+        public static void DeleteCache(string key)
+        {
+            lock (FileLock)
+            {
+                try
+                {
+                    var path = Path.Combine(CacheDir, key + ".json");
+                    if (File.Exists(path)) File.Delete(path);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"DeleteCache Error ({key}): {ex.Message}");
+                }
+            }
+        }
     }
 }

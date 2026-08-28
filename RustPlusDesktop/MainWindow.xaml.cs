@@ -297,6 +297,29 @@ public partial class MainWindow : WpfUi.FluentWindow
         StopTeamFeatureMasterWatch();
     }
 
+    /// <summary>
+    /// Mirror of <see cref="StopCloudTrafficForUpgrade"/>: restart the window-side cloud
+    /// timers and watches once a soft (transient) upgrade block lapses. Raised from
+    /// <see cref="Services.Auth.SupabaseAuthManager.UpgradeBlockLifted"/> on a pool thread,
+    /// so it marshals to the UI thread. Re-arming the team-master watch re-establishes the
+    /// Discord listener via its normal team-state path; overlay polling resumes only if the
+    /// overlay tools are currently shown.
+    /// </summary>
+    private void ResumeCloudTrafficAfterUpgrade()
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            _ = Dispatcher.BeginInvoke(new Action(ResumeCloudTrafficAfterUpgrade));
+            return;
+        }
+
+        AppendLog("[upgrade] Cooldown lapsed — resuming cloud sync, team-master watch and overlay polling.");
+        StartCloudSyncTimer();
+        UpdateTeamFeatureMasterWatch();
+        if (_overlayToolsVisible)
+            StartOverlayPollTimer();
+    }
+
     private void StartCloudSyncTimer()
     {
         if (_cloudSyncTimer == null)
@@ -412,6 +435,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         InitializeComponent();
         MainTabs.SelectedItem = DevicesTabItem;
         Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
+        Services.Auth.SupabaseAuthManager.UpgradeBlockLifted += ResumeCloudTrafficAfterUpgrade;
         CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
         StateChanged += (_, _) =>
         {
@@ -6917,6 +6941,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             btn.IsEnabled = false;
             try
             {
+                // Always resolve the download through the in-app auto-updater
+                // (Velopack, GitHub Releases fallback) and download it here on click.
+                // The backend's upgrade_url is intentionally not used to launch a
+                // browser — the required build is fetched and applied in-app instead.
                 var latestInfo = await _updateService.GetLatestReleaseAsync();
                 if (latestInfo != null && !string.IsNullOrEmpty(latestInfo.Value.downloadUrl))
                 {
@@ -6928,27 +6956,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(upgradeUrl) { UseShellExecute = true });
-                    if (snackbar != null)
-                    {
-                        snackbar.Visibility = Visibility.Collapsed;
-                    }
+                    // No release could be resolved to download. Keep the notice up and
+                    // let the user retry rather than sending them to the response URL.
+                    AppendLog("[upgrade] Required update could not be resolved via auto-update. Please try again.");
+                    ShowInfoSnackbar(
+                        Properties.Resources.GetString("UpdateTitle"),
+                        Properties.Resources.GetString("CodeUiCouldNotCheckForUpdates"),
+                        WpfUi.ControlAppearance.Danger);
+                    btn.IsEnabled = true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                try
-                {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(upgradeUrl) { UseShellExecute = true });
-                    if (snackbar != null)
-                    {
-                        snackbar.Visibility = Visibility.Collapsed;
-                    }
-                }
-                catch { /* ignore */ }
-            }
-            finally
-            {
+                AppendLog("[upgrade] Auto-update download failed: " + ex.Message);
+                ShowInfoSnackbar(
+                    Properties.Resources.GetString("UpdateTitle"),
+                    string.Format(Properties.Resources.GetString("FormatDownloadFailed"), ex.Message),
+                    WpfUi.ControlAppearance.Danger);
                 btn.IsEnabled = true;
             }
         };
@@ -7704,8 +7728,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
 
+            // An update was found: start the download immediately and auto-install when
+            // it finishes. No confirmation prompt — the user clicked check, and a found
+            // update is downloaded and applied on completion.
             if (string.IsNullOrWhiteSpace(dlUrl))
             {
+                // Nothing downloadable was resolved (e.g. the installer asset is missing
+                // from the GitHub fallback). Offer the releases page rather than failing
+                // silently, since there is no URL to auto-download from.
+                AppendLog($"Update {tag}{sizeStr} found, but no downloadable installer could be resolved.");
                 var open = System.Windows.MessageBox.Show(
                     $"New version available: {tag}{sizeStr}\nOpen Releases page?",
                     "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -7714,12 +7745,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 return;
             }
 
-            var ask = System.Windows.MessageBox.Show(
-                $"New version available: {tag}{sizeStr}\nDownload and install now?",
-                "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (ask != MessageBoxResult.Yes) return;
-
+            AppendLog($"Update {tag}{sizeStr} found. Downloading and installing when ready…");
             _lastDownloadUrl = dlUrl;
             _lastDownloadTag = tag;
 

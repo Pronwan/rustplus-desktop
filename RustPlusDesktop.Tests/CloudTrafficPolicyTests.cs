@@ -33,4 +33,23 @@ public class CloudTrafficPolicyTests
         Assert.IsTrue(CloudTrafficPolicy.IsUpgradeBlockedVersion("7.2.0", "7.1.0", "7.1.5"));
         Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedVersion("7.2.0", "7.1.0", "7.2.0"));
     }
+
+    [TestMethod]
+    public void UpgradeBlockByMinimum_OnlyHonoursConcreteMinimum()
+    {
+        // Genuine "below the minimum" still blocks until the build is updated.
+        Assert.IsTrue(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion("7.2.0", "7.1.5"));
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion("7.2.0", "7.2.0"));
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion("7.2.0", "7.3.0"));
+
+        // A stale cache with no comparable minimum must NOT latch the current build —
+        // this is the exact-version fallback that permanently blocked test/rebuilt
+        // builds, and it is deliberately absent here.
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion(null, "7.1.0"));
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion("", "7.1.0"));
+        Assert.IsFalse(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion("not-a-version", "7.1.0"));
+
+        // Version prefixes/suffixes are tolerated the same way the caching path emits them.
+        Assert.IsTrue(CloudTrafficPolicy.IsUpgradeBlockedByMinimumVersion("v7.2.0", "7.1.0-beta"));
+    }
 }
