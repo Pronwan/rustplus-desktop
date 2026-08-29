@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
 using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
@@ -4436,10 +4437,18 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         return IsAccessDeniedError(ex.Message) || IsAccessDeniedError(ex.ToString());
     }
 
+    /// <summary>
+    /// 418 as a standalone number, never as digits inside a longer one. Bare "418" also occurs
+    /// in the middle of entity ids, ports and Steam ids, and a Steam id is the same on every
+    /// server — so one unrelated failure could brand the whole list "re-pair needed" at once.
+    /// The lookarounds keep "status code '418'" and "HTTP 418" while rejecting "1234187".
+    /// </summary>
+    private static readonly Regex StandaloneTeapot = new(@"(?<!\d)418(?!\d)", RegexOptions.Compiled);
+
     public static bool IsAccessDeniedError(string? message)
     {
         if (string.IsNullOrWhiteSpace(message)) return false;
-        if (message.Contains("418")) return true;
+        if (StandaloneTeapot.IsMatch(message)) return true;
         if (message.Contains("Access Denied", StringComparison.OrdinalIgnoreCase)) return true;
         if (message.Contains("Zugriff verweigert", StringComparison.OrdinalIgnoreCase)) return true;
         if (message.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase)) return true;
