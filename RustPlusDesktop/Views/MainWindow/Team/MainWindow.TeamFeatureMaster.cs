@@ -455,16 +455,13 @@ public partial class MainWindow
         if (_playMasterOfferSound)
             PlayChatMasterSound();
 
-        if (RootSnackbar == null) return;
-
-        var snackbar = new WpfUi.Snackbar(RootSnackbar)
+        var item = new Controls.ToastItem
         {
             Title = TeamFeatureText("ChatFeatureMasterAssignedTitle", "You are Chat Master"),
-            Appearance = WpfUi.ControlAppearance.Success,
-            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
+            Icon = WpfUi.SymbolRegular.Info24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Success),
+            MaxCardWidth = 380,
             Timeout = TimeSpan.FromSeconds(10),
-            MaxWidth = 380,
-            HorizontalAlignment = HorizontalAlignment.Right
         };
 
         var stack = new StackPanel { Orientation = Orientation.Vertical };
@@ -526,6 +523,8 @@ public partial class MainWindow
                 remainingSeconds);
         };
         countdownTimer.Start();
+        // Stop the countdown whenever the toast leaves, however it goes away.
+        item.Closed = () => countdownTimer.Stop();
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
         var deny = new WpfUi.Button
@@ -539,8 +538,7 @@ public partial class MainWindow
             _declinedMasterUntilUtc = DateTime.UtcNow.AddMinutes(5);
             _isChatFeatureMaster = false;
             ApplyChatFeatureMasterUiState();
-            countdownTimer.Stop();
-            snackbar.Visibility = Visibility.Collapsed;
+            DismissToast(item);
             _ = SyncTeamFeatureMasterAsync();
         };
 
@@ -548,8 +546,8 @@ public partial class MainWindow
         DockPanel.SetDock(buttons, Dock.Right);
         footer.Children.Add(buttons);
         stack.Children.Add(footer);
-        snackbar.Content = stack;
-        snackbar.Show();
+        item.Content = stack;
+        AddToast(item);
     }
 
     private void PlayChatMasterSound()

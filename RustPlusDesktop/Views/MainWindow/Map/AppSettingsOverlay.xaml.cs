@@ -987,7 +987,6 @@ namespace RustPlusDesk.Views
       
         private void BtnDelete3DMapData_Click(object sender, RoutedEventArgs e)
         {
-            var owner = ParentWindow ?? Window.GetWindow(this);
             var result = MessageBox.Show(
                 "Delete all cached 3D map data for every server? This removes parsed map files and generated viewer JSON, but keeps app assets and icons.",
                 "Delete 3D Map Data",
@@ -999,7 +998,7 @@ namespace RustPlusDesk.Views
             var deleted = Map3DLocalBuildService.DeleteAllCachedMapData();
             ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
             ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
-            MessageBox.Show(owner, RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), WpfUi.ControlAppearance.Success);
         }
 
         private async void BtnPurgeOrphanedCloudData_Click(object sender, RoutedEventArgs e)
@@ -1038,7 +1037,7 @@ namespace RustPlusDesk.Views
                     string msg = string.Format(formatStr, result.PurgedMapOverlays, result.PurgedBaseMarkers, result.PurgedSmartDevices, result.PurgedUserServers);
 
                     ParentWindow?.AppendLog($"[Cloud] Orphaned cloud data purge complete: {result.TotalPurgedCount} items removed.");
-                    MessageBox.Show(owner, msg, Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", msg, WpfUi.ControlAppearance.Success);
                 }
                 else
                 {
@@ -1077,7 +1076,7 @@ namespace RustPlusDesk.Views
                     {
                         RustPlusDesk.Services.Data.BackupDataModule.CreateBackup(sfd.FileName, dialog.Password);
                         ParentWindow.AppendLog(string.Format(Properties.Resources.BackupSuccessLog, sfd.FileName));
-                        MessageBox.Show(Properties.Resources.BackupSuccessMessage, Properties.Resources.BackupSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                        ParentWindow?.ShowInfoSnackbar(Properties.Resources.BackupSuccessTitle, Properties.Resources.BackupSuccessMessage, WpfUi.ControlAppearance.Success);
                     }
                     catch (Exception ex)
                     {
@@ -1129,7 +1128,7 @@ namespace RustPlusDesk.Views
                 {
                     RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
                     ParentWindow.ReloadApplicationData();
-                    MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(Properties.Resources.RestoreSuccessTitle, Properties.Resources.RestoreSuccessMessage, WpfUi.ControlAppearance.Success);
                 }
                 catch (System.Security.Cryptography.CryptographicException)
                 {
@@ -1361,7 +1360,7 @@ namespace RustPlusDesk.Views
                     BtnSyncFcm.Content = RustPlusDesk.Properties.Resources.GetString("UiSyncCloudConnection");
                     BtnSyncFcm.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.CloudArrowUp24 };
                     BtnSyncFcm.ClearValue(WpfUi.Button.ForegroundProperty);
-                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612"), RustPlusDesk.Properties.Resources.GetString("CodeUiAccessRevoked"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiAccessRevoked"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612"), WpfUi.ControlAppearance.Success);
                 }
                 else
                 {
@@ -1414,7 +1413,7 @@ namespace RustPlusDesk.Views
                         await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Delete, null, delParams);
                     }
                     
-                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E"), WpfUi.ControlAppearance.Success);
                     _ = LoadDiscordBotSettingsAsync();
                 }
                 catch (Exception ex)
@@ -1485,7 +1484,7 @@ namespace RustPlusDesk.Views
                     return;
                 }
 
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerLinkedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerLinkedSuccessfully"), WpfUi.ControlAppearance.Success);
                 _ = LoadDiscordBotSettingsAsync();
             }
             catch (Exception ex)
@@ -1554,7 +1553,7 @@ namespace RustPlusDesk.Views
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
                 await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
 
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiChannelsConfigurationSavedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiChannelsConfigurationSavedSuccessfully"), WpfUi.ControlAppearance.Success);
             }
             catch (Exception ex)
             {
@@ -2192,7 +2191,7 @@ namespace RustPlusDesk.Views
                 }
 
                 CmbAlexaServer.SelectedItem = null;
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), WpfUi.ControlAppearance.Success);
             }
             catch (Exception ex)
             {

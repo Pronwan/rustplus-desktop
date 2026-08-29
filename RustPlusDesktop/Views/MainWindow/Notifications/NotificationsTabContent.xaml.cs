@@ -165,11 +165,10 @@ namespace RustPlusDesk.Views
             }
 
             TrackingService.MuteServer(notif.ServerIp, notif.ServerPort.Value, notif.ServerName);
-            MessageBox.Show(
-                $"Notifications from {server} are now muted.",
+            MainWindow.ShowInfoSnackbarOnMain(
                 "Server muted",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+                $"Notifications from {server} are now muted.",
+                Wpf.Ui.Controls.ControlAppearance.Info);
         }
 
         private async void BtnServerTag_Click(object sender, RoutedEventArgs e)
@@ -194,7 +193,7 @@ namespace RustPlusDesk.Views
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(Properties.Resources.ServerNotFoundMessage, notif.ServerIp, notif.ServerPort.Value), Properties.Resources.ServerNotFoundTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                    mainWin.ShowInfoSnackbar(Properties.Resources.ServerNotFoundTitle, string.Format(Properties.Resources.ServerNotFoundMessage, notif.ServerIp, notif.ServerPort.Value), Wpf.Ui.Controls.ControlAppearance.Caution);
                 }
             }
         }
