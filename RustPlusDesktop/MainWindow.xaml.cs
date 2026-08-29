@@ -39,6 +39,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources; // für Application.GetResourceStream
 using System.Windows.Shapes;
@@ -3095,12 +3096,24 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             AppendLog($"[audio] Error playing offline death sound: {ex.Message}");
         }
 
-        // Show Snackbar Alert with Stop Button to stop looping sound
+        // Show a toast with a Stop button to silence the looping sound. The sound is
+        // stopped however the toast leaves — button, auto-timeout, or close — via its
+        // Closed callback, so there's a single place that owns that side effect.
         Dispatcher.Invoke(() =>
         {
-            if (RootSnackbar == null) return;
-
-            WpfUi.Snackbar? snackbar = null;
+            var item = new Controls.ToastItem
+            {
+                Title = Properties.Resources.OfflineDeathTitle,
+                Icon = WpfUi.SymbolRegular.Alert24,
+                AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Danger),
+                MaxCardWidth = 400,
+                Timeout = TimeSpan.FromHours(24),
+                Closed = () =>
+                {
+                    StopLoopPlayer();
+                    StopAlarmPlayer();
+                },
+            };
 
             var stopBtn = new WpfUi.Button
             {
@@ -3110,52 +3123,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 Padding = new Thickness(8, 2, 8, 2),
                 Margin = new Thickness(0, 4, 0, 0)
             };
-            stopBtn.Click += (s, e) =>
-            {
-                StopLoopPlayer();
-                StopAlarmPlayer();
-                if (snackbar != null)
-                {
-                    snackbar.Visibility = Visibility.Collapsed;
-                }
-            };
+            stopBtn.Click += (s, e) => DismissToast(item);
 
             var panel = new StackPanel { Orientation = Orientation.Vertical };
-            panel.Children.Add(new TextBlock 
-            { 
-                Text = string.Format(Properties.Resources.OfflineDeathMessage, d.AttackerName, d.ServerName), 
-                TextWrapping = TextWrapping.Wrap 
+            panel.Children.Add(new TextBlock
+            {
+                Text = string.Format(Properties.Resources.OfflineDeathMessage, d.AttackerName, d.ServerName),
+                TextWrapping = TextWrapping.Wrap
             });
             panel.Children.Add(stopBtn);
 
-            snackbar = new WpfUi.Snackbar(RootSnackbar)
-            {
-                Title = Properties.Resources.OfflineDeathTitle,
-                Content = panel,
-                Appearance = WpfUi.ControlAppearance.Danger,
-                Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Alert24),
-                Timeout = TimeSpan.FromHours(24),
-                MaxWidth = 400,
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-            
-            // Also stop sound when snackbar hides automatically or is closed
-            snackbar.Closed += (s, e) =>
-            {
-                StopLoopPlayer();
-                StopAlarmPlayer();
-            };
-
-            snackbar.IsVisibleChanged += (s, e) =>
-            {
-                if (snackbar.Visibility != Visibility.Visible || !snackbar.IsVisible)
-                {
-                    StopLoopPlayer();
-                    StopAlarmPlayer();
-                }
-            };
-
-            snackbar.Show();
+            item.Content = panel;
+            AddToast(item);
         });
 
         // Send to Discord Bot Raid Alerts if premium user and setting is enabled
@@ -3553,7 +3532,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.Save();
                 
                 AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
-                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), Properties.Resources.GetString("MapImportedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
             }
         }
         catch (Exception ex)
@@ -3569,13 +3548,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (string.IsNullOrEmpty(sourceProfile.LocalMapFilePath))
             {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers"), RustPlusDesk.Properties.Resources.GetString("CodeUiCopyMap"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiCopyMap"), RustPlusDesk.Properties.Resources.GetString("CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers"), WpfUi.ControlAppearance.Info);
                 return;
             }
 
             _copyMapSourceProfile = sourceProfile;
             AppendLog($"[Offline Map] Staged source map for copy: {sourceProfile.Name} ({sourceProfile.LocalMapFilePath})");
-            MessageBox.Show(Properties.Resources.GetString("CopyMapStagedMessage"), Properties.Resources.GetString("CopyMapStagedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ShowInfoSnackbar(Properties.Resources.GetString("CopyMapStagedTitle"), Properties.Resources.GetString("CopyMapStagedMessage"), WpfUi.ControlAppearance.Info);
         }
     }
 
@@ -3766,7 +3745,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.Save();
 
                 AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
-                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), Properties.Resources.GetString("MapImportedTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
                 this.Activate();
                 return;
             }
@@ -4478,7 +4457,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
                 ReloadApplicationData();
-                MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowInfoSnackbar(Properties.Resources.RestoreSuccessTitle, Properties.Resources.RestoreSuccessMessage, WpfUi.ControlAppearance.Success);
             }
             catch (System.Security.Cryptography.CryptographicException)
             {
@@ -6738,21 +6717,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowUpdateSnackbar(string tag, string? dlUrl)
     {
-        if (RootSnackbar == null) return;
-
-        var snackbar = new WpfUi.Snackbar(RootSnackbar)
+        var item = new Controls.ToastItem
         {
             Title = Properties.Resources.UpdateAvailableHeader,
-            Appearance = WpfUi.ControlAppearance.Success,
-            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
+            Icon = WpfUi.SymbolRegular.ArrowDownload24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Success),
+            MaxCardWidth = 350,
             Timeout = TimeSpan.FromSeconds(7),
-            MaxWidth = 350,
-            HorizontalAlignment = HorizontalAlignment.Right
         };
 
         var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
         var stack = new StackPanel { Orientation = Orientation.Vertical };
-        stack.Children.Add(new TextBlock { Text = $"Version {tag}{sizeStr} is available. Download now?", Margin = new Thickness(0, 0, 0, 8) });
+        stack.Children.Add(new TextBlock { Text = $"Version {tag}{sizeStr} is available. Download now?", TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8) });
 
         if (!string.IsNullOrEmpty(dlUrl))
         {
@@ -6764,17 +6740,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             };
             btn.Click += async (s, e) =>
             {
-                // In Wpf.Ui 3.0 the Snackbar is controlled via its Visibility or IsShown property if used directly
-                // but if it's a separate window/control it might be different. 
-                // Using IsOpen = false is common for many popup-like controls in Wpf.Ui
-                snackbar.Visibility = Visibility.Collapsed; 
+                DismissToast(item);
                 await PerformUpdateDownloadAsync(tag, dlUrl);
             };
             stack.Children.Add(btn);
         }
 
-        snackbar.Content = stack;
-        snackbar.Show();
+        item.Content = stack;
+        AddToast(item);
     }
 
     public void ApplySettings()
@@ -6834,22 +6807,147 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         ApplyShopDataAvailability();
     }
 
+    // ----- Stacked toast notifications -------------------------------------------------
+    // A lightweight replacement for Wpf.Ui's single-slot SnackbarPresenter: an
+    // ObservableCollection bound to the ToastHost ItemsControl so several toasts can
+    // stack at once. The enter animation lives in the ToastCardTemplate DataTemplate;
+    // exit animation and auto-dismiss timing live here. The public Show*Snackbar
+    // helpers keep their old names/signatures so every existing call site is unchanged.
+
+    /// <summary>At most this many toasts on screen at once; the oldest is evicted past this.</summary>
+    private const int MaxVisibleToasts = 5;
+
+    /// <summary>Bound to ToastHost.ItemsSource. Newest is last — nearest the bottom-right corner.</summary>
+    public ObservableCollection<Controls.ToastItem> Toasts { get; } = new();
+
+    private static readonly Brush _toastSuccessBrush = FrozenBrush(0x4C, 0xAF, 0x50);
+    private static readonly Brush _toastCautionBrush = FrozenBrush(0xFF, 0xA5, 0x00);
+    private static readonly Brush _toastDangerBrush = FrozenBrush(0xF4, 0x43, 0x36);
+    private static readonly Brush _toastInfoBrush = FrozenBrush(0x4F, 0x9C, 0xF0);
+
+    private static Brush FrozenBrush(byte r, byte g, byte b)
+    {
+        var brush = new SolidColorBrush(Color.FromRgb(r, g, b));
+        brush.Freeze();
+        return brush;
+    }
+
+    /// <summary>Accent colour per severity, matching the retired snackbar accent bar.</summary>
+    private Brush ToastAccentBrush(WpfUi.ControlAppearance appearance)
+    {
+        return appearance switch
+        {
+            WpfUi.ControlAppearance.Success => _toastSuccessBrush,
+            WpfUi.ControlAppearance.Caution => _toastCautionBrush,
+            WpfUi.ControlAppearance.Danger => _toastDangerBrush,
+            _ => (TryFindResource("Accent") as Brush) ?? _toastInfoBrush,
+        };
+    }
+
+    /// <summary>Push a toast onto the stack and start its auto-dismiss countdown.</summary>
+    private void AddToast(Controls.ToastItem item)
+    {
+        if (!Dispatcher.CheckAccess()) { Dispatcher.Invoke(() => AddToast(item)); return; }
+
+        // Evict the oldest immediately (no fade) once the stack is full.
+        while (Toasts.Count >= MaxVisibleToasts)
+            RemoveToast(Toasts[0]);
+
+        Toasts.Add(item);
+
+        if (item.Timeout > TimeSpan.Zero)
+        {
+            item.Timer = new DispatcherTimer { Interval = item.Timeout };
+            item.Timer.Tick += (_, _) => DismissToast(item);
+            item.Timer.Start();
+        }
+    }
+
+    /// <summary>Animate a toast out to the right, then drop it from the collection.</summary>
+    private void DismissToast(Controls.ToastItem item)
+    {
+        item.Timer?.Stop();
+        item.Timer = null;
+        if (!Toasts.Contains(item)) return;
+
+        if (ToastHost?.ItemContainerGenerator.ContainerFromItem(item) is not FrameworkElement container)
+        {
+            RemoveToast(item);
+            return;
+        }
+
+        var slide = new TranslateTransform();
+        container.RenderTransform = slide;
+
+        var fade = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(180)));
+        Storyboard.SetTarget(fade, container);
+        Storyboard.SetTargetProperty(fade, new PropertyPath(UIElement.OpacityProperty));
+
+        var move = new DoubleAnimation(0, 40, new Duration(TimeSpan.FromMilliseconds(180)))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+        };
+        Storyboard.SetTarget(move, slide);
+        Storyboard.SetTargetProperty(move, new PropertyPath(TranslateTransform.XProperty));
+
+        var sb = new Storyboard();
+        sb.Children.Add(fade);
+        sb.Children.Add(move);
+        sb.Completed += (_, _) => RemoveToast(item);
+        sb.Begin();
+    }
+
+    private void RemoveToast(Controls.ToastItem item)
+    {
+        if (Toasts.Remove(item))
+            item.Closed?.Invoke();
+    }
+
+    private void ToastClose_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is Controls.ToastItem item)
+            DismissToast(item);
+    }
+
+    // Pause the auto-dismiss countdown while the pointer is over a toast, so a user
+    // reading or reaching for its button isn't raced by the timeout.
+    private void Toast_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is Controls.ToastItem item)
+            item.Timer?.Stop();
+    }
+
+    private void Toast_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is Controls.ToastItem item && item.Timer != null)
+        {
+            item.Timer.Stop();
+            item.Timer.Start(); // restart the full interval
+        }
+    }
+
     /// <summary>
-    /// A snackbar the user can act on, for the cases where telling them is not enough. It lingers
+    /// A toast the user can act on, for the cases where telling them is not enough. It lingers
     /// far longer than an ordinary toast, because it asks for a decision and eight seconds would
-    /// make it no better than the log line it replaces. Not indefinitely, though: the presenter
-    /// reads Timeout as a delay before hiding, so TimeSpan.Zero would dismiss it instantly.
+    /// make it no better than the log line it replaces. Not indefinitely, though.
     /// </summary>
     internal void ShowActionSnackbar(
         string title, string message, string buttonText, Action onClick, WpfUi.ControlAppearance appearance)
     {
-        if (RootSnackbar == null) return;
+        var item = new Controls.ToastItem
+        {
+            Title = title,
+            Icon = WpfUi.SymbolRegular.PlugDisconnected24,
+            AccentBrush = ToastAccentBrush(appearance),
+            MaxCardWidth = 500,
+            Timeout = TimeSpan.FromMinutes(10),
+        };
 
-        var panel = new System.Windows.Controls.StackPanel();
-        panel.Children.Add(new System.Windows.Controls.TextBlock
+        var panel = new StackPanel();
+        panel.Children.Add(new TextBlock
         {
             Text = message,
-            TextWrapping = System.Windows.TextWrapping.Wrap,
+            TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 0, 0, 10),
         });
 
@@ -6859,58 +6957,56 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Appearance = WpfUi.ControlAppearance.Primary,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
-        panel.Children.Add(button);
-
-        var snackbar = new WpfUi.Snackbar(RootSnackbar)
-        {
-            Title = title,
-            Content = panel,
-            Appearance = appearance,
-            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.PlugDisconnected24),
-            Timeout = TimeSpan.FromMinutes(10),
-            MaxWidth = 500,
-            HorizontalAlignment = HorizontalAlignment.Right,
-        };
-
         button.Click += (_, _) =>
         {
-            // Through the presenter, which also cancels the pending timeout.
-            _ = RootSnackbar.HideCurrent();
+            DismissToast(item);
             onClick();
         };
+        panel.Children.Add(button);
 
-        snackbar.Show();
+        item.Content = panel;
+        AddToast(item);
+    }
+
+    /// <summary>
+    /// Convenience for code that isn't the main window itself — child overlays,
+    /// tab controls, and services — to raise an info snackbar on the shared root
+    /// presenter. No-ops when the live window isn't a <see cref="MainWindow"/>
+    /// (e.g. during shutdown), matching the guard the instance method already has.
+    /// </summary>
+    internal static void ShowInfoSnackbarOnMain(string title, string message, WpfUi.ControlAppearance appearance)
+    {
+        if (Application.Current?.MainWindow is MainWindow mw)
+            mw.ShowInfoSnackbar(title, message, appearance);
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
     {
-        if (RootSnackbar == null) return;
-
-        var textBlock = new System.Windows.Controls.TextBlock
-        {
-            Text = message,
-            TextWrapping = System.Windows.TextWrapping.Wrap
-        };
-
-        var snackbar = new WpfUi.Snackbar(RootSnackbar)
+        AddToast(new Controls.ToastItem
         {
             Title = title,
-            Content = textBlock,
-            Appearance = appearance,
-            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Info24),
+            Message = message,
+            Icon = WpfUi.SymbolRegular.Info24,
+            AccentBrush = ToastAccentBrush(appearance),
+            MaxCardWidth = 500,
             Timeout = TimeSpan.FromSeconds(8),
-            MaxWidth = 500,
-            HorizontalAlignment = HorizontalAlignment.Right
-        };
-        snackbar.Show();
+        });
     }
 
     internal void ShowUpgradeRequiredSnackbar(string message, string upgradeUrl)
     {
-        if (RootSnackbar == null) return;
         if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
         if (_upgradeRequiredSnackbarShown) return;
         _upgradeRequiredSnackbarShown = true;
+
+        var item = new Controls.ToastItem
+        {
+            Title = Properties.Resources.GetString("UpdateRequiredTitle"),
+            Icon = WpfUi.SymbolRegular.ArrowDownload24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Danger),
+            MaxCardWidth = 450,
+            Timeout = TimeSpan.FromSeconds(25),
+        };
 
         var stack = new StackPanel { Orientation = Orientation.Vertical };
 
@@ -6927,8 +7023,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             Margin = new Thickness(0, 0, 0, 8)
         };
         stack.Children.Add(textBlock);
-
-        WpfUi.Snackbar? snackbar = null;
 
         var btn = new WpfUi.Button
         {
@@ -6948,10 +7042,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 var latestInfo = await _updateService.GetLatestReleaseAsync();
                 if (latestInfo != null && !string.IsNullOrEmpty(latestInfo.Value.downloadUrl))
                 {
-                    if (snackbar != null)
-                    {
-                        snackbar.Visibility = Visibility.Collapsed;
-                    }
+                    DismissToast(item);
                     await PerformUpdateDownloadAsync(latestInfo.Value.tag, latestInfo.Value.downloadUrl);
                 }
                 else
@@ -6978,23 +7069,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
         stack.Children.Add(btn);
 
-        snackbar = new WpfUi.Snackbar(RootSnackbar)
-        {
-            Title = Properties.Resources.GetString("UpdateRequiredTitle"),
-            Content = stack,
-            Appearance = WpfUi.ControlAppearance.Danger,
-            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.ArrowDownload24),
-            Timeout = TimeSpan.FromSeconds(25),
-            MaxWidth = 450,
-            HorizontalAlignment = HorizontalAlignment.Right
-        };
-        snackbar.Show();
+        item.Content = stack;
+        AddToast(item);
     }
 
 
     private void ShowTimerSnackbar(string title, string timerName, int timeoutSeconds = 8)
     {
-        if (RootSnackbar == null) return;
+        var item = new Controls.ToastItem
+        {
+            Title = title,
+            Icon = WpfUi.SymbolRegular.Timer24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Caution),
+            MaxCardWidth = 400,
+            Timeout = TimeSpan.FromSeconds(timeoutSeconds),
+        };
 
         var snoozeBtn = new WpfUi.Button
         {
@@ -7007,7 +7096,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
         snoozeBtn.Click += (s, e) =>
         {
-            var btn = (WpfUi.Button)s;
+            DismissToast(item);
             SnoozeAlarm();
         };
 
@@ -7021,6 +7110,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
         stopBtn.Click += (s, e) =>
         {
+            DismissToast(item);
             DismissAlarm();
         };
 
@@ -7029,67 +7119,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         panel.Children.Add(snoozeBtn);
         panel.Children.Add(stopBtn);
 
-        var snackbar = new WpfUi.Snackbar(RootSnackbar)
-        {
-            Title = title,
-            Content = panel,
-            Appearance = WpfUi.ControlAppearance.Caution,
-            Icon = new WpfUi.SymbolIcon(WpfUi.SymbolRegular.Timer24),
-            Timeout = TimeSpan.FromSeconds(timeoutSeconds),
-            MaxWidth = 400,
-            HorizontalAlignment = HorizontalAlignment.Right
-        };
-        snackbar.Show();
+        item.Content = panel;
+        AddToast(item);
     }
 
-    private WpfUi.Snackbar? _guideSnackbar;
+    private Controls.ToastItem? _guideToast;
 
     private void UpdatePairingGuideSnackbar()
     {
-        if (RootSnackbar == null) return;
-        
-        if (_vm.Servers.Count > 0)
+        // A persistent (no-timeout) toast that nudges the user through pairing. It
+        // reflects live state, so on each change we dismiss the old one and add a
+        // fresh toast rather than mutating in place.
+        if (_guideToast != null)
         {
-            if (_guideSnackbar != null)
-            {
-                _guideSnackbar.Visibility = Visibility.Collapsed;
-                _guideSnackbar = null;
-            }
-            return;
+            DismissToast(_guideToast);
+            _guideToast = null;
         }
+
+        if (_vm.Servers.Count > 0)
+            return;
 
         bool isListening = _vm.IsPairingBusy;
 
         string title = isListening ? "Pairing Active" : "Action Required";
-        string msg = isListening 
-            ? "Please pair your server in-game with Rust+" 
+        string msg = isListening
+            ? "Please pair your server in-game with Rust+"
             : "Please pair your Steam account to start.";
         var appearance = isListening ? WpfUi.ControlAppearance.Info : WpfUi.ControlAppearance.Caution;
         var icon = isListening ? WpfUi.SymbolRegular.Phone24 : WpfUi.SymbolRegular.Warning24;
 
-        if (_guideSnackbar == null)
+        _guideToast = new Controls.ToastItem
         {
-            _guideSnackbar = new WpfUi.Snackbar(RootSnackbar)
-            {
-                Title = title,
-                Content = msg,
-                Appearance = appearance,
-                Icon = new WpfUi.SymbolIcon(icon),
-                Timeout = TimeSpan.FromHours(24),
-                MaxWidth = 350,
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-            _guideSnackbar.Show();
-        }
-        else
-        {
-            _guideSnackbar.Title = title;
-            _guideSnackbar.Content = msg;
-            _guideSnackbar.Appearance = appearance;
-            _guideSnackbar.Icon = new WpfUi.SymbolIcon(icon);
-            if (_guideSnackbar.Visibility != Visibility.Visible)
-                _guideSnackbar.Show();
-        }
+            Title = title,
+            Message = msg,
+            Icon = icon,
+            AccentBrush = ToastAccentBrush(appearance),
+            MaxCardWidth = 350,
+            Timeout = TimeSpan.Zero, // pinned until pairing state changes
+        };
+        AddToast(_guideToast);
     }
     private void SidebarSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
     {
@@ -7694,9 +7762,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCouldNotCheckForUpdates");
                 _vm.IsUpdateStatusExpanded = true;
-                System.Windows.MessageBox.Show(
+                ShowInfoSnackbar(
+                    RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"),
                     "Could not query latest release. Please try again or open Releases page.",
-                    "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                    WpfUi.ControlAppearance.Caution);
                 return;
             }
 
@@ -7717,7 +7786,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.IsUpdateAvailable = false;
                 _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate");
                 _vm.IsUpdateStatusExpanded = false;
-                System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate"), RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate"), WpfUi.ControlAppearance.Success);
                 return;
             }
 

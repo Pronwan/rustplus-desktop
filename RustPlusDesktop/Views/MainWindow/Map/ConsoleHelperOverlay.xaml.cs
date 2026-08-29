@@ -147,11 +147,11 @@ public partial class ConsoleHelperOverlay : UserControl
         if (!cmd.HasBind)
         {
             // Copying "bind <key> ..." would paste a line that errors in the console.
-            MessageBox.Show(
+            MainWindow.ShowInfoSnackbarOnMain(
+                RustPlusDesk.Properties.Resources.GetString("ConsoleHelperTitle") ?? "Console Helper",
                 RustPlusDesk.Properties.Resources.GetString("ConsoleHelperPickKeyFirst")
                     ?? "Pick a key first.",
-                RustPlusDesk.Properties.Resources.GetString("ConsoleHelperTitle") ?? "Console Helper",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+                WpfUi.ControlAppearance.Info);
             return;
         }
         CopyToClipboard(cmd.BindLine, "bind");
@@ -162,11 +162,11 @@ public partial class ConsoleHelperOverlay : UserControl
         var all = ConsoleCommandLibrary.AllBindLines();
         if (string.IsNullOrWhiteSpace(all))
         {
-            MessageBox.Show(
+            MainWindow.ShowInfoSnackbarOnMain(
+                RustPlusDesk.Properties.Resources.GetString("ConsoleHelperTitle") ?? "Console Helper",
                 RustPlusDesk.Properties.Resources.GetString("ConsoleHelperNoBindsYet")
                     ?? "No keys bound yet.",
-                RustPlusDesk.Properties.Resources.GetString("ConsoleHelperTitle") ?? "Console Helper",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+                WpfUi.ControlAppearance.Info);
             return;
         }
         CopyToClipboard(all, "all binds");

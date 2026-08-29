@@ -1890,9 +1890,10 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
             if (items.Count == 0)
             {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiNoDeviceExportsFoundForYourTeamServer") +
-                                "Make sure Cloud Sync is enabled and at least one team member has synced their devices.",
-                    "Device Import", MessageBoxButton.OK, MessageBoxImage.Information);
+                ShowInfoSnackbar("Device Import",
+                    RustPlusDesk.Properties.Resources.GetString("CodeUiNoDeviceExportsFoundForYourTeamServer") +
+                    "Make sure Cloud Sync is enabled and at least one team member has synced their devices.",
+                    Wpf.Ui.Controls.ControlAppearance.Info);
                 return;
             }
 

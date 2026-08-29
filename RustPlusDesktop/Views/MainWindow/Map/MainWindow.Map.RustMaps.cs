@@ -1656,7 +1656,7 @@ namespace RustPlusDesk.Views
                 _vm.Save();
 
                 AppendLog($"[Offline Map] Map successfully copied from '{sourceProfile.Name}' to '{connectedProfile.Name}'!");
-                System.Windows.MessageBox.Show(string.Format(Properties.Resources.GetString("FormatMapCopied"), sourceProfile.Name, connectedProfile.Name), Properties.Resources.GetString("MapCopiedTitle"), System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                ShowInfoSnackbar(Properties.Resources.GetString("MapCopiedTitle"), string.Format(Properties.Resources.GetString("FormatMapCopied"), sourceProfile.Name, connectedProfile.Name), Wpf.Ui.Controls.ControlAppearance.Success);
             }
             catch (Exception ex)
             {
