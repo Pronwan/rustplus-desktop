@@ -70,6 +70,15 @@ public class ServerProfile : INotifyPropertyChanged
     }
 
     private bool _isAccessDenied;
+
+    /// <summary>
+    /// Deliberately not persisted. This describes the last connection attempt, not the server,
+    /// and only a successful connect or a fresh player token clears it — so a single
+    /// misclassification used to outlive restarts and leave "re-pair needed" on a healthy
+    /// server for good. Starting each run clean costs nothing: the first connect re-establishes
+    /// the truth either way.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
     public bool IsAccessDenied
     {
         get => _isAccessDenied;
