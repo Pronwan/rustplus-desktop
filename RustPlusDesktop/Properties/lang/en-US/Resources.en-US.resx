@@ -5854,4 +5854,10 @@ You can find more information on the server's official website:
   <data name="ChatRules" xml:space="preserve">
     <value>Everyone here can see your name. Nobody can see which server you play on.</value>
   </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>Talk to everyone, or find people to play with.</value>
+  </data>
 </root>

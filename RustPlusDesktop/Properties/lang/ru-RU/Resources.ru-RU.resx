@@ -6111,4 +6111,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ChatRules" xml:space="preserve">
     <value>Все здесь видят ваше имя. Никто не видит, на каком сервере вы играете.</value>
   </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>Сообщество</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>Общайтесь со всеми — или найдите, с кем играть.</value>
+  </data>
 </root>

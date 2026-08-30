@@ -5859,4 +5859,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ChatRules" xml:space="preserve">
     <value>这里的所有人都能看到你的名字。没有人能看到你在哪个服务器游玩。</value>
   </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>社区中心</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>和大家聊天，或找人一起玩。</value>
+  </data>
 </root>

@@ -63,6 +63,7 @@ public partial class LfgOverlay : UserControl
                 _ => RbModeNone,
             }).IsChecked = true;
 
+            PopulateAcceptModes(mode != LfgMode.None);
             SelectAcceptMode(settings?.Accept ?? AcceptMode.Auto);
 
             ConsentPanel.Visibility = Visibility.Collapsed;
@@ -144,26 +145,42 @@ public partial class LfgOverlay : UserControl
 
     /// <summary>
     /// Three settings in a dropdown rather than three radio rows. The choice is made once and
-    /// then only read, and the row that says what it currently is does the same job in a fifth of
-    /// the height.
+    /// afterwards only read, so the row that says what it currently is does the same job in a
+    /// fifth of the height.
+    ///
+    /// While a listing is up, "don't allow messages" is not among them. Offering a choice and
+    /// then undoing it is worse than not offering it: the user sees their pick reverted and has
+    /// no way to tell a rule from a bug.
     /// </summary>
-    private void PopulateAcceptModes()
+    private void PopulateAcceptModes(bool isListed)
     {
-        if (CmbAcceptMode.ItemsSource is not null) return;
-
-        CmbAcceptMode.ItemsSource = new[]
+        var choices = new System.Collections.Generic.List<AcceptChoice>
         {
-            new AcceptChoice(AcceptMode.Auto, Properties.Resources.GetString("LfgAcceptAuto")),
-            new AcceptChoice(AcceptMode.Approval, Properties.Resources.GetString("LfgAcceptApproval")),
-            new AcceptChoice(AcceptMode.Off, Properties.Resources.GetString("LfgAcceptOff")),
+            new(AcceptMode.Auto, Properties.Resources.GetString("LfgAcceptAuto")),
+            new(AcceptMode.Approval, Properties.Resources.GetString("LfgAcceptApproval")),
         };
-        CmbAcceptMode.DisplayMemberPath = nameof(AcceptChoice.Label);
+
+        if (!isListed)
+            choices.Add(new AcceptChoice(AcceptMode.Off, Properties.Resources.GetString("LfgAcceptOff")));
+
+        // Rebuilding drops the selection, so remember it and restore it below.
+        var current = (CmbAcceptMode.SelectedItem as AcceptChoice)?.Mode ?? AcceptMode.Auto;
+
+        _suppressEvents = true;
+        try
+        {
+            CmbAcceptMode.ItemsSource = choices;
+            CmbAcceptMode.DisplayMemberPath = nameof(AcceptChoice.Label);
+            CmbAcceptMode.SelectedItem = choices.FirstOrDefault(c => c.Mode == current) ?? choices[0];
+        }
+        finally
+        {
+            _suppressEvents = false;
+        }
     }
 
     private void SelectAcceptMode(AcceptMode mode)
     {
-        PopulateAcceptModes();
-
         if (CmbAcceptMode.ItemsSource is not System.Collections.Generic.IEnumerable<AcceptChoice> items) return;
 
         CmbAcceptMode.SelectedItem = items.FirstOrDefault(c => c.Mode == mode) ?? items.First();
@@ -194,17 +211,21 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     private void ApplyListedConstraints(bool isListed)
     {
-        PopulateAcceptModes();
+        // Somebody who had refused all messages and then lists themselves lands on "ask me
+        // first", which is what the server does too. Rebuilding the list handles that on its
+        // own: the option is gone, so the nearest remaining choice is taken.
+        var wasOff = (CmbAcceptMode.SelectedItem as AcceptChoice)?.Mode == AcceptMode.Off;
+
+        PopulateAcceptModes(isListed);
+
+        if (isListed && wasOff)
+        {
+            _suppressEvents = true;
+            try { SelectAcceptMode(AcceptMode.Approval); }
+            finally { _suppressEvents = false; }
+        }
+
         AcceptOffBlockedNote.Visibility = isListed ? Visibility.Visible : Visibility.Collapsed;
-
-        if (!isListed) return;
-        if (CmbAcceptMode.SelectedItem is not AcceptChoice { Mode: AcceptMode.Off }) return;
-
-        // The server makes the same switch when a listing goes up; this keeps the panel in step
-        // rather than leaving a choice on screen that no longer applies.
-        _suppressEvents = true;
-        try { SelectAcceptMode(AcceptMode.Approval); }
-        finally { _suppressEvents = false; }
     }
 
     private void ResetModeToNone()

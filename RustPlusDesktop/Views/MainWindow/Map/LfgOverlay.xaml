@@ -25,6 +25,40 @@
         </Style>
 
         <!--
+            A round box with a green dot, matching the online lights in the lists below it. The
+            filter and the thing it filters on then look like the same idea, which is what a
+            square tick next to round status lights was failing to do.
+        -->
+        <Style x:Key="SocialDotCheck" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid Width="15" Height="15" Margin="0,0,6,0" VerticalAlignment="Center">
+                                <Ellipse x:Name="Ring" Stroke="#FF5A6675" StrokeThickness="1.5" />
+                                <Ellipse x:Name="Dot" Width="7" Height="7" Fill="#FF4CC38A" Opacity="0" />
+                            </Grid>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF8894A5" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Dot" Property="Opacity" Value="1" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF4CC38A" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--
             Tabs, not buttons. A pill that stays lit reads as "this is switched on", which is the
             wrong idea for choosing which of two things you are looking at - and two lit pills in
             one panel read as two independent toggles rather than one choice each.
@@ -70,8 +104,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="{DynamicResource LfgTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
-                    <TextBlock Text="{DynamicResource LfgSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    <!--  The panel holds a room and a board, so it is named after neither.  -->
+                    <TextBlock Text="{DynamicResource SocialHubTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
+                    <TextBlock Text="{DynamicResource SocialHubSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
                 </StackPanel>
                 <ui:Button Grid.Column="1" x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
                            Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" VerticalAlignment="Top" />
@@ -253,10 +288,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="CmbLanguage" Grid.Column="0" FontSize="11" Height="28"
+                        <ComboBox x:Name="CmbLanguage" Grid.Column="0" FontSize="11.5" Height="30" Padding="8,0"
+                                  VerticalContentAlignment="Center" MaxDropDownHeight="220"
                                   SelectionChanged="Filter_Changed" />
-                        <CheckBox x:Name="ChkOnlineOnly" Grid.Column="1" Margin="8,0,0,0" FontSize="11"
-                                  VerticalAlignment="Center" Foreground="{StaticResource LfgText}"
+                        <CheckBox x:Name="ChkOnlineOnly" Grid.Column="1" Margin="10,0,2,0"
+                                  Style="{StaticResource SocialDotCheck}" VerticalAlignment="Center"
                                   Content="{DynamicResource LfgFilterOnline}"
                                   Checked="Filter_Changed" Unchecked="Filter_Changed" />
                         <ui:Button x:Name="BtnRefresh" Grid.Column="2" Margin="8,0,0,0" Height="28"

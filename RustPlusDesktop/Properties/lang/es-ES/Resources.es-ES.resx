@@ -6111,4 +6111,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ChatRules" xml:space="preserve">
     <value>Todos aquí ven tu nombre. Nadie ve en qué servidor juegas.</value>
   </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>Centro de la comunidad</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>Habla con todos, o encuentra con quién jugar.</value>
+  </data>
 </root>
