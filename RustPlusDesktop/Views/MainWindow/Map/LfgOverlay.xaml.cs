@@ -63,12 +63,7 @@ public partial class LfgOverlay : UserControl
                 _ => RbModeNone,
             }).IsChecked = true;
 
-            ((settings?.Accept ?? AcceptMode.Auto) switch
-            {
-                AcceptMode.Approval => RbAcceptApproval,
-                AcceptMode.Off => RbAcceptOff,
-                _ => RbAcceptAuto,
-            }).IsChecked = true;
+            SelectAcceptMode(settings?.Accept ?? AcceptMode.Auto);
 
             ConsentPanel.Visibility = Visibility.Collapsed;
             ApplyListedConstraints(mode != LfgMode.None);
@@ -139,16 +134,42 @@ public partial class LfgOverlay : UserControl
         _pendingMode = LfgMode.None;
     }
 
-    private async void Accept_Checked(object sender, RoutedEventArgs e)
+    private async void AcceptMode_Changed(object sender, SelectionChangedEventArgs e)
     {
         if (_suppressEvents) return;
+        if (CmbAcceptMode.SelectedItem is not AcceptChoice choice) return;
 
-        var mode = ReferenceEquals(sender, RbAcceptApproval) ? AcceptMode.Approval
-                 : ReferenceEquals(sender, RbAcceptOff) ? AcceptMode.Off
-                 : AcceptMode.Auto;
-
-        await SocialApi.SetAcceptModeAsync(mode).ConfigureAwait(true);
+        await SocialApi.SetAcceptModeAsync(choice.Mode).ConfigureAwait(true);
     }
+
+    /// <summary>
+    /// Three settings in a dropdown rather than three radio rows. The choice is made once and
+    /// then only read, and the row that says what it currently is does the same job in a fifth of
+    /// the height.
+    /// </summary>
+    private void PopulateAcceptModes()
+    {
+        if (CmbAcceptMode.ItemsSource is not null) return;
+
+        CmbAcceptMode.ItemsSource = new[]
+        {
+            new AcceptChoice(AcceptMode.Auto, Properties.Resources.GetString("LfgAcceptAuto")),
+            new AcceptChoice(AcceptMode.Approval, Properties.Resources.GetString("LfgAcceptApproval")),
+            new AcceptChoice(AcceptMode.Off, Properties.Resources.GetString("LfgAcceptOff")),
+        };
+        CmbAcceptMode.DisplayMemberPath = nameof(AcceptChoice.Label);
+    }
+
+    private void SelectAcceptMode(AcceptMode mode)
+    {
+        PopulateAcceptModes();
+
+        if (CmbAcceptMode.ItemsSource is not System.Collections.Generic.IEnumerable<AcceptChoice> items) return;
+
+        CmbAcceptMode.SelectedItem = items.FirstOrDefault(c => c.Mode == mode) ?? items.First();
+    }
+
+    private sealed record AcceptChoice(AcceptMode Mode, string Label);
 
     private async Task PublishAsync(LfgMode mode)
     {
@@ -173,17 +194,17 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     private void ApplyListedConstraints(bool isListed)
     {
-        RbAcceptOff.IsEnabled = !isListed;
+        PopulateAcceptModes();
         AcceptOffBlockedNote.Visibility = isListed ? Visibility.Visible : Visibility.Collapsed;
 
-        if (!isListed || RbAcceptOff.IsChecked != true) return;
-
-        _suppressEvents = true;
-        try { RbAcceptApproval.IsChecked = true; }
-        finally { _suppressEvents = false; }
+        if (!isListed) return;
+        if (CmbAcceptMode.SelectedItem is not AcceptChoice { Mode: AcceptMode.Off }) return;
 
         // The server makes the same switch when a listing goes up; this keeps the panel in step
-        // rather than showing a choice that no longer applies.
+        // rather than leaving a choice on screen that no longer applies.
+        _suppressEvents = true;
+        try { SelectAcceptMode(AcceptMode.Approval); }
+        finally { _suppressEvents = false; }
     }
 
     private void ResetModeToNone()

@@ -23,6 +23,37 @@
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
+
+        <!--
+            Tabs, not buttons. A pill that stays lit reads as "this is switched on", which is the
+            wrong idea for choosing which of two things you are looking at - and two lit pills in
+            one panel read as two independent toggles rather than one choice each.
+        -->
+        <Style x:Key="SocialTab" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource LfgMuted}" />
+            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Tab" Background="Transparent" Padding="2,0,2,7"
+                                BorderBrush="Transparent" BorderThickness="0,0,0,2">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Tab" Property="BorderBrush" Value="{StaticResource LfgAccent}" />
+                                <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Border Background="{StaticResource LfgCard}" CornerRadius="8" BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
@@ -61,16 +92,16 @@
                 <StackPanel>
 
                     <!--  Which half of Community you are in  -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                        <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
-                                     Style="{StaticResource {x:Type ToggleButton}}"
-                                     Content="{DynamicResource SocialSectionChat}" FontSize="11"
-                                     Padding="11,5" Margin="0,0,6,0" Checked="Section_Checked" />
-                        <RadioButton x:Name="SecLfg" GroupName="SocialSection"
-                                     Style="{StaticResource {x:Type ToggleButton}}"
-                                     Content="{DynamicResource SocialSectionLfg}" FontSize="11"
-                                     Padding="11,5" Checked="Section_Checked" />
-                    </StackPanel>
+                    <Border BorderBrush="{StaticResource LfgLine}" BorderThickness="0,0,0,1" Margin="0,0,0,14">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
+                                         Style="{StaticResource SocialTab}" Margin="0,0,18,0"
+                                         Content="{DynamicResource SocialSectionChat}" Checked="Section_Checked" />
+                            <RadioButton x:Name="SecLfg" GroupName="SocialSection"
+                                         Style="{StaticResource SocialTab}"
+                                         Content="{DynamicResource SocialSectionLfg}" Checked="Section_Checked" />
+                        </StackPanel>
+                    </Border>
 
                     <!--  The public room  -->
                     <StackPanel x:Name="ChatSection">
@@ -141,19 +172,44 @@
 
                     <StackPanel x:Name="LfgSection" Visibility="Collapsed">
 
-                    <!--  Your status  -->
-                    <TextBlock Text="{DynamicResource LfgStatusHeading}" Style="{StaticResource LfgSectionHeading}" />
-                    <StackPanel Margin="0,0,0,18">
-                        <RadioButton x:Name="RbModeNone" GroupName="LfgMode" Content="{DynamicResource LfgModeNone}"
-                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
-                                     Checked="Mode_Checked" />
-                        <RadioButton x:Name="RbModeLfg" GroupName="LfgMode" Content="{DynamicResource LfgModeLfg}"
-                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
-                                     Checked="Mode_Checked" />
-                        <RadioButton x:Name="RbModeLfm" GroupName="LfgMode" Content="{DynamicResource LfgModeLfm}"
-                                     Foreground="{StaticResource LfgText}" FontSize="12"
-                                     Checked="Mode_Checked" />
-                    </StackPanel>
+                    <!--
+                        Status and inbox side by side. Six stacked rows spent more than half the
+                        panel saying two things, and the lists underneath are what people came
+                        for.
+                    -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                            <TextBlock Text="{DynamicResource LfgStatusHeading}" Style="{StaticResource LfgSectionHeading}" />
+                            <RadioButton x:Name="RbModeNone" GroupName="LfgMode" Content="{DynamicResource LfgModeNone}"
+                                         Foreground="{StaticResource LfgText}" FontSize="11.5" Margin="0,0,0,5"
+                                         Checked="Mode_Checked" />
+                            <RadioButton x:Name="RbModeLfg" GroupName="LfgMode" Content="{DynamicResource LfgModeLfg}"
+                                         Foreground="{StaticResource LfgText}" FontSize="11.5" Margin="0,0,0,5"
+                                         Checked="Mode_Checked" />
+                            <RadioButton x:Name="RbModeLfm" GroupName="LfgMode" Content="{DynamicResource LfgModeLfm}"
+                                         Foreground="{StaticResource LfgText}" FontSize="11.5"
+                                         Checked="Mode_Checked" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Top" MinWidth="178">
+                            <TextBlock Text="{DynamicResource LfgMessagesHeading}" Style="{StaticResource LfgSectionHeading}" />
+                            <!--
+                                Height and centred content on purpose: left to size itself the
+                                selected line sits against the top edge and reads as clipped.
+                            -->
+                            <ComboBox x:Name="CmbAcceptMode" FontSize="11.5" Height="30" Padding="8,0"
+                                      VerticalContentAlignment="Center" MaxDropDownHeight="220"
+                                      SelectionChanged="AcceptMode_Changed" />
+                            <TextBlock x:Name="AcceptOffBlockedNote" Visibility="Collapsed" Margin="1,5,0,0"
+                                       Text="{DynamicResource LfgAcceptOffBlocked}" MaxWidth="178"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="10" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
 
                     <!--
                         Consent, inline rather than as a modal. It appears the moment somebody
@@ -175,36 +231,20 @@
                         </StackPanel>
                     </Border>
 
-                    <!--  Direct messages  -->
-                    <TextBlock Text="{DynamicResource LfgMessagesHeading}" Style="{StaticResource LfgSectionHeading}" />
-                    <StackPanel Margin="0,0,0,18">
-                        <RadioButton x:Name="RbAcceptAuto" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptAuto}"
-                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
-                                     Checked="Accept_Checked" />
-                        <RadioButton x:Name="RbAcceptApproval" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptApproval}"
-                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
-                                     Checked="Accept_Checked" />
-                        <RadioButton x:Name="RbAcceptOff" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptOff}"
-                                     Foreground="{StaticResource LfgText}" FontSize="12"
-                                     Checked="Accept_Checked" />
-                        <TextBlock x:Name="AcceptOffBlockedNote" Visibility="Collapsed" Margin="22,4,0,0"
-                                   Text="{DynamicResource LfgAcceptOffBlocked}"
-                                   Foreground="{StaticResource LfgMuted}" FontSize="10" TextWrapping="Wrap" />
-                    </StackPanel>
 
                     <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,0,0,14" />
 
                     <!--  Which list  -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <RadioButton x:Name="TabTeams" GroupName="LfgTab" IsChecked="True"
-                                     Style="{StaticResource {x:Type ToggleButton}}"
-                                     Content="{DynamicResource LfgTabTeams}" FontSize="11"
-                                     Padding="9,4" Margin="0,0,6,0" Checked="Tab_Checked" />
-                        <RadioButton x:Name="TabPlayers" GroupName="LfgTab"
-                                     Style="{StaticResource {x:Type ToggleButton}}"
-                                     Content="{DynamicResource LfgTabPlayers}" FontSize="11"
-                                     Padding="9,4" Checked="Tab_Checked" />
-                    </StackPanel>
+                    <Border BorderBrush="{StaticResource LfgLine}" BorderThickness="0,0,0,1" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="TabTeams" GroupName="LfgTab" IsChecked="True"
+                                         Style="{StaticResource SocialTab}" Margin="0,0,18,0"
+                                         Content="{DynamicResource LfgTabTeams}" Checked="Tab_Checked" />
+                            <RadioButton x:Name="TabPlayers" GroupName="LfgTab"
+                                         Style="{StaticResource SocialTab}"
+                                         Content="{DynamicResource LfgTabPlayers}" Checked="Tab_Checked" />
+                        </StackPanel>
+                    </Border>
 
                     <!--  Filters. Without them a list stops being useful somewhere past a hundred rows.  -->
                     <Grid Margin="0,0,0,10">
