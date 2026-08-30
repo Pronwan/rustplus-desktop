@@ -1,0 +1,118 @@
+<UserControl x:Class="RustPlusDesk.Views.LfgOverlay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="720" d:DesignWidth="420"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="LfgText" Color="#FFF4F6FA" />
+        <SolidColorBrush x:Key="LfgMuted" Color="#FF94A0B3" />
+        <SolidColorBrush x:Key="LfgLine" Color="#26FFFFFF" />
+        <SolidColorBrush x:Key="LfgCard" Color="#FF111820" />
+        <SolidColorBrush x:Key="LfgAccent" Color="#FF3FD7FF" />
+
+        <Style x:Key="LfgSectionHeading" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource LfgMuted}" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="{StaticResource LfgCard}" CornerRadius="8" BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+        <Grid Margin="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Grid Grid.Row="0" Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource LfgTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
+                    <TextBlock Text="{DynamicResource LfgSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
+                </StackPanel>
+                <ui:Button Grid.Column="1" x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
+                           Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" VerticalAlignment="Top" />
+            </Grid>
+
+            <!--  Cloud gate: shown instead of everything else when there is no cloud account.  -->
+            <Border x:Name="CloudGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
+                    Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource LfgCloudRequired}" Foreground="{StaticResource LfgMuted}" FontSize="12" TextWrapping="Wrap" />
+                    <ui:Button x:Name="BtnCloudSetup" Click="BtnCloudSetup_Click" Appearance="Primary" Margin="0,12,0,0"
+                               HorizontalAlignment="Left" Content="{DynamicResource LfgCloudConnect}" />
+                </StackPanel>
+            </Border>
+
+            <!--  Main body  -->
+            <ScrollViewer x:Name="Body" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+
+                    <!--  Your status  -->
+                    <TextBlock Text="{DynamicResource LfgStatusHeading}" Style="{StaticResource LfgSectionHeading}" />
+                    <StackPanel Margin="0,0,0,18">
+                        <RadioButton x:Name="RbModeNone" GroupName="LfgMode" Content="{DynamicResource LfgModeNone}"
+                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
+                                     Checked="Mode_Checked" />
+                        <RadioButton x:Name="RbModeLfg" GroupName="LfgMode" Content="{DynamicResource LfgModeLfg}"
+                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
+                                     Checked="Mode_Checked" />
+                        <RadioButton x:Name="RbModeLfm" GroupName="LfgMode" Content="{DynamicResource LfgModeLfm}"
+                                     Foreground="{StaticResource LfgText}" FontSize="12"
+                                     Checked="Mode_Checked" />
+                    </StackPanel>
+
+                    <!--
+                        Consent, inline rather than as a modal. It appears the moment somebody
+                        reaches for a mode and the status only commits once it is accepted, so the
+                        disclosure sits where the decision is instead of interrupting it.
+                    -->
+                    <Border x:Name="ConsentPanel" Visibility="Collapsed" Margin="0,0,0,18"
+                            Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource LfgConsentTitle}" Foreground="{StaticResource LfgText}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <TextBlock Text="{DynamicResource LfgConsentBody}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                            <TextBlock Text="{DynamicResource LfgConsentNote}" Foreground="{StaticResource LfgText}" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" />
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <ui:Button x:Name="BtnConsentAccept" Click="BtnConsentAccept_Click" Appearance="Primary"
+                                           Content="{DynamicResource LfgConsentAccept}" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnConsentCancel" Click="BtnConsentCancel_Click" Appearance="Secondary"
+                                           Content="{DynamicResource LfgConsentCancel}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Direct messages  -->
+                    <TextBlock Text="{DynamicResource LfgMessagesHeading}" Style="{StaticResource LfgSectionHeading}" />
+                    <StackPanel Margin="0,0,0,18">
+                        <RadioButton x:Name="RbAcceptAuto" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptAuto}"
+                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
+                                     Checked="Accept_Checked" />
+                        <RadioButton x:Name="RbAcceptApproval" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptApproval}"
+                                     Foreground="{StaticResource LfgText}" FontSize="12" Margin="0,0,0,6"
+                                     Checked="Accept_Checked" />
+                        <RadioButton x:Name="RbAcceptOff" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptOff}"
+                                     Foreground="{StaticResource LfgText}" FontSize="12"
+                                     Checked="Accept_Checked" />
+                    </StackPanel>
+
+                    <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,0,0,14" />
+
+                    <!--  Listings and inbox arrive here next.  -->
+                    <TextBlock x:Name="PlaceholderNotice" Foreground="{StaticResource LfgMuted}" FontSize="11"
+                               TextWrapping="Wrap" Text="Listings and inbox are not built yet." />
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

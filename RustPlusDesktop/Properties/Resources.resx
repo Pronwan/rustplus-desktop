@@ -5988,4 +5988,58 @@ You can find more information on the server&apos;s official website:
   <data name="FcmRepairButton" xml:space="preserve">
     <value>Re-pair now</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>Looking for Group</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>Find a team, or find members for yours.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>Your status</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>Not looking</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>Looking for a team</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>Looking for members</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>Direct messages</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>Accept messages automatically</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>Ask me before accepting</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>Don't allow messages</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>Before you appear in the list</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>Other players will be able to see your name and avatar, your language, whether you are online, the server you are playing on, your team size, and a link to your Steam profile.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>The server is the one that matters: anyone browsing for a team can see where you play. You can stop appearing at any time.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>I understand</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>Looking for Group needs Cloud features. Your account is what other players message — there is nothing to connect to without it.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>Set up Cloud</value>
+  </data>
 </root>

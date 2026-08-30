@@ -5700,4 +5700,58 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="FcmRepairButton" xml:space="preserve">
     <value>立即重新配对</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>寻找队伍</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>找一支队伍，或为自己的队伍找人。</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>你的状态</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>不在寻找</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>寻找队伍</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>寻找队员</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>私信</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>自动接收消息</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>接收前先询问我</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>不接收消息</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>在你出现在列表中之前</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>其他玩家将能看到你的名称和头像、语言、是否在线、你所在的服务器、队伍人数，以及你的 Steam 个人资料链接。</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>关键在于服务器：任何寻找队伍的人都能看到你在哪里游玩。你可以随时不再出现在列表中。</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>我明白了</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>寻找队伍需要云功能。别人联系的是你的账号——没有云就没有可连接的对象。</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>设置云功能</value>
+  </data>
 </root>

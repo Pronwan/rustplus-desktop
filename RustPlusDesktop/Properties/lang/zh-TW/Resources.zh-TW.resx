@@ -963,4 +963,58 @@
   <data name="FcmRepairButton" xml:space="preserve">
     <value>立即重新配對</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>尋找隊伍</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>找一支隊伍，或為自己的隊伍找人。</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>你的狀態</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>不在尋找</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>尋找隊伍</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>尋找隊員</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>私訊</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>自動接收訊息</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>接收前先詢問我</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>不接收訊息</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>在你出現在列表中之前</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>其他玩家將能看到你的名稱和頭像、語言、是否在線、你所在的伺服器、隊伍人數，以及你的 Steam 個人檔案連結。</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>關鍵在於伺服器：任何尋找隊伍的人都能看到你在哪裡遊玩。你可以隨時不再出現在列表中。</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>我明白了</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>尋找隊伍需要雲端功能。別人聯絡的是你的帳號 —— 沒有雲端就沒有可連接的對象。</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>設定雲端功能</value>
+  </data>
 </root>

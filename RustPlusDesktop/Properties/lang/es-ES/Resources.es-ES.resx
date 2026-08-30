@@ -5952,4 +5952,58 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="FcmRepairButton" xml:space="preserve">
     <value>Vincular de nuevo</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>Buscar equipo</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>Encuentra un equipo, o miembros para el tuyo.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>Tu estado</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>No busco nada</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>Busco equipo</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>Busco miembros</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>Mensajes directos</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>Aceptar mensajes automáticamente</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>Preguntarme antes de aceptar</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>No permitir mensajes</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>Antes de aparecer en la lista</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>Otros jugadores podrán ver tu nombre y avatar, tu idioma, si estás en línea, el servidor en el que juegas, el tamaño de tu equipo y un enlace a tu perfil de Steam.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>Lo importante es el servidor: cualquiera que busque equipo verá dónde juegas. Puedes dejar de aparecer cuando quieras.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>Entendido</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>Buscar equipo necesita las funciones de Cloud. Los demás escriben a tu cuenta: sin Cloud no hay nada a lo que conectarse.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>Configurar Cloud</value>
+  </data>
 </root>

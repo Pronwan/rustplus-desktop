@@ -5952,4 +5952,58 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="FcmRepairButton" xml:space="preserve">
     <value>Сопрячь заново</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>Поиск команды</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>Найдите команду или участников для своей.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>Ваш статус</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>Ничего не ищу</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>Ищу команду</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>Ищу участников</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>Личные сообщения</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>Принимать сообщения автоматически</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>Спрашивать перед приёмом</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>Не принимать сообщения</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>Прежде чем вы появитесь в списке</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>Другие игроки увидят ваше имя и аватар, язык, статус в сети, сервер, на котором вы играете, размер команды и ссылку на профиль Steam.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>Главное здесь — сервер: любой, кто ищет команду, увидит, где вы играете. Вы можете убрать себя из списка в любой момент.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>Понятно</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>Для поиска команды нужны облачные функции. Пишут именно вашей учётной записи — без облака подключаться не к чему.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>Настроить облако</value>
+  </data>
 </root>
