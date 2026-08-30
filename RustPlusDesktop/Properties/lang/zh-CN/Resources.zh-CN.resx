@@ -5763,4 +5763,31 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="SocialRailHelp" xml:space="preserve">
     <value>全局聊天与寻找队伍</value>
   </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>招募队员的队伍</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>寻找队伍的玩家</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>所有语言</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>仅在线</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>目前列表中没有人。稍后再看看，或在上方添加你自己。</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>队伍</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>发送消息</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam 个人资料</value>
+  </data>
 </root>

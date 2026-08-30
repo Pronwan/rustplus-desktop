@@ -81,6 +81,8 @@ public partial class LfgOverlay : UserControl
         // who uses the app listed, and lets the entry of somebody who stopped fall away.
         if (mode != LfgMode.None)
             _ = SocialApi.RenewListingAsync();
+
+        await LoadListingsAsync().ConfigureAwait(true);
     }
 
     private async void Mode_Checked(object sender, RoutedEventArgs e)
@@ -194,6 +196,87 @@ public partial class LfgOverlay : UserControl
             _suppressEvents = false;
         }
     }
+
+    // ── The two lists ───────────────────────────────────────────────────────
+
+    /// <summary>Raised with the player the user wants to write to; the inbox handles it from there.</summary>
+    public event EventHandler<Models.LfgEntry>? ChatRequested;
+
+    private bool _languagesPopulated;
+
+    private void Tab_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded) return;
+        _ = LoadListingsAsync();
+    }
+
+    private void Filter_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _suppressEvents) return;
+        _ = LoadListingsAsync();
+    }
+
+    private void Filter_Changed(object sender, SelectionChangedEventArgs e)
+        => Filter_Changed(sender, (RoutedEventArgs)e);
+
+    private void BtnRefresh_Click(object sender, RoutedEventArgs e) => _ = LoadListingsAsync();
+
+    private void BtnOpenChat_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is Models.LfgEntry entry)
+            ChatRequested?.Invoke(this, entry);
+    }
+
+    private async Task LoadListingsAsync()
+    {
+        PopulateLanguages();
+
+        var mode = TabPlayers.IsChecked == true ? LfgMode.LookingForTeam : LfgMode.LookingForMembers;
+        var language = (CmbLanguage.SelectedItem as LanguageChoice)?.Code;
+
+        var entries = await SocialApi
+            .GetListingsAsync(mode, language, ChkOnlineOnly.IsChecked == true)
+            .ConfigureAwait(true);
+
+        ListingList.ItemsSource = entries;
+
+        // An empty board and an unreachable one look the same from here, and the notice says the
+        // same thing for both: there is nobody to write to right now.
+        ListEmptyNotice.Visibility = entries.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    /// <summary>
+    /// The languages we actually ship, so the filter cannot offer one nobody can be listed under.
+    /// </summary>
+    private void PopulateLanguages()
+    {
+        if (_languagesPopulated) return;
+        _languagesPopulated = true;
+
+        _suppressEvents = true;
+        try
+        {
+            CmbLanguage.ItemsSource = new[]
+            {
+                new LanguageChoice(null, Properties.Resources.GetString("LfgFilterLanguage")),
+                new LanguageChoice("en-US", "English"),
+                new LanguageChoice("de-DE", "Deutsch"),
+                new LanguageChoice("es-ES", "Español"),
+                new LanguageChoice("fr-FR", "Français"),
+                new LanguageChoice("ru-RU", "Русский"),
+                new LanguageChoice("zh-CN", "简体中文"),
+                new LanguageChoice("zh-TW", "繁體中文"),
+            };
+            CmbLanguage.DisplayMemberPath = nameof(LanguageChoice.Label);
+            CmbLanguage.SelectedIndex = 0;
+        }
+        finally
+        {
+            _suppressEvents = false;
+        }
+    }
+
+    private sealed record LanguageChoice(string? Code, string Label);
 
     private void BtnCloudSetup_Click(object sender, RoutedEventArgs e)
         => CloudSetupRequested?.Invoke(this, e);

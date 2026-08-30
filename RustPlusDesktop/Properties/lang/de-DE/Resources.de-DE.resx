@@ -6090,4 +6090,31 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="SocialRailHelp" xml:space="preserve">
     <value>Globaler Chat und Team-Suche</value>
   </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Teams suchen Mitglieder</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Spieler suchen ein Team</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Alle Sprachen</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Nur Online</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Zurzeit ist niemand eingetragen. Schau später nochmal – oder trag dich oben selbst ein.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Nachricht schreiben</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam-Profil</value>
+  </data>
 </root>

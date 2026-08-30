@@ -1026,4 +1026,31 @@
   <data name="SocialRailHelp" xml:space="preserve">
     <value>全域聊天與尋找隊伍</value>
   </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>招募隊員的隊伍</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>尋找隊伍的玩家</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>所有語言</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>僅線上</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>目前列表中沒有人。稍後再看看，或在上方加入你自己。</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>隊伍</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>傳送訊息</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam 個人檔案</value>
+  </data>
 </root>

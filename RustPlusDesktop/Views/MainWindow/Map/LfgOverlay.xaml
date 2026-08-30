@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="420"
              Background="Transparent">
 
     <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
         <SolidColorBrush x:Key="LfgText" Color="#FFF4F6FA" />
         <SolidColorBrush x:Key="LfgMuted" Color="#FF94A0B3" />
         <SolidColorBrush x:Key="LfgLine" Color="#26FFFFFF" />
@@ -111,9 +113,95 @@
 
                     <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,0,0,14" />
 
-                    <!--  Listings and inbox arrive here next.  -->
-                    <TextBlock x:Name="PlaceholderNotice" Foreground="{StaticResource LfgMuted}" FontSize="11"
-                               TextWrapping="Wrap" Text="Listings and inbox are not built yet." />
+                    <!--  Which list  -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <RadioButton x:Name="TabTeams" GroupName="LfgTab" IsChecked="True"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     Content="{DynamicResource LfgTabTeams}" FontSize="11"
+                                     Padding="9,4" Margin="0,0,6,0" Checked="Tab_Checked" />
+                        <RadioButton x:Name="TabPlayers" GroupName="LfgTab"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     Content="{DynamicResource LfgTabPlayers}" FontSize="11"
+                                     Padding="9,4" Checked="Tab_Checked" />
+                    </StackPanel>
+
+                    <!--  Filters. Without them a list stops being useful somewhere past a hundred rows.  -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="CmbLanguage" Grid.Column="0" FontSize="11" Height="28"
+                                  SelectionChanged="Filter_Changed" />
+                        <CheckBox x:Name="ChkOnlineOnly" Grid.Column="1" Margin="8,0,0,0" FontSize="11"
+                                  VerticalAlignment="Center" Foreground="{StaticResource LfgText}"
+                                  Content="{DynamicResource LfgFilterOnline}"
+                                  Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                        <ui:Button x:Name="BtnRefresh" Grid.Column="2" Margin="8,0,0,0" Height="28"
+                                   Appearance="Secondary" Click="BtnRefresh_Click"
+                                   ToolTip="{DynamicResource LfgFilterRefresh}"
+                                   Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
+                    </Grid>
+
+                    <TextBlock x:Name="ListEmptyNotice" Visibility="Collapsed" Margin="0,4,0,12"
+                               Text="{DynamicResource LfgEmpty}" TextWrapping="Wrap"
+                               Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                    <ItemsControl x:Name="ListingList" Margin="0,0,0,4">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#0DFFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Avatar, ringed in gold for supporters  -->
+                                        <Grid Grid.Column="0" Width="34" Height="34" Margin="0,0,10,0">
+                                            <Ellipse Stroke="#FFD9A22B" StrokeThickness="2"
+                                                     Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}" />
+                                            <Ellipse Margin="3">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <!--  Online light, bottom right of the avatar  -->
+                                            <Ellipse Width="9" Height="9" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                     Fill="{Binding StatusBrush}" Stroke="#FF111820" StrokeThickness="1.5" />
+                                        </Grid>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{Binding FlagPath}" Width="15" Height="11" Margin="0,0,6,0"
+                                                       VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                           FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding Blurb}" Foreground="{StaticResource LfgMuted}"
+                                                       FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="8,0,8,0">
+                                            <TextBlock Text="{DynamicResource LfgTeamSize}" Foreground="{StaticResource LfgMuted}"
+                                                       FontSize="9" HorizontalAlignment="Center" />
+                                            <TextBlock Text="{Binding TeamSizeLabel}" Foreground="{StaticResource LfgText}"
+                                                       FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                        </StackPanel>
+
+                                        <ui:Button Grid.Column="3" VerticalAlignment="Center" Height="30" Width="34"
+                                                   Appearance="Secondary" Tag="{Binding}" Click="BtnOpenChat_Click"
+                                                   ToolTip="{DynamicResource LfgOpenChat}"
+                                                   Icon="{ui:SymbolIcon Symbol=Chat24}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </ScrollViewer>
         </Grid>

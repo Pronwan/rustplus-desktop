@@ -6051,4 +6051,31 @@ You can find more information on the server&apos;s official website:
   <data name="SocialRailHelp" xml:space="preserve">
     <value>Global chat and Looking for Group</value>
   </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Teams looking for members</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Players looking for a team</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Any language</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Online only</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Nobody is listed right now. Try again later, or add yourself above.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Send a message</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam profile</value>
+  </data>
 </root>

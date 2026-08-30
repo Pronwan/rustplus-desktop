@@ -6015,4 +6015,31 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="SocialRailHelp" xml:space="preserve">
     <value>Общий чат и поиск команды</value>
   </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Команды ищут игроков</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Игроки ищут команду</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Любой язык</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Только в сети</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Сейчас в списке никого нет. Загляните позже — или добавьте себя выше.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Команда</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Написать сообщение</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Профиль Steam</value>
+  </data>
 </root>

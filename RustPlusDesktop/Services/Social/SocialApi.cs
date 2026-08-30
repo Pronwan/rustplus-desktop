@@ -108,6 +108,80 @@ public static class SocialApi
     public static Task<bool> RenewListingAsync()
         => WriteAsync("social/lfg/me/renew", HttpMethod.Post);
 
+    /// <summary>
+    /// One page of listings. Returns an empty list rather than null on failure: an empty board and
+    /// an unreachable one look the same to somebody scrolling, and the panel says which above the
+    /// list instead of in place of it.
+    /// </summary>
+    public static async Task<System.Collections.Generic.List<Models.LfgEntry>> GetListingsAsync(
+        LfgMode mode, string? language = null, bool onlineOnly = false)
+    {
+        var result = new System.Collections.Generic.List<Models.LfgEntry>();
+
+        var query = new System.Collections.Generic.Dictionary<string, string>
+        {
+            ["mode"] = mode == LfgMode.LookingForMembers ? "lfm" : "lfg",
+        };
+        if (!string.IsNullOrWhiteSpace(language)) query["language"] = language!;
+        if (onlineOnly) query["online"] = "1";
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync(
+                "social/lfg/listings", HttpMethod.Get, queryParams: query).ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+
+            // Laravel wraps a paginator as data.data; the outer "data" is the envelope every
+            // endpoint here uses, the inner one is the page.
+            if (!doc.RootElement.TryGetProperty("data", out var envelope)) return result;
+            if (!envelope.TryGetProperty("data", out var rows) || rows.ValueKind != JsonValueKind.Array)
+                return result;
+
+            foreach (var row in rows.EnumerateArray())
+                result.Add(ParseEntry(row));
+        }
+        catch
+        {
+            // Swallowed deliberately — see the summary above.
+        }
+
+        return result;
+    }
+
+    private static Models.LfgEntry ParseEntry(JsonElement row)
+    {
+        var user = row.TryGetProperty("user", out var u) && u.ValueKind == JsonValueKind.Object ? u : default;
+        var team = row.TryGetProperty("team", out var t) && t.ValueKind == JsonValueKind.Object ? t : default;
+        var presence = user.ValueKind == JsonValueKind.Object
+            && user.TryGetProperty("presence", out var p) && p.ValueKind == JsonValueKind.Object ? p : default;
+
+        return new Models.LfgEntry
+        {
+            UserId = Str(user, "id") ?? "",
+            // display_name is what a player set; name is what Steam or Discord gave us. Falling
+            // through keeps the row from being blank for accounts that never chose one.
+            DisplayName = Str(user, "display_name") ?? Str(user, "name") ?? "—",
+            AvatarUrl = Str(user, "avatar_url"),
+            SteamId = Str(user, "steam_id"),
+            Language = Str(presence, "language"),
+            IsOnline = presence.ValueKind == JsonValueKind.Object
+                && presence.TryGetProperty("is_online", out var on) && on.ValueKind == JsonValueKind.True,
+            IsSupporter = row.TryGetProperty("is_supporter", out var s) && s.ValueKind == JsonValueKind.True,
+            TeamName = Str(team, "name"),
+            TeamSize = team.ValueKind == JsonValueKind.Object
+                && team.TryGetProperty("members_count", out var c) && c.TryGetInt32(out var n) ? n : 0,
+            Blurb = Str(row, "blurb"),
+        };
+    }
+
+    private static string? Str(JsonElement element, string name)
+        => element.ValueKind == JsonValueKind.Object
+           && element.TryGetProperty(name, out var v)
+           && v.ValueKind == JsonValueKind.String
+            ? v.GetString()
+            : null;
+
     private static async Task<bool> WriteAsync(string route, HttpMethod method, object? payload = null)
     {
         try

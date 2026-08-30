@@ -6015,4 +6015,31 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="SocialRailHelp" xml:space="preserve">
     <value>Chat global y búsqueda de equipo</value>
   </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Equipos que buscan miembros</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Jugadores que buscan equipo</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Cualquier idioma</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Solo en línea</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Ahora mismo no hay nadie en la lista. Vuelve más tarde, o añádete arriba.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Enviar un mensaje</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Perfil de Steam</value>
+  </data>
 </root>
