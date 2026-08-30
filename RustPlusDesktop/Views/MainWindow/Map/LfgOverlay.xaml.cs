@@ -105,6 +105,19 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.EnsureStarted();
 
         var settings = await SocialApi.GetSettingsAsync().ConfigureAwait(true);
+
+        // Closed for this account. Everything below would be refused, so nothing below is asked -
+        // and the notice says which of the two silences this is, because "not yet" and "you were
+        // removed" look identical from an empty panel.
+        if (settings is { Enabled: false })
+        {
+            ClosedGate.Visibility = Visibility.Visible;
+            Body.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        ClosedGate.Visibility = Visibility.Collapsed;
+
         var mode = await SocialApi.GetListingAsync().ConfigureAwait(true);
 
         _suppressEvents = true;

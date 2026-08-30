@@ -1179,4 +1179,10 @@
   <data name="ReportClose" xml:space="preserve">
     <value>關閉</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>尚未開放</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>社群聊天正在分批開放。輪到你的帳號時就會出現在這裡——不是你這邊出了問題。</value>
+  </data>
 </root>

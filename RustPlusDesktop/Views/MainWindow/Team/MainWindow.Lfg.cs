@@ -1,4 +1,5 @@
 using RustPlusDesk.Services;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace RustPlusDesk.Views;
@@ -43,4 +44,40 @@ public partial class MainWindow
     /// rather than two that each hold half the messages.
     /// </summary>
     private void BtnSocial_Click(object sender, RoutedEventArgs e) => BtnLfg_Click(sender, e);
+
+    /// <summary>
+    /// Shows or hides the Community entry according to whether the platform has opened the layer
+    /// to this account.
+    ///
+    /// The feature is rolled out in stages, and during the early ones most accounts are behind
+    /// the door. A rail button that leads to "not for you yet" every time is worse than no
+    /// button - it reads as something broken rather than something coming.
+    ///
+    /// Only a definite no hides it. Signed out we cannot ask, and the panel's own cloud gate is
+    /// the right answer there; unreachable is not a no either.
+    /// </summary>
+    public async Task RefreshSocialAvailabilityAsync()
+    {
+        if (!Services.Cloud.CloudAuthManager.IsAuthenticated)
+        {
+            SetSocialRailVisible(true);
+            return;
+        }
+
+        var settings = await Services.Social.SocialApi.GetSettingsAsync().ConfigureAwait(true);
+
+        SetSocialRailVisible(settings?.Enabled ?? true);
+    }
+
+    private void SetSocialRailVisible(bool visible)
+    {
+        var state = visible ? Visibility.Visible : Visibility.Collapsed;
+
+        // The divider above it goes too. The one below stays, so the rule between the tools and
+        // the pin/settings pair survives the button disappearing from between them.
+        RailSocialButton.Visibility = state;
+        RailSocialDivider.Visibility = state;
+
+        if (!visible) LfgPanel.Visibility = Visibility.Collapsed;
+    }
 }

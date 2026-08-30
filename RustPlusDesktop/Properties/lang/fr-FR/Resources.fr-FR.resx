@@ -6168,4 +6168,10 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ReportClose" xml:space="preserve">
     <value>Fermer</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Pas encore ouvert</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>Le chat communautaire est déployé progressivement. Il apparaîtra ici dès que votre compte sera concerné — rien ne cloche chez vous.</value>
+  </data>
 </root>

@@ -6168,4 +6168,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ReportClose" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Пока закрыто</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>Чат сообщества открывают постепенно. Он появится здесь, когда очередь дойдёт до вашей учётной записи — у вас всё в порядке.</value>
+  </data>
 </root>

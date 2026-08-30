@@ -928,6 +928,11 @@ public partial class MainWindow : WpfUi.FluentWindow
         await Dispatcher.Yield(DispatcherPriority.ContextIdle);
         _ = EnsureWebView2Async();
 
+        // Whether the Community entry belongs in the rail at all. Asked once on start and again
+        // whenever the account changes; a stored token means the auth event has already fired by
+        // the time this window exists.
+        _ = RefreshSocialAvailabilityAsync();
+
         await Dispatcher.InvokeAsync(() =>
         {
             AppendLog("[items-new] loading deferred item catalog");
@@ -1512,6 +1517,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             UpdateRustMapsUi();
             UpdateCloudSyncUI();
             _ = RefreshPlayerWipeTrackerCapabilitiesAsync();
+            _ = RefreshSocialAvailabilityAsync();
         }
 
         if (Dispatcher.CheckAccess())

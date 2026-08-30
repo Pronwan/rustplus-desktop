@@ -17,7 +17,11 @@ public sealed record SocialSettings(
     AcceptMode Accept,
     bool LfgConsent,
     bool DmConsent,
-    string? NameColor);
+    string? NameColor,
+    // Whether the layer is open to this account at all. The platform rolls it out in stages, and
+    // this is the one read that still answers while it is closed - everything else refuses, so
+    // without this the app could not tell "not yet" from "you are banned".
+    bool Enabled = true);
 
 /// <summary>
 /// The social layer, from the client's side.
@@ -43,7 +47,10 @@ public static class SocialApi
                 ParseAccept(data.TryGetProperty("accept_mode", out var a) ? a.GetString() : null),
                 data.TryGetProperty("lfg_consent", out var l) && l.GetBoolean(),
                 data.TryGetProperty("dm_consent", out var d) && d.GetBoolean(),
-                data.TryGetProperty("name_color", out var c) ? c.GetString() : null);
+                data.TryGetProperty("name_color", out var c) ? c.GetString() : null,
+                !doc.RootElement.TryGetProperty("meta", out var meta)
+                    || !meta.TryGetProperty("enabled", out var enabled)
+                    || enabled.ValueKind != System.Text.Json.JsonValueKind.False);
         }
         catch
         {

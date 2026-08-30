@@ -150,6 +150,17 @@
                 </StackPanel>
             </Border>
 
+            <!--  Rolled out in stages, and this account is not in one yet.  -->
+            <Border x:Name="ClosedGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
+                    Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SocialNotOpenTitle}" Foreground="{StaticResource LfgText}"
+                               FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    <TextBlock Text="{DynamicResource SocialNotOpenBody}" Foreground="{StaticResource LfgMuted}"
+                               FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+
             <!--  Main body  -->
             <ScrollViewer x:Name="Body" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>

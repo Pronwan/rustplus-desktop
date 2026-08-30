@@ -6168,4 +6168,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ReportClose" xml:space="preserve">
     <value>Cerrar</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Aún no está abierto</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>El chat de la comunidad se está habilitando por fases. Aparecerá aquí cuando tu cuenta esté incluida; no hay nada mal en tu instalación.</value>
+  </data>
 </root>

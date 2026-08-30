@@ -5916,4 +5916,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ReportClose" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>尚未开放</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>社区聊天正在分批开放。轮到你的账号时它就会出现在这里——不是你这边出了问题。</value>
+  </data>
 </root>

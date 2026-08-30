@@ -6243,4 +6243,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ReportClose" xml:space="preserve">
     <value>Schließen</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Noch nicht offen</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>Der Community Chat wird schrittweise freigeschaltet. Er erscheint hier, sobald dein Konto dabei ist – bei dir ist nichts kaputt.</value>
+  </data>
 </root>

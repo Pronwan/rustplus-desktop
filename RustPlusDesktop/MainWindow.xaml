@@ -4377,7 +4377,7 @@
                                 thing you operate. Hence the rule and the tinted icon - a filled
                                 background would read as "this tab is active", which it is not.
                             -->
-                            <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,2,0,8" />
+                            <Border x:Name="RailSocialDivider" Height="1" Width="22" Background="#33FFFFFF" Margin="0,2,0,8" />
                             <ui:Button
                                 x:Name="RailSocialButton"
                                 Style="{StaticResource SidebarRailButton}"

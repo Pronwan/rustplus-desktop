@@ -5911,4 +5911,10 @@ You can find more information on the server's official website:
   <data name="ReportClose" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Not open yet</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>The community chat is being rolled out gradually. It will appear here once your account is included — nothing is wrong on your side.</value>
+  </data>
 </root>
