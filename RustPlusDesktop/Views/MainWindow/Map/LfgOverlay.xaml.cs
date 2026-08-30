@@ -34,7 +34,61 @@ public partial class LfgOverlay : UserControl
     public LfgOverlay()
     {
         InitializeComponent();
-        Loaded += (_, __) => _ = RefreshAsync();
+
+        Loaded += (_, __) =>
+        {
+            AttachRealtime();
+            _ = RefreshAsync();
+        };
+
+        Unloaded += (_, __) => DetachRealtime();
+    }
+
+    // ── Live updates ────────────────────────────────────────────────────────
+
+    private bool _realtimeAttached;
+
+    /// <summary>
+    /// Hooks the push channels. Attached while the control is in the tree rather than while the
+    /// panel is visible: hiding a panel is not the same as leaving the room, and a whisper that
+    /// arrives with the panel closed should already be there when it is opened again.
+    /// </summary>
+    private void AttachRealtime()
+    {
+        if (_realtimeAttached) return;
+        _realtimeAttached = true;
+
+        SocialRealtime.ChatChanged += OnChatChanged;
+        SocialRealtime.MessageArrived += OnMessageArrived;
+        SocialRealtime.RequestArrived += OnRequestArrived;
+    }
+
+    private void DetachRealtime()
+    {
+        if (!_realtimeAttached) return;
+        _realtimeAttached = false;
+
+        SocialRealtime.ChatChanged -= OnChatChanged;
+        SocialRealtime.MessageArrived -= OnMessageArrived;
+        SocialRealtime.RequestArrived -= OnRequestArrived;
+    }
+
+    private void OnChatChanged() => _ = CatchUpChatAsync();
+
+    private void OnRequestArrived() => _ = LoadInboxAsync();
+
+    private async void OnMessageArrived(string conversationId)
+    {
+        if (_openThread is { } open && open.Id == conversationId)
+        {
+            MessageList.ItemsSource = await SocialApi.GetMessagesAsync(open.Id).ConfigureAwait(true);
+
+            // It is on screen, so it has been read. Without this the thread would light up as
+            // unread in the list behind the very view showing the message.
+            await SocialApi.MarkReadAsync(open.Id).ConfigureAwait(true);
+        }
+
+        await LoadInboxAsync().ConfigureAwait(true);
     }
 
     /// <summary>Kept for callers that cannot await; the work still happens.</summary>
@@ -47,6 +101,8 @@ public partial class LfgOverlay : UserControl
         CloudGate.Visibility = hasCloud ? Visibility.Collapsed : Visibility.Visible;
         Body.Visibility = hasCloud ? Visibility.Visible : Visibility.Collapsed;
         if (!hasCloud) return;
+
+        SocialRealtime.EnsureStarted();
 
         var settings = await SocialApi.GetSettingsAsync().ConfigureAwait(true);
         var mode = await SocialApi.GetListingAsync().ConfigureAwait(true);
@@ -551,14 +607,90 @@ public partial class LfgOverlay : UserControl
         if (chat) _ = LoadChatAsync();
     }
 
+    /// <summary>What the room currently holds, so a pushed line can be added to it.</summary>
+    private readonly System.Collections.Generic.List<Models.ChatLine> _chatLines = new();
+
+    /// <summary>The window the server serves, matched here so an evening in the room stays bounded.</summary>
+    private const int ChatWindow = 200;
+
     private async Task LoadChatAsync()
     {
         var snapshot = await SocialApi.GetChatAsync().ConfigureAwait(true);
 
-        ChatList.ItemsSource = snapshot.Lines;
-        ChatEmptyNotice.Visibility = snapshot.Lines.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        _chatLines.Clear();
+        _chatLines.AddRange(snapshot.Lines);
+        ShowChatLines();
 
-        ApplyChatSanction(snapshot.Sanction);
+        if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
+    }
+
+    private void ShowChatLines()
+    {
+        // A fresh array each time: ItemsControl does not notice a list mutated behind its back,
+        // and the room is small enough that rebinding it costs nothing worth a collection type.
+        ChatList.ItemsSource = _chatLines.ToArray();
+        ChatEmptyNotice.Visibility = _chatLines.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private bool _catchUpRunning;
+    private bool _catchUpAgain;
+
+    /// <summary>
+    /// Fetches what was written since the last line we hold, in answer to a push.
+    ///
+    /// Reading rather than trusting the payload is what keeps blocks working: the endpoint knows
+    /// who the reader has blocked and who has blocked them, and the broadcast — one frame for
+    /// the whole room — cannot. A busy room is folded into one request at a time, so ten lines
+    /// arriving together cost one read rather than ten.
+    /// </summary>
+    private async Task CatchUpChatAsync()
+    {
+        if (_catchUpRunning)
+        {
+            _catchUpAgain = true;
+            return;
+        }
+
+        _catchUpRunning = true;
+        try
+        {
+            do
+            {
+                _catchUpAgain = false;
+
+                var since = _chatLines.LastOrDefault()?.SentAtIso;
+                if (since is null)
+                {
+                    // Nothing to count from — an empty room, or one that failed to load.
+                    await LoadChatAsync().ConfigureAwait(true);
+                    continue;
+                }
+
+                var snapshot = await SocialApi.GetChatAsync(since).ConfigureAwait(true);
+                if (!snapshot.Ok) continue;
+
+                ApplyChatSanction(snapshot.Sanction);
+
+                var known = new System.Collections.Generic.HashSet<string>(
+                    _chatLines.Select(line => line.Id), StringComparer.Ordinal);
+
+                var added = false;
+                foreach (var line in snapshot.Lines)
+                    if (known.Add(line.Id)) { _chatLines.Add(line); added = true; }
+
+                if (!added) continue;
+
+                if (_chatLines.Count > ChatWindow)
+                    _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
+
+                ShowChatLines();
+            }
+            while (_catchUpAgain);
+        }
+        finally
+        {
+            _catchUpRunning = false;
+        }
     }
 
     /// <summary>

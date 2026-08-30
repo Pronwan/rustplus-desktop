@@ -247,15 +247,24 @@ public static class SocialApi
     /// <summary>
     /// Reads the room. Returns an empty snapshot on failure rather than throwing — an empty room
     /// and an unreachable one both mean there is nothing to read yet.
+    ///
+    /// With <paramref name="since"/> it returns only what was written after that timestamp,
+    /// which is what a live nudge asks for: the server still decides what the reader may see,
+    /// so blocks and sanctions keep working without the client holding a block list of its own.
     /// </summary>
-    public static async Task<Models.ChatSnapshot> GetChatAsync()
+    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null)
     {
         var lines = new System.Collections.Generic.List<Models.ChatLine>();
         Models.ChatSanction? sanction = null;
+        var ok = false;
 
         try
         {
-            var body = await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Get)
+            var query = string.IsNullOrWhiteSpace(since)
+                ? null
+                : new System.Collections.Generic.Dictionary<string, string> { ["since"] = since! };
+
+            var body = await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Get, queryParams: query)
                 .ConfigureAwait(false);
 
             using var doc = JsonDocument.Parse(body);
@@ -275,6 +284,7 @@ public static class SocialApi
                         SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
                         AvatarUrl = Str(sender, "avatar_url"),
                         SentAt = Date(row, "created_at"),
+                        SentAtIso = Str(row, "created_at"),
                     });
                 }
             }
@@ -288,13 +298,15 @@ public static class SocialApi
                     Str(s2, "reason") ?? "",
                     Date(s2, "expires_at"));
             }
+
+            ok = true;
         }
         catch
         {
             // Deliberately quiet.
         }
 
-        return new Models.ChatSnapshot(lines, sanction);
+        return new Models.ChatSnapshot(lines, sanction, ok);
     }
 
     /// <summary>
