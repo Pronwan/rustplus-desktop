@@ -6084,6 +6084,24 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgAcceptOffBlocked" xml:space="preserve">
     <value>Solange du in der Liste stehst, muss man dich erreichen können.</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>Deine Notiz / Beschreibung</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>Notiz hinzufügen (z.B. Spielstil, 2k Std, Wipe-Zeiten)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>Dein aktives Inserat (Vorschau)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>Keine Notiz angegeben</value>
+  </data>
   <data name="SocialRailName" xml:space="preserve">
     <value>Community</value>
   </data>

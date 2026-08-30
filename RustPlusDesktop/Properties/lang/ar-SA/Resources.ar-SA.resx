@@ -5838,4 +5838,22 @@
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>من مسح سابق — معرّفات هذه الأجهزة لم تعد موجودة</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>ملاحظتك / الوصف</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>أضف ملاحظة (مثل أسلوب اللعب، الساعات، جدول المسح)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>إعلانك النشط (معاينة)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>لم تتم إضافة ملاحظة بعد</value>
+  </data>
 </root>

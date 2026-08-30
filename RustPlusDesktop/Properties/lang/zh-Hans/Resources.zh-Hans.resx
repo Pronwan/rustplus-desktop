@@ -1104,4 +1104,22 @@
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
     <value>即使应用最小化，也会继续直接向服务器查询在线人数。</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>你的备注 / 简介</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>添加备注（如游戏风格、时长、清档时间）...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>你的当前招募（预览）</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>活跃</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>暂无备注</value>
+  </data>
 </root>

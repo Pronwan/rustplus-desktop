@@ -6246,4 +6246,22 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="BlocksSince" xml:space="preserve">
     <value>Bloqueado</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>Tu nota / descripción</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>Añade una nota (ej. estilo de juego, horas, horario de wipe)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>Tu anuncio activo (Vista previa)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>Sin nota todavía</value>
+  </data>
 </root>

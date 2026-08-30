@@ -121,13 +121,16 @@ public partial class LfgOverlay : UserControl
 
         ClosedGate.Visibility = Visibility.Collapsed;
 
-        var mode = await SocialApi.GetListingAsync().ConfigureAwait(true);
+        var myListing = await SocialApi.GetListingDetailsAsync().ConfigureAwait(true);
+        var mode = myListing.Mode;
 
         _suppressEvents = true;
         try
         {
             _hasLfgConsent = settings?.LfgConsent ?? false;
             _hasChatConsent = settings?.ChatConsent ?? false;
+
+            TxtBlurb.Text = myListing.Blurb ?? "";
 
             (mode switch
             {
@@ -146,6 +149,8 @@ public partial class LfgOverlay : UserControl
         {
             _suppressEvents = false;
         }
+
+        _ = UpdateMyListingPreviewAsync();
 
         // A listing expires two days after its last sign of life. Renewing on open keeps somebody
         // who uses the app listed, and lets the entry of somebody who stopped fall away.
@@ -171,6 +176,7 @@ public partial class LfgOverlay : UserControl
             ConsentPanel.Visibility = Visibility.Collapsed;
             _pendingMode = LfgMode.None;
             ApplyListedConstraints(false);
+            _ = UpdateMyListingPreviewAsync();
             await SocialApi.SetListingAsync(LfgMode.None).ConfigureAwait(true);
             return;
         }
@@ -206,6 +212,97 @@ public partial class LfgOverlay : UserControl
     {
         ResetModeToNone();
         _pendingMode = LfgMode.None;
+    }
+
+    private void TxtBlurb_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _ = UpdateMyListingPreviewAsync();
+    }
+
+    private void TxtBlurb_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter)
+        {
+            e.Handled = true;
+            _ = SaveCurrentBlurbAsync();
+        }
+    }
+
+    private async void BtnSaveBlurb_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveCurrentBlurbAsync().ConfigureAwait(true);
+    }
+
+    private async Task SaveCurrentBlurbAsync()
+    {
+        var isLfg = RbModeLfg.IsChecked == true;
+        var isLfm = RbModeLfm.IsChecked == true;
+        if (!isLfg && !isLfm) return;
+
+        var mode = isLfg ? LfgMode.LookingForTeam : LfgMode.LookingForMembers;
+        var blurb = TxtBlurb.Text?.Trim();
+        await SocialApi.SetListingAsync(mode, blurb).ConfigureAwait(true);
+        await UpdateMyListingPreviewAsync().ConfigureAwait(true);
+    }
+
+    private async Task UpdateMyListingPreviewAsync()
+    {
+        var isLfg = RbModeLfg.IsChecked == true;
+        var isLfm = RbModeLfm.IsChecked == true;
+        var isListed = isLfg || isLfm;
+
+        LfgNotePanel.Visibility = isListed ? Visibility.Visible : Visibility.Collapsed;
+        MyListingPreview.Visibility = isListed ? Visibility.Visible : Visibility.Collapsed;
+
+        if (!isListed) return;
+
+        PreviewModeBadge.Text = isLfg
+            ? Properties.Resources.GetString("LfgModeLfg")
+            : Properties.Resources.GetString("LfgModeLfm");
+
+        var steamId = Services.TrackingService.SteamId64;
+        var profile = await SteamProfileService.GetAsync(steamId).ConfigureAwait(true);
+        var displayName = profile?.PersonaName
+            ?? Services.Cloud.CloudAuthManager.CurrentUser?.DisplayName
+            ?? Services.Cloud.CloudAuthManager.CurrentUser?.Email
+            ?? "You";
+
+        PreviewDisplayName.Text = displayName;
+
+        var avatarUrl = profile?.AvatarUrl;
+        if (!string.IsNullOrEmpty(avatarUrl))
+        {
+            try
+            {
+                PreviewAvatar.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(avatarUrl));
+            }
+            catch { }
+        }
+
+        var lang = Helpers.AppLanguages.Current();
+        var flagFile = !string.IsNullOrEmpty(lang) ? Helpers.AppLanguages.FlagFile(lang) : null;
+        if (!string.IsNullOrEmpty(flagFile))
+        {
+            try
+            {
+                PreviewFlag.Source = new System.Windows.Media.Imaging.BitmapImage(
+                    new Uri($"pack://application:,,,/Assets/Flags/{flagFile}.png"));
+                PreviewFlag.Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                PreviewFlag.Visibility = Visibility.Collapsed;
+            }
+        }
+        else
+        {
+            PreviewFlag.Visibility = Visibility.Collapsed;
+        }
+
+        var blurb = TxtBlurb.Text?.Trim();
+        PreviewBlurb.Text = !string.IsNullOrEmpty(blurb)
+            ? blurb
+            : Properties.Resources.GetString("LfgEmptyBlurbPlaceholder");
     }
 
     private async void AcceptMode_Changed(object sender, SelectionChangedEventArgs e)
@@ -265,9 +362,11 @@ public partial class LfgOverlay : UserControl
     {
         if (mode == LfgMode.None) return;
 
-        if (await SocialApi.SetListingAsync(mode).ConfigureAwait(true))
+        var blurb = TxtBlurb.Text?.Trim();
+        if (await SocialApi.SetListingAsync(mode, blurb).ConfigureAwait(true))
         {
             ApplyListedConstraints(true);
+            _ = UpdateMyListingPreviewAsync();
             return;
         }
 

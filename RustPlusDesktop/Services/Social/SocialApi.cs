@@ -94,45 +94,61 @@ public static class SocialApi
     public static Task<bool> ConsentAsync(string scope)
         => WriteAsync("social/consent", HttpMethod.Post, new { scope });
 
-    /// <summary>The listing, or None when there is none — including when the cloud is unreachable.</summary>
-    public static async Task<LfgMode> GetListingAsync()
+    public sealed record MyLfgListing(LfgMode Mode, string? Blurb, string? Region);
+
+    /// <summary>The full listing details, or None when there is none.</summary>
+    public static async Task<MyLfgListing> GetListingDetailsAsync()
     {
         try
         {
             var (status, body) = await CloudApiClient.TryCallApiAsync("social/lfg/me", HttpMethod.Get)
                 .ConfigureAwait(false);
 
-            // 404 is the ordinary answer for "not advertising", not a failure.
-            if (status == 404) return LfgMode.None;
-            if (status is < 200 or >= 300) return LfgMode.None;
+            if (status == 404 || status is < 200 or >= 300) return new MyLfgListing(LfgMode.None, null, null);
 
             using var doc = JsonDocument.Parse(body);
-            var mode = doc.RootElement.GetProperty("data").TryGetProperty("mode", out var m)
-                ? m.GetString() : null;
+            var data = doc.RootElement.GetProperty("data");
+            var modeStr = data.TryGetProperty("mode", out var m) ? m.GetString() : null;
+            var blurb = data.TryGetProperty("blurb", out var b) ? b.GetString() : null;
+            var region = data.TryGetProperty("region", out var r) ? r.GetString() : null;
 
-            return mode switch
+            var mode = modeStr switch
             {
                 "lfg" => LfgMode.LookingForTeam,
                 "lfm" => LfgMode.LookingForMembers,
                 _ => LfgMode.None,
             };
+
+            return new MyLfgListing(mode, blurb, region);
         }
         catch
         {
-            return LfgMode.None;
+            return new MyLfgListing(LfgMode.None, null, null);
         }
+    }
+
+    /// <summary>The listing, or None when there is none — including when the cloud is unreachable.</summary>
+    public static async Task<LfgMode> GetListingAsync()
+    {
+        var details = await GetListingDetailsAsync().ConfigureAwait(false);
+        return details.Mode;
     }
 
     /// <summary>
     /// Publishes or withdraws a listing. Returns false when the disclosure has not been accepted
     /// yet — the server answers 409 for that, which is a step missing rather than a refusal.
     /// </summary>
-    public static async Task<bool> SetListingAsync(LfgMode mode)
+    public static async Task<bool> SetListingAsync(LfgMode mode, string? blurb = null, string? region = null)
     {
         if (mode == LfgMode.None)
             return await WriteAsync("social/lfg/me", HttpMethod.Delete).ConfigureAwait(false);
 
-        var payload = new { mode = mode == LfgMode.LookingForTeam ? "lfg" : "lfm" };
+        var payload = new
+        {
+            mode = mode == LfgMode.LookingForTeam ? "lfg" : "lfm",
+            blurb = string.IsNullOrWhiteSpace(blurb) ? null : blurb.Trim(),
+            region = string.IsNullOrWhiteSpace(region) ? Helpers.AppLanguages.Current() : region.Trim(),
+        };
         return await WriteAsync("social/lfg/me", HttpMethod.Put, payload).ConfigureAwait(false);
     }
 

@@ -5864,4 +5864,22 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="Update800Title4" xml:space="preserve">
     <value>Logic Engine 및 UI</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>내 메모 / 설명</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>메모 추가 (예: 플레이 스타일, 플레이 시간, 초기화 일정)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>내 활성 모집글 (미리보기)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>활성</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>작성된 메모가 없습니다</value>
+  </data>
 </root>
