@@ -6156,4 +6156,13 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgReportUser" xml:space="preserve">
     <value>Spieler melden</value>
   </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>An {0} schreiben</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Sag Hallo und was du suchst …</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>Erste Nachrichten sind absichtlich kurz. Wenn geantwortet wird, ist der Rest ein normales Gespräch.</value>
+  </data>
 </root>

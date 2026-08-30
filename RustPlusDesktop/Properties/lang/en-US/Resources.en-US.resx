@@ -5824,4 +5824,13 @@ You can find more information on the server's official website:
   <data name="LfgReportUser" xml:space="preserve">
     <value>Report this player</value>
   </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>Write to {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Say hello and what you are looking for…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>First messages are short on purpose. If they reply, the rest is a normal conversation.</value>
+  </data>
 </root>

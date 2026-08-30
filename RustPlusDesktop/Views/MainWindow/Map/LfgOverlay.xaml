@@ -305,6 +305,11 @@
                                 </StackPanel>
                             </Border>
 
+                            <!--  Writing to somebody for the first time: no history yet, and a shorter limit  -->
+                            <TextBlock x:Name="ComposeHint" Visibility="Collapsed" Margin="0,0,0,10"
+                                       Text="{DynamicResource LfgComposeHint}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
                             <TextBlock x:Name="DeclinedHint" Visibility="Collapsed" Margin="0,0,0,10"
                                        Text="{DynamicResource LfgDeclinedHint}" TextWrapping="Wrap"
                                        Foreground="{StaticResource LfgMuted}" FontSize="11" />

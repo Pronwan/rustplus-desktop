@@ -1092,4 +1092,13 @@
   <data name="LfgReportUser" xml:space="preserve">
     <value>檢舉該玩家</value>
   </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>寫給 {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>打個招呼，說說你在找什麼…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>首則訊息刻意簡短。對方回覆後，接下來就是正常聊天。</value>
+  </data>
 </root>

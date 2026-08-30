@@ -6081,4 +6081,13 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="LfgReportUser" xml:space="preserve">
     <value>Denunciar a este jugador</value>
   </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>Escribir a {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Saluda y di qué buscas…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>Los primeros mensajes son cortos a propósito. Si te responden, el resto es una conversación normal.</value>
+  </data>
 </root>

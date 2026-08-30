@@ -6081,4 +6081,13 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="LfgReportUser" xml:space="preserve">
     <value>Signaler ce joueur</value>
   </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>Écrire à {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Dites bonjour et ce que vous cherchez…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>Les premiers messages sont courts à dessein. En cas de réponse, la suite est une conversation normale.</value>
+  </data>
 </root>

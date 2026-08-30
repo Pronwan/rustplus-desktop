@@ -225,8 +225,10 @@ public partial class LfgOverlay : UserControl
 
     private void BtnOpenChat_Click(object sender, RoutedEventArgs e)
     {
-        if ((sender as FrameworkElement)?.Tag is Models.LfgEntry entry)
-            ChatRequested?.Invoke(this, entry);
+        if ((sender as FrameworkElement)?.Tag is not Models.LfgEntry entry) return;
+
+        ChatRequested?.Invoke(this, entry);
+        StartCompose(entry);
     }
 
     private async Task LoadListingsAsync()
@@ -284,6 +286,42 @@ public partial class LfgOverlay : UserControl
 
     private Models.SocialThread? _openThread;
 
+    /// <summary>Set while writing a first message to somebody who has no thread with us yet.</summary>
+    private Models.LfgEntry? _composeTarget;
+
+    /// <summary>
+    /// Opens the thread view as an empty conversation addressed to somebody from a listing.
+    ///
+    /// Reuses the thread view rather than adding a compose dialog: from the user's side this is
+    /// the same act as replying, and a second surface for it would only be a second place where
+    /// the send button lives.
+    /// </summary>
+    private void StartCompose(Models.LfgEntry entry)
+    {
+        _openThread = null;
+        _composeTarget = entry;
+
+        ThreadTitle.Text = string.Format(
+            Properties.Resources.GetString("LfgComposeTitle"), entry.DisplayName);
+
+        ThreadListView.Visibility = Visibility.Collapsed;
+        ThreadView.Visibility = Visibility.Visible;
+
+        PendingBar.Visibility = Visibility.Collapsed;
+        DeclinedHint.Visibility = Visibility.Collapsed;
+        ComposeHint.Visibility = Visibility.Visible;
+        ReplyRow.Visibility = Visibility.Visible;
+
+        MessageList.ItemsSource = null;
+
+        // The server refuses a longer opener; matching it here means the limit is felt while
+        // typing rather than reported after sending.
+        TxtReply.MaxLength = 300;
+        TxtReply.PlaceholderText = Properties.Resources.GetString("LfgComposePlaceholder");
+        TxtReply.Text = "";
+        TxtReply.Focus();
+    }
+
     /// <summary>Loads the thread list. Called on open and after anything that changes it.</summary>
     private async Task LoadInboxAsync()
     {
@@ -303,6 +341,10 @@ public partial class LfgOverlay : UserControl
     private async Task OpenThreadAsync(Models.SocialThread thread)
     {
         _openThread = thread;
+        _composeTarget = null;
+        ComposeHint.Visibility = Visibility.Collapsed;
+        TxtReply.MaxLength = 1000;
+        TxtReply.PlaceholderText = Properties.Resources.GetString("LfgReplyPlaceholder");
 
         ThreadTitle.Text = thread.CounterpartName;
         ThreadListView.Visibility = Visibility.Collapsed;
@@ -331,6 +373,7 @@ public partial class LfgOverlay : UserControl
     private void BtnThreadBack_Click(object sender, RoutedEventArgs e)
     {
         _openThread = null;
+        _composeTarget = null;
         ThreadView.Visibility = Visibility.Collapsed;
         ThreadListView.Visibility = Visibility.Visible;
     }
@@ -350,8 +393,6 @@ public partial class LfgOverlay : UserControl
 
     private async Task SendReplyAsync()
     {
-        if (_openThread is null) return;
-
         var body = TxtReply.Text?.Trim();
         if (string.IsNullOrEmpty(body)) return;
 
@@ -359,17 +400,40 @@ public partial class LfgOverlay : UserControl
         // flight is how the same message gets sent twice.
         TxtReply.Text = "";
 
-        if (await SocialApi.ReplyAsync(_openThread.Id, body!).ConfigureAwait(true))
+        var sent = _composeTarget is { } target
+            ? await SocialApi.OpenThreadAsync(target.UserId, body!).ConfigureAwait(true)
+            : _openThread is { } thread
+                ? await SocialApi.ReplyAsync(thread.Id, body!).ConfigureAwait(true)
+                : false;
+
+        await LoadInboxAsync().ConfigureAwait(true);
+
+        if (!sent)
         {
-            MessageList.ItemsSource = await SocialApi.GetMessagesAsync(_openThread.Id).ConfigureAwait(true);
-            await LoadInboxAsync().ConfigureAwait(true);
+            // Refused — most often a closed inbox or a block, neither of which the sender is
+            // told apart. Put the text back so it is not lost.
+            TxtReply.Text = body;
             return;
         }
 
-        // Refused — put the text back so it is not lost, and reload in case the thread's state
-        // moved underneath us.
-        TxtReply.Text = body;
-        await LoadInboxAsync().ConfigureAwait(true);
+        if (_composeTarget is { } opened)
+        {
+            _composeTarget = null;
+
+            // Step into the thread that now exists, so the first message appears where the reply
+            // to it will. Falling back to the list is better than an empty view if the thread
+            // cannot be found - that only happens if the server disagrees about what was created.
+            var created = (ThreadList.ItemsSource as System.Collections.Generic.IEnumerable<Models.SocialThread>)?
+                .FirstOrDefault(t => t.CounterpartId == opened.UserId);
+
+            if (created is null) BtnThreadBack_Click(this, new RoutedEventArgs());
+            else await OpenThreadAsync(created).ConfigureAwait(true);
+
+            return;
+        }
+
+        if (_openThread is { } current)
+            MessageList.ItemsSource = await SocialApi.GetMessagesAsync(current.Id).ConfigureAwait(true);
     }
 
     private async void BtnAcceptRequest_Click(object sender, RoutedEventArgs e)
