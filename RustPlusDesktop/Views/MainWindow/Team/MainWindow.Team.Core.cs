@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ public partial class MainWindow
     private System.Windows.Threading.DispatcherTimer? _afkTimer;
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
-    private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
+    private readonly ConcurrentDictionary<ulong, ImageSource> _avatarCache = new();
 
     // Death log: detects team-member deaths across successive team-info snapshots.
     private readonly RustPlusDesk.Services.Deaths.DeathTracker _deathTracker = new();
@@ -236,7 +237,7 @@ public partial class MainWindow
     private readonly Dictionary<ulong, (bool online, bool dead)> _lastPresence = new();
     private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0UL);
 
-    private readonly Dictionary<ulong, string> _steamNames = new();
+    private readonly ConcurrentDictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
     private string? _lastCloudPresenceSignature;
     private DateTime _lastPresenceUploadTime = DateTime.MinValue;

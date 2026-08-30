@@ -928,6 +928,11 @@ public partial class MainWindow : WpfUi.FluentWindow
         await Dispatcher.Yield(DispatcherPriority.ContextIdle);
         _ = EnsureWebView2Async();
 
+        // Whether the Community entry belongs in the rail at all. Asked once on start and again
+        // whenever the account changes; a stored token means the auth event has already fired by
+        // the time this window exists.
+        _ = RefreshSocialAvailabilityAsync();
+
         await Dispatcher.InvokeAsync(() =>
         {
             AppendLog("[items-new] loading deferred item catalog");
@@ -1512,6 +1517,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             UpdateRustMapsUi();
             UpdateCloudSyncUI();
             _ = RefreshPlayerWipeTrackerCapabilitiesAsync();
+            _ = RefreshSocialAvailabilityAsync();
         }
 
         if (Dispatcher.CheckAccess())
@@ -8344,15 +8350,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async void BtnFcmInfo_Click(object sender, RoutedEventArgs e)
     {
-        string title = Properties.Resources.ResourceManager.GetString("FcmInfoTitle") ?? "What is FCM?";
-        string message = Properties.Resources.ResourceManager.GetString("FcmInfoMessage") ??
+        string title = RustPlusDesk.Helpers.Loc.TextOrNull("FcmInfoTitle") ?? "What is FCM?";
+        string message = RustPlusDesk.Helpers.Loc.TextOrNull("FcmInfoMessage") ??
                          "FCM stands for Firebase Cloud Messaging. Rust+ uses it to send push notifications for paired servers, devices, alarms, team chat, and other live events.\n\nRust+ Desktop registers your local app with FCM so it can receive those same Rust+ notifications in the background. The pairing credentials are saved locally on this PC and can be deleted by resetting the pairing config.";
 
         var msgBox = new WpfUi.MessageBox
         {
             Title = title,
             Content = message,
-            CloseButtonText = Properties.Resources.ResourceManager.GetString("GenericClose") ?? "Close"
+            CloseButtonText = RustPlusDesk.Helpers.Loc.TextOrNull("GenericClose") ?? "Close"
         };
         msgBox.Owner = this;
         msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;

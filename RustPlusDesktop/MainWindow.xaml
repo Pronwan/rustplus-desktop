@@ -69,7 +69,7 @@
                                 Background="{Binding AccentBrush}"
                                 VerticalAlignment="Stretch"/>
 
-                        <Border Grid.Column="1" Padding="14,16,14,16">
+                        <Border Grid.Column="1" Padding="14,16,14,16" TextElement.Foreground="{DynamicResource TextPrimary}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/> <!-- Icon -->
@@ -108,17 +108,7 @@
                                     </TextBlock>
 
                                     <!-- Rich body when supplied, else the plain message. -->
-                                    <ContentPresenter Content="{Binding Content}">
-                                        <ContentPresenter.Style>
-                                            <Style TargetType="ContentPresenter">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Content}" Value="{x:Null}">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentPresenter.Style>
-                                    </ContentPresenter>
+                                    <ContentPresenter Content="{Binding Content}" />
                                     <!-- Plain body; collapses when empty (i.e. when rich Content is used instead). -->
                                     <TextBlock Text="{Binding Message}"
                                                TextWrapping="Wrap"
@@ -3247,16 +3237,55 @@
                                                 <TextBlock Text="{DynamicResource UiA}" FontSize="10" FontWeight="Bold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
                                             </ToggleButton>
 
-                                            <!-- Dynamic Slider -->
+                                            <!-- Dynamic Slider + Looking for Group -->
                                             <Grid Grid.Column="1" VerticalAlignment="Center">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
                                                 <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
                                                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconSize, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="#AAA" FontSize="10" Width="30" />
+
+                                                <!-- Looking for Group. The slider gives up the width; it has more than it needs. -->
+                                                <Button Grid.Column="3" x:Name="BtnLfg" Click="BtnLfg_Click"
+                                                        Margin="8,0,0,0" Height="24" Padding="7,0" Cursor="Hand"
+                                                        ToolTip="{DynamicResource LfgTitle}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="Background" Value="Transparent"/>
+                                                            <Setter Property="BorderThickness" Value="1"/>
+                                                            <Setter Property="BorderBrush" Value="#444"/>
+                                                            <Setter Property="Foreground" Value="#CCC"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="#222"/>
+                                                                    <Setter Property="BorderBrush" Value="#2A6CA6"/>
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <!-- Two figures: the same shape the Team tab header uses. -->
+                                                        <Path Data="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+                                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                              Width="13" Height="13" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                        <TextBlock Text="{DynamicResource LfgButton}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"
+                                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                                    </StackPanel>
+                                                </Button>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -4294,12 +4323,6 @@
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Players}" AutomationProperties.HelpText="{DynamicResource UiBrowseOnlinePlayersAndTrackedTargets}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
                                 <ui:Button x:Name="RailNotificationsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource NotificationsTab}" AutomationProperties.HelpText="{DynamicResource UiReviewAlertsAndRecentServerEvents}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Alert24}" Tag="{Binding ElementName=NotificationsTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailNotificationsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailNotificationsButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailNotificationsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
@@ -4349,6 +4372,23 @@
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
+                            <!--
+                                Community sits apart from the tools above it: it is the one place
+                                in the app where other people can reach you, rather than another
+                                thing you operate. Hence the rule and the tinted icon - a filled
+                                background would read as "this tab is active", which it is not.
+                            -->
+                            <Border x:Name="RailSocialDivider" Height="1" Width="22" Background="#33FFFFFF" Margin="0,2,0,8" />
+                            <ui:Button
+                                x:Name="RailSocialButton"
+                                Style="{StaticResource SidebarRailButton}"
+                                AutomationProperties.Name="{DynamicResource SocialRailName}"
+                                AutomationProperties.HelpText="{DynamicResource SocialRailHelp}"
+                                Click="BtnSocial_Click"
+                                ToolTip="{DynamicResource SocialRailName}"
+                                Foreground="#FF8B7BE8"
+                                Icon="{ui:SymbolIcon Symbol=ChatMultiple24}" />
+                            <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,8,0,8" />
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"
                                 tutorials:Tutorial.TargetId="Navigation.Collapse"
@@ -4664,6 +4704,11 @@
                     <!--  Device Automation Overlay  -->
                     <views:DeviceAutomationOverlay
                         x:Name="DeviceAutomationPanel"
+                        Visibility="Collapsed" />
+
+                    <!--  Looking for Group Overlay  -->
+                    <views:LfgOverlay
+                        x:Name="LfgPanel"
                         Visibility="Collapsed" />
                 </Grid>
             </Border>

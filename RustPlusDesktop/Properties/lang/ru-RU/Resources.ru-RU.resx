@@ -5952,4 +5952,298 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="FcmRepairButton" xml:space="preserve">
     <value>Сопрячь заново</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>Поиск команды</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>Найдите команду или участников для своей.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>Ваш статус</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>Ничего не ищу</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>Ищу команду</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>Ищу участников</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>Личные сообщения</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>Принимать сообщения автоматически</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>Спрашивать перед приёмом</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>Не принимать сообщения</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>Прежде чем вы появитесь в списке</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>Другие игроки увидят ваше имя и аватар, язык, статус в сети, сервер, на котором вы играете, размер команды и ссылку на профиль Steam.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>Главное здесь — сервер: любой, кто ищет команду, увидит, где вы играете. Вы можете убрать себя из списка в любой момент.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>Понятно</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>Для поиска команды нужны облачные функции. Пишут именно вашей учётной записи — без облака подключаться не к чему.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>Настроить облако</value>
+  </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>Пока вы в списке, с вами должно быть можно связаться.</value>
+  </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>Сообщество</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>Общий чат и поиск команды</value>
+  </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Команды ищут игроков</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Игроки ищут команду</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Любой язык</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Только в сети</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Сейчас в списке никого нет. Загляните позже — или добавьте себя выше.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Команда</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Написать сообщение</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Профиль Steam</value>
+  </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>Сообщений пока нет. Напишите кому-нибудь из списка выше.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>Написать сообщение…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>Запрос</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>Отклонён</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} хочет вам написать.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>Вы отклонили этот запрос. Повторить его нельзя.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>Заблокировать игрока</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>Пожаловаться на игрока</value>
+  </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>Написать: {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Поздоровайтесь и скажите, что ищете…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>Первые сообщения короткие намеренно. Если вам ответят, дальше — обычный разговор.</value>
+  </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Общий чат</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Поиск команды</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>Написать всем…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Здесь ещё ничего не написано. Начните вы.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>Вы не можете писать до {0}. Причина: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>Вы больше не можете здесь писать. Причина: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Все здесь видят ваше имя. Никто не видит, на каком сервере вы играете.</value>
+  </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>Сообщество</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>Общайтесь со всеми — или найдите, с кем играть.</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Пожаловаться на {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>Модератор читает каждую жалобу. Что подходит лучше всего?</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Травля или угрозы</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Спам или реклама</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Мошенничество или фишинг</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Разжигание ненависти</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Сексуальный или шокирующий контент</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Что-нибудь ещё, что нам стоит знать? (необязательно)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>Что произошло, своими словами</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>Сообщение, на которое вы жалуетесь</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Отправить жалобу</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Жалоба отправлена</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Спасибо. Модератор её рассмотрит. Вы также можете заблокировать этого игрока, если пока не хотите ничего от него получать.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>Не удалось отправить жалобу. Попробуйте ещё раз через минуту.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Пока закрыто</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>Чат сообщества открывают постепенно. Он появится здесь, когда очередь дойдёт до вашей учётной записи — у вас всё в порядке.</value>
+  </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>Прежде чем писать здесь</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>Эта комната публичная. Всё, что вы напишете, видят все пользователи Rust+ Desktop.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>Запрещено: любые ссылки, реклама, торговля и продажа, травля и угрозы, разжигание ненависти, сексуальный или шокирующий контент, а также выдача себя за команду проекта.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>Модераторы читают каждую жалобу. Нарушение может стоить вам доступа к комнате на время — или навсегда. Постоянный запрет привязан к аккаунту Steam, а не к установке: новая учётная запись на том же Steam ID не вернёт доступ.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>Прочитал(а)</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>Не сейчас</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>Ссылки в публичной комнате запрещены. Отправьте её личным сообщением.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>Вы только что это отправили. Подождите немного.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>Новые аккаунты смогут писать здесь через некоторое время. Так комната остаётся пригодной для общения.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>Отправлять оказалось нечего.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>Отправить не удалось. Попробуйте ещё раз через минуту.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Открыть профиль Steam</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Скопировать Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>В Steam с</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>Местоположение</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>Есть блокировка VAC</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>Этот профиль Steam закрыт.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam не ответил. Возможно, профиль закрыт или Steam перегружен.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Заблокированные игроки</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Вы не можете писать друг другу и не видите друг друга ни в комнате, ни в списках. Второму человеку об этом не сообщают.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>Вы никого не заблокировали.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Разблокировать</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Заблокирован</value>
+  </data>
 </root>

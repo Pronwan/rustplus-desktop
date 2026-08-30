@@ -5695,4 +5695,298 @@ You can find more information on the server's official website:
   <data name="FcmRepairButton" xml:space="preserve">
     <value>Re-pair now</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>Looking for Group</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>Find a team, or find members for yours.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>Your status</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>Not looking</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>Looking for a team</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>Looking for members</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>Direct messages</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>Accept messages automatically</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>Ask me before accepting</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>Don't allow messages</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>Before you appear in the list</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>Other players will be able to see your name and avatar, your language, whether you are online, the server you are playing on, your team size, and a link to your Steam profile.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>The server is the one that matters: anyone browsing for a team can see where you play. You can stop appearing at any time.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>I understand</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>Looking for Group needs Cloud features. Your account is what other players message — there is nothing to connect to without it.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>Set up Cloud</value>
+  </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>While you are listed, people need some way to reach you.</value>
+  </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>Global chat and Looking for Group</value>
+  </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Teams looking for members</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Players looking for a team</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Any language</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Online only</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Nobody is listed right now. Try again later, or add yourself above.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Send a message</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam profile</value>
+  </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>No messages yet. Write to somebody from the list above.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>Write a message…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>Request</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>Declined</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} would like to write to you.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>You declined this request. They cannot write again.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>Block this player</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>Report this player</value>
+  </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>Write to {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Say hello and what you are looking for…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>First messages are short on purpose. If they reply, the rest is a normal conversation.</value>
+  </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Global chat</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Looking for Group</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>Message everyone…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Nothing has been said yet. Go ahead.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>You cannot post until {0}. Reason: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>You can no longer post here. Reason: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Everyone here can see your name. Nobody can see which server you play on.</value>
+  </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>Talk to everyone, or find people to play with.</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Report {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>A moderator reads every report. Tell us which of these fits best.</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Harassment or threats</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Spam or advertising</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Scam or phishing</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Hate speech</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Sexual or graphic content</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Something else</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Anything else we should know? (optional)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>What happened, in your words</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>The message you are reporting</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Send report</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Report sent</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Thank you. A moderator will look at it. You can block this player as well if you would rather not hear from them in the meantime.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>The report could not be sent. Please try again in a moment.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Not open yet</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>The community chat is being rolled out gradually. It will appear here once your account is included — nothing is wrong on your side.</value>
+  </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>Before you write in here</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>This room is public. Everyone using Rust+ Desktop can read what you post.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>Not allowed: links of any kind, advertising, trading or selling, harassment and threats, hate speech, sexual or graphic content, and impersonating staff.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>Moderators read every report. Breaking these rules can cost you the room for a while, or permanently — and a permanent exclusion follows the Steam account, not the install. A new account on the same Steam ID does not get you back in.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>I have read this</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>Not now</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>Links are not allowed in the public room. Send it in a direct message instead.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>You just sent that. Give it a moment.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>New accounts can post here after a short wait. This keeps the room usable.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>There was nothing left to send.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>That could not be sent. Try again in a moment.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Open Steam profile</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Copy Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Steam member since</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>VAC ban on record</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>This Steam profile is private.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam did not answer. The profile may be private, or Steam may be busy.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Blocked players</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Neither of you can message the other, and neither of you appears in the other’s room or lists. They are never told.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>You have not blocked anyone.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
 </root>
