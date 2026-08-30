@@ -6090,4 +6090,25 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="LfgComposeHint" xml:space="preserve">
     <value>Les premiers messages sont courts à dessein. En cas de réponse, la suite est une conversation normale.</value>
   </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Chat global</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Recherche d’équipe</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>Écrire à tout le monde…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Rien n'a encore été dit. Lancez-vous.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>Vous ne pouvez pas écrire avant {0}. Motif : {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>Vous ne pouvez plus écrire ici. Motif : {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Tout le monde ici voit votre nom. Personne ne voit sur quel serveur vous jouez.</value>
+  </data>
 </root>

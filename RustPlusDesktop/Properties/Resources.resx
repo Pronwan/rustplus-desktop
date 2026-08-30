@@ -6126,4 +6126,25 @@ You can find more information on the server&apos;s official website:
   <data name="LfgComposeHint" xml:space="preserve">
     <value>First messages are short on purpose. If they reply, the rest is a normal conversation.</value>
   </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Global chat</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Looking for Group</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>Message everyone…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Nothing has been said yet. Go ahead.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>You cannot post until {0}. Reason: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>You can no longer post here. Reason: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Everyone here can see your name. Nobody can see which server you play on.</value>
+  </data>
 </root>

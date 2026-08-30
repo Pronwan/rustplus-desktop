@@ -60,6 +60,87 @@
             <ScrollViewer x:Name="Body" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
 
+                    <!--  Which half of Community you are in  -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                        <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     Content="{DynamicResource SocialSectionChat}" FontSize="11"
+                                     Padding="11,5" Margin="0,0,6,0" Checked="Section_Checked" />
+                        <RadioButton x:Name="SecLfg" GroupName="SocialSection"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     Content="{DynamicResource SocialSectionLfg}" FontSize="11"
+                                     Padding="11,5" Checked="Section_Checked" />
+                    </StackPanel>
+
+                    <!--  The public room  -->
+                    <StackPanel x:Name="ChatSection">
+                        <TextBlock Text="{DynamicResource ChatRules}" TextWrapping="Wrap" Margin="0,0,0,10"
+                                   Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+
+                        <TextBlock x:Name="ChatEmptyNotice" Visibility="Collapsed" Margin="0,0,0,10"
+                                   Text="{DynamicResource ChatEmpty}" TextWrapping="Wrap"
+                                   Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                        <ItemsControl x:Name="ChatList" Margin="0,0,0,10">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
+                                                <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
+                                            </ContextMenu>
+                                        </Grid.ContextMenu>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Ellipse Grid.Column="0" Width="26" Height="26" Margin="0,1,9,0" VerticalAlignment="Top">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+
+                                        <StackPanel Grid.Column="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
+                                                           FontSize="11.5" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
+                                                           FontSize="9.5" Margin="7,1,0,0" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
+                                                       Foreground="{StaticResource LfgText}" FontSize="12" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <!--  Why the box is gone, rather than a box that silently does nothing  -->
+                        <Border x:Name="ChatSilencedBar" Visibility="Collapsed" Margin="0,0,0,4"
+                                Background="#14FFFFFF" CornerRadius="6" Padding="10"
+                                BorderBrush="#33A93C36" BorderThickness="1">
+                            <TextBlock x:Name="ChatSilencedText" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgText}" FontSize="11" />
+                        </Border>
+
+                        <Grid x:Name="ChatComposeRow">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox Grid.Column="0" x:Name="TxtChat" MaxLength="500"
+                                        PlaceholderText="{DynamicResource ChatPlaceholder}"
+                                        KeyDown="TxtChat_KeyDown" />
+                            <ui:Button Grid.Column="1" x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                       Appearance="Primary" Margin="8,0,0,0"
+                                       Content="{DynamicResource LfgSend}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel x:Name="LfgSection" Visibility="Collapsed">
+
                     <!--  Your status  -->
                     <TextBlock Text="{DynamicResource LfgStatusHeading}" Style="{StaticResource LfgSectionHeading}" />
                     <StackPanel Margin="0,0,0,18">
@@ -343,6 +424,7 @@
                             </Grid>
                         </StackPanel>
                     </Grid>
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
         </Grid>

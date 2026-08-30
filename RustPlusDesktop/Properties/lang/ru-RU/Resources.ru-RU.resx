@@ -6090,4 +6090,25 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="LfgComposeHint" xml:space="preserve">
     <value>Первые сообщения короткие намеренно. Если вам ответят, дальше — обычный разговор.</value>
   </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Общий чат</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Поиск команды</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>Написать всем…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Здесь ещё ничего не написано. Начните вы.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>Вы не можете писать до {0}. Причина: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>Вы больше не можете здесь писать. Причина: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Все здесь видят ваше имя. Никто не видит, на каком сервере вы играете.</value>
+  </data>
 </root>

@@ -83,6 +83,7 @@ public partial class LfgOverlay : UserControl
         if (mode != LfgMode.None)
             _ = SocialApi.RenewListingAsync();
 
+        await LoadChatAsync().ConfigureAwait(true);
         await LoadListingsAsync().ConfigureAwait(true);
         await LoadInboxAsync().ConfigureAwait(true);
     }
@@ -493,6 +494,104 @@ public partial class LfgOverlay : UserControl
         // Reason and note come from a dialog next; filing it with a bare reason is still better
         // than a menu entry that does nothing.
         await SocialApi.ReportAsync(thread.CounterpartId, "other").ConfigureAwait(true);
+    }
+
+    // ── The public room ─────────────────────────────────────────────────────
+
+    private void Section_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded) return;
+
+        var chat = SecChat.IsChecked == true;
+        ChatSection.Visibility = chat ? Visibility.Visible : Visibility.Collapsed;
+        LfgSection.Visibility = chat ? Visibility.Collapsed : Visibility.Visible;
+
+        if (chat) _ = LoadChatAsync();
+    }
+
+    private async Task LoadChatAsync()
+    {
+        var snapshot = await SocialApi.GetChatAsync().ConfigureAwait(true);
+
+        ChatList.ItemsSource = snapshot.Lines;
+        ChatEmptyNotice.Visibility = snapshot.Lines.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        ApplyChatSanction(snapshot.Sanction);
+    }
+
+    /// <summary>
+    /// Replaces the text box with the reason when writing is closed.
+    ///
+    /// A box that silently refuses is worse than no box: the user retypes, tries again, and
+    /// concludes the app is broken. Saying "until 19:40, for spam" costs one line and answers
+    /// the support message before it is written.
+    /// </summary>
+    private void ApplyChatSanction(Models.ChatSanction? sanction)
+    {
+        if (sanction is null)
+        {
+            ChatSilencedBar.Visibility = Visibility.Collapsed;
+            ChatComposeRow.Visibility = Visibility.Visible;
+            return;
+        }
+
+        ChatSilencedBar.Visibility = Visibility.Visible;
+        ChatComposeRow.Visibility = Visibility.Collapsed;
+
+        ChatSilencedText.Text = sanction.ExpiresAt is { } until
+            ? string.Format(
+                Properties.Resources.GetString("ChatSilencedTimeout"),
+                until.ToLocalTime().ToString("g"),
+                sanction.Reason)
+            : string.Format(
+                Properties.Resources.GetString("ChatSilencedBan"),
+                sanction.Reason);
+    }
+
+    private async void BtnChatSend_Click(object sender, RoutedEventArgs e) => await SendChatAsync();
+
+    private async void TxtChat_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key != System.Windows.Input.Key.Enter) return;
+        if (System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Shift)) return;
+
+        e.Handled = true;
+        await SendChatAsync();
+    }
+
+    private async Task SendChatAsync()
+    {
+        var body = TxtChat.Text?.Trim();
+        if (string.IsNullOrEmpty(body)) return;
+
+        TxtChat.Text = "";
+
+        if (!await SocialApi.PostChatAsync(body!).ConfigureAwait(true))
+        {
+            // Refused. Reloading shows why when the reason is a sanction, and puts the text back
+            // when it is anything else — a duplicate, or an account still too new to post.
+            TxtChat.Text = body;
+        }
+
+        await LoadChatAsync().ConfigureAwait(true);
+    }
+
+    private async void ChatBlock_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line || line.SenderId is null) return;
+
+        await SocialApi.BlockAsync(line.SenderId).ConfigureAwait(true);
+        // Their lines disappear on the next read, since the server filters both directions.
+        await LoadChatAsync().ConfigureAwait(true);
+    }
+
+    private async void ChatReport_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line || line.SenderId is null) return;
+
+        // The message id goes with it, so the report keeps a copy of what was said even after the
+        // line itself is pruned a week later.
+        await SocialApi.ReportAsync(line.SenderId, "chat", line.Id).ConfigureAwait(true);
     }
 
     private void BtnCloudSetup_Click(object sender, RoutedEventArgs e)

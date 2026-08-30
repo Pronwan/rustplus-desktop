@@ -1101,4 +1101,25 @@
   <data name="LfgComposeHint" xml:space="preserve">
     <value>首則訊息刻意簡短。對方回覆後，接下來就是正常聊天。</value>
   </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>全域聊天</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>尋找隊伍</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>向所有人發言…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>這裡還沒有人說話。你先來吧。</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>你在 {0} 之前無法發言。原因：{1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>你無法再在此發言。原因：{0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>這裡的所有人都能看到你的名字。沒有人能看到你在哪個伺服器遊玩。</value>
+  </data>
 </root>

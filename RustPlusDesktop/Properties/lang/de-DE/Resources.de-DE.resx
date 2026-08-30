@@ -6165,4 +6165,25 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgComposeHint" xml:space="preserve">
     <value>Erste Nachrichten sind absichtlich kurz. Wenn geantwortet wird, ist der Rest ein normales Gespräch.</value>
   </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Globaler Chat</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Team-Suche</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>An alle schreiben …</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Hier wurde noch nichts gesagt. Fang an.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>Du kannst bis {0} nicht schreiben. Grund: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>Du kannst hier nicht mehr schreiben. Grund: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Alle hier sehen deinen Namen. Niemand sieht, auf welchem Server du spielst.</value>
+  </data>
 </root>

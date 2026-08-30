@@ -242,6 +242,69 @@ public static class SocialApi
     public static Task<bool> ReportAsync(string userId, string reason, string? messageId = null, string? note = null)
         => WriteAsync("social/reports", HttpMethod.Post, new { user_id = userId, reason, message_id = messageId, note });
 
+    // ── The public room ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Reads the room. Returns an empty snapshot on failure rather than throwing — an empty room
+    /// and an unreachable one both mean there is nothing to read yet.
+    /// </summary>
+    public static async Task<Models.ChatSnapshot> GetChatAsync()
+    {
+        var lines = new System.Collections.Generic.List<Models.ChatLine>();
+        Models.ChatSanction? sanction = null;
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Get)
+                .ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("data", out var rows) && rows.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var row in rows.EnumerateArray())
+                {
+                    var sender = row.TryGetProperty("sender", out var s) && s.ValueKind == JsonValueKind.Object ? s : default;
+
+                    lines.Add(new Models.ChatLine
+                    {
+                        Id = Str(row, "id") ?? "",
+                        Body = Str(row, "body") ?? "",
+                        SenderId = Str(row, "sender_id"),
+                        SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
+                        AvatarUrl = Str(sender, "avatar_url"),
+                        SentAt = Date(row, "created_at"),
+                    });
+                }
+            }
+
+            if (root.TryGetProperty("meta", out var meta)
+                && meta.TryGetProperty("sanction", out var s2)
+                && s2.ValueKind == JsonValueKind.Object)
+            {
+                sanction = new Models.ChatSanction(
+                    Str(s2, "kind") ?? "timeout",
+                    Str(s2, "reason") ?? "",
+                    Date(s2, "expires_at"));
+            }
+        }
+        catch
+        {
+            // Deliberately quiet.
+        }
+
+        return new Models.ChatSnapshot(lines, sanction);
+    }
+
+    /// <summary>
+    /// Posts a line. False covers every refusal the server makes — silenced, account too new,
+    /// nothing left after cleaning, or the same line twice — because none of them is worth a
+    /// different sentence to somebody who just wants their message to appear.
+    /// </summary>
+    public static Task<bool> PostChatAsync(string body)
+        => WriteAsync("social/chat", HttpMethod.Post, new { body });
+
     /// <summary>
     /// Picks the other participant out of a thread's members.
     ///
