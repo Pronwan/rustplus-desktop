@@ -88,6 +88,34 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="SocialDotRadio" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="0,0,0,7" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid Width="15" Height="15" Margin="0,0,7,0" VerticalAlignment="Center">
+                                <Ellipse x:Name="Ring" Stroke="#FF5A6675" StrokeThickness="1.5" />
+                                <Ellipse x:Name="Dot" Width="7" Height="7" Fill="#FF4CC38A" Opacity="0" />
+                            </Grid>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF8894A5" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Dot" Property="Opacity" Value="1" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF4CC38A" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Border Background="{StaticResource LfgCard}" CornerRadius="8" BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
@@ -503,6 +531,72 @@
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
+
+            <!--
+                Reporting somebody, over the whole panel.
+
+                A scrim rather than an inline block, because this is the one action here that
+                asks a moderator to spend time. Making it happen half-scrolled past the thing
+                being reported is how a queue fills up with reports nobody can act on.
+            -->
+            <Border x:Name="ReportSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock x:Name="ReportHeading" Foreground="{StaticResource LfgText}"
+                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+
+                        <!--  The form  -->
+                        <StackPanel x:Name="ReportForm">
+                            <TextBlock Text="{DynamicResource ReportIntro}" Margin="0,6,0,12"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
+
+                            <StackPanel x:Name="ReportReasons" />
+
+                            <!--  What is being reported, when it is one line rather than a person  -->
+                            <StackPanel x:Name="ReportQuoted" Visibility="Collapsed" Margin="0,4,0,0">
+                                <TextBlock Text="{DynamicResource ReportQuotedLabel}" Margin="0,0,0,4"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="10" FontWeight="Bold" />
+                                <Border Background="#14FFFFFF" CornerRadius="6" Padding="9,7">
+                                    <TextBlock x:Name="ReportQuotedText" Foreground="{StaticResource LfgText}"
+                                               FontSize="11" TextWrapping="Wrap" MaxHeight="72" />
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Text="{DynamicResource ReportNoteLabel}" Margin="0,12,0,5"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="10.5" TextWrapping="Wrap" />
+                            <ui:TextBox x:Name="TxtReportNote" MaxLength="1000" MinHeight="62"
+                                        AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top"
+                                        PlaceholderText="{DynamicResource ReportNotePlaceholder}" />
+
+                            <TextBlock x:Name="ReportError" Visibility="Collapsed" Margin="0,8,0,0"
+                                       Text="{DynamicResource ReportFailed}" Foreground="#FFFF8A8A"
+                                       FontSize="11" TextWrapping="Wrap" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                <ui:Button x:Name="BtnReportSubmit" Click="BtnReportSubmit_Click" Appearance="Primary"
+                                           Content="{DynamicResource ReportSubmit}" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnReportCancel" Click="BtnReportCancel_Click" Appearance="Secondary"
+                                           Content="{DynamicResource ReportCancel}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  The receipt. Same sheet, so the answer arrives where the question was asked.  -->
+                        <StackPanel x:Name="ReportDone" Visibility="Collapsed">
+                            <TextBlock Text="{DynamicResource ReportDoneBody}" Margin="0,8,0,0"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
+                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                <ui:Button x:Name="BtnReportBlock" Click="BtnReportBlock_Click" Appearance="Secondary"
+                                           Content="{DynamicResource LfgBlockUser}" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnReportClose" Click="BtnReportCancel_Click" Appearance="Primary"
+                                           Content="{DynamicResource ReportClose}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
         </Grid>
     </Border>
 </UserControl>

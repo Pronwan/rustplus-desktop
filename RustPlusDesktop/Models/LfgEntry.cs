@@ -47,24 +47,5 @@ public sealed class LfgEntry
     /// </summary>
     public string? FlagPath => string.IsNullOrWhiteSpace(Language)
         ? null
-        : $"pack://application:,,,/Assets/Flags/{FlagFile(Language!)}.png";
-
-    /// <summary>
-    /// Maps a culture to the flag we ship. Most are the language half of the code; the ones that
-    /// are not are the cases where two cultures share a language or the file is named for the
-    /// region.
-    /// </summary>
-    private static string FlagFile(string language) => language switch
-    {
-        "es-ES" => "es-ES",
-        "pt-BR" => "pt-BR",
-        "pt-PT" => "pt-PT",
-        "sv-SE" => "sv-SE",
-        "zh-CN" => "zh-CN",
-        "zh-TW" => "zh-TW",
-        "zh-Hans" => "zh-Hans",
-        "zh-Hant" => "zh-Hant",
-        "sr-Latn-RS" => "sr",
-        _ => language.Split('-')[0],
-    };
+        : $"pack://application:,,,/Assets/Flags/{Helpers.AppLanguages.FlagFile(Language!)}.png";
 }

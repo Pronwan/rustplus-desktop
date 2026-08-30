@@ -6117,4 +6117,55 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>Parlez à tout le monde, ou trouvez avec qui jouer.</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Signaler {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>Un modérateur lit chaque signalement. Qu’est-ce qui correspond le mieux ?</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Harcèlement ou menaces</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Spam ou publicité</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Arnaque ou hameçonnage</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Discours haineux</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Contenu sexuel ou choquant</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Autre chose</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Autre chose à nous dire ? (facultatif)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>Ce qui s’est passé, avec vos mots</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>Le message que vous signalez</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Envoyer le signalement</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Signalement envoyé</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Merci. Un modérateur va l’examiner. Vous pouvez aussi bloquer ce joueur si vous préférez ne plus rien recevoir de lui entre-temps.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>Le signalement n’a pas pu être envoyé. Réessayez dans un instant.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
 </root>

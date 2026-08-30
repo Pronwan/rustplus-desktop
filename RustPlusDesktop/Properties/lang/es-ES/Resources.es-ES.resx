@@ -6117,4 +6117,55 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>Habla con todos, o encuentra con quién jugar.</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Denunciar a {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>Un moderador lee todas las denuncias. ¿Qué encaja mejor?</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Acoso o amenazas</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Spam o publicidad</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Estafa o phishing</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Discurso de odio</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Contenido sexual o gráfico</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Otra cosa</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>¿Algo más que debamos saber? (opcional)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>Qué ocurrió, en tus palabras</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>El mensaje que denuncias</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Enviar denuncia</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Denuncia enviada</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Gracias. Un moderador la revisará. También puedes bloquear a este jugador si prefieres no saber nada de él mientras tanto.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>No se pudo enviar la denuncia. Inténtalo de nuevo en un momento.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
 </root>

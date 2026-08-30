@@ -6192,4 +6192,55 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>Mit allen reden – oder Leute zum Spielen finden.</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>{0} melden</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>Jede Meldung wird von einem Moderator gelesen. Was trifft am ehesten zu?</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Belästigung oder Drohungen</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Spam oder Werbung</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Betrug oder Phishing</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Hassrede</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Sexuelle oder verstörende Inhalte</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Etwas anderes</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Noch etwas, das wir wissen sollten? (optional)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>Was ist passiert, in deinen Worten</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>Die gemeldete Nachricht</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Meldung senden</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Meldung gesendet</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Danke. Ein Moderator sieht sie sich an. Du kannst den Spieler zusätzlich blockieren, wenn du bis dahin nichts von ihm hören willst.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>Die Meldung konnte nicht gesendet werden. Bitte gleich noch einmal versuchen.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
 </root>

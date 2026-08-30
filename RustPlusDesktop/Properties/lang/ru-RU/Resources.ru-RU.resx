@@ -6117,4 +6117,55 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>Общайтесь со всеми — или найдите, с кем играть.</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Пожаловаться на {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>Модератор читает каждую жалобу. Что подходит лучше всего?</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Травля или угрозы</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Спам или реклама</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Мошенничество или фишинг</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Разжигание ненависти</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Сексуальный или шокирующий контент</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Что-нибудь ещё, что нам стоит знать? (необязательно)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>Что произошло, своими словами</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>Сообщение, на которое вы жалуетесь</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Отправить жалобу</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Жалоба отправлена</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Спасибо. Модератор её рассмотрит. Вы также можете заблокировать этого игрока, если пока не хотите ничего от него получать.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>Не удалось отправить жалобу. Попробуйте ещё раз через минуту.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
 </root>

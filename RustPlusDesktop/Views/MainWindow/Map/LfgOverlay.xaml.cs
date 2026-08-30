@@ -349,7 +349,9 @@ public partial class LfgOverlay : UserControl
     }
 
     /// <summary>
-    /// The languages we actually ship, so the filter cannot offer one nobody can be listed under.
+    /// Every language the app ships, because that is every language somebody can be listed
+    /// under. Offering a shorter list made the players running the app in the other twenty-five
+    /// unfindable — they were in the board, and no filter reached them.
     /// </summary>
     private void PopulateLanguages()
     {
@@ -359,17 +361,14 @@ public partial class LfgOverlay : UserControl
         _suppressEvents = true;
         try
         {
-            CmbLanguage.ItemsSource = new[]
+            var choices = new System.Collections.Generic.List<LanguageChoice>
             {
-                new LanguageChoice(null, Properties.Resources.GetString("LfgFilterLanguage")),
-                new LanguageChoice("en-US", "English"),
-                new LanguageChoice("de-DE", "Deutsch"),
-                new LanguageChoice("es-ES", "Español"),
-                new LanguageChoice("fr-FR", "Français"),
-                new LanguageChoice("ru-RU", "Русский"),
-                new LanguageChoice("zh-CN", "简体中文"),
-                new LanguageChoice("zh-TW", "繁體中文"),
+                new(null, Properties.Resources.GetString("LfgFilterLanguage")),
             };
+
+            choices.AddRange(Helpers.AppLanguages.All.Select(l => new LanguageChoice(l.Code, l.Name)));
+
+            CmbLanguage.ItemsSource = choices;
             CmbLanguage.DisplayMemberPath = nameof(LanguageChoice.Label);
             CmbLanguage.SelectedIndex = 0;
         }
@@ -584,14 +583,141 @@ public partial class LfgOverlay : UserControl
         await LoadInboxAsync().ConfigureAwait(true);
     }
 
-    private async void MenuReport_Click(object sender, RoutedEventArgs e)
+    private void MenuReport_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
         if (thread.CounterpartId is null) return;
 
-        // Reason and note come from a dialog next; filing it with a bare reason is still better
-        // than a menu entry that does nothing.
-        await SocialApi.ReportAsync(thread.CounterpartId, "other").ConfigureAwait(true);
+        OpenReport(new ReportTarget(thread.CounterpartId, thread.CounterpartName, null, null));
+    }
+
+    // ── Reporting ───────────────────────────────────────────────────────────
+
+    /// <summary>Always a person, and sometimes one line they wrote.</summary>
+    private sealed record ReportTarget(string UserId, string DisplayName, string? MessageId, string? Quote);
+
+    private ReportTarget? _reportTarget;
+
+    /// <summary>
+    /// The reasons, paired with the word the server files them under.
+    ///
+    /// A fixed set rather than free text: somebody working through the queue needs to see the
+    /// same six words, not six hundred phrasings of them, and a set is what makes "twelve spam
+    /// reports this week" a sentence anybody can act on. The note underneath is where the
+    /// phrasing goes.
+    /// </summary>
+    private static readonly (string Reason, string Key)[] ReasonChoices =
+    {
+        ("harassment", "ReportReasonHarassment"),
+        ("spam", "ReportReasonSpam"),
+        ("scam", "ReportReasonScam"),
+        ("hate", "ReportReasonHate"),
+        ("explicit", "ReportReasonExplicit"),
+        ("other", "ReportReasonOther"),
+    };
+
+    private void OpenReport(ReportTarget target)
+    {
+        _reportTarget = target;
+
+        ReportHeading.Text = string.Format(
+            Properties.Resources.GetString("ReportTitle"), target.DisplayName);
+
+        BuildReportReasons();
+
+        // The quote is what makes the report actionable without a moderator having to go and
+        // find the line - which, a week later, they cannot: the room is pruned.
+        var hasQuote = !string.IsNullOrWhiteSpace(target.Quote);
+        ReportQuoted.Visibility = hasQuote ? Visibility.Visible : Visibility.Collapsed;
+        ReportQuotedText.Text = target.Quote ?? "";
+
+        TxtReportNote.Text = "";
+        ReportError.Visibility = Visibility.Collapsed;
+        ReportForm.Visibility = Visibility.Visible;
+        ReportDone.Visibility = Visibility.Collapsed;
+        ReportSheet.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>
+    /// Nothing is preselected. A pre-ticked first option would file "harassment" for everyone
+    /// who did not read the list, which is the one reason that must never be the default.
+    /// </summary>
+    private void BuildReportReasons()
+    {
+        ReportReasons.Children.Clear();
+        BtnReportSubmit.IsEnabled = false;
+
+        var style = (Style)FindResource("SocialDotRadio");
+
+        foreach (var (reason, key) in ReasonChoices)
+        {
+            var radio = new RadioButton
+            {
+                GroupName = "ReportReason",
+                Style = style,
+                Content = Properties.Resources.GetString(key),
+                Tag = reason,
+            };
+
+            radio.Checked += (_, __) => BtnReportSubmit.IsEnabled = true;
+            ReportReasons.Children.Add(radio);
+        }
+    }
+
+    private async void BtnReportSubmit_Click(object sender, RoutedEventArgs e)
+    {
+        if (_reportTarget is not { } target) return;
+
+        if (ReportReasons.Children.OfType<RadioButton>()
+                .FirstOrDefault(r => r.IsChecked == true)?.Tag is not string reason) return;
+
+        BtnReportSubmit.IsEnabled = false;
+        ReportError.Visibility = Visibility.Collapsed;
+
+        var note = TxtReportNote.Text?.Trim();
+
+        var sent = await SocialApi
+            .ReportAsync(target.UserId, reason, target.MessageId, string.IsNullOrEmpty(note) ? null : note)
+            .ConfigureAwait(true);
+
+        if (!sent)
+        {
+            ReportError.Visibility = Visibility.Visible;
+            BtnReportSubmit.IsEnabled = true;
+            return;
+        }
+
+        // The receipt replaces the form in the same sheet, so the answer arrives where the
+        // question was asked rather than as a toast somewhere else on screen.
+        ReportHeading.Text = Properties.Resources.GetString("ReportDoneTitle");
+        ReportForm.Visibility = Visibility.Collapsed;
+        ReportDone.Visibility = Visibility.Visible;
+    }
+
+    private void BtnReportCancel_Click(object sender, RoutedEventArgs e)
+    {
+        ReportSheet.Visibility = Visibility.Collapsed;
+        _reportTarget = null;
+    }
+
+    /// <summary>
+    /// Blocking straight from the receipt. Reporting asks somebody else to act and takes as long
+    /// as that takes; blocking is the part the reporter can do now, and offering it here means
+    /// they do not have to go and find the same person again in a list.
+    /// </summary>
+    private async void BtnReportBlock_Click(object sender, RoutedEventArgs e)
+    {
+        if (_reportTarget is not { } target) return;
+
+        await SocialApi.BlockAsync(target.UserId).ConfigureAwait(true);
+
+        ReportSheet.Visibility = Visibility.Collapsed;
+        _reportTarget = null;
+
+        // Their lines, their listing and their thread all go, and the server filters all three.
+        await LoadChatAsync().ConfigureAwait(true);
+        await LoadInboxAsync().ConfigureAwait(true);
+        await LoadListingsAsync().ConfigureAwait(true);
     }
 
     // ── The public room ─────────────────────────────────────────────────────
@@ -759,13 +885,13 @@ public partial class LfgOverlay : UserControl
         await LoadChatAsync().ConfigureAwait(true);
     }
 
-    private async void ChatReport_Click(object sender, RoutedEventArgs e)
+    private void ChatReport_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line || line.SenderId is null) return;
 
-        // The message id goes with it, so the report keeps a copy of what was said even after the
-        // line itself is pruned a week later.
-        await SocialApi.ReportAsync(line.SenderId, "chat", line.Id).ConfigureAwait(true);
+        // The id goes with it, so the server keeps a copy of what was said even after the line
+        // itself is pruned a week later.
+        OpenReport(new ReportTarget(line.SenderId, line.SenderName, line.Id, line.Body));
     }
 
     private void BtnCloudSetup_Click(object sender, RoutedEventArgs e)

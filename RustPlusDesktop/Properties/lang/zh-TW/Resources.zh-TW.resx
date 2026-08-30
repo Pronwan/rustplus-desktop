@@ -1128,4 +1128,55 @@
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>和大家聊天，或找人一起玩。</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>檢舉 {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>每一則檢舉都會有管理員查看。哪一項最符合？</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>騷擾或威脅</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>垃圾訊息或廣告</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>詐騙或釣魚</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>仇恨言論</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>色情或血腥內容</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>還有什麼需要我們知道的嗎？（選填）</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>用你自己的話說說發生了什麼</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>你要檢舉的訊息</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>送出檢舉</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>檢舉已送出</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>謝謝。管理員會查看。如果暫時不想再收到這名玩家的訊息，你也可以把他封鎖。</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>檢舉未能送出，請稍後再試。</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>關閉</value>
+  </data>
 </root>

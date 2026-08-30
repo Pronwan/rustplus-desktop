@@ -5860,4 +5860,55 @@ You can find more information on the server's official website:
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>Talk to everyone, or find people to play with.</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>Report {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>A moderator reads every report. Tell us which of these fits best.</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Harassment or threats</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Spam or advertising</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Scam or phishing</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Hate speech</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Sexual or graphic content</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Something else</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Anything else we should know? (optional)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>What happened, in your words</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>The message you are reporting</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Send report</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Report sent</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Thank you. A moderator will look at it. You can block this player as well if you would rather not hear from them in the meantime.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>The report could not be sent. Please try again in a moment.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

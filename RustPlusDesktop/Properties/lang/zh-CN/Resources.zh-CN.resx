@@ -5865,4 +5865,55 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="SocialHubSubtitle" xml:space="preserve">
     <value>和大家聊天，或找人一起玩。</value>
   </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>举报 {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>每一条举报都会有管理员查看。哪一项最符合？</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>骚扰或威胁</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>垃圾信息或广告</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>诈骗或钓鱼</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>仇恨言论</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>色情或血腥内容</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>还有什么需要我们知道的吗？（选填）</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>用你自己的话说说发生了什么</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>你要举报的消息</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>提交举报</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>举报已提交</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>谢谢。管理员会查看。如果暂时不想再收到这名玩家的消息，你也可以把他拉黑。</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>举报没能提交，请稍后再试。</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
 </root>
