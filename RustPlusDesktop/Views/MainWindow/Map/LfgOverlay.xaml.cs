@@ -1,4 +1,6 @@
+using RustPlusDesk.Services.Social;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,6 +13,9 @@ namespace RustPlusDesk.Views;
 /// visible and said so — the consent block appears the moment a mode is picked and the status only
 /// commits once it is accepted. And the whole feature needs a cloud account, because an account is
 /// what other players message; without one there is nothing for them to reach.
+///
+/// State lives on the server, not here. Reinstalling or moving to a second machine should not
+/// silently drop somebody out of the list they thought they were in.
 /// </summary>
 public partial class LfgOverlay : UserControl
 {
@@ -23,37 +28,62 @@ public partial class LfgOverlay : UserControl
     /// <summary>The mode waiting for consent, held back until the disclosure is accepted.</summary>
     private LfgMode _pendingMode = LfgMode.None;
 
+    private bool _hasLfgConsent;
+
     public LfgOverlay()
     {
         InitializeComponent();
-        Loaded += (_, __) => Refresh();
+        Loaded += (_, __) => _ = RefreshAsync();
     }
 
-    public enum LfgMode { None, LookingForTeam, LookingForMembers }
+    /// <summary>Kept for callers that cannot await; the work still happens.</summary>
+    public void Refresh() => _ = RefreshAsync();
 
-    /// <summary>Reloads from stored state. Safe to call whenever the panel is opened.</summary>
-    public void Refresh()
+    /// <summary>Loads the stored state. Safe to call whenever the panel is opened.</summary>
+    public async Task RefreshAsync()
     {
         bool hasCloud = Services.Cloud.CloudAuthManager.IsAuthenticated;
         CloudGate.Visibility = hasCloud ? Visibility.Collapsed : Visibility.Visible;
         Body.Visibility = hasCloud ? Visibility.Visible : Visibility.Collapsed;
         if (!hasCloud) return;
 
+        var settings = await SocialApi.GetSettingsAsync().ConfigureAwait(true);
+        var mode = await SocialApi.GetListingAsync().ConfigureAwait(true);
+
         _suppressEvents = true;
         try
         {
-            // TODO(social-layer): read from GET lfg/me and GET dm/settings once they exist.
-            RbModeNone.IsChecked = true;
-            RbAcceptAuto.IsChecked = true;
+            _hasLfgConsent = settings?.LfgConsent ?? false;
+
+            (mode switch
+            {
+                LfgMode.LookingForTeam => RbModeLfg,
+                LfgMode.LookingForMembers => RbModeLfm,
+                _ => RbModeNone,
+            }).IsChecked = true;
+
+            ((settings?.Accept ?? AcceptMode.Auto) switch
+            {
+                AcceptMode.Approval => RbAcceptApproval,
+                AcceptMode.Off => RbAcceptOff,
+                _ => RbAcceptAuto,
+            }).IsChecked = true;
+
             ConsentPanel.Visibility = Visibility.Collapsed;
+            ApplyListedConstraints(mode != LfgMode.None);
         }
         finally
         {
             _suppressEvents = false;
         }
+
+        // A listing expires two days after its last sign of life. Renewing on open keeps somebody
+        // who uses the app listed, and lets the entry of somebody who stopped fall away.
+        if (mode != LfgMode.None)
+            _ = SocialApi.RenewListingAsync();
     }
 
-    private void Mode_Checked(object sender, RoutedEventArgs e)
+    private async void Mode_Checked(object sender, RoutedEventArgs e)
     {
         if (_suppressEvents) return;
 
@@ -67,14 +97,13 @@ public partial class LfgOverlay : UserControl
             ConsentPanel.Visibility = Visibility.Collapsed;
             _pendingMode = LfgMode.None;
             ApplyListedConstraints(false);
-            // TODO(social-layer): DELETE lfg/me
+            await SocialApi.SetListingAsync(LfgMode.None).ConfigureAwait(true);
             return;
         }
 
-        if (HasGivenConsent())
+        if (_hasLfgConsent)
         {
-            ApplyListedConstraints(true);
-            // TODO(social-layer): PUT lfg/me with the chosen mode
+            await PublishAsync(mode).ConfigureAwait(true);
             return;
         }
 
@@ -82,13 +111,53 @@ public partial class LfgOverlay : UserControl
         ConsentPanel.Visibility = Visibility.Visible;
     }
 
-    private void BtnConsentAccept_Click(object sender, RoutedEventArgs e)
+    private async void BtnConsentAccept_Click(object sender, RoutedEventArgs e)
     {
-        RecordConsent();
         ConsentPanel.Visibility = Visibility.Collapsed;
-        // TODO(social-layer): POST lfg/consent, then PUT lfg/me with _pendingMode
-        ApplyListedConstraints(_pendingMode != LfgMode.None);
+
+        if (!await SocialApi.ConsentAsync("lfg").ConfigureAwait(true))
+        {
+            // The disclosure was never recorded, so publishing would be refused anyway. Put the
+            // switch back rather than leave the panel claiming a state the server does not have.
+            ResetModeToNone();
+            return;
+        }
+
+        _hasLfgConsent = true;
+        await PublishAsync(_pendingMode).ConfigureAwait(true);
         _pendingMode = LfgMode.None;
+    }
+
+    private void BtnConsentCancel_Click(object sender, RoutedEventArgs e)
+    {
+        ResetModeToNone();
+        _pendingMode = LfgMode.None;
+    }
+
+    private async void Accept_Checked(object sender, RoutedEventArgs e)
+    {
+        if (_suppressEvents) return;
+
+        var mode = ReferenceEquals(sender, RbAcceptApproval) ? AcceptMode.Approval
+                 : ReferenceEquals(sender, RbAcceptOff) ? AcceptMode.Off
+                 : AcceptMode.Auto;
+
+        await SocialApi.SetAcceptModeAsync(mode).ConfigureAwait(true);
+    }
+
+    private async Task PublishAsync(LfgMode mode)
+    {
+        if (mode == LfgMode.None) return;
+
+        if (await SocialApi.SetListingAsync(mode).ConfigureAwait(true))
+        {
+            ApplyListedConstraints(true);
+            return;
+        }
+
+        // Refused — most likely the consent version moved on. Reload rather than guess, so the
+        // panel ends up showing whatever is actually stored.
+        await RefreshAsync().ConfigureAwait(true);
     }
 
     /// <summary>
@@ -108,13 +177,12 @@ public partial class LfgOverlay : UserControl
         try { RbAcceptApproval.IsChecked = true; }
         finally { _suppressEvents = false; }
 
-        // TODO(social-layer): PUT dm/settings with accept_mode=approval
+        // The server makes the same switch when a listing goes up; this keeps the panel in step
+        // rather than showing a choice that no longer applies.
     }
 
-    private void BtnConsentCancel_Click(object sender, RoutedEventArgs e)
+    private void ResetModeToNone()
     {
-        // Declining puts the radio back rather than leaving a mode selected that was never
-        // published — the panel must not claim a state the server does not have.
         _suppressEvents = true;
         try
         {
@@ -125,13 +193,6 @@ public partial class LfgOverlay : UserControl
         {
             _suppressEvents = false;
         }
-        _pendingMode = LfgMode.None;
-    }
-
-    private void Accept_Checked(object sender, RoutedEventArgs e)
-    {
-        if (_suppressEvents) return;
-        // TODO(social-layer): PUT dm/settings with the chosen accept mode
     }
 
     private void BtnCloudSetup_Click(object sender, RoutedEventArgs e)
@@ -139,10 +200,4 @@ public partial class LfgOverlay : UserControl
 
     private void BtnClose_Click(object sender, RoutedEventArgs e)
         => CloseRequested?.Invoke(this, e);
-
-    // TODO(social-layer): both back onto social_settings.lfg_consent_version from the API. Local
-    // for now so the flow can be exercised before the endpoints exist.
-    private static bool HasGivenConsent() => false;
-
-    private static void RecordConsent() { }
 }
