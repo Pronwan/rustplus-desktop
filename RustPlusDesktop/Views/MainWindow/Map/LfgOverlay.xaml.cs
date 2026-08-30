@@ -962,6 +962,41 @@ public partial class LfgOverlay : UserControl
     private void BtnChatRulesCancel_Click(object sender, RoutedEventArgs e)
         => ChatRulesPanel.Visibility = Visibility.Collapsed;
 
+    // ── The block list ──────────────────────────────────────────────────────
+
+    private async void BtnBlocks_Click(object sender, RoutedEventArgs e)
+    {
+        BlocksSheet.Visibility = Visibility.Visible;
+        await LoadBlocksAsync().ConfigureAwait(true);
+    }
+
+    private void BtnBlocksClose_Click(object sender, RoutedEventArgs e)
+        => BlocksSheet.Visibility = Visibility.Collapsed;
+
+    private async Task LoadBlocksAsync()
+    {
+        var blocks = await SocialApi.GetBlocksAsync().ConfigureAwait(true);
+
+        BlockList.ItemsSource = blocks;
+        BlocksEmptyNotice.Visibility = blocks.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private async void BtnUnblock_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.BlockedPlayer blocked) return;
+
+        if (sender is System.Windows.Controls.Control button) button.IsEnabled = false;
+
+        await SocialApi.UnblockAsync(blocked.UserId).ConfigureAwait(true);
+        await LoadBlocksAsync().ConfigureAwait(true);
+
+        // Both directions come back at once: their lines reappear in the room, their listing in
+        // the board. Reloading here rather than on close means the change is visible where it
+        // was made.
+        await LoadChatAsync().ConfigureAwait(true);
+        await LoadListingsAsync().ConfigureAwait(true);
+    }
+
     // ── The Steam profile behind a listing ──────────────────────────────────
 
     private Models.LfgEntry? _profileEntry;

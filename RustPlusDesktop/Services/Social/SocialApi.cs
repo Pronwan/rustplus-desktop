@@ -272,6 +272,56 @@ public static class SocialApi
     public static Task<bool> MarkReadAsync(string conversationId)
         => WriteAsync($"social/conversations/{conversationId}/read", HttpMethod.Post);
 
+    /// <summary>
+    /// The block list, so it can be undone. A list you cannot see is a list you cannot leave, and
+    /// blocking somebody in the heat of an argument is exactly the kind of thing people want back.
+    ///
+    /// Empty on failure, like the other reads: an empty list and an unreachable one both mean
+    /// there is nothing to show right now.
+    /// </summary>
+    public static async Task<System.Collections.Generic.List<Models.BlockedPlayer>> GetBlocksAsync()
+    {
+        var result = new System.Collections.Generic.List<Models.BlockedPlayer>();
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync("social/blocks", HttpMethod.Get)
+                .ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+
+            if (!doc.RootElement.TryGetProperty("data", out var rows) || rows.ValueKind != JsonValueKind.Array)
+                return result;
+
+            foreach (var row in rows.EnumerateArray())
+            {
+                var blocked = row.TryGetProperty("blocked", out var b) && b.ValueKind == JsonValueKind.Object ? b : default;
+
+                var id = Str(blocked, "id") ?? Str(row, "blocked_id");
+                if (string.IsNullOrWhiteSpace(id)) continue;
+
+                result.Add(new Models.BlockedPlayer
+                {
+                    UserId = id!,
+                    DisplayName = Str(blocked, "display_name") ?? Str(blocked, "name") ?? "—",
+                    AvatarUrl = Str(blocked, "avatar_url"),
+                    SteamId = Str(blocked, "steam_id"),
+                    BlockedAt = Date(row, "created_at"),
+                });
+            }
+        }
+        catch
+        {
+            // Deliberately quiet.
+        }
+
+        return result;
+    }
+
+    /// <summary>Takes somebody off the list. The server treats a repeat as already done.</summary>
+    public static Task<bool> UnblockAsync(string userId)
+        => WriteAsync($"social/blocks/{userId}", HttpMethod.Delete);
+
     public static Task<bool> BlockAsync(string userId)
         => WriteAsync("social/blocks", HttpMethod.Post, new { user_id = userId });
 

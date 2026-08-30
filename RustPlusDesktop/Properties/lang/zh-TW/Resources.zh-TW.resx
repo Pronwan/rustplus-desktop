@@ -1242,4 +1242,19 @@
   <data name="ProfileClose" xml:space="preserve">
     <value>關閉</value>
   </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>已封鎖的玩家</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>你們互相傳不了訊息，也不會出現在對方的聊天室和列表裡。對方不會收到任何提示。</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>你還沒有封鎖任何人。</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>解除封鎖</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>封鎖於</value>
+  </data>
 </root>

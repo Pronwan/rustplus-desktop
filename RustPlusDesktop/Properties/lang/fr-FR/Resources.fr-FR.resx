@@ -6231,4 +6231,19 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ProfileClose" xml:space="preserve">
     <value>Fermer</value>
   </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Joueurs bloqués</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Aucun de vous deux ne peut écrire à l’autre, et vous n’apparaissez plus l’un pour l’autre, ni dans le salon ni dans les listes. La personne n’en est pas informée.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>Vous n’avez bloqué personne.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Débloquer</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Bloqué le</value>
+  </data>
 </root>

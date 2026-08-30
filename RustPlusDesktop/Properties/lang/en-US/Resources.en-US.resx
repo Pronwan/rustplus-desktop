@@ -5974,4 +5974,19 @@ You can find more information on the server's official website:
   <data name="ProfileClose" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Blocked players</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Neither of you can message the other, and neither of you appears in the other’s room or lists. They are never told.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>You have not blocked anyone.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
 </root>

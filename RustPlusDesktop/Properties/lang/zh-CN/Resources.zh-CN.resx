@@ -5979,4 +5979,19 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ProfileClose" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>已拉黑的玩家</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>你们互相发不了消息，也不会出现在对方的聊天室和列表里。对方不会收到任何提示。</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>你还没有拉黑任何人。</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>取消拉黑</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>拉黑于</value>
+  </data>
 </root>

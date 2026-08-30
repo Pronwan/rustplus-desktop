@@ -6231,4 +6231,19 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ProfileClose" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Заблокированные игроки</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Вы не можете писать друг другу и не видите друг друга ни в комнате, ни в списках. Второму человеку об этом не сообщают.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>Вы никого не заблокировали.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Разблокировать</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Заблокирован</value>
+  </data>
 </root>

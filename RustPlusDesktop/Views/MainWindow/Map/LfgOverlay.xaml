@@ -136,8 +136,13 @@
                     <TextBlock Text="{DynamicResource SocialHubTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
                     <TextBlock Text="{DynamicResource SocialHubSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
                 </StackPanel>
-                <ui:Button Grid.Column="1" x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
-                           Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" VerticalAlignment="Top" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                    <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
+                               ToolTip="{DynamicResource BlocksTitle}"
+                               Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" Margin="0,0,6,0" />
+                    <ui:Button x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
+                               Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" />
+                </StackPanel>
             </Grid>
 
             <!--  Cloud gate: shown instead of everything else when there is no cloud account.  -->
@@ -575,6 +580,76 @@
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
+
+            <!--
+                The block list.
+
+                Blocking is the one thing here somebody can do about another person without
+                waiting for us, and it is deliberately private and immediate. That only works if
+                it can also be undone: a list you cannot see is a list you cannot leave, and a
+                block made in the middle of an argument is exactly what people want back.
+            -->
+            <Border x:Name="BlocksSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource BlocksTitle}" Foreground="{StaticResource LfgText}"
+                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <TextBlock Text="{DynamicResource BlocksIntro}" Foreground="{StaticResource LfgMuted}"
+                                   FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+
+                        <TextBlock x:Name="BlocksEmptyNotice" Visibility="Collapsed" Margin="0,12,0,0"
+                                   Text="{DynamicResource BlocksEmpty}" TextWrapping="Wrap"
+                                   Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                        <ScrollViewer MaxHeight="300" Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="BlockList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0DFFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Ellipse Grid.Column="0" Width="30" Height="30" Margin="0,0,10,0">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                               FontSize="12.5" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                                        <TextBlock Text="{DynamicResource BlocksSince}" Foreground="{StaticResource LfgMuted}"
+                                                                   FontSize="10.5" Margin="0,0,4,0" />
+                                                        <TextBlock Text="{Binding BlockedAtLabel}" Foreground="{StaticResource LfgMuted}"
+                                                                   FontSize="10.5" />
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <ui:Button Grid.Column="2" VerticalAlignment="Center" Height="28"
+                                                           Appearance="Secondary" Tag="{Binding}" Click="BtnUnblock_Click"
+                                                           Content="{DynamicResource BlocksUnblock}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <ui:Button x:Name="BtnBlocksClose" Click="BtnBlocksClose_Click" Appearance="Primary"
+                                   HorizontalAlignment="Left" Margin="0,14,0,0"
+                                   Content="{DynamicResource ProfileClose}" />
+                    </StackPanel>
+                </Border>
+            </Border>
 
             <!--
                 A Steam profile, read straight from the community page.

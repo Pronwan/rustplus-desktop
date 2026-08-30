@@ -6306,4 +6306,19 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ProfileClose" xml:space="preserve">
     <value>Schließen</value>
   </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Blockierte Spieler</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Ihr könnt euch gegenseitig nicht schreiben und taucht beim jeweils anderen weder im Chat noch in den Listen auf. Der andere erfährt nichts davon.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>Du hast niemanden blockiert.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Aufheben</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Blockiert</value>
+  </data>
 </root>
