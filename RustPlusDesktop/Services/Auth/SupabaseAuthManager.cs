@@ -382,7 +382,7 @@ namespace RustPlusDesk.Services.Auth
 
         private static string T(string key, string fallback)
         {
-            return RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+            return RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
         }
         private static DateTime GetJwtExpiration(string token)
         {

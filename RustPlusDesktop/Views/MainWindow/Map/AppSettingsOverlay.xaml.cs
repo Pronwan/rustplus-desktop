@@ -153,7 +153,7 @@ namespace RustPlusDesk.Views
 
         private static string T(string key, string fallback)
         {
-            return Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+            return RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
         }
 
         private void InitializeSettingsNavigation()

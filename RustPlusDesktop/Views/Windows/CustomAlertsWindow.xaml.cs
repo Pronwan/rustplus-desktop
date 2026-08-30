@@ -186,11 +186,11 @@ namespace RustPlusDesk.Views.Windows
         public AlertModel(string key)
         {
             Key = key;
-            Name = Properties.Resources.ResourceManager.GetString(key + "Name") ?? key;
-            Description = Properties.Resources.ResourceManager.GetString(key + "Desc") ?? string.Empty;
+            Name = RustPlusDesk.Helpers.Loc.TextOrNull(key + "Name") ?? key;
+            Description = RustPlusDesk.Helpers.Loc.TextOrNull(key + "Desc") ?? string.Empty;
             
-            string varsText = Properties.Resources.ResourceManager.GetString(key + "Vars") ?? string.Empty;
-            string varsLabelPattern = Properties.Resources.ResourceManager.GetString("VariablesLabel") ?? "Variables: {0}";
+            string varsText = RustPlusDesk.Helpers.Loc.TextOrNull(key + "Vars") ?? string.Empty;
+            string varsLabelPattern = RustPlusDesk.Helpers.Loc.TextOrNull("VariablesLabel") ?? "Variables: {0}";
             Variables = string.Format(varsLabelPattern, varsText);
             
             _currentText = AlertTemplateService.GetAlertTemplate(key);
