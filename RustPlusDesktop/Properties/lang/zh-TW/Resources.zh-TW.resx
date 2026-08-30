@@ -1257,4 +1257,22 @@
   <data name="BlocksSince" xml:space="preserve">
     <value>封鎖於</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>你的備註 / 簡介</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>新增備註（例如遊玩風格、時數、洗白時程）...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>你的當前招募（預覽）</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>活躍</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>暫無備註</value>
+  </data>
 </root>

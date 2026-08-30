@@ -6246,4 +6246,22 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BlocksSince" xml:space="preserve">
     <value>Заблокирован</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>Ваша заметка / описание</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>Добавьте заметку (например, стиль игры, часы, расписание вайпов)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>Ваше активное объявление (Предпросмотр)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>Активно</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>Заметка пока не указана</value>
+  </data>
 </root>
