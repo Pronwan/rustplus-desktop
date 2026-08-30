@@ -5700,4 +5700,298 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="FcmRepairButton" xml:space="preserve">
     <value>立即重新配对</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>寻找队伍</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>找一支队伍，或为自己的队伍找人。</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>你的状态</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>不在寻找</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>寻找队伍</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>寻找队员</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>私信</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>自动接收消息</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>接收前先询问我</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>不接收消息</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>在你出现在列表中之前</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>其他玩家将能看到你的名称和头像、语言、是否在线、你所在的服务器、队伍人数，以及你的 Steam 个人资料链接。</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>关键在于服务器：任何寻找队伍的人都能看到你在哪里游玩。你可以随时不再出现在列表中。</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>我明白了</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>寻找队伍需要云功能。别人联系的是你的账号——没有云就没有可连接的对象。</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>设置云功能</value>
+  </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>当你出现在列表中时，别人需要有办法联系到你。</value>
+  </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>社区</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>全局聊天与寻找队伍</value>
+  </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>招募队员的队伍</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>寻找队伍的玩家</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>所有语言</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>仅在线</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>目前列表中没有人。稍后再看看，或在上方添加你自己。</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>队伍</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>发送消息</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam 个人资料</value>
+  </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>还没有消息。从上方列表中找人聊聊吧。</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>写一条消息…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>接受</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>请求</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>已拒绝</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} 想给你发消息。</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>你已拒绝该请求，对方无法再次发送。</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>屏蔽该玩家</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>举报该玩家</value>
+  </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>写给 {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>打个招呼，说说你在找什么…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>首条消息刻意简短。对方回复后，接下来就是正常聊天。</value>
+  </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>全局聊天</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>寻找队伍</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>向所有人发言…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>这里还没有人说话。你先来吧。</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>你在 {0} 之前无法发言。原因：{1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>你无法再在此发言。原因：{0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>这里的所有人都能看到你的名字。没有人能看到你在哪个服务器游玩。</value>
+  </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>社区中心</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>和大家聊天，或找人一起玩。</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>举报 {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>每一条举报都会有管理员查看。哪一项最符合？</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>骚扰或威胁</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>垃圾信息或广告</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>诈骗或钓鱼</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>仇恨言论</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>色情或血腥内容</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>还有什么需要我们知道的吗？（选填）</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>用你自己的话说说发生了什么</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>你要举报的消息</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>提交举报</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>举报已提交</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>谢谢。管理员会查看。如果暂时不想再收到这名玩家的消息，你也可以把他拉黑。</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>举报没能提交，请稍后再试。</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>尚未开放</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>社区聊天正在分批开放。轮到你的账号时它就会出现在这里——不是你这边出了问题。</value>
+  </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>在这里发言之前</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>这是公共聊天室。所有使用 Rust+ Desktop 的人都能看到你发的内容。</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>禁止：任何形式的链接、广告、交易与买卖、骚扰与威胁、仇恨言论、色情或血腥内容，以及冒充官方人员。</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>每一条举报都会有管理员查看。违反规则可能让你暂时、甚至永久失去这个聊天室。永久封禁绑定的是 Steam 账号，而不是这台电脑——换个账号但用同一个 Steam ID 也回不来。</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>我已阅读</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>暂不</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>公共聊天室不允许发链接。请改用私信发送。</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>你刚刚发过这句了，稍等一会儿。</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>新账号需要等一小段时间才能在这里发言，这样聊天室才能保持可用。</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>没有可发送的内容。</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>发送失败，请稍后再试。</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>打开 Steam 个人资料</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>复制 Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Steam 注册于</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>地区</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>有 VAC 封禁记录</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>该 Steam 资料是私密的。</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam 没有响应。资料可能是私密的，或者 Steam 正忙。</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>已拉黑的玩家</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>你们互相发不了消息，也不会出现在对方的聊天室和列表里。对方不会收到任何提示。</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>你还没有拉黑任何人。</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>取消拉黑</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>拉黑于</value>
+  </data>
 </root>

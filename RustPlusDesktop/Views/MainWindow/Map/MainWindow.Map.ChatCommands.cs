@@ -170,7 +170,7 @@ public partial class MainWindow
             var afkMembers = TeamMembers.Where(t => t.IsAfk).ToList();
             if (afkMembers.Count == 0)
             {
-                var noOneAfkMsg = Properties.Resources.ResourceManager.GetString("ChatCmdNoOneAfk") ?? "No one is AFK.";
+                var noOneAfkMsg = RustPlusDesk.Helpers.Loc.TextOrNull("ChatCmdNoOneAfk") ?? "No one is AFK.";
                 _ = SendChatCommandResponseAsync(noOneAfkMsg);
             }
             else
