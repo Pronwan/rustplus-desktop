@@ -4333,12 +4333,6 @@
                                 </Popup>
                             </Grid>
                             <Grid>
-                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Players}" AutomationProperties.HelpText="{DynamicResource UiBrowseOnlinePlayersAndTrackedTargets}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
                                 <ui:Button x:Name="RailNotificationsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource NotificationsTab}" AutomationProperties.HelpText="{DynamicResource UiReviewAlertsAndRecentServerEvents}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Alert24}" Tag="{Binding ElementName=NotificationsTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailNotificationsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailNotificationsButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailNotificationsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
@@ -4387,6 +4381,23 @@
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
+                            <!--
+                                Community sits apart from the tools above it: it is the one place
+                                in the app where other people can reach you, rather than another
+                                thing you operate. Hence the rule and the tinted icon - a filled
+                                background would read as "this tab is active", which it is not.
+                            -->
+                            <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,2,0,8" />
+                            <ui:Button
+                                x:Name="RailSocialButton"
+                                Style="{StaticResource SidebarRailButton}"
+                                AutomationProperties.Name="{DynamicResource SocialRailName}"
+                                AutomationProperties.HelpText="{DynamicResource SocialRailHelp}"
+                                Click="BtnSocial_Click"
+                                ToolTip="{DynamicResource SocialRailName}"
+                                Foreground="#FF8B7BE8"
+                                Icon="{ui:SymbolIcon Symbol=ChatMultiple24}" />
+                            <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,8,0,8" />
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"
                                 tutorials:Tutorial.TargetId="Navigation.Collapse"

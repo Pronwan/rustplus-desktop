@@ -36,4 +36,11 @@ public partial class MainWindow
         LfgPanel.Refresh();
         LfgPanel.Visibility = Visibility.Visible;
     }
+
+    /// <summary>
+    /// Opens the Community area from the rail. Same panel as the Team tab's LFG button for now —
+    /// global chat arrives here next, and the two share one inbox, so they share one surface
+    /// rather than two that each hold half the messages.
+    /// </summary>
+    private void BtnSocial_Click(object sender, RoutedEventArgs e) => BtnLfg_Click(sender, e);
 }

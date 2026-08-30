@@ -6009,4 +6009,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="LfgAcceptOffBlocked" xml:space="preserve">
     <value>Mientras apareces en la lista, la gente necesita poder contactarte.</value>
   </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>Comunidad</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>Chat global y búsqueda de equipo</value>
+  </data>
 </root>

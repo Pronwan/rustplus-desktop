@@ -6084,4 +6084,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgAcceptOffBlocked" xml:space="preserve">
     <value>Solange du in der Liste stehst, muss man dich erreichen können.</value>
   </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>Globaler Chat und Team-Suche</value>
+  </data>
 </root>

@@ -1020,4 +1020,10 @@
   <data name="LfgAcceptOffBlocked" xml:space="preserve">
     <value>當你出現在列表中時，別人需要有辦法聯絡到你。</value>
   </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>社群</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>全域聊天與尋找隊伍</value>
+  </data>
 </root>

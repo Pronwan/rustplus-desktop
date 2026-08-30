@@ -5757,4 +5757,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="LfgAcceptOffBlocked" xml:space="preserve">
     <value>当你出现在列表中时，别人需要有办法联系到你。</value>
   </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>社区</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>全局聊天与寻找队伍</value>
+  </data>
 </root>

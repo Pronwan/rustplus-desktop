@@ -5752,4 +5752,10 @@ You can find more information on the server's official website:
   <data name="LfgAcceptOffBlocked" xml:space="preserve">
     <value>While you are listed, people need some way to reach you.</value>
   </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>Global chat and Looking for Group</value>
+  </data>
 </root>
