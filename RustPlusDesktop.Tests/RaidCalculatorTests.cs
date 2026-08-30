@@ -79,6 +79,53 @@ public sealed class RaidCalculatorTests
     }
 
     [TestMethod]
+    public void SulfurCostReflectsFlattenedCraftCostTimesRequiredItems()
+    {
+        RaidTarget target = _data.Targets.First(item => item.DisplayName == "Armored Door");
+        RaidMethodResult c4 = _engine.GetMethods(target)
+            .Single(item => item.Source.ItemShortname == "explosive.timed");
+
+        double sulfurPerItem = c4.Source.CraftCost!.Single(cost => cost.Shortname == "sulfur").Amount;
+        Assert.AreEqual(sulfurPerItem * c4.RequiredItems, c4.SulfurCost);
+        Assert.IsTrue(c4.IsSulfurRankable);
+    }
+
+    [TestMethod]
+    public void BestMethodPrefersMainstreamToolsOverCheaperSiegeItems()
+    {
+        RaidTarget target = _data.Targets.First(item => item.DisplayName == "Sheet Metal Door");
+
+        RaidMethodResult? best = _engine.BestMethod(target);
+        double cheapestStandard = _engine.GetMethods(target)
+            .Where(method => method.IsSulfurRankable && method.IsStandardTool)
+            .Min(method => method.SulfurCost);
+
+        Assert.IsNotNull(best);
+        // The practical best is a standard raiding tool, not the raw-sulfur-cheapest siege item.
+        Assert.IsTrue(best!.IsStandardTool);
+        Assert.AreEqual(cheapestStandard, best.SulfurCost);
+        // A siege item (e.g. Torpedo) is cheaper on paper but must not be the recommendation.
+        double absoluteCheapest = _engine.GetMethods(target)
+            .Where(method => method.IsSulfurRankable).Min(method => method.SulfurCost);
+        Assert.IsTrue(absoluteCheapest < best.SulfurCost);
+    }
+
+    [TestMethod]
+    public void RankBySulfurOrdersCraftableSulfurMethodsFirstThenByCost()
+    {
+        RaidTarget target = _data.Targets.First(item => item.DisplayName == "Armored Door");
+
+        IReadOnlyList<RaidMethodResult> ranked = RaidCalculatorEngine.RankBySulfur(_engine.GetMethods(target));
+
+        List<RaidMethodResult> sulfurMethods = ranked.Where(method => method.IsSulfurRankable).ToList();
+        // Sulfur-rankable methods come as a contiguous leading block.
+        Assert.AreEqual(sulfurMethods.Count, ranked.TakeWhile(method => method.IsSulfurRankable).Count());
+        // And that leading block is sorted by ascending sulfur cost.
+        for (int i = 1; i < sulfurMethods.Count; i++)
+            Assert.IsTrue(sulfurMethods[i - 1].SulfurCost <= sulfurMethods[i].SulfurCost);
+    }
+
+    [TestMethod]
     public void InvalidQuantityIsClampedAndUnknownMethodIsUnavailable()
     {
         RaidTarget target = _data.Targets.First();
