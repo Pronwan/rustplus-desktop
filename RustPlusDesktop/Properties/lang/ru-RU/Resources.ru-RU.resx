@@ -6006,4 +6006,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="LfgCloudConnect" xml:space="preserve">
     <value>Настроить облако</value>
   </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>Пока вы в списке, с вами должно быть можно связаться.</value>
+  </data>
 </root>

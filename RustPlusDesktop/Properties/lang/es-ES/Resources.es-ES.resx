@@ -6006,4 +6006,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="LfgCloudConnect" xml:space="preserve">
     <value>Configurar Cloud</value>
   </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>Mientras apareces en la lista, la gente necesita poder contactarte.</value>
+  </data>
 </root>

@@ -66,12 +66,14 @@ public partial class LfgOverlay : UserControl
         {
             ConsentPanel.Visibility = Visibility.Collapsed;
             _pendingMode = LfgMode.None;
+            ApplyListedConstraints(false);
             // TODO(social-layer): DELETE lfg/me
             return;
         }
 
         if (HasGivenConsent())
         {
+            ApplyListedConstraints(true);
             // TODO(social-layer): PUT lfg/me with the chosen mode
             return;
         }
@@ -85,7 +87,28 @@ public partial class LfgOverlay : UserControl
         RecordConsent();
         ConsentPanel.Visibility = Visibility.Collapsed;
         // TODO(social-layer): POST lfg/consent, then PUT lfg/me with _pendingMode
+        ApplyListedConstraints(_pendingMode != LfgMode.None);
         _pendingMode = LfgMode.None;
+    }
+
+    /// <summary>
+    /// Refusing all messages while advertising is a contradiction: it puts you in a list nobody
+    /// can reach you through. So while a mode is set, that choice is unavailable — and if it was
+    /// the active one, it becomes "ask me first" rather than "accept everything". Being listed
+    /// should not quietly open the floodgates either.
+    /// </summary>
+    private void ApplyListedConstraints(bool isListed)
+    {
+        RbAcceptOff.IsEnabled = !isListed;
+        AcceptOffBlockedNote.Visibility = isListed ? Visibility.Visible : Visibility.Collapsed;
+
+        if (!isListed || RbAcceptOff.IsChecked != true) return;
+
+        _suppressEvents = true;
+        try { RbAcceptApproval.IsChecked = true; }
+        finally { _suppressEvents = false; }
+
+        // TODO(social-layer): PUT dm/settings with accept_mode=approval
     }
 
     private void BtnConsentCancel_Click(object sender, RoutedEventArgs e)

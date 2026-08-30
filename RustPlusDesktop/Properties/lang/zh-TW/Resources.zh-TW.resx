@@ -1017,4 +1017,7 @@
   <data name="LfgCloudConnect" xml:space="preserve">
     <value>設定雲端功能</value>
   </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>當你出現在列表中時，別人需要有辦法聯絡到你。</value>
+  </data>
 </root>

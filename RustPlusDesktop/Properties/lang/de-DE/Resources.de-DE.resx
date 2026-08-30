@@ -6081,4 +6081,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgCloudConnect" xml:space="preserve">
     <value>Cloud einrichten</value>
   </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>Solange du in der Liste stehst, muss man dich erreichen können.</value>
+  </data>
 </root>

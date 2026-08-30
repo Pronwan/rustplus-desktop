@@ -6042,4 +6042,7 @@ You can find more information on the server&apos;s official website:
   <data name="LfgCloudConnect" xml:space="preserve">
     <value>Set up Cloud</value>
   </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>While you are listed, people need some way to reach you.</value>
+  </data>
 </root>

@@ -104,6 +104,9 @@
                         <RadioButton x:Name="RbAcceptOff" GroupName="LfgAccept" Content="{DynamicResource LfgAcceptOff}"
                                      Foreground="{StaticResource LfgText}" FontSize="12"
                                      Checked="Accept_Checked" />
+                        <TextBlock x:Name="AcceptOffBlockedNote" Visibility="Collapsed" Margin="22,4,0,0"
+                                   Text="{DynamicResource LfgAcceptOffBlocked}"
+                                   Foreground="{StaticResource LfgMuted}" FontSize="10" TextWrapping="Wrap" />
                     </StackPanel>
 
                     <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,0,0,14" />
