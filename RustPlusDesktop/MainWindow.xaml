@@ -69,7 +69,7 @@
                                 Background="{Binding AccentBrush}"
                                 VerticalAlignment="Stretch"/>
 
-                        <Border Grid.Column="1" Padding="14,16,14,16">
+                        <Border Grid.Column="1" Padding="14,16,14,16" TextElement.Foreground="{DynamicResource TextPrimary}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/> <!-- Icon -->
@@ -108,17 +108,7 @@
                                     </TextBlock>
 
                                     <!-- Rich body when supplied, else the plain message. -->
-                                    <ContentPresenter Content="{Binding Content}">
-                                        <ContentPresenter.Style>
-                                            <Style TargetType="ContentPresenter">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Content}" Value="{x:Null}">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentPresenter.Style>
-                                    </ContentPresenter>
+                                    <ContentPresenter Content="{Binding Content}" />
                                     <!-- Plain body; collapses when empty (i.e. when rich Content is used instead). -->
                                     <TextBlock Text="{Binding Message}"
                                                TextWrapping="Wrap"
