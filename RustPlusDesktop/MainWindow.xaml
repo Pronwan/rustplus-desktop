@@ -4339,7 +4339,8 @@
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRecyclerCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRecyclerCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailRecyclerCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
-
+                            </Grid>
+                            <Grid>
                                 <ui:Button x:Name="RailConsoleHelperButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource ConsoleHelperTitle}" AutomationProperties.HelpText="{DynamicResource ConsoleHelperSubtitle}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=WindowConsole20}" Tag="{Binding ElementName=ConsoleHelperTab}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailConsoleHelperButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailConsoleHelperButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailConsoleHelperButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
