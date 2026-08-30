@@ -31,6 +31,9 @@ public partial class LfgOverlay : UserControl
 
     private bool _hasLfgConsent;
 
+    /// <summary>Whether the rules of the public room have been read and accepted.</summary>
+    private bool _hasChatConsent;
+
     public LfgOverlay()
     {
         InitializeComponent();
@@ -124,6 +127,7 @@ public partial class LfgOverlay : UserControl
         try
         {
             _hasLfgConsent = settings?.LfgConsent ?? false;
+            _hasChatConsent = settings?.ChatConsent ?? false;
 
             (mode switch
             {
@@ -877,16 +881,215 @@ public partial class LfgOverlay : UserControl
         var body = TxtChat.Text?.Trim();
         if (string.IsNullOrEmpty(body)) return;
 
+        // The rules come before the first line, not after it. Sending and then being told is how
+        // somebody ends up banned for a message they were never warned about.
+        if (!_hasChatConsent)
+        {
+            ChatRulesPanel.Visibility = Visibility.Visible;
+            return;
+        }
+
+        ChatRefusal.Visibility = Visibility.Collapsed;
         TxtChat.Text = "";
 
-        if (!await SocialApi.PostChatAsync(body!).ConfigureAwait(true))
+        var result = await SocialApi.PostChatAsync(body!).ConfigureAwait(true);
+
+        if (result != ChatPostResult.Ok)
         {
-            // Refused. Reloading shows why when the reason is a sanction, and puts the text back
-            // when it is anything else — a duplicate, or an account still too new to post.
+            // Put the text back. Whatever the reason, the words are still worth keeping - and for
+            // a link the whole point is that they can rewrite it.
             TxtChat.Text = body;
+            ShowChatRefusal(result);
         }
 
         await LoadChatAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>
+    /// One sentence above the box, saying which refusal this was.
+    ///
+    /// The reasons are answered differently: reading a notice, waiting, or rewriting the message.
+    /// A single "could not send" leaves the user to guess which, and the usual guess is that the
+    /// app is broken.
+    /// </summary>
+    private void ShowChatRefusal(ChatPostResult result)
+    {
+        // A sanction already has its own bar in place of the text box, drawn from the read that
+        // follows this. Saying it twice would be shouting.
+        if (result == ChatPostResult.Sanctioned)
+        {
+            ChatRefusal.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        if (result == ChatPostResult.ConsentRequired)
+        {
+            // The server disagrees with what we thought we had recorded. Ask again.
+            _hasChatConsent = false;
+            ChatRulesPanel.Visibility = Visibility.Visible;
+            ChatRefusal.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        ChatRefusal.Text = Properties.Resources.GetString(result switch
+        {
+            ChatPostResult.LinkNotAllowed => "ChatRefusedLink",
+            ChatPostResult.Duplicate => "ChatRefusedDuplicate",
+            ChatPostResult.TooNew => "ChatRefusedTooNew",
+            ChatPostResult.Empty => "ChatRefusedEmpty",
+            _ => "ChatRefusedFailed",
+        });
+
+        ChatRefusal.Visibility = Visibility.Visible;
+    }
+
+    private async void BtnChatRulesAccept_Click(object sender, RoutedEventArgs e)
+    {
+        ChatRulesPanel.Visibility = Visibility.Collapsed;
+
+        if (!await SocialApi.ConsentAsync("chat").ConfigureAwait(true))
+        {
+            // Nothing was recorded, so posting would be refused anyway. Better to say so than to
+            // let them type a line that vanishes.
+            ShowChatRefusal(ChatPostResult.Failed);
+            return;
+        }
+
+        _hasChatConsent = true;
+        TxtChat.Focus();
+    }
+
+    private void BtnChatRulesCancel_Click(object sender, RoutedEventArgs e)
+        => ChatRulesPanel.Visibility = Visibility.Collapsed;
+
+    // ── The Steam profile behind a listing ──────────────────────────────────
+
+    private Models.LfgEntry? _profileEntry;
+
+    /// <summary>
+    /// Opens the profile card for a listing.
+    ///
+    /// Deliberately reachable only from a listing. The public room shows a name and no more,
+    /// which is the promise it makes; a listing already discloses the Steam account and did so
+    /// with consent, so showing what Steam shows anyone adds nothing that was not agreed to.
+    /// </summary>
+    private async void Listing_ProfileClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.LfgEntry entry) return;
+
+        _profileEntry = entry;
+
+        ProfileName.Text = entry.DisplayName;
+        ProfileSteamId.Text = entry.SteamId ?? "";
+        ProfileSupporterRing.Visibility = entry.IsSupporter ? Visibility.Visible : Visibility.Collapsed;
+
+        ProfileBlurb.Text = entry.Blurb ?? "";
+        ProfileBlurb.Visibility = string.IsNullOrWhiteSpace(entry.Blurb) ? Visibility.Collapsed : Visibility.Visible;
+
+        ProfileFacts.Children.Clear();
+        ProfileNotice.Visibility = Visibility.Collapsed;
+        ProfileVacWarning.Visibility = Visibility.Collapsed;
+        ProfileAvatar.ImageSource = SafeImage(entry.AvatarUrl);
+
+        // Shown immediately with what the listing already carries; Steam fills in the rest when
+        // it answers. A card that waits on a network call feels broken on a slow connection.
+        BtnProfileSteam.IsEnabled = !string.IsNullOrWhiteSpace(entry.SteamId);
+        BtnProfileCopy.IsEnabled = !string.IsNullOrWhiteSpace(entry.SteamId);
+        ProfileSheet.Visibility = Visibility.Visible;
+
+        var profile = await Services.Social.SteamProfileService.GetAsync(entry.SteamId).ConfigureAwait(true);
+
+        // They may have closed it, or opened another one, while Steam was thinking.
+        if (!ReferenceEquals(_profileEntry, entry)) return;
+
+        if (profile is null)
+        {
+            ProfileNotice.Text = Properties.Resources.GetString("ProfileUnavailable");
+            ProfileNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(profile.PersonaName)) ProfileName.Text = profile.PersonaName;
+        if (SafeImage(profile.AvatarUrl) is { } avatar) ProfileAvatar.ImageSource = avatar;
+
+        AddProfileFact("ProfileMember", profile.MemberSince);
+        AddProfileFact("ProfileLocation", profile.Location);
+
+        ProfileVacWarning.Visibility = profile.VacBanned ? Visibility.Visible : Visibility.Collapsed;
+
+        if (profile.IsPrivate)
+        {
+            ProfileNotice.Text = Properties.Resources.GetString("ProfilePrivate");
+            ProfileNotice.Visibility = Visibility.Visible;
+        }
+    }
+
+    /// <summary>One label/value row, skipped entirely when Steam did not give us the value.</summary>
+    private void AddProfileFact(string labelKey, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return;
+
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 4) };
+
+        row.Children.Add(new TextBlock
+        {
+            Text = Properties.Resources.GetString(labelKey) + "  ",
+            Foreground = (System.Windows.Media.Brush)FindResource("LfgMuted"),
+            FontSize = 11,
+        });
+
+        row.Children.Add(new TextBlock
+        {
+            Text = value,
+            Foreground = (System.Windows.Media.Brush)FindResource("LfgText"),
+            FontSize = 11,
+            TextWrapping = TextWrapping.Wrap,
+        });
+
+        ProfileFacts.Children.Add(row);
+    }
+
+    /// <summary>
+    /// A remote image, or null. Binding a URL straight into an ImageBrush throws on a malformed
+    /// one and takes the panel with it.
+    /// </summary>
+    private static System.Windows.Media.ImageSource? SafeImage(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return null;
+
+        try { return new System.Windows.Media.Imaging.BitmapImage(new Uri(url)); }
+        catch { return null; }
+    }
+
+    private void BtnProfileSteam_Click(object sender, RoutedEventArgs e)
+    {
+        if (_profileEntry?.SteamId is not { Length: > 0 } steamId) return;
+
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = $"https://steamcommunity.com/profiles/{steamId}",
+                UseShellExecute = true,
+            });
+        }
+        catch
+        {
+            // No browser, or the shell refused. Nothing useful to say about it.
+        }
+    }
+
+    private void BtnProfileCopy_Click(object sender, RoutedEventArgs e)
+    {
+        if (_profileEntry?.SteamId is not { Length: > 0 } steamId) return;
+
+        try { Clipboard.SetText(steamId); } catch { }
+    }
+
+    private void BtnProfileClose_Click(object sender, RoutedEventArgs e)
+    {
+        ProfileSheet.Visibility = Visibility.Collapsed;
+        _profileEntry = null;
     }
 
     private async void ChatBlock_Click(object sender, RoutedEventArgs e)

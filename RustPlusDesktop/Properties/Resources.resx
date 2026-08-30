@@ -6210,4 +6210,61 @@ You can find more information on the server&apos;s official website:
   <data name="SocialNotOpenBody" xml:space="preserve">
     <value>The community chat is being rolled out gradually. It will appear here once your account is included — nothing is wrong on your side.</value>
   </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>Before you write in here</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>This room is public. Everyone using Rust+ Desktop can read what you post.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>Not allowed: links of any kind, advertising, trading or selling, harassment and threats, hate speech, sexual or graphic content, and impersonating staff.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>Moderators read every report. Breaking these rules can cost you the room for a while, or permanently — and a permanent exclusion follows the Steam account, not the install. A new account on the same Steam ID does not get you back in.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>I have read this</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>Not now</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>Links are not allowed in the public room. Send it in a direct message instead.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>You just sent that. Give it a moment.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>New accounts can post here after a short wait. This keeps the room usable.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>There was nothing left to send.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>That could not be sent. Try again in a moment.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Open Steam profile</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Copy Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Steam member since</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>VAC ban on record</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>This Steam profile is private.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam did not answer. The profile may be private, or Steam may be busy.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

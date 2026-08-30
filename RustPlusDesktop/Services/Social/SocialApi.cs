@@ -13,10 +13,38 @@ public enum AcceptMode { Auto, Approval, Off }
 public enum LfgMode { None, LookingForTeam, LookingForMembers }
 
 /// <summary>Everything the panel needs to draw itself on open.</summary>
+/// <summary>Why a line was refused, in the words the panel needs to pick a sentence.</summary>
+public enum ChatPostResult
+{
+    Ok,
+
+    /// <summary>The rules of the room have not been read yet. The panel shows them.</summary>
+    ConsentRequired,
+
+    /// <summary>Timed out or banned. The bar above the box says until when.</summary>
+    Sanctioned,
+
+    /// <summary>The account is too new to post. Costs a spammer time, which is the point.</summary>
+    TooNew,
+
+    /// <summary>The same line, again, within the window.</summary>
+    Duplicate,
+
+    /// <summary>The public room carries no links.</summary>
+    LinkNotAllowed,
+
+    /// <summary>Nothing usable was left after cleaning.</summary>
+    Empty,
+
+    /// <summary>Anything else, including not reaching the platform at all.</summary>
+    Failed,
+}
+
 public sealed record SocialSettings(
     AcceptMode Accept,
     bool LfgConsent,
     bool DmConsent,
+    bool ChatConsent,
     string? NameColor,
     // Whether the layer is open to this account at all. The platform rolls it out in stages, and
     // this is the one read that still answers while it is closed - everything else refuses, so
@@ -47,6 +75,7 @@ public static class SocialApi
                 ParseAccept(data.TryGetProperty("accept_mode", out var a) ? a.GetString() : null),
                 data.TryGetProperty("lfg_consent", out var l) && l.GetBoolean(),
                 data.TryGetProperty("dm_consent", out var d) && d.GetBoolean(),
+                data.TryGetProperty("chat_consent", out var cc) && cc.GetBoolean(),
                 data.TryGetProperty("name_color", out var c) ? c.GetString() : null,
                 !doc.RootElement.TryGetProperty("meta", out var meta)
                     || !meta.TryGetProperty("enabled", out var enabled)
@@ -317,12 +346,41 @@ public static class SocialApi
     }
 
     /// <summary>
-    /// Posts a line. False covers every refusal the server makes — silenced, account too new,
-    /// nothing left after cleaning, or the same line twice — because none of them is worth a
-    /// different sentence to somebody who just wants their message to appear.
+    /// Posts a line, and says which refusal it was when it does not go through.
+    ///
+    /// The reasons are not interchangeable: one of them is answered by reading a notice, one by
+    /// waiting, one by rewriting the message. Collapsing them into "it did not work" leaves the
+    /// user guessing which, and the guess is usually "the app is broken".
     /// </summary>
-    public static Task<bool> PostChatAsync(string body)
-        => WriteAsync("social/chat", HttpMethod.Post, new { body });
+    public static async Task<ChatPostResult> PostChatAsync(string body)
+    {
+        try
+        {
+            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body })
+                .ConfigureAwait(false);
+
+            return ChatPostResult.Ok;
+        }
+        catch (CloudApiException ex)
+        {
+            // The server sends the reason as the message, and it is matched rather than compared
+            // because the platform may wrap it.
+            var reason = ex.Reason ?? "";
+
+            if (reason.Contains("consent_required", StringComparison.Ordinal)) return ChatPostResult.ConsentRequired;
+            if (reason.Contains("sanctioned", StringComparison.Ordinal)) return ChatPostResult.Sanctioned;
+            if (reason.Contains("account_too_new", StringComparison.Ordinal)) return ChatPostResult.TooNew;
+            if (reason.Contains("link_not_allowed", StringComparison.Ordinal)) return ChatPostResult.LinkNotAllowed;
+            if (reason.Contains("duplicate", StringComparison.Ordinal)) return ChatPostResult.Duplicate;
+            if (reason.Contains("empty", StringComparison.Ordinal)) return ChatPostResult.Empty;
+
+            return ChatPostResult.Failed;
+        }
+        catch
+        {
+            return ChatPostResult.Failed;
+        }
+    }
 
     /// <summary>
     /// Picks the other participant out of a thread's members.

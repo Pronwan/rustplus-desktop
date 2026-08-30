@@ -6174,4 +6174,61 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="SocialNotOpenBody" xml:space="preserve">
     <value>Le chat communautaire est déployé progressivement. Il apparaîtra ici dès que votre compte sera concerné — rien ne cloche chez vous.</value>
   </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>Avant d’écrire ici</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>Ce salon est public. Toute personne utilisant Rust+ Desktop peut lire ce que vous publiez.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>Interdit : les liens de toute sorte, la publicité, le commerce et la vente, le harcèlement et les menaces, les discours haineux, les contenus sexuels ou choquants, et le fait de se faire passer pour l’équipe.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>Les modérateurs lisent chaque signalement. Enfreindre ces règles peut vous coûter le salon pour un temps, ou définitivement — et une exclusion définitive suit le compte Steam, pas l’installation. Un nouveau compte sur la même Steam ID ne vous fait pas revenir.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>J’ai lu</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>Pas maintenant</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>Les liens ne sont pas autorisés dans le salon public. Envoyez-le en message privé.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>Vous venez de l’envoyer. Patientez un instant.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>Les nouveaux comptes peuvent écrire ici après une courte attente. Cela garde le salon utilisable.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>Il ne restait rien à envoyer.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>L’envoi a échoué. Réessayez dans un instant.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Ouvrir le profil Steam</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Copier la Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Sur Steam depuis</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>Lieu</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>Bannissement VAC enregistré</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>Ce profil Steam est privé.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam n’a pas répondu. Le profil est peut-être privé, ou Steam est occupé.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
 </root>

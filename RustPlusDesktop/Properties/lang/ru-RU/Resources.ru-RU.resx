@@ -6174,4 +6174,61 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="SocialNotOpenBody" xml:space="preserve">
     <value>Чат сообщества открывают постепенно. Он появится здесь, когда очередь дойдёт до вашей учётной записи — у вас всё в порядке.</value>
   </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>Прежде чем писать здесь</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>Эта комната публичная. Всё, что вы напишете, видят все пользователи Rust+ Desktop.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>Запрещено: любые ссылки, реклама, торговля и продажа, травля и угрозы, разжигание ненависти, сексуальный или шокирующий контент, а также выдача себя за команду проекта.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>Модераторы читают каждую жалобу. Нарушение может стоить вам доступа к комнате на время — или навсегда. Постоянный запрет привязан к аккаунту Steam, а не к установке: новая учётная запись на том же Steam ID не вернёт доступ.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>Прочитал(а)</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>Не сейчас</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>Ссылки в публичной комнате запрещены. Отправьте её личным сообщением.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>Вы только что это отправили. Подождите немного.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>Новые аккаунты смогут писать здесь через некоторое время. Так комната остаётся пригодной для общения.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>Отправлять оказалось нечего.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>Отправить не удалось. Попробуйте ещё раз через минуту.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Открыть профиль Steam</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Скопировать Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>В Steam с</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>Местоположение</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>Есть блокировка VAC</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>Этот профиль Steam закрыт.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam не ответил. Возможно, профиль закрыт или Steam перегружен.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
 </root>

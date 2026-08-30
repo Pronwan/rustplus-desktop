@@ -1185,4 +1185,61 @@
   <data name="SocialNotOpenBody" xml:space="preserve">
     <value>社群聊天正在分批開放。輪到你的帳號時就會出現在這裡——不是你這邊出了問題。</value>
   </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>在這裡發言之前</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>這是公開聊天室。所有使用 Rust+ Desktop 的人都看得到你發的內容。</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>禁止：任何形式的連結、廣告、交易與買賣、騷擾與威脅、仇恨言論、色情或血腥內容，以及冒充官方人員。</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>每一則檢舉都會有管理員查看。違反規則可能讓你暫時、甚至永久失去這個聊天室。永久封鎖綁定的是 Steam 帳號，而不是這台電腦——換個帳號但用同一組 Steam ID 也回不來。</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>我已閱讀</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>暫不</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>公開聊天室不允許發連結。請改用私訊發送。</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>你剛剛發過這句了，稍等一下。</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>新帳號需要等一小段時間才能在這裡發言，這樣聊天室才能保持可用。</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>沒有可發送的內容。</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>傳送失敗，請稍後再試。</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>開啟 Steam 個人檔案</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>複製 Steam ID</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Steam 註冊於</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>地區</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>有 VAC 封鎖紀錄</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>這個 Steam 個人檔案是私密的。</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam 沒有回應。個人檔案可能是私密的，或 Steam 正忙。</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>關閉</value>
+  </data>
 </root>
