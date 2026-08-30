@@ -6042,4 +6042,43 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="LfgViewProfile" xml:space="preserve">
     <value>Профиль Steam</value>
   </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>Сообщений пока нет. Напишите кому-нибудь из списка выше.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>Написать сообщение…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>Запрос</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>Отклонён</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} хочет вам написать.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>Вы отклонили этот запрос. Повторить его нельзя.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>Заблокировать игрока</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>Пожаловаться на игрока</value>
+  </data>
 </root>

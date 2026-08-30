@@ -6117,4 +6117,43 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgViewProfile" xml:space="preserve">
     <value>Steam-Profil</value>
   </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>Nachrichten</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>Noch keine Nachrichten. Schreib jemanden aus der Liste oben an.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>Nachricht schreiben …</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>Anfrage</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>Abgelehnt</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} möchte dir schreiben.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>Du hast diese Anfrage abgelehnt. Ein zweites Mal geht nicht.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>Spieler blockieren</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>Spieler melden</value>
+  </data>
 </root>

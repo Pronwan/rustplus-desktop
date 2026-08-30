@@ -1,5 +1,6 @@
 using RustPlusDesk.Services.Social;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -83,6 +84,7 @@ public partial class LfgOverlay : UserControl
             _ = SocialApi.RenewListingAsync();
 
         await LoadListingsAsync().ConfigureAwait(true);
+        await LoadInboxAsync().ConfigureAwait(true);
     }
 
     private async void Mode_Checked(object sender, RoutedEventArgs e)
@@ -277,6 +279,157 @@ public partial class LfgOverlay : UserControl
     }
 
     private sealed record LanguageChoice(string? Code, string Label);
+
+    // ── Inbox ───────────────────────────────────────────────────────────────
+
+    private Models.SocialThread? _openThread;
+
+    /// <summary>Loads the thread list. Called on open and after anything that changes it.</summary>
+    private async Task LoadInboxAsync()
+    {
+        var threads = await SocialApi.GetThreadsAsync().ConfigureAwait(true);
+
+        ThreadList.ItemsSource = threads;
+        InboxEmptyNotice.Visibility = threads.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private async void Thread_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
+
+        await OpenThreadAsync(thread).ConfigureAwait(true);
+    }
+
+    private async Task OpenThreadAsync(Models.SocialThread thread)
+    {
+        _openThread = thread;
+
+        ThreadTitle.Text = thread.CounterpartName;
+        ThreadListView.Visibility = Visibility.Collapsed;
+        ThreadView.Visibility = Visibility.Visible;
+
+        // A request that has not been answered gets its decision above the reply box, and no reply
+        // box at all: being able to type before deciding invites answering by accident.
+        PendingBar.Visibility = thread.IsPending ? Visibility.Visible : Visibility.Collapsed;
+        PendingHint.Text = string.Format(
+            Properties.Resources.GetString("LfgPendingHint"), thread.CounterpartName);
+
+        DeclinedHint.Visibility = thread.IsDeclined ? Visibility.Visible : Visibility.Collapsed;
+        ReplyRow.Visibility = thread.IsPending || thread.IsDeclined ? Visibility.Collapsed : Visibility.Visible;
+
+        MessageList.ItemsSource = await SocialApi.GetMessagesAsync(thread.Id).ConfigureAwait(true);
+
+        // Reading it is what marks it read. Doing that on send instead would leave a thread you
+        // looked at and did not answer sitting there as unread.
+        if (thread.UnreadCount > 0)
+        {
+            await SocialApi.MarkReadAsync(thread.Id).ConfigureAwait(true);
+            await LoadInboxAsync().ConfigureAwait(true);
+        }
+    }
+
+    private void BtnThreadBack_Click(object sender, RoutedEventArgs e)
+    {
+        _openThread = null;
+        ThreadView.Visibility = Visibility.Collapsed;
+        ThreadListView.Visibility = Visibility.Visible;
+    }
+
+    private async void BtnSend_Click(object sender, RoutedEventArgs e) => await SendReplyAsync();
+
+    private async void TxtReply_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        // Enter sends, Shift+Enter would be a newline — but the box is single-line, so this is
+        // just the shortcut people reach for.
+        if (e.Key != System.Windows.Input.Key.Enter) return;
+        if (System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Shift)) return;
+
+        e.Handled = true;
+        await SendReplyAsync();
+    }
+
+    private async Task SendReplyAsync()
+    {
+        if (_openThread is null) return;
+
+        var body = TxtReply.Text?.Trim();
+        if (string.IsNullOrEmpty(body)) return;
+
+        // Cleared before the call, not after: leaving the text in place while the request is in
+        // flight is how the same message gets sent twice.
+        TxtReply.Text = "";
+
+        if (await SocialApi.ReplyAsync(_openThread.Id, body!).ConfigureAwait(true))
+        {
+            MessageList.ItemsSource = await SocialApi.GetMessagesAsync(_openThread.Id).ConfigureAwait(true);
+            await LoadInboxAsync().ConfigureAwait(true);
+            return;
+        }
+
+        // Refused — put the text back so it is not lost, and reload in case the thread's state
+        // moved underneath us.
+        TxtReply.Text = body;
+        await LoadInboxAsync().ConfigureAwait(true);
+    }
+
+    private async void BtnAcceptRequest_Click(object sender, RoutedEventArgs e)
+        => await SettleRequestAsync(accept: true);
+
+    private async void BtnDeclineRequest_Click(object sender, RoutedEventArgs e)
+        => await SettleRequestAsync(accept: false);
+
+    private async Task SettleRequestAsync(bool accept)
+    {
+        if (_openThread is null) return;
+
+        var ok = accept
+            ? await SocialApi.AcceptThreadAsync(_openThread.Id).ConfigureAwait(true)
+            : await SocialApi.DeclineThreadAsync(_openThread.Id).ConfigureAwait(true);
+
+        await LoadInboxAsync().ConfigureAwait(true);
+
+        if (!ok)
+        {
+            BtnThreadBack_Click(this, e: new RoutedEventArgs());
+            return;
+        }
+
+        // Reopen from the refreshed list rather than patching the object in hand, so what is shown
+        // is the state the server actually holds.
+        var refreshed = (ThreadList.ItemsSource as System.Collections.Generic.IEnumerable<Models.SocialThread>)?
+            .FirstOrDefault(t => t.Id == _openThread.Id);
+
+        if (refreshed is null) BtnThreadBack_Click(this, new RoutedEventArgs());
+        else await OpenThreadAsync(refreshed).ConfigureAwait(true);
+    }
+
+    /// <summary>Opens a thread with somebody from the listings, or reuses the one that exists.</summary>
+    public async Task StartConversationAsync(Models.LfgEntry entry, string firstMessage)
+    {
+        if (string.IsNullOrWhiteSpace(entry.UserId)) return;
+
+        await SocialApi.OpenThreadAsync(entry.UserId, firstMessage).ConfigureAwait(true);
+        await LoadInboxAsync().ConfigureAwait(true);
+    }
+
+    private async void MenuBlock_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
+        if (thread.CounterpartId is null) return;
+
+        await SocialApi.BlockAsync(thread.CounterpartId).ConfigureAwait(true);
+        await LoadInboxAsync().ConfigureAwait(true);
+    }
+
+    private async void MenuReport_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
+        if (thread.CounterpartId is null) return;
+
+        // Reason and note come from a dialog next; filing it with a bare reason is still better
+        // than a menu entry that does nothing.
+        await SocialApi.ReportAsync(thread.CounterpartId, "other").ConfigureAwait(true);
+    }
 
     private void BtnCloudSetup_Click(object sender, RoutedEventArgs e)
         => CloudSetupRequested?.Invoke(this, e);

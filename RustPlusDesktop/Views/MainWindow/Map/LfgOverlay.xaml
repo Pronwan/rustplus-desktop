@@ -202,6 +202,142 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,10,0,14" />
+
+                    <!--  Inbox: the thread list, or one open thread in its place  -->
+                    <Grid x:Name="InboxRoot">
+                        <StackPanel x:Name="ThreadListView">
+                            <TextBlock Text="{DynamicResource LfgInbox}" Style="{StaticResource LfgSectionHeading}" />
+
+                            <TextBlock x:Name="InboxEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
+                                       Text="{DynamicResource LfgInboxEmpty}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                            <ItemsControl x:Name="ThreadList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0DFFFFFF" CornerRadius="6" Padding="8" Margin="0,0,0,5"
+                                                Cursor="Hand" MouseLeftButtonUp="Thread_Click" Tag="{Binding}">
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuBlock_Click" Tag="{Binding}" />
+                                                    <MenuItem Header="{DynamicResource LfgReportUser}" Click="MenuReport_Click" Tag="{Binding}" />
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid Grid.Column="0" Width="28" Height="28" Margin="0,0,9,0">
+                                                    <Ellipse>
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                             Fill="{Binding StatusBrush}" Stroke="#FF111820" StrokeThickness="1.5" />
+                                                </Grid>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding CounterpartName}" Foreground="{StaticResource LfgText}"
+                                                                   FontSize="12" FontWeight="{Binding NameWeight}"
+                                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                        <Border Background="#332A6CA6" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                                Visibility="{Binding PendingBadge}">
+                                                            <TextBlock Text="{DynamicResource LfgPendingBadge}" FontSize="9"
+                                                                       Foreground="#FF7FB6E8" />
+                                                        </Border>
+                                                        <Border Background="#33A93C36" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                                Visibility="{Binding DeclinedBadge}">
+                                                            <TextBlock Text="{DynamicResource LfgDeclinedBadge}" FontSize="9"
+                                                                       Foreground="#FFE08880" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Border Background="#FF2A6CA6" CornerRadius="8" Padding="5,1" Margin="0,0,6,0"
+                                                            Visibility="{Binding UnreadBadge}">
+                                                        <TextBlock Text="{Binding UnreadLabel}" FontSize="9.5" Foreground="White" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding WhenLabel}" Foreground="{StaticResource LfgMuted}" FontSize="10" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!--  One open thread  -->
+                        <StackPanel x:Name="ThreadView" Visibility="Collapsed">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:Button Grid.Column="0" x:Name="BtnThreadBack" Click="BtnThreadBack_Click"
+                                           Appearance="Secondary" Height="28" Width="32" Margin="0,0,9,0"
+                                           ToolTip="{DynamicResource LfgBack}"
+                                           Icon="{ui:SymbolIcon Symbol=ArrowLeft24}" />
+                                <TextBlock Grid.Column="1" x:Name="ThreadTitle" VerticalAlignment="Center"
+                                           Foreground="{StaticResource LfgText}" FontSize="13" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+
+                            <!--  A request you have not answered: the decision comes before the reply box  -->
+                            <Border x:Name="PendingBar" Visibility="Collapsed" Margin="0,0,0,10"
+                                    Background="#14FFFFFF" CornerRadius="6" Padding="10">
+                                <StackPanel>
+                                    <TextBlock x:Name="PendingHint" Foreground="{StaticResource LfgText}" FontSize="11"
+                                               TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:Button x:Name="BtnAcceptRequest" Click="BtnAcceptRequest_Click" Appearance="Primary"
+                                                   Content="{DynamicResource LfgAcceptRequest}" Margin="0,0,8,0" />
+                                        <ui:Button x:Name="BtnDeclineRequest" Click="BtnDeclineRequest_Click" Appearance="Secondary"
+                                                   Content="{DynamicResource LfgDeclineRequest}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock x:Name="DeclinedHint" Visibility="Collapsed" Margin="0,0,0,10"
+                                       Text="{DynamicResource LfgDeclinedHint}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                            <ItemsControl x:Name="MessageList" Margin="0,0,0,10">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{Binding Bubble}" CornerRadius="8" Padding="9,6" Margin="0,0,0,5"
+                                                MaxWidth="300" HorizontalAlignment="{Binding Side}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Body}" TextWrapping="Wrap"
+                                                           Foreground="{StaticResource LfgText}" FontSize="12" />
+                                                <TextBlock Text="{Binding TimeLabel}" HorizontalAlignment="Right" Margin="0,3,0,0"
+                                                           Foreground="{StaticResource LfgMuted}" FontSize="9" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Grid x:Name="ReplyRow">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBox Grid.Column="0" x:Name="TxtReply" MaxLength="1000"
+                                            PlaceholderText="{DynamicResource LfgReplyPlaceholder}"
+                                            KeyDown="TxtReply_KeyDown" />
+                                <ui:Button Grid.Column="1" x:Name="BtnSend" Click="BtnSend_Click" Appearance="Primary"
+                                           Margin="8,0,0,0" Content="{DynamicResource LfgSend}" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </ScrollViewer>
         </Grid>

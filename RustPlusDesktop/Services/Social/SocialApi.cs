@@ -149,6 +149,147 @@ public static class SocialApi
         return result;
     }
 
+    // ── Inbox ───────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// The inbox. Empty on failure for the same reason the listings are: an empty inbox and an
+    /// unreachable one lead to the same next step.
+    /// </summary>
+    public static async Task<System.Collections.Generic.List<Models.SocialThread>> GetThreadsAsync()
+    {
+        var result = new System.Collections.Generic.List<Models.SocialThread>();
+        var me = CloudAuthManager.CurrentUser?.Id;
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync("social/conversations", HttpMethod.Get)
+                .ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("data", out var envelope)) return result;
+            if (!envelope.TryGetProperty("data", out var rows) || rows.ValueKind != JsonValueKind.Array)
+                return result;
+
+            foreach (var row in rows.EnumerateArray())
+                result.Add(ParseThread(row, me));
+        }
+        catch
+        {
+            // Deliberately quiet — see the summary above.
+        }
+
+        return result;
+    }
+
+    /// <summary>The messages in one thread, oldest first so it reads like a conversation.</summary>
+    public static async Task<System.Collections.Generic.List<Models.SocialMessage>> GetMessagesAsync(string conversationId)
+    {
+        var result = new System.Collections.Generic.List<Models.SocialMessage>();
+        var me = CloudAuthManager.CurrentUser?.Id;
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync(
+                $"social/conversations/{conversationId}", HttpMethod.Get).ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("data", out var data)) return result;
+            if (!data.TryGetProperty("messages", out var page)) return result;
+            if (!page.TryGetProperty("data", out var rows) || rows.ValueKind != JsonValueKind.Array)
+                return result;
+
+            foreach (var row in rows.EnumerateArray())
+            {
+                var sender = row.TryGetProperty("sender", out var s) && s.ValueKind == JsonValueKind.Object ? s : default;
+                var senderId = Str(row, "sender_id");
+
+                result.Add(new Models.SocialMessage
+                {
+                    Id = Str(row, "id") ?? "",
+                    Body = Str(row, "body") ?? "",
+                    SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
+                    IsMine = me is not null && senderId == me,
+                    SentAt = Date(row, "created_at"),
+                });
+            }
+        }
+        catch
+        {
+            // Deliberately quiet.
+        }
+
+        return result;
+    }
+
+    public static Task<bool> OpenThreadAsync(string userId, string body, string origin = "lfg")
+        => WriteAsync("social/conversations", HttpMethod.Post, new { user_id = userId, body, origin });
+
+    public static Task<bool> ReplyAsync(string conversationId, string body)
+        => WriteAsync($"social/conversations/{conversationId}/messages", HttpMethod.Post, new { body });
+
+    public static Task<bool> AcceptThreadAsync(string conversationId)
+        => WriteAsync($"social/conversations/{conversationId}/accept", HttpMethod.Post);
+
+    public static Task<bool> DeclineThreadAsync(string conversationId)
+        => WriteAsync($"social/conversations/{conversationId}/decline", HttpMethod.Post);
+
+    public static Task<bool> MarkReadAsync(string conversationId)
+        => WriteAsync($"social/conversations/{conversationId}/read", HttpMethod.Post);
+
+    public static Task<bool> BlockAsync(string userId)
+        => WriteAsync("social/blocks", HttpMethod.Post, new { user_id = userId });
+
+    public static Task<bool> ReportAsync(string userId, string reason, string? messageId = null, string? note = null)
+        => WriteAsync("social/reports", HttpMethod.Post, new { user_id = userId, reason, message_id = messageId, note });
+
+    /// <summary>
+    /// Picks the other participant out of a thread's members.
+    ///
+    /// The API returns both sides rather than "the other one", because who that is depends on who
+    /// is asking — and an endpoint that answers differently per caller is one that caches wrong.
+    /// </summary>
+    private static Models.SocialThread ParseThread(JsonElement row, string? me)
+    {
+        JsonElement other = default;
+
+        if (row.TryGetProperty("members", out var members) && members.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var member in members.EnumerateArray())
+            {
+                if (Str(member, "user_id") == me) continue;
+                if (member.TryGetProperty("user", out var u) && u.ValueKind == JsonValueKind.Object)
+                {
+                    other = u;
+                    break;
+                }
+            }
+        }
+
+        var presence = other.ValueKind == JsonValueKind.Object
+            && other.TryGetProperty("presence", out var p) && p.ValueKind == JsonValueKind.Object ? p : default;
+
+        return new Models.SocialThread
+        {
+            Id = Str(row, "id") ?? "",
+            State = Str(row, "state") ?? "accepted",
+            CounterpartId = Str(other, "id"),
+            CounterpartName = Str(other, "display_name") ?? Str(other, "name") ?? "—",
+            AvatarUrl = Str(other, "avatar_url"),
+            IsOnline = presence.ValueKind == JsonValueKind.Object
+                && presence.TryGetProperty("is_online", out var on) && on.ValueKind == JsonValueKind.True,
+            UnreadCount = row.TryGetProperty("unread_count", out var uc) && uc.TryGetInt32(out var n) ? n : 0,
+            LastMessageAt = Date(row, "last_message_at"),
+        };
+    }
+
+    private static DateTime? Date(JsonElement element, string name)
+        => element.ValueKind == JsonValueKind.Object
+           && element.TryGetProperty(name, out var v)
+           && v.ValueKind == JsonValueKind.String
+           && DateTime.TryParse(v.GetString(), null, System.Globalization.DateTimeStyles.RoundtripKind, out var parsed)
+            ? parsed
+            : null;
+
     private static Models.LfgEntry ParseEntry(JsonElement row)
     {
         var user = row.TryGetProperty("user", out var u) && u.ValueKind == JsonValueKind.Object ? u : default;

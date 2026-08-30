@@ -1053,4 +1053,43 @@
   <data name="LfgViewProfile" xml:space="preserve">
     <value>Steam 個人檔案</value>
   </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>訊息</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>還沒有訊息。從上方列表中找人聊聊吧。</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>寫一則訊息…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>傳送</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>接受</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>拒絕</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>請求</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>已拒絕</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} 想傳訊息給你。</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>你已拒絕該請求，對方無法再次傳送。</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>封鎖該玩家</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>檢舉該玩家</value>
+  </data>
 </root>

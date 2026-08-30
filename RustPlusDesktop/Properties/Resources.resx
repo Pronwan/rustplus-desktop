@@ -6078,4 +6078,43 @@ You can find more information on the server&apos;s official website:
   <data name="LfgViewProfile" xml:space="preserve">
     <value>Steam profile</value>
   </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>No messages yet. Write to somebody from the list above.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>Write a message…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>Request</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>Declined</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} would like to write to you.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>You declined this request. They cannot write again.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>Block this player</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>Report this player</value>
+  </data>
 </root>
