@@ -34,20 +34,163 @@ public sealed class RaidCalculatorEngine(RaidDataSet data)
         return methods;
     }
 
+    /// <summary>
+    /// Orders the methods the way a raider reads a raid-cost chart: cheapest raw sulfur first,
+    /// then the fewest explosives to deploy, then the lowest workbench tier. Craftable methods
+    /// always rank above ones the dataset has no craft cost for (MLRS, 40mm, scattershot, …).
+    /// </summary>
+    public static IReadOnlyList<RaidMethodResult> RankBySulfur(IEnumerable<RaidMethodResult> methods) =>
+        methods
+            .OrderByDescending(method => method.IsSulfurRankable)
+            .ThenBy(method => method.IsSulfurRankable ? method.SulfurCost : double.MaxValue)
+            .ThenBy(method => method.RequiredItems)
+            .ThenBy(method => method.WorkbenchLevel ?? int.MaxValue)
+            .ThenBy(method => method.Source.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+    /// <summary>
+    /// The practical "best" method: cheapest raw sulfur among the mainstream raiding explosives
+    /// (C4, rockets, satchels, explosive ammo, grenades). Siege/situational tools can be lower raw
+    /// sulfur on paper but are never picked as the default. Falls back to any craftable method only
+    /// when no standard tool can hit the target.
+    /// </summary>
+    public RaidMethodResult? BestMethod(RaidTarget target, int targetQuantity = 1)
+    {
+        List<RaidMethodResult> methods = GetMethods(target, targetQuantity)
+            .Where(method => method.IsSulfurRankable).ToList();
+        return methods
+            .OrderByDescending(method => method.IsStandardTool)
+            .ThenBy(method => method.SulfurCost)
+            .ThenBy(method => method.RequiredItems)
+            .ThenBy(method => method.WorkbenchLevel ?? int.MaxValue)
+            .FirstOrDefault();
+    }
+
+    // Popular two-tool loadouts players actually combine on a raid. Each becomes one "mix" option
+    // in the method picker, so the menu offers variety instead of a single blended result.
+    private static readonly (string Big, string Small)[] CuratedPairs =
+    {
+        ("explosive.timed", "ammo.rocket.basic"),      // C4 + Rockets
+        ("explosive.timed", "explosive.satchel"),      // C4 + Satchels
+        ("ammo.rocket.basic", "explosive.satchel"),    // Rockets + Satchels
+        ("explosive.timed", "ammo.rifle.explosive"),   // C4 + Explo ammo
+        ("ammo.rocket.basic", "ammo.rifle.explosive"), // Rockets + Explo ammo
+        ("explosive.satchel", "ammo.rifle.explosive")  // Satchels + Explo ammo
+    };
+
+    /// <summary>
+    /// Builds a set of two-item mixes for a target — one per popular tool pair — each a balanced split
+    /// that uses both explosives and wastes the least leftover damage. Gives the picker real variety
+    /// beyond the single global smart mix.
+    /// </summary>
+    public IReadOnlyList<IReadOnlyList<RaidMethodResult>> GetCuratedMixes(RaidTarget target, int targetQuantity = 1)
+    {
+        int quantity = Math.Max(1, targetQuantity);
+        var mixes = new List<IReadOnlyList<RaidMethodResult>>();
+        var seen = new HashSet<string>();
+
+        foreach ((string bigShort, string smallShort) in CuratedPairs)
+        {
+            if (!TryTool(bigShort, target, out RaidSource big, out double bigDamage) ||
+                !TryTool(smallShort, target, out RaidSource small, out double smallDamage))
+                continue;
+
+            // Always treat the higher-damage item as the "bulk" tool.
+            if (smallDamage > bigDamage)
+            {
+                (big, small) = (small, big);
+                (bigDamage, smallDamage) = (smallDamage, bigDamage);
+            }
+
+            (int bigCount, int smallCount)? split = BalancedSplit(target.StartHealth, bigDamage, smallDamage);
+            if (split is null) continue;
+            (int bigCount, int smallCount) = split.Value;
+
+            string signature = $"{Math.Min(big.SourceId, small.SourceId)}:{Math.Max(big.SourceId, small.SourceId)}:{bigCount}:{smallCount}";
+            if (!seen.Add(signature)) continue;
+
+            double combinedDamage = ((bigCount * bigDamage) + (smallCount * smallDamage)) * quantity;
+            double overkill = Math.Max(0, combinedDamage - (target.StartHealth * quantity));
+            mixes.Add(
+            [
+                BuildMixPart(big, bigDamage, bigCount, quantity, overkill),
+                BuildMixPart(small, smallDamage, smallCount, quantity, 0)
+            ]);
+        }
+        return mixes;
+    }
+
+    private bool TryTool(string shortname, RaidTarget target, out RaidSource source, out double damagePerItem)
+    {
+        source = _sources.Values.FirstOrDefault(candidate =>
+            string.Equals(candidate.ItemShortname, shortname, StringComparison.OrdinalIgnoreCase))!;
+        damagePerItem = 0;
+        return source is { CraftCost: not null }
+            && data.DamagePerHit.TryGetValue(source.SourceId, out Dictionary<long, double>? row)
+            && row.TryGetValue(target.TargetId, out damagePerItem)
+            && damagePerItem > 0;
+    }
+
+    private static RaidMethodResult BuildMixPart(RaidSource source, double damagePerItem, int countPerTarget, int quantity, double overkill)
+    {
+        int requiredItems = countPerTarget * quantity;
+        IReadOnlyList<RaidResourceTotal> resources = source.CraftCost is null
+            ? []
+            : source.CraftCost.Select(cost => new RaidResourceTotal(
+                cost.Shortname, cost.ItemId, cost.DisplayName, cost.Amount * requiredItems)).ToList();
+        return new RaidMethodResult(source, requiredItems, damagePerItem, damagePerItem * requiredItems,
+            overkill, resources, source.CraftCost is not null);
+    }
+
+    /// <summary>
+    /// Picks whole-item counts of a bulk item and a finisher item that reach the target's health using
+    /// both, with the least leftover (overkill) damage, then the fewest total items. Both counts are ≥ 1
+    /// so the result is always a genuine mix.
+    /// </summary>
+    private static (int Big, int Small)? BalancedSplit(double health, double bigDamage, double smallDamage)
+    {
+        if (bigDamage <= 0 || smallDamage <= 0) return null;
+        int maxBig = Math.Max(1, (int)Math.Ceiling(health / bigDamage));
+        (int Big, int Small)? best = null;
+        double bestOverkill = double.MaxValue;
+        int bestItems = int.MaxValue;
+
+        for (int big = 1; big <= maxBig; big++)
+        {
+            double remaining = health - (big * bigDamage);
+            int small = remaining <= 0 ? 1 : (int)Math.Ceiling(remaining / smallDamage);
+            double overkill = (big * bigDamage) + (small * smallDamage) - health;
+            int items = big + small;
+            if (overkill < bestOverkill - 1e-9 || (Math.Abs(overkill - bestOverkill) < 1e-9 && items < bestItems))
+            {
+                best = (big, small);
+                bestOverkill = overkill;
+                bestItems = items;
+            }
+        }
+        return best;
+    }
+
     public static RaidMethodResult? Recommend(IEnumerable<RaidMethodResult> methods, RaidComparisonMode mode)
     {
         var available = methods.ToList();
         if (available.Count == 0 || mode == RaidComparisonMode.Custom)
             return null;
 
+        // Every mode prefers the mainstream raiding explosives first, so the auto-pick never lands on a
+        // siege/situational item (e.g. 400 torpedoes) that is only "cheapest" on a raw-sulfur technicality.
         return mode switch
         {
             RaidComparisonMode.LowestSulfur => available.Where(method => method.HasCraftCost)
-                .OrderBy(method => method.Resources.FirstOrDefault(cost => cost.Shortname == "sulfur")?.Amount ?? 0)
+                .OrderByDescending(method => method.IsStandardTool)
+                .ThenBy(method => method.SulfurCost)
                 .ThenBy(method => method.RequiredItems).FirstOrDefault(),
             RaidComparisonMode.LowestTotalResources => available.Where(method => method.HasCraftCost)
-                .OrderBy(method => method.Resources.Sum(cost => cost.Amount)).ThenBy(method => method.RequiredItems).FirstOrDefault(),
-            RaidComparisonMode.FewestRaidItems => available.OrderBy(method => method.RequiredItems)
+                .OrderByDescending(method => method.IsStandardTool)
+                .ThenBy(method => method.Resources.Sum(cost => cost.Amount)).ThenBy(method => method.RequiredItems).FirstOrDefault(),
+            RaidComparisonMode.FewestRaidItems => available
+                .OrderByDescending(method => method.IsStandardTool)
+                .ThenBy(method => method.RequiredItems)
                 .ThenBy(method => method.HasCraftCost ? 0 : 1).First(),
             _ => null
         };

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace RustPlusDesk.Models.Raid;
@@ -72,7 +73,68 @@ public sealed record RaidMethodResult(
     double TotalDamage,
     double Overkill,
     IReadOnlyList<RaidResourceTotal> Resources,
-    bool HasCraftCost);
+    bool HasCraftCost)
+{
+    /// <summary>Raw sulfur required for this method — the community-standard raid-cost metric.</summary>
+    public double SulfurCost => HasCraftCost
+        ? Resources.Where(cost => cost.Shortname.Equals("sulfur", StringComparison.OrdinalIgnoreCase))
+            .Sum(cost => cost.Amount)
+        : 0;
+
+    /// <summary>Workbench tier needed to craft this raid item, or null when it cannot be crafted.</summary>
+    public int? WorkbenchLevel => Source.WorkbenchLevelRequired;
+
+    /// <summary>True when this method has a craft cost that includes sulfur, so it can be sulfur-ranked.</summary>
+    public bool IsSulfurRankable => HasCraftCost && SulfurCost > 0;
+
+    /// <summary>
+    /// True for the explosives players actually carry on a raid. Siege/situational tools
+    /// (torpedo, cannonball, mortar, catapult, fire, bee, …) can be the lowest raw sulfur on
+    /// paper but are impractical, so they never win the default recommendation.
+    /// </summary>
+    public bool IsStandardTool => RaidTools.IsStandard(Source.ItemShortname);
+
+    /// <summary>Non-null for siege-delivered items (e.g. "Catapult"), so the UI can flag the delivery weapon.</summary>
+    public string? DeliveryLabel => RaidTools.DeliveryLabel(Source.ItemShortname);
+}
+
+/// <summary>The mainstream raiding explosives, per the community raid-cost meta.</summary>
+public static class RaidTools
+{
+    private static readonly HashSet<string> Standard = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "explosive.timed",      // C4
+        "ammo.rocket.basic",    // Rocket
+        "ammo.rocket.hv",       // HV Rocket
+        "explosive.satchel",    // Satchel Charge
+        "ammo.rifle.explosive", // Explosive 5.56
+        "grenade.beancan",      // Beancan Grenade
+        "grenade.f1"            // F1 Grenade
+    };
+
+    public static bool IsStandard(string? shortname) => shortname is not null && Standard.Contains(shortname);
+
+    /// <summary>
+    /// How a raid item is delivered when it is not a hand-thrown/placed explosive. Siege deliveries
+    /// (catapult, mortar, cannon, submarine, MLRS, grenade launcher) require a separate weapon, so the
+    /// picker tags them — a catapult-launched propane bomb is a very different plan from placing C4.
+    /// Returns null for the standard hand tools.
+    /// </summary>
+    public static string? DeliveryLabel(string? shortname)
+    {
+        if (string.IsNullOrEmpty(shortname)) return null;
+        if (shortname.StartsWith("catapult.ammo", StringComparison.OrdinalIgnoreCase)) return "Catapult";
+        if (shortname.StartsWith("ammo.mortar", StringComparison.OrdinalIgnoreCase)) return "Mortar";
+        return shortname switch
+        {
+            "cannonball" => "Cannon",
+            "submarine.torpedo.straight" => "Submarine",
+            "ammo.rocket.mlrs" => "MLRS",
+            "ammo.grenadelauncher.he" => "Launcher",
+            _ => null
+        };
+    }
+}
 
 public sealed record RaidResourceTotal(string Shortname, int ItemId, string DisplayName, double Amount);
 

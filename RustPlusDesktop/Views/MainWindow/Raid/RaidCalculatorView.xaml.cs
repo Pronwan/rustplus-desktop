@@ -25,9 +25,37 @@ public partial class RaidCalculatorView : UserControl
 
     private async void RaidCalculatorView_Loaded(object sender, RoutedEventArgs e)
     {
+        ApplyResponsiveLayout(ActualWidth);
         if (_initialized) return;
         _initialized = true;
         await _viewModel.InitializeAsync();
+    }
+
+    private void RaidRoot_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (e.WidthChanged) ApplyResponsiveLayout(e.NewSize.Width);
+    }
+
+    /// <summary>
+    /// Reflows the three panels (catalog | plan | shopping list) for the current width.
+    /// Wide keeps all three; medium narrows the side rails; narrow drops the shopping list,
+    /// then the catalog — so the plan always keeps usable width instead of squeezing to nothing.
+    /// </summary>
+    private void ApplyResponsiveLayout(double width)
+    {
+        if (CatalogColumn is null) return; // template not applied yet
+
+        bool showShopping = width >= 900;
+        bool showCatalog = width >= 680;
+        bool roomy = width >= 1080;
+
+        ShoppingPanel.Visibility = showShopping ? Visibility.Visible : Visibility.Collapsed;
+        ShoppingColumn.Width = showShopping ? new GridLength(roomy ? 300 : 272) : new GridLength(0);
+        ShoppingSpacer.Width = showShopping ? new GridLength(10) : new GridLength(0);
+
+        CatalogPanel.Visibility = showCatalog ? Visibility.Visible : Visibility.Collapsed;
+        CatalogColumn.Width = showCatalog ? new GridLength(roomy ? 330 : 292) : new GridLength(0);
+        CatalogSpacer.Width = showCatalog ? new GridLength(10) : new GridLength(0);
     }
 
     private void AddTarget_Click(object sender, RoutedEventArgs e)
@@ -54,6 +82,11 @@ public partial class RaidCalculatorView : UserControl
     private void Remove_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is RaidPlanItemViewModel item) _viewModel.Remove(item);
+    }
+
+    private void UseCheapest_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is RaidPlanItemViewModel item) item.UseCheapest();
     }
 
     private void SmartSource_Changed(object sender, RoutedEventArgs e)
