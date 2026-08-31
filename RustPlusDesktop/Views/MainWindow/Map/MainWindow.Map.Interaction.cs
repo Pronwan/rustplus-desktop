@@ -188,36 +188,102 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
-        if (_overlayToolsVisible)
-        {
-            if (e.ChangedButton == MouseButton.Right)
-            {
-                if (TryHandleOverlayRightClick(mapPos))
-                {
-                    e.Handled = true;
-                    return;
-                }
-            }
+        // Navigation is always available, even while a draw tool is armed.
+        // Middle always pans. Right first tries an overlay delete; if nothing was hit, it pans too.
+        bool rightPansAfterDelete = e.ChangedButton == MouseButton.Right
+            && !(_overlayToolsVisible && TryHandleOverlayRightClick(mapPos));
+        // Space held turns left-drag into a temporary hand.
+        bool spacePan = e.ChangedButton == MouseButton.Left && _spacePanHeld;
 
-            if (_currentTool != OverlayToolMode.None)
-            {
-                HandleOverlayMouseDown(e, mapPos);
-                e.Handled = true;
-                return;
-            }
-        }
-        if (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right)
+        if (e.ChangedButton == MouseButton.Middle || rightPansAfterDelete || spacePan)
         {
             StopTracking(); // Stop tracking on pan
+            HidePanHint();  // they found it — the first-run tip has done its job
             _isPanning = true;
-            _panLastHost = e.GetPosition(WebViewHost);
+            _panLastHost = hostPos;
             WebViewHost.CaptureMouse();
+            e.Handled = true;
+            return;
+        }
+
+        // The right-click delete above already consumed a hit; nothing more to do.
+        if (e.ChangedButton == MouseButton.Right)
+        {
+            e.Handled = true;
+            return;
+        }
+
+        // Left button uses the active tool (draw/text/icon/erase), or drags an existing
+        // element when the Select tool (None) is active.
+        if (_overlayToolsVisible && e.ChangedButton == MouseButton.Left)
+        {
+            HandleOverlayMouseDown(e, mapPos);
             e.Handled = true;
         }
     }
 
     private void WebViewHost_KeyDown(object sender, KeyEventArgs e)
     {
+        // While typing an inline map label, let the text box handle every key.
+        if (_isEditingOverlayText) return;
+
+        bool ctrl = (Keyboard.Modifiers & ModifierKeys.Control) != 0;
+
+        // Undo / redo of my map drawings.
+        if (ctrl && e.Key == Key.Z) { OverlayUndo(); e.Handled = true; return; }
+        if (ctrl && (e.Key == Key.Y || (e.Key == Key.Z && (Keyboard.Modifiers & ModifierKeys.Shift) != 0)))
+        {
+            OverlayRedo(); e.Handled = true; return;
+        }
+
+        // Hold Space for a temporary hand — left-drag pans without dropping the active tool.
+        if (e.Key == Key.Space && !_spacePanHeld)
+        {
+            _spacePanHeld = true;
+            ApplyToolCursor();
+            e.Handled = true;
+            return;
+        }
+
+        // Single-key tool shortcuts — only while the drawing tools are open and no modifier is held.
+        if (_overlayToolsVisible && Keyboard.Modifiers == ModifierKeys.None)
+        {
+            OverlayToolMode? pick = e.Key switch
+            {
+                Key.V => OverlayToolMode.None,   // Select / navigate
+                Key.P => OverlayToolMode.Draw,   // Pen
+                Key.L => OverlayToolMode.Line,
+                Key.A => OverlayToolMode.Arrow,
+                Key.R => OverlayToolMode.Box,    // Rectangle
+                Key.C => OverlayToolMode.Circle,
+                Key.T => OverlayToolMode.Text,
+                Key.M => OverlayToolMode.Icon,   // Marker
+                Key.E => OverlayToolMode.Erase,
+                _ => (OverlayToolMode?)null
+            };
+            if (pick is OverlayToolMode mode)
+            {
+                SelectOverlayTool(mode);
+                e.Handled = true;
+                return;
+            }
+            if (e.Key == Key.Escape)
+            {
+                CancelActiveOverlayDraw();
+                DeselectElement();
+                SelectOverlayTool(OverlayToolMode.None);
+                UpdateOptionsPanelVisibility();
+                e.Handled = true;
+                return;
+            }
+            if (e.Key is Key.Delete or Key.Back && _selectedElement != null)
+            {
+                DeleteSelectedElement();
+                e.Handled = true;
+                return;
+            }
+        }
+
         if (_scene == null) return;
 
         bool zoomIn = e.Key == Key.Add || e.Key == Key.OemPlus;
@@ -239,30 +305,49 @@ public partial class MainWindow
         e.Handled = true;
     }
 
+    private void WebViewHost_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Space)
+        {
+            _spacePanHeld = false;
+            if (_isPanning)
+            {
+                _isPanning = false;
+                WebViewHost.ReleaseMouseCapture();
+            }
+            ApplyToolCursor();
+            e.Handled = true;
+        }
+    }
+
     private void WebViewHost_MouseMove(object? sender, MouseEventArgs e)
     {
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
-        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        // Panning always wins, even while a tool is armed.
+        if (_isPanning)
         {
-            HandleOverlayMouseMove(e, mapPos);
+            var dHost = hostPos - _panLastHost;
+            _panLastHost = hostPos;
+
+            var dScene = HostDeltaToSceneDelta(dHost);
+
+            var m = MapTransform.Matrix;
+            m.Translate(dScene.X, dScene.Y);
+            MapTransform.Matrix = m;
+            CenterMiniMapOnPlayer();
             e.Handled = true;
             return;
         }
-        if (!_isPanning) return;
 
-        var hostNow = e.GetPosition(WebViewHost);
-        var dHost = hostNow - _panLastHost;
-        _panLastHost = hostNow;
-
-        var dScene = HostDeltaToSceneDelta(dHost);
-
-        var m = MapTransform.Matrix;
-        m.Translate(dScene.X, dScene.Y);
-        MapTransform.Matrix = m;
-        CenterMiniMapOnPlayer();
-        e.Handled = true;
+        // Tool stroke/erase, or dragging an element under the Select tool.
+        if (_overlayToolsVisible)
+        {
+            HandleOverlayMouseMove(e, mapPos);
+            if (_currentTool != OverlayToolMode.None || _draggingElement != null)
+                e.Handled = true;
+        }
     }
 
     private void WebViewHost_MouseUp(object? sender, MouseButtonEventArgs e)
@@ -270,17 +355,18 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
-        if (_overlayToolsVisible && _currentTool != OverlayToolMode.None)
+        // End a pan started by middle, right, or space+left.
+        if (_isPanning)
         {
-            HandleOverlayMouseUp(e, mapPos);
+            _isPanning = false;
+            WebViewHost.ReleaseMouseCapture();
             e.Handled = true;
             return;
         }
 
-        if (_isPanning && (e.ChangedButton == MouseButton.Middle || e.ChangedButton == MouseButton.Right))
+        if (_overlayToolsVisible)
         {
-            _isPanning = false;
-            WebViewHost.ReleaseMouseCapture();
+            HandleOverlayMouseUp(e, mapPos);
             e.Handled = true;
         }
     }

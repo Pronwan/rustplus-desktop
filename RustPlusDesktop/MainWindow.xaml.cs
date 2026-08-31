@@ -548,6 +548,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.MouseUp += WebViewHost_MouseUp;
 
         WebViewHost.KeyDown += WebViewHost_KeyDown;
+        WebViewHost.KeyUp += WebViewHost_KeyUp;
         WebViewHost.Focusable = true;
         DataContext = _vm;
         _vm.Load();
@@ -866,10 +867,15 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _toolButtons = new Dictionary<OverlayToolMode, Button>
     {
-        { OverlayToolMode.Draw,  ToolDrawButton },
-        { OverlayToolMode.Text,  ToolTextButton },
-        { OverlayToolMode.Icon,  ToolIconButton },
-        { OverlayToolMode.Erase, ToolEraseButton }
+        { OverlayToolMode.None,   ToolSelectButton },
+        { OverlayToolMode.Draw,   ToolDrawButton },
+        { OverlayToolMode.Line,   ToolLineButton },
+        { OverlayToolMode.Arrow,  ToolArrowButton },
+        { OverlayToolMode.Box,    ToolBoxButton },
+        { OverlayToolMode.Circle, ToolCircleButton },
+        { OverlayToolMode.Text,   ToolTextButton },
+        { OverlayToolMode.Icon,   ToolIconButton },
+        { OverlayToolMode.Erase,  ToolEraseButton }
     };
 
         _monumentWatcher.OnOilRigTriggered += (s, data) =>

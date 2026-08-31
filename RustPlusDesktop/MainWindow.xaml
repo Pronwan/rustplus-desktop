@@ -8373,6 +8373,19 @@
                             Visibility="Collapsed">
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <!--  Select / Navigate (default)  -->
+                                    <Button
+                                        x:Name="ToolSelectButton"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="ToolSelectButton_Click"
+                                        ToolTip="Select &amp; move — navigate the map (default)">
+                                        <ui:SymbolIcon Symbol="Cursor24" Foreground="White" FontSize="18" />
+                                    </Button>
+
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+
                                     <!--  Zeichnen  -->
                                     <Button
                                         x:Name="ToolDrawButton"
@@ -8383,6 +8396,26 @@
                                         Click="ToolDrawButton_Click"
                                         ToolTip="{DynamicResource DrawToolTip}">
                                         <Image Source="pack://application:,,,/Assets/icons/pen.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Button>
+
+                                    <!--  Line  -->
+                                    <Button x:Name="ToolLineButton" Width="32" Height="32" Margin="2,0" Click="ToolLineButton_Click" ToolTip="Line (hold Shift to lock angle)">
+                                        <Path Stroke="White" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,18 L18,6" />
+                                    </Button>
+
+                                    <!--  Arrow  -->
+                                    <Button x:Name="ToolArrowButton" Width="32" Height="32" Margin="2,0" Click="ToolArrowButton_Click" ToolTip="Arrow (rotations / pushes)">
+                                        <Path Stroke="White" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,18 L18,6 M18,6 L12.5,6.5 M18,6 L17.5,11.5" />
+                                    </Button>
+
+                                    <!--  Box  -->
+                                    <Button x:Name="ToolBoxButton" Width="32" Height="32" Margin="2,0" Click="ToolBoxButton_Click" ToolTip="Rectangle (hold Shift for square)">
+                                        <Rectangle Width="16" Height="12" Stroke="White" StrokeThickness="2" Fill="Transparent" RadiusX="1" RadiusY="1" />
+                                    </Button>
+
+                                    <!--  Circle  -->
+                                    <Button x:Name="ToolCircleButton" Width="32" Height="32" Margin="2,0" Click="ToolCircleButton_Click" ToolTip="Ellipse / range (hold Shift for a circle)">
+                                        <Ellipse Width="16" Height="16" Stroke="White" StrokeThickness="2" Fill="Transparent" />
                                     </Button>
 
                                     <!--  Text  -->
@@ -8475,6 +8508,22 @@
                                         Click="BtnAdminPanel_Click"
                                         ToolTip="{DynamicResource UiAdminPanel}" />
                                 </StackPanel>
+
+                                <!-- Active-tool identity: ties the context bar together and teaches the shortcut -->
+                                <Border x:Name="ToolContextBar" Visibility="Collapsed" Margin="0,8,0,0" Padding="8,3" HorizontalAlignment="Left" Background="#1A60CDFF" CornerRadius="5">
+                                    <TextBlock x:Name="ToolContextLabel" FontSize="10.5" FontWeight="SemiBold" Foreground="#60CDFF" />
+                                </Border>
+
+                                <!-- First-run hint: the core "you can still navigate" message -->
+                                <Border x:Name="OverlayPanHint" Visibility="Collapsed" Margin="0,8,0,0" Padding="10,6" HorizontalAlignment="Center" Background="#CC0E639C" CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Info24" FontSize="14" Foreground="White" VerticalAlignment="Center" />
+                                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" FontSize="11" Text="Right-drag or hold Space to pan while a tool is active. Ctrl+Z to undo." />
+                                        <Button Margin="12,0,0,0" Padding="0" Width="18" Height="18" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="DismissPanHint_Click" ToolTip="Dismiss">
+                                            <ui:SymbolIcon Symbol="Dismiss20" FontSize="12" Foreground="White" />
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
 
                                 <!-- Options Panel (Inline below) -->
                                 <Grid x:Name="OverlayToolOptionsPanel" Visibility="Collapsed" Margin="0,8,0,0">
@@ -8611,6 +8660,27 @@
                                         <TextBlock Text="{DynamicResource UiSize}" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                         <Slider x:Name="SliderEraserSize" Width="100" Minimum="5" Maximum="40" Value="20" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="SliderEraserSize_ValueChanged"/>
                                         <TextBlock Text="{Binding ElementName=SliderEraserSize, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                    </StackPanel>
+
+                                    <!-- Selection editing (Select tool, an element is clicked) -->
+                                    <StackPanel x:Name="SelectionOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <TextBlock Text="Selected" VerticalAlignment="Center" Foreground="#60CDFF" FontSize="11" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                        <TextBlock x:Name="SelectionSizeLabel" Text="Size" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
+                                        <Slider x:Name="SelectionSizeSlider" Width="100" Minimum="1" Maximum="64" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True"
+                                                ValueChanged="SelectionSizeSlider_ValueChanged" GotMouseCapture="SelectionSizeSlider_GotMouseCapture" LostMouseCapture="SelectionSizeSlider_LostMouseCapture"/>
+                                        <TextBlock Text="{Binding ElementName=SelectionSizeSlider, Path=Value, StringFormat={}{0:F0}}" Width="26" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
+                                        <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <StackPanel x:Name="SelectionColorRow" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="#EF5350" Click="SelectionColorButton_Click" Tag="#EF5350"/>
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="#66BB6A" Click="SelectionColorButton_Click" Tag="#66BB6A"/>
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="#42A5F5" Click="SelectionColorButton_Click" Tag="#42A5F5"/>
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="#FFCA28" Click="SelectionColorButton_Click" Tag="#FFCA28"/>
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="#FFFFFF" Click="SelectionColorButton_Click" Tag="#FFFFFF"/>
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="#212121" Click="SelectionColorButton_Click" Tag="#212121"/>
+                                        </StackPanel>
+                                        <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="10,0" VerticalAlignment="Center"/>
+                                        <Button x:Name="SelectionEditTextButton" Click="SelectionEditText_Click" Height="24" Padding="8,0" Margin="0,0,6,0" Content="Edit" ToolTip="Edit text" />
+                                        <Button x:Name="SelectionDeleteButton" Click="SelectionDelete_Click" Height="24" Padding="8,0" Content="Delete" ToolTip="Delete (Del)" />
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
