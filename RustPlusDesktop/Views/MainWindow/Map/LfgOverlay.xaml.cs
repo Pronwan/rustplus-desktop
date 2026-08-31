@@ -982,6 +982,7 @@ public partial class LfgOverlay : UserControl
 
         if (chat)
         {
+            _userScrolledUp = false;
             _ = LoadChatAsync();
         }
         else
@@ -999,6 +1000,36 @@ public partial class LfgOverlay : UserControl
     private int _slowModeSeconds;
     private System.Windows.Threading.DispatcherTimer? _cooldownTimer;
     private int _remainingCooldownSeconds;
+    private bool _userScrolledUp;
+
+    private void ChatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        if (ChatScrollViewer == null) return;
+
+        if (e.ExtentHeightChange > 0 && !_userScrolledUp)
+        {
+            ChatScrollViewer.ScrollToEnd();
+            if (BtnScrollToBottom != null)
+                BtnScrollToBottom.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        bool isScrolledUp = ChatScrollViewer.VerticalOffset < (ChatScrollViewer.ScrollableHeight - 30);
+        _userScrolledUp = isScrolledUp;
+
+        if (BtnScrollToBottom != null)
+        {
+            BtnScrollToBottom.Visibility = (isScrolledUp && _chatLines.Count > 5) ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    private void BtnScrollToBottom_Click(object sender, RoutedEventArgs e)
+    {
+        _userScrolledUp = false;
+        ChatScrollViewer?.ScrollToEnd();
+        if (BtnScrollToBottom != null)
+            BtnScrollToBottom.Visibility = Visibility.Collapsed;
+    }
 
     private void UpdateSlowModeUI()
     {
@@ -1056,6 +1087,7 @@ public partial class LfgOverlay : UserControl
 
         _chatLines.Clear();
         _chatLines.AddRange(snapshot.Lines);
+        _userScrolledUp = false;
         ShowChatLines();
 
         _slowModeSeconds = snapshot.SlowModeSeconds;
@@ -1070,6 +1102,14 @@ public partial class LfgOverlay : UserControl
         // and the room is small enough that rebinding it costs nothing worth a collection type.
         ChatList.ItemsSource = _chatLines.ToArray();
         ChatEmptyNotice.Visibility = _chatLines.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        if (!_userScrolledUp)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                ChatScrollViewer?.ScrollToEnd();
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
+        }
     }
 
     private bool _catchUpRunning;
@@ -1147,12 +1187,12 @@ public partial class LfgOverlay : UserControl
         if (sanction is null)
         {
             ChatSilencedBar.Visibility = Visibility.Collapsed;
-            ChatComposeRow.Visibility = Visibility.Visible;
+            ChatComposeArea.Visibility = Visibility.Visible;
             return;
         }
 
         ChatSilencedBar.Visibility = Visibility.Visible;
-        ChatComposeRow.Visibility = Visibility.Collapsed;
+        ChatComposeArea.Visibility = Visibility.Collapsed;
 
         ChatSilencedText.Text = sanction.ExpiresAt is { } until
             ? string.Format(

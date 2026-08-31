@@ -168,182 +168,227 @@
             </Border>
 
             <!--  Main body  -->
-            <ScrollViewer x:Name="Body" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
+            <Grid x:Name="Body" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <!--  Which half of Community you are in  -->
-                    <Border BorderBrush="{StaticResource LfgLine}" BorderThickness="0,0,0,1" Margin="0,0,0,14">
-                        <StackPanel Orientation="Horizontal">
-                            <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
-                                         Style="{StaticResource SocialTab}" Margin="0,0,18,0"
-                                         Content="{DynamicResource SocialSectionChat}" Checked="Section_Checked" />
-                            <RadioButton x:Name="SecLfg" GroupName="SocialSection"
-                                         Style="{StaticResource SocialTab}"
-                                         Content="{DynamicResource SocialSectionLfg}" Checked="Section_Checked" />
-                        </StackPanel>
-                    </Border>
+                <!--  Which half of Community you are in (Sticky Tabs)  -->
+                <Border Grid.Row="0" BorderBrush="{StaticResource LfgLine}" BorderThickness="0,0,0,1" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
+                                     Style="{StaticResource SocialTab}" Margin="0,0,18,0"
+                                     Content="{DynamicResource SocialSectionChat}" Checked="Section_Checked" />
+                        <RadioButton x:Name="SecLfg" GroupName="SocialSection"
+                                     Style="{StaticResource SocialTab}"
+                                     Content="{DynamicResource SocialSectionLfg}" Checked="Section_Checked" />
+                    </StackPanel>
+                </Border>
 
-                    <!--  The public room  -->
-                    <StackPanel x:Name="ChatSection">
-                        <TextBlock Text="{DynamicResource ChatRules}" TextWrapping="Wrap" Margin="0,0,0,10"
-                                   Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                <!--  The public room (3-row layout: header note, scrollable chat list, sticky compose footer)  -->
+                <Grid x:Name="ChatSection" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <!-- Active Slow Mode indicator -->
-                        <Border x:Name="ChatSlowModeBar" Visibility="Collapsed" Margin="0,0,0,10"
-                                Background="#143FD7FF" CornerRadius="6" Padding="9,6"
-                                BorderBrush="#333FD7FF" BorderThickness="1">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:SymbolIcon Symbol="Timer24" FontSize="14" Foreground="#FF3FD7FF" Margin="0,0,7,0" VerticalAlignment="Center" />
-                                <TextBlock x:Name="ChatSlowModeText" Text="Slow Mode: 10s" Foreground="#FF3FD7FF"
-                                           FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
+                    <TextBlock Grid.Row="0" Text="{DynamicResource ChatRules}" TextWrapping="Wrap" Margin="0,0,0,8"
+                               Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
 
-                        <TextBlock x:Name="ChatEmptyNotice" Visibility="Collapsed" Margin="0,0,0,10"
-                                   Text="{DynamicResource ChatEmpty}" TextWrapping="Wrap"
-                                   Foreground="{StaticResource LfgMuted}" FontSize="11" />
+                    <!-- Scrollable Chat Messages & Floating Scroll To Bottom Button -->
+                    <Grid Grid.Row="1" Margin="0,0,0,8">
+                        <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                      ScrollChanged="ChatScrollViewer_ScrollChanged">
+                            <StackPanel Margin="0,0,4,0">
+                                <TextBlock x:Name="ChatEmptyNotice" Visibility="Collapsed" Margin="0,0,0,10"
+                                           Text="{DynamicResource ChatEmpty}" TextWrapping="Wrap"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="11" />
 
-                        <ItemsControl x:Name="ChatList" Margin="0,0,0,10">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,0,0,8">
-                                        <!-- Regular Chat Bubble -->
-                                        <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
-                                            <Grid.ContextMenu>
-                                                <ContextMenu>
-                                                    <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
-                                                    <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
-                                                </ContextMenu>
-                                            </Grid.ContextMenu>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!-- Avatar with Glow & Star for Premium Members -->
-                                            <Grid Grid.Column="0" Width="28" Height="28" Margin="0,1,9,0" VerticalAlignment="Top">
-                                                <!-- Supporter Glow Ring -->
-                                                <Ellipse Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                         Stroke="#FFA629" StrokeThickness="1.5"
-                                                         Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
-                                                    <Ellipse.Effect>
-                                                        <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
-                                                    </Ellipse.Effect>
-                                                </Ellipse>
-
-                                                <!-- Base Avatar Circle -->
-                                                <Grid Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                    <Ellipse Fill="#222B38" />
-                                                    <ui:SymbolIcon Symbol="Person24" FontSize="11" Foreground="#94A0B3" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Ellipse>
-                                                        <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
-                                                        </Ellipse.Fill>
-                                                    </Ellipse>
-                                                </Grid>
-
-                                                <!-- Top-Right Star Badge for Premium Members -->
-                                                <Border Width="11" Height="11"
-                                                        HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                        Background="#FFD700"
-                                                        BorderBrush="#FFE58F"
-                                                        BorderThickness="1"
-                                                        CornerRadius="5.5"
-                                                        Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
-                                                    <Border.Effect>
-                                                        <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="#FFA629" Opacity="0.9" />
-                                                    </Border.Effect>
-                                                    <TextBlock Text="★" FontSize="7" FontWeight="Bold" Foreground="#4A2800"
-                                                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
-                                                </Border>
-                                            </Grid>
-
-                                            <StackPanel Grid.Column="1">
-                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
-                                                               FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
-
-                                                    <!-- Staff Role Badge -->
-                                                    <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
-                                                            Background="{Binding RoleBadge.BackgroundBrush}"
-                                                            BorderBrush="{Binding RoleBadge.BorderBrush}"
-                                                            BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
-                                                            VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding RoleBadge.DisplayText}"
-                                                                   Foreground="{Binding RoleBadge.ForegroundBrush}"
-                                                                   FontSize="9" FontWeight="Bold" />
-                                                    </Border>
-
-                                                    <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
-                                                               FontSize="9.5" Margin="7,1,0,0" VerticalAlignment="Center" />
-                                                </StackPanel>
-                                                <TextBlock Text="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
-                                                           Foreground="{StaticResource LfgText}" FontSize="12" />
-                                            </StackPanel>
-                                        </Grid>
-
-                                        <!-- System Sanction Alert Banner (Timeout / Ban / Lifted) -->
-                                        <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource BoolToVis}}"
-                                                Background="{Binding SanctionEvent.CardBackgroundBrush}"
-                                                BorderBrush="{Binding SanctionEvent.CardBorderBrush}"
-                                                BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,2,0,2">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-
-                                                <!-- Header: Status Title + Duration Badge + Timestamp -->
-                                                <Grid Grid.Row="0" Margin="0,0,0,6">
+                                <ItemsControl x:Name="ChatList" Margin="0,0,0,6">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,0,0,8">
+                                                <!-- Regular Chat Bubble -->
+                                                <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
+                                                    <Grid.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
+                                                            <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
+                                                        </ContextMenu>
+                                                    </Grid.ContextMenu>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
-                                                        <Border Background="{Binding SanctionEvent.HeaderBackgroundBrush}"
-                                                                BorderBrush="{Binding SanctionEvent.HeaderBorderBrush}"
-                                                                BorderThickness="1" CornerRadius="3" Padding="5,2" Margin="0,0,6,0">
-                                                            <TextBlock Text="{Binding SanctionEvent.HeaderTitle}"
-                                                                       Foreground="{Binding SanctionEvent.HeaderForegroundBrush}"
-                                                                       FontSize="9.5" FontWeight="Bold" />
-                                                        </Border>
+                                                    <!-- Avatar with Glow & Star for Premium Members -->
+                                                    <Grid Grid.Column="0" Width="28" Height="28" Margin="0,1,9,0" VerticalAlignment="Top">
+                                                        <!-- Supporter Glow Ring -->
+                                                        <Ellipse Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                 Stroke="#FFA629" StrokeThickness="1.5"
+                                                                 Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
+                                                            <Ellipse.Effect>
+                                                                <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
+                                                            </Ellipse.Effect>
+                                                        </Ellipse>
 
-                                                        <Border Visibility="{Binding SanctionEvent.DurationBadgeVisibility}"
-                                                                Background="#33F59E0B" BorderBrush="#F59E0B"
-                                                                BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
-                                                            <TextBlock Text="{Binding SanctionEvent.DurationBadgeText}"
-                                                                       Foreground="#FFFBBF24" FontSize="9" FontWeight="SemiBold" />
+                                                        <!-- Base Avatar Circle -->
+                                                        <Grid Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <Ellipse Fill="#222B38" />
+                                                            <ui:SymbolIcon Symbol="Person24" FontSize="11" Foreground="#94A0B3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            <Ellipse>
+                                                                <Ellipse.Fill>
+                                                                    <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                                </Ellipse.Fill>
+                                                            </Ellipse>
+                                                        </Grid>
+
+                                                        <!-- Top-Right Star Badge for Premium Members -->
+                                                        <Border Width="11" Height="11"
+                                                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                                Background="#FFD700"
+                                                                BorderBrush="#FFE58F"
+                                                                BorderThickness="1"
+                                                                CornerRadius="5.5"
+                                                                Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="#FFA629" Opacity="0.9" />
+                                                            </Border.Effect>
+                                                            <TextBlock Text="★" FontSize="7" FontWeight="Bold" Foreground="#4A2800"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
                                                         </Border>
+                                                    </Grid>
+
+                                                    <StackPanel Grid.Column="1">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
+                                                                       FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
+
+                                                            <!-- Staff Role Badge -->
+                                                            <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
+                                                                    Background="{Binding RoleBadge.BackgroundBrush}"
+                                                                    BorderBrush="{Binding RoleBadge.BorderBrush}"
+                                                                    BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                                    VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding RoleBadge.DisplayText}"
+                                                                           Foreground="{Binding RoleBadge.ForegroundBrush}"
+                                                                           FontSize="9" FontWeight="Bold" />
+                                                            </Border>
+
+                                                            <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
+                                                                       FontSize="9.5" Margin="7,1,0,0" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
+                                                                   Foreground="{StaticResource LfgText}" FontSize="12" />
                                                     </StackPanel>
-
-                                                    <TextBlock Grid.Column="1" Text="{Binding SanctionEvent.TimeLabel}"
-                                                               Foreground="{StaticResource LfgMuted}" FontSize="9.5" VerticalAlignment="Center" />
                                                 </Grid>
 
-                                                <!-- Details: Target -->
-                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4">
-                                                    <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
-                                                    <TextBlock Text="{Binding SanctionEvent.TargetDisplayName}" Foreground="{StaticResource LfgText}"
-                                                               FontSize="10.5" FontWeight="SemiBold" />
-                                                    <TextBlock Text="{Binding SanctionEvent.TargetSteamIdFormatted}" Foreground="{StaticResource LfgMuted}"
-                                                               FontSize="9.5" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
-                                                </StackPanel>
+                                                <!-- System Sanction Alert Banner (Timeout / Ban / Lifted) -->
+                                                <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource BoolToVis}}"
+                                                        Background="{Binding SanctionEvent.CardBackgroundBrush}"
+                                                        BorderBrush="{Binding SanctionEvent.CardBorderBrush}"
+                                                        BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,2,0,2">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
 
-                                                <!-- Reason -->
-                                                <TextBlock Grid.Row="2" Visibility="{Binding SanctionEvent.HasReason, Converter={StaticResource BoolToVis}}"
-                                                           Foreground="{StaticResource LfgText}" FontSize="11" TextWrapping="Wrap">
-                                                    <Run Text="Reason: " Foreground="{StaticResource LfgMuted}" />
-                                                    <Run Text="{Binding SanctionEvent.Reason}" />
-                                                </TextBlock>
+                                                        <!-- Header: Status Title + Duration Badge + Timestamp -->
+                                                        <Grid Grid.Row="0" Margin="0,0,0,6">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                                                                <Border Background="{Binding SanctionEvent.HeaderBackgroundBrush}"
+                                                                        BorderBrush="{Binding SanctionEvent.HeaderBorderBrush}"
+                                                                        BorderThickness="1" CornerRadius="3" Padding="5,2" Margin="0,0,6,0">
+                                                                    <TextBlock Text="{Binding SanctionEvent.HeaderTitle}"
+                                                                               Foreground="{Binding SanctionEvent.HeaderForegroundBrush}"
+                                                                               FontSize="9.5" FontWeight="Bold" />
+                                                                </Border>
+
+                                                                <Border Visibility="{Binding SanctionEvent.DurationBadgeVisibility}"
+                                                                        Background="#33F59E0B" BorderBrush="#F59E0B"
+                                                                        BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
+                                                                    <TextBlock Text="{Binding SanctionEvent.DurationBadgeText}"
+                                                                               Foreground="#FFFBBF24" FontSize="9" FontWeight="SemiBold" />
+                                                                </Border>
+                                                            </StackPanel>
+
+                                                            <TextBlock Grid.Column="1" Text="{Binding SanctionEvent.TimeLabel}"
+                                                                       Foreground="{StaticResource LfgMuted}" FontSize="9.5" VerticalAlignment="Center" />
+                                                        </Grid>
+
+                                                        <!-- Details: Target -->
+                                                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4">
+                                                            <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                                                            <TextBlock Text="{Binding SanctionEvent.TargetDisplayName}" Foreground="{StaticResource LfgText}"
+                                                                       FontSize="10.5" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{Binding SanctionEvent.TargetSteamIdFormatted}" Foreground="{StaticResource LfgMuted}"
+                                                                       FontSize="9.5" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                                        </StackPanel>
+
+                                                        <!-- Reason -->
+                                                        <TextBlock Grid.Row="2" Visibility="{Binding SanctionEvent.HasReason, Converter={StaticResource BoolToVis}}"
+                                                                   Foreground="{StaticResource LfgText}" FontSize="11" TextWrapping="Wrap">
+                                                            <Run Text="Reason: " Foreground="{StaticResource LfgMuted}" />
+                                                            <Run Text="{Binding SanctionEvent.Reason}" />
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Border>
                                             </Grid>
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
 
+                        <!-- Floating Scroll to Bottom Button -->
+                        <Button x:Name="BtnScrollToBottom"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Margin="0,0,0,8"
+                                Padding="10,4"
+                                Background="#E6151F2C"
+                                BorderBrush="#333FD7FF"
+                                BorderThickness="1"
+                                Click="BtnScrollToBottom_Click"
+                                Visibility="Collapsed"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="12">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.5" />
+                                        </Border.Effect>
+                                        <StackPanel Orientation="Horizontal" Margin="6,2">
+                                            <ui:SymbolIcon Symbol="ArrowDown24" FontSize="12" Foreground="{StaticResource LfgAccent}" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                            <TextBlock Text="{DynamicResource ChatScrollToBottom}" FontSize="10.5" FontWeight="SemiBold" Foreground="{StaticResource LfgText}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#FF1C2B3E" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#663FD7FF" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <!-- Sticky Bottom Send Message & Status Component -->
+                    <StackPanel Grid.Row="2">
                         <!--  Why the box is gone, rather than a box that silently does nothing  -->
                         <Border x:Name="ChatSilencedBar" Visibility="Collapsed" Margin="0,0,0,4"
                                 Background="#14FFFFFF" CornerRadius="6" Padding="10"
@@ -358,7 +403,7 @@
                             be held to afterwards - and this one can end in losing the room for
                             good.
                         -->
-                        <Border x:Name="ChatRulesPanel" Visibility="Collapsed" Margin="0,0,0,10"
+                        <Border x:Name="ChatRulesPanel" Visibility="Collapsed" Margin="0,0,0,8"
                                 Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource ChatRulesTitle}" Foreground="{StaticResource LfgText}"
@@ -379,24 +424,42 @@
                         </Border>
 
                         <!--  Why the last line did not go through. One sentence, above the box.  -->
-                        <TextBlock x:Name="ChatRefusal" Visibility="Collapsed" Margin="0,0,0,8"
+                        <TextBlock x:Name="ChatRefusal" Visibility="Collapsed" Margin="0,0,0,6"
                                    Foreground="#FFFF8A8A" FontSize="11" TextWrapping="Wrap" />
 
-                        <Grid x:Name="ChatComposeRow">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <ui:TextBox Grid.Column="0" x:Name="TxtChat" MaxLength="500"
-                                        PlaceholderText="{DynamicResource ChatPlaceholder}"
-                                        KeyDown="TxtChat_KeyDown" />
-                            <ui:Button Grid.Column="1" x:Name="BtnChatSend" Click="BtnChatSend_Click"
-                                       Appearance="Primary" Margin="8,0,0,0"
-                                       Content="{DynamicResource LfgSend}" />
-                        </Grid>
-                    </StackPanel>
+                        <!-- Active Compose Component (includes Slow Mode indicator & Compose input) -->
+                        <StackPanel x:Name="ChatComposeArea">
+                            <!-- Active Slow Mode indicator directly within send message component -->
+                            <Border x:Name="ChatSlowModeBar" Visibility="Collapsed" Margin="0,0,0,6"
+                                    Background="#143FD7FF" CornerRadius="6" Padding="8,4"
+                                    BorderBrush="#333FD7FF" BorderThickness="1"
+                                    HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Timer24" FontSize="13" Foreground="#FF3FD7FF" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="ChatSlowModeText" Text="Slow Mode: 10s" Foreground="#FF3FD7FF"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
 
-                    <StackPanel x:Name="LfgSection" Visibility="Collapsed">
+                            <Grid x:Name="ChatComposeRow">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBox Grid.Column="0" x:Name="TxtChat" MaxLength="500"
+                                            PlaceholderText="{DynamicResource ChatPlaceholder}"
+                                            KeyDown="TxtChat_KeyDown" />
+                                <ui:Button Grid.Column="1" x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                           Appearance="Primary" Margin="8,0,0,0"
+                                           Content="{DynamicResource LfgSend}" />
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <ScrollViewer x:Name="LfgSection" Grid.Row="1" Visibility="Collapsed"
+                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,4,0">
 
                     <!--
                         Status and inbox side by side. Six stacked rows spent more than half the
@@ -786,8 +849,8 @@
                         </StackPanel>
                     </Grid>
                     </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
+                </ScrollViewer>
+            </Grid>
 
             <!--
                 The block list.
