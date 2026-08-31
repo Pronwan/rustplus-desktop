@@ -1083,6 +1083,10 @@
   <data name="LfgPendingHint" xml:space="preserve">
     <value>{0} 想傳訊息給你。</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>等待 {0} 接受您的請求...</value>
+  </data>
+
   <data name="LfgDeclinedHint" xml:space="preserve">
     <value>你已拒絕該請求，對方無法再次傳送。</value>
   </data>

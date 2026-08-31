@@ -6072,6 +6072,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="LfgPendingHint" xml:space="preserve">
     <value>{0} хочет вам написать.</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>Ожидание подтверждения от {0}...</value>
+  </data>
+
   <data name="LfgDeclinedHint" xml:space="preserve">
     <value>Вы отклонили этот запрос. Повторить его нельзя.</value>
   </data>

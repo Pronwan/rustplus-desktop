@@ -5820,6 +5820,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="LfgPendingHint" xml:space="preserve">
     <value>{0} 想给你发消息。</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>等待 {0} 接受您的请求...</value>
+  </data>
+
   <data name="LfgDeclinedHint" xml:space="preserve">
     <value>你已拒绝该请求，对方无法再次发送。</value>
   </data>

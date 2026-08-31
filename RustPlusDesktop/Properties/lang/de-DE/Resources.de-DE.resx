@@ -6165,6 +6165,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="LfgPendingHint" xml:space="preserve">
     <value>{0} möchte dir schreiben.</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>Warte auf Annahme durch {0}...</value>
+  </data>
+
   <data name="LfgDeclinedHint" xml:space="preserve">
     <value>Du hast diese Anfrage abgelehnt. Ein zweites Mal geht nicht.</value>
   </data>

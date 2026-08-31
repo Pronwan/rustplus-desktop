@@ -25,8 +25,18 @@ public sealed class SocialThread
 
     public DateTime? LastMessageAt { get; init; }
 
+    public string? CreatedBy { get; init; }
+
+    public bool IsCreatedByMe { get; init; }
+
     /// <summary>True while this is a request you have not answered.</summary>
     public bool IsPending => State == "pending";
+
+    /// <summary>True while this is a request you received and have not answered yet.</summary>
+    public bool IsIncomingPending => IsPending && !IsCreatedByMe;
+
+    /// <summary>True while this is an outgoing request you sent that has not been accepted yet.</summary>
+    public bool IsOutgoingPending => IsPending && IsCreatedByMe;
 
     /// <summary>True once you declined it — kept visible rather than deleted, and marked as such.</summary>
     public bool IsDeclined => State == "declined";

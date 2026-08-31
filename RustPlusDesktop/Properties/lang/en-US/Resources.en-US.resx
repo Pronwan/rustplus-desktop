@@ -5815,6 +5815,10 @@ You can find more information on the server's official website:
   <data name="LfgPendingHint" xml:space="preserve">
     <value>{0} would like to write to you.</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>Waiting for {0} to accept your request...</value>
+  </data>
+
   <data name="LfgDeclinedHint" xml:space="preserve">
     <value>You declined this request. They cannot write again.</value>
   </data>
