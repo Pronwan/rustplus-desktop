@@ -6361,4 +6361,34 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="FriendsSent" xml:space="preserve">
     <value>Запрос отправлен. Ваше сообщение дошло, на него можно ответить.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>Маршруты</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>Маршруты — именованные пути с длиной и временем пробежки</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>Путь со стрелками — нарисуйте линию, стрелки направления пойдут по ней (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>Новый маршрут</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>Выйти из режима маршрутов</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>Удалить маршрут</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>Показать или скрыть на карте</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>Маршрутов пока нет. Создайте один, дайте ему имя и нарисуйте на карте.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter — создать, Escape — отменить. Маршрут возьмёт цвет, на который настроено перо.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>Рисуйте на карте. Первый штрих задаёт начало; если продолжить от конца, конец сместится. Вернитесь к началу — и маршрут замкнётся в круг.</value>
+  </data>
 </root>

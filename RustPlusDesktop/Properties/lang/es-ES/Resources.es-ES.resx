@@ -6361,4 +6361,34 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="FriendsSent" xml:space="preserve">
     <value>Solicitud enviada. Verán tu mensaje y podrán responderlo.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>Rutas</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>Rutas: caminos con nombre, longitud y tiempo de carrera</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>Camino de flechas: dibuja un trazo y las flechas de dirección lo siguen (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>Nueva ruta</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>Salir del modo rutas</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>Eliminar ruta</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>Mostrar u ocultar en el mapa</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>Aún no hay rutas. Crea una, ponle nombre y dibújala en el mapa.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Intro para crear, Escape para cancelar. La ruta toma el color del lápiz.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>Dibuja en el mapa. El primer trazo fija el inicio; si sigues desde el final, el final se mueve. Vuelve al inicio y la ruta se cierra en una vuelta.</value>
+  </data>
 </root>

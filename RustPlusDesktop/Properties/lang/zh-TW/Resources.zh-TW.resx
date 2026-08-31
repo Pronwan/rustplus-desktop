@@ -1372,4 +1372,34 @@
   <data name="FriendsSent" xml:space="preserve">
     <value>請求已送出。對方會看到你的訊息，也可以回覆。</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>路線</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>路線——帶名稱、長度和跑動時間的路徑</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>箭頭路徑——畫一條線，方向箭頭會沿著它排列（7）</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>新增路線</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>離開路線模式</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>刪除路線</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>在地圖上顯示或隱藏</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>還沒有路線。先新增一條，取個名字，然後在地圖上畫出來。</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter 建立，Esc 取消。路線會採用畫筆目前的顏色。</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>在地圖上繪製。第一筆定下起點；從終點繼續畫，終點就會跟著移動。畫回起點，路線就閉合成一圈。</value>
+  </data>
 </root>

@@ -471,6 +471,8 @@ private bool _overlayToolsVisible = false;
         // Wir bauen jetzt meine Shapes.
         var myList = new List<FrameworkElement>();
 
+        ApplySavedRoutes(data.Routes);
+
         // 1) Strokes
         foreach (var stroke in data.Strokes)
         {
@@ -806,6 +808,10 @@ private bool _overlayToolsVisible = false;
                 // Drop an accidental click that never became a shape.
                 if (anchor is Point a && PointDistance(a, mapPos) < 0.75)
                     RemoveOwnElement(completed);
+                else if (IsRouteModeActive)
+                    // A shape can be a route too. A line joins on like a pen stroke; a box or a
+                    // circle arrives already closed, which is a lap by any other name.
+                    AppendStrokeToActiveRoute(completed, closes: _currentTool is OverlayToolMode.Box or OverlayToolMode.Circle);
                 else
                     RecordOverlayAdd(completed);
             }
@@ -820,7 +826,11 @@ private bool _overlayToolsVisible = false;
             _currentStroke = null;
             if (completed != null)
             {
-                if (_currentTool == OverlayToolMode.Route)
+                if (IsRouteModeActive)
+                    // In route mode a stroke is not a stroke: it extends the route being drawn,
+                    // which owns its own geometry and its own start and end.
+                    AppendStrokeToActiveRoute(completed);
+                else if (_currentTool == OverlayToolMode.Route)
                     // Replace the freehand stroke with evenly-spaced direction arrows.
                     BuildArrowRouteElements(completed);
                 else
@@ -2772,6 +2782,10 @@ private bool _overlayToolsVisible = false;
     {
         var data = new OverlaySaveData();
         data.LastUpdatedUnix = DataManager.UnixNow(); // NEU: stamp jetzt
+
+        // Routes carry their own geometry rather than appearing in the stroke list. Their visuals
+        // have no OverlayTag, so the loop below steps over them on its own.
+        data.Routes = BuildSavedRoutes();
 
         foreach (var child in Overlay.Children)
         {

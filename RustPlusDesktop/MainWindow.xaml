@@ -8785,8 +8785,8 @@
                                         <Ellipse Width="16" Height="16" Stroke="White" StrokeThickness="2" Fill="Transparent" />
                                     </Button>
 
-                                    <!--  Route — 7  -->
-                                    <Button x:Name="ToolRouteButton" Tag="7" Width="32" Height="32" Margin="2,0" Click="ToolRouteButton_Click" ToolTip="Route — draw a path, direction arrows follow it (7)">
+                                    <!--  Arrow path — 7. Named routes are the panel next to Layers.  -->
+                                    <Button x:Name="ToolRouteButton" Tag="7" Width="32" Height="32" Margin="2,0" Click="ToolRouteButton_Click" ToolTip="{DynamicResource RoutesArrowPathTool}">
                                         <Path Stroke="White" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,18 L9,9 L14,15 L20,5" />
                                     </Button>
 
@@ -8826,6 +8826,18 @@
                                         Click="BtnToggleLayers_Click"
                                         ToolTip="Layers — see &amp; edit everything on the map">
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+
+                                    <!--  Routes — named paths with a length and a running time  -->
+                                    <Button
+                                        x:Name="BtnToggleRoutes"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="BtnToggleRoutes_Click"
+                                        ToolTip="{DynamicResource RoutesToolTip}">
+                                        <Path Stroke="White" StrokeThickness="1.8" StrokeLineJoin="Round" Fill="Transparent"
+                                              Data="M6,18 C6,12 16,14 16,8 M6,18 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0 M16,8 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
                                     </Button>
 
                                     <!--  LÃƒÂ¶schen  -->
@@ -9104,6 +9116,140 @@
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
+                        </Border>
+
+                        <!--  Routes: the legend, and the way in and out of route mode. The top margin
+                              clears the server dropdown, which opens over this corner of the map.  -->
+                        <Border
+                            x:Name="RoutesPanel"
+                            Grid.Row="1"
+                            Width="252"
+                            MaxHeight="380"
+                            Margin="8,168,8,8"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Panel.ZIndex="9000"
+                            Background="#F214161B"
+                            BorderBrush="#2EFFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="11"
+                            Visibility="Collapsed">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20" ShadowDepth="4" Direction="270" Opacity="0.5" Color="Black" />
+                            </Border.Effect>
+                            <Border.Resources>
+                                <Style x:Key="RouteIconBtn" TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <Setter Property="Foreground" Value="#FFE6EAF2" />
+                                    <Setter Property="Width" Value="26" />
+                                    <Setter Property="Height" Value="26" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="5">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#26FFFFFF" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Border.Resources>
+
+                            <Grid Margin="12,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0" Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                               Text="{DynamicResource RoutesTitle}" Foreground="#FFF4F6FA"
+                                               FontSize="13" FontWeight="SemiBold" />
+                                    <Button Grid.Column="1" Style="{StaticResource RouteIconBtn}"
+                                            Click="BtnRouteAdd_Click" ToolTip="{DynamicResource RoutesAdd}">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="14" />
+                                    </Button>
+                                    <Button Grid.Column="2" Style="{StaticResource RouteIconBtn}"
+                                            Click="BtnRoutesClose_Click" ToolTip="{DynamicResource RoutesClose}">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="14" />
+                                    </Button>
+                                </Grid>
+
+                                <TextBlock x:Name="RoutesEmptyNotice" Grid.Row="0" Visibility="Collapsed"
+                                           Margin="0,30,0,0" Text="{DynamicResource RoutesEmpty}"
+                                           Foreground="#FF94A0B3" FontSize="11" TextWrapping="Wrap" />
+
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled">
+                                    <ItemsControl x:Name="RoutesList">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{Binding RowBackground}" CornerRadius="6" Padding="8,6" Margin="0,0,0,5"
+                                                        Cursor="Hand" Tag="{Binding}" MouseLeftButtonUp="RouteRow_Click">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" MinWidth="0" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <!--  The colour is the legend: it is how the line on the map is found.  -->
+                                                        <Ellipse Grid.Column="0" Width="11" Height="11" Margin="0,0,8,0"
+                                                                 VerticalAlignment="Center" Fill="{Binding Swatch}" />
+
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding Name}" Foreground="#FFF4F6FA" FontSize="12"
+                                                                       FontWeight="{Binding NameWeight}" TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock Text="{Binding Measurement}" Foreground="#FF94A0B3"
+                                                                       FontSize="10.5" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                                        </StackPanel>
+
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <Button Style="{StaticResource RouteIconBtn}" Width="24" Height="24"
+                                                                    Tag="{Binding}" Click="BtnRouteVisibility_Click"
+                                                                    ToolTip="{DynamicResource RoutesToggleVisible}">
+                                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="{Binding EyeGlyph}"
+                                                                           FontSize="13" Opacity="{Binding EyeOpacity}" />
+                                                            </Button>
+                                                            <Button Style="{StaticResource RouteIconBtn}" Width="24" Height="24"
+                                                                    Tag="{Binding}" Click="BtnRouteDelete_Click"
+                                                                    ToolTip="{DynamicResource RoutesDelete}">
+                                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" />
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <!--  Naming a new route. Inline, because a dialog for one field is a dialog too many.  -->
+                                <StackPanel Grid.Row="2" x:Name="RouteNameRow" Visibility="Collapsed" Margin="0,8,0,0">
+                                    <TextBox x:Name="TxtRouteName" MaxLength="40" Background="#22FFFFFF"
+                                             Foreground="#FFF4F6FA" BorderBrush="#3AFFFFFF" BorderThickness="1"
+                                             Padding="6,4" KeyDown="TxtRouteName_KeyDown" />
+                                    <TextBlock Text="{DynamicResource RoutesNameHint}" Foreground="#FF94A0B3"
+                                               FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0" />
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="2" x:Name="RoutesDrawHint" Visibility="Collapsed" Margin="0,8,0,0"
+                                           Text="{DynamicResource RoutesDrawHint}" Foreground="#FF94A0B3"
+                                           FontSize="10.5" TextWrapping="Wrap" />
+                            </Grid>
                         </Border>
 
                         <!--  Layers panel: everything on the map, grouped and editable  -->

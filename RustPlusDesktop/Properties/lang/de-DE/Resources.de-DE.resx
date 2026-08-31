@@ -6439,4 +6439,34 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="FriendsSent" xml:space="preserve">
     <value>Anfrage gesendet. Deine Nachricht ist angekommen und kann beantwortet werden.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>Routen</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>Routen — benannte Wege mit Länge und Laufzeit</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>Pfeilpfad — Weg zeichnen, Richtungspfeile folgen ihm (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>Neue Route</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>Routen-Modus verlassen</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>Route löschen</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>Auf der Karte ein- oder ausblenden</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>Noch keine Routen. Leg eine an, gib ihr einen Namen und zeichne sie dann auf der Karte.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter legt an, Escape bricht ab. Die Route bekommt die Farbe, auf die der Stift eingestellt ist.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>Zeichne auf der Karte. Der erste Strich setzt den Start; zeichnest du vom Ende weiter, wandert das Ende mit. Kommst du zum Start zurück, schließt sich die Route zur Runde.</value>
+  </data>
 </root>

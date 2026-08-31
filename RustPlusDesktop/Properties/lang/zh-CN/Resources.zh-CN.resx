@@ -6109,4 +6109,34 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="FriendsSent" xml:space="preserve">
     <value>请求已发送。对方能看到你的消息，也能回复。</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>路线</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>路线——带名称、长度和跑动时间的路径</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>箭头路径——画一条线，方向箭头会沿着它排列（7）</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>新建路线</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>退出路线模式</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>删除路线</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>在地图上显示或隐藏</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>还没有路线。先新建一条，取个名字，然后在地图上画出来。</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>回车创建，Esc 取消。路线会采用画笔当前的颜色。</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>在地图上绘制。第一笔定下起点；从终点继续画，终点就会跟着移动。画回起点，路线就闭合成一圈。</value>
+  </data>
 </root>

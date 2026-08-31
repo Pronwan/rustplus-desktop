@@ -25,6 +25,15 @@ namespace RustPlusDesk.Models
         public List<SavedIcon> Icons { get; set; } = new();
         public List<SavedText> Texts { get; set; } = new();
         public List<ExportedDeviceDto> Devices { get; set; } = new();
+
+        /// <summary>
+        /// Named routes, with their own geometry rather than as strokes.
+        ///
+        /// A route is a thing you name, colour, hide and measure - none of which a stroke has a
+        /// place for. Older builds simply do not see this property and carry on with the strokes,
+        /// and a payload written by one of them arrives here with no routes, which is correct.
+        /// </summary>
+        public List<SavedRoute> Routes { get; set; } = new();
     }
 
     public sealed class ExportedDeviceDto
@@ -54,6 +63,30 @@ namespace RustPlusDesk.Models
         public double Thickness { get; set; } = 2.0;
         /// <summary>Strokes sharing this id form one group/layer (e.g. an arrow route). Null when ungrouped.</summary>
         public string? GroupId { get; set; }
+    }
+
+    /// <summary>One named route: where it goes, what it is called, and whether it is shown.</summary>
+    public class SavedRoute
+    {
+        public string Id { get; set; } = "";
+
+        public string Name { get; set; } = "";
+
+        public string Color { get; set; } = "#FF3FD7FF";
+
+        public double Thickness { get; set; } = 3.0;
+
+        public List<Point> Points { get; set; } = new();
+
+        /// <summary>
+        /// The end has been walked back to the start, so the route is a lap. Stored rather than
+        /// derived from the last point: two points can sit on top of each other by accident, and
+        /// a lap is a decision rather than a coincidence.
+        /// </summary>
+        public bool Closed { get; set; }
+
+        /// <summary>Hidden routes stay in the list and off the map.</summary>
+        public bool Visible { get; set; } = true;
     }
 
     public class SavedIcon
