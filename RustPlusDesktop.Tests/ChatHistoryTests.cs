@@ -215,4 +215,87 @@ public class ChatHistoryTests
         }
         Assert.IsFalse(isDifferentDuplicate, "msgDifferentText should not be marked as duplicate");
     }
+
+    [TestMethod]
+    public void ChatMessageVM_InitialsAndFormatting_GeneratesExpectedValues()
+    {
+        var vm1 = new RustPlusDesk.Views.MainWindow.ChatMessageVM
+        {
+            Author = "Abo Yzbk",
+            Text = "Hello team!",
+            Timestamp = new DateTime(2026, 8, 31, 14, 30, 0),
+            SteamId = 76561198000000001UL
+        };
+
+        Assert.AreEqual("AY", vm1.AuthorInitials);
+        Assert.AreEqual("14:30", vm1.FormattedTime);
+        Assert.IsTrue(vm1.HasSteamId);
+        Assert.AreEqual("76561198000000001", vm1.SteamIdFormatted);
+        Assert.IsFalse(vm1.IsMe);
+
+        var vmSingleName = new RustPlusDesk.Views.MainWindow.ChatMessageVM
+        {
+            Author = "Jawad",
+            Text = "On my way"
+        };
+        Assert.AreEqual("JA", vmSingleName.AuthorInitials);
+
+        var vmBot = new RustPlusDesk.Views.MainWindow.ChatMessageVM
+        {
+            Author = "RustPlus Bot",
+            Text = "[Chat Command] !upkeep",
+            IsBotOrCommand = true
+        };
+        Assert.AreEqual("BOT", vmBot.AuthorInitials);
+        Assert.AreEqual("!upkeep", vmBot.DisplayText);
+    }
+
+    [TestMethod]
+    public void ChatMessageVM_DeterministicPalettes_ProducesConsistentColor()
+    {
+        var vm1 = new RustPlusDesk.Views.MainWindow.ChatMessageVM
+        {
+            Author = "Player1",
+            SteamId = 76561198000000001UL
+        };
+        var vm2 = new RustPlusDesk.Views.MainWindow.ChatMessageVM
+        {
+            Author = "Player1",
+            SteamId = 76561198000000001UL
+        };
+
+        var brush1 = vm1.AvatarBackgroundBrush;
+        var brush2 = vm2.AvatarBackgroundBrush;
+
+        Assert.IsNotNull(brush1);
+        Assert.IsNotNull(brush2);
+        Assert.AreEqual(brush1.ToString(), brush2.ToString());
+    }
+
+    [TestMethod]
+    public void AvatarLoader_StoreCachedAvatar_RaisesAvatarLoadedEvent()
+    {
+        ulong testSteamId = 76561198999999999UL;
+        ulong receivedId = 0;
+
+        Action<ulong, System.Windows.Media.ImageSource> handler = (id, img) =>
+        {
+            receivedId = id;
+        };
+
+        RustPlusDesk.Services.AvatarLoader.AvatarLoaded += handler;
+        try
+        {
+            // Create a dummy 1x1 image source
+            var bi = new System.Windows.Media.Imaging.BitmapImage();
+            RustPlusDesk.Services.AvatarLoader.StoreCachedAvatar(testSteamId, bi);
+
+            Assert.AreEqual(testSteamId, receivedId);
+            Assert.AreSame(bi, RustPlusDesk.Services.AvatarLoader.GetCachedAvatar(testSteamId));
+        }
+        finally
+        {
+            RustPlusDesk.Services.AvatarLoader.AvatarLoaded -= handler;
+        }
+    }
 }

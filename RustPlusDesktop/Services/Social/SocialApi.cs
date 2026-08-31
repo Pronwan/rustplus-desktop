@@ -1,5 +1,6 @@
 using RustPlusDesk.Services.Cloud;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -61,8 +62,23 @@ public sealed record SocialSettings(
 /// </summary>
 public static class SocialApi
 {
-    public static async Task<SocialSettings?> GetSettingsAsync()
+    private static SocialSettings? _cachedSettings;
+    private static DateTime _settingsCachedAt = DateTime.MinValue;
+    private static readonly TimeSpan SettingsCacheDuration = TimeSpan.FromMinutes(5);
+
+    public static void InvalidateSettingsCache()
     {
+        _cachedSettings = null;
+        _settingsCachedAt = DateTime.MinValue;
+    }
+
+    public static async Task<SocialSettings?> GetSettingsAsync(bool forceRefresh = false)
+    {
+        if (!forceRefresh && _cachedSettings != null && DateTime.UtcNow - _settingsCachedAt < SettingsCacheDuration)
+        {
+            return _cachedSettings;
+        }
+
         try
         {
             var body = await CloudApiClient.CallApiAsync("social/settings", HttpMethod.Get)
@@ -71,7 +87,7 @@ public static class SocialApi
             using var doc = JsonDocument.Parse(body);
             var data = doc.RootElement.GetProperty("data");
 
-            return new SocialSettings(
+            var settings = new SocialSettings(
                 ParseAccept(data.TryGetProperty("accept_mode", out var a) ? a.GetString() : null),
                 data.TryGetProperty("lfg_consent", out var l) && l.GetBoolean(),
                 data.TryGetProperty("dm_consent", out var d) && d.GetBoolean(),
@@ -80,19 +96,30 @@ public static class SocialApi
                 !doc.RootElement.TryGetProperty("meta", out var meta)
                     || !meta.TryGetProperty("enabled", out var enabled)
                     || enabled.ValueKind != System.Text.Json.JsonValueKind.False);
+
+            _cachedSettings = settings;
+            _settingsCachedAt = DateTime.UtcNow;
+
+            return settings;
         }
         catch
         {
-            return null;
+            return _cachedSettings;
         }
     }
 
-    public static Task<bool> SetAcceptModeAsync(AcceptMode mode)
-        => WriteAsync("social/settings", HttpMethod.Put, new { accept_mode = Serialize(mode) });
+    public static async Task<bool> SetAcceptModeAsync(AcceptMode mode)
+    {
+        InvalidateSettingsCache();
+        return await WriteAsync("social/settings", HttpMethod.Put, new { accept_mode = Serialize(mode) }).ConfigureAwait(false);
+    }
 
-    /// <summary>Records that the current disclosure was read. Scope is "lfg" or "dm".</summary>
-    public static Task<bool> ConsentAsync(string scope)
-        => WriteAsync("social/consent", HttpMethod.Post, new { scope });
+    /// <summary>Records that the current disclosure was read. Scope is "lfg" or "dm" or "chat".</summary>
+    public static async Task<bool> ConsentAsync(string scope)
+    {
+        InvalidateSettingsCache();
+        return await WriteAsync("social/consent", HttpMethod.Post, new { scope }).ConfigureAwait(false);
+    }
 
     public sealed record MyLfgListing(LfgMode Mode, string? Blurb, string? Region, string? ServerName);
 
@@ -144,12 +171,15 @@ public static class SocialApi
         if (mode == LfgMode.None)
             return await WriteAsync("social/lfg/me", HttpMethod.Delete).ConfigureAwait(false);
 
+        bool isPremium = Auth.SupabaseAuthManager.IsPremium;
         var payload = new
         {
             mode = mode == LfgMode.LookingForTeam ? "lfg" : "lfm",
             blurb = string.IsNullOrWhiteSpace(blurb) ? null : blurb.Trim(),
             region = string.IsNullOrWhiteSpace(region) ? Helpers.AppLanguages.Current() : region.Trim(),
             server_name = string.IsNullOrWhiteSpace(serverName) ? null : serverName.Trim(),
+            is_supporter = isPremium,
+            is_premium = isPremium,
         };
         return await WriteAsync("social/lfg/me", HttpMethod.Put, payload).ConfigureAwait(false);
     }
@@ -308,10 +338,16 @@ public static class SocialApi
     }
 
     public static Task<bool> OpenThreadAsync(string userId, string body, string origin = "lfg")
-        => WriteAsync("social/conversations", HttpMethod.Post, new { user_id = userId, body, origin });
+    {
+        bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+        return WriteAsync("social/conversations", HttpMethod.Post, new { user_id = userId, body, origin, is_supporter = isPremium, is_premium = isPremium });
+    }
 
     public static Task<bool> ReplyAsync(string conversationId, string body)
-        => WriteAsync($"social/conversations/{conversationId}/messages", HttpMethod.Post, new { body });
+    {
+        bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+        return WriteAsync($"social/conversations/{conversationId}/messages", HttpMethod.Post, new { body, is_supporter = isPremium, is_premium = isPremium });
+    }
 
     public static Task<bool> AcceptThreadAsync(string conversationId)
         => WriteAsync($"social/conversations/{conversationId}/accept", HttpMethod.Post);
@@ -388,17 +424,23 @@ public static class SocialApi
     /// which is what a live nudge asks for: the server still decides what the reader may see,
     /// so blocks and sanctions keep working without the client holding a block list of its own.
     /// </summary>
-    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null)
+    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null, int limit = 50)
     {
         var lines = new System.Collections.Generic.List<Models.ChatLine>();
         Models.ChatSanction? sanction = null;
+        var slowMode = 0;
         var ok = false;
 
         try
         {
-            var query = string.IsNullOrWhiteSpace(since)
-                ? null
-                : new System.Collections.Generic.Dictionary<string, string> { ["since"] = since! };
+            var query = new System.Collections.Generic.Dictionary<string, string>
+            {
+                ["limit"] = limit.ToString()
+            };
+            if (!string.IsNullOrWhiteSpace(since))
+            {
+                query["since"] = since!;
+            }
 
             var body = await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Get, queryParams: query)
                 .ConfigureAwait(false);
@@ -412,6 +454,30 @@ public static class SocialApi
                 {
                     var sender = row.TryGetProperty("sender", out var s) && s.ValueKind == JsonValueKind.Object ? s : default;
 
+                    var roles = new System.Collections.Generic.List<string>();
+                    if (sender.ValueKind == JsonValueKind.Object && sender.TryGetProperty("roles", out var rArray) && rArray.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var r in rArray.EnumerateArray())
+                        {
+                            string? roleStr = null;
+                            if (r.ValueKind == JsonValueKind.String)
+                            {
+                                roleStr = r.GetString();
+                            }
+                            else if (r.ValueKind == JsonValueKind.Object && r.TryGetProperty("name", out var nameProp))
+                            {
+                                roleStr = nameProp.GetString();
+                            }
+                            if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
+                        }
+                    }
+
+                    bool isSupporter = (sender.ValueKind == JsonValueKind.Object && sender.TryGetProperty("is_supporter", out var sup1) && (sup1.ValueKind == JsonValueKind.True || (sup1.ValueKind == JsonValueKind.Number && sup1.GetInt32() == 1)))
+                        || (sender.ValueKind == JsonValueKind.Object && sender.TryGetProperty("is_premium", out var prem1) && (prem1.ValueKind == JsonValueKind.True || (prem1.ValueKind == JsonValueKind.Number && prem1.GetInt32() == 1)))
+                        || (row.TryGetProperty("is_supporter", out var sup2) && (sup2.ValueKind == JsonValueKind.True || (sup2.ValueKind == JsonValueKind.Number && sup2.GetInt32() == 1)))
+                        || (row.TryGetProperty("is_premium", out var prem2) && (prem2.ValueKind == JsonValueKind.True || (prem2.ValueKind == JsonValueKind.Number && prem2.GetInt32() == 1)))
+                        || roles.Any(r => string.Equals(r, "supporter", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "premium", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "vip", StringComparison.OrdinalIgnoreCase));
+
                     lines.Add(new Models.ChatLine
                     {
                         Id = Str(row, "id") ?? "",
@@ -419,20 +485,34 @@ public static class SocialApi
                         SenderId = Str(row, "sender_id"),
                         SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
                         AvatarUrl = Str(sender, "avatar_url"),
+                        SteamId = Str(sender, "steam_id"),
+                        IsSupporter = isSupporter,
+                        Roles = roles,
                         SentAt = Date(row, "created_at"),
                         SentAtIso = Str(row, "created_at"),
                     });
                 }
             }
 
-            if (root.TryGetProperty("meta", out var meta)
-                && meta.TryGetProperty("sanction", out var s2)
-                && s2.ValueKind == JsonValueKind.Object)
+            if (root.TryGetProperty("meta", out var meta))
             {
-                sanction = new Models.ChatSanction(
-                    Str(s2, "kind") ?? "timeout",
-                    Str(s2, "reason") ?? "",
-                    Date(s2, "expires_at"));
+                if (meta.TryGetProperty("sanction", out var s2)
+                    && s2.ValueKind == JsonValueKind.Object)
+                {
+                    sanction = new Models.ChatSanction(
+                        Str(s2, "kind") ?? "timeout",
+                        Str(s2, "reason") ?? "",
+                        Date(s2, "expires_at"));
+                }
+
+                if (meta.TryGetProperty("slow_mode", out var sm) && sm.TryGetInt32(out var smVal))
+                {
+                    slowMode = smVal;
+                }
+                else if (meta.TryGetProperty("slow_mode_seconds", out var sms) && sms.TryGetInt32(out var smsVal))
+                {
+                    slowMode = smsVal;
+                }
             }
 
             ok = true;
@@ -442,7 +522,7 @@ public static class SocialApi
             // Deliberately quiet.
         }
 
-        return new Models.ChatSnapshot(lines, sanction, ok);
+        return new Models.ChatSnapshot(lines, sanction, slowMode, ok);
     }
 
     /// <summary>
@@ -456,7 +536,8 @@ public static class SocialApi
     {
         try
         {
-            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body })
+            bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, is_supporter = isPremium, is_premium = isPremium })
                 .ConfigureAwait(false);
 
             return ChatPostResult.Ok;
@@ -541,6 +622,24 @@ public static class SocialApi
         var presence = user.ValueKind == JsonValueKind.Object
             && user.TryGetProperty("presence", out var p) && p.ValueKind == JsonValueKind.Object ? p : default;
 
+        var roles = new System.Collections.Generic.List<string>();
+        if (user.ValueKind == JsonValueKind.Object && user.TryGetProperty("roles", out var rArray) && rArray.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var r in rArray.EnumerateArray())
+            {
+                string? roleStr = null;
+                if (r.ValueKind == JsonValueKind.String)
+                {
+                    roleStr = r.GetString();
+                }
+                else if (r.ValueKind == JsonValueKind.Object && r.TryGetProperty("name", out var nameProp))
+                {
+                    roleStr = nameProp.GetString();
+                }
+                if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
+            }
+        }
+
         return new Models.LfgEntry
         {
             UserId = Str(user, "id") ?? "",
@@ -549,6 +648,7 @@ public static class SocialApi
             DisplayName = Str(user, "display_name") ?? Str(user, "name") ?? "—",
             AvatarUrl = Str(user, "avatar_url"),
             SteamId = Str(user, "steam_id"),
+            Roles = roles,
             Language = Str(presence, "language"),
             IsOnline = presence.ValueKind == JsonValueKind.Object
                 && presence.TryGetProperty("is_online", out var on) && on.ValueKind == JsonValueKind.True,

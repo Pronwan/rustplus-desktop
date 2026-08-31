@@ -4731,6 +4731,7 @@
 
                     <!--  RE-DESIGNED MAP CONTROL BAR  -->
                     <Border
+                        x:Name="MapControlBar"
                         Grid.Row="0"
                         tutorials:Tutorial.TargetId="Map.Toolbar"
                         Margin="-12,-12,-12,0"
@@ -8014,7 +8015,7 @@
                         <!--  Integrated Chat Overlay (Roll-up)  -->
                         <Border
                             x:Name="ChatOverlayPanel"
-                            Width="450"
+                            Width="460"
                             Margin="12,0,0,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Bottom"
@@ -8026,16 +8027,20 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
+                                <!-- Main Chat Card -->
                                 <Border
                                     x:Name="ChatContentBorder"
                                     Grid.Row="0"
-                                    Height="420"
+                                    Height="440"
                                     Background="#14171C"
-                                    BorderBrush="#1F242E"
+                                    BorderBrush="#252A36"
                                     BorderThickness="1"
-                                    CornerRadius="12"
+                                    CornerRadius="14"
                                     RenderTransformOrigin="0.5,1"
                                     Visibility="Collapsed">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="24" ShadowDepth="4" Direction="270" Opacity="0.6" Color="#0A0D14" />
+                                    </Border.Effect>
                                     <Border.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform x:Name="ChatScale" ScaleY="1" />
@@ -8044,17 +8049,19 @@
                                     </Border.RenderTransform>
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="38" />
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="42" />   <!-- 0: Header Area -->
+                                            <RowDefinition Height="Auto" /> <!-- 1: Search Bar (collapsible) -->
+                                            <RowDefinition Height="Auto" /> <!-- 2: Quick Commands Drawer (collapsible) -->
+                                            <RowDefinition Height="*" />    <!-- 3: Message History & Empty State -->
+                                            <RowDefinition Height="Auto" /> <!-- 4: Input Bar -->
                                         </Grid.RowDefinitions>
 
-                                        <!--  Header / Drag / Close Area  -->
-                                        <Grid Grid.Row="0" Background="#1B1E24">
-                                            <Grid.Resources>
+                                        <!-- 0: HEADER AREA -->
+                                        <Border Grid.Row="0" Background="#181B22" BorderBrush="#1F2430" BorderThickness="0,0,0,1" CornerRadius="13,13,0,0">
+                                            <Border.Resources>
                                                 <Style x:Key="ChatTabPillStyle" TargetType="RadioButton">
-                                                    <Setter Property="Padding" Value="9,4" />
-                                                    <Setter Property="FontSize" Value="10" />
+                                                    <Setter Property="Padding" Value="10,4" />
+                                                    <Setter Property="FontSize" Value="11" />
                                                     <Setter Property="FontWeight" Value="SemiBold" />
                                                     <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
                                                     <Setter Property="Cursor" Value="Hand" />
@@ -8064,247 +8071,485 @@
                                                                 <Border
                                                                     x:Name="PillBorder"
                                                                     Background="Transparent"
-                                                                    CornerRadius="10"
+                                                                    CornerRadius="8"
                                                                     Padding="{TemplateBinding Padding}">
                                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Border>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsChecked" Value="True">
-                                                                        <Setter TargetName="PillBorder" Property="Background" Value="#26FFFFFF" />
+                                                                        <Setter TargetName="PillBorder" Property="Background" Value="#22FFFFFF" />
                                                                         <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
                                                                     </Trigger>
                                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter TargetName="PillBorder" Property="Background" Value="#16FFFFFF" />
+                                                                        <Setter TargetName="PillBorder" Property="Background" Value="#1AFFFFFF" />
                                                                     </Trigger>
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>
-                                            </Grid.Resources>
-                                            <StackPanel Margin="12,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <ui:SymbolIcon Symbol="Chat24" Margin="0,0,8,0" FontSize="16" Foreground="{DynamicResource Accent}" />
-                                                <RadioButton
-                                                    x:Name="TabTeamChat"
-                                                    GroupName="ChatTabsGroup"
-                                                    IsChecked="True"
-                                                    Tag="Team"
-                                                    Style="{StaticResource ChatTabPillStyle}"
-                                                    Checked="ChatTab_Checked"
-                                                    Content="{DynamicResource TeamChatTitle}" />
-                                                <RadioButton
-                                                    x:Name="TabClanChat"
-                                                    GroupName="ChatTabsGroup"
-                                                    Margin="4,0,0,0"
-                                                    Tag="Clan"
-                                                    Style="{StaticResource ChatTabPillStyle}"
-                                                    Checked="ChatTab_Checked"
-                                                    Content="{DynamicResource ClanChatTitle}" />
-                                            </StackPanel>
-                                            <ui:Button
-                                                x:Name="BtnCloseChatOverlay"
-                                                Width="28"
-                                                Height="28"
-                                                Margin="0,0,6,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Click="BtnCloseChatOverlay_Click"
-                                                Appearance="Transparent"
-                                                Icon="{ui:SymbolIcon Symbol=Dismiss24}"
-                                                Foreground="{DynamicResource TextSubtle}"
-                                                ToolTip="{DynamicResource UiCloseTeamPanel}"
-                                                AutomationProperties.Name="{DynamicResource UiCloseTeamPanel}"
-                                                Padding="0" />
-                                        </Grid>
+                                            </Border.Resources>
+                                            <Grid Margin="10,0,8,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
-                                        <!--  Chat-History  -->
-                                        <ListBox
-                                            x:Name="ChatList"
-                                            tutorials:Tutorial.TargetId="Chat.History"
-                                            Grid.Row="1"
-                                            ScrollViewer.ScrollChanged="ChatScrollViewer_ScrollChanged"
-                                            PreviewMouseWheel="ChatList_PreviewMouseWheel"
-                                            HorizontalContentAlignment="Stretch"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            ItemsSource="{Binding ChatMessages, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            Padding="4,8">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="0,2">
-                                                        <!--  Day Separator  -->
-                                                        <Border
-                                                            Margin="0,8"
-                                                            Padding="10,4"
-                                                            HorizontalAlignment="Center"
-                                                            Background="#1B1E24"
-                                                            BorderBrush="#10FFFFFF"
-                                                            BorderThickness="1"
-                                                            CornerRadius="10"
-                                                            Visibility="{Binding ShowSeparator, Converter={StaticResource BoolToVisibility}}">
-                                                            <TextBlock
-                                                                FontSize="10"
-                                                                FontWeight="SemiBold"
-                                                                Foreground="{DynamicResource TextSubtle}"
-                                                                Text="{Binding SeparatorText}" />
-                                                        </Border>
-
-                                                        <!--  Message Bubble Grid  -->
-                                                        <Grid x:Name="MsgGrid" Margin="6,2">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                            </Grid.ColumnDefinitions>
-
-                                                            <!-- Column 0: Left Avatar (for Me) -->
-                                                            <Border x:Name="LeftAvatarBorder" Grid.Column="0" Width="26" Height="26" Margin="0,0,8,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Visible">
-                                                                <Grid>
-                                                                    <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                                </Grid>
+                                                <!-- Channel Tabs -->
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <!-- Team Chat Tab -->
+                                                    <RadioButton
+                                                        x:Name="TabTeamChat"
+                                                        GroupName="ChatTabsGroup"
+                                                        IsChecked="True"
+                                                        Tag="Team"
+                                                        Style="{StaticResource ChatTabPillStyle}"
+                                                        Checked="ChatTab_Checked">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Symbol="Chat24" Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource Accent}" />
+                                                            <TextBlock Text="{DynamicResource TeamChatTitle}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                            <Border x:Name="BadgeUnreadTeam" Visibility="Collapsed" Background="#FF3FD7FF" CornerRadius="7" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
+                                                                <TextBlock x:Name="TxtUnreadTeam" FontSize="8.5" FontWeight="Bold" Foreground="#FF0A0D14" Text="0" />
                                                             </Border>
+                                                        </StackPanel>
+                                                    </RadioButton>
 
-                                                            <!-- Column 1: Bubble Content -->
-                                                            <StackPanel Grid.Column="1" x:Name="BubbleStack" VerticalAlignment="Top">
-                                                                <!-- Sender Name & Time Metadata -->
-                                                                <StackPanel x:Name="MetaStack" Orientation="Horizontal" Margin="4,0,4,2">
-                                                                    <TextBlock x:Name="SenderText" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource Accent}" Text="{Binding Author}" />
-                                                                    <TextBlock x:Name="TimeText" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="9" Foreground="{DynamicResource TextSubtle}" Text="{Binding Timestamp, StringFormat=HH:mm}" />
-                                                                </StackPanel>
-
-                                                                <!-- Actual Message Bubble -->
-                                                                <Border x:Name="MsgBubble" Padding="10,6" CornerRadius="12,12,12,2" BorderThickness="1" Background="#22252C" BorderBrush="#323846" HorizontalAlignment="Left">
-                                                                    <TextBlock Foreground="{DynamicResource TextPrimary}" Text="{Binding Text}" TextWrapping="Wrap" FontSize="12" LineHeight="16"/>
-                                                                </Border>
-                                                            </StackPanel>
-
-                                                            <!-- Column 2: Right Avatar (for Teammates) -->
-                                                            <Border x:Name="RightAvatarBorder" Grid.Column="2" Width="26" Height="26" Margin="8,0,0,0" CornerRadius="13" ClipToBounds="True" Background="#2B303C" VerticalAlignment="Top" Visibility="Collapsed">
-                                                                <Grid>
-                                                                    <ui:SymbolIcon Symbol="Person24" Filled="True" FontSize="14" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                    <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                                </Grid>
+                                                    <!-- Clan Chat Tab -->
+                                                    <RadioButton
+                                                        x:Name="TabClanChat"
+                                                        GroupName="ChatTabsGroup"
+                                                        Tag="Clan"
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource ChatTabPillStyle}"
+                                                        Checked="ChatTab_Checked">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Symbol="Shield24" Margin="0,0,5,0" FontSize="13" Foreground="#FFD97706" />
+                                                            <TextBlock Text="{DynamicResource ClanChatTitle}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                            <Border x:Name="BadgeUnreadClan" Visibility="Collapsed" Background="#FFD97706" CornerRadius="7" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
+                                                                <TextBlock x:Name="TxtUnreadClan" FontSize="8.5" FontWeight="Bold" Foreground="White" Text="0" />
                                                             </Border>
-                                                        </Grid>
-                                                    </StackPanel>
+                                                        </StackPanel>
+                                                    </RadioButton>
+                                                </StackPanel>
 
-                                                    <!-- Triggers to shift layout to Left vs Right based on IsMe -->
-                                                    <DataTemplate.Triggers>
-                                                        <!-- ME: Left Sided -->
-                                                        <DataTrigger Binding="{Binding IsMe}" Value="True">
-                                                            <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Visible" />
-                                                            <Setter TargetName="RightAvatarBorder" Property="Visibility" Value="Collapsed" />
-                                                            <Setter TargetName="BubbleStack" Property="HorizontalAlignment" Value="Left" />
-                                                            <Setter TargetName="MetaStack" Property="HorizontalAlignment" Value="Left" />
-                                                            <Setter TargetName="MsgBubble" Property="HorizontalAlignment" Value="Left" />
-                                                            <Setter TargetName="MsgBubble" Property="Background" Value="#22252C" />
-                                                            <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#323846" />
-                                                            <Setter TargetName="MsgBubble" Property="CornerRadius" Value="12,12,12,2" />
-                                                            <Setter TargetName="SenderText" Property="Foreground" Value="{DynamicResource Accent}" />
-                                                        </DataTrigger>
-                                                        
-                                                        <!-- TEAMMATE: Right Sided -->
-                                                        <DataTrigger Binding="{Binding IsMe}" Value="False">
-                                                            <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Collapsed" />
-                                                            <Setter TargetName="RightAvatarBorder" Property="Visibility" Value="Visible" />
-                                                            <Setter TargetName="BubbleStack" Property="HorizontalAlignment" Value="Right" />
-                                                            <Setter TargetName="MetaStack" Property="HorizontalAlignment" Value="Right" />
-                                                            <Setter TargetName="MetaStack" Property="FlowDirection" Value="RightToLeft" />
-                                                            <Setter TargetName="MsgBubble" Property="HorizontalAlignment" Value="Right" />
-                                                            <Setter TargetName="MsgBubble" Property="Background" Value="#1A4D6B" />
-                                                            <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#2C6B91" />
-                                                            <Setter TargetName="MsgBubble" Property="CornerRadius" Value="12,12,2,12" />
-                                                            <Setter TargetName="SenderText" Property="Foreground" Value="#60CDFF" />
-                                                        </DataTrigger>
-                                                    </DataTemplate.Triggers>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="ListBoxItem">
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="ListBoxItem">
-                                                                <ContentPresenter />
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                        </ListBox>
-
-                                        <!--  Input-Bar  -->
-                                        <StackPanel
-                                            Grid.Row="2"
-                                            Margin="0"
-                                            Background="#111317">
-                                            <!--  Inline Error Box  -->
-                                            <Border
-                                                x:Name="ChatErrorBox"
-                                                Margin="12,8,12,0"
-                                                Padding="8"
-                                                Background="#33FF0000"
-                                                BorderBrush="Red"
-                                                BorderThickness="1"
-                                                CornerRadius="6"
-                                                Visibility="Collapsed">
+                                                <!-- Server Context Indicator -->
                                                 <TextBlock
-                                                    x:Name="ChatErrorText"
-                                                    FontSize="11"
-                                                    Foreground="White"
-                                                    Text="{DynamicResource ChatErrorPlaceholder}"
-                                                    TextWrapping="Wrap" />
+                                                    x:Name="TxtChatServerContext"
+                                                    Grid.Column="1"
+                                                    FontSize="10"
+                                                    Foreground="{DynamicResource TextSubtle}"
+                                                    VerticalAlignment="Center"
+                                                    Margin="8,0,4,0"
+                                                    TextTrimming="CharacterEllipsis" />
+
+                                                <!-- Action Toolbar Buttons -->
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <!-- Search Toggle -->
+                                                    <ui:Button
+                                                        x:Name="BtnToggleChatSearch"
+                                                        Width="26"
+                                                        Height="26"
+                                                        Margin="0,0,2,0"
+                                                        Padding="0"
+                                                        Appearance="Transparent"
+                                                        Click="BtnToggleChatSearch_Click"
+                                                        Icon="{ui:SymbolIcon Symbol=Search24}"
+                                                        Foreground="{DynamicResource TextSubtle}"
+                                                        ToolTip="Search Messages" />
+
+                                                    <!-- Quick Commands Drawer Toggle -->
+                                                    <ui:Button
+                                                        x:Name="BtnToggleQuickCommands"
+                                                        Width="26"
+                                                        Height="26"
+                                                        Margin="0,0,2,0"
+                                                        Padding="0"
+                                                        Appearance="Transparent"
+                                                        Click="BtnToggleQuickCommands_Click"
+                                                        Icon="{ui:SymbolIcon Symbol=Flash24}"
+                                                        Foreground="{DynamicResource Accent}"
+                                                        ToolTip="Quick Commands" />
+
+                                                    <!-- Settings -->
+                                                    <ui:Button
+                                                        x:Name="BtnOpenChatCommands"
+                                                        Width="26"
+                                                        Height="26"
+                                                        Margin="0,0,2,0"
+                                                        Padding="0"
+                                                        Appearance="Transparent"
+                                                        Click="BtnOpenChatCommands_Click"
+                                                        Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                                        Foreground="{DynamicResource TextSubtle}"
+                                                        ToolTip="{DynamicResource ChatCommandsSettings}" />
+
+                                                    <!-- Close Button -->
+                                                    <ui:Button
+                                                        x:Name="BtnCloseChatOverlay"
+                                                        Width="26"
+                                                        Height="26"
+                                                        Padding="0"
+                                                        Appearance="Transparent"
+                                                        Click="BtnCloseChatOverlay_Click"
+                                                        Icon="{ui:SymbolIcon Symbol=Dismiss24}"
+                                                        Foreground="{DynamicResource TextSubtle}"
+                                                        ToolTip="{DynamicResource UiCloseTeamPanel}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 1: SEARCH BAR (Collapsible) -->
+                                        <Border x:Name="ChatSearchPanel" Grid.Row="1" Background="#161920" BorderBrush="#1F2430" BorderThickness="0,0,0,1" Padding="8,6" Visibility="Collapsed">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ui:TextBox
+                                                    x:Name="TxtChatSearch"
+                                                    Grid.Column="0"
+                                                    Height="28"
+                                                    PlaceholderText="Search chat history..."
+                                                    TextChanged="TxtChatSearch_TextChanged"
+                                                    VerticalContentAlignment="Center"
+                                                    FontSize="11" />
+                                                <ui:Button
+                                                    x:Name="BtnClearChatSearch"
+                                                    Grid.Column="1"
+                                                    Width="24"
+                                                    Height="24"
+                                                    Margin="4,0,0,0"
+                                                    Padding="0"
+                                                    Appearance="Transparent"
+                                                    Click="BtnClearChatSearch_Click"
+                                                    Icon="{ui:SymbolIcon Symbol=Dismiss16}" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 2: QUICK COMMANDS DRAWER (Collapsible) -->
+                                        <Border x:Name="ChatQuickCommandsDrawer" Grid.Row="2" Background="#161920" BorderBrush="#1F2430" BorderThickness="0,0,0,1" Padding="8,6" Visibility="Collapsed">
+                                            <WrapPanel Orientation="Horizontal">
+                                                <Button Content="!upkeep" Tag="!upkeep" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Tool Cupboard Upkeep Status" />
+                                                <Button Content="!heli" Tag="!heli" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Patrol Heli Status &amp; Grid" />
+                                                <Button Content="!cargo" Tag="!cargo" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Cargo Ship Status" />
+                                                <Button Content="!timer 15" Tag="!timer 15 Oil Rig" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Start 15m Oil Rig Timer" />
+                                                <Button Content="!code" Tag="!code" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Base Codes Vault" />
+                                                <Button Content="!pop" Tag="!pop" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Server Player Count" />
+                                                <Button Content="!switches" Tag="!switches" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Smart Switches State" />
+                                            </WrapPanel>
+                                        </Border>
+
+                                        <!-- 3: MESSAGE HISTORY & EMPTY STATE -->
+                                        <Grid Grid.Row="3">
+                                            <!-- Empty State Card -->
+                                            <Border x:Name="ChatEmptyNoticeCard" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20">
+                                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Border Width="48" Height="48" CornerRadius="24" Background="#182A3A" BorderBrush="#254660" BorderThickness="1" HorizontalAlignment="Center" Margin="0,0,0,10">
+                                                        <ui:SymbolIcon Symbol="ChatMultiple24" FontSize="22" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <TextBlock Text="No Messages Yet" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                                                    <TextBlock Text="Send a message or use quick commands to coordinate with your team." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="280" Margin="0,0,0,10" />
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                        <Button Content="!upkeep" Tag="!upkeep" Margin="3,0" Padding="8,3" FontSize="10.5" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" />
+                                                        <Button Content="!heli" Tag="!heli" Margin="3,0" Padding="8,3" FontSize="10.5" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" />
+                                                        <Button Content="!cargo" Tag="!cargo" Margin="3,0" Padding="8,3" FontSize="10.5" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" />
+                                                    </StackPanel>
+                                                </StackPanel>
                                             </Border>
 
-                                            <DockPanel Margin="12,10,12,4">
-                                                <ui:Button
-                                                    x:Name="BtnSendChat"
-                                                    tutorials:Tutorial.TargetId="Chat.Send"
-                                                    Width="Auto"
-                                                    Padding="12,0"
-                                                    Height="36"
-                                                    Margin="8,0,0,0"
-                                                    VerticalAlignment="Bottom"
-                                                    DockPanel.Dock="Right"
-                                                    Click="BtnSendChat_Click"
-                                                    Content="{DynamicResource Send}"
-                                                    Icon="{ui:SymbolIcon Symbol=Send20}"
-                                                    Appearance="Primary" />
+                                            <!-- Chat List -->
+                                            <ListBox
+                                                x:Name="ChatList"
+                                                tutorials:Tutorial.TargetId="Chat.History"
+                                                ScrollViewer.ScrollChanged="ChatScrollViewer_ScrollChanged"
+                                                PreviewMouseWheel="ChatList_PreviewMouseWheel"
+                                                HorizontalContentAlignment="Stretch"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                ItemsSource="{Binding ChatMessages, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                Padding="6,8">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="0,3">
+                                                            <!-- Day Separator Capsule -->
+                                                            <Border
+                                                                Margin="0,8"
+                                                                Padding="10,3"
+                                                                HorizontalAlignment="Center"
+                                                                Background="#1B1E26"
+                                                                BorderBrush="#1E2A38"
+                                                                BorderThickness="1"
+                                                                CornerRadius="10"
+                                                                Visibility="{Binding ShowSeparator, Converter={StaticResource BoolToVisibility}}">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <ui:SymbolIcon Symbol="Calendar24" FontSize="11" Margin="0,0,5,0" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
+                                                                    <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{Binding SeparatorText}" VerticalAlignment="Center" />
+                                                                </StackPanel>
+                                                            </Border>
 
-                                                <ui:TextBox
-                                                    x:Name="TxtChatInput"
-                                                    tutorials:Tutorial.TargetId="Chat.Input"
-                                                    PlaceholderText="{DynamicResource ChatMessagePlaceholder}"
-                                                    VerticalContentAlignment="Center"
-                                                    KeyDown="TxtChatInput_KeyDown"
-                                                    MaxLength="128"
-                                                    MaxLines="1" />
-                                            </DockPanel>
+                                                            <!-- Message Bubble Grid -->
+                                                            <Grid x:Name="MsgGrid" Margin="4,1">
+                                                                <Grid.ContextMenu>
+                                                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                                                        <MenuItem Header="Copy Text" Click="ChatContext_CopyText_Click" Tag="{Binding}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Copy24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <MenuItem Header="Copy Steam ID" Click="ChatContext_CopySteamId_Click" Tag="{Binding}" Visibility="{Binding HasSteamId, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Person24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <MenuItem Header="Mention @User" Click="ChatContext_Mention_Click" Tag="{Binding}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Mention24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <MenuItem Header="Center on Map" Click="ChatContext_CenterMap_Click" Tag="{Binding}" Visibility="{Binding HasSteamId, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Location24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <MenuItem Header="Open Steam Profile" Click="ChatContext_OpenSteam_Click" Tag="{Binding}" Visibility="{Binding HasSteamId, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Globe24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                    </ContextMenu>
+                                                                </Grid.ContextMenu>
 
-                                            <ui:Button
-                                                x:Name="BtnOpenChatCommands"
-                                                tutorials:Tutorial.TargetId="Chat.Commands"
-                                                Margin="12,0,0,8"
-                                                Padding="6,4"
-                                                HorizontalAlignment="Left"
-                                                Appearance="Transparent"
-                                                Click="BtnOpenChatCommands_Click"
-                                                ToolTip="{DynamicResource ChatCommandsSettings}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <ui:SymbolIcon Symbol="Settings24" Margin="0,0,6,0" FontSize="14" Foreground="{DynamicResource TextSubtle}"/>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <!-- Column 0: Left Avatar (for Teammates / Clan / Bots) -->
+                                                                <Grid x:Name="LeftAvatarBorder" Grid.Column="0" Width="32" Height="32" Margin="0,0,8,0" VerticalAlignment="Top" Visibility="Visible">
+                                                                    <!-- Supporter Glow Ring -->
+                                                                    <Ellipse Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                             Stroke="#FFA629" StrokeThickness="1.5"
+                                                                             Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVisibility}}">
+                                                                        <Ellipse.Effect>
+                                                                            <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
+                                                                        </Ellipse.Effect>
+                                                                    </Ellipse>
+
+                                                                    <!-- Avatar Circle -->
+                                                                    <Border Width="26" Height="26" CornerRadius="13" ClipToBounds="True" Background="{Binding AvatarBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                        <Grid>
+                                                                            <!-- Fallback initials -->
+                                                                            <TextBlock Text="{Binding AuthorInitials}" FontSize="10" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                            <!-- Steam Avatar Overlay -->
+                                                                            <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding HasAvatar, Converter={StaticResource BoolToVisibility}}" />
+                                                                        </Grid>
+                                                                    </Border>
+
+                                                                    <!-- Top-Right Star Badge for Premium Members -->
+                                                                    <Border Width="11" Height="11"
+                                                                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                                            Background="#FFD700"
+                                                                            BorderBrush="#FFE58F"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="5.5"
+                                                                            Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVisibility}}">
+                                                                        <Border.Effect>
+                                                                            <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="#FFA629" Opacity="0.9" />
+                                                                        </Border.Effect>
+                                                                        <TextBlock Text="★" FontSize="7" FontWeight="Bold" Foreground="#4A2800"
+                                                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
+                                                                    </Border>
+                                                                </Grid>
+
+                                                                <!-- Column 1: Bubble Content -->
+                                                                <StackPanel Grid.Column="1" x:Name="BubbleStack" VerticalAlignment="Top">
+                                                                    <!-- Metadata Header: Sender Name & Time -->
+                                                                    <StackPanel x:Name="MetaStack" Orientation="Horizontal" Margin="4,0,4,3">
+                                                                        <TextBlock x:Name="SenderText" FontWeight="SemiBold" FontSize="11" Foreground="#60CDFF" Text="{Binding Author}" />
+                                                                        <!-- Bot / Command badge -->
+                                                                        <Border x:Name="BotBadge" Visibility="{Binding IsBotOrCommand, Converter={StaticResource BoolToVisibility}}" Background="#254660" BorderBrush="#3B6B91" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
+                                                                            <TextBlock Text="BOT" FontSize="8.5" FontWeight="Bold" Foreground="#FF3FD7FF" />
+                                                                        </Border>
+                                                                        <TextBlock x:Name="TimeText" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="9" Foreground="{DynamicResource TextSubtle}" Text="{Binding FormattedTime}" ToolTip="{Binding FullTimestampTooltip}" />
+                                                                    </StackPanel>
+
+                                                                    <!-- Message Bubble -->
+                                                                    <Border x:Name="MsgBubble" Padding="10,6" CornerRadius="2,12,12,12" BorderThickness="1" Background="#1C2028" BorderBrush="#2A303C" HorizontalAlignment="Left" MaxWidth="340">
+                                                                        <TextBlock Foreground="{DynamicResource TextPrimary}" Text="{Binding DisplayText}" TextWrapping="Wrap" FontSize="11.5" LineHeight="16" />
+                                                                    </Border>
+                                                                </StackPanel>
+
+                                                                <!-- Column 2: Right Avatar (for Outgoing / Me) -->
+                                                                <Grid x:Name="RightAvatarBorder" Grid.Column="2" Width="32" Height="32" Margin="8,0,0,0" VerticalAlignment="Top" Visibility="Collapsed">
+                                                                    <!-- Supporter Glow Ring -->
+                                                                    <Ellipse Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                             Stroke="#FFA629" StrokeThickness="1.5"
+                                                                             Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVisibility}}">
+                                                                        <Ellipse.Effect>
+                                                                            <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
+                                                                        </Ellipse.Effect>
+                                                                    </Ellipse>
+
+                                                                    <!-- Avatar Circle -->
+                                                                    <Border Width="26" Height="26" CornerRadius="13" ClipToBounds="True" Background="{Binding AvatarBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                        <Grid>
+                                                                            <!-- Fallback initials -->
+                                                                            <TextBlock Text="{Binding AuthorInitials}" FontSize="10" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                            <!-- Steam Avatar Overlay -->
+                                                                            <Image Source="{Binding Avatar}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding HasAvatar, Converter={StaticResource BoolToVisibility}}" />
+                                                                        </Grid>
+                                                                    </Border>
+
+                                                                    <!-- Top-Right Star Badge for Premium Members -->
+                                                                    <Border Width="11" Height="11"
+                                                                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                                            Background="#FFD700"
+                                                                            BorderBrush="#FFE58F"
+                                                                            BorderThickness="1"
+                                                                            CornerRadius="5.5"
+                                                                            Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVisibility}}">
+                                                                        <Border.Effect>
+                                                                            <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="#FFA629" Opacity="0.9" />
+                                                                        </Border.Effect>
+                                                                        <TextBlock Text="★" FontSize="7" FontWeight="Bold" Foreground="#4A2800"
+                                                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
+                                                                    </Border>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </StackPanel>
+
+                                                        <!-- Layout Triggers: Outgoing (Me) on Right vs Incoming (Teammates) on Left -->
+                                                        <DataTemplate.Triggers>
+                                                            <!-- ME: Right Sided -->
+                                                            <DataTrigger Binding="{Binding IsMe}" Value="True">
+                                                                <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Collapsed" />
+                                                                <Setter TargetName="RightAvatarBorder" Property="Visibility" Value="Visible" />
+                                                                <Setter TargetName="BubbleStack" Property="HorizontalAlignment" Value="Right" />
+                                                                <Setter TargetName="MetaStack" Property="HorizontalAlignment" Value="Right" />
+                                                                <Setter TargetName="MsgBubble" Property="HorizontalAlignment" Value="Right" />
+                                                                <Setter TargetName="MsgBubble" Property="Background" Value="#173549" />
+                                                                <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#295572" />
+                                                                <Setter TargetName="MsgBubble" Property="CornerRadius" Value="12,2,12,12" />
+                                                                <Setter TargetName="SenderText" Property="Foreground" Value="{DynamicResource Accent}" />
+                                                            </DataTrigger>
+
+                                                            <!-- BOT / SYSTEM COMMAND -->
+                                                            <DataTrigger Binding="{Binding IsBotOrCommand}" Value="True">
+                                                                <Setter TargetName="MsgBubble" Property="Background" Value="#142330" />
+                                                                <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#1E4760" />
+                                                                <Setter TargetName="SenderText" Property="Foreground" Value="#FF3FD7FF" />
+                                                            </DataTrigger>
+
+                                                            <!-- SYSTEM ALERT -->
+                                                            <DataTrigger Binding="{Binding IsSystemAlert}" Value="True">
+                                                                <Setter TargetName="MsgBubble" Property="Background" Value="#2B1D12" />
+                                                                <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#6B411F" />
+                                                                <Setter TargetName="SenderText" Property="Foreground" Value="#FFF59E0B" />
+                                                            </DataTrigger>
+                                                        </DataTemplate.Triggers>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ListBoxItem">
+                                                                    <ContentPresenter />
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                            </ListBox>
+
+                                            <!-- Floating Jump to Bottom Button -->
+                                            <Button
+                                                x:Name="BtnJumpToBottom"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Bottom"
+                                                Margin="0,0,0,10"
+                                                Padding="10,4"
+                                                Background="#E6182A3A"
+                                                BorderBrush="#254660"
+                                                BorderThickness="1"
+                                                Click="BtnJumpToBottom_Click"
+                                                Visibility="Collapsed"
+                                                Cursor="Hand">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="12">
+                                                            <StackPanel Orientation="Horizontal" Margin="6,2">
+                                                                <ui:SymbolIcon Symbol="ArrowDown24" FontSize="12" Foreground="{DynamicResource Accent}" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                                                <TextBlock Text="Jump to latest" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </Grid>
+
+                                        <!-- 4: INPUT BAR -->
+                                        <Border Grid.Row="4" Background="#111317" BorderBrush="#1F2430" BorderThickness="0,1,0,0" CornerRadius="0,0,13,13" Padding="10,8">
+                                            <StackPanel>
+                                                <!-- Inline Error Box -->
+                                                <Border
+                                                    x:Name="ChatErrorBox"
+                                                    Margin="0,0,0,8"
+                                                    Padding="8,5"
+                                                    Background="#33FF0000"
+                                                    BorderBrush="#80FF0000"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Visibility="Collapsed">
                                                     <TextBlock
-                                                        VerticalAlignment="Center"
-                                                        FontSize="10"
-                                                        Foreground="{DynamicResource TextSubtle}"
-                                                        Text="{DynamicResource ChatCommands}" />
-                                                </StackPanel>
-                                            </ui:Button>
-                                        </StackPanel>
+                                                        x:Name="ChatErrorText"
+                                                        FontSize="10.5"
+                                                        Foreground="#FFFF9999"
+                                                        Text="{DynamicResource ChatErrorPlaceholder}"
+                                                        TextWrapping="Wrap" />
+                                                </Border>
 
+                                                <!-- Textbox & Send Button Row -->
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <ui:TextBox
+                                                        x:Name="TxtChatInput"
+                                                        Grid.Column="0"
+                                                        tutorials:Tutorial.TargetId="Chat.Input"
+                                                        PlaceholderText="{DynamicResource ChatMessagePlaceholder}"
+                                                        VerticalContentAlignment="Center"
+                                                        KeyDown="TxtChatInput_KeyDown"
+                                                        TextChanged="TxtChatInput_TextChanged"
+                                                        MaxLength="128"
+                                                        Height="34"
+                                                        FontSize="11.5" />
+
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                        <!-- Character Counter -->
+                                                        <TextBlock
+                                                            x:Name="TxtChatCharCount"
+                                                            Text="0/128"
+                                                            FontSize="9"
+                                                            Foreground="{DynamicResource TextSubtle}"
+                                                            VerticalAlignment="Center"
+                                                            Margin="0,0,6,0" />
+
+                                                        <!-- Send Button -->
+                                                        <ui:Button
+                                                            x:Name="BtnSendChat"
+                                                            tutorials:Tutorial.TargetId="Chat.Send"
+                                                            Height="34"
+                                                            Padding="12,0"
+                                                            VerticalAlignment="Center"
+                                                            Click="BtnSendChat_Click"
+                                                            Content="{DynamicResource Send}"
+                                                            Icon="{ui:SymbolIcon Symbol=Send20}"
+                                                            Appearance="Primary" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
                                     </Grid>
                                 </Border>
 
+                                <!-- Bottom Dock Toggle Bar -->
                                 <Border
                                     x:Name="BtnChatToggleBorder"
                                     Grid.Row="1"
@@ -8342,7 +8587,7 @@
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Button.Template>
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock
                                                 Margin="0,0,6,0"
                                                 VerticalAlignment="Center"
@@ -8354,6 +8599,10 @@
                                                 FontSize="11"
                                                 FontWeight="SemiBold"
                                                 Text="{DynamicResource TeamTab}" />
+                                            <!-- Bottom Dock Unread Badge -->
+                                            <Border x:Name="BadgeUnreadDock" Visibility="Collapsed" Background="#FF3FD7FF" CornerRadius="7" Padding="4,0" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="TxtUnreadDock" FontSize="8.5" FontWeight="Bold" Foreground="#FF0A0D14" Text="0" />
+                                            </Border>
                                         </StackPanel>
                                     </Button>
                                 </Border>
@@ -8364,94 +8613,135 @@
                             x:Name="OverlayToolbox"
                             Grid.Row="1"
                             Margin="8"
-                            Padding="8,6"
+                            Padding="8,7"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
-                            Background="#CC1E1E1E"
-                            CornerRadius="8"
+                            Background="#F515171C"
+                            BorderBrush="#2EFFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="10"
                             Visibility="Collapsed">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="18" ShadowDepth="3" Direction="270" Opacity="0.5" Color="Black" />
+                            </Border.Effect>
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <!--  Select / Navigate (default)  -->
-                                    <Button
-                                        x:Name="ToolSelectButton"
-                                        Width="32"
-                                        Height="32"
-                                        Margin="2,0"
-                                        Click="ToolSelectButton_Click"
-                                        ToolTip="Select &amp; move — navigate the map (default)">
-                                        <ui:SymbolIcon Symbol="Cursor24" Foreground="White" FontSize="18" />
+                                    <StackPanel.Resources>
+                                        <!--  Hotkey number — bottom-right of each tool, dark chip for legibility  -->
+                                        <Style x:Key="ToolHotkeyBadge" TargetType="TextBlock">
+                                            <Setter Property="FontSize" Value="10" />
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                            <Setter Property="Foreground" Value="#F2FFFFFF" />
+                                            <Setter Property="Background" Value="#D2101116" />
+                                            <Setter Property="Padding" Value="3,0,3,1" />
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="VerticalAlignment" Value="Bottom" />
+                                            <Setter Property="Margin" Value="0,0,-2,-2" />
+                                            <Setter Property="IsHitTestVisible" Value="False" />
+                                        </Style>
+
+                                        <!--  Modern flat tool button — hover glow independent of the code-driven active state  -->
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="#14FFFFFF" />
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Cursor" Value="Hand" />
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="bd" CornerRadius="8" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                            <Grid>
+                                                                <Border x:Name="hover" CornerRadius="7" Background="#1EFFFFFF" Opacity="0" />
+                                                                <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                <!--  Hotkey number pinned to the button's bottom-right corner (from Tag)  -->
+                                                                <Border x:Name="badge" Background="#F20E0F13" CornerRadius="3" Padding="2.5,0" MinWidth="11" Height="11"
+                                                                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,1,1" IsHitTestVisible="False">
+                                                                    <TextBlock Text="{TemplateBinding Tag}" FontSize="8.5" FontWeight="Bold" Foreground="#F2FFFFFF"
+                                                                               HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" LineHeight="11" />
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="hover" Property="Opacity" Value="1" /></Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="hover" Property="Opacity" Value="1" />
+                                                                <Setter TargetName="hover" Property="Background" Value="#33FFFFFF" />
+                                                            </Trigger>
+                                                            <Trigger Property="Tag" Value="{x:Null}"><Setter TargetName="badge" Property="Visibility" Value="Collapsed" /></Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </StackPanel.Resources>
+
+                                    <!--  Select / Navigate (default) — 1  -->
+                                    <Button x:Name="ToolSelectButton" Tag="1" Width="32" Height="32" Margin="2,0" Click="ToolSelectButton_Click" ToolTip="Select &amp; move — navigate the map (1)">
+                                        <Path Fill="White" Data="M5,3 L5,18.5 L9.2,14.3 L12,20.5 L14.3,19.4 L11.4,13.4 L17,13.4 Z" />
                                     </Button>
 
                                     <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
 
-                                    <!--  Zeichnen  -->
-                                    <Button
-                                        x:Name="ToolDrawButton"
-                                        tutorials:Tutorial.TargetId="Map.Drawing"
-                                        Width="32"
-                                        Height="32"
-                                        Margin="2,0"
-                                        Click="ToolDrawButton_Click"
-                                        ToolTip="{DynamicResource DrawToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/pen.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <!--  Pen — 2  -->
+                                    <Button x:Name="ToolDrawButton" Tag="2" tutorials:Tutorial.TargetId="Map.Drawing" Width="32" Height="32" Margin="2,0" Click="ToolDrawButton_Click" ToolTip="{DynamicResource DrawToolTip}">
+                                        <Image Width="19" Height="19" Source="pack://application:,,,/Assets/icons/pen.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
-                                    <!--  Line  -->
-                                    <Button x:Name="ToolLineButton" Width="32" Height="32" Margin="2,0" Click="ToolLineButton_Click" ToolTip="Line (hold Shift to lock angle)">
+                                    <!--  Line — 3  -->
+                                    <Button x:Name="ToolLineButton" Tag="3" Width="32" Height="32" Margin="2,0" Click="ToolLineButton_Click" ToolTip="Line — hold Shift to lock angle (3)">
                                         <Path Stroke="White" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,18 L18,6" />
                                     </Button>
 
-                                    <!--  Arrow  -->
-                                    <Button x:Name="ToolArrowButton" Width="32" Height="32" Margin="2,0" Click="ToolArrowButton_Click" ToolTip="Arrow (rotations / pushes)">
+                                    <!--  Arrow — 4  -->
+                                    <Button x:Name="ToolArrowButton" Tag="4" Width="32" Height="32" Margin="2,0" Click="ToolArrowButton_Click" ToolTip="Arrow — rotations / pushes (4)">
                                         <Path Stroke="White" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,18 L18,6 M18,6 L12.5,6.5 M18,6 L17.5,11.5" />
                                     </Button>
 
-                                    <!--  Box  -->
-                                    <Button x:Name="ToolBoxButton" Width="32" Height="32" Margin="2,0" Click="ToolBoxButton_Click" ToolTip="Rectangle (hold Shift for square)">
+                                    <!--  Box — 5  -->
+                                    <Button x:Name="ToolBoxButton" Tag="5" Width="32" Height="32" Margin="2,0" Click="ToolBoxButton_Click" ToolTip="Rectangle — hold Shift for a square (5)">
                                         <Rectangle Width="16" Height="12" Stroke="White" StrokeThickness="2" Fill="Transparent" RadiusX="1" RadiusY="1" />
                                     </Button>
 
-                                    <!--  Circle  -->
-                                    <Button x:Name="ToolCircleButton" Width="32" Height="32" Margin="2,0" Click="ToolCircleButton_Click" ToolTip="Ellipse / range (hold Shift for a circle)">
+                                    <!--  Circle — 6  -->
+                                    <Button x:Name="ToolCircleButton" Tag="6" Width="32" Height="32" Margin="2,0" Click="ToolCircleButton_Click" ToolTip="Ellipse / range — hold Shift for a circle (6)">
                                         <Ellipse Width="16" Height="16" Stroke="White" StrokeThickness="2" Fill="Transparent" />
                                     </Button>
 
-                                    <!--  Text  -->
-                                    <Button
-                                        x:Name="ToolTextButton"
-                                        Width="32"
-                                        Height="32"
-                                        Margin="2,0"
-                                        Click="ToolTextButton_Click"
-                                        ToolTip="{DynamicResource PlaceTextToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/text.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <!--  Route — 7  -->
+                                    <Button x:Name="ToolRouteButton" Tag="7" Width="32" Height="32" Margin="2,0" Click="ToolRouteButton_Click" ToolTip="Route — draw a path, direction arrows follow it (7)">
+                                        <Path Stroke="White" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M4,18 L9,9 L14,15 L20,5" />
                                     </Button>
 
-                                    <!--  Icons  -->
-                                    <Button
-                                        x:Name="ToolIconButton"
-                                        Width="32"
-                                        Height="32"
-                                        Margin="2,0"
-                                        Click="ToolIconButton_Click"
-                                        ToolTip="{DynamicResource PlaceIconToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/pin.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <!--  Text — 8  -->
+                                    <Button x:Name="ToolTextButton" Tag="8" Width="32" Height="32" Margin="2,0" Click="ToolTextButton_Click" ToolTip="{DynamicResource PlaceTextToolTip}">
+                                        <Image Width="19" Height="19" Source="pack://application:,,,/Assets/icons/text.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
-                                    <!--  Radierer  -->
-                                    <Button
-                                        x:Name="ToolEraseButton"
-                                        Width="32"
-                                        Height="32"
-                                        Margin="2,0"
-                                        Click="ToolEraseButton_Click"
-                                        ToolTip="{DynamicResource EraserToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/eraser.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <!--  Marker — 9  -->
+                                    <Button x:Name="ToolIconButton" Tag="9" Width="32" Height="32" Margin="2,0" Click="ToolIconButton_Click" ToolTip="{DynamicResource PlaceIconToolTip}">
+                                        <Image Width="19" Height="19" Source="pack://application:,,,/Assets/icons/pin.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Button>
+
+                                    <!--  Eraser — 0  -->
+                                    <Button x:Name="ToolEraseButton" Tag="0" Width="32" Height="32" Margin="2,0" Click="ToolEraseButton_Click" ToolTip="{DynamicResource EraserToolTip}">
+                                        <Image Width="19" Height="19" Source="pack://application:,,,/Assets/icons/eraser.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
                                     <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+
+                                    <!--  Layers  -->
+                                    <Button
+                                        x:Name="BtnToggleLayers"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
+                                        Click="BtnToggleLayers_Click"
+                                        ToolTip="Layers — see &amp; edit everything on the map">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
 
                                     <!--  LÃƒÂ¶schen  -->
                                     <Button
@@ -8461,8 +8751,25 @@
                                         Margin="2,0"
                                         Click="ToolTrashButton_Click"
                                         ToolTip="{DynamicResource DeleteOverlayToolTip}">
-                                        <Image Source="pack://application:,,,/Assets/icons/trash.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        <Image Width="19" Height="19" Source="pack://application:,,,/Assets/icons/trash.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
+
+                                    <!--  Inline confirm for Clear (replaces the modal dialog)  -->
+                                    <Popup x:Name="ClearConfirmPopup" PlacementTarget="{Binding ElementName=ToolTrashButton}" Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" HorizontalOffset="-90" VerticalOffset="6">
+                                        <Border Width="230" Padding="14,12" Background="#F51B1E24" BorderBrush="#3AFFFFFF" BorderThickness="1" CornerRadius="9">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="16" ShadowDepth="3" Direction="270" Opacity="0.5" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel>
+                                                <TextBlock FontSize="12.5" FontWeight="SemiBold" Foreground="White" Text="Clear all your drawings?" />
+                                                <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="#A8A8A8" TextWrapping="Wrap" Text="Removes every marker, label and drawing you made. This can't be undone." />
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+                                                    <Button Padding="12,4" Margin="0,0,6,0" Cursor="Hand" Content="Cancel" Click="ClearConfirmCancel_Click" />
+                                                    <Button Padding="12,4" Cursor="Hand" Background="#C0392B" Foreground="White" BorderThickness="0" Content="Clear" Click="ClearConfirmYes_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
 
                                     <Button
                                         x:Name="ToolUploadButton"
@@ -8471,7 +8778,7 @@
                                         Margin="2,0"
                                         Click="ToolUploadButton_Click"
                                         ToolTip="{DynamicResource UploadOverlayToolTip}">
-                                        <ui:SymbolIcon Symbol="Cloud24" Foreground="White" FontSize="18" />
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE753;" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
 
                                     <!--  Manual Refresh  -->
@@ -8482,31 +8789,43 @@
                                         Margin="2,0"
                                         Click="ToolRefreshOverlayButton_Click"
                                         ToolTip="{DynamicResource UiForceRefreshAllSubscriptions}">
-                                        <ui:SymbolIcon Symbol="ArrowCounterclockwise24" Foreground="White" FontSize="18" />
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE72C;" FontSize="15" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
 
-                                    <ui:Button
-                                        x:Name="BtnPremiumInfoMap"
-                                        Appearance="Transparent"
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+
+                                    <!--  Close the drawing tools (also restores the map control bar)  -->
+                                    <Button
+                                        x:Name="BtnCloseOverlayTools"
                                         Width="32"
                                         Height="32"
                                         Margin="2,0"
-                                        Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
-                                        Foreground="#e03131"
+                                        Click="BtnToggleOverlayTools_Click"
+                                        ToolTip="Close drawing tools">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="14" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+
+                                    <Button
+                                        x:Name="BtnPremiumInfoMap"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2,0"
                                         Visibility="Collapsed"
                                         Click="BtnPremiumInfoMap_Click"
-                                        ToolTip="{DynamicResource PremiumFeatures}" />
+                                        ToolTip="{DynamicResource PremiumFeatures}">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE946;" FontSize="15" Foreground="#e03131" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
 
-                                    <ui:Button
+                                    <Button
                                         x:Name="BtnAdminPanel"
-                                        Appearance="Primary"
                                         Width="32"
                                         Height="32"
                                         Margin="2,0"
-                                        Icon="{ui:SymbolIcon Symbol=Shield24, Filled=True}"
                                         Visibility="Collapsed"
                                         Click="BtnAdminPanel_Click"
-                                        ToolTip="{DynamicResource UiAdminPanel}" />
+                                        ToolTip="{DynamicResource UiAdminPanel}">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA18;" FontSize="15" Foreground="#60CDFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
                                 </StackPanel>
 
                                 <!-- Active-tool identity: ties the context bar together and teaches the shortcut -->
@@ -8517,10 +8836,10 @@
                                 <!-- First-run hint: the core "you can still navigate" message -->
                                 <Border x:Name="OverlayPanHint" Visibility="Collapsed" Margin="0,8,0,0" Padding="10,6" HorizontalAlignment="Center" Background="#CC0E639C" CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <ui:SymbolIcon Symbol="Info24" FontSize="14" Foreground="White" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE946;" FontSize="14" Foreground="White" VerticalAlignment="Center" />
                                         <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" FontSize="11" Text="Right-drag or hold Space to pan while a tool is active. Ctrl+Z to undo." />
                                         <Button Margin="12,0,0,0" Padding="0" Width="18" Height="18" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="DismissPanHint_Click" ToolTip="Dismiss">
-                                            <ui:SymbolIcon Symbol="Dismiss20" FontSize="12" Foreground="White" />
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Button>
                                     </StackPanel>
                                 </Border>
@@ -8546,14 +8865,30 @@
                                         </Style>
                                         <!-- Shared square icon selector style -->
                                         <Style x:Key="IconSelectorButton" TargetType="Button">
-                                            <Setter Property="Width" Value="32"/>
-                                            <Setter Property="Height" Value="32"/>
+                                            <Setter Property="Width" Value="34"/>
+                                            <Setter Property="Height" Value="34"/>
                                             <Setter Property="Margin" Value="2"/>
-                                            <Setter Property="Padding" Value="3"/>
-                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Padding" Value="4"/>
+                                            <Setter Property="Background" Value="#14FFFFFF"/>
                                             <Setter Property="BorderThickness" Value="1"/>
-                                            <Setter Property="BorderBrush" Value="#40FFFFFF"/>
+                                            <Setter Property="BorderBrush" Value="#26FFFFFF"/>
                                             <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="bd" CornerRadius="8" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                            <Grid>
+                                                                <Border x:Name="hover" CornerRadius="7" Background="#1EFFFFFF" Opacity="0"/>
+                                                                <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="hover" Property="Opacity" Value="1"/></Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Style>
 
                                          <!-- Custom marker color button style for better UI/UX -->
@@ -8684,6 +9019,105 @@
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
+                        </Border>
+
+                        <!--  Layers panel: everything on the map, grouped and editable  -->
+                        <Border
+                            x:Name="LayersPanel"
+                            Grid.Row="1"
+                            Width="248"
+                            MaxHeight="440"
+                            Margin="8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Panel.ZIndex="9000"
+                            Background="#EC1E1E1E"
+                            BorderBrush="#33FFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Visibility="Collapsed">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid Margin="12,9,8,7">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="14" Foreground="#60CDFF" VerticalAlignment="Center" />
+                                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="White" Text="Layers" />
+                                    </StackPanel>
+                                    <Button HorizontalAlignment="Right" Width="22" Height="22" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="CloseLayersPanel_Click" ToolTip="Close">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+                                </Grid>
+                                <!--  Group / ungroup checked layers (tick the boxes, then Group)  -->
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,7">
+                                    <Button Padding="8,3" Margin="0,0,6,0" Cursor="Hand" Click="GroupCheckedLayers_Click" ToolTip="Group the ticked layers into one">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="#60CDFF" VerticalAlignment="Center" />
+                                            <TextBlock Margin="5,0,0,0" FontSize="10.5" Foreground="White" Text="Group" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Padding="8,3" Cursor="Hand" Click="UngroupCheckedLayers_Click" ToolTip="Ungroup the ticked group(s)">
+                                        <TextBlock FontSize="10.5" Foreground="#C0C0C0" Text="Ungroup" />
+                                    </Button>
+                                </StackPanel>
+                                <Grid Grid.Row="2">
+                                    <TextBlock x:Name="LayersEmptyHint" Margin="16,12" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+                                               Foreground="#8A8A8A" FontSize="11.5" Text="Nothing drawn yet. Add markers, text or drawings and they'll show up here." />
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="6,0,6,8">
+                                        <ItemsControl x:Name="LayersList">
+                                            <ItemsControl.GroupStyle>
+                                                <GroupStyle>
+                                                    <GroupStyle.HeaderTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="4,8,2,3">
+                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                    <TextBlock FontSize="10.5" FontWeight="SemiBold" Foreground="#60CDFF" Text="{Binding Name}" />
+                                                                    <TextBlock Margin="6,0,0,0" FontSize="10.5" Foreground="#707070" Text="{Binding ItemCount, StringFormat=({0})}" />
+                                                                </StackPanel>
+                                                                <Button HorizontalAlignment="Right" Width="20" Height="20" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                                                        Click="LayerGroupToggle_Click" ToolTip="Show / hide this group">
+                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" Foreground="#909090" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Button>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </GroupStyle.HeaderTemplate>
+                                                </GroupStyle>
+                                            </ItemsControl.GroupStyle>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Click="LayerRow_Click" HorizontalContentAlignment="Stretch" Cursor="Hand" Margin="0,1" Padding="4,4" BorderThickness="0" Background="#0FFFFFFF">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="22" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <CheckBox VerticalAlignment="Center" Margin="0,0,4,0" IsChecked="{Binding IsSelectedInPanel, Mode=TwoWay}" ToolTip="Tick to group" />
+                                                            <Image Grid.Column="1" Width="18" Height="18" VerticalAlignment="Center" Source="{Binding Preview}" Visibility="{Binding HasPreview, Converter={StaticResource BoolToVisibility}}" />
+                                                            <Border Grid.Column="1" Width="12" Height="12" CornerRadius="6" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{Binding Swatch}"
+                                                                    Visibility="{Binding HasNoPreview, Converter={StaticResource BoolToVisibility}}" />
+                                                            <TextBlock Grid.Column="2" Margin="8,0" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextPrimary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                                                            <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                                                <Button Width="24" Height="24" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="LayerEditText_Click" ToolTip="Edit text"
+                                                                        Visibility="{Binding IsText, Converter={StaticResource BoolToVisibility}}">
+                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Button>
+                                                                <Button Width="24" Height="24" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="LayerDelete_Click" ToolTip="Delete">
+                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" Foreground="#E08585" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Grid>
                         </Border>
 
                         <Border

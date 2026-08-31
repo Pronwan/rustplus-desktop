@@ -6002,4 +6002,7 @@ You can find more information on the server's official website:
   <data name="ProfileVacClean" xml:space="preserve">
     <value>Clean (0 bans on record)</value>
   </data>
+  <data name="ChatScrollToBottom" xml:space="preserve">
+    <value>Jump to latest</value>
+  </data>
 </root>

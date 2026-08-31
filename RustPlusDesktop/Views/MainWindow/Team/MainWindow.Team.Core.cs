@@ -860,29 +860,6 @@ public partial class MainWindow
         }
     }
 
-    private static async Task<ImageSource?> FetchSteamAvatarAsync(ulong steamId)
-    {
-        if (steamId == 0) return null;
-        try
-        {
-            using var http = new HttpClient();
-            var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
-            string url = "";
-            var mFull = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
-            var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
-            if (mFull.Success) url = mFull.Groups[1].Value;
-            else if (mMedium.Success) url = mMedium.Groups[1].Value;
-            if (string.IsNullOrWhiteSpace(url)) return null;
-
-            var bytes = await http.GetByteArrayAsync(url);
-            return BytesToImage(bytes);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
     private async Task LoadAvatarAsync(TeamMemberVM vm)
     {
         try
@@ -895,7 +872,7 @@ public partial class MainWindow
                 return;
             }
 
-            var img = await FetchSteamAvatarAsync(vm.SteamId);
+            var img = await AvatarLoader.GetOrLoadAvatarAsync(vm.SteamId);
             if (img != null)
             {
                 _avatarCache[vm.SteamId] = img;

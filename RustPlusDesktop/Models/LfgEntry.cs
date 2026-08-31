@@ -20,6 +20,12 @@ public sealed class LfgEntry
 
     public string? SteamId { get; init; }
 
+    public System.Collections.Generic.IReadOnlyList<string> Roles { get; init; } = Array.Empty<string>();
+
+    public RoleBadgeInfo? RoleBadge => ChatLine.GetBadgeForRoles(Roles);
+
+    public bool HasRoleBadge => RoleBadge != null;
+
     /// <summary>Two-letter code from the client's UI language, used to pick a flag.</summary>
     public string? Language { get; init; }
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,10 +14,26 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private FrameworkElement? _selectedElement;
+    private List<FrameworkElement>? _selectedGroup;   // set when the selection is a group (e.g. a route)
     private double _selectionSizeDragStart;
     private bool _suppressSelectionSlider;
 
     private static readonly Color SelectionGlow = Color.FromRgb(0x60, 0xCD, 0xFF);
+
+    // All of my elements sharing a group id.
+    private List<FrameworkElement> GetGroupMembers(string groupId)
+    {
+        var list = new List<FrameworkElement>();
+        foreach (UIElement child in Overlay.Children)
+            if (child is FrameworkElement fe && fe.Tag is OverlayTag t
+                && t.OwnerSteamId == _mySteamId && t.GroupId == groupId)
+                list.Add(fe);
+        return list;
+    }
+
+    // The element(s) the current selection acts on — the whole group when grouped.
+    private IReadOnlyList<FrameworkElement> SelectedTargets =>
+        _selectedGroup ?? (_selectedElement is { } fe ? new List<FrameworkElement> { fe } : new List<FrameworkElement>());
 
     // Topmost of my editable elements under the point — strokes/shapes hit-test by proximity,
     // icons/text by bounding box.
@@ -48,21 +66,22 @@ public partial class MainWindow
         if (_selectedElement == fe) return;
         DeselectElement();
         _selectedElement = fe;
-        fe.Effect = new DropShadowEffect
-        {
-            Color = SelectionGlow,
-            BlurRadius = 16,
-            ShadowDepth = 0,
-            Opacity = 1.0
-        };
+
+        string? groupId = (fe.Tag as OverlayTag)?.GroupId;
+        _selectedGroup = groupId != null ? GetGroupMembers(groupId) : null;
+
+        foreach (FrameworkElement t in SelectedTargets)
+            t.Effect = new DropShadowEffect { Color = SelectionGlow, BlurRadius = 16, ShadowDepth = 0, Opacity = 1.0 };
+
         ConfigureSelectionPanel(fe);
     }
 
     private void DeselectElement()
     {
         if (_selectedElement == null) return;
-        _selectedElement.Effect = null;
+        foreach (FrameworkElement t in SelectedTargets) t.Effect = null;
         _selectedElement = null;
+        _selectedGroup = null;
     }
 
     private void ConfigureSelectionPanel(FrameworkElement fe)
@@ -135,15 +154,21 @@ public partial class MainWindow
 
     private void SelectionColorButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_selectedElement is not { } fe) return;
+        if (_selectedElement is null) return;
         if (sender is not Button { Tag: string hex }) return;
-        if (GetElementColor(fe) is not { } current) return;
 
         var target = (Color)ColorConverter.ConvertFromString(hex);
-        if (current == target) return;
+        // Recolour the whole selection (all group members).
+        var changes = new List<(FrameworkElement fe, Color from)>();
+        foreach (FrameworkElement fe in SelectedTargets)
+            if (GetElementColor(fe) is { } current && current != target)
+                changes.Add((fe, current));
+        if (changes.Count == 0) return;
 
-        SetElementColor(fe, target);
-        PushOverlayEdit(() => SetElementColor(fe, current), () => SetElementColor(fe, target));
+        foreach (var c in changes) SetElementColor(c.fe, target);
+        PushOverlayEdit(
+            () => { foreach (var c in changes) SetElementColor(c.fe, c.from); },
+            () => { foreach (var c in changes) SetElementColor(c.fe, target); });
         SaveOwnOverlayToJson();
     }
 
@@ -154,17 +179,20 @@ public partial class MainWindow
 
     private void SelectionSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (_suppressSelectionSlider || _selectedElement is not { } fe) return;
-        SetElementSize(fe, e.NewValue);
+        if (_suppressSelectionSlider || _selectedElement is null) return;
+        foreach (FrameworkElement fe in SelectedTargets) SetElementSize(fe, e.NewValue);
     }
 
     private void SelectionSizeSlider_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (_selectedElement is not { } fe) return;
+        if (_selectedElement is null) return;
         double from = _selectionSizeDragStart;
-        double to = GetElementSize(fe);
+        double to = SelectionSizeSlider.Value;
         if (Math.Abs(from - to) < 0.01) return;
-        PushOverlayEdit(() => SetElementSize(fe, from), () => SetElementSize(fe, to));
+        var targets = SelectedTargets.ToList();
+        PushOverlayEdit(
+            () => { foreach (FrameworkElement fe in targets) SetElementSize(fe, from); },
+            () => { foreach (FrameworkElement fe in targets) SetElementSize(fe, to); });
         SaveOwnOverlayToJson();
     }
 
@@ -185,10 +213,20 @@ public partial class MainWindow
 
     private void DeleteSelectedElement()
     {
-        if (_selectedElement is not { } fe) return;
+        if (_selectedElement is { } fe) DeleteElement(fe);
+    }
+
+    // Remove an element (or its whole group), undoable. Used by the selection panel, Del key and layers list.
+    private void DeleteElement(FrameworkElement fe)
+    {
+        string? groupId = (fe.Tag as OverlayTag)?.GroupId;
+        List<FrameworkElement> targets = groupId != null ? GetGroupMembers(groupId) : new List<FrameworkElement> { fe };
+
         DeselectElement();
-        RemoveOwnElement(fe);
-        PushOverlayEdit(() => ReAddOwnElement(fe), () => RemoveOwnElement(fe));
+        foreach (FrameworkElement t in targets) RemoveOwnElement(t);
+        PushOverlayEdit(
+            () => { foreach (FrameworkElement t in targets) ReAddOwnElement(t); },
+            () => { foreach (FrameworkElement t in targets) RemoveOwnElement(t); });
         UpdateOptionsPanelVisibility();
         SaveOwnOverlayToJson();
     }

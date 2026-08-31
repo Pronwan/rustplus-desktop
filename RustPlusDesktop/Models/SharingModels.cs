@@ -52,6 +52,8 @@ namespace RustPlusDesk.Models
         public List<Point> Points { get; set; } = new();
         public string Color { get; set; } = "#FF0000";
         public double Thickness { get; set; } = 2.0;
+        /// <summary>Strokes sharing this id form one group/layer (e.g. an arrow route). Null when ungrouped.</summary>
+        public string? GroupId { get; set; }
     }
 
     public class SavedIcon
@@ -102,6 +104,11 @@ namespace RustPlusDesk.Models
                     {
                         stroke.Thickness = reader.GetDouble();
                     }
+                    else if (propertyName.Equals("GroupId", StringComparison.OrdinalIgnoreCase) ||
+                             propertyName.Equals("g", StringComparison.OrdinalIgnoreCase))
+                    {
+                        stroke.GroupId = reader.TokenType == JsonTokenType.String ? reader.GetString() : null;
+                    }
                     else if (propertyName.Equals("p", StringComparison.OrdinalIgnoreCase) ||
                              propertyName.Equals("Points", StringComparison.OrdinalIgnoreCase) ||
                              propertyName.Equals("points", StringComparison.OrdinalIgnoreCase))
@@ -147,6 +154,8 @@ namespace RustPlusDesk.Models
             writer.WriteStartObject();
             writer.WriteString("Color", value.Color);
             writer.WriteNumber("Thickness", value.Thickness);
+            if (!string.IsNullOrEmpty(value.GroupId))
+                writer.WriteString("g", value.GroupId);
             writer.WriteString("p", PolylineEncoder.Encode(value.Points));
             writer.WriteEndObject();
         }

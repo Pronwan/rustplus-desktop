@@ -417,22 +417,12 @@ namespace RustPlusDesk.Views
                     vm.Name = name;
                 }
 
-                // Parse Avatar
-                string url = "";
-                var mFull = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
-                var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
-                if (mFull.Success) url = mFull.Groups[1].Value;
-                else if (mMedium.Success) url = mMedium.Groups[1].Value;
-
-                if (!string.IsNullOrWhiteSpace(url))
+                // Parse & Load Avatar
+                var img = await AvatarLoader.GetOrLoadAvatarAsync(vm.SteamId);
+                if (img != null)
                 {
-                    var bytes = await http.GetByteArrayAsync(url);
-                    var img = BytesToImage(bytes);
-                    if (img != null)
-                    {
-                        _avatarCache[vm.SteamId] = img;
-                        vm.Avatar = img;
-                    }
+                    _avatarCache[vm.SteamId] = img;
+                    vm.Avatar = img;
                 }
             }
             catch (Exception ex)
