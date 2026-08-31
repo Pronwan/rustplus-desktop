@@ -290,27 +290,13 @@
                                                                Foreground="{StaticResource LfgMuted}" FontSize="9.5" VerticalAlignment="Center" />
                                                 </Grid>
 
-                                                <!-- Details: Target & Moderator -->
+                                                <!-- Details: Target -->
                                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4">
                                                     <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
                                                     <TextBlock Text="{Binding SanctionEvent.TargetDisplayName}" Foreground="{StaticResource LfgText}"
                                                                FontSize="10.5" FontWeight="SemiBold" />
                                                     <TextBlock Text="{Binding SanctionEvent.TargetSteamIdFormatted}" Foreground="{StaticResource LfgMuted}"
                                                                FontSize="9.5" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
-
-                                                    <TextBlock Text="  •  By: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
-                                                    <TextBlock Text="{Binding SanctionEvent.ModeratorDisplayName}" Foreground="{StaticResource LfgText}"
-                                                               FontSize="10.5" FontWeight="SemiBold" />
-
-                                                    <Border Visibility="{Binding SanctionEvent.HasModeratorRoleBadge, Converter={StaticResource BoolToVis}}"
-                                                            Background="{Binding SanctionEvent.ModeratorRoleBadge.BackgroundBrush}"
-                                                            BorderBrush="{Binding SanctionEvent.ModeratorRoleBadge.BorderBrush}"
-                                                            BorderThickness="1" CornerRadius="3" Padding="3,0" Margin="4,0,0,0"
-                                                            VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding SanctionEvent.ModeratorRoleBadge.DisplayText}"
-                                                                   Foreground="{Binding SanctionEvent.ModeratorRoleBadge.ForegroundBrush}"
-                                                                   FontSize="8.5" FontWeight="Bold" />
-                                                    </Border>
                                                 </StackPanel>
 
                                                 <!-- Reason -->
