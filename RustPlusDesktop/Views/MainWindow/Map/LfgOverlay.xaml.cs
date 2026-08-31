@@ -79,6 +79,10 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.SanctionEventReceived += OnSanctionEventReceived;
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
+        SocialUnread.Changed += ShowUnread;
+
+        // Whatever it already knows, before anything is loaded.
+        ShowUnread(SocialUnread.Count);
     }
 
     private void DetachRealtime()
@@ -93,6 +97,7 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.SanctionEventReceived -= OnSanctionEventReceived;
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
+        SocialUnread.Changed -= ShowUnread;
     }
 
     private void OnChatChanged() => _ = CatchUpChatAsync();
@@ -567,12 +572,39 @@ public partial class LfgOverlay : UserControl
 
     private void BtnRefresh_Click(object sender, RoutedEventArgs e) => _ = LoadListingsAsync();
 
-    private void BtnOpenChat_Click(object sender, RoutedEventArgs e)
+    private async void BtnOpenChat_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.LfgEntry entry) return;
 
         ChatRequested?.Invoke(this, entry);
-        StartCompose(entry);
+        await OpenConversationWithAsync(entry).ConfigureAwait(true);
+    }
+
+    /// <summary>
+    /// Takes you to the conversation with somebody from a listing: the one you already have, or
+    /// an empty one addressed to them.
+    ///
+    /// The inbox is its own tab now, so this has to move you there first. It used to open the
+    /// thread view in place, which since the tabs went in meant writing into a view that was not
+    /// on screen - the button appeared to do nothing at all.
+    /// </summary>
+    private async Task OpenConversationWithAsync(Models.LfgEntry entry)
+    {
+        if (string.IsNullOrWhiteSpace(entry.UserId)) return;
+
+        // Checking the tab is what switches the section; it also kicks off a load of its own,
+        // which the await below then waits out rather than racing.
+        SecInbox.IsChecked = true;
+
+        await LoadInboxAsync().ConfigureAwait(true);
+
+        var existing = (ThreadList.ItemsSource as System.Collections.Generic.IEnumerable<Models.SocialThread>)?
+            .FirstOrDefault(t => t.CounterpartId == entry.UserId);
+
+        // Somebody you have written to before opens where you left off; somebody new gets an
+        // empty thread addressed to them, which is the same view with nothing in it yet.
+        if (existing is not null) await OpenThreadAsync(existing).ConfigureAwait(true);
+        else StartCompose(entry);
     }
 
     private async Task LoadListingsAsync()
@@ -676,31 +708,20 @@ public partial class LfgOverlay : UserControl
         InboxEmptyNotice.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
         InboxHint.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
 
-        ShowUnread(threads.Sum(t => t.UnreadCount));
+        // Reported rather than counted here: the rail carries the same number and needs it even
+        // when this panel has never been opened.
+        SocialUnread.Report(threads.Sum(t => t.UnreadCount));
     }
 
-    /// <summary>How many messages are waiting. Raised so the rail can carry the same number.</summary>
-    public event EventHandler<int>? UnreadChanged;
-
-    private int _unread = -1;
-
     /// <summary>
-    /// Puts the count on the Inbox tab, and hands it on.
+    /// Puts the count on the Inbox tab.
     ///
-    /// Only when it changes: the inbox is reloaded on every push, and re-raising an unchanged
-    /// number would have the rail redrawing itself all evening in a busy conversation.
+    /// Past a certain point the exact number stops being the useful part, so it stops counting.
     /// </summary>
     private void ShowUnread(int count)
     {
-        if (count == _unread) return;
-        _unread = count;
-
         InboxTabBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
-
-        // Past a certain point the exact number stops being the useful part.
         InboxTabBadgeText.Text = count > 99 ? "99+" : count.ToString();
-
-        UnreadChanged?.Invoke(this, count);
     }
 
     private async void Thread_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -808,14 +829,10 @@ public partial class LfgOverlay : UserControl
         {
             _composeTarget = null;
 
-            // Step into the thread that now exists, so the first message appears where the reply
-            // to it will. Falling back to the list is better than an empty view if the thread
-            // cannot be found - that only happens if the server disagrees about what was created.
-            var created = (ThreadList.ItemsSource as System.Collections.Generic.IEnumerable<Models.SocialThread>)?
-                .FirstOrDefault(t => t.CounterpartId == opened.UserId);
-
-            if (created is null) BtnThreadBack_Click(this, new RoutedEventArgs());
-            else await OpenThreadAsync(created).ConfigureAwait(true);
+// Back to the list rather than into the thread that was just created. Stepping into
+            // it would mark it read on arrival, and the new conversation would sink into the
+            // list unmarked - the one moment it is worth pointing at.
+            BtnThreadBack_Click(this, new RoutedEventArgs());
 
             return;
         }

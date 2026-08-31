@@ -64,7 +64,10 @@ public partial class MainWindow
             ShowPremiumLimitDialog(Properties.Resources.GetString("SupporterGateBody"));
         };
 
-        LfgPanel.UnreadChanged += (_, count) => ShowSocialUnread(count);
+        // Counted outside the panel, so the rail carries a number from start-up rather than only
+        // after somebody has opened the thing the badge is meant to send them to.
+        Services.Social.SocialUnread.Changed += ShowSocialUnread;
+        Services.Social.SocialUnread.Start();
     }
 
     /// <summary>The same number the Inbox tab carries, on the rail.</summary>
@@ -88,6 +91,9 @@ public partial class MainWindow
     public async Task RefreshSocialAvailabilityAsync()
     {
         EnsureLfgWired();
+
+        // The account may have just changed; the count belongs to whoever is signed in now.
+        _ = Services.Social.SocialUnread.RefreshAsync();
 
         if (!Services.Cloud.CloudAuthManager.IsAuthenticated)
         {
