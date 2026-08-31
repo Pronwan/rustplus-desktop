@@ -6043,4 +6043,70 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="SupporterGateAction" xml:space="preserve">
     <value>赞助 Rust+ Desktop</value>
   </data>
+  <data name="FriendsTitle" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="FriendsEmpty" xml:space="preserve">
+    <value>列表里还没有人。在下面用 Steam ID 添加一个。</value>
+  </data>
+  <data name="FriendsAddSteamId" xml:space="preserve">
+    <value>Steam ID（17 位数字）</value>
+  </data>
+  <data name="FriendsAddMessage" xml:space="preserve">
+    <value>说说你是谁——在对方回复之前，你只能发这一条</value>
+  </data>
+  <data name="FriendsAddAction" xml:space="preserve">
+    <value>发送请求</value>
+  </data>
+  <data name="FriendsIncoming" xml:space="preserve">
+    <value>等你回应</value>
+  </data>
+  <data name="FriendsOutgoing" xml:space="preserve">
+    <value>等待对方回应</value>
+  </data>
+  <data name="FriendsAccept" xml:space="preserve">
+    <value>接受</value>
+  </data>
+  <data name="FriendsDecline" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="FriendsRemove" xml:space="preserve">
+    <value>删除好友</value>
+  </data>
+  <data name="FriendsWithdraw" xml:space="preserve">
+    <value>撤回请求</value>
+  </data>
+  <data name="FriendsMessage" xml:space="preserve">
+    <value>发消息</value>
+  </data>
+  <data name="FriendsAddFriend" xml:space="preserve">
+    <value>加为好友</value>
+  </data>
+  <data name="FriendsOffline" xml:space="preserve">
+    <value>离线</value>
+  </data>
+  <data name="FriendsNotInServer" xml:space="preserve">
+    <value>不在服务器中</value>
+  </data>
+  <data name="FriendsErrorNotFound" xml:space="preserve">
+    <value>没有账号使用这个 Steam ID。</value>
+  </data>
+  <data name="FriendsErrorPending" xml:space="preserve">
+    <value>你已经发过了，给对方一点时间。</value>
+  </data>
+  <data name="FriendsErrorAlready" xml:space="preserve">
+    <value>你们已经是好友了。</value>
+  </data>
+  <data name="FriendsErrorDeclined" xml:space="preserve">
+    <value>这个请求已被拒绝。</value>
+  </data>
+  <data name="FriendsErrorRefused" xml:space="preserve">
+    <value>这个请求发不出去。</value>
+  </data>
+  <data name="FriendsErrorFailed" xml:space="preserve">
+    <value>发送失败，请稍后再试。</value>
+  </data>
+  <data name="FriendsSent" xml:space="preserve">
+    <value>请求已发送。对方能看到你的消息，也能回复。</value>
+  </data>
 </root>

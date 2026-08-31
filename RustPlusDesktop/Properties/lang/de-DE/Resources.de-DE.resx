@@ -6373,4 +6373,70 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="SupporterGateAction" xml:space="preserve">
     <value>Rust+ Desktop unterstützen</value>
   </data>
+  <data name="FriendsTitle" xml:space="preserve">
+    <value>Freunde</value>
+  </data>
+  <data name="FriendsEmpty" xml:space="preserve">
+    <value>Noch niemand auf der Liste. Füge unten jemanden über seine Steam-ID hinzu.</value>
+  </data>
+  <data name="FriendsAddSteamId" xml:space="preserve">
+    <value>Steam-ID (17 Ziffern)</value>
+  </data>
+  <data name="FriendsAddMessage" xml:space="preserve">
+    <value>Sag kurz, wer du bist – mehr kannst du nicht schicken, bis geantwortet wird</value>
+  </data>
+  <data name="FriendsAddAction" xml:space="preserve">
+    <value>Anfrage senden</value>
+  </data>
+  <data name="FriendsIncoming" xml:space="preserve">
+    <value>Wartet auf deine Antwort</value>
+  </data>
+  <data name="FriendsOutgoing" xml:space="preserve">
+    <value>Wartet auf Antwort</value>
+  </data>
+  <data name="FriendsAccept" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="FriendsDecline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="FriendsRemove" xml:space="preserve">
+    <value>Freund entfernen</value>
+  </data>
+  <data name="FriendsWithdraw" xml:space="preserve">
+    <value>Anfrage zurückziehen</value>
+  </data>
+  <data name="FriendsMessage" xml:space="preserve">
+    <value>Nachricht schreiben</value>
+  </data>
+  <data name="FriendsAddFriend" xml:space="preserve">
+    <value>Als Freund hinzufügen</value>
+  </data>
+  <data name="FriendsOffline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="FriendsNotInServer" xml:space="preserve">
+    <value>Auf keinem Server</value>
+  </data>
+  <data name="FriendsErrorNotFound" xml:space="preserve">
+    <value>Zu dieser Steam-ID gibt es kein Konto.</value>
+  </data>
+  <data name="FriendsErrorPending" xml:space="preserve">
+    <value>Du hast schon gefragt. Gib ihm Zeit zu antworten.</value>
+  </data>
+  <data name="FriendsErrorAlready" xml:space="preserve">
+    <value>Ihr seid bereits befreundet.</value>
+  </data>
+  <data name="FriendsErrorDeclined" xml:space="preserve">
+    <value>Diese Anfrage wurde abgelehnt.</value>
+  </data>
+  <data name="FriendsErrorRefused" xml:space="preserve">
+    <value>Diese Anfrage konnte nicht gesendet werden.</value>
+  </data>
+  <data name="FriendsErrorFailed" xml:space="preserve">
+    <value>Konnte nicht gesendet werden. Gleich noch einmal versuchen.</value>
+  </data>
+  <data name="FriendsSent" xml:space="preserve">
+    <value>Anfrage gesendet. Deine Nachricht ist angekommen und kann beantwortet werden.</value>
+  </data>
 </root>

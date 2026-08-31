@@ -6295,4 +6295,70 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="SupporterGateAction" xml:space="preserve">
     <value>Поддержать Rust+ Desktop</value>
   </data>
+  <data name="FriendsTitle" xml:space="preserve">
+    <value>Друзья</value>
+  </data>
+  <data name="FriendsEmpty" xml:space="preserve">
+    <value>В списке пока никого. Добавьте кого-нибудь по Steam ID ниже.</value>
+  </data>
+  <data name="FriendsAddSteamId" xml:space="preserve">
+    <value>Steam ID (17 цифр)</value>
+  </data>
+  <data name="FriendsAddMessage" xml:space="preserve">
+    <value>Скажите, кто вы — это единственное сообщение, пока вам не ответят</value>
+  </data>
+  <data name="FriendsAddAction" xml:space="preserve">
+    <value>Отправить запрос</value>
+  </data>
+  <data name="FriendsIncoming" xml:space="preserve">
+    <value>Ждут вашего ответа</value>
+  </data>
+  <data name="FriendsOutgoing" xml:space="preserve">
+    <value>Ожидает ответа</value>
+  </data>
+  <data name="FriendsAccept" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="FriendsDecline" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="FriendsRemove" xml:space="preserve">
+    <value>Удалить из друзей</value>
+  </data>
+  <data name="FriendsWithdraw" xml:space="preserve">
+    <value>Отозвать запрос</value>
+  </data>
+  <data name="FriendsMessage" xml:space="preserve">
+    <value>Написать сообщение</value>
+  </data>
+  <data name="FriendsAddFriend" xml:space="preserve">
+    <value>Добавить в друзья</value>
+  </data>
+  <data name="FriendsOffline" xml:space="preserve">
+    <value>Не в сети</value>
+  </data>
+  <data name="FriendsNotInServer" xml:space="preserve">
+    <value>Не на сервере</value>
+  </data>
+  <data name="FriendsErrorNotFound" xml:space="preserve">
+    <value>С таким Steam ID нет учётной записи.</value>
+  </data>
+  <data name="FriendsErrorPending" xml:space="preserve">
+    <value>Вы уже спросили. Дайте время ответить.</value>
+  </data>
+  <data name="FriendsErrorAlready" xml:space="preserve">
+    <value>Вы уже друзья.</value>
+  </data>
+  <data name="FriendsErrorDeclined" xml:space="preserve">
+    <value>Этот запрос отклонён.</value>
+  </data>
+  <data name="FriendsErrorRefused" xml:space="preserve">
+    <value>Запрос не удалось отправить.</value>
+  </data>
+  <data name="FriendsErrorFailed" xml:space="preserve">
+    <value>Отправить не удалось. Попробуйте ещё раз через минуту.</value>
+  </data>
+  <data name="FriendsSent" xml:space="preserve">
+    <value>Запрос отправлен. Ваше сообщение дошло, на него можно ответить.</value>
+  </data>
 </root>

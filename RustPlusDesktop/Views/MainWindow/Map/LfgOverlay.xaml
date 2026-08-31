@@ -165,6 +165,19 @@
                     <TextBlock Text="{DynamicResource SocialHubSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                    <Grid Margin="0,0,6,0">
+                        <ui:Button x:Name="BtnFriends" Click="BtnFriends_Click" Appearance="Secondary"
+                                   ToolTip="{DynamicResource FriendsTitle}"
+                                   Icon="{ui:SymbolIcon Symbol=People24}" Height="30" Width="34" />
+                        <!--  Requests waiting on an answer, over the icon.  -->
+                        <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
+                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                Background="#FFE5484D" Padding="3,0">
+                            <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
+                                       FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
                     <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
                                ToolTip="{DynamicResource BlocksTitle}"
                                Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" Margin="0,0,6,0" />
@@ -264,6 +277,8 @@
                                                 <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
                                                     <Grid.ContextMenu>
                                                         <ContextMenu>
+                                                            <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ChatAddFriend_Click" Tag="{Binding}" />
+                                                            <Separator />
                                                             <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
                                                             <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
                                                         </ContextMenu>
@@ -808,6 +823,8 @@
                                                 Cursor="Hand" MouseLeftButtonUp="Thread_Click" Tag="{Binding}">
                                             <Border.ContextMenu>
                                                 <ContextMenu>
+                                                    <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ThreadAddFriend_Click" Tag="{Binding}" />
+                                                    <Separator />
                                                     <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuBlock_Click" Tag="{Binding}" />
                                                     <MenuItem Header="{DynamicResource LfgReportUser}" Click="MenuReport_Click" Tag="{Binding}" />
                                                 </ContextMenu>
@@ -947,6 +964,154 @@
                     </Grid>
                 </Grid>
             </Grid>
+
+            <!--
+                The friends list.
+
+                A friendship is not a conversation: somebody can answer a stranger without wanting
+                them on a list, so the request that arrives carries both decisions separately and
+                this sheet only ever shows the second one.
+            -->
+            <Border x:Name="FriendsSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource FriendsTitle}" Foreground="{StaticResource LfgText}"
+                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+
+                        <ScrollViewer MaxHeight="330" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock x:Name="FriendsEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
+                                           Text="{DynamicResource FriendsEmpty}" TextWrapping="Wrap"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                                <!--  Waiting on you: the only rows here with a decision attached.  -->
+                                <TextBlock x:Name="FriendsIncomingHeading" Visibility="Collapsed"
+                                           Text="{DynamicResource FriendsIncoming}" Style="{StaticResource LfgSectionHeading}" />
+                                <ItemsControl x:Name="FriendRequestList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#14FFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Grid.Column="0" Width="30" Height="30" Margin="0,0,10,0">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                                               Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                               FontSize="12.5" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <ui:Button Height="26" Appearance="Primary" Margin="0,0,6,0"
+                                                                   Tag="{Binding}" Click="BtnFriendAccept_Click"
+                                                                   Content="{DynamicResource FriendsAccept}" />
+                                                        <ui:Button Height="26" Appearance="Secondary"
+                                                                   Tag="{Binding}" Click="BtnFriendDecline_Click"
+                                                                   Content="{DynamicResource FriendsDecline}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!--  Friends, with where they are when they are somewhere.  -->
+                                <ItemsControl x:Name="FriendList" Margin="0,4,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#0DFFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6"
+                                                    Cursor="Hand" Tag="{Binding}" MouseLeftButtonUp="Friend_Click">
+                                                <Border.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="{DynamicResource FriendsMessage}" Click="MenuFriendMessage_Click" Tag="{Binding}" />
+                                                        <MenuItem Header="{DynamicResource ProfileOpenSteam}" Click="MenuFriendProfile_Click" Tag="{Binding}" />
+                                                        <Separator />
+                                                        <MenuItem Header="{DynamicResource FriendsRemove}" Click="MenuFriendRemove_Click" Tag="{Binding}" />
+                                                        <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuFriendBlock_Click" Tag="{Binding}" />
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0">
+                                                        <Ellipse>
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        <Ellipse Width="9" Height="9" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                                 Fill="{Binding StatusBrush}" Stroke="#FF111820" StrokeThickness="1.5" />
+                                                    </Grid>
+
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                                   FontSize="12.5" FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding WhereLabel}" Visibility="{Binding WhereVisibility}"
+                                                                   Foreground="{StaticResource LfgMuted}" FontSize="10.5"
+                                                                   TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!--  Asked, not yet answered. Shown so nobody asks twice.  -->
+                                <TextBlock x:Name="FriendsOutgoingHeading" Visibility="Collapsed" Margin="0,6,0,0"
+                                           Text="{DynamicResource FriendsOutgoing}" Style="{StaticResource LfgSectionHeading}" />
+                                <ItemsControl x:Name="FriendOutgoingList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,0,0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                                           Text="{Binding DisplayName}" Foreground="{StaticResource LfgMuted}"
+                                                           FontSize="11.5" TextTrimming="CharacterEllipsis" />
+                                                <ui:Button Grid.Column="1" Height="24" Appearance="Secondary"
+                                                           Tag="{Binding}" Click="BtnFriendWithdraw_Click"
+                                                           Content="{DynamicResource FriendsWithdraw}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!--  Adding somebody: an id and one message, which is all you get.  -->
+                        <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,12,0,12" />
+
+                        <ui:TextBox x:Name="TxtFriendSteamId" MaxLength="17"
+                                    PlaceholderText="{DynamicResource FriendsAddSteamId}" />
+                        <ui:TextBox x:Name="TxtFriendMessage" MaxLength="300" Margin="0,8,0,0"
+                                    PlaceholderText="{DynamicResource FriendsAddMessage}" />
+
+                        <TextBlock x:Name="FriendsNotice" Visibility="Collapsed" Margin="0,8,0,0"
+                                   Foreground="#FFFF8A8A" FontSize="11" TextWrapping="Wrap" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <ui:Button x:Name="BtnFriendAdd" Click="BtnFriendAdd_Click" Appearance="Primary"
+                                       Content="{DynamicResource FriendsAddAction}" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnFriendsClose" Click="BtnFriendsClose_Click" Appearance="Secondary"
+                                       Content="{DynamicResource ProfileClose}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
 
             <!--
                 The block list.

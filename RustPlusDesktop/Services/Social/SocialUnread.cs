@@ -43,6 +43,11 @@ public static class SocialUnread
             _started = true;
         }
 
+        // The socket has to be up for any of this to be live. It used to be started by the
+        // Community panel, which WPF does not realise until it is first shown - so on a fresh
+        // launch nothing was subscribed to anything and the count only ever moved on a restart.
+        SocialRealtime.EnsureStarted();
+
         SocialRealtime.MessageArrived += conversationId => _ = RefreshAsync();
         SocialRealtime.RequestArrived += () => _ = RefreshAsync();
 
