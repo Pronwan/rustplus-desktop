@@ -9035,61 +9035,164 @@
                         <Border
                             x:Name="LayersPanel"
                             Grid.Row="1"
-                            Width="248"
-                            MaxHeight="440"
+                            Width="266"
+                            MaxHeight="466"
                             Margin="8"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
-                            Background="#EC1E1E1E"
-                            BorderBrush="#33FFFFFF"
+                            Background="#F214161B"
+                            BorderBrush="#2EFFFFFF"
                             BorderThickness="1"
-                            CornerRadius="8"
+                            CornerRadius="11"
                             Visibility="Collapsed">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20" ShadowDepth="4" Direction="270" Opacity="0.5" Color="Black" />
+                            </Border.Effect>
+                            <Border.Resources>
+                                <!--  Custom tick box  -->
+                                <Style x:Key="LyrCheck" TargetType="CheckBox">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="CheckBox">
+                                                <Border x:Name="box" Width="16" Height="16" CornerRadius="4" Background="#18FFFFFF" BorderBrush="#4DFFFFFF" BorderThickness="1.2">
+                                                    <TextBlock x:Name="chk" FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" FontSize="10" Foreground="#0C0D11" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="box" Property="BorderBrush" Value="#8060CDFF" /></Trigger>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="box" Property="Background" Value="#60CDFF" />
+                                                        <Setter TargetName="box" Property="BorderBrush" Value="#60CDFF" />
+                                                        <Setter TargetName="chk" Property="Visibility" Value="Visible" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <!--  Small flat icon button  -->
+                                <Style x:Key="LyrIconBtn" TargetType="Button">
+                                    <Setter Property="Width" Value="26" />
+                                    <Setter Property="Height" Value="24" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="b" CornerRadius="5" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="b" Property="Background" Value="#22FFFFFF" /></Trigger>
+                                                    <Trigger Property="IsPressed" Value="True"><Setter TargetName="b" Property="Background" Value="#33FFFFFF" /></Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <!--  Row button (hover highlight)  -->
+                                <Style x:Key="LyrRow" TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                    <Setter Property="Padding" Value="8,5" />
+                                    <Setter Property="Margin" Value="0,1" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="rb" CornerRadius="7" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="rb" Property="Background" Value="#16FFFFFF" /></Trigger>
+                                                    <Trigger Property="IsPressed" Value="True"><Setter TargetName="rb" Property="Background" Value="#24FFFFFF" /></Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <!--  Group / ungroup chip  -->
+                                <Style x:Key="LyrChip" TargetType="Button">
+                                    <Setter Property="Background" Value="#16FFFFFF" />
+                                    <Setter Property="BorderBrush" Value="#2EFFFFFF" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <Setter Property="Padding" Value="11,4" />
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="c" CornerRadius="6" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="c" Property="Background" Value="#28FFFFFF" /></Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Border.Resources>
+
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <Grid Margin="12,9,8,7">
+
+                                <!--  Header  -->
+                                <Grid Margin="14,11,10,9">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="14" Foreground="#60CDFF" VerticalAlignment="Center" />
-                                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Foreground="White" Text="Layers" />
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="15" Foreground="#60CDFF" VerticalAlignment="Center" />
+                                        <TextBlock Margin="9,0,0,0" VerticalAlignment="Center" FontSize="13.5" FontWeight="SemiBold" Foreground="White" Text="Layers" />
                                     </StackPanel>
-                                    <Button HorizontalAlignment="Right" Width="22" Height="22" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="CloseLayersPanel_Click" ToolTip="Close">
+                                    <Button Style="{StaticResource LyrIconBtn}" HorizontalAlignment="Right" Click="CloseLayersPanel_Click" ToolTip="Close">
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
                                 </Grid>
-                                <!--  Group / ungroup checked layers (tick the boxes, then Group)  -->
-                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,7">
-                                    <Button Padding="8,3" Margin="0,0,6,0" Cursor="Hand" Click="GroupCheckedLayers_Click" ToolTip="Group the ticked layers into one">
+
+                                <!--  Group / ungroup toolbar  -->
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="13,0,13,9">
+                                    <Button Style="{StaticResource LyrChip}" Margin="0,0,6,0" Click="GroupCheckedLayers_Click" ToolTip="Group the ticked layers into one">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="#60CDFF" VerticalAlignment="Center" />
-                                            <TextBlock Margin="5,0,0,0" FontSize="10.5" Foreground="White" Text="Group" />
+                                            <TextBlock Margin="6,0,0,0" FontSize="11" FontWeight="SemiBold" Foreground="White" Text="Group" />
                                         </StackPanel>
                                     </Button>
-                                    <Button Padding="8,3" Cursor="Hand" Click="UngroupCheckedLayers_Click" ToolTip="Ungroup the ticked group(s)">
-                                        <TextBlock FontSize="10.5" Foreground="#C0C0C0" Text="Ungroup" />
+                                    <Button Style="{StaticResource LyrChip}" Click="UngroupCheckedLayers_Click" ToolTip="Ungroup the ticked group(s)">
+                                        <TextBlock FontSize="11" Foreground="#C8C8C8" Text="Ungroup" />
                                     </Button>
                                 </StackPanel>
-                                <Grid Grid.Row="2">
-                                    <TextBlock x:Name="LayersEmptyHint" Margin="16,12" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+
+                                <Border Grid.Row="2" Height="1" Background="#16FFFFFF" Margin="13,0,13,2" />
+
+                                <!--  List  -->
+                                <Grid Grid.Row="3">
+                                    <TextBlock x:Name="LayersEmptyHint" Margin="18,16" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
                                                Foreground="#8A8A8A" FontSize="11.5" Text="Nothing drawn yet. Add markers, text or drawings and they'll show up here." />
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="6,0,6,8">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8,4,8,10">
                                         <ItemsControl x:Name="LayersList">
                                             <ItemsControl.GroupStyle>
                                                 <GroupStyle>
                                                     <GroupStyle.HeaderTemplate>
                                                         <DataTemplate>
-                                                            <Grid Margin="4,8,2,3">
+                                                            <Grid Margin="6,10,2,4">
                                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                                    <TextBlock FontSize="10.5" FontWeight="SemiBold" Foreground="#60CDFF" Text="{Binding Name}" />
-                                                                    <TextBlock Margin="6,0,0,0" FontSize="10.5" Foreground="#707070" Text="{Binding ItemCount, StringFormat=({0})}" />
+                                                                    <TextBlock FontSize="10.5" FontWeight="Bold" Foreground="#9AA6B2" Text="{Binding Name}" />
+                                                                    <Border Margin="8,0,0,0" Background="#1EFFFFFF" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
+                                                                        <TextBlock FontSize="9.5" FontWeight="SemiBold" Foreground="#B8C2CC" Text="{Binding ItemCount}" />
+                                                                    </Border>
                                                                 </StackPanel>
-                                                                <Button HorizontalAlignment="Right" Width="20" Height="20" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                                                        Click="LayerGroupToggle_Click" ToolTip="Show / hide this group">
-                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" Foreground="#909090" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                <Button Style="{StaticResource LyrIconBtn}" Width="22" Height="20" HorizontalAlignment="Right" Click="LayerGroupToggle_Click" ToolTip="Show / hide this group">
+                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="11" Foreground="#8A929C" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                             </Grid>
                                                         </DataTemplate>
@@ -9098,25 +9201,27 @@
                                             </ItemsControl.GroupStyle>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Button Click="LayerRow_Click" HorizontalContentAlignment="Stretch" Cursor="Hand" Margin="0,1" Padding="4,4" BorderThickness="0" Background="#0FFFFFFF">
+                                                    <Button Style="{StaticResource LyrRow}" Click="LayerRow_Click" Opacity="{Binding RowOpacity}">
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="22" />
+                                                                <ColumnDefinition Width="24" />
                                                                 <ColumnDefinition Width="*" />
                                                                 <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
-                                                            <CheckBox VerticalAlignment="Center" Margin="0,0,4,0" IsChecked="{Binding IsSelectedInPanel, Mode=TwoWay}" ToolTip="Tick to group" />
+                                                            <CheckBox Style="{StaticResource LyrCheck}" VerticalAlignment="Center" Margin="0,0,9,0" IsChecked="{Binding IsSelectedInPanel, Mode=TwoWay}" ToolTip="Tick to group" />
                                                             <Image Grid.Column="1" Width="18" Height="18" VerticalAlignment="Center" Source="{Binding Preview}" Visibility="{Binding HasPreview, Converter={StaticResource BoolToVisibility}}" />
-                                                            <Border Grid.Column="1" Width="12" Height="12" CornerRadius="6" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{Binding Swatch}"
+                                                            <Border Grid.Column="1" Width="13" Height="13" CornerRadius="7" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{Binding Swatch}" BorderBrush="#40000000" BorderThickness="1"
                                                                     Visibility="{Binding HasNoPreview, Converter={StaticResource BoolToVisibility}}" />
-                                                            <TextBlock Grid.Column="2" Margin="8,0" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextPrimary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock Grid.Column="2" Margin="9,0" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextPrimary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
                                                             <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                                                <Button Width="24" Height="24" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="LayerEditText_Click" ToolTip="Edit text"
-                                                                        Visibility="{Binding IsText, Converter={StaticResource BoolToVisibility}}">
+                                                                <Button Style="{StaticResource LyrIconBtn}" Click="LayerVisibility_Click" ToolTip="Show / hide">
+                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" Foreground="#9AA0A8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Button>
+                                                                <Button Style="{StaticResource LyrIconBtn}" Click="LayerEditText_Click" ToolTip="Edit text" Visibility="{Binding IsText, Converter={StaticResource BoolToVisibility}}">
                                                                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
-                                                                <Button Width="24" Height="24" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="LayerDelete_Click" ToolTip="Delete">
+                                                                <Button Style="{StaticResource LyrIconBtn}" Click="LayerDelete_Click" ToolTip="Delete">
                                                                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" Foreground="#E08585" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                             </StackPanel>
