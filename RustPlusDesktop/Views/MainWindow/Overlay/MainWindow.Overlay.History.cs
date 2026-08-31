@@ -39,6 +39,9 @@ public partial class MainWindow
         _redoStack.Clear();
     }
 
+    private void BtnUndo_Click(object sender, RoutedEventArgs e) => OverlayUndo();
+    private void BtnRedo_Click(object sender, RoutedEventArgs e) => OverlayRedo();
+
     private void OverlayUndo()
     {
         if (_undoStack.Count == 0) return;
