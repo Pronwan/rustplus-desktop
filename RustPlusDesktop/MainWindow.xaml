@@ -9119,13 +9119,13 @@
                         </Border>
 
                         <!--  Routes: the legend, and the way in and out of route mode. The top margin
-                              clears the expanded toolbar strip above it on the left.  -->
+                              clears the server dropdown, which opens over this corner of the map.  -->
                         <Border
                             x:Name="RoutesPanel"
                             Grid.Row="1"
                             Width="252"
-                            MaxHeight="430"
-                            Margin="8,56,8,8"
+                            MaxHeight="380"
+                            Margin="8,168,8,8"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
