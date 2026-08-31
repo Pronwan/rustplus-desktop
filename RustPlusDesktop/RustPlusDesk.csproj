@@ -346,6 +346,7 @@
     <PackageReference Include="RustPlusApi" Version="2.0.0-beta.6" />
     <PackageReference Include="RustPlusApi.Camera" Version="2.0.0-beta.6" />
     <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.6" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
     <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
@@ -408,21 +409,14 @@
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)vite.config.ts" />
   </ItemGroup>
 
-  <Target Name="BuildGeneticsLabDist"
-          BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish"
-          Inputs="@(GeneticsLabSourceFiles)"
-          Outputs="$(GeneticsLabDir)dist\index.html"
-          Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="BuildGeneticsLabDist" BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish" Inputs="@(GeneticsLabSourceFiles)" Outputs="$(GeneticsLabDir)dist\index.html" Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <Message Importance="high" Text="Building GeneticsLab frontend (npm run build)..." />
     <Exec Command="npm ci" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and Exists('$(GeneticsLabDir)package-lock.json')" />
     <Exec Command="npm install" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and !Exists('$(GeneticsLabDir)package-lock.json')" />
     <Exec Command="npm run build" WorkingDirectory="$(GeneticsLabDir)" />
   </Target>
 
-  <Target Name="IncludeGeneticsLabDist"
-          BeforeTargets="AssignTargetPaths"
-          DependsOnTargets="BuildGeneticsLabDist"
-          Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="IncludeGeneticsLabDist" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildGeneticsLabDist" Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
       <GeneticsLabDistFiles Include="$(GeneticsLabDir)dist\**\*.*" />
       <Content Include="@(GeneticsLabDistFiles)">
@@ -629,6 +623,10 @@
     <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\Flags\*.png" />
+    <None Include="Assets\emojis\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
     <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_dollar.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

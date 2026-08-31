@@ -171,6 +171,15 @@ public sealed class ChatLine
 
     public string TimeLabel => SentAt?.ToLocalTime().ToString("HH:mm") ?? "";
 
+    public bool ShowHeader { get; set; } = true;
+
+    public Thickness GroupMargin => ShowHeader ? new Thickness(0, 10, 0, 2) : new Thickness(0, 1, 0, 1);
+
+    public Brush SenderNameBrush => IsSupporter ? SupporterNameBrush : DefaultSenderBrush;
+
+    private static readonly Brush SupporterNameBrush = CreateFrozenBrush(0xFF, 0xFF, 0xD1, 0x66); // Warm gold
+    private static readonly Brush DefaultSenderBrush = CreateFrozenBrush(0xFF, 0x60, 0xCD, 0xFF);   // Crisp vibrant cyan
+
     public bool IsSystemSanction { get; init; }
 
     public SystemSanctionEvent? SanctionEvent { get; init; }
@@ -197,26 +206,26 @@ public sealed class ChatLine
     {
         RoleKey = "super_admin",
         DisplayText = "SUPER ADMIN",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0xEF, 0x44, 0x44),
-        BorderBrush = CreateFrozenBrush(0xFF, 0xEF, 0x44, 0x44),
-        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFF, 0x85, 0x85),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0xEF, 0x44, 0x44),
+        BorderBrush = CreateFrozenBrush(0x55, 0xEF, 0x44, 0x44),
+        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFA, 0x8A, 0x8A),
     };
 
     private static readonly RoleBadgeInfo AdminBadge = new()
     {
         RoleKey = "admin",
         DisplayText = "ADMIN",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0xEF, 0x44, 0x44),
-        BorderBrush = CreateFrozenBrush(0xFF, 0xEF, 0x44, 0x44),
-        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFF, 0x85, 0x85),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0xEF, 0x44, 0x44),
+        BorderBrush = CreateFrozenBrush(0x55, 0xEF, 0x44, 0x44),
+        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFA, 0x8A, 0x8A),
     };
 
     private static readonly RoleBadgeInfo ModBadge = new()
     {
         RoleKey = "moderator",
         DisplayText = "MOD",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0x3B, 0x82, 0xF6),
-        BorderBrush = CreateFrozenBrush(0xFF, 0x3B, 0x82, 0xF6),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0x3B, 0x82, 0xF6),
+        BorderBrush = CreateFrozenBrush(0x55, 0x3B, 0x82, 0xF6),
         ForegroundBrush = CreateFrozenBrush(0xFF, 0x93, 0xC5, 0xFD),
     };
 
@@ -224,8 +233,8 @@ public sealed class ChatLine
     {
         RoleKey = "community_manager",
         DisplayText = "CM",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0x8B, 0x5C, 0xF6),
-        BorderBrush = CreateFrozenBrush(0xFF, 0x8B, 0x5C, 0xF6),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0x8B, 0x5C, 0xF6),
+        BorderBrush = CreateFrozenBrush(0x55, 0x8B, 0x5C, 0xF6),
         ForegroundBrush = CreateFrozenBrush(0xFF, 0xC4, 0xB5, 0xFD),
     };
 
@@ -260,9 +269,6 @@ public sealed class ChatLine
 /// <summary>Why the text box is closed, and until when.</summary>
 public sealed record ChatSanction(string Kind, string Reason, DateTime? ExpiresAt);
 
-/// <summary>
-/// What one read of the room returns.
-/// </summary>
 public sealed record ChatSnapshot(
     List<ChatLine> Lines,
     ChatSanction? Sanction,
@@ -270,5 +276,6 @@ public sealed record ChatSnapshot(
     bool Ok = true,
     // Whether this account may use the supporters' room. Carried on every read of either room,
     // so the tab knows what to draw without a request of its own.
-    bool SupporterRoom = false);
+    bool SupporterRoom = false,
+    int MaxLength = 128);
 

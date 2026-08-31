@@ -50,6 +50,7 @@ public partial class MainWindow
     private ScrollViewer? _chatScrollViewer;
     private string _chatSearchQuery = "";
     private bool _chatAvatarListenerInitialized = false;
+    private Controls.Chat.ChatEmojiInputHelper? _teamChatEmojiHelper;
 
     // ====== VIEW MODEL ======
     public ObservableCollection<ChatMessageVM> ChatMessages { get; } = new();
@@ -914,6 +915,7 @@ public partial class MainWindow
         System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
         sb.Begin();
 
+        EnsureTeamChatEmojiHelper();
         TxtChatInput.Focus();
         ScrollChatToBottom();
 
@@ -939,6 +941,22 @@ public partial class MainWindow
         catch (Exception ex)
         {
             AppendLog("GetHistory Error: " + ex.Message);
+        }
+    }
+
+    private void EnsureTeamChatEmojiHelper()
+    {
+        if (_teamChatEmojiHelper != null) return;
+        if (TxtChatInput != null && TeamChatAutocompletePopup != null && TeamChatAutocompleteControl != null &&
+            TeamChatPickerPopup != null && TeamChatPickerControl != null && BtnTeamEmoji != null)
+        {
+            _teamChatEmojiHelper = new Controls.Chat.ChatEmojiInputHelper(
+                TxtChatInput,
+                TeamChatAutocompletePopup,
+                TeamChatAutocompleteControl,
+                TeamChatPickerPopup,
+                TeamChatPickerControl,
+                BtnTeamEmoji);
         }
     }
 

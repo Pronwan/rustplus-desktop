@@ -437,6 +437,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         MainTabs.SelectedItem = DevicesTabItem;
         Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
         Services.Auth.SupabaseAuthManager.UpgradeBlockLifted += ResumeCloudTrafficAfterUpgrade;
+        Services.Emoji.EmojiService.StartBackgroundPreload();
         CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
         StateChanged += (_, _) =>
         {
@@ -4851,6 +4852,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _vm.MyAvatar = null;
             }
         }
+    }
+
+    public static IEnumerable<string> GetAllItemShortNames()
+    {
+        EnsureNewItemDbLoaded();
+        return sItemsByShort.Keys;
     }
 
     private static string FormatItemName(int id) => /* deine vorhandene Map-Funktion */ ResolveItemName(id, null);

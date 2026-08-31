@@ -45,9 +45,19 @@ public partial class LfgOverlay : UserControl
     /// <summary>Whether the supporters' room is open to this account. Answered by every read.</summary>
     private bool _supporterRoom;
 
+    private readonly Controls.Chat.ChatEmojiInputHelper _emojiHelper;
+
     public LfgOverlay()
     {
         InitializeComponent();
+
+        _emojiHelper = new Controls.Chat.ChatEmojiInputHelper(
+            TxtChat,
+            GlobalChatAutocompletePopup,
+            GlobalChatAutocompleteControl,
+            GlobalChatPickerPopup,
+            GlobalChatPickerControl,
+            BtnChatEmoji);
 
         Loaded += (_, __) =>
         {
@@ -1201,11 +1211,61 @@ public partial class LfgOverlay : UserControl
         _slowModeSeconds = snapshot.SlowModeSeconds;
         UpdateSlowModeUI();
 
+        if (snapshot.MaxLength > 0 && TxtChat.MaxLength != snapshot.MaxLength)
+        {
+            TxtChat.MaxLength = snapshot.MaxLength;
+            UpdateChatCharCount();
+        }
+
         if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
+    }
+
+    private void TxtChat_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        UpdateChatCharCount();
+    }
+
+    private void UpdateChatCharCount()
+    {
+        if (TxtChatCharCount == null || TxtChat == null) return;
+        int len = TxtChat.Text?.Length ?? 0;
+        int max = TxtChat.MaxLength > 0 ? TxtChat.MaxLength : 128;
+        TxtChatCharCount.Text = $"{len}/{max}";
+    }
+
+    private void UpdateChatGrouping()
+    {
+        for (int i = 0; i < _chatLines.Count; i++)
+        {
+            if (i == 0)
+            {
+                _chatLines[i].ShowHeader = true;
+                continue;
+            }
+
+            var curr = _chatLines[i];
+            var prev = _chatLines[i - 1];
+
+            if (curr.IsSystemSanction || prev.IsSystemSanction)
+            {
+                curr.ShowHeader = true;
+                continue;
+            }
+
+            // Same sender within 5 minutes collapses the redundant header (Discord/Slack style)
+            bool sameSender = (!string.IsNullOrEmpty(curr.SenderId) && string.Equals(curr.SenderId, prev.SenderId, StringComparison.Ordinal))
+                || string.Equals(curr.SenderName, prev.SenderName, StringComparison.Ordinal);
+
+            bool closeInTime = curr.SentAt.HasValue && prev.SentAt.HasValue && Math.Abs((curr.SentAt.Value - prev.SentAt.Value).TotalMinutes) < 5;
+
+            curr.ShowHeader = !(sameSender && closeInTime);
+        }
     }
 
     private void ShowChatLines()
     {
+        UpdateChatGrouping();
+
         // A fresh array each time: ItemsControl does not notice a list mutated behind its back,
         // and the room is small enough that rebinding it costs nothing worth a collection type.
         ChatList.ItemsSource = _chatLines.ToArray();
