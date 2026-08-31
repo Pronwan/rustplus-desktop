@@ -260,7 +260,7 @@
                                 <ItemsControl x:Name="ChatList" Margin="0,0,0,6">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="0,2,0,2">
+                                            <Grid Margin="{Binding GroupMargin}">
                                                 <!-- Regular Chat Bubble -->
                                                 <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
                                                     <Grid.ContextMenu>
@@ -318,7 +318,7 @@
                                                         <!-- Metadata Header (Shown only on first message of a group) -->
                                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,2"
                                                                     Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
-                                                            <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
+                                                            <TextBlock Text="{Binding SenderName}" Foreground="{Binding SenderNameBrush}"
                                                                        FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
 
                                                             <!-- Sleek Staff Role Badge -->

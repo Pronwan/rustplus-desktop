@@ -173,6 +173,13 @@ public sealed class ChatLine
 
     public bool ShowHeader { get; set; } = true;
 
+    public Thickness GroupMargin => ShowHeader ? new Thickness(0, 10, 0, 2) : new Thickness(0, 1, 0, 1);
+
+    public Brush SenderNameBrush => IsSupporter ? SupporterNameBrush : DefaultSenderBrush;
+
+    private static readonly Brush SupporterNameBrush = CreateFrozenBrush(0xFF, 0xFF, 0xD1, 0x66); // Warm gold
+    private static readonly Brush DefaultSenderBrush = CreateFrozenBrush(0xFF, 0x60, 0xCD, 0xFF);   // Crisp vibrant cyan
+
     public bool IsSystemSanction { get; init; }
 
     public SystemSanctionEvent? SanctionEvent { get; init; }
