@@ -30,7 +30,7 @@ public partial class MainWindow
 private bool _overlayToolsVisible = false;
 
     // wer ist aktuell ausgewaehlt als Zeichenwerkzeug?
-    private enum OverlayToolMode { None, Draw, Line, Arrow, Box, Circle, Text, Icon, Erase }
+    private enum OverlayToolMode { None, Draw, Line, Arrow, Box, Circle, Route, Text, Icon, Erase }
     private OverlayToolMode _currentTool = OverlayToolMode.None;
 
     // Anchor for the shape tools (line/arrow/box/circle): the first corner/centre of the drag.
@@ -485,7 +485,8 @@ private bool _overlayToolsVisible = false;
                 Tag = new OverlayTag
                 {
                     OwnerSteamId = _mySteamId,
-                    IsUserEditable = true
+                    IsUserEditable = true,
+                    GroupId = stroke.GroupId
                 }
             };
 
@@ -572,8 +573,8 @@ private bool _overlayToolsVisible = false;
 
     private void HandleOverlayMouseDown(MouseButtonEventArgs e, Point mapPos)
     {
-        // 1) DRAW
-        if (_currentTool == OverlayToolMode.Draw &&
+        // 1) DRAW / ROUTE — both draw a freehand stroke; Route simplifies it into a path on release.
+        if ((_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route) &&
             e.LeftButton == MouseButtonState.Pressed)
         {
             _isDrawingStroke = true;
@@ -732,8 +733,8 @@ private bool _overlayToolsVisible = false;
 
     private void HandleOverlayMouseMove(MouseEventArgs e, Point mapPos)
     {
-        // Stroke weiterzeichnen
-        if (_currentTool == OverlayToolMode.Draw &&
+        // Stroke weiterzeichnen (Draw + Route)
+        if ((_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route) &&
             _isDrawingStroke &&
             _currentStroke != null)
         {
@@ -791,12 +792,19 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
-        if (_currentTool == OverlayToolMode.Draw)
+        if (_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route)
         {
             _isDrawingStroke = false;
             Polyline? completed = _currentStroke;
             _currentStroke = null;
-            if (completed != null) RecordOverlayAdd(completed);
+            if (completed != null)
+            {
+                if (_currentTool == OverlayToolMode.Route)
+                    // Replace the freehand stroke with evenly-spaced direction arrows.
+                    BuildArrowRouteElements(completed);
+                else
+                    RecordOverlayAdd(completed);
+            }
             SaveOwnOverlayToJson();
         }
 
@@ -1209,6 +1217,8 @@ private bool _overlayToolsVisible = false;
             BtnToggleOverlayTools.ClearValue(Control.BackgroundProperty);
             BtnToggleOverlayTools.ClearValue(Control.BorderBrushProperty);
             HidePanHint();
+            if (LayersPanel != null) LayersPanel.Visibility = Visibility.Collapsed;
+            if (MapControlBar != null) MapControlBar.Visibility = Visibility.Visible; // restore the map HUD
             ApplyToolCursor();
         }
         else
@@ -1224,6 +1234,8 @@ private bool _overlayToolsVisible = false;
 
             BtnToggleOverlayTools.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
             BtnToggleOverlayTools.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+            // Hide the map control bar so the drawing toolbar sits on a clean surface.
+            if (MapControlBar != null) MapControlBar.Visibility = Visibility.Collapsed;
             UpdateToolButtonHighlights();
             ShowPanHintIfFirstOpen();
             ApplyToolCursor();
@@ -1298,14 +1310,23 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
-        // Clearing wipes every drawing you own — confirm first (it's not undoable).
-        if (MessageBox.Show(
-                "Clear all of your drawings and markers from the map?\nThis cannot be undone.",
-                "Clear my drawings",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning) != MessageBoxResult.Yes)
-            return;
+        // Ask with an inline popover anchored to the trash button (no modal dialog).
+        if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = true;
+    }
 
+    private void ClearConfirmCancel_Click(object sender, RoutedEventArgs e)
+    {
+        if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = false;
+    }
+
+    private void ClearConfirmYes_Click(object sender, RoutedEventArgs e)
+    {
+        if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = false;
+        ClearMyDrawings();
+    }
+
+    private void ClearMyDrawings()
+    {
         // 1. Alle meine Elemente vom Overlay entfernen
         if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
         {
@@ -2089,6 +2110,7 @@ private bool _overlayToolsVisible = false;
         switch (_currentTool)
         {
             case OverlayToolMode.Draw:
+            case OverlayToolMode.Route:
             case OverlayToolMode.Line:
             case OverlayToolMode.Arrow:
             case OverlayToolMode.Box:
@@ -2148,8 +2170,8 @@ private bool _overlayToolsVisible = false;
             string tag = btn.Tag as string ?? "";
             if (tag == activePath)
             {
-                btn.Background = new SolidColorBrush(Color.FromArgb(48, 255, 255, 255));
-                btn.BorderBrush = Brushes.DodgerBlue;
+                btn.Background = new SolidColorBrush(Color.FromArgb(0x3A, 0x60, 0xCD, 0xFF));
+                btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF));
                 btn.BorderThickness = new Thickness(2);
             }
             else
@@ -2183,8 +2205,8 @@ private bool _overlayToolsVisible = false;
                 {
                     if (isCustom && shape.Equals(activeShape, StringComparison.OrdinalIgnoreCase))
                     {
-                        btn.Background = new SolidColorBrush(Color.FromArgb(48, 255, 255, 255));
-                        btn.BorderBrush = Brushes.DodgerBlue;
+                        btn.Background = new SolidColorBrush(Color.FromArgb(0x3A, 0x60, 0xCD, 0xFF));
+                        btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF));
                         btn.BorderThickness = new Thickness(2);
                     }
                     else
@@ -2581,27 +2603,28 @@ private bool _overlayToolsVisible = false;
     }
     private void UpdateToolButtonHighlights()
     {
-        // Erstmal alle zuruecksetzen
+        // Erstmal alle zuruecksetzen (dezenter Fuellton wie der Button-Style)
         foreach (var kv in _toolButtons)
         {
             var btn = kv.Value;
-            btn.Background = Brushes.Transparent;
-            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x44, 0x44, 0x44));
+            btn.Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF));
+            btn.BorderBrush = Brushes.Transparent;
             btn.BorderThickness = new Thickness(1);
         }
 
-        // Aktiven Button highlighten (None -> Select-Button)
+        // Aktiven Button highlighten (None -> Select-Button) mit Akzentfarbe
         if (_toolButtons.TryGetValue(_currentTool, out var activeBtn))
         {
-            activeBtn.Background = new SolidColorBrush(Color.FromArgb(0x33, 0x4C, 0x8D, 0xFF)); // halbtransparentes Blau
-            activeBtn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0x8D, 0xFF));
-            activeBtn.BorderThickness = new Thickness(2);
+            activeBtn.Background = new SolidColorBrush(Color.FromArgb(0x3A, 0x60, 0xCD, 0xFF));
+            activeBtn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF));
+            activeBtn.BorderThickness = new Thickness(1.5);
         }
     }
 
     private void SaveOwnOverlayToJson()
     {
         if (_isShowingDeepSeaMap) return;
+        RefreshLayersPanel(); // keep the layers list live on any overlay change (no-op while hidden)
         try
         {
             // 1) aktuelles Overlay aus dem Canvas bauen
@@ -2719,6 +2742,7 @@ private bool _overlayToolsVisible = false;
         public string? Note;
         public List<string> Screenshots = new();
         public string? CustomIconPath;
+        public string? GroupId;    // elements sharing this id act as one layer (e.g. an arrow route)
     }
 
     // Liest lokales Overlay (mich) als OverlaySaveData
@@ -2740,7 +2764,8 @@ private bool _overlayToolsVisible = false;
                         var stroke = new SavedStroke
                         {
                             Thickness = pl.StrokeThickness,
-                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
+                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF",
+                            GroupId = meta.GroupId
                         };
 
                         foreach (var p in pl.Points)
@@ -2852,7 +2877,8 @@ private bool _overlayToolsVisible = false;
                 Tag = new OverlayTag
                 {
                     OwnerSteamId = steamId,
-                    IsUserEditable = editableIfMine
+                    IsUserEditable = editableIfMine,
+                    GroupId = stroke.GroupId
                 },
                 Visibility = _visibleOverlayOwners.Contains(steamId)
                              ? Visibility.Visible

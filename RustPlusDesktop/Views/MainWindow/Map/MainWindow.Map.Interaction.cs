@@ -250,15 +250,16 @@ public partial class MainWindow
         {
             OverlayToolMode? pick = e.Key switch
             {
-                Key.V => OverlayToolMode.None,   // Select / navigate
-                Key.P => OverlayToolMode.Draw,   // Pen
-                Key.L => OverlayToolMode.Line,
-                Key.A => OverlayToolMode.Arrow,
-                Key.R => OverlayToolMode.Box,    // Rectangle
-                Key.C => OverlayToolMode.Circle,
-                Key.T => OverlayToolMode.Text,
-                Key.M => OverlayToolMode.Icon,   // Marker
-                Key.E => OverlayToolMode.Erase,
+                Key.D1 or Key.NumPad1 => OverlayToolMode.None,   // Select / navigate
+                Key.D2 or Key.NumPad2 => OverlayToolMode.Draw,   // Pen
+                Key.D3 or Key.NumPad3 => OverlayToolMode.Line,
+                Key.D4 or Key.NumPad4 => OverlayToolMode.Arrow,
+                Key.D5 or Key.NumPad5 => OverlayToolMode.Box,    // Rectangle
+                Key.D6 or Key.NumPad6 => OverlayToolMode.Circle,
+                Key.D7 or Key.NumPad7 => OverlayToolMode.Route,
+                Key.D8 or Key.NumPad8 => OverlayToolMode.Text,
+                Key.D9 or Key.NumPad9 => OverlayToolMode.Icon,   // Marker
+                Key.D0 or Key.NumPad0 => OverlayToolMode.Erase,
                 _ => (OverlayToolMode?)null
             };
             if (pick is OverlayToolMode mode)

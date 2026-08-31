@@ -17,14 +17,15 @@ public partial class MainWindow
             ? "SELECTED  ·  Del removes  ·  double-click text to edit"
             : _currentTool switch
             {
-                OverlayToolMode.Draw => "PEN  ·  P",
-                OverlayToolMode.Line => "LINE  ·  L  ·  Shift locks angle",
-                OverlayToolMode.Arrow => "ARROW  ·  A  ·  Shift locks angle",
-                OverlayToolMode.Box => "RECTANGLE  ·  R  ·  Shift for square",
-                OverlayToolMode.Circle => "CIRCLE  ·  C  ·  Shift for circle",
-                OverlayToolMode.Text => "TEXT  ·  T",
-                OverlayToolMode.Icon => "MARKER  ·  M",
-                OverlayToolMode.Erase => "ERASER  ·  E",
+                OverlayToolMode.Draw => "PEN  ·  2",
+                OverlayToolMode.Line => "LINE  ·  3  ·  Shift locks angle",
+                OverlayToolMode.Arrow => "ARROW  ·  4  ·  Shift locks angle",
+                OverlayToolMode.Box => "RECTANGLE  ·  5  ·  Shift for square",
+                OverlayToolMode.Circle => "CIRCLE  ·  6  ·  Shift for circle",
+                OverlayToolMode.Route => "ROUTE  ·  7  ·  draw a path, arrows follow it",
+                OverlayToolMode.Text => "TEXT  ·  8",
+                OverlayToolMode.Icon => "MARKER  ·  9",
+                OverlayToolMode.Erase => "ERASER  ·  0",
                 _ => null
             };
 

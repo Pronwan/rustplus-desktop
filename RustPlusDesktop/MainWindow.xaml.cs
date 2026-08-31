@@ -873,10 +873,13 @@ public partial class MainWindow : WpfUi.FluentWindow
         { OverlayToolMode.Arrow,  ToolArrowButton },
         { OverlayToolMode.Box,    ToolBoxButton },
         { OverlayToolMode.Circle, ToolCircleButton },
+        { OverlayToolMode.Route,  ToolRouteButton },
         { OverlayToolMode.Text,   ToolTextButton },
         { OverlayToolMode.Icon,   ToolIconButton },
         { OverlayToolMode.Erase,  ToolEraseButton }
     };
+
+        InitLayersPanel();
 
         _monumentWatcher.OnOilRigTriggered += (s, data) =>
         {
