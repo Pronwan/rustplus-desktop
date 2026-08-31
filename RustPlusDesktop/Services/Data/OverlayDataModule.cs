@@ -74,6 +74,7 @@ namespace RustPlusDesk.Services.Data
                 data.Icons,
                 data.Texts,
                 data.Devices,
+                data.Routes,
                 explicitWipe
             }))));
             var inFlightKey = $"{uploadKey}:{contentHash}";
@@ -88,7 +89,8 @@ namespace RustPlusDesk.Services.Data
 
             bool isEmpty = (data.Strokes?.Count ?? 0) == 0
                         && (data.Icons?.Count   ?? 0) == 0
-                        && (data.Texts?.Count   ?? 0) == 0;
+                        && (data.Texts?.Count   ?? 0) == 0
+                        && (data.Routes?.Count  ?? 0) == 0;
 
             var icons = data.Icons ?? new List<SavedIcon>();
             var baseIcons = icons.Where(icon => IsBaseIconPath(icon.IconPath)).ToList();
@@ -119,7 +121,9 @@ namespace RustPlusDesk.Services.Data
                 Strokes = data.Strokes ?? new List<SavedStroke>(),
                 Icons = nonBaseIcons,
                 Texts = data.Texts ?? new List<SavedText>(),
-                Devices = data.Devices ?? new List<ExportedDeviceDto>()
+                Devices = data.Devices ?? new List<ExportedDeviceDto>(),
+                Routes = data.Routes ?? new List<SavedRoute>(),
+                ImportedRouteIds = data.ImportedRouteIds ?? new List<string>()
             };
 
             // Size limit check (excluding bases/screenshots)
