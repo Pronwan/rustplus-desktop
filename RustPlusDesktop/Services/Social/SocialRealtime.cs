@@ -33,6 +33,9 @@ public static class SocialRealtime
     /// <summary>A message landed in a thread. The argument is the conversation it belongs to.</summary>
     public static event Action<string>? MessageArrived;
 
+    /// <summary>Somebody would like to be on your friends list.</summary>
+    public static event Action? FriendRequestArrived;
+
     /// <summary>Somebody wants to open a thread and is waiting to be let in.</summary>
     public static event Action? RequestArrived;
 
@@ -173,6 +176,13 @@ public static class SocialRealtime
             var conversation = data["conversation_id"]?.ToString() ?? data["data"]?["conversation_id"]?.ToString();
             if (!string.IsNullOrWhiteSpace(conversation))
                 Raise(() => MessageArrived?.Invoke(conversation!));
+        }
+        else if (norm.Equals("social.friend_request", StringComparison.OrdinalIgnoreCase)
+            || norm.EndsWith("FriendRequestReceived", StringComparison.OrdinalIgnoreCase))
+        {
+            // Checked before the thread request below, whose suffix test would otherwise
+            // swallow it - "FriendRequestReceived" ends in "RequestReceived" too.
+            Raise(() => FriendRequestArrived?.Invoke());
         }
         else if (norm.EndsWith("RequestArrived", StringComparison.OrdinalIgnoreCase)
             || norm.Equals("social.request", StringComparison.OrdinalIgnoreCase))

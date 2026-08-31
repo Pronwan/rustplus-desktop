@@ -416,6 +416,133 @@ public static class SocialApi
     public static Task<bool> UnblockAsync(string userId)
         => WriteAsync($"social/blocks/{userId}", HttpMethod.Delete);
 
+    // ── Friends ─────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// The friends list and the requests on both sides.
+    ///
+    /// Empty on failure like the other reads, with Ok saying which kind of empty it is — an
+    /// account with no friends and an unreachable platform should not both offer to add one.
+    /// </summary>
+    public static async Task<Models.FriendList> GetFriendsAsync()
+    {
+        var friends = new System.Collections.Generic.List<Models.Friend>();
+        var incoming = new System.Collections.Generic.List<Models.Friend>();
+        var outgoing = new System.Collections.Generic.List<Models.Friend>();
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync("social/friends", HttpMethod.Get)
+                .ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("data", out var data)) return new Models.FriendList(friends, incoming, outgoing, false);
+
+            Fill(data, "friends", friends);
+            Fill(data, "incoming", incoming);
+            Fill(data, "outgoing", outgoing);
+
+            return new Models.FriendList(friends, incoming, outgoing);
+        }
+        catch
+        {
+            return new Models.FriendList(friends, incoming, outgoing, false);
+        }
+    }
+
+    private static void Fill(JsonElement data, string name, System.Collections.Generic.List<Models.Friend> into)
+    {
+        if (!data.TryGetProperty(name, out var rows) || rows.ValueKind != JsonValueKind.Array) return;
+
+        foreach (var row in rows.EnumerateArray())
+            into.Add(ParseFriend(row));
+    }
+
+    private static Models.Friend ParseFriend(JsonElement row)
+    {
+        var user = row.TryGetProperty("user", out var u) && u.ValueKind == JsonValueKind.Object ? u : default;
+
+        return new Models.Friend
+        {
+            Id = Str(row, "id") ?? "",
+            State = Str(row, "state") ?? "pending",
+            RequestedByMe = row.TryGetProperty("requested_by_me", out var mine) && mine.ValueKind == JsonValueKind.True,
+            UserId = Str(user, "id") ?? "",
+            DisplayName = Str(user, "display_name") ?? "—",
+            AvatarUrl = Str(user, "avatar_url"),
+            SteamId = Str(user, "steam_id"),
+            IsOnline = user.ValueKind == JsonValueKind.Object
+                && user.TryGetProperty("is_online", out var on) && on.ValueKind == JsonValueKind.True,
+            Server = Str(row, "server"),
+            TeamSize = row.TryGetProperty("team_size", out var ts) && ts.TryGetInt32(out var n) ? n : 0,
+        };
+    }
+
+    /// <summary>Why a friend request was refused, in the words the panel needs.</summary>
+    public enum FriendRequestResult
+    {
+        Ok,
+
+        /// <summary>No account carries that Steam id — or the person behind it blocked you.</summary>
+        NotFound,
+
+        /// <summary>Already asked, and still waiting for an answer.</summary>
+        Pending,
+
+        AlreadyFriends,
+
+        /// <summary>They said no. The answer stands.</summary>
+        Declined,
+
+        /// <summary>Sanctioned, or blocked in one direction or the other.</summary>
+        Refused,
+
+        Failed,
+    }
+
+    /// <summary>
+    /// Asks somebody to be a friend, with the one message that goes with it.
+    ///
+    /// Addressed by Steam id because a name is not unique, and because a search that answers with
+    /// near-matches would be a directory of everybody who plays.
+    /// </summary>
+    public static async Task<FriendRequestResult> AddFriendAsync(string steamId, string message)
+    {
+        try
+        {
+            await CloudApiClient.CallApiAsync("social/friends", HttpMethod.Post,
+                payload: new { steam_id = steamId, body = message }).ConfigureAwait(false);
+
+            return FriendRequestResult.Ok;
+        }
+        catch (CloudApiException ex)
+        {
+            var reason = ex.Reason ?? "";
+
+            if (ex.StatusCode == 404) return FriendRequestResult.NotFound;
+            if (reason.Contains("already_friends", StringComparison.Ordinal)) return FriendRequestResult.AlreadyFriends;
+            if (reason.Contains("declined", StringComparison.Ordinal)) return FriendRequestResult.Declined;
+            if (reason.Contains("pending", StringComparison.Ordinal)) return FriendRequestResult.Pending;
+            if (ex.StatusCode == 403) return FriendRequestResult.Refused;
+
+            return FriendRequestResult.Failed;
+        }
+        catch
+        {
+            return FriendRequestResult.Failed;
+        }
+    }
+
+    public static Task<bool> AcceptFriendAsync(string friendshipId)
+        => WriteAsync($"social/friends/{friendshipId}/accept", HttpMethod.Post);
+
+    public static Task<bool> DeclineFriendAsync(string friendshipId)
+        => WriteAsync($"social/friends/{friendshipId}/decline", HttpMethod.Post);
+
+    /// <summary>Removes a friend, or withdraws a request that has not been answered.</summary>
+    public static Task<bool> RemoveFriendAsync(string friendshipId)
+        => WriteAsync($"social/friends/{friendshipId}", HttpMethod.Delete);
+
     public static Task<bool> BlockAsync(string userId)
         => WriteAsync("social/blocks", HttpMethod.Post, new { user_id = userId });
 
@@ -615,6 +742,7 @@ public static class SocialApi
             IsCreatedByMe = isCreatedByMe,
             CounterpartId = Str(other, "id"),
             CounterpartName = Str(other, "display_name") ?? Str(other, "name") ?? "—",
+            CounterpartSteamId = Str(other, "steam_id"),
             AvatarUrl = Str(other, "avatar_url"),
             IsOnline = presence.ValueKind == JsonValueKind.Object
                 && presence.TryGetProperty("is_online", out var on) && on.ValueKind == JsonValueKind.True,
