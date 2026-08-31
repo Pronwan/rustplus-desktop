@@ -74,8 +74,12 @@ namespace RustPlusDesk.Services.Cloud
             if (payload != null)
                 request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
+            SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Request: {method} /api/v1/{routePath}" + (payload != null ? " (with payload)" : ""));
+
             using var response = await Http.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
+
+            SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Response: {method} /api/v1/{routePath} -> {(int)response.StatusCode} {response.StatusCode}" + (!response.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(body) ? $" ({body})" : ""));
 
             if (!response.IsSuccessStatusCode)
                 SupabaseAuthManager.HandleUpgradeRequiredResponse(body);
