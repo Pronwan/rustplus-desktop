@@ -89,6 +89,7 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.SanctionEventReceived += OnSanctionEventReceived;
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
+        SocialRealtime.FriendRequestArrived += OnFriendRequestArrived;
         SocialUnread.Changed += ShowUnread;
 
         // Whatever it already knows, before anything is loaded.
@@ -107,6 +108,7 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.SanctionEventReceived -= OnSanctionEventReceived;
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
+        SocialRealtime.FriendRequestArrived -= OnFriendRequestArrived;
         SocialUnread.Changed -= ShowUnread;
     }
 
@@ -159,6 +161,8 @@ public partial class LfgOverlay : UserControl
     }
 
     private void OnRequestArrived() => _ = LoadInboxAsync();
+
+    private void OnFriendRequestArrived() => _ = LoadFriendsAsync();
 
     private async void OnMessageArrived(string conversationId)
     {
@@ -252,6 +256,7 @@ public partial class LfgOverlay : UserControl
 
         await LoadListingsAsync().ConfigureAwait(true);
         await LoadInboxAsync().ConfigureAwait(true);
+        await LoadFriendsAsync().ConfigureAwait(true);
     }
 
     private async void Mode_Checked(object sender, RoutedEventArgs e)
@@ -1472,6 +1477,213 @@ public partial class LfgOverlay : UserControl
 
     private void BtnChatRulesCancel_Click(object sender, RoutedEventArgs e)
         => ChatRulesPanel.Visibility = Visibility.Collapsed;
+
+    // ── Friends ─────────────────────────────────────────────────────────────
+
+    private async void BtnFriends_Click(object sender, RoutedEventArgs e)
+    {
+        FriendsSheet.Visibility = Visibility.Visible;
+        FriendsNotice.Visibility = Visibility.Collapsed;
+
+        await LoadFriendsAsync().ConfigureAwait(true);
+    }
+
+    private void BtnFriendsClose_Click(object sender, RoutedEventArgs e)
+        => FriendsSheet.Visibility = Visibility.Collapsed;
+
+    /// <summary>
+    /// Reads the list and the requests on both sides.
+    ///
+    /// Called whether or not the sheet is open, because the badge on the button has to be right
+    /// before somebody opens it - the same reason the unread count moved out of the panel.
+    /// </summary>
+    private async Task LoadFriendsAsync()
+    {
+        var list = await SocialApi.GetFriendsAsync().ConfigureAwait(true);
+
+        FriendList.ItemsSource = list.Friends;
+        FriendRequestList.ItemsSource = list.Incoming;
+        FriendOutgoingList.ItemsSource = list.Outgoing;
+
+        FriendsIncomingHeading.Visibility = list.Incoming.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        FriendsOutgoingHeading.Visibility = list.Outgoing.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        // The invitation to add somebody only makes sense when there is nothing to look at, and
+        // only when we actually managed to look.
+        FriendsEmptyNotice.Visibility = list.Ok && list.Friends.Count == 0 && list.Incoming.Count == 0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        ShowFriendRequests(list.Incoming.Count);
+    }
+
+    private void ShowFriendRequests(int count)
+    {
+        FriendsBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        FriendsBadgeText.Text = count > 9 ? "9+" : count.ToString();
+    }
+
+    private async void BtnFriendAdd_Click(object sender, RoutedEventArgs e)
+    {
+        var steamId = TxtFriendSteamId.Text?.Trim() ?? "";
+        var message = TxtFriendMessage.Text?.Trim() ?? "";
+
+        if (steamId.Length == 0 || message.Length == 0) return;
+
+        BtnFriendAdd.IsEnabled = false;
+        FriendsNotice.Visibility = Visibility.Collapsed;
+
+        try
+        {
+            var result = await SocialApi.AddFriendAsync(steamId, message).ConfigureAwait(true);
+
+            if (result == SocialApi.FriendRequestResult.Ok)
+            {
+                TxtFriendSteamId.Text = "";
+                TxtFriendMessage.Text = "";
+
+                // Green rather than red: this one is not a refusal.
+                FriendsNotice.Foreground = (System.Windows.Media.Brush)FindResource("LfgMuted");
+                FriendsNotice.Text = Properties.Resources.GetString("FriendsSent");
+                FriendsNotice.Visibility = Visibility.Visible;
+
+                await LoadFriendsAsync().ConfigureAwait(true);
+                return;
+            }
+
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+
+            FriendsNotice.Text = Properties.Resources.GetString(result switch
+            {
+                SocialApi.FriendRequestResult.NotFound => "FriendsErrorNotFound",
+                SocialApi.FriendRequestResult.Pending => "FriendsErrorPending",
+                SocialApi.FriendRequestResult.AlreadyFriends => "FriendsErrorAlready",
+                SocialApi.FriendRequestResult.Declined => "FriendsErrorDeclined",
+                SocialApi.FriendRequestResult.Refused => "FriendsErrorRefused",
+                _ => "FriendsErrorFailed",
+            });
+
+            FriendsNotice.Visibility = Visibility.Visible;
+        }
+        finally
+        {
+            BtnFriendAdd.IsEnabled = true;
+        }
+    }
+
+    private async void BtnFriendAccept_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
+
+        await SocialApi.AcceptFriendAsync(friend.Id).ConfigureAwait(true);
+        await LoadFriendsAsync().ConfigureAwait(true);
+    }
+
+    private async void BtnFriendDecline_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
+
+        await SocialApi.DeclineFriendAsync(friend.Id).ConfigureAwait(true);
+        await LoadFriendsAsync().ConfigureAwait(true);
+    }
+
+    private async void BtnFriendWithdraw_Click(object sender, RoutedEventArgs e)
+        => await RemoveFriendshipAsync(sender);
+
+    private async void MenuFriendRemove_Click(object sender, RoutedEventArgs e)
+        => await RemoveFriendshipAsync(sender);
+
+    private async Task RemoveFriendshipAsync(object sender)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
+
+        await SocialApi.RemoveFriendAsync(friend.Id).ConfigureAwait(true);
+        await LoadFriendsAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>Clicking a friend writes to them, which is the thing you want nine times in ten.</summary>
+    private async void Friend_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        => await MessageFriendAsync(sender);
+
+    private async void MenuFriendMessage_Click(object sender, RoutedEventArgs e)
+        => await MessageFriendAsync(sender);
+
+    private async Task MessageFriendAsync(object sender)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
+        if (string.IsNullOrWhiteSpace(friend.UserId)) return;
+
+        FriendsSheet.Visibility = Visibility.Collapsed;
+
+        // The same route a listing takes, so there is one way into a conversation rather than two
+        // that drift apart.
+        await OpenConversationWithAsync(new Models.LfgEntry
+        {
+            UserId = friend.UserId,
+            DisplayName = friend.DisplayName,
+            AvatarUrl = friend.AvatarUrl,
+            SteamId = friend.SteamId,
+        }).ConfigureAwait(true);
+    }
+
+    private void MenuFriendProfile_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
+
+        FriendsSheet.Visibility = Visibility.Collapsed;
+
+        OpenProfileSheet(new Models.LfgEntry
+        {
+            UserId = friend.UserId,
+            DisplayName = friend.DisplayName,
+            AvatarUrl = friend.AvatarUrl,
+            SteamId = friend.SteamId,
+        });
+    }
+
+    private async void MenuFriendBlock_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
+        if (string.IsNullOrWhiteSpace(friend.UserId)) return;
+
+        // Blocking somebody you had as a friend ends the friendship too. Leaving the row behind
+        // would be a friends list containing somebody you cannot reach.
+        await SocialApi.RemoveFriendAsync(friend.Id).ConfigureAwait(true);
+        await SocialApi.BlockAsync(friend.UserId).ConfigureAwait(true);
+
+        await LoadFriendsAsync().ConfigureAwait(true);
+        await LoadInboxAsync().ConfigureAwait(true);
+    }
+
+    private void ChatAddFriend_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
+        _ = StartFriendRequestAsync(line.SteamId);
+    }
+
+    private void ThreadAddFriend_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
+        _ = StartFriendRequestAsync(thread.CounterpartSteamId);
+    }
+
+    /// <summary>
+    /// Opens the friends sheet with the id already filled in, so the one message they get is all
+    /// that is left to write. Somebody who has no Steam id on their account cannot be added, and
+    /// the empty field says so more plainly than a refusal afterwards would.
+    /// </summary>
+    private async Task StartFriendRequestAsync(string? steamId)
+    {
+        FriendsSheet.Visibility = Visibility.Visible;
+        FriendsNotice.Visibility = Visibility.Collapsed;
+
+        TxtFriendSteamId.Text = steamId ?? "";
+        TxtFriendMessage.Text = "";
+        TxtFriendMessage.Focus();
+
+        await LoadFriendsAsync().ConfigureAwait(true);
+    }
 
     // ── The block list ──────────────────────────────────────────────────────
 

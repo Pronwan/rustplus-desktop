@@ -15,6 +15,9 @@ public sealed class SocialThread
     /// <summary>Whose thread this is, from your side — never yourself.</summary>
     public string CounterpartName { get; init; } = "—";
 
+    /// <summary>Needed to offer them as a friend, which is addressed by Steam id.</summary>
+    public string? CounterpartSteamId { get; init; }
+
     public string? CounterpartId { get; init; }
 
     public string? AvatarUrl { get; init; }
