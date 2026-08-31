@@ -6277,4 +6277,22 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ProfileVacClean" xml:space="preserve">
     <value>En règle (0 bannissement)</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>Chat des soutiens</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>Boîte de réception</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>Les demandes concernant vos annonces LFG et LFM arrivent ici, ainsi que les réponses des personnes que vous avez contactées.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>Un salon pour les soutiens</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>Un salon plus calme, sans le passage du salon public. Il s’ouvre à toute personne qui soutient Rust+ Desktop, et le reste tant que vous le faites.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Soutenir Rust+ Desktop</value>
+  </data>
 </root>

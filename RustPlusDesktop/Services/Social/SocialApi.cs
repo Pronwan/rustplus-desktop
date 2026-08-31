@@ -60,6 +60,14 @@ public sealed record SocialSettings(
 /// "we could not reach the cloud" and "you have not set anything" look identical to a user, and
 /// both mean the panel should not pretend to know.
 /// </summary>
+/// <summary>The two rooms, named as the platform names them.</summary>
+public static class ChatRooms
+{
+    public const string Public = "public";
+
+    public const string Supporter = "supporter";
+}
+
 public static class SocialApi
 {
     private static SocialSettings? _cachedSettings;
@@ -424,18 +432,20 @@ public static class SocialApi
     /// which is what a live nudge asks for: the server still decides what the reader may see,
     /// so blocks and sanctions keep working without the client holding a block list of its own.
     /// </summary>
-    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null, int limit = 50)
+    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null, int limit = 50, string room = ChatRooms.Public)
     {
         var lines = new System.Collections.Generic.List<Models.ChatLine>();
         Models.ChatSanction? sanction = null;
         var slowMode = 0;
         var ok = false;
+        var supporterRoom = false;
 
         try
         {
             var query = new System.Collections.Generic.Dictionary<string, string>
             {
-                ["limit"] = limit.ToString()
+                ["limit"] = limit.ToString(),
+                ["room"] = room,
             };
             if (!string.IsNullOrWhiteSpace(since))
             {
@@ -508,6 +518,9 @@ public static class SocialApi
                         Date(s2, "expires_at"));
                 }
 
+                supporterRoom = meta.TryGetProperty("supporter_room", out var sr)
+                    && sr.ValueKind == JsonValueKind.True;
+
                 if (meta.TryGetProperty("slow_mode", out var sm) && sm.TryGetInt32(out var smVal))
                 {
                     slowMode = smVal;
@@ -525,7 +538,7 @@ public static class SocialApi
             // Deliberately quiet.
         }
 
-        return new Models.ChatSnapshot(lines, sanction, slowMode, ok);
+        return new Models.ChatSnapshot(lines, sanction, slowMode, ok, supporterRoom);
     }
 
     /// <summary>
@@ -535,12 +548,12 @@ public static class SocialApi
     /// waiting, one by rewriting the message. Collapsing them into "it did not work" leaves the
     /// user guessing which, and the guess is usually "the app is broken".
     /// </summary>
-    public static async Task<ChatPostResult> PostChatAsync(string body)
+    public static async Task<ChatPostResult> PostChatAsync(string body, string room = ChatRooms.Public)
     {
         try
         {
             bool isPremium = Auth.SupabaseAuthManager.IsPremium;
-            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, is_supporter = isPremium, is_premium = isPremium })
+            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, room, is_supporter = isPremium, is_premium = isPremium })
                 .ConfigureAwait(false);
 
             return ChatPostResult.Ok;

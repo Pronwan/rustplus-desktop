@@ -6318,4 +6318,22 @@ You can find more information on the server&apos;s official website:
   <data name="ChatScrollToBottom" xml:space="preserve">
     <value>Jump to latest</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>Supporter chat</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>Inbox</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>Requests about your LFG and LFM listings land here, along with replies to anyone you wrote to.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>A room for supporters</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>A quieter room, without the traffic of the public one. It opens for anyone supporting Rust+ Desktop, and stays open for as long as you do.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Support Rust+ Desktop</value>
+  </data>
 </root>

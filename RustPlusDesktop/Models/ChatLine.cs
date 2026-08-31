@@ -267,5 +267,8 @@ public sealed record ChatSnapshot(
     List<ChatLine> Lines,
     ChatSanction? Sanction,
     int SlowModeSeconds = 0,
-    bool Ok = true);
+    bool Ok = true,
+    // Whether this account may use the supporters' room. Carried on every read of either room,
+    // so the tab knows what to draw without a request of its own.
+    bool SupporterRoom = false);
 

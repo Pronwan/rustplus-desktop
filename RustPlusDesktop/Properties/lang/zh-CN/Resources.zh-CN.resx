@@ -6025,4 +6025,22 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ProfileVacClean" xml:space="preserve">
     <value>信誉良好（0 次封禁）</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>赞助者聊天</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>收件箱</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>关于你的 LFG 和 LFM 招募帖的申请会出现在这里，你主动联系过的人的回复也在这里。</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>赞助者专属聊天室</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>一个更安静的房间，没有公共聊天室的喧闹。只要你在赞助 Rust+ Desktop，这里就一直为你开着。</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>赞助 Rust+ Desktop</value>
+  </data>
 </root>

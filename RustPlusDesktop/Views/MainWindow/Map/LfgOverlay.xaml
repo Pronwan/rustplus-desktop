@@ -89,6 +89,33 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!--
+            The supporters tab. The same shape as the others so it does not shout, in gold so it
+            is clearly not the same kind of room.
+        -->
+        <Style x:Key="SocialTabGold" TargetType="RadioButton" BasedOn="{StaticResource SocialTab}">
+            <Setter Property="Foreground" Value="#FFB99A5B" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Tab" Background="Transparent" Padding="2,0,2,7"
+                                BorderBrush="Transparent" BorderThickness="0,0,0,2">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#FFF0D08A" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Tab" Property="BorderBrush" Value="#FFD9A22B" />
+                                <Setter Property="Foreground" Value="#FFF0D08A" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="SocialDotRadio" TargetType="RadioButton">
             <Setter Property="Foreground" Value="{StaticResource LfgText}" />
             <Setter Property="FontSize" Value="11.5" />
@@ -180,9 +207,32 @@
                         <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
                                      Style="{StaticResource SocialTab}" Margin="0,0,18,0"
                                      Content="{DynamicResource SocialSectionChat}" Checked="Section_Checked" />
+                        <!--
+                            The supporters' room. Gold rather than the accent, because it is the
+                            one tab that says something about the person reading it rather than
+                            about what is behind it.
+                        -->
+                        <RadioButton x:Name="SecSupporter" GroupName="SocialSection"
+                                     Style="{StaticResource SocialTabGold}" Margin="0,0,18,0"
+                                     Content="{DynamicResource SocialSectionSupporter}" Checked="Section_Checked" />
                         <RadioButton x:Name="SecLfg" GroupName="SocialSection"
-                                     Style="{StaticResource SocialTab}"
+                                     Style="{StaticResource SocialTab}" Margin="0,0,18,0"
                                      Content="{DynamicResource SocialSectionLfg}" Checked="Section_Checked" />
+
+                        <!--  Inbox, with the unread count on it when there is one.  -->
+                        <Grid>
+                            <RadioButton x:Name="SecInbox" GroupName="SocialSection"
+                                         Style="{StaticResource SocialTab}"
+                                         Content="{DynamicResource SocialSectionInbox}" Checked="Section_Checked" />
+                            <Border x:Name="InboxTabBadge" Visibility="Collapsed"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Margin="0,-4,-14,0" MinWidth="16" Height="16" CornerRadius="8"
+                                    Background="#FFE5484D" Padding="4,0">
+                                <TextBlock x:Name="InboxTabBadgeText" Foreground="White" FontSize="9.5"
+                                           FontWeight="Bold" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
                     </StackPanel>
                 </Border>
 
@@ -457,6 +507,23 @@
                     </StackPanel>
                 </Grid>
 
+                <!--
+                    What somebody outside the supporters' room sees in place of it. The tab is
+                    drawn for everybody on purpose: hiding it would hide what supporting buys.
+                -->
+                <Border x:Name="SupporterGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
+                        Background="#14FFFFFF" CornerRadius="6" BorderBrush="#55D9A22B" BorderThickness="1" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource SupporterGateTitle}" Foreground="#FFF0D08A"
+                                   FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <TextBlock Text="{DynamicResource SupporterGateBody}" Foreground="{StaticResource LfgMuted}"
+                                   FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" />
+                        <ui:Button x:Name="BtnSupporterOffer" Click="BtnSupporterOffer_Click" Appearance="Primary"
+                                   HorizontalAlignment="Left" Margin="0,14,0,0"
+                                   Content="{DynamicResource SupporterGateAction}" />
+                    </StackPanel>
+                </Border>
+
                 <ScrollViewer x:Name="LfgSection" Grid.Row="1" Visibility="Collapsed"
                               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <StackPanel Margin="0,0,4,0">
@@ -708,15 +775,26 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,10,0,14" />
-
-                    <!--  Inbox: the thread list, or one open thread in its place  -->
+                    </StackPanel>
+                </ScrollViewer>
+                <!--
+                    The inbox. Same mechanism as before, one level up: requests and replies are
+                    not a footnote to the board they came from, and burying them under a list
+                    meant scrolling past forty strangers to reach the one who wrote to you.
+                -->
+                <ScrollViewer x:Name="InboxSection" Grid.Row="1" Visibility="Collapsed"
+                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,4,0">
                     <Grid x:Name="InboxRoot">
                         <StackPanel x:Name="ThreadListView">
                             <TextBlock Text="{DynamicResource LfgInbox}" Style="{StaticResource LfgSectionHeading}" />
 
                             <TextBlock x:Name="InboxEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
                                        Text="{DynamicResource LfgInboxEmpty}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+                            <!--  Said once, while there is nothing to read instead.  -->
+                            <TextBlock x:Name="InboxHint" Visibility="Collapsed" Margin="0,0,0,10"
+                                       Text="{DynamicResource SocialInboxHint}" TextWrapping="Wrap"
                                        Foreground="{StaticResource LfgMuted}" FontSize="11" />
 
                             <ItemsControl x:Name="ThreadList">

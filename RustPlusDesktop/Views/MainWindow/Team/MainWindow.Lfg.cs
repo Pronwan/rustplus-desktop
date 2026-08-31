@@ -21,18 +21,7 @@ public partial class MainWindow
             return;
         }
 
-        if (!_lfgWired)
-        {
-            LfgPanel.CloseRequested += (_, __) => LfgPanel.Visibility = Visibility.Collapsed;
-            LfgPanel.CloudSetupRequested += (_, __) =>
-            {
-                // Same dialog the cloud icon under the device list opens, so there is one place
-                // that explains cloud rather than two that drift apart.
-                LfgPanel.Visibility = Visibility.Collapsed;
-                new Views.Windows.CloudAccountWindow(this).ShowDialog();
-            };
-            _lfgWired = true;
-        }
+        EnsureLfgWired();
 
         LfgPanel.Refresh();
         LfgPanel.Visibility = Visibility.Visible;
@@ -44,6 +33,46 @@ public partial class MainWindow
     /// rather than two that each hold half the messages.
     /// </summary>
     private void BtnSocial_Click(object sender, RoutedEventArgs e) => BtnLfg_Click(sender, e);
+
+    /// <summary>
+    /// Hooks the panel up, once.
+    ///
+    /// Called at start rather than only on first open, because the unread count belongs on the
+    /// rail before anybody has opened anything - a badge that only appears after you have already
+    /// looked is telling you what you know.
+    /// </summary>
+    private void EnsureLfgWired()
+    {
+        if (_lfgWired) return;
+        _lfgWired = true;
+
+        LfgPanel.CloseRequested += (_, __) => LfgPanel.Visibility = Visibility.Collapsed;
+
+        LfgPanel.CloudSetupRequested += (_, __) =>
+        {
+            // Same dialog the cloud icon under the device list opens, so there is one place that
+            // explains cloud rather than two that drift apart.
+            LfgPanel.Visibility = Visibility.Collapsed;
+            new Views.Windows.CloudAccountWindow(this).ShowDialog();
+        };
+
+        LfgPanel.SupporterOfferRequested += (_, __) =>
+        {
+            // The same window every other premium feature opens. A second explanation of what
+            // supporting buys would be a second thing to keep true.
+            LfgPanel.Visibility = Visibility.Collapsed;
+            ShowPremiumLimitDialog(Properties.Resources.GetString("SupporterGateBody"));
+        };
+
+        LfgPanel.UnreadChanged += (_, count) => ShowSocialUnread(count);
+    }
+
+    /// <summary>The same number the Inbox tab carries, on the rail.</summary>
+    private void ShowSocialUnread(int count)
+    {
+        RailSocialBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        RailSocialBadgeText.Text = count > 9 ? "9+" : count.ToString();
+    }
 
     /// <summary>
     /// Shows or hides the Community entry according to whether the platform has opened the layer
@@ -58,6 +87,8 @@ public partial class MainWindow
     /// </summary>
     public async Task RefreshSocialAvailabilityAsync()
     {
+        EnsureLfgWired();
+
         if (!Services.Cloud.CloudAuthManager.IsAuthenticated)
         {
             SetSocialRailVisible(true);
@@ -77,6 +108,9 @@ public partial class MainWindow
         // the pin/settings pair survives the button disappearing from between them.
         RailSocialButton.Visibility = state;
         RailSocialDivider.Visibility = state;
+
+        // The count goes with the button it belongs to.
+        if (!visible) RailSocialBadge.Visibility = Visibility.Collapsed;
 
         if (!visible) LfgPanel.Visibility = Visibility.Collapsed;
     }
