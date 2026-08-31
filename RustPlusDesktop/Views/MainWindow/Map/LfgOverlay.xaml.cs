@@ -297,6 +297,9 @@ public partial class LfgOverlay : UserControl
 
         PreviewDisplayName.Text = displayName;
 
+        var isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
+        PreviewSupporterRing.Visibility = isPremium ? Visibility.Visible : Visibility.Collapsed;
+
         var avatarUrl = profile?.AvatarUrl;
         if (!string.IsNullOrEmpty(avatarUrl))
         {
