@@ -792,6 +792,7 @@ public static class TrackingService
             // A language change only modifies settings. Rewriting the complete
             // tracked-player history here caused an avoidable UI-thread pause.
             SaveSettings();
+            _ = Social.SocialApi.UpdateActiveListingLanguageAsync(value);
         }
     }
 

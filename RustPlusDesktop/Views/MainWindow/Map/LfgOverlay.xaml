@@ -389,6 +389,9 @@
                                         <Border Background="#334CC38A" CornerRadius="3" Padding="4,1" Margin="6,0,0,0">
                                             <TextBlock x:Name="PreviewModeBadge" FontSize="9.5" FontWeight="SemiBold" Foreground="#FF4CC38A" />
                                         </Border>
+                                        <Border x:Name="PreviewServerBadge" Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" Visibility="Collapsed">
+                                            <TextBlock x:Name="PreviewServerName" FontSize="9.5" Foreground="{StaticResource LfgMuted}" TextTrimming="CharacterEllipsis" MaxWidth="160" />
+                                        </Border>
                                     </StackPanel>
                                     <TextBlock x:Name="PreviewBlurb" Foreground="{StaticResource LfgMuted}"
                                                FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
@@ -476,6 +479,11 @@
                                                 <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
                                                            FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
                                                            TextTrimming="CharacterEllipsis" />
+                                                <Border Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                        Visibility="{Binding HasServer, Converter={StaticResource BoolToVis}}">
+                                                    <TextBlock Text="{Binding ServerName}" FontSize="9.5" Foreground="{StaticResource LfgMuted}"
+                                                               TextTrimming="CharacterEllipsis" MaxWidth="160" />
+                                                </Border>
                                             </StackPanel>
                                             <TextBlock Text="{Binding Blurb}" Foreground="{StaticResource LfgMuted}"
                                                        FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
