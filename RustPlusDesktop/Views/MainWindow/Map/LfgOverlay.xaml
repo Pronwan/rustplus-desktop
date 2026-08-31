@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+             xmlns:chat="clr-namespace:RustPlusDesk.Controls.Chat"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="420"
              Background="Transparent">
@@ -330,8 +331,8 @@
                                                             <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
                                                                        FontSize="9.5" Margin="7,1,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
-                                                        <TextBlock Text="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
-                                                                   Foreground="{StaticResource LfgText}" FontSize="12" />
+                                                        <chat:RichChatTextBlock RawText="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
+                                                                                Foreground="{StaticResource LfgText}" FontSize="12" />
                                                     </StackPanel>
                                                 </Grid>
 
@@ -495,13 +496,40 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <ui:TextBox Grid.Column="0" x:Name="TxtChat" MaxLength="500"
                                             PlaceholderText="{DynamicResource ChatPlaceholder}"
                                             KeyDown="TxtChat_KeyDown" />
-                                <ui:Button Grid.Column="1" x:Name="BtnChatSend" Click="BtnChatSend_Click"
-                                           Appearance="Primary" Margin="8,0,0,0"
+                                <ui:Button Grid.Column="1" x:Name="BtnChatEmoji"
+                                           Appearance="Secondary" Margin="6,0,0,0" Padding="8,4"
+                                           ToolTip="Insert Emoji or Rust Item">
+                                    <TextBlock Text="😊" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </ui:Button>
+                                <ui:Button Grid.Column="2" x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                           Appearance="Primary" Margin="6,0,0,0"
                                            Content="{DynamicResource LfgSend}" />
+
+                                <!-- Autocomplete Popup -->
+                                <Popup x:Name="GlobalChatAutocompletePopup"
+                                       PlacementTarget="{Binding ElementName=TxtChat}"
+                                       Placement="Top"
+                                       StaysOpen="False"
+                                       AllowsTransparency="True"
+                                       VerticalOffset="-4">
+                                    <chat:ChatEmojiAutocompletePopup x:Name="GlobalChatAutocompleteControl" />
+                                </Popup>
+
+                                <!-- Emoji & Item Picker Popup -->
+                                <Popup x:Name="GlobalChatPickerPopup"
+                                       PlacementTarget="{Binding ElementName=BtnChatEmoji}"
+                                       Placement="Top"
+                                       HorizontalOffset="-210"
+                                       VerticalOffset="-6"
+                                       StaysOpen="False"
+                                       AllowsTransparency="True">
+                                    <chat:ChatEmojiPickerPopup x:Name="GlobalChatPickerControl" />
+                                </Popup>
                             </Grid>
                         </StackPanel>
                     </StackPanel>

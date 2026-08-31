@@ -45,9 +45,19 @@ public partial class LfgOverlay : UserControl
     /// <summary>Whether the supporters' room is open to this account. Answered by every read.</summary>
     private bool _supporterRoom;
 
+    private readonly Controls.Chat.ChatEmojiInputHelper _emojiHelper;
+
     public LfgOverlay()
     {
         InitializeComponent();
+
+        _emojiHelper = new Controls.Chat.ChatEmojiInputHelper(
+            TxtChat,
+            GlobalChatAutocompletePopup,
+            GlobalChatAutocompleteControl,
+            GlobalChatPickerPopup,
+            GlobalChatPickerControl,
+            BtnChatEmoji);
 
         Loaded += (_, __) =>
         {

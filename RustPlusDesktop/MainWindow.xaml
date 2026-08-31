@@ -15,6 +15,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:views="clr-namespace:RustPlusDesk.Views"
+    xmlns:chat="clr-namespace:RustPlusDesk.Controls.Chat"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     Title="{DynamicResource AppTitle}"
     Width="1750"
@@ -8383,7 +8384,7 @@
 
                                                                     <!-- Message Bubble -->
                                                                     <Border x:Name="MsgBubble" Padding="10,6" CornerRadius="2,12,12,12" BorderThickness="1" Background="#1C2028" BorderBrush="#2A303C" HorizontalAlignment="Left" MaxWidth="340">
-                                                                        <TextBlock Foreground="{DynamicResource TextPrimary}" Text="{Binding DisplayText}" TextWrapping="Wrap" FontSize="11.5" LineHeight="16" />
+                                                                        <chat:RichChatTextBlock Foreground="{DynamicResource TextPrimary}" RawText="{Binding DisplayText}" TextWrapping="Wrap" FontSize="11.5" LineHeight="16" />
                                                                     </Border>
                                                                 </StackPanel>
 
@@ -8522,6 +8523,7 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
 
                                                     <ui:TextBox
@@ -8536,7 +8538,20 @@
                                                         Height="34"
                                                         FontSize="11.5" />
 
-                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                    <!-- Emoji Picker Button -->
+                                                    <ui:Button
+                                                        x:Name="BtnTeamEmoji"
+                                                        Grid.Column="1"
+                                                        Height="34"
+                                                        Margin="4,0,0,0"
+                                                        Padding="8,0"
+                                                        Appearance="Secondary"
+                                                        VerticalAlignment="Center"
+                                                        ToolTip="Insert Emoji or Rust Item">
+                                                        <TextBlock Text="😊" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </ui:Button>
+
+                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="6,0,0,0" VerticalAlignment="Center">
                                                         <!-- Character Counter -->
                                                         <TextBlock
                                                             x:Name="TxtChatCharCount"
@@ -8558,6 +8573,27 @@
                                                             Icon="{ui:SymbolIcon Symbol=Send20}"
                                                             Appearance="Primary" />
                                                     </StackPanel>
+
+                                                    <!-- Autocomplete Popup -->
+                                                    <Popup x:Name="TeamChatAutocompletePopup"
+                                                           PlacementTarget="{Binding ElementName=TxtChatInput}"
+                                                           Placement="Top"
+                                                           StaysOpen="False"
+                                                           AllowsTransparency="True"
+                                                           VerticalOffset="-4">
+                                                        <chat:ChatEmojiAutocompletePopup x:Name="TeamChatAutocompleteControl" />
+                                                    </Popup>
+
+                                                    <!-- Emoji & Item Picker Popup -->
+                                                    <Popup x:Name="TeamChatPickerPopup"
+                                                           PlacementTarget="{Binding ElementName=BtnTeamEmoji}"
+                                                           Placement="Top"
+                                                           HorizontalOffset="-210"
+                                                           VerticalOffset="-6"
+                                                           StaysOpen="False"
+                                                           AllowsTransparency="True">
+                                                        <chat:ChatEmojiPickerPopup x:Name="TeamChatPickerControl" />
+                                                    </Popup>
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
