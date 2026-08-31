@@ -782,11 +782,15 @@
                     not a footnote to the board they came from, and burying them under a list
                     meant scrolling past forty strangers to reach the one who wrote to you.
                 -->
-                <ScrollViewer x:Name="InboxSection" Grid.Row="1" Visibility="Collapsed"
-                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Margin="0,0,4,0">
-                    <Grid x:Name="InboxRoot">
-                        <StackPanel x:Name="ThreadListView">
+                <!--
+                    The inbox holds two views in the same place: the list of threads, and one
+                    thread opened. Both scroll on the inside rather than as a whole, so the way
+                    back and the reply box stay where they were put.
+                -->
+                <Grid x:Name="InboxSection" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer x:Name="ThreadListView"
+                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="0,0,4,0">
                             <TextBlock Text="{DynamicResource LfgInbox}" Style="{StaticResource LfgSectionHeading}" />
 
                             <TextBlock x:Name="InboxEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
@@ -856,10 +860,18 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
+                    </ScrollViewer>
 
-                        <!--  One open thread  -->
-                        <StackPanel x:Name="ThreadView" Visibility="Collapsed">
-                            <Grid Margin="0,0,0,10">
+                    <!--  One open thread  -->
+                    <Grid x:Name="ThreadView" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
@@ -872,6 +884,8 @@
                                            Foreground="{StaticResource LfgText}" FontSize="13" FontWeight="SemiBold"
                                            TextTrimming="CharacterEllipsis" />
                             </Grid>
+
+                            <StackPanel Grid.Row="1">
 
                             <!--  A request you have not answered: the decision comes before the reply box  -->
                             <Border x:Name="PendingBar" Visibility="Collapsed" Margin="0,0,0,10"
@@ -897,6 +911,11 @@
                                        Text="{DynamicResource LfgDeclinedHint}" TextWrapping="Wrap"
                                        Foreground="{StaticResource LfgMuted}" FontSize="11" />
 
+                            </StackPanel>
+
+                            <!--  The only part that scrolls.  -->
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled" Margin="0,0,4,0">
                             <ItemsControl x:Name="MessageList" Margin="0,0,0,10">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -912,8 +931,9 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            </ScrollViewer>
 
-                            <Grid x:Name="ReplyRow">
+                            <Grid x:Name="ReplyRow" Grid.Row="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
@@ -924,10 +944,8 @@
                                 <ui:Button Grid.Column="1" x:Name="BtnSend" Click="BtnSend_Click" Appearance="Primary"
                                            Margin="8,0,0,0" Content="{DynamicResource LfgSend}" />
                             </Grid>
-                        </StackPanel>
                     </Grid>
-                    </StackPanel>
-                </ScrollViewer>
+                </Grid>
             </Grid>
 
             <!--

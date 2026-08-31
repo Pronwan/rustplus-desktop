@@ -79,6 +79,10 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.SanctionEventReceived += OnSanctionEventReceived;
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
+        SocialUnread.Changed += ShowUnread;
+
+        // Whatever it already knows, before anything is loaded.
+        ShowUnread(SocialUnread.Count);
     }
 
     private void DetachRealtime()
@@ -93,6 +97,7 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.SanctionEventReceived -= OnSanctionEventReceived;
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
+        SocialUnread.Changed -= ShowUnread;
     }
 
     private void OnChatChanged() => _ = CatchUpChatAsync();
@@ -676,31 +681,20 @@ public partial class LfgOverlay : UserControl
         InboxEmptyNotice.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
         InboxHint.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
 
-        ShowUnread(threads.Sum(t => t.UnreadCount));
+        // Reported rather than counted here: the rail carries the same number and needs it even
+        // when this panel has never been opened.
+        SocialUnread.Report(threads.Sum(t => t.UnreadCount));
     }
 
-    /// <summary>How many messages are waiting. Raised so the rail can carry the same number.</summary>
-    public event EventHandler<int>? UnreadChanged;
-
-    private int _unread = -1;
-
     /// <summary>
-    /// Puts the count on the Inbox tab, and hands it on.
+    /// Puts the count on the Inbox tab.
     ///
-    /// Only when it changes: the inbox is reloaded on every push, and re-raising an unchanged
-    /// number would have the rail redrawing itself all evening in a busy conversation.
+    /// Past a certain point the exact number stops being the useful part, so it stops counting.
     /// </summary>
     private void ShowUnread(int count)
     {
-        if (count == _unread) return;
-        _unread = count;
-
         InboxTabBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
-
-        // Past a certain point the exact number stops being the useful part.
         InboxTabBadgeText.Text = count > 99 ? "99+" : count.ToString();
-
-        UnreadChanged?.Invoke(this, count);
     }
 
     private async void Thread_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
