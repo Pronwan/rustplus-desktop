@@ -21,6 +21,8 @@
             <ui:TextBox x:Name="InputTextBox"
                         Height="36"
                         Padding="10,0,38,0"
+                        ClearButtonEnabled="False"
+                        ClipToBounds="True"
                         MaxLength="{Binding MaxLength, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         PlaceholderText="{Binding PlaceholderText, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}"

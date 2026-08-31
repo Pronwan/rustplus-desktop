@@ -8537,6 +8537,8 @@
                                                             MaxLength="128"
                                                             Height="36"
                                                             Padding="10,0,38,0"
+                                                            ClearButtonEnabled="False"
+                                                            ClipToBounds="True"
                                                             FontSize="12" />
 
                                                         <!-- Seamless Embedded Emoji Button -->

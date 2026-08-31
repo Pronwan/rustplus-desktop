@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,13 +11,14 @@ namespace RustPlusDesk.Controls.Chat;
 public class EmojiInputAdorner : Adorner
 {
     private readonly TextBox _textBox;
-    private static readonly SolidColorBrush s_dimBackgroundBrush = new(Color.FromArgb(0x66, 0x10, 0x15, 0x1C));
-    private static readonly SolidColorBrush s_dimTextCoverBrush = new(Color.FromArgb(0x40, 0x00, 0x00, 0x00));
+    private static readonly SolidColorBrush s_pillBackgroundBrush = new(Color.FromArgb(0xF2, 0x1A, 0x22, 0x2E));
+    private static readonly Pen s_pillBorderPen = new(new SolidColorBrush(Color.FromArgb(0x4D, 0xFF, 0xFF, 0xFF)), 0.8);
 
     static EmojiInputAdorner()
     {
-        s_dimBackgroundBrush.Freeze();
-        s_dimTextCoverBrush.Freeze();
+        s_pillBackgroundBrush.Freeze();
+        s_pillBorderPen.Brush.Freeze();
+        s_pillBorderPen.Freeze();
     }
 
     public EmojiInputAdorner(TextBox textBox) : base(textBox)
@@ -38,48 +38,66 @@ public class EmojiInputAdorner : Adorner
         var text = _textBox.Text;
         if (string.IsNullOrEmpty(text)) return;
 
-        var matches = EmojiService.EmojiTokenRegex.Matches(text);
-        if (matches.Count == 0) return;
+        double maxWidth = Math.Max(0, _textBox.ActualWidth - 36);
+        double maxHeight = _textBox.ActualHeight;
+        if (maxWidth <= 0 || maxHeight <= 0) return;
 
-        foreach (Match match in matches)
+        // Clip strictly within the text box typing viewport so pills never bleed past the emoji button
+        dc.PushClip(new RectangleGeometry(new Rect(0, 0, maxWidth, maxHeight)));
+        try
         {
-            var token = match.Groups["token"].Value;
-            var entry = EmojiService.ResolveEmojiOrItem(token);
-            if (entry == null || entry.Icon == null) continue;
+            var matches = EmojiService.EmojiTokenRegex.Matches(text);
+            if (matches.Count == 0) return;
 
-            int startIndex = match.Index;
-            int endIndex = match.Index + match.Length;
-
-            try
+            foreach (Match match in matches)
             {
-                var startRect = _textBox.GetRectFromCharacterIndex(startIndex, false);
-                var endRect = _textBox.GetRectFromCharacterIndex(Math.Max(0, endIndex - 1), true);
+                var token = match.Groups["token"].Value;
+                var entry = EmojiService.ResolveEmojiOrItem(token);
+                if (entry == null) continue;
 
-                if (startRect.IsEmpty || endRect.IsEmpty) continue;
+                var icon = entry.Icon ?? EmojiService.GetIcon(entry);
+                if (icon == null) continue;
 
-                double x = startRect.Left;
-                double y = startRect.Top;
-                double width = Math.Max(12, endRect.Right - startRect.Left);
-                double height = Math.Max(14, startRect.Height);
+                int startIndex = match.Index;
+                int endIndex = match.Index + match.Length;
 
-                var tagRect = new Rect(x - 1, y, width + 2, height);
+                try
+                {
+                    var startRect = _textBox.GetRectFromCharacterIndex(startIndex, false);
+                    var endRect = _textBox.GetRectFromCharacterIndex(Math.Max(0, endIndex - 1), true);
 
-                // 1. Darken and dim the text of the matched token
-                dc.DrawRoundedRectangle(s_dimBackgroundBrush, null, tagRect, 3, 3);
-                dc.DrawRoundedRectangle(s_dimTextCoverBrush, null, tagRect, 3, 3);
+                    if (startRect.IsEmpty || endRect.IsEmpty) continue;
 
-                // 2. Draw the emoji icon directly on/aligned with the token
-                double iconSize = Math.Min(height - 2, 18);
-                double iconX = x + 2;
-                double iconY = y + (height - iconSize) / 2.0;
+                    double x = startRect.Left;
+                    double y = startRect.Top;
+                    double width = Math.Max(16, endRect.Right - startRect.Left);
+                    double height = Math.Max(16, startRect.Height);
 
-                var iconRect = new Rect(iconX, iconY, iconSize, iconSize);
-                dc.DrawImage(entry.Icon, iconRect);
+                    // Skip if completely scrolled outside viewport
+                    if (x + width < 0 || x > maxWidth) continue;
+
+                    var tagRect = new Rect(x - 1, y + 1, width + 2, Math.Max(12, height - 2));
+
+                    // 1. Draw solid sleek pill background covering the raw text tag
+                    dc.DrawRoundedRectangle(s_pillBackgroundBrush, s_pillBorderPen, tagRect, 4, 4);
+
+                    // 2. Draw the emoji icon centered inside the pill
+                    double iconSize = Math.Min(height - 2, 20);
+                    double iconX = x + (width - iconSize) / 2.0;
+                    double iconY = y + (height - iconSize) / 2.0;
+
+                    var iconRect = new Rect(iconX, iconY, iconSize, iconSize);
+                    dc.DrawImage(icon, iconRect);
+                }
+                catch
+                {
+                    // Ignore layout race conditions while typing
+                }
             }
-            catch
-            {
-                // Ignore layout race conditions while typing
-            }
+        }
+        finally
+        {
+            dc.Pop();
         }
     }
 }

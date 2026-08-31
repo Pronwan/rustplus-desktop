@@ -18,6 +18,7 @@ public class ChatEmojiInputHelper
     private readonly ChatEmojiPickerPopup _pickerControl;
     private readonly Button? _pickerButton;
 
+    private EmojiInputAdorner? _emojiAdorner;
     private int _autocompleteStartIndex = -1;
 
     public ChatEmojiInputHelper(
@@ -35,7 +36,9 @@ public class ChatEmojiInputHelper
         _pickerControl = pickerControl;
         _pickerButton = pickerButton;
 
-        _textBox.Loaded += TextBox_Loaded;
+        _textBox.Loaded += (s, e) => EnsureAdornerAttached();
+        _textBox.GotFocus += (s, e) => EnsureAdornerAttached();
+        _textBox.IsVisibleChanged += (s, e) => EnsureAdornerAttached();
         _textBox.PreviewKeyDown += TextBox_PreviewKeyDown;
         _textBox.TextChanged += TextBox_TextChanged;
         _textBox.LostFocus += TextBox_LostFocus;
@@ -47,14 +50,19 @@ public class ChatEmojiInputHelper
         {
             _pickerButton.Click += PickerButton_Click;
         }
+
+        EnsureAdornerAttached();
     }
 
-    private void TextBox_Loaded(object sender, RoutedEventArgs e)
+    private void EnsureAdornerAttached()
     {
+        if (_emojiAdorner != null) return;
+
         var adornerLayer = AdornerLayer.GetAdornerLayer(_textBox);
         if (adornerLayer != null)
         {
-            adornerLayer.Add(new EmojiInputAdorner(_textBox));
+            _emojiAdorner = new EmojiInputAdorner(_textBox);
+            adornerLayer.Add(_emojiAdorner);
         }
     }
 

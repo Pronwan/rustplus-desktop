@@ -507,6 +507,8 @@
                                     <ui:TextBox x:Name="TxtChat" MaxLength="128"
                                                 Height="36"
                                                 Padding="10,0,38,0"
+                                                ClearButtonEnabled="False"
+                                                ClipToBounds="True"
                                                 PlaceholderText="{DynamicResource ChatPlaceholder}"
                                                 VerticalContentAlignment="Center"
                                                 TextChanged="TxtChat_TextChanged"
