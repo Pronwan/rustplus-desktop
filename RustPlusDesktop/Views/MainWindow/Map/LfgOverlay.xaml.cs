@@ -618,9 +618,25 @@ public partial class LfgOverlay : UserControl
 
         // A request that has not been answered gets its decision above the reply box, and no reply
         // box at all: being able to type before deciding invites answering by accident.
-        PendingBar.Visibility = thread.IsPending ? Visibility.Visible : Visibility.Collapsed;
-        PendingHint.Text = string.Format(
-            Properties.Resources.GetString("LfgPendingHint"), thread.CounterpartName);
+        if (thread.IsIncomingPending)
+        {
+            PendingBar.Visibility = Visibility.Visible;
+            PendingActionsRow.Visibility = Visibility.Visible;
+            PendingHint.Text = string.Format(
+                Properties.Resources.GetString("LfgPendingHint"), thread.CounterpartName);
+        }
+        else if (thread.IsOutgoingPending)
+        {
+            PendingBar.Visibility = Visibility.Visible;
+            PendingActionsRow.Visibility = Visibility.Collapsed;
+            PendingHint.Text = string.Format(
+                Properties.Resources.GetString("LfgPendingWaitingHint") ?? "Waiting for {0} to accept your message request...",
+                thread.CounterpartName);
+        }
+        else
+        {
+            PendingBar.Visibility = Visibility.Collapsed;
+        }
 
         DeclinedHint.Visibility = thread.IsDeclined ? Visibility.Visible : Visibility.Collapsed;
         ReplyRow.Visibility = thread.IsPending || thread.IsDeclined ? Visibility.Collapsed : Visibility.Visible;

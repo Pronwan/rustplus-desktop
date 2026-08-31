@@ -612,7 +612,7 @@
                                 <StackPanel>
                                     <TextBlock x:Name="PendingHint" Foreground="{StaticResource LfgText}" FontSize="11"
                                                TextWrapping="Wrap" Margin="0,0,0,8" />
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel x:Name="PendingActionsRow" Orientation="Horizontal">
                                         <ui:Button x:Name="BtnAcceptRequest" Click="BtnAcceptRequest_Click" Appearance="Primary"
                                                    Content="{DynamicResource LfgAcceptRequest}" Margin="0,0,8,0" />
                                         <ui:Button x:Name="BtnDeclineRequest" Click="BtnDeclineRequest_Click" Appearance="Secondary"

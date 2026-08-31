@@ -6072,6 +6072,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="LfgPendingHint" xml:space="preserve">
     <value>{0} quiere escribirte.</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>Esperando la aceptación de {0}...</value>
+  </data>
+
   <data name="LfgDeclinedHint" xml:space="preserve">
     <value>Rechazaste esta solicitud. No puede volver a escribirte.</value>
   </data>

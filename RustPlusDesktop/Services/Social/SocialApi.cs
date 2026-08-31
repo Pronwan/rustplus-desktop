@@ -491,6 +491,8 @@ public static class SocialApi
     private static Models.SocialThread ParseThread(JsonElement row, string? me)
     {
         JsonElement other = default;
+        var createdBy = Str(row, "created_by");
+        var isCreatedByMe = !string.IsNullOrEmpty(createdBy) && !string.IsNullOrEmpty(me) && createdBy == me;
 
         if (row.TryGetProperty("members", out var members) && members.ValueKind == JsonValueKind.Array)
         {
@@ -512,6 +514,8 @@ public static class SocialApi
         {
             Id = Str(row, "id") ?? "",
             State = Str(row, "state") ?? "accepted",
+            CreatedBy = createdBy,
+            IsCreatedByMe = isCreatedByMe,
             CounterpartId = Str(other, "id"),
             CounterpartName = Str(other, "display_name") ?? Str(other, "name") ?? "—",
             AvatarUrl = Str(other, "avatar_url"),

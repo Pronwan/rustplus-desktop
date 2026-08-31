@@ -5865,4 +5865,7 @@
   <data name="ProfileVacClean" xml:space="preserve">
     <value>سليم (0 حظر مسجل)</value>
   </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>في انتظار قبول {0} لطلبك...</value>
+  </data>
 </root>
