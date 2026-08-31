@@ -11,6 +11,7 @@
 
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:BoolToVisibilityConverter x:Key="InverseBoolToVis" Invert="True" />
         <SolidColorBrush x:Key="LfgText" Color="#FFF4F6FA" />
         <SolidColorBrush x:Key="LfgMuted" Color="#FF94A0B3" />
         <SolidColorBrush x:Key="LfgLine" Color="#26FFFFFF" />
@@ -187,6 +188,17 @@
                         <TextBlock Text="{DynamicResource ChatRules}" TextWrapping="Wrap" Margin="0,0,0,10"
                                    Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
 
+                        <!-- Active Slow Mode indicator -->
+                        <Border x:Name="ChatSlowModeBar" Visibility="Collapsed" Margin="0,0,0,10"
+                                Background="#143FD7FF" CornerRadius="6" Padding="9,6"
+                                BorderBrush="#333FD7FF" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Timer24" FontSize="14" Foreground="#FF3FD7FF" Margin="0,0,7,0" VerticalAlignment="Center" />
+                                <TextBlock x:Name="ChatSlowModeText" Text="Slow Mode: 10s" Foreground="#FF3FD7FF"
+                                           FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
                         <TextBlock x:Name="ChatEmptyNotice" Visibility="Collapsed" Margin="0,0,0,10"
                                    Text="{DynamicResource ChatEmpty}" TextWrapping="Wrap"
                                    Foreground="{StaticResource LfgMuted}" FontSize="11" />
@@ -195,33 +207,120 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,0,8">
-                                        <Grid.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
-                                                <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
-                                            </ContextMenu>
-                                        </Grid.ContextMenu>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                                        <!-- Regular Chat Bubble -->
+                                        <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
+                                            <Grid.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
+                                                    <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
+                                                </ContextMenu>
+                                            </Grid.ContextMenu>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
 
-                                        <Ellipse Grid.Column="0" Width="26" Height="26" Margin="0,1,9,0" VerticalAlignment="Top">
-                                            <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
-                                            </Ellipse.Fill>
-                                        </Ellipse>
+                                            <Ellipse Grid.Column="0" Width="26" Height="26" Margin="0,1,9,0" VerticalAlignment="Top">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
 
-                                        <StackPanel Grid.Column="1">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
-                                                           FontSize="11.5" FontWeight="SemiBold" />
-                                                <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
-                                                           FontSize="9.5" Margin="7,1,0,0" />
+                                            <StackPanel Grid.Column="1">
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
+                                                               FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
+
+                                                    <!-- Staff Role Badge -->
+                                                    <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
+                                                            Background="{Binding RoleBadge.BackgroundBrush}"
+                                                            BorderBrush="{Binding RoleBadge.BorderBrush}"
+                                                            BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding RoleBadge.DisplayText}"
+                                                                   Foreground="{Binding RoleBadge.ForegroundBrush}"
+                                                                   FontSize="9" FontWeight="Bold" />
+                                                    </Border>
+
+                                                    <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
+                                                               FontSize="9.5" Margin="7,1,0,0" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
+                                                           Foreground="{StaticResource LfgText}" FontSize="12" />
                                             </StackPanel>
-                                            <TextBlock Text="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
-                                                       Foreground="{StaticResource LfgText}" FontSize="12" />
-                                        </StackPanel>
+                                        </Grid>
+
+                                        <!-- System Sanction Alert Banner (Timeout / Ban / Lifted) -->
+                                        <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource BoolToVis}}"
+                                                Background="{Binding SanctionEvent.CardBackgroundBrush}"
+                                                BorderBrush="{Binding SanctionEvent.CardBorderBrush}"
+                                                BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,2,0,2">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Header: Status Title + Duration Badge + Timestamp -->
+                                                <Grid Grid.Row="0" Margin="0,0,0,6">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                                                        <Border Background="{Binding SanctionEvent.HeaderBackgroundBrush}"
+                                                                BorderBrush="{Binding SanctionEvent.HeaderBorderBrush}"
+                                                                BorderThickness="1" CornerRadius="3" Padding="5,2" Margin="0,0,6,0">
+                                                            <TextBlock Text="{Binding SanctionEvent.HeaderTitle}"
+                                                                       Foreground="{Binding SanctionEvent.HeaderForegroundBrush}"
+                                                                       FontSize="9.5" FontWeight="Bold" />
+                                                        </Border>
+
+                                                        <Border Visibility="{Binding SanctionEvent.DurationBadgeVisibility}"
+                                                                Background="#33F59E0B" BorderBrush="#F59E0B"
+                                                                BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
+                                                            <TextBlock Text="{Binding SanctionEvent.DurationBadgeText}"
+                                                                       Foreground="#FFFBBF24" FontSize="9" FontWeight="SemiBold" />
+                                                        </Border>
+                                                    </StackPanel>
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding SanctionEvent.TimeLabel}"
+                                                               Foreground="{StaticResource LfgMuted}" FontSize="9.5" VerticalAlignment="Center" />
+                                                </Grid>
+
+                                                <!-- Details: Target & Moderator -->
+                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4">
+                                                    <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                                                    <TextBlock Text="{Binding SanctionEvent.TargetDisplayName}" Foreground="{StaticResource LfgText}"
+                                                               FontSize="10.5" FontWeight="SemiBold" />
+                                                    <TextBlock Text="{Binding SanctionEvent.TargetSteamIdFormatted}" Foreground="{StaticResource LfgMuted}"
+                                                               FontSize="9.5" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
+
+                                                    <TextBlock Text="  •  By: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                                                    <TextBlock Text="{Binding SanctionEvent.ModeratorDisplayName}" Foreground="{StaticResource LfgText}"
+                                                               FontSize="10.5" FontWeight="SemiBold" />
+
+                                                    <Border Visibility="{Binding SanctionEvent.HasModeratorRoleBadge, Converter={StaticResource BoolToVis}}"
+                                                            Background="{Binding SanctionEvent.ModeratorRoleBadge.BackgroundBrush}"
+                                                            BorderBrush="{Binding SanctionEvent.ModeratorRoleBadge.BorderBrush}"
+                                                            BorderThickness="1" CornerRadius="3" Padding="3,0" Margin="4,0,0,0"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding SanctionEvent.ModeratorRoleBadge.DisplayText}"
+                                                                   Foreground="{Binding SanctionEvent.ModeratorRoleBadge.ForegroundBrush}"
+                                                                   FontSize="8.5" FontWeight="Bold" />
+                                                    </Border>
+                                                </StackPanel>
+
+                                                <!-- Reason -->
+                                                <TextBlock Grid.Row="2" Visibility="{Binding SanctionEvent.HasReason, Converter={StaticResource BoolToVis}}"
+                                                           Foreground="{StaticResource LfgText}" FontSize="11" TextWrapping="Wrap">
+                                                    <Run Text="Reason: " Foreground="{StaticResource LfgMuted}" />
+                                                    <Run Text="{Binding SanctionEvent.Reason}" />
+                                                </TextBlock>
+                                            </Grid>
+                                        </Border>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -492,6 +591,15 @@
                                                  <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
                                                             FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
                                                             TextTrimming="CharacterEllipsis" />
+                                                 <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
+                                                         Background="{Binding RoleBadge.BackgroundBrush}"
+                                                         BorderBrush="{Binding RoleBadge.BorderBrush}"
+                                                         BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                         VerticalAlignment="Center">
+                                                     <TextBlock Text="{Binding RoleBadge.DisplayText}"
+                                                                Foreground="{Binding RoleBadge.ForegroundBrush}"
+                                                                FontSize="9" FontWeight="Bold" />
+                                                 </Border>
                                                  <Border Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
                                                          Visibility="{Binding HasServer, Converter={StaticResource BoolToVis}}">
                                                      <TextBlock Text="{Binding ServerName}" FontSize="9.5" Foreground="{StaticResource LfgMuted}"

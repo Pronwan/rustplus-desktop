@@ -6159,6 +6159,9 @@ You can find more information on the server&apos;s official website:
   <data name="ChatEmpty" xml:space="preserve">
     <value>Nothing has been said yet. Go ahead.</value>
   </data>
+  <data name="ChatSlowModeIndicator" xml:space="preserve">
+    <value>Slow Mode: {0}s</value>
+  </data>
   <data name="ChatSilencedTimeout" xml:space="preserve">
     <value>You cannot post until {0}. Reason: {1}</value>
   </data>

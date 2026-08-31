@@ -62,6 +62,10 @@ public partial class LfgOverlay : UserControl
         _realtimeAttached = true;
 
         SocialRealtime.ChatChanged += OnChatChanged;
+        SocialRealtime.ChatMessageReceived += OnChatMessageReceived;
+        SocialRealtime.ChatMessageDeleted += OnChatMessageDeleted;
+        SocialRealtime.SlowModeUpdated += OnSlowModeUpdated;
+        SocialRealtime.SanctionEventReceived += OnSanctionEventReceived;
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
     }
@@ -72,11 +76,61 @@ public partial class LfgOverlay : UserControl
         _realtimeAttached = false;
 
         SocialRealtime.ChatChanged -= OnChatChanged;
+        SocialRealtime.ChatMessageReceived -= OnChatMessageReceived;
+        SocialRealtime.ChatMessageDeleted -= OnChatMessageDeleted;
+        SocialRealtime.SlowModeUpdated -= OnSlowModeUpdated;
+        SocialRealtime.SanctionEventReceived -= OnSanctionEventReceived;
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
     }
 
     private void OnChatChanged() => _ = CatchUpChatAsync();
+
+    private void OnChatMessageReceived(Models.ChatLine line)
+    {
+        if (_chatLines.Any(l => l.Id == line.Id)) return;
+        _chatLines.Add(line);
+        if (_chatLines.Count > ChatWindow)
+            _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
+        ShowChatLines();
+    }
+
+    private void OnChatMessageDeleted(string messageId)
+    {
+        var count = _chatLines.RemoveAll(l => l.Id == messageId);
+        if (count > 0) ShowChatLines();
+    }
+
+    private void OnSlowModeUpdated(Models.ChatSlowModeEvent e)
+    {
+        _slowModeSeconds = Math.Max(0, e.Seconds);
+        UpdateSlowModeUI();
+    }
+
+    private void OnSanctionEventReceived(Models.SystemSanctionEvent e)
+    {
+        var sanctionLine = Models.ChatLine.FromSanction(e);
+        if (!_chatLines.Any(l => l.Id == sanctionLine.Id))
+        {
+            _chatLines.Add(sanctionLine);
+            if (_chatLines.Count > ChatWindow)
+                _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
+            ShowChatLines();
+        }
+
+        var myId = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
+        if (!string.IsNullOrEmpty(myId) && string.Equals(e.Target?.Id, myId, StringComparison.OrdinalIgnoreCase))
+        {
+            if (e.IsLifted)
+            {
+                ApplyChatSanction(null);
+            }
+            else
+            {
+                ApplyChatSanction(new Models.ChatSanction(e.Kind, e.Reason, e.ExpiresAt));
+            }
+        }
+    }
 
     private void OnRequestArrived() => _ = LoadInboxAsync();
 
@@ -923,6 +977,60 @@ public partial class LfgOverlay : UserControl
     /// <summary>The window the server serves, matched here so an evening in the room stays bounded.</summary>
     private const int ChatWindow = 200;
 
+    private int _slowModeSeconds;
+    private System.Windows.Threading.DispatcherTimer? _cooldownTimer;
+    private int _remainingCooldownSeconds;
+
+    private void UpdateSlowModeUI()
+    {
+        if (_slowModeSeconds > 0)
+        {
+            var format = Properties.Resources.GetString("ChatSlowModeIndicator") ?? "Slow Mode: {0}s";
+            ChatSlowModeText.Text = string.Format(format, _slowModeSeconds);
+            ChatSlowModeBar.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            ChatSlowModeBar.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void StartSendCooldown(int seconds)
+    {
+        if (seconds <= 0) return;
+        _remainingCooldownSeconds = seconds;
+        BtnChatSend.IsEnabled = false;
+        UpdateCooldownButtonLabel();
+
+        _cooldownTimer?.Stop();
+        _cooldownTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        _cooldownTimer.Tick += (_, __) =>
+        {
+            _remainingCooldownSeconds--;
+            if (_remainingCooldownSeconds <= 0)
+            {
+                _cooldownTimer?.Stop();
+                _cooldownTimer = null;
+                BtnChatSend.IsEnabled = true;
+                BtnChatSend.Content = Properties.Resources.GetString("LfgSend");
+            }
+            else
+            {
+                UpdateCooldownButtonLabel();
+            }
+        };
+        _cooldownTimer.Start();
+    }
+
+    private void UpdateCooldownButtonLabel()
+    {
+        var sendLabel = Properties.Resources.GetString("LfgSend") ?? "Send";
+        BtnChatSend.Content = $"{sendLabel} ({_remainingCooldownSeconds}s)";
+    }
+
     private async Task LoadChatAsync()
     {
         var snapshot = await SocialApi.GetChatAsync().ConfigureAwait(true);
@@ -930,6 +1038,9 @@ public partial class LfgOverlay : UserControl
         _chatLines.Clear();
         _chatLines.AddRange(snapshot.Lines);
         ShowChatLines();
+
+        _slowModeSeconds = snapshot.SlowModeSeconds;
+        UpdateSlowModeUI();
 
         if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
     }
@@ -980,6 +1091,8 @@ public partial class LfgOverlay : UserControl
                 if (!snapshot.Ok) continue;
 
                 ApplyChatSanction(snapshot.Sanction);
+                _slowModeSeconds = snapshot.SlowModeSeconds;
+                UpdateSlowModeUI();
 
                 var known = new System.Collections.Generic.HashSet<string>(
                     _chatLines.Select(line => line.Id), StringComparer.Ordinal);
@@ -1045,6 +1158,8 @@ public partial class LfgOverlay : UserControl
 
     private async Task SendChatAsync()
     {
+        if (_remainingCooldownSeconds > 0) return;
+
         var body = TxtChat.Text?.Trim();
         if (string.IsNullOrEmpty(body)) return;
 
@@ -1067,6 +1182,13 @@ public partial class LfgOverlay : UserControl
             // a link the whole point is that they can rewrite it.
             TxtChat.Text = body;
             ShowChatRefusal(result);
+        }
+        else
+        {
+            if (_slowModeSeconds > 0)
+            {
+                StartSendCooldown(_slowModeSeconds);
+            }
         }
 
         await LoadChatAsync().ConfigureAwait(true);

@@ -392,6 +392,7 @@ public static class SocialApi
     {
         var lines = new System.Collections.Generic.List<Models.ChatLine>();
         Models.ChatSanction? sanction = null;
+        var slowMode = 0;
         var ok = false;
 
         try
@@ -412,6 +413,16 @@ public static class SocialApi
                 {
                     var sender = row.TryGetProperty("sender", out var s) && s.ValueKind == JsonValueKind.Object ? s : default;
 
+                    var roles = new System.Collections.Generic.List<string>();
+                    if (sender.ValueKind == JsonValueKind.Object && sender.TryGetProperty("roles", out var rArray) && rArray.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var r in rArray.EnumerateArray())
+                        {
+                            var roleStr = r.GetString();
+                            if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
+                        }
+                    }
+
                     lines.Add(new Models.ChatLine
                     {
                         Id = Str(row, "id") ?? "",
@@ -419,20 +430,33 @@ public static class SocialApi
                         SenderId = Str(row, "sender_id"),
                         SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
                         AvatarUrl = Str(sender, "avatar_url"),
+                        SteamId = Str(sender, "steam_id"),
+                        Roles = roles,
                         SentAt = Date(row, "created_at"),
                         SentAtIso = Str(row, "created_at"),
                     });
                 }
             }
 
-            if (root.TryGetProperty("meta", out var meta)
-                && meta.TryGetProperty("sanction", out var s2)
-                && s2.ValueKind == JsonValueKind.Object)
+            if (root.TryGetProperty("meta", out var meta))
             {
-                sanction = new Models.ChatSanction(
-                    Str(s2, "kind") ?? "timeout",
-                    Str(s2, "reason") ?? "",
-                    Date(s2, "expires_at"));
+                if (meta.TryGetProperty("sanction", out var s2)
+                    && s2.ValueKind == JsonValueKind.Object)
+                {
+                    sanction = new Models.ChatSanction(
+                        Str(s2, "kind") ?? "timeout",
+                        Str(s2, "reason") ?? "",
+                        Date(s2, "expires_at"));
+                }
+
+                if (meta.TryGetProperty("slow_mode", out var sm) && sm.TryGetInt32(out var smVal))
+                {
+                    slowMode = smVal;
+                }
+                else if (meta.TryGetProperty("slow_mode_seconds", out var sms) && sms.TryGetInt32(out var smsVal))
+                {
+                    slowMode = smsVal;
+                }
             }
 
             ok = true;
@@ -442,7 +466,7 @@ public static class SocialApi
             // Deliberately quiet.
         }
 
-        return new Models.ChatSnapshot(lines, sanction, ok);
+        return new Models.ChatSnapshot(lines, sanction, slowMode, ok);
     }
 
     /// <summary>
@@ -541,6 +565,16 @@ public static class SocialApi
         var presence = user.ValueKind == JsonValueKind.Object
             && user.TryGetProperty("presence", out var p) && p.ValueKind == JsonValueKind.Object ? p : default;
 
+        var roles = new System.Collections.Generic.List<string>();
+        if (user.ValueKind == JsonValueKind.Object && user.TryGetProperty("roles", out var rArray) && rArray.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var r in rArray.EnumerateArray())
+            {
+                var roleStr = r.GetString();
+                if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
+            }
+        }
+
         return new Models.LfgEntry
         {
             UserId = Str(user, "id") ?? "",
@@ -549,6 +583,7 @@ public static class SocialApi
             DisplayName = Str(user, "display_name") ?? Str(user, "name") ?? "—",
             AvatarUrl = Str(user, "avatar_url"),
             SteamId = Str(user, "steam_id"),
+            Roles = roles,
             Language = Str(presence, "language"),
             IsOnline = presence.ValueKind == JsonValueKind.Object
                 && presence.TryGetProperty("is_online", out var on) && on.ValueKind == JsonValueKind.True,
