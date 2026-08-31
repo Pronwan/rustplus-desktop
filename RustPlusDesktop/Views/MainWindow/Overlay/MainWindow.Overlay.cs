@@ -471,8 +471,6 @@ private bool _overlayToolsVisible = false;
         // Wir bauen jetzt meine Shapes.
         var myList = new List<FrameworkElement>();
 
-        ApplySavedRoutes(data.Routes);
-
         // 1) Strokes
         foreach (var stroke in data.Strokes)
         {
@@ -2786,6 +2784,7 @@ private bool _overlayToolsVisible = false;
         // Routes carry their own geometry rather than appearing in the stroke list. Their visuals
         // have no OverlayTag, so the loop below steps over them on its own.
         data.Routes = BuildSavedRoutes();
+        data.ImportedRouteIds = _importedRouteIds.ToList();
 
         foreach (var child in Overlay.Children)
         {
@@ -2890,6 +2889,12 @@ private bool _overlayToolsVisible = false;
     // und cached sie in _playerOverlayElements[steamId]
     private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
     {
+        // Routes are rebuilt here rather than alongside the strokes: they are their own objects
+        // with their own list, and this is the one place every overlay - mine on start-up, a
+        // teammate's on sync, a restored one from the cloud - actually comes through.
+        if (steamId == _mySteamId) ApplySavedRoutes(data.Routes, data.ImportedRouteIds);
+        else ImportTeammateRoutes(steamId, data.Routes);
+
         // falls schon Elemente fuer den Spieler existieren -> erstmal killen
         if (_playerOverlayElements.TryGetValue(steamId, out var existing))
         {

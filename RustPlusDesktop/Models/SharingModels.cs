@@ -34,6 +34,14 @@ namespace RustPlusDesk.Models
         /// and a payload written by one of them arrives here with no routes, which is correct.
         /// </summary>
         public List<SavedRoute> Routes { get; set; } = new();
+
+        /// <summary>
+        /// Ids of teammates' routes that have already been copied into this list.
+        ///
+        /// Without it, deleting an imported route would only last until the next sync brought it
+        /// straight back — which is not a delete, it is a flicker.
+        /// </summary>
+        public List<string> ImportedRouteIds { get; set; } = new();
     }
 
     public sealed class ExportedDeviceDto

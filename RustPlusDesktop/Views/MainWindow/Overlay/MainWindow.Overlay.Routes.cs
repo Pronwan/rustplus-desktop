@@ -41,6 +41,15 @@ public partial class MainWindow
     private readonly List<FrameworkElement> _hiddenByRouteMode = new();
 
     /// <summary>
+    /// Teammates' route ids that have already been copied into the list.
+    ///
+    /// An imported route becomes yours: you can rename it, hide it, delete it. That last one only
+    /// means anything if the next sync does not hand it straight back, which is what this
+    /// remembers.
+    /// </summary>
+    private readonly HashSet<string> _importedRouteIds = new(StringComparer.Ordinal);
+
+    /// <summary>
     /// True only while there is a route to draw into. Without one a stroke stays a stroke:
     /// swallowing it because a panel happens to be open is how a drawing tool loses somebody
     /// their work.
@@ -437,13 +446,74 @@ public partial class MainWindow
             Visible = item.Visible,
         }).ToList();
 
-    private void ApplySavedRoutes(List<SavedRoute>? routes)
+    /// <summary>
+    /// Copies a teammate's routes into the list, once each.
+    ///
+    /// Imported rather than shown separately, so they behave like everything else here: rename,
+    /// hide, delete. The teammate's name goes in brackets so it stays obvious whose route it was
+    /// after it has been sitting in the list for a week.
+    /// </summary>
+    private void ImportTeammateRoutes(ulong steamId, List<SavedRoute>? routes)
+    {
+        if (routes == null || routes.Count == 0) return;
+
+        string who = ResolveRouteOwnerName(steamId);
+        bool added = false;
+
+        foreach (SavedRoute saved in routes)
+        {
+            if (string.IsNullOrWhiteSpace(saved.Id)) continue;
+            if (!_importedRouteIds.Add(saved.Id)) continue;
+
+            var item = new MapRouteItem
+            {
+                // A new id, because the copy is yours: theirs changing later must not reach in
+                // and rewrite what you have since renamed.
+                Id = "route-" + Guid.NewGuid().ToString("N"),
+                Name = string.IsNullOrWhiteSpace(saved.Name) ? who : $"{saved.Name} ({who})",
+                Thickness = saved.Thickness,
+                Closed = saved.Closed,
+                // Somebody else's route arrives hidden. Half a dozen teammates syncing at once
+                // would otherwise redraw the map without anybody asking.
+                Visible = false,
+                Color = ParseRouteColor(saved.Color),
+            };
+
+            item.Points.AddRange(saved.Points);
+            _routeItems.Add(item);
+            added = true;
+        }
+
+        if (!added) return;
+
+        RedrawAllRoutes();
+        UpdateRoutesPanelState();
+
+        // Deferred: this runs in the middle of rebuilding somebody else's overlay, and saving
+        // walks the same canvas that is currently being rewritten.
+        Dispatcher.BeginInvoke(new Action(SaveOwnOverlayToJson), System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    /// <summary>Whatever the teammate is called, or their id when nothing better is known.</summary>
+    private string ResolveRouteOwnerName(ulong steamId)
+    {
+        if (_steamNames.TryGetValue(steamId, out string? name) && !string.IsNullOrWhiteSpace(name))
+            return name;
+
+        return steamId.ToString();
+    }
+
+    private void ApplySavedRoutes(List<SavedRoute>? routes, List<string>? importedIds = null)
     {
         foreach (string id in _routeVisuals.Keys.ToList())
             ClearRouteVisuals(id);
 
         _routeItems.Clear();
         _activeRouteId = null;
+
+        _importedRouteIds.Clear();
+        if (importedIds != null)
+            foreach (string id in importedIds) _importedRouteIds.Add(id);
 
         if (routes == null) return;
 
