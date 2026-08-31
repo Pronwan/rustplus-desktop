@@ -482,7 +482,10 @@ public static class SocialApi
                     {
                         Id = Str(row, "id") ?? "",
                         Body = Str(row, "body") ?? "",
-                        SenderId = Str(row, "sender_id"),
+                        // Fall back to the nested sender object (like the realtime path) — the server
+                        // returns the id under "sender.id", not always a top-level "sender_id", so
+                        // without this block/report bail out on a null SenderId.
+                        SenderId = Str(row, "sender_id") ?? Str(sender, "id"),
                         SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
                         AvatarUrl = Str(sender, "avatar_url"),
                         SteamId = Str(sender, "steam_id"),
