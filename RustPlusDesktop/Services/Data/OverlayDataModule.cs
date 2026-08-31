@@ -240,7 +240,11 @@ namespace RustPlusDesk.Services.Data
                 Strokes = uncompressedStrokes,
                 Icons = nonBaseIcons,
                 data.Texts,
-                data.Devices
+                data.Devices,
+                // Routes weigh the same as the strokes they are made of, and a long one is not
+                // free. Leaving them out here would let an overlay past the tier limit and then
+                // upload it anyway.
+                data.Routes
             };
 
             var json = JsonSerializer.Serialize(tempObj, new JsonSerializerOptions { WriteIndented = false });
