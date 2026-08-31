@@ -70,7 +70,8 @@ public partial class MainWindow
                     Category = "Drawings",
                     Label = isRoute ? $"Route · {count} arrows" : $"Group · {count} items",
                     GroupId = gid,
-                    Swatch = fe is Polyline gpl ? (gpl.Stroke as SolidColorBrush) : null
+                    Swatch = fe is Polyline gpl ? (gpl.Stroke as SolidColorBrush) : null,
+                    IsHidden = fe.Visibility == Visibility.Collapsed
                 });
                 continue;
             }
@@ -83,7 +84,8 @@ public partial class MainWindow
                 Label = label,
                 IsText = isText,
                 Preview = ExtractPreview(fe),
-                Swatch = fe is Polyline pl ? (pl.Stroke as SolidColorBrush) : null
+                Swatch = fe is Polyline pl ? (pl.Stroke as SolidColorBrush) : null,
+                IsHidden = fe.Visibility == Visibility.Collapsed
             });
         }
 
@@ -182,6 +184,20 @@ public partial class MainWindow
             BeginEditText(tb);
     }
 
+    // Show/hide this layer (or its whole group) on the map — session-only, like a Photoshop eye.
+    private void LayerVisibility_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is not MapLayerItem item) return;
+        List<FrameworkElement> targets = item.GroupId is { } gid
+            ? GetGroupMembers(gid)
+            : new List<FrameworkElement> { item.Element };
+
+        bool hide = !item.IsHidden;
+        foreach (FrameworkElement t in targets)
+            t.Visibility = hide ? Visibility.Collapsed : Visibility.Visible;
+        item.IsHidden = hide;
+    }
+
     private void LayerDelete_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is not MapLayerItem item) return;
@@ -254,6 +270,20 @@ public sealed class MapLayerItem : System.ComponentModel.INotifyPropertyChanged
         get => _checked;
         set { if (_checked != value) { _checked = value; PropertyChanged?.Invoke(this, new(nameof(IsSelectedInPanel))); } }
     }
+
+    private bool _hidden;
+    public bool IsHidden
+    {
+        get => _hidden;
+        set
+        {
+            if (_hidden == value) return;
+            _hidden = value;
+            PropertyChanged?.Invoke(this, new(nameof(IsHidden)));
+            PropertyChanged?.Invoke(this, new(nameof(RowOpacity)));
+        }
+    }
+    public double RowOpacity => _hidden ? 0.4 : 1.0;
 
     public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 }

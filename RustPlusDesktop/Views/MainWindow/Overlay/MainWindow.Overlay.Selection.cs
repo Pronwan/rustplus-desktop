@@ -15,8 +15,14 @@ public partial class MainWindow
 {
     private FrameworkElement? _selectedElement;
     private List<FrameworkElement>? _selectedGroup;   // set when the selection is a group (e.g. a route)
+    private List<FrameworkElement>? _marquee;         // set when several elements are drag-selected
     private double _selectionSizeDragStart;
     private bool _suppressSelectionSlider;
+
+    // Rubber-band drag-select state.
+    private bool _isMarqueeSelecting;
+    private Point? _marqueeAnchor;
+    private Rectangle? _marqueeRect;
 
     private static readonly Color SelectionGlow = Color.FromRgb(0x60, 0xCD, 0xFF);
 
@@ -31,9 +37,12 @@ public partial class MainWindow
         return list;
     }
 
-    // The element(s) the current selection acts on — the whole group when grouped.
+    // The element(s) the current selection acts on — a marquee set, a group, or a single element.
     private IReadOnlyList<FrameworkElement> SelectedTargets =>
-        _selectedGroup ?? (_selectedElement is { } fe ? new List<FrameworkElement> { fe } : new List<FrameworkElement>());
+        _marquee is { Count: > 0 } ? _marquee
+        : _selectedGroup is { Count: > 0 } ? _selectedGroup
+        : _selectedElement is { } fe ? new List<FrameworkElement> { fe }
+        : new List<FrameworkElement>();
 
     // Topmost of my editable elements under the point — strokes/shapes hit-test by proximity,
     // icons/text by bounding box.
@@ -76,12 +85,25 @@ public partial class MainWindow
         ConfigureSelectionPanel(fe);
     }
 
+    // Select several elements at once (from a drag-select marquee), expanding any groups.
+    private void SelectMarquee(List<FrameworkElement> elements)
+    {
+        DeselectElement();
+        if (elements.Count == 0) return;
+        _marquee = elements;
+        _selectedElement = elements[0];
+        foreach (FrameworkElement t in elements)
+            t.Effect = new DropShadowEffect { Color = SelectionGlow, BlurRadius = 16, ShadowDepth = 0, Opacity = 1.0 };
+        ConfigureSelectionPanel(elements[0]);
+    }
+
     private void DeselectElement()
     {
-        if (_selectedElement == null) return;
+        if (_selectedElement == null && _marquee == null) return;
         foreach (FrameworkElement t in SelectedTargets) t.Effect = null;
         _selectedElement = null;
         _selectedGroup = null;
+        _marquee = null;
     }
 
     private void ConfigureSelectionPanel(FrameworkElement fe)
@@ -213,7 +235,124 @@ public partial class MainWindow
 
     private void DeleteSelectedElement()
     {
-        if (_selectedElement is { } fe) DeleteElement(fe);
+        var targets = SelectedTargets.ToList();
+        if (targets.Count == 0) return;
+        DeselectElement();
+        foreach (FrameworkElement t in targets) RemoveOwnElement(t);
+        PushOverlayEdit(
+            () => { foreach (FrameworkElement t in targets) ReAddOwnElement(t); },
+            () => { foreach (FrameworkElement t in targets) RemoveOwnElement(t); });
+        UpdateOptionsPanelVisibility();
+        SaveOwnOverlayToJson();
+    }
+
+    // Combine the current map selection into one group (Ctrl+G).
+    private void GroupMapSelection()
+    {
+        var targets = SelectedTargets.Distinct().ToList();
+        if (targets.Count < 2) return;
+        string groupId = "grp-" + Guid.NewGuid().ToString("N");
+        foreach (FrameworkElement t in targets)
+            if (t.Tag is OverlayTag tag) tag.GroupId = groupId;
+        FrameworkElement anchor = targets[0];
+        DeselectElement();
+        SaveOwnOverlayToJson();
+        SelectElement(anchor);          // reselect as the new group
+        UpdateOptionsPanelVisibility();
+    }
+
+    // --- rubber-band marquee ---
+
+    private void BeginMarquee(Point mapPos)
+    {
+        _isMarqueeSelecting = true;
+        _marqueeAnchor = mapPos;
+        _marqueeRect = new Rectangle
+        {
+            Stroke = new SolidColorBrush(SelectionGlow),
+            StrokeThickness = 1.2,
+            StrokeDashArray = new DoubleCollection { 4, 3 },
+            Fill = new SolidColorBrush(Color.FromArgb(0x22, 0x60, 0xCD, 0xFF)),
+            IsHitTestVisible = false,
+            Width = 0,
+            Height = 0
+        };
+        Canvas.SetLeft(_marqueeRect, mapPos.X);
+        Canvas.SetTop(_marqueeRect, mapPos.Y);
+        Overlay.Children.Add(_marqueeRect);
+        WebViewHost.CaptureMouse();
+    }
+
+    private void UpdateMarquee(Point mapPos)
+    {
+        if (!_isMarqueeSelecting || _marqueeRect is null || _marqueeAnchor is not Point a) return;
+        Canvas.SetLeft(_marqueeRect, Math.Min(a.X, mapPos.X));
+        Canvas.SetTop(_marqueeRect, Math.Min(a.Y, mapPos.Y));
+        _marqueeRect.Width = Math.Abs(mapPos.X - a.X);
+        _marqueeRect.Height = Math.Abs(mapPos.Y - a.Y);
+    }
+
+    private void EndMarquee(Point mapPos)
+    {
+        if (!_isMarqueeSelecting) return;
+        _isMarqueeSelecting = false;
+        Point a = _marqueeAnchor ?? mapPos;
+        if (_marqueeRect is not null) Overlay.Children.Remove(_marqueeRect);
+        _marqueeRect = null;
+        _marqueeAnchor = null;
+        WebViewHost.ReleaseMouseCapture();
+
+        var area = new Rect(Math.Min(a.X, mapPos.X), Math.Min(a.Y, mapPos.Y), Math.Abs(mapPos.X - a.X), Math.Abs(mapPos.Y - a.Y));
+        if (area.Width < 2 && area.Height < 2) { UpdateOptionsPanelVisibility(); return; }
+
+        List<FrameworkElement> hits = FindOwnElementsInRect(area);
+        if (hits.Count > 0) SelectMarquee(hits);
+        UpdateOptionsPanelVisibility();
+    }
+
+    // My visible, editable elements whose bounds intersect the marquee (groups pulled in whole).
+    private List<FrameworkElement> FindOwnElementsInRect(Rect area)
+    {
+        var result = new List<FrameworkElement>();
+        var seen = new HashSet<FrameworkElement>();
+        foreach (UIElement child in Overlay.Children)
+        {
+            if (child is not FrameworkElement fe || fe.Tag is not OverlayTag meta) continue;
+            if (meta.OwnerSteamId != _mySteamId || !meta.IsUserEditable) continue;
+            if (fe.Visibility != Visibility.Visible) continue;
+            if (!GetElementSceneBounds(fe).IntersectsWith(area)) continue;
+
+            if (meta.GroupId is { } gid)
+            {
+                foreach (FrameworkElement m in GetGroupMembers(gid))
+                    if (seen.Add(m)) result.Add(m);
+            }
+            else if (seen.Add(fe))
+            {
+                result.Add(fe);
+            }
+        }
+        return result;
+    }
+
+    private static Rect GetElementSceneBounds(FrameworkElement fe)
+    {
+        if (fe is Polyline pl && pl.Points.Count > 0)
+        {
+            double minX = double.MaxValue, minY = double.MaxValue, maxX = double.MinValue, maxY = double.MinValue;
+            foreach (Point p in pl.Points)
+            {
+                minX = Math.Min(minX, p.X); minY = Math.Min(minY, p.Y);
+                maxX = Math.Max(maxX, p.X); maxY = Math.Max(maxY, p.Y);
+            }
+            return new Rect(minX, minY, Math.Max(1, maxX - minX), Math.Max(1, maxY - minY));
+        }
+
+        double x = Canvas.GetLeft(fe); if (double.IsNaN(x)) x = 0;
+        double y = Canvas.GetTop(fe); if (double.IsNaN(y)) y = 0;
+        double w = !double.IsNaN(fe.Width) && fe.Width > 0 ? fe.Width : (fe.ActualWidth > 0 ? fe.ActualWidth : 24);
+        double h = !double.IsNaN(fe.Height) && fe.Height > 0 ? fe.Height : (fe.ActualHeight > 0 ? fe.ActualHeight : 16);
+        return new Rect(x, y, w, h);
     }
 
     // Remove an element (or its whole group), undoable. Used by the selection panel, Del key and layers list.

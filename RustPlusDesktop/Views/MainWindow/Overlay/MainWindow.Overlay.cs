@@ -656,12 +656,20 @@ private bool _overlayToolsVisible = false;
             }
 
             FrameworkElement? hit = FindOwnElementAt(mapPos);
-            if (hit != null) SelectElement(hit); else DeselectElement();
-            UpdateOptionsPanelVisibility();
+            if (hit != null)
+            {
+                SelectElement(hit);
+                UpdateOptionsPanelVisibility();
+                // Icons/text drag to move; strokes/shapes are selectable (recolour/resize/delete) but not dragged.
+                if (hit is not Polyline)
+                    TryBeginDragExistingElement(mapPos);
+                return;
+            }
 
-            // Icons/text drag to move; strokes/shapes are selectable (recolour/resize/delete) but not dragged.
-            if (hit is not Polyline)
-                TryBeginDragExistingElement(mapPos);
+            // Empty space: start a rubber-band drag-select for multiple layers.
+            DeselectElement();
+            UpdateOptionsPanelVisibility();
+            BeginMarquee(mapPos);
             return;
         }
 
@@ -733,6 +741,13 @@ private bool _overlayToolsVisible = false;
 
     private void HandleOverlayMouseMove(MouseEventArgs e, Point mapPos)
     {
+        // Rubber-band marquee resize
+        if (_isMarqueeSelecting)
+        {
+            UpdateMarquee(mapPos);
+            return;
+        }
+
         // Stroke weiterzeichnen (Draw + Route)
         if ((_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route) &&
             _isDrawingStroke &&
@@ -773,6 +788,12 @@ private bool _overlayToolsVisible = false;
 
     private void HandleOverlayMouseUp(MouseButtonEventArgs e, Point mapPos)
     {
+        if (_isMarqueeSelecting)
+        {
+            EndMarquee(mapPos);
+            return;
+        }
+
         if (IsShapeTool(_currentTool))
         {
             _isDrawingStroke = false;
@@ -858,8 +879,9 @@ private bool _overlayToolsVisible = false;
             var img = new Image
             {
                 Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
-                Width = _activeIconSize,
-                Height = _activeIconSize,
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 IsHitTestVisible = false
             };
@@ -2467,8 +2489,8 @@ private bool _overlayToolsVisible = false;
                 // 1. Background layer: Filled with the bright color, masked by the pin background PNG.
                 var bgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = brightBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png"))
                 };
@@ -2477,8 +2499,8 @@ private bool _overlayToolsVisible = false;
                 // 2. Foreground layer: Rendered as-is (original PNG colors) to draw the black outlines and shadows natively.
                 var fgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinfg.png"))
                 };
                 grid.Children.Add(fgRect);
@@ -2488,8 +2510,8 @@ private bool _overlayToolsVisible = false;
                 // 1. Background layer (dark color, masked by circular background mask)
                 var bgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = darkBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapbackground.png"))
                 };
@@ -2498,8 +2520,8 @@ private bool _overlayToolsVisible = false;
                 // 2. Foreground layer (bright color, masked by circular foreground mask/ring)
                 var fgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = brightBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforeground.png"))
                 };
@@ -2509,8 +2531,8 @@ private bool _overlayToolsVisible = false;
                 string iconResPath = $"pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_{shape.ToLowerInvariant()}.png";
                 var iconRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = Brushes.White,
                     OpacityMask = new ImageBrush(LoadBitmapResource(iconResPath))
                 };
@@ -4259,13 +4281,20 @@ private bool _overlayToolsVisible = false;
         };
         Panel.SetZIndex(panel, 9999);
 
+        // Keep the picker a constant on-screen size regardless of map zoom (the Overlay canvas is
+        // scaled by the map transform, so without this the box shrinks when zoomed out).
+        double eff = GetEffectiveZoom();
+        double counterScale = eff > 0.0001 ? 1.0 / eff : 1.0;
+        panel.RenderTransformOrigin = new Point(0, 0);   // grow from the anchor corner
+        panel.RenderTransform = new ScaleTransform(counterScale, counterScale);
+
         // Position: just below & to the right of the anchor
         double anchorLeft = Canvas.GetLeft(anchorEl);
         double anchorTop  = Canvas.GetTop(anchorEl);
         double anchorH    = !double.IsNaN(anchorEl.Height) ? anchorEl.Height
                             : (anchorEl.ActualHeight > 0 ? anchorEl.ActualHeight : 32);
         Canvas.SetLeft(panel, anchorLeft + 4);
-        Canvas.SetTop(panel,  anchorTop  + anchorH + 4);
+        Canvas.SetTop(panel,  anchorTop  + (anchorH + 4) * counterScale);
 
         return (panel, dismissLayer);
     }

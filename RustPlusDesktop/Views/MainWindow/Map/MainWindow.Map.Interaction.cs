@@ -229,6 +229,9 @@ public partial class MainWindow
 
         bool ctrl = (Keyboard.Modifiers & ModifierKeys.Control) != 0;
 
+        // Group the current map selection.
+        if (ctrl && e.Key == Key.G && _overlayToolsVisible) { GroupMapSelection(); e.Handled = true; return; }
+
         // Undo / redo of my map drawings.
         if (ctrl && e.Key == Key.Z) { OverlayUndo(); e.Handled = true; return; }
         if (ctrl && (e.Key == Key.Y || (e.Key == Key.Z && (Keyboard.Modifiers & ModifierKeys.Shift) != 0)))
