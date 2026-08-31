@@ -269,9 +269,6 @@ public sealed class ChatLine
 /// <summary>Why the text box is closed, and until when.</summary>
 public sealed record ChatSanction(string Kind, string Reason, DateTime? ExpiresAt);
 
-/// <summary>
-/// What one read of the room returns.
-/// </summary>
 public sealed record ChatSnapshot(
     List<ChatLine> Lines,
     ChatSanction? Sanction,
@@ -279,5 +276,6 @@ public sealed record ChatSnapshot(
     bool Ok = true,
     // Whether this account may use the supporters' room. Carried on every read of either room,
     // so the tab knows what to draw without a request of its own.
-    bool SupporterRoom = false);
+    bool SupporterRoom = false,
+    int MaxLength = 128);
 

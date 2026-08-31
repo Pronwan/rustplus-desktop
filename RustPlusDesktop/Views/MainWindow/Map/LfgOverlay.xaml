@@ -504,11 +504,12 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <ui:TextBox x:Name="TxtChat" MaxLength="500"
+                                    <ui:TextBox x:Name="TxtChat" MaxLength="128"
                                                 Height="36"
                                                 Padding="10,0,38,0"
                                                 PlaceholderText="{DynamicResource ChatPlaceholder}"
                                                 VerticalContentAlignment="Center"
+                                                TextChanged="TxtChat_TextChanged"
                                                 KeyDown="TxtChat_KeyDown" />
                                     <Button x:Name="BtnChatEmoji"
                                             HorizontalAlignment="Right"
@@ -541,10 +542,20 @@
                                         </Button.Template>
                                     </Button>
                                 </Grid>
-                                <ui:Button Grid.Column="1" x:Name="BtnChatSend" Click="BtnChatSend_Click"
-                                           Appearance="Primary" Margin="8,0,0,0"
-                                           Height="36" Padding="14,0"
-                                           Content="{DynamicResource LfgSend}" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <!-- Character Counter -->
+                                    <TextBlock x:Name="TxtChatCharCount"
+                                               Text="0/128"
+                                               FontSize="9.5"
+                                               Foreground="{DynamicResource TextSubtle}"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,8,0" />
+
+                                    <ui:Button x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                               Appearance="Primary"
+                                               Height="36" Padding="14,0"
+                                               Content="{DynamicResource LfgSend}" />
+                                </StackPanel>
 
                                 <!-- Autocomplete Popup -->
                                 <Popup x:Name="GlobalChatAutocompletePopup"

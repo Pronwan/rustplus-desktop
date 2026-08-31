@@ -1206,7 +1206,26 @@ public partial class LfgOverlay : UserControl
         _slowModeSeconds = snapshot.SlowModeSeconds;
         UpdateSlowModeUI();
 
+        if (snapshot.MaxLength > 0 && TxtChat.MaxLength != snapshot.MaxLength)
+        {
+            TxtChat.MaxLength = snapshot.MaxLength;
+            UpdateChatCharCount();
+        }
+
         if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
+    }
+
+    private void TxtChat_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        UpdateChatCharCount();
+    }
+
+    private void UpdateChatCharCount()
+    {
+        if (TxtChatCharCount == null || TxtChat == null) return;
+        int len = TxtChat.Text?.Length ?? 0;
+        int max = TxtChat.MaxLength > 0 ? TxtChat.MaxLength : 128;
+        TxtChatCharCount.Text = $"{len}/{max}";
     }
 
     private void UpdateChatGrouping()
