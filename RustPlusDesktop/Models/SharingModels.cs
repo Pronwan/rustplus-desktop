@@ -95,6 +95,15 @@ namespace RustPlusDesk.Models
 
         /// <summary>Hidden routes stay in the list and off the map.</summary>
         public bool Visible { get; set; } = true;
+
+        /// <summary>
+        /// The id of the teammate's route this was copied from, or null when it is your own.
+        ///
+        /// Two jobs. It stops the same route being imported twice, and it keeps copies out of
+        /// what gets shared: a copy that travels back out is a copy somebody else re-imports,
+        /// which is how two clients grew each other a list of a hundred routes.
+        /// </summary>
+        public string? SourceId { get; set; }
     }
 
     public class SavedIcon

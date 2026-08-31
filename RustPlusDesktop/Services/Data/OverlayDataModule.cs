@@ -122,7 +122,11 @@ namespace RustPlusDesk.Services.Data
                 Icons = nonBaseIcons,
                 Texts = data.Texts ?? new List<SavedText>(),
                 Devices = data.Devices ?? new List<ExportedDeviceDto>(),
-                Routes = data.Routes ?? new List<SavedRoute>(),
+                // Only your own. Sharing a copy of somebody's route sends it back to them, they
+                // import it again under a new id, and the two lists grow without end.
+                Routes = (data.Routes ?? new List<SavedRoute>())
+                    .Where(r => string.IsNullOrEmpty(r.SourceId))
+                    .ToList(),
                 ImportedRouteIds = data.ImportedRouteIds ?? new List<string>()
             };
 

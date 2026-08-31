@@ -438,6 +438,7 @@ public partial class MainWindow
         => _routeItems.Select(item => new SavedRoute
         {
             Id = item.Id,
+            SourceId = item.SourceId,
             Name = item.Name,
             Color = item.Color.ToString(),
             Thickness = item.Thickness,
@@ -463,6 +464,18 @@ public partial class MainWindow
         foreach (SavedRoute saved in routes)
         {
             if (string.IsNullOrWhiteSpace(saved.Id)) continue;
+
+            // Never import somebody else's import. Without this, a route makes a round trip
+            // through every client on the team and comes back wearing another name in brackets.
+            if (!string.IsNullOrEmpty(saved.SourceId)) continue;
+
+            // Nor one that is already here, whether we copied it before or wrote it ourselves.
+            if (_routeItems.Any(r => r.SourceId == saved.Id || r.Id == saved.Id)) continue;
+
+            // Nor the same path under a different id. Lists polluted before the loop was closed
+            // carry copies with no source recorded, and the geometry is what gives them away.
+            if (_routeItems.Any(r => IsSamePath(r, saved))) continue;
+
             if (!_importedRouteIds.Add(saved.Id)) continue;
 
             var item = new MapRouteItem
@@ -470,6 +483,7 @@ public partial class MainWindow
                 // A new id, because the copy is yours: theirs changing later must not reach in
                 // and rewrite what you have since renamed.
                 Id = "route-" + Guid.NewGuid().ToString("N"),
+                SourceId = saved.Id,
                 Name = string.IsNullOrWhiteSpace(saved.Name) ? who : $"{saved.Name} ({who})",
                 Thickness = saved.Thickness,
                 Closed = saved.Closed,
@@ -492,6 +506,20 @@ public partial class MainWindow
         // Deferred: this runs in the middle of rebuilding somebody else's overlay, and saving
         // walks the same canvas that is currently being rewritten.
         Dispatcher.BeginInvoke(new Action(SaveOwnOverlayToJson), System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// Whether two routes are the same path.
+    ///
+    /// Point count and the two ends, not every point: a copy is byte-identical, and comparing
+    /// three numbers is enough to say so without walking a thousand of them per row.
+    /// </summary>
+    private static bool IsSamePath(MapRouteItem mine, SavedRoute theirs)
+    {
+        if (mine.Points.Count != theirs.Points.Count || mine.Points.Count == 0) return false;
+
+        return Distance(mine.Points[0], theirs.Points[0]) < 0.5
+            && Distance(mine.Points[^1], theirs.Points[^1]) < 0.5;
     }
 
     /// <summary>Whatever the teammate is called, or their id when nothing better is known.</summary>
@@ -517,11 +545,29 @@ public partial class MainWindow
 
         if (routes == null) return;
 
+        // Lists that grew duplicates before the loop was closed clean themselves up on load. Two
+        // routes are the same route when they were copied from the same one, or when they are
+        // called the same and run through the same points.
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
         foreach (SavedRoute saved in routes)
         {
+            string fingerprint = !string.IsNullOrEmpty(saved.SourceId)
+                ? "src:" + saved.SourceId
+                : string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "geo:{0}|{1}|{2:0.0}|{3:0.0}",
+                    saved.Name,
+                    saved.Points.Count,
+                    saved.Points.Count > 0 ? saved.Points[0].X : 0,
+                    saved.Points.Count > 0 ? saved.Points[0].Y : 0);
+
+            if (!seen.Add(fingerprint)) continue;
+
             var item = new MapRouteItem
             {
                 Id = string.IsNullOrWhiteSpace(saved.Id) ? "route-" + Guid.NewGuid().ToString("N") : saved.Id,
+                SourceId = saved.SourceId,
                 Name = saved.Name,
                 Thickness = saved.Thickness,
                 Closed = saved.Closed,
@@ -558,6 +604,9 @@ public partial class MainWindow
 public sealed class MapRouteItem : System.ComponentModel.INotifyPropertyChanged
 {
     public string Id { get; init; } = "";
+
+    /// <summary>Set when this is a copy of a teammate's route. Null when it is your own.</summary>
+    public string? SourceId { get; init; }
 
     private string _name = "";
 
