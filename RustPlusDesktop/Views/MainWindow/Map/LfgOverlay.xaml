@@ -369,7 +369,10 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--  Avatar  -->
-                                <Grid Grid.Column="0" Width="34" Height="34" Margin="0,0,10,0">
+                                <Grid Grid.Column="0" Width="34" Height="34" Margin="0,0,10,0"
+                                      Background="Transparent" Cursor="Hand"
+                                      MouseLeftButtonUp="Preview_ProfileClick"
+                                      ToolTip="{DynamicResource ProfileOpenSteam}">
                                     <Ellipse x:Name="PreviewSupporterRing" Stroke="#FFD9A22B" StrokeThickness="2" Visibility="Collapsed" />
                                     <Ellipse Margin="3">
                                         <Ellipse.Fill>

@@ -1139,10 +1139,34 @@ public partial class LfgOverlay : UserControl
     /// which is the promise it makes; a listing already discloses the Steam account and did so
     /// with consent, so showing what Steam shows anyone adds nothing that was not agreed to.
     /// </summary>
-    private async void Listing_ProfileClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void Listing_ProfileClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.LfgEntry entry) return;
+        OpenProfileSheet(entry);
+    }
 
+    private void Preview_ProfileClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var steamId = Services.TrackingService.SteamId64;
+        if (string.IsNullOrWhiteSpace(steamId)) return;
+
+        var myEntry = new Models.LfgEntry
+        {
+            DisplayName = PreviewDisplayName.Text,
+            SteamId = steamId,
+            IsSupporter = Services.Auth.SupabaseAuthManager.IsPremium,
+            Blurb = TxtBlurb.Text?.Trim(),
+            ServerName = GetConnectedServerName(),
+            Language = Helpers.AppLanguages.Current(),
+            IsOnline = true,
+            AvatarUrl = (PreviewAvatar.ImageSource as System.Windows.Media.Imaging.BitmapImage)?.UriSource?.ToString(),
+        };
+
+        OpenProfileSheet(myEntry);
+    }
+
+    private async void OpenProfileSheet(Models.LfgEntry entry)
+    {
         _profileEntry = entry;
 
         ProfileName.Text = entry.DisplayName;
