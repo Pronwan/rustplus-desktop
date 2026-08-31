@@ -366,6 +366,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <!--  Avatar  -->
@@ -401,7 +402,14 @@
                                                 FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
                                  </StackPanel>
 
-                                 <Border Grid.Column="2" VerticalAlignment="Center" Margin="8,0,0,0"
+                                 <StackPanel x:Name="PreviewTeamSizePanel" Grid.Column="2" VerticalAlignment="Center" Margin="8,0,8,0" Visibility="Collapsed">
+                                     <TextBlock Text="{DynamicResource LfgTeamSize}" Foreground="{StaticResource LfgMuted}"
+                                                FontSize="9" HorizontalAlignment="Center" />
+                                     <TextBlock x:Name="PreviewTeamSize" Text="—" Foreground="{StaticResource LfgText}"
+                                                FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                 </StackPanel>
+
+                                 <Border Grid.Column="3" VerticalAlignment="Center" Margin="4,0,0,0"
                                          Background="#14FFFFFF" CornerRadius="4" Padding="6,2">
                                      <TextBlock Text="{DynamicResource LfgPreviewActiveBadge}" FontSize="10" Foreground="{StaticResource LfgMuted}" />
                                  </Border>
