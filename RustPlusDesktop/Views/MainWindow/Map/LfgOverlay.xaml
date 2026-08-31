@@ -260,7 +260,7 @@
                                 <ItemsControl x:Name="ChatList" Margin="0,0,0,6">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="0,0,0,8">
+                                            <Grid Margin="0,2,0,2">
                                                 <!-- Regular Chat Bubble -->
                                                 <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
                                                     <Grid.ContextMenu>
@@ -270,18 +270,19 @@
                                                         </ContextMenu>
                                                     </Grid.ContextMenu>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="26" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- Avatar with Glow & Star for Premium Members -->
-                                                    <Grid Grid.Column="0" Width="28" Height="28" Margin="0,1,9,0" VerticalAlignment="Top">
+                                                    <!-- Avatar (Shown only on first message of a group) -->
+                                                    <Grid Grid.Column="0" Width="26" Height="26" Margin="0,1,0,0" VerticalAlignment="Top"
+                                                          Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
                                                         <!-- Supporter Glow Ring -->
                                                         <Ellipse Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                                  Stroke="#FFA629" StrokeThickness="1.5"
                                                                  Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
                                                             <Ellipse.Effect>
-                                                                <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
+                                                                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
                                                             </Ellipse.Effect>
                                                         </Ellipse>
 
@@ -312,27 +313,32 @@
                                                         </Border>
                                                     </Grid>
 
-                                                    <StackPanel Grid.Column="1">
-                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <!-- Content Column -->
+                                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                        <!-- Metadata Header (Shown only on first message of a group) -->
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,2"
+                                                                    Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
                                                             <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource LfgText}"
                                                                        FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
 
-                                                            <!-- Staff Role Badge -->
+                                                            <!-- Sleek Staff Role Badge -->
                                                             <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
                                                                     Background="{Binding RoleBadge.BackgroundBrush}"
                                                                     BorderBrush="{Binding RoleBadge.BorderBrush}"
-                                                                    BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                                    BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="5,0,0,0"
                                                                     VerticalAlignment="Center">
                                                                 <TextBlock Text="{Binding RoleBadge.DisplayText}"
                                                                            Foreground="{Binding RoleBadge.ForegroundBrush}"
-                                                                           FontSize="9" FontWeight="Bold" />
+                                                                           FontSize="8.5" FontWeight="SemiBold" />
                                                             </Border>
 
                                                             <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
-                                                                       FontSize="9.5" Margin="7,1,0,0" VerticalAlignment="Center" />
+                                                                       FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
-                                                        <chat:RichChatTextBlock RawText="{Binding Body}" TextWrapping="Wrap" Margin="0,1,0,0"
-                                                                                Foreground="{StaticResource LfgText}" FontSize="12" />
+
+                                                        <!-- Message Text & Emojis -->
+                                                        <chat:RichChatTextBlock RawText="{Binding Body}" TextWrapping="Wrap" Margin="0,0,0,0"
+                                                                                Foreground="{StaticResource LfgText}" FontSize="12.5" EmojiSize="30" />
                                                     </StackPanel>
                                                 </Grid>
 
@@ -496,18 +502,48 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <ui:TextBox Grid.Column="0" x:Name="TxtChat" MaxLength="500"
-                                            PlaceholderText="{DynamicResource ChatPlaceholder}"
-                                            KeyDown="TxtChat_KeyDown" />
-                                <ui:Button Grid.Column="1" x:Name="BtnChatEmoji"
-                                           Appearance="Secondary" Margin="6,0,0,0" Padding="8,4"
-                                           ToolTip="Insert Emoji or Rust Item">
-                                    <TextBlock Text="😊" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </ui:Button>
-                                <ui:Button Grid.Column="2" x:Name="BtnChatSend" Click="BtnChatSend_Click"
-                                           Appearance="Primary" Margin="6,0,0,0"
+                                <Grid Grid.Column="0">
+                                    <ui:TextBox x:Name="TxtChat" MaxLength="500"
+                                                Height="36"
+                                                Padding="10,0,38,0"
+                                                PlaceholderText="{DynamicResource ChatPlaceholder}"
+                                                VerticalContentAlignment="Center"
+                                                KeyDown="TxtChat_KeyDown" />
+                                    <Button x:Name="BtnChatEmoji"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,6,0"
+                                            Width="28"
+                                            Height="28"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            ToolTip="Insert Emoji or Rust Item">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                    <TextBlock x:Name="Ico" Text="😊" FontSize="15"
+                                                               Opacity="0.65"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                        <Setter TargetName="Ico" Property="Opacity" Value="1.0" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                        <Setter TargetName="Ico" Property="Opacity" Value="0.8" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                                <ui:Button Grid.Column="1" x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                           Appearance="Primary" Margin="8,0,0,0"
+                                           Height="36" Padding="14,0"
                                            Content="{DynamicResource LfgSend}" />
 
                                 <!-- Autocomplete Popup -->
@@ -516,7 +552,7 @@
                                        Placement="Top"
                                        StaysOpen="False"
                                        AllowsTransparency="True"
-                                       VerticalOffset="-4">
+                                       VerticalOffset="-6">
                                     <chat:ChatEmojiAutocompletePopup x:Name="GlobalChatAutocompleteControl" />
                                 </Popup>
 
@@ -524,8 +560,8 @@
                                 <Popup x:Name="GlobalChatPickerPopup"
                                        PlacementTarget="{Binding ElementName=BtnChatEmoji}"
                                        Placement="Top"
-                                       HorizontalOffset="-210"
-                                       VerticalOffset="-6"
+                                       HorizontalOffset="-230"
+                                       VerticalOffset="-8"
                                        StaysOpen="False"
                                        AllowsTransparency="True">
                                     <chat:ChatEmojiPickerPopup x:Name="GlobalChatPickerControl" />

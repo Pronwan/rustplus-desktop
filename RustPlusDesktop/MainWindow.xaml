@@ -8523,50 +8523,72 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <ui:TextBox
-                                                        x:Name="TxtChatInput"
-                                                        Grid.Column="0"
-                                                        tutorials:Tutorial.TargetId="Chat.Input"
-                                                        PlaceholderText="{DynamicResource ChatMessagePlaceholder}"
-                                                        VerticalContentAlignment="Center"
-                                                        KeyDown="TxtChatInput_KeyDown"
-                                                        TextChanged="TxtChatInput_TextChanged"
-                                                        MaxLength="128"
-                                                        Height="34"
-                                                        FontSize="11.5" />
+                                                    <!-- Message Input Box with Embedded Right Emoji Button -->
+                                                    <Grid Grid.Column="0">
+                                                        <ui:TextBox
+                                                            x:Name="TxtChatInput"
+                                                            tutorials:Tutorial.TargetId="Chat.Input"
+                                                            PlaceholderText="{DynamicResource ChatMessagePlaceholder}"
+                                                            VerticalContentAlignment="Center"
+                                                            KeyDown="TxtChatInput_KeyDown"
+                                                            TextChanged="TxtChatInput_TextChanged"
+                                                            MaxLength="128"
+                                                            Height="36"
+                                                            Padding="10,0,38,0"
+                                                            FontSize="12" />
 
-                                                    <!-- Emoji Picker Button -->
-                                                    <ui:Button
-                                                        x:Name="BtnTeamEmoji"
-                                                        Grid.Column="1"
-                                                        Height="34"
-                                                        Margin="4,0,0,0"
-                                                        Padding="8,0"
-                                                        Appearance="Secondary"
-                                                        VerticalAlignment="Center"
-                                                        ToolTip="Insert Emoji or Rust Item">
-                                                        <TextBlock Text="😊" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </ui:Button>
+                                                        <!-- Seamless Embedded Emoji Button -->
+                                                        <Button
+                                                            x:Name="BtnTeamEmoji"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
+                                                            Margin="0,0,6,0"
+                                                            Width="28"
+                                                            Height="28"
+                                                            Background="Transparent"
+                                                            BorderThickness="0"
+                                                            Cursor="Hand"
+                                                            ToolTip="Insert Emoji or Rust Item">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                                        <TextBlock x:Name="Ico" Text="😊" FontSize="15" 
+                                                                                   Opacity="0.65"
+                                                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                                            <Setter TargetName="Ico" Property="Opacity" Value="1.0" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsPressed" Value="True">
+                                                                            <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                                            <Setter TargetName="Ico" Property="Opacity" Value="0.8" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+                                                    </Grid>
 
-                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
                                                         <!-- Character Counter -->
                                                         <TextBlock
                                                             x:Name="TxtChatCharCount"
                                                             Text="0/128"
-                                                            FontSize="9"
+                                                            FontSize="9.5"
                                                             Foreground="{DynamicResource TextSubtle}"
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,6,0" />
+                                                            Margin="0,0,8,0" />
 
                                                         <!-- Send Button -->
                                                         <ui:Button
                                                             x:Name="BtnSendChat"
                                                             tutorials:Tutorial.TargetId="Chat.Send"
-                                                            Height="34"
-                                                            Padding="12,0"
+                                                            Height="36"
+                                                            Padding="14,0"
                                                             VerticalAlignment="Center"
                                                             Click="BtnSendChat_Click"
                                                             Content="{DynamicResource Send}"
@@ -8580,7 +8602,7 @@
                                                            Placement="Top"
                                                            StaysOpen="False"
                                                            AllowsTransparency="True"
-                                                           VerticalOffset="-4">
+                                                           VerticalOffset="-6">
                                                         <chat:ChatEmojiAutocompletePopup x:Name="TeamChatAutocompleteControl" />
                                                     </Popup>
 
@@ -8588,8 +8610,8 @@
                                                     <Popup x:Name="TeamChatPickerPopup"
                                                            PlacementTarget="{Binding ElementName=BtnTeamEmoji}"
                                                            Placement="Top"
-                                                           HorizontalOffset="-210"
-                                                           VerticalOffset="-6"
+                                                           HorizontalOffset="-230"
+                                                           VerticalOffset="-8"
                                                            StaysOpen="False"
                                                            AllowsTransparency="True">
                                                         <chat:ChatEmojiPickerPopup x:Name="TeamChatPickerControl" />

@@ -1209,8 +1209,39 @@ public partial class LfgOverlay : UserControl
         if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
     }
 
+    private void UpdateChatGrouping()
+    {
+        for (int i = 0; i < _chatLines.Count; i++)
+        {
+            if (i == 0)
+            {
+                _chatLines[i].ShowHeader = true;
+                continue;
+            }
+
+            var curr = _chatLines[i];
+            var prev = _chatLines[i - 1];
+
+            if (curr.IsSystemSanction || prev.IsSystemSanction)
+            {
+                curr.ShowHeader = true;
+                continue;
+            }
+
+            // Same sender within 5 minutes collapses the redundant header (Discord/Slack style)
+            bool sameSender = (!string.IsNullOrEmpty(curr.SenderId) && string.Equals(curr.SenderId, prev.SenderId, StringComparison.Ordinal))
+                || string.Equals(curr.SenderName, prev.SenderName, StringComparison.Ordinal);
+
+            bool closeInTime = curr.SentAt.HasValue && prev.SentAt.HasValue && Math.Abs((curr.SentAt.Value - prev.SentAt.Value).TotalMinutes) < 5;
+
+            curr.ShowHeader = !(sameSender && closeInTime);
+        }
+    }
+
     private void ShowChatLines()
     {
+        UpdateChatGrouping();
+
         // A fresh array each time: ItemsControl does not notice a list mutated behind its back,
         // and the room is small enough that rebinding it costs nothing worth a collection type.
         ChatList.ItemsSource = _chatLines.ToArray();

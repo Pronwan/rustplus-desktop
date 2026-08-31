@@ -171,6 +171,8 @@ public sealed class ChatLine
 
     public string TimeLabel => SentAt?.ToLocalTime().ToString("HH:mm") ?? "";
 
+    public bool ShowHeader { get; set; } = true;
+
     public bool IsSystemSanction { get; init; }
 
     public SystemSanctionEvent? SanctionEvent { get; init; }
@@ -197,26 +199,26 @@ public sealed class ChatLine
     {
         RoleKey = "super_admin",
         DisplayText = "SUPER ADMIN",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0xEF, 0x44, 0x44),
-        BorderBrush = CreateFrozenBrush(0xFF, 0xEF, 0x44, 0x44),
-        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFF, 0x85, 0x85),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0xEF, 0x44, 0x44),
+        BorderBrush = CreateFrozenBrush(0x55, 0xEF, 0x44, 0x44),
+        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFA, 0x8A, 0x8A),
     };
 
     private static readonly RoleBadgeInfo AdminBadge = new()
     {
         RoleKey = "admin",
         DisplayText = "ADMIN",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0xEF, 0x44, 0x44),
-        BorderBrush = CreateFrozenBrush(0xFF, 0xEF, 0x44, 0x44),
-        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFF, 0x85, 0x85),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0xEF, 0x44, 0x44),
+        BorderBrush = CreateFrozenBrush(0x55, 0xEF, 0x44, 0x44),
+        ForegroundBrush = CreateFrozenBrush(0xFF, 0xFA, 0x8A, 0x8A),
     };
 
     private static readonly RoleBadgeInfo ModBadge = new()
     {
         RoleKey = "moderator",
         DisplayText = "MOD",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0x3B, 0x82, 0xF6),
-        BorderBrush = CreateFrozenBrush(0xFF, 0x3B, 0x82, 0xF6),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0x3B, 0x82, 0xF6),
+        BorderBrush = CreateFrozenBrush(0x55, 0x3B, 0x82, 0xF6),
         ForegroundBrush = CreateFrozenBrush(0xFF, 0x93, 0xC5, 0xFD),
     };
 
@@ -224,8 +226,8 @@ public sealed class ChatLine
     {
         RoleKey = "community_manager",
         DisplayText = "CM",
-        BackgroundBrush = CreateFrozenBrush(0x33, 0x8B, 0x5C, 0xF6),
-        BorderBrush = CreateFrozenBrush(0xFF, 0x8B, 0x5C, 0xF6),
+        BackgroundBrush = CreateFrozenBrush(0x22, 0x8B, 0x5C, 0xF6),
+        BorderBrush = CreateFrozenBrush(0x55, 0x8B, 0x5C, 0xF6),
         ForegroundBrush = CreateFrozenBrush(0xFF, 0xC4, 0xB5, 0xFD),
     };
 

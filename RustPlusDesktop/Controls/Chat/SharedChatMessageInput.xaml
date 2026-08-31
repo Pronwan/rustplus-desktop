@@ -14,52 +14,80 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <!-- Message Text Box -->
-        <ui:TextBox Grid.Column="0" x:Name="InputTextBox"
-                    MaxLength="{Binding MaxLength, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    PlaceholderText="{Binding PlaceholderText, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}"
-                    KeyDown="InputTextBox_KeyDown"
-                    VerticalContentAlignment="Center" />
+        <!-- Message Text Box with Embedded Emoji Button -->
+        <Grid Grid.Column="0">
+            <ui:TextBox x:Name="InputTextBox"
+                        Height="36"
+                        Padding="10,0,38,0"
+                        MaxLength="{Binding MaxLength, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        PlaceholderText="{Binding PlaceholderText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}"
+                        KeyDown="InputTextBox_KeyDown"
+                        VerticalContentAlignment="Center" />
 
-        <!-- Emoji Picker Button -->
-        <ui:Button Grid.Column="1" x:Name="BtnEmoji"
-                   Appearance="Secondary"
-                   Margin="4,0,0,0"
-                   Padding="6,4"
-                   ToolTip="Insert Emoji or Rust Item"
-                   Click="BtnEmoji_Click">
-            <TextBlock Text="😊" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </ui:Button>
+            <!-- Embedded Emoji Picker Button -->
+            <Button x:Name="BtnEmoji"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0,0,6,0"
+                    Width="28"
+                    Height="28"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    ToolTip="Insert Emoji or Rust Item"
+                    Click="BtnEmoji_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                            <TextBlock x:Name="Ico" Text="😊" FontSize="15"
+                                       Opacity="0.65"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                <Setter TargetName="Ico" Property="Opacity" Value="1.0" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                <Setter TargetName="Ico" Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
 
         <!-- Send Button -->
-        <ui:Button Grid.Column="2" x:Name="BtnSend"
+        <ui:Button Grid.Column="1" x:Name="BtnSend"
                    Appearance="Primary"
-                   Margin="6,0,0,0"
+                   Height="36"
+                   Margin="8,0,0,0"
+                   Padding="14,0"
                    Content="{Binding SendButtonText, RelativeSource={RelativeSource AncestorType=UserControl}}"
                    IsEnabled="{Binding IsSendEnabled, RelativeSource={RelativeSource AncestorType=UserControl}}"
                    Visibility="{Binding ShowSendButton, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibility}}"
                    Click="BtnSend_Click" />
 
-        <!-- Inline Autocomplete Suggestion Popup (Screenshot 2) -->
+        <!-- Inline Autocomplete Suggestion Popup -->
         <Popup x:Name="AutocompletePopup"
                PlacementTarget="{Binding ElementName=InputTextBox}"
                Placement="Top"
                StaysOpen="False"
                AllowsTransparency="True"
-               VerticalOffset="-4">
+               VerticalOffset="-6">
             <local:ChatEmojiAutocompletePopup x:Name="AutocompleteControl" />
         </Popup>
 
-        <!-- Emoji & Rust Item Picker Popover (Screenshot 1) -->
+        <!-- Emoji & Rust Item Picker Popover -->
         <Popup x:Name="PickerPopup"
                PlacementTarget="{Binding ElementName=BtnEmoji}"
                Placement="Top"
-               HorizontalOffset="-210"
-               VerticalOffset="-6"
+               HorizontalOffset="-230"
+               VerticalOffset="-8"
                StaysOpen="False"
                AllowsTransparency="True">
             <local:ChatEmojiPickerPopup x:Name="PickerControl" />
