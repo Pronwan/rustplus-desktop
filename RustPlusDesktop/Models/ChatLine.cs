@@ -161,6 +161,8 @@ public sealed class ChatLine
 
     public string? SteamId { get; init; }
 
+    public bool IsSupporter { get; init; }
+
     public IReadOnlyList<string> Roles { get; init; } = Array.Empty<string>();
 
     public DateTime? SentAt { get; init; }
@@ -243,19 +245,7 @@ public sealed class ChatLine
         if (roles.Any(r => string.Equals(r, "community_manager", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "cm", StringComparison.OrdinalIgnoreCase)))
             return CmBadge;
 
-        var first = roles.FirstOrDefault(r => !string.IsNullOrWhiteSpace(r));
-        if (first != null)
-        {
-            return new RoleBadgeInfo
-            {
-                RoleKey = first,
-                DisplayText = first.ToUpperInvariant(),
-                BackgroundBrush = CreateFrozenBrush(0x33, 0x10, 0xB9, 0x81),
-                BorderBrush = CreateFrozenBrush(0xFF, 0x10, 0xB9, 0x81),
-                ForegroundBrush = CreateFrozenBrush(0xFF, 0x6E, 0xE7, 0xB7),
-            };
-        }
-
+        // Do not show badges for regular users or non-staff roles
         return null;
     }
 

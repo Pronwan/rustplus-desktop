@@ -1,5 +1,6 @@
 using RustPlusDesk.Services.Cloud;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -170,12 +171,15 @@ public static class SocialApi
         if (mode == LfgMode.None)
             return await WriteAsync("social/lfg/me", HttpMethod.Delete).ConfigureAwait(false);
 
+        bool isPremium = Auth.SupabaseAuthManager.IsPremium;
         var payload = new
         {
             mode = mode == LfgMode.LookingForTeam ? "lfg" : "lfm",
             blurb = string.IsNullOrWhiteSpace(blurb) ? null : blurb.Trim(),
             region = string.IsNullOrWhiteSpace(region) ? Helpers.AppLanguages.Current() : region.Trim(),
             server_name = string.IsNullOrWhiteSpace(serverName) ? null : serverName.Trim(),
+            is_supporter = isPremium,
+            is_premium = isPremium,
         };
         return await WriteAsync("social/lfg/me", HttpMethod.Put, payload).ConfigureAwait(false);
     }
@@ -334,10 +338,16 @@ public static class SocialApi
     }
 
     public static Task<bool> OpenThreadAsync(string userId, string body, string origin = "lfg")
-        => WriteAsync("social/conversations", HttpMethod.Post, new { user_id = userId, body, origin });
+    {
+        bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+        return WriteAsync("social/conversations", HttpMethod.Post, new { user_id = userId, body, origin, is_supporter = isPremium, is_premium = isPremium });
+    }
 
     public static Task<bool> ReplyAsync(string conversationId, string body)
-        => WriteAsync($"social/conversations/{conversationId}/messages", HttpMethod.Post, new { body });
+    {
+        bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+        return WriteAsync($"social/conversations/{conversationId}/messages", HttpMethod.Post, new { body, is_supporter = isPremium, is_premium = isPremium });
+    }
 
     public static Task<bool> AcceptThreadAsync(string conversationId)
         => WriteAsync($"social/conversations/{conversationId}/accept", HttpMethod.Post);
@@ -457,6 +467,12 @@ public static class SocialApi
                         }
                     }
 
+                    bool isSupporter = (sender.ValueKind == JsonValueKind.Object && sender.TryGetProperty("is_supporter", out var sup1) && (sup1.ValueKind == JsonValueKind.True || (sup1.ValueKind == JsonValueKind.Number && sup1.GetInt32() == 1)))
+                        || (sender.ValueKind == JsonValueKind.Object && sender.TryGetProperty("is_premium", out var prem1) && (prem1.ValueKind == JsonValueKind.True || (prem1.ValueKind == JsonValueKind.Number && prem1.GetInt32() == 1)))
+                        || (row.TryGetProperty("is_supporter", out var sup2) && (sup2.ValueKind == JsonValueKind.True || (sup2.ValueKind == JsonValueKind.Number && sup2.GetInt32() == 1)))
+                        || (row.TryGetProperty("is_premium", out var prem2) && (prem2.ValueKind == JsonValueKind.True || (prem2.ValueKind == JsonValueKind.Number && prem2.GetInt32() == 1)))
+                        || roles.Any(r => string.Equals(r, "supporter", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "premium", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "vip", StringComparison.OrdinalIgnoreCase));
+
                     lines.Add(new Models.ChatLine
                     {
                         Id = Str(row, "id") ?? "",
@@ -465,6 +481,7 @@ public static class SocialApi
                         SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
                         AvatarUrl = Str(sender, "avatar_url"),
                         SteamId = Str(sender, "steam_id"),
+                        IsSupporter = isSupporter,
                         Roles = roles,
                         SentAt = Date(row, "created_at"),
                         SentAtIso = Str(row, "created_at"),
@@ -514,7 +531,8 @@ public static class SocialApi
     {
         try
         {
-            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body })
+            bool isPremium = Auth.SupabaseAuthManager.IsPremium;
+            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, is_supporter = isPremium, is_premium = isPremium })
                 .ConfigureAwait(false);
 
             return ChatPostResult.Ok;

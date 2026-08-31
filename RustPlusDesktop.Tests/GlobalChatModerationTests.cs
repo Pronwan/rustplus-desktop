@@ -27,9 +27,11 @@ public class GlobalChatModerationTests
         Assert.IsNotNull(cmBadge);
         Assert.AreEqual("CM", cmBadge.DisplayText);
 
-        var customBadge = ChatLine.GetBadgeForRoles(new[] { "vip_host" });
-        Assert.IsNotNull(customBadge);
-        Assert.AreEqual("VIP_HOST", customBadge.DisplayText);
+        var userBadge = ChatLine.GetBadgeForRoles(new[] { "user" });
+        Assert.IsNull(userBadge, "Regular users should not have a badge");
+
+        var memberBadge = ChatLine.GetBadgeForRoles(new[] { "member" });
+        Assert.IsNull(memberBadge, "Non-staff roles should not have a badge");
 
         var emptyBadge = ChatLine.GetBadgeForRoles(Array.Empty<string>());
         Assert.IsNull(emptyBadge);

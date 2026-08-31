@@ -210,6 +210,12 @@ public static class SocialRealtime
                 sentAt = dt;
             }
 
+            bool isSupporter = sender?["is_supporter"]?.Value<bool>() == true
+                || sender?["is_premium"]?.Value<bool>() == true
+                || data["is_supporter"]?.Value<bool>() == true
+                || data["is_premium"]?.Value<bool>() == true
+                || roles.Any(r => string.Equals(r, "supporter", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "premium", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "vip", StringComparison.OrdinalIgnoreCase));
+
             return new Models.ChatLine
             {
                 Id = id,
@@ -218,6 +224,7 @@ public static class SocialRealtime
                 SenderName = senderName,
                 AvatarUrl = avatarUrl,
                 SteamId = steamId,
+                IsSupporter = isSupporter,
                 Roles = roles,
                 SentAt = sentAt,
                 SentAtIso = createdAtStr,

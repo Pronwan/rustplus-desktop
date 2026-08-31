@@ -220,11 +220,43 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Ellipse Grid.Column="0" Width="26" Height="26" Margin="0,1,9,0" VerticalAlignment="Top">
-                                                <Ellipse.Fill>
-                                                    <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
-                                                </Ellipse.Fill>
-                                            </Ellipse>
+                                            <!-- Avatar with Glow & Star for Premium Members -->
+                                            <Grid Grid.Column="0" Width="28" Height="28" Margin="0,1,9,0" VerticalAlignment="Top">
+                                                <!-- Supporter Glow Ring -->
+                                                <Ellipse Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Stroke="#FFA629" StrokeThickness="1.5"
+                                                         Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
+                                                    <Ellipse.Effect>
+                                                        <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
+                                                    </Ellipse.Effect>
+                                                </Ellipse>
+
+                                                <!-- Base Avatar Circle -->
+                                                <Grid Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Ellipse Fill="#222B38" />
+                                                    <ui:SymbolIcon Symbol="Person24" FontSize="11" Foreground="#94A0B3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    <Ellipse>
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                </Grid>
+
+                                                <!-- Top-Right Star Badge for Premium Members -->
+                                                <Border Width="11" Height="11"
+                                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                        Background="#FFD700"
+                                                        BorderBrush="#FFE58F"
+                                                        BorderThickness="1"
+                                                        CornerRadius="5.5"
+                                                        Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="#FFA629" Opacity="0.9" />
+                                                    </Border.Effect>
+                                                    <TextBlock Text="★" FontSize="7" FontWeight="Bold" Foreground="#4A2800"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
+                                                </Border>
+                                            </Grid>
 
                                             <StackPanel Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
