@@ -3104,10 +3104,14 @@ private bool _overlayToolsVisible = false;
             var serverKey = GetServerKey();
             var localData = OverlayDataModule.LoadLocalOverlay(serverKey, _mySteamId);
 
+            // Routes count as content. Without them an overlay that is nothing but routes reads
+            // as empty here, takes the "nothing to do" branch below, and never materialises - so
+            // the routes are saved perfectly and silently never come back.
             bool localHasContent = localData != null
                 && ((localData.Strokes?.Count ?? 0) > 0
                  || (localData.Icons?.Count   ?? 0) > 0
                  || (localData.Texts?.Count   ?? 0) > 0
+                 || (localData.Routes?.Count  ?? 0) > 0
                  || (localData.Devices?.Count ?? 0) > 0);
 
             OverlaySaveData? cloudData = null;
@@ -3141,6 +3145,7 @@ private bool _overlayToolsVisible = false;
                 && ((cloudData.Strokes?.Count ?? 0) > 0
                  || (cloudData.Icons?.Count   ?? 0) > 0
                  || (cloudData.Texts?.Count   ?? 0) > 0
+                 || (cloudData.Routes?.Count  ?? 0) > 0
                  || (cloudData.Devices?.Count ?? 0) > 0);
 
             OverlaySaveData? toUse;
