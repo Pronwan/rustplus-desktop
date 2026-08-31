@@ -34,6 +34,17 @@ public partial class LfgOverlay : UserControl
     /// <summary>Whether the rules of the public room have been read and accepted.</summary>
     private bool _hasChatConsent;
 
+    /// <summary>
+    /// Which room the chat view is showing. Both tabs share one view: the two rooms differ in who
+    /// may write in them, not in what a message looks like, and a second copy of the message
+    /// list, the compose bar and the jump-to-bottom button would be two of everything to keep in
+    /// step.
+    /// </summary>
+    private string _room = ChatRooms.Public;
+
+    /// <summary>Whether the supporters' room is open to this account. Answered by every read.</summary>
+    private bool _supporterRoom;
+
     public LfgOverlay()
     {
         InitializeComponent();
@@ -660,7 +671,36 @@ public partial class LfgOverlay : UserControl
         var threads = await SocialApi.GetThreadsAsync().ConfigureAwait(true);
 
         ThreadList.ItemsSource = threads;
-        InboxEmptyNotice.Visibility = threads.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        var empty = threads.Count == 0;
+        InboxEmptyNotice.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
+        InboxHint.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
+
+        ShowUnread(threads.Sum(t => t.UnreadCount));
+    }
+
+    /// <summary>How many messages are waiting. Raised so the rail can carry the same number.</summary>
+    public event EventHandler<int>? UnreadChanged;
+
+    private int _unread = -1;
+
+    /// <summary>
+    /// Puts the count on the Inbox tab, and hands it on.
+    ///
+    /// Only when it changes: the inbox is reloaded on every push, and re-raising an unchanged
+    /// number would have the rail redrawing itself all evening in a busy conversation.
+    /// </summary>
+    private void ShowUnread(int count)
+    {
+        if (count == _unread) return;
+        _unread = count;
+
+        InboxTabBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        // Past a certain point the exact number stops being the useful part.
+        InboxTabBadgeText.Text = count > 99 ? "99+" : count.ToString();
+
+        UnreadChanged?.Invoke(this, count);
     }
 
     private async void Thread_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -976,12 +1016,31 @@ public partial class LfgOverlay : UserControl
     {
         if (!IsLoaded) return;
 
-        var chat = SecChat.IsChecked == true;
-        ChatSection.Visibility = chat ? Visibility.Visible : Visibility.Collapsed;
-        LfgSection.Visibility = chat ? Visibility.Collapsed : Visibility.Visible;
+        var supporter = SecSupporter.IsChecked == true;
+        var chat = SecChat.IsChecked == true || supporter;
+        var inbox = SecInbox.IsChecked == true;
 
-        if (chat)
+        _room = supporter ? ChatRooms.Supporter : ChatRooms.Public;
+
+        // The gate stands in place of the room, not next to it: showing an empty message list
+        // above an offer to buy access reads as though the room is simply quiet.
+        var gated = supporter && !_supporterRoom;
+
+        ChatSection.Visibility = chat && !gated ? Visibility.Visible : Visibility.Collapsed;
+        SupporterGate.Visibility = gated ? Visibility.Visible : Visibility.Collapsed;
+        LfgSection.Visibility = !chat && !inbox ? Visibility.Visible : Visibility.Collapsed;
+        InboxSection.Visibility = inbox ? Visibility.Visible : Visibility.Collapsed;
+
+        if (inbox)
         {
+            _ = LoadInboxAsync();
+        }
+        else if (chat)
+        {
+            // Switching rooms means the lines in hand belong to the other one.
+            _chatLines.Clear();
+            ShowChatLines();
+
             _userScrolledUp = false;
             _ = LoadChatAsync();
         }
@@ -1081,9 +1140,36 @@ public partial class LfgOverlay : UserControl
         BtnChatSend.Content = $"{sendLabel} ({_remainingCooldownSeconds}s)";
     }
 
+    /// <summary>Somebody wants to know what supporting buys. The window that answers is not ours.</summary>
+    public event EventHandler? SupporterOfferRequested;
+
+    private void BtnSupporterOffer_Click(object sender, RoutedEventArgs e)
+        => SupporterOfferRequested?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>
+    /// Keeps the supporter tab honest about whether it leads anywhere.
+    ///
+    /// The answer rides on every read of either room, so a plan bought while the panel is open
+    /// takes effect on the next refresh rather than on the next restart.
+    /// </summary>
+    private void ApplySupporterAccess(Models.ChatSnapshot snapshot)
+    {
+        if (!snapshot.Ok) return;
+
+        _supporterRoom = snapshot.SupporterRoom;
+
+        if (SecSupporter.IsChecked != true) return;
+
+        var gated = !_supporterRoom;
+        SupporterGate.Visibility = gated ? Visibility.Visible : Visibility.Collapsed;
+        ChatSection.Visibility = gated ? Visibility.Collapsed : Visibility.Visible;
+    }
+
     private async Task LoadChatAsync()
     {
-        var snapshot = await SocialApi.GetChatAsync().ConfigureAwait(true);
+        var snapshot = await SocialApi.GetChatAsync(room: _room).ConfigureAwait(true);
+
+        ApplySupporterAccess(snapshot);
 
         _chatLines.Clear();
         _chatLines.AddRange(snapshot.Lines);
@@ -1146,7 +1232,7 @@ public partial class LfgOverlay : UserControl
                     continue;
                 }
 
-                var snapshot = await SocialApi.GetChatAsync(since).ConfigureAwait(true);
+                var snapshot = await SocialApi.GetChatAsync(since, room: _room).ConfigureAwait(true);
                 if (!snapshot.Ok) continue;
 
                 ApplyChatSanction(snapshot.Sanction);
@@ -1233,7 +1319,7 @@ public partial class LfgOverlay : UserControl
         ChatRefusal.Visibility = Visibility.Collapsed;
         TxtChat.Text = "";
 
-        var result = await SocialApi.PostChatAsync(body!).ConfigureAwait(true);
+        var result = await SocialApi.PostChatAsync(body!, _room).ConfigureAwait(true);
 
         if (result != ChatPostResult.Ok)
         {

@@ -6277,4 +6277,22 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ProfileVacClean" xml:space="preserve">
     <value>Без блокировок (0 банов)</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>Чат для сторонников</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>Входящие</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>Сюда приходят запросы по вашим объявлениям LFG и LFM, а также ответы тех, кому вы написали.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>Комната для тех, кто поддерживает</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>Комната потише, без потока публичной. Она открывается для всех, кто поддерживает Rust+ Desktop, и остаётся открытой, пока вы это делаете.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Поддержать Rust+ Desktop</value>
+  </data>
 </root>

@@ -4379,15 +4379,30 @@
                                 background would read as "this tab is active", which it is not.
                             -->
                             <Border x:Name="RailSocialDivider" Height="1" Width="22" Background="#33FFFFFF" Margin="0,2,0,8" />
-                            <ui:Button
-                                x:Name="RailSocialButton"
-                                Style="{StaticResource SidebarRailButton}"
-                                AutomationProperties.Name="{DynamicResource SocialRailName}"
-                                AutomationProperties.HelpText="{DynamicResource SocialRailHelp}"
-                                Click="BtnSocial_Click"
-                                ToolTip="{DynamicResource SocialRailName}"
-                                Foreground="#FF8B7BE8"
-                                Icon="{ui:SymbolIcon Symbol=ChatMultiple24}" />
+                            <Grid>
+                                <ui:Button
+                                    x:Name="RailSocialButton"
+                                    Style="{StaticResource SidebarRailButton}"
+                                    AutomationProperties.Name="{DynamicResource SocialRailName}"
+                                    AutomationProperties.HelpText="{DynamicResource SocialRailHelp}"
+                                    Click="BtnSocial_Click"
+                                    ToolTip="{DynamicResource SocialRailName}"
+                                    Foreground="#FF8B7BE8"
+                                    Icon="{ui:SymbolIcon Symbol=ChatMultiple24}" />
+                                <!--
+                                    Unread messages, over the bubble. IsHitTestVisible off so the
+                                    badge cannot swallow the click it is sitting on.
+                                -->
+                                <Border x:Name="RailSocialBadge" Visibility="Collapsed"
+                                        IsHitTestVisible="False"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        Margin="0,2,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                        Background="#FFE5484D" Padding="3,0">
+                                    <TextBlock x:Name="RailSocialBadgeText" Foreground="White" FontSize="9"
+                                               FontWeight="Bold" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
                             <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,8,0,8" />
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"

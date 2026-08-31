@@ -6355,4 +6355,22 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ChatScrollToBottom" xml:space="preserve">
     <value>Nach unten springen</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>Supporter Chat</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>Postfach</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>Hier landen Anfragen zu deinen LFG- und LFM-Einträgen, und die Antworten von Leuten, die du angeschrieben hast.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>Ein Raum für Supporter</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>Ein ruhigerer Raum, ohne den Betrieb des öffentlichen. Er öffnet sich für alle, die Rust+ Desktop unterstützen, und bleibt offen, solange du das tust.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Rust+ Desktop unterstützen</value>
+  </data>
 </root>

@@ -6277,4 +6277,22 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ProfileVacClean" xml:space="preserve">
     <value>Sin sanciones (0 bloqueos)</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>Chat de mecenas</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>Buzón</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>Aquí llegan las solicitudes sobre tus anuncios de LFG y LFM, y las respuestas de quienes hayas escrito.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>Una sala para mecenas</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>Una sala más tranquila, sin el tráfico de la pública. Se abre para quien apoya Rust+ Desktop y sigue abierta mientras lo hagas.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Apoyar Rust+ Desktop</value>
+  </data>
 </root>

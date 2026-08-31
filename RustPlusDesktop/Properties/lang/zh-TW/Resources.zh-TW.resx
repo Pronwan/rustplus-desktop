@@ -1288,4 +1288,22 @@
   <data name="ProfileVacClean" xml:space="preserve">
     <value>信用良好（0 次封鎖）</value>
   </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>贊助者聊天</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>收件匣</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>關於你的 LFG 和 LFM 徵人貼文的申請會出現在這裡，你主動聯絡過的人的回覆也在這裡。</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>贊助者專屬聊天室</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>一個更安靜的房間，沒有公開聊天室的喧鬧。只要你在贊助 Rust+ Desktop，這裡就一直為你開著。</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>贊助 Rust+ Desktop</value>
+  </data>
 </root>

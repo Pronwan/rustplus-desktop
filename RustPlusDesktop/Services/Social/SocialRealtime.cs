@@ -38,6 +38,13 @@ public static class SocialRealtime
 
     private const string ChatChannel = "presence-chat.global";
 
+    /// <summary>
+    /// The supporters' room. Subscribed unconditionally: the server refuses it for accounts it
+    /// is not for, which is the same answer asking first would have given and one round trip
+    /// cheaper. A refusal is logged and nothing else happens.
+    /// </summary>
+    private const string SupporterChannel = "presence-chat.supporter";
+
     private static readonly object Gate = new();
 
     private static bool _handlerAttached;
@@ -93,6 +100,7 @@ public static class SocialRealtime
             _ = RealtimeClient.Shared.UnsubscribeAsync(channel);
 
         _ = RealtimeClient.Shared.UnsubscribeAsync(ChatChannel);
+        _ = RealtimeClient.Shared.UnsubscribeAsync(SupporterChannel);
     }
 
     private static async Task SubscribeAsync(string userChannel)
@@ -107,6 +115,7 @@ public static class SocialRealtime
             // thread requests arrive on the same connection, and an occupant list that emptied
             // whenever somebody closed a panel would describe nothing useful.
             await RealtimeClient.Shared.SubscribeAsync(ChatChannel).ConfigureAwait(false);
+            await RealtimeClient.Shared.SubscribeAsync(SupporterChannel).ConfigureAwait(false);
         }
         catch
         {
