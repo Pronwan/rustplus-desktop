@@ -174,7 +174,22 @@ public partial class LfgOverlay : UserControl
         }
 
         ClosedGate.Visibility = Visibility.Collapsed;
+        _hasLfgConsent = settings?.LfgConsent ?? false;
+        _hasChatConsent = settings?.ChatConsent ?? false;
 
+        if (SecChat.IsChecked == true)
+        {
+            await LoadChatAsync().ConfigureAwait(true);
+        }
+        else
+        {
+            await LoadLfgSectionAsync().ConfigureAwait(true);
+        }
+    }
+
+    private async Task LoadLfgSectionAsync()
+    {
+        var settings = await SocialApi.GetSettingsAsync().ConfigureAwait(true);
         var myListing = await SocialApi.GetListingDetailsAsync().ConfigureAwait(true);
         var mode = myListing.Mode;
 
@@ -182,8 +197,6 @@ public partial class LfgOverlay : UserControl
         try
         {
             _hasLfgConsent = settings?.LfgConsent ?? false;
-            _hasChatConsent = settings?.ChatConsent ?? false;
-
             TxtBlurb.Text = myListing.Blurb ?? "";
 
             (mode switch
@@ -211,7 +224,6 @@ public partial class LfgOverlay : UserControl
         if (mode != LfgMode.None)
             _ = SocialApi.RenewListingAsync();
 
-        await LoadChatAsync().ConfigureAwait(true);
         await LoadListingsAsync().ConfigureAwait(true);
         await LoadInboxAsync().ConfigureAwait(true);
     }
@@ -968,7 +980,14 @@ public partial class LfgOverlay : UserControl
         ChatSection.Visibility = chat ? Visibility.Visible : Visibility.Collapsed;
         LfgSection.Visibility = chat ? Visibility.Collapsed : Visibility.Visible;
 
-        if (chat) _ = LoadChatAsync();
+        if (chat)
+        {
+            _ = LoadChatAsync();
+        }
+        else
+        {
+            _ = LoadLfgSectionAsync();
+        }
     }
 
     /// <summary>What the room currently holds, so a pushed line can be added to it.</summary>

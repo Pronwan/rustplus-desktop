@@ -126,7 +126,10 @@ public static class SocialRealtime
             {
                 Raise(() => ChatMessageReceived?.Invoke(msg));
             }
-            Raise(() => ChatChanged?.Invoke());
+            else
+            {
+                Raise(() => ChatChanged?.Invoke());
+            }
         }
         else if (norm.EndsWith("ChatMessageDeleted", StringComparison.OrdinalIgnoreCase)
             || norm.Equals("chat.message_deleted", StringComparison.OrdinalIgnoreCase))
@@ -190,7 +193,15 @@ public static class SocialRealtime
             var steamId = sender?["steam_id"]?.ToString() ?? data["steam_id"]?.ToString();
 
             var rolesToken = sender?["roles"] as JArray ?? data["roles"] as JArray;
-            var roles = rolesToken?.Select(r => r.ToString()).ToList() ?? new List<string>();
+            var roles = new List<string>();
+            if (rolesToken != null)
+            {
+                foreach (var r in rolesToken)
+                {
+                    var roleStr = r is JObject obj ? obj["name"]?.ToString() : r.ToString();
+                    if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
+                }
+            }
 
             var createdAtStr = data["created_at"]?.ToString();
             DateTime? sentAt = null;
@@ -298,7 +309,16 @@ public static class SocialRealtime
             Models.SanctionModerator? moderator = null;
             if (data["moderator"] is JObject m)
             {
-                var modRoles = (m["roles"] as JArray)?.Select(r => r.ToString()).ToList() ?? new List<string>();
+                var modRoles = new List<string>();
+                if (m["roles"] is JArray mRolesArray)
+                {
+                    foreach (var r in mRolesArray)
+                    {
+                        var roleStr = r is JObject obj ? obj["name"]?.ToString() : r.ToString();
+                        if (!string.IsNullOrWhiteSpace(roleStr)) modRoles.Add(roleStr!);
+                    }
+                }
+
                 moderator = new Models.SanctionModerator
                 {
                     Id = m["id"]?.ToString() ?? "",

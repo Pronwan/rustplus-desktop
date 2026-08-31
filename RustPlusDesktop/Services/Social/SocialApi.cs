@@ -61,8 +61,23 @@ public sealed record SocialSettings(
 /// </summary>
 public static class SocialApi
 {
-    public static async Task<SocialSettings?> GetSettingsAsync()
+    private static SocialSettings? _cachedSettings;
+    private static DateTime _settingsCachedAt = DateTime.MinValue;
+    private static readonly TimeSpan SettingsCacheDuration = TimeSpan.FromMinutes(5);
+
+    public static void InvalidateSettingsCache()
     {
+        _cachedSettings = null;
+        _settingsCachedAt = DateTime.MinValue;
+    }
+
+    public static async Task<SocialSettings?> GetSettingsAsync(bool forceRefresh = false)
+    {
+        if (!forceRefresh && _cachedSettings != null && DateTime.UtcNow - _settingsCachedAt < SettingsCacheDuration)
+        {
+            return _cachedSettings;
+        }
+
         try
         {
             var body = await CloudApiClient.CallApiAsync("social/settings", HttpMethod.Get)
@@ -71,7 +86,7 @@ public static class SocialApi
             using var doc = JsonDocument.Parse(body);
             var data = doc.RootElement.GetProperty("data");
 
-            return new SocialSettings(
+            var settings = new SocialSettings(
                 ParseAccept(data.TryGetProperty("accept_mode", out var a) ? a.GetString() : null),
                 data.TryGetProperty("lfg_consent", out var l) && l.GetBoolean(),
                 data.TryGetProperty("dm_consent", out var d) && d.GetBoolean(),
@@ -80,19 +95,30 @@ public static class SocialApi
                 !doc.RootElement.TryGetProperty("meta", out var meta)
                     || !meta.TryGetProperty("enabled", out var enabled)
                     || enabled.ValueKind != System.Text.Json.JsonValueKind.False);
+
+            _cachedSettings = settings;
+            _settingsCachedAt = DateTime.UtcNow;
+
+            return settings;
         }
         catch
         {
-            return null;
+            return _cachedSettings;
         }
     }
 
-    public static Task<bool> SetAcceptModeAsync(AcceptMode mode)
-        => WriteAsync("social/settings", HttpMethod.Put, new { accept_mode = Serialize(mode) });
+    public static async Task<bool> SetAcceptModeAsync(AcceptMode mode)
+    {
+        InvalidateSettingsCache();
+        return await WriteAsync("social/settings", HttpMethod.Put, new { accept_mode = Serialize(mode) }).ConfigureAwait(false);
+    }
 
-    /// <summary>Records that the current disclosure was read. Scope is "lfg" or "dm".</summary>
-    public static Task<bool> ConsentAsync(string scope)
-        => WriteAsync("social/consent", HttpMethod.Post, new { scope });
+    /// <summary>Records that the current disclosure was read. Scope is "lfg" or "dm" or "chat".</summary>
+    public static async Task<bool> ConsentAsync(string scope)
+    {
+        InvalidateSettingsCache();
+        return await WriteAsync("social/consent", HttpMethod.Post, new { scope }).ConfigureAwait(false);
+    }
 
     public sealed record MyLfgListing(LfgMode Mode, string? Blurb, string? Region, string? ServerName);
 
@@ -418,7 +444,15 @@ public static class SocialApi
                     {
                         foreach (var r in rArray.EnumerateArray())
                         {
-                            var roleStr = r.GetString();
+                            string? roleStr = null;
+                            if (r.ValueKind == JsonValueKind.String)
+                            {
+                                roleStr = r.GetString();
+                            }
+                            else if (r.ValueKind == JsonValueKind.Object && r.TryGetProperty("name", out var nameProp))
+                            {
+                                roleStr = nameProp.GetString();
+                            }
                             if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
                         }
                     }
@@ -570,7 +604,15 @@ public static class SocialApi
         {
             foreach (var r in rArray.EnumerateArray())
             {
-                var roleStr = r.GetString();
+                string? roleStr = null;
+                if (r.ValueKind == JsonValueKind.String)
+                {
+                    roleStr = r.GetString();
+                }
+                else if (r.ValueKind == JsonValueKind.Object && r.TryGetProperty("name", out var nameProp))
+                {
+                    roleStr = nameProp.GetString();
+                }
                 if (!string.IsNullOrWhiteSpace(roleStr)) roles.Add(roleStr!);
             }
         }
