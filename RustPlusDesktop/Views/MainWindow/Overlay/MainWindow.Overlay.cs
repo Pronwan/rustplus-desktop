@@ -2887,6 +2887,32 @@ private bool _overlayToolsVisible = false;
 
     // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas fuer einen Spieler
     // und cached sie in _playerOverlayElements[steamId]
+    /// <summary>
+    /// Keeps routes the cloud copy does not know about.
+    ///
+    /// The same shape as the device merge above it, and for the same reason: an older payload
+    /// missing a newer kind of thing is not a payload saying that thing was deleted.
+    /// </summary>
+    private static void MergeMissingLocalRoutesInto(OverlaySaveData target, OverlaySaveData local)
+    {
+        if (local.Routes == null || local.Routes.Count == 0) return;
+
+        target.Routes ??= new List<SavedRoute>();
+
+        var known = new HashSet<string>(target.Routes.Select(r => r.Id), StringComparer.Ordinal);
+
+        foreach (SavedRoute route in local.Routes)
+            if (!string.IsNullOrWhiteSpace(route.Id) && known.Add(route.Id))
+                target.Routes.Add(route);
+
+        if (local.ImportedRouteIds is { Count: > 0 })
+        {
+            target.ImportedRouteIds ??= new List<string>();
+            foreach (string id in local.ImportedRouteIds)
+                if (!target.ImportedRouteIds.Contains(id)) target.ImportedRouteIds.Add(id);
+        }
+    }
+
     private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
     {
         // Routes are rebuilt here rather than alongside the strokes: they are their own objects
@@ -3149,6 +3175,13 @@ private bool _overlayToolsVisible = false;
                  || (cloudData.Devices?.Count ?? 0) > 0);
 
             OverlaySaveData? toUse;
+
+            // A cloud copy written before routes existed simply has none, and it is newer than
+            // the local file the moment anything else syncs. Taking it whole would read "no
+            // routes" as "routes deleted" and wipe them - which is exactly what happened. What
+            // the cloud does not carry, local keeps.
+            if (cloudData != null && localData != null)
+                MergeMissingLocalRoutesInto(cloudData, localData);
 
             if (!localHasContent && cloudHasContent)
             {
@@ -3779,6 +3812,9 @@ private bool _overlayToolsVisible = false;
                     data.Icons = mapData.Icons ?? new();
                     data.Texts = mapData.Texts ?? new();
                     data.Devices = mapData.Devices ?? new();
+                    // The same omission as everywhere else: a teammate broadcasting their map
+                    // would arrive with everything except the routes.
+                    data.Routes = mapData.Routes ?? new();
                 }
             }
 
