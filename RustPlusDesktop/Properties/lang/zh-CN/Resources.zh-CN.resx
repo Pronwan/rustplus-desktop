@@ -6012,4 +6012,13 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
     <value>暂无备注</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust 游戏时间</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC 状态</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>信誉良好（0 次封禁）</value>
+  </data>
 </root>

@@ -5501,4 +5501,13 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>Hiçbir eğitim kuralı çalıştırmaz veya gerçek bir akıllı cihazı açmaz.</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust Hours</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC Status</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Clean (0 bans on record)</value>
+  </data>
 </root>

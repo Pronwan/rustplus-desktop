@@ -5501,4 +5501,13 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>Niciun tutorial nu execută o regulă sau nu activează un dispozitiv inteligent real.</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust Hours</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC Status</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Clean (0 bans on record)</value>
+  </data>
 </root>

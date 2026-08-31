@@ -5882,4 +5882,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
     <value>작성된 메모가 없습니다</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust 플레이 시간</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC 상태</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>양호함 (제재 0건)</value>
+  </data>
 </root>

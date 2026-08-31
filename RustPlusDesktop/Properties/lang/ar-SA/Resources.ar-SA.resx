@@ -5856,4 +5856,13 @@
   <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
     <value>لم تتم إضافة ملاحظة بعد</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>ساعات Rust</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>حالة VAC</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>سليم (0 حظر مسجل)</value>
+  </data>
 </root>

@@ -6339,4 +6339,13 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="BlocksSince" xml:space="preserve">
     <value>Blockiert</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust Spielzeit</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC-Status</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Einwandfrei (keine Sperren)</value>
+  </data>
 </root>

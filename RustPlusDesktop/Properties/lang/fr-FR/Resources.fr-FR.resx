@@ -6264,4 +6264,13 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
     <value>Aucune note pour le moment</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Heures sur Rust</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>Statut VAC</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>En règle (0 bannissement)</value>
+  </data>
 </root>

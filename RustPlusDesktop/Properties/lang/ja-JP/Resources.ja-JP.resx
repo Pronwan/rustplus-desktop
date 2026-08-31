@@ -5501,4 +5501,13 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>ルールを実行したり、実際のスマート デバイスを切り替えたりするチュートリアルはありません。</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust Hours</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC Status</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Clean (0 bans on record)</value>
+  </data>
 </root>
