@@ -77,6 +77,7 @@ public partial class MainWindow
         if (RoutesPanel != null) RoutesPanel.Visibility = Visibility.Visible;
         if (LayersPanel != null) LayersPanel.Visibility = Visibility.Collapsed;
 
+        ApplyRouteModeChrome(true);
         UpdateRoutesPanelState();
     }
 
@@ -88,11 +89,42 @@ public partial class MainWindow
         if (RoutesPanel != null) RoutesPanel.Visibility = Visibility.Collapsed;
         if (RouteNameRow != null) RouteNameRow.Visibility = Visibility.Collapsed;
 
+        ApplyRouteModeChrome(false);
         RestoreNonRouteOverlay();
 
         // The visible routes stay on the map. Leaving the panel is not the same as putting the
         // routes away, and somebody who ticked two of them wants to see them while they play.
         RedrawAllRoutes();
+    }
+
+    /// <summary>
+    /// The toolbar as route mode leaves it.
+    ///
+    /// The arrow and the arrow-path both decorate a stroke, and neither means anything once the
+    /// stroke is a route with its own start and end — leaving them in the row would be offering
+    /// two things that look like routes and are not. The pen, line, box and circle all stay,
+    /// because each of them is a perfectly good way to describe a path.
+    ///
+    /// The button itself lights up, so the mode is legible from the toolbar rather than only from
+    /// the panel it opened.
+    /// </summary>
+    private void ApplyRouteModeChrome(bool on)
+    {
+        Visibility hidden = on ? Visibility.Collapsed : Visibility.Visible;
+
+        if (ToolArrowButton != null) ToolArrowButton.Visibility = hidden;
+        if (ToolRouteButton != null) ToolRouteButton.Visibility = hidden;
+
+        if (BtnToggleRoutes != null)
+        {
+            BtnToggleRoutes.Background = on
+                ? new SolidColorBrush(Color.FromArgb(0x66, 0x3F, 0xD7, 0xFF))
+                : Brushes.Transparent;
+        }
+
+        // A tool that just disappeared cannot stay selected.
+        if (on && _currentTool is OverlayToolMode.Arrow or OverlayToolMode.Route)
+            SetCurrentTool(OverlayToolMode.Draw);
     }
 
     private void HideNonRouteOverlay()
@@ -232,7 +264,7 @@ public partial class MainWindow
     /// from the end moves the end and drawing back from the start extends the other way. When the
     /// end lands back on the start the route closes and becomes a lap.
     /// </summary>
-    private void AppendStrokeToActiveRoute(Polyline stroke)
+    private void AppendStrokeToActiveRoute(Polyline stroke, bool closes = false)
     {
         List<Point> pts = stroke.Points.ToList();
 
@@ -273,8 +305,14 @@ public partial class MainWindow
             }
         }
 
-        // Back where it began: the route is a lap, and the two ends become one point.
-        if (item.Points.Count > 2 && Distance(item.Points[0], item.Points[^1]) <= RouteCloseRadiusPx)
+        // A box or a circle arrives closed already; a pen or a line closes by coming back to
+        // where it started.
+        if (closes && item.Points.Count > 2)
+        {
+            item.Points[^1] = item.Points[0];
+            item.Closed = true;
+        }
+        else if (item.Points.Count > 2 && Distance(item.Points[0], item.Points[^1]) <= RouteCloseRadiusPx)
         {
             item.Points[^1] = item.Points[0];
             item.Closed = true;

@@ -1075,25 +1075,34 @@
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" MinWidth="0" />
                                                     </Grid.ColumnDefinitions>
-                                                    <Ellipse Grid.Column="0" Width="30" Height="30" Margin="0,0,10,0">
+                                                    <Ellipse Grid.Column="0" Width="30" Height="30" Margin="0,0,10,0"
+                                                             VerticalAlignment="Top">
                                                         <Ellipse.Fill>
                                                             <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
                                                         </Ellipse.Fill>
                                                     </Ellipse>
-                                                    <TextBlock Grid.Column="1" VerticalAlignment="Center"
-                                                               Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
-                                                               FontSize="12.5" FontWeight="SemiBold"
-                                                               TextTrimming="CharacterEllipsis" />
-                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <ui:Button Height="26" Appearance="Primary" Margin="0,0,6,0"
-                                                                   Tag="{Binding}" Click="BtnFriendAccept_Click"
-                                                                   Content="{DynamicResource FriendsAccept}" />
-                                                        <ui:Button Height="26" Appearance="Secondary"
-                                                                   Tag="{Binding}" Click="BtnFriendDecline_Click"
-                                                                   Content="{DynamicResource FriendsDecline}" />
+
+                                                    <!--
+                                                        The name above, the two answers below it. Side by side they
+                                                        needed more width than the panel has, and the first thing to
+                                                        fall off the edge was the button you press.
+                                                    -->
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                                   FontSize="12.5" FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                                            <ui:Button Height="26" Padding="10,0" FontSize="11"
+                                                                       Appearance="Primary" Margin="0,0,6,0"
+                                                                       Tag="{Binding}" Click="BtnFriendAccept_Click"
+                                                                       Content="{DynamicResource FriendsAccept}" />
+                                                            <ui:Button Height="26" Padding="10,0" FontSize="11"
+                                                                       Appearance="Secondary"
+                                                                       Tag="{Binding}" Click="BtnFriendDecline_Click"
+                                                                       Content="{DynamicResource FriendsDecline}" />
+                                                        </StackPanel>
                                                     </StackPanel>
                                                 </Grid>
                                             </Border>

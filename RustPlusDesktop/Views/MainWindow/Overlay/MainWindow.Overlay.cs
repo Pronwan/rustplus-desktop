@@ -808,6 +808,10 @@ private bool _overlayToolsVisible = false;
                 // Drop an accidental click that never became a shape.
                 if (anchor is Point a && PointDistance(a, mapPos) < 0.75)
                     RemoveOwnElement(completed);
+                else if (IsRouteModeActive)
+                    // A shape can be a route too. A line joins on like a pen stroke; a box or a
+                    // circle arrives already closed, which is a lap by any other name.
+                    AppendStrokeToActiveRoute(completed, closes: _currentTool is OverlayToolMode.Box or OverlayToolMode.Circle);
                 else
                     RecordOverlayAdd(completed);
             }
