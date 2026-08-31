@@ -334,6 +334,26 @@ public partial class LfgOverlay : UserControl
         PreviewBlurb.Text = !string.IsNullOrEmpty(blurb)
             ? blurb
             : Properties.Resources.GetString("LfgEmptyBlurbPlaceholder");
+
+        int teamCount = 0;
+        try
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow mw && mw.TeamMembers != null)
+            {
+                teamCount = mw.TeamMembers.Count;
+            }
+        }
+        catch { }
+
+        if (isLfm)
+        {
+            PreviewTeamSize.Text = teamCount > 0 ? teamCount.ToString() : "1";
+            PreviewTeamSizePanel.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            PreviewTeamSizePanel.Visibility = Visibility.Collapsed;
+        }
     }
 
     private async void AcceptMode_Changed(object sender, SelectionChangedEventArgs e)
