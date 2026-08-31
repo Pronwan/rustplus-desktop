@@ -6305,7 +6305,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Steam ID (17 dígitos)</value>
   </data>
   <data name="FriendsAddMessage" xml:space="preserve">
-    <value>Di quién eres: es el único mensaje que puedes enviar hasta que respondan</value>
+    <value>Di quién eres: solo este mensaje</value>
   </data>
   <data name="FriendsAddAction" xml:space="preserve">
     <value>Enviar solicitud</value>
@@ -6326,7 +6326,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Eliminar amigo</value>
   </data>
   <data name="FriendsWithdraw" xml:space="preserve">
-    <value>Retirar solicitud</value>
+    <value>Retirar</value>
   </data>
   <data name="FriendsMessage" xml:space="preserve">
     <value>Enviar un mensaje</value>

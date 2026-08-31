@@ -6053,7 +6053,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>Steam ID（17 位数字）</value>
   </data>
   <data name="FriendsAddMessage" xml:space="preserve">
-    <value>说说你是谁——在对方回复之前，你只能发这一条</value>
+    <value>说说你是谁——只能发这一条</value>
   </data>
   <data name="FriendsAddAction" xml:space="preserve">
     <value>发送请求</value>
@@ -6074,7 +6074,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>删除好友</value>
   </data>
   <data name="FriendsWithdraw" xml:space="preserve">
-    <value>撤回请求</value>
+    <value>撤回</value>
   </data>
   <data name="FriendsMessage" xml:space="preserve">
     <value>发消息</value>

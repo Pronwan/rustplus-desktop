@@ -6305,7 +6305,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Steam ID (17 chiffres)</value>
   </data>
   <data name="FriendsAddMessage" xml:space="preserve">
-    <value>Dites qui vous êtes — c’est le seul message possible avant leur réponse</value>
+    <value>Dites qui vous êtes — un seul message</value>
   </data>
   <data name="FriendsAddAction" xml:space="preserve">
     <value>Envoyer la demande</value>
@@ -6326,7 +6326,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Retirer des amis</value>
   </data>
   <data name="FriendsWithdraw" xml:space="preserve">
-    <value>Annuler la demande</value>
+    <value>Annuler</value>
   </data>
   <data name="FriendsMessage" xml:space="preserve">
     <value>Envoyer un message</value>
