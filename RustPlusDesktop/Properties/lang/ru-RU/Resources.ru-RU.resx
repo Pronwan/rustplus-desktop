@@ -6264,4 +6264,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
     <value>Заметка пока не указана</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Часы в Rust</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>Статус VAC</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Без блокировок (0 банов)</value>
+  </data>
 </root>

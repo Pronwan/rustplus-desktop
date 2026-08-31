@@ -1202,10 +1202,20 @@ public partial class LfgOverlay : UserControl
         if (!string.IsNullOrWhiteSpace(profile.PersonaName)) ProfileName.Text = profile.PersonaName;
         if (SafeImage(profile.AvatarUrl) is { } avatar) ProfileAvatar.ImageSource = avatar;
 
+        AddProfileFact("ProfileRustHours", profile.RustHours);
         AddProfileFact("ProfileMember", profile.MemberSince);
         AddProfileFact("ProfileLocation", profile.Location);
 
-        ProfileVacWarning.Visibility = profile.VacBanned ? Visibility.Visible : Visibility.Collapsed;
+        if (profile.VacBanned)
+        {
+            ProfileVacWarning.Visibility = Visibility.Visible;
+            AddProfileFact("ProfileVacStatus", Properties.Resources.GetString("ProfileVac"));
+        }
+        else
+        {
+            ProfileVacWarning.Visibility = Visibility.Collapsed;
+            AddProfileFact("ProfileVacStatus", Properties.Resources.GetString("ProfileVacClean"));
+        }
 
         if (profile.IsPrivate)
         {

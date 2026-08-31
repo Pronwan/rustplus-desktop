@@ -14,7 +14,8 @@ public sealed record SteamProfile(
     string? MemberSince,
     string? Location,
     bool VacBanned,
-    bool IsPrivate)
+    bool IsPrivate,
+    string? RustHours)
 {
     public string ProfileUrl => $"https://steamcommunity.com/profiles/{SteamId}";
 }
@@ -50,6 +51,18 @@ public static class SteamProfileService
         return match.Success ? Trim(match.Groups[1].Value) : null;
     }
 
+    private static string? ExtractRustHours(string xml)
+    {
+        var match = Regex.Match(xml, @"<mostPlayedGame>\s*<gameName>(?:<!\[CDATA\[)?Rust(?:\]\]>)?</gameName>.*?<hoursOnRecord>(.*?)</hoursOnRecord>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        if (match.Success)
+        {
+            var text = Trim(match.Groups[1].Value);
+            if (!string.IsNullOrEmpty(text))
+                return $"{text} hrs";
+        }
+        return null;
+    }
+
     private static string? Trim(string value)
     {
         var text = value.Trim();
@@ -73,6 +86,27 @@ public static class SteamProfileService
             var isPrivate = Field(xml, "privacyState") is { } privacy
                 && !privacy.Equals("public", StringComparison.OrdinalIgnoreCase);
 
+            var rustHours = ExtractRustHours(xml);
+
+            if (rustHours == null && !isPrivate)
+            {
+                try
+                {
+                    var statsXml = await Http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}/stats/appid/252490/?xml=1")
+                        .ConfigureAwait(false);
+                    var hoursMatch = Regex.Match(statsXml, @"<hoursPlayed>(.*?)</hoursPlayed>", RegexOptions.IgnoreCase);
+                    if (hoursMatch.Success)
+                    {
+                        var val = Trim(hoursMatch.Groups[1].Value);
+                        if (val != null && double.TryParse(val, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var h) && h > 0)
+                        {
+                            rustHours = $"{h:N0} hrs";
+                        }
+                    }
+                }
+                catch { }
+            }
+
             var profile = new SteamProfile(
                 steamId!,
                 Field(xml, "steamID"),
@@ -80,7 +114,8 @@ public static class SteamProfileService
                 Field(xml, "memberSince"),
                 Field(xml, "location"),
                 Field(xml, "vacBanned") == "1",
-                isPrivate);
+                isPrivate,
+                rustHours);
 
             Cache[steamId!] = profile;
             return profile;

@@ -870,4 +870,13 @@
   <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
     <value>暫無備註</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust 遊戲時間</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC 狀態</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>信用良好（0 次封鎖）</value>
+  </data>
 </root>
