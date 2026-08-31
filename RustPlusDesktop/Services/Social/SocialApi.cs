@@ -424,7 +424,7 @@ public static class SocialApi
     /// which is what a live nudge asks for: the server still decides what the reader may see,
     /// so blocks and sanctions keep working without the client holding a block list of its own.
     /// </summary>
-    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null)
+    public static async Task<Models.ChatSnapshot> GetChatAsync(string? since = null, int limit = 50)
     {
         var lines = new System.Collections.Generic.List<Models.ChatLine>();
         Models.ChatSanction? sanction = null;
@@ -433,9 +433,14 @@ public static class SocialApi
 
         try
         {
-            var query = string.IsNullOrWhiteSpace(since)
-                ? null
-                : new System.Collections.Generic.Dictionary<string, string> { ["since"] = since! };
+            var query = new System.Collections.Generic.Dictionary<string, string>
+            {
+                ["limit"] = limit.ToString()
+            };
+            if (!string.IsNullOrWhiteSpace(since))
+            {
+                query["since"] = since!;
+            }
 
             var body = await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Get, queryParams: query)
                 .ConfigureAwait(false);
