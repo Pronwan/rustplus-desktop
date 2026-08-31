@@ -6361,4 +6361,34 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="FriendsSent" xml:space="preserve">
     <value>Demande envoyée. Votre message est arrivé et peut recevoir une réponse.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>Itinéraires</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>Itinéraires — des trajets nommés, avec longueur et temps de course</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>Chemin fléché — tracez un trajet, les flèches de direction le suivent (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>Nouvel itinéraire</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>Quitter le mode itinéraires</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>Supprimer l’itinéraire</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>Afficher ou masquer sur la carte</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>Aucun itinéraire pour l’instant. Créez-en un, nommez-le, puis tracez-le sur la carte.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Entrée pour créer, Échap pour annuler. L’itinéraire prend la couleur du crayon.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>Tracez sur la carte. Le premier trait pose le départ ; si vous repartez de la fin, la fin se déplace. Revenez au départ et l’itinéraire se referme en boucle.</value>
+  </data>
 </root>

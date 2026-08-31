@@ -6278,4 +6278,34 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="FriendsSent" xml:space="preserve">
     <value>요청을 보냈습니다. 상대가 메시지를 보고 답할 수 있습니다.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>경로</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>경로 — 이름과 길이, 달리는 시간이 붙는 길</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>화살표 경로 — 선을 그으면 방향 화살표가 따라옵니다 (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>새 경로</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>경로 모드 나가기</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>경로 삭제</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>지도에서 표시하거나 숨기기</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>아직 경로가 없습니다. 하나 만들고 이름을 붙인 뒤 지도에 그려 보세요.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter로 만들고 Esc로 취소합니다. 경로는 펜에 설정된 색을 따릅니다.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>지도에 그리세요. 첫 획이 시작점을 정하고, 끝점에서 이어 그리면 끝점이 옮겨집니다. 시작점으로 돌아오면 한 바퀴로 닫힙니다.</value>
+  </data>
 </root>

@@ -6402,4 +6402,34 @@ You can find more information on the server&apos;s official website:
   <data name="FriendsSent" xml:space="preserve">
     <value>Request sent. They will see your message and can answer it.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>Routes</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>Routes — named paths with a length and a running time</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>Arrow path — draw a path, direction arrows follow it (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>New route</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>Leave route mode</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>Delete route</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>Show or hide on the map</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>No routes yet. Add one, give it a name, then draw it on the map.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter to create, Escape to cancel. The route takes the colour the pen is set to.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>Draw on the map. The first stroke sets the start; drawing on from the end moves it. Come back to the start and the route closes into a lap.</value>
+  </data>
 </root>

@@ -6252,4 +6252,34 @@
   <data name="FriendsSent" xml:space="preserve">
     <value>أُرسل الطلب. سيرى رسالتك ويمكنه الرد عليها.</value>
   </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>المسارات</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>المسارات — طرق لها اسم وطول وزمن ركض</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>مسار بالأسهم — ارسم خطًا وتتبعه أسهم الاتجاه (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>مسار جديد</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>الخروج من وضع المسارات</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>حذف المسار</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>إظهار أو إخفاء على الخريطة</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>لا مسارات بعد. أنشئ واحدًا وسمِّه ثم ارسمه على الخريطة.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter للإنشاء وEscape للإلغاء. يأخذ المسار لون القلم الحالي.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>ارسم على الخريطة. الخط الأول يحدد نقطة البداية، وإن تابعت من النهاية تحركت النهاية معك. عد إلى البداية فينغلق المسار في دورة كاملة.</value>
+  </data>
 </root>

@@ -471,6 +471,8 @@ private bool _overlayToolsVisible = false;
         // Wir bauen jetzt meine Shapes.
         var myList = new List<FrameworkElement>();
 
+        ApplySavedRoutes(data.Routes);
+
         // 1) Strokes
         foreach (var stroke in data.Strokes)
         {
@@ -820,7 +822,11 @@ private bool _overlayToolsVisible = false;
             _currentStroke = null;
             if (completed != null)
             {
-                if (_currentTool == OverlayToolMode.Route)
+                if (IsRouteModeActive)
+                    // In route mode a stroke is not a stroke: it extends the route being drawn,
+                    // which owns its own geometry and its own start and end.
+                    AppendStrokeToActiveRoute(completed);
+                else if (_currentTool == OverlayToolMode.Route)
                     // Replace the freehand stroke with evenly-spaced direction arrows.
                     BuildArrowRouteElements(completed);
                 else
@@ -2772,6 +2778,10 @@ private bool _overlayToolsVisible = false;
     {
         var data = new OverlaySaveData();
         data.LastUpdatedUnix = DataManager.UnixNow(); // NEU: stamp jetzt
+
+        // Routes carry their own geometry rather than appearing in the stroke list. Their visuals
+        // have no OverlayTag, so the loop below steps over them on its own.
+        data.Routes = BuildSavedRoutes();
 
         foreach (var child in Overlay.Children)
         {
