@@ -303,6 +303,10 @@ namespace RustPlusDesk.Services.Data
                             data.Strokes         = mapData.Strokes  ?? data.Strokes;
                             data.Icons           = mapData.Icons    ?? data.Icons;
                             data.Texts           = mapData.Texts    ?? data.Texts;
+                            // The download end of the same pipe. Uploading routes is no use if
+                            // the fetch that brings them back leaves them in the payload.
+                            data.Routes          = mapData.Routes   ?? data.Routes;
+                            data.ImportedRouteIds = mapData.ImportedRouteIds ?? data.ImportedRouteIds;
                             data.LastUpdatedUnix = mapData.LastUpdatedUnix > 0
                                 ? mapData.LastUpdatedUnix
                                 : new DateTimeOffset(mapRow.UpdatedAt).ToUnixTimeSeconds();

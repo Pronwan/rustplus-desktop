@@ -3812,6 +3812,9 @@ private bool _overlayToolsVisible = false;
                     data.Icons = mapData.Icons ?? new();
                     data.Texts = mapData.Texts ?? new();
                     data.Devices = mapData.Devices ?? new();
+                    // The same omission as everywhere else: a teammate broadcasting their map
+                    // would arrive with everything except the routes.
+                    data.Routes = mapData.Routes ?? new();
                 }
             }
 
