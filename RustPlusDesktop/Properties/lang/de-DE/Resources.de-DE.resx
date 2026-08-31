@@ -6383,7 +6383,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Steam-ID (17 Ziffern)</value>
   </data>
   <data name="FriendsAddMessage" xml:space="preserve">
-    <value>Sag kurz, wer du bist – mehr kannst du nicht schicken, bis geantwortet wird</value>
+    <value>Sag kurz, wer du bist – mehr geht nicht</value>
   </data>
   <data name="FriendsAddAction" xml:space="preserve">
     <value>Anfrage senden</value>
@@ -6404,7 +6404,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Freund entfernen</value>
   </data>
   <data name="FriendsWithdraw" xml:space="preserve">
-    <value>Anfrage zurückziehen</value>
+    <value>Zurückziehen</value>
   </data>
   <data name="FriendsMessage" xml:space="preserve">
     <value>Nachricht schreiben</value>

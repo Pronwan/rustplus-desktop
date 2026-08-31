@@ -5894,4 +5894,388 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="LfgPendingWaitingHint" xml:space="preserve">
     <value>{0} 님의 수락을 기다리는 중...</value>
   </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>설정된 금고 코드가 없습니다.</value>
+  </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>팀 찾기</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>팀을 찾거나, 팀에 들어올 사람을 찾으세요.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>내 상태</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>찾는 중 아님</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>팀을 찾는 중</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>팀원을 찾는 중</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>개인 메시지</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>메시지를 자동으로 받기</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>받기 전에 먼저 묻기</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>메시지 받지 않기</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>목록에 올라가기 전에</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>다른 플레이어가 당신의 이름과 아바타, 언어, 접속 여부, 플레이 중인 서버, 팀 인원수, 그리고 Steam 프로필 링크를 볼 수 있게 됩니다.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>중요한 것은 서버입니다. 팀을 찾는 사람은 누구나 당신이 어디서 플레이하는지 볼 수 있습니다. 언제든 목록에서 내려올 수 있습니다.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>이해했습니다</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>팀 찾기에는 클라우드 기능이 필요합니다. 다른 플레이어가 연락하는 대상은 당신의 계정이며, 계정이 없으면 연결할 것도 없습니다.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>클라우드 설정</value>
+  </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>목록에 올라가 있는 동안에는 연락할 방법이 하나는 있어야 합니다.</value>
+  </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>커뮤니티</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>전체 채팅과 팀 찾기</value>
+  </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>팀원을 찾는 팀</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>팀을 찾는 플레이어</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>모든 언어</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>접속 중만</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>새로 고침</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>지금은 목록에 아무도 없습니다. 나중에 다시 보거나, 위에서 직접 올려 보세요.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>팀</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>메시지 보내기</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam 프로필</value>
+  </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>메시지</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>아직 메시지가 없습니다. 위 목록에서 누군가에게 말을 걸어 보세요.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>메시지 입력…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>보내기</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>수락</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>거절</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>요청</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>거절됨</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} 님이 당신에게 메시지를 보내고 싶어 합니다.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>이 요청을 거절했습니다. 상대는 다시 보낼 수 없습니다.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>이 플레이어 차단</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>이 플레이어 신고</value>
+  </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>{0} 님에게 쓰기</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>인사와 함께 무엇을 찾는지 적어 보세요…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>첫 메시지는 일부러 짧게 제한합니다. 답장이 오면 그다음부터는 평범한 대화입니다.</value>
+  </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>전체 채팅</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>팀 찾기</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>모두에게 보내기…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>아직 아무도 말하지 않았습니다. 먼저 시작해 보세요.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>{0}까지 글을 쓸 수 없습니다. 사유: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>여기에 더 이상 글을 쓸 수 없습니다. 사유: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>여기 있는 모두가 당신의 이름을 봅니다. 어느 서버에서 플레이하는지는 아무도 볼 수 없습니다.</value>
+  </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>커뮤니티 허브</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>모두와 이야기하거나, 함께할 사람을 찾으세요.</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>{0} 신고</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>모든 신고는 운영자가 읽습니다. 어느 쪽에 가장 가까운지 알려 주세요.</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>괴롭힘 또는 협박</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>스팸 또는 광고</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>사기 또는 피싱</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>혐오 발언</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>성적이거나 잔혹한 내용</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>그 밖의 이유</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>더 알려 주실 내용이 있나요? (선택)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>무슨 일이 있었는지 직접 적어 주세요</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>신고하는 메시지</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>신고 보내기</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>신고를 보냈습니다</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>감사합니다. 운영자가 확인할 예정입니다. 그때까지 이 플레이어에게서 연락받고 싶지 않다면 차단할 수도 있습니다.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>신고를 보내지 못했습니다. 잠시 후 다시 시도해 주세요.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>아직 열리지 않았습니다</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>커뮤니티 채팅은 단계적으로 열리고 있습니다. 당신의 계정 차례가 되면 여기에 나타납니다. 문제가 생긴 것이 아닙니다.</value>
+  </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>여기에 글을 쓰기 전에</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>이 방은 공개되어 있습니다. Rust+ Desktop을 쓰는 모두가 당신이 쓴 글을 읽을 수 있습니다.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>금지: 모든 종류의 링크, 광고, 거래와 판매, 괴롭힘과 협박, 혐오 발언, 성적이거나 잔혹한 내용, 그리고 운영진 사칭.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>모든 신고는 운영자가 읽습니다. 규칙을 어기면 한동안, 또는 영구히 이 방을 잃을 수 있습니다. 영구 차단은 설치가 아니라 Steam 계정에 따라붙습니다. 같은 Steam ID로 새 계정을 만들어도 돌아올 수 없습니다.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>읽었습니다</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>공개 채팅방에서는 링크를 보낼 수 없습니다. 개인 메시지로 보내 주세요.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>방금 같은 내용을 보냈습니다. 잠시 기다려 주세요.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>새 계정은 잠시 기다린 뒤에 글을 쓸 수 있습니다. 방을 쓸 만하게 유지하기 위한 것입니다.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>보낼 내용이 남지 않았습니다.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>보내지 못했습니다. 잠시 후 다시 시도해 주세요.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Steam 프로필 열기</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Steam ID 복사</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Steam 가입일</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>지역</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>VAC 차단 기록 있음</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>이 Steam 프로필은 비공개입니다.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam이 응답하지 않았습니다. 프로필이 비공개이거나 Steam이 바쁠 수 있습니다.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>차단한 플레이어</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>서로에게 메시지를 보낼 수 없고, 채팅방과 목록에서도 서로 보이지 않습니다. 상대는 알 수 없습니다.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>아직 아무도 차단하지 않았습니다.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>차단 해제</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>차단일</value>
+  </data>
+  <data name="ChatScrollToBottom" xml:space="preserve">
+    <value>최신으로 이동</value>
+  </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>서포터 채팅</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>받은 메시지</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>LFG와 LFM 글에 대한 요청, 그리고 당신이 먼저 연락한 사람들의 답장이 여기에 도착합니다.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>서포터를 위한 방</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>공개 채팅방의 북적임 없이 조용한 방입니다. Rust+ Desktop을 후원하는 동안 열려 있습니다.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Rust+ Desktop 후원하기</value>
+  </data>
+  <data name="FriendsTitle" xml:space="preserve">
+    <value>친구</value>
+  </data>
+  <data name="FriendsEmpty" xml:space="preserve">
+    <value>아직 목록에 아무도 없습니다. 아래에서 Steam ID로 추가해 보세요.</value>
+  </data>
+  <data name="FriendsAddSteamId" xml:space="preserve">
+    <value>Steam ID (17자리)</value>
+  </data>
+  <data name="FriendsAddMessage" xml:space="preserve">
+    <value>누구인지 알려 주세요 — 보낼 수 있는 메시지는 이 하나뿐입니다</value>
+  </data>
+  <data name="FriendsAddAction" xml:space="preserve">
+    <value>요청 보내기</value>
+  </data>
+  <data name="FriendsIncoming" xml:space="preserve">
+    <value>당신의 답을 기다리는 중</value>
+  </data>
+  <data name="FriendsOutgoing" xml:space="preserve">
+    <value>상대의 답을 기다리는 중</value>
+  </data>
+  <data name="FriendsAccept" xml:space="preserve">
+    <value>수락</value>
+  </data>
+  <data name="FriendsDecline" xml:space="preserve">
+    <value>거절</value>
+  </data>
+  <data name="FriendsRemove" xml:space="preserve">
+    <value>친구 삭제</value>
+  </data>
+  <data name="FriendsWithdraw" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="FriendsMessage" xml:space="preserve">
+    <value>메시지 보내기</value>
+  </data>
+  <data name="FriendsAddFriend" xml:space="preserve">
+    <value>친구로 추가</value>
+  </data>
+  <data name="FriendsOffline" xml:space="preserve">
+    <value>오프라인</value>
+  </data>
+  <data name="FriendsNotInServer" xml:space="preserve">
+    <value>서버에 없음</value>
+  </data>
+  <data name="FriendsErrorNotFound" xml:space="preserve">
+    <value>그 Steam ID를 쓰는 계정이 없습니다.</value>
+  </data>
+  <data name="FriendsErrorPending" xml:space="preserve">
+    <value>이미 요청했습니다. 답할 시간을 주세요.</value>
+  </data>
+  <data name="FriendsErrorAlready" xml:space="preserve">
+    <value>이미 친구입니다.</value>
+  </data>
+  <data name="FriendsErrorDeclined" xml:space="preserve">
+    <value>그 요청은 거절되었습니다.</value>
+  </data>
+  <data name="FriendsErrorRefused" xml:space="preserve">
+    <value>요청을 보낼 수 없었습니다.</value>
+  </data>
+  <data name="FriendsErrorFailed" xml:space="preserve">
+    <value>보내지 못했습니다. 잠시 후 다시 시도해 주세요.</value>
+  </data>
+  <data name="FriendsSent" xml:space="preserve">
+    <value>요청을 보냈습니다. 상대가 메시지를 보고 답할 수 있습니다.</value>
+  </data>
 </root>

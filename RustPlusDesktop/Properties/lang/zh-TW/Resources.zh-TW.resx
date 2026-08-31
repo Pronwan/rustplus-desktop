@@ -1316,7 +1316,7 @@
     <value>Steam ID（17 位數字）</value>
   </data>
   <data name="FriendsAddMessage" xml:space="preserve">
-    <value>說說你是誰——在對方回覆之前，你只能發這一則</value>
+    <value>說說你是誰——只能發這一則</value>
   </data>
   <data name="FriendsAddAction" xml:space="preserve">
     <value>送出請求</value>
@@ -1337,7 +1337,7 @@
     <value>刪除好友</value>
   </data>
   <data name="FriendsWithdraw" xml:space="preserve">
-    <value>收回請求</value>
+    <value>收回</value>
   </data>
   <data name="FriendsMessage" xml:space="preserve">
     <value>傳訊息</value>

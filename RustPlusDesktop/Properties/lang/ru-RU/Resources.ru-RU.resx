@@ -6305,7 +6305,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Steam ID (17 цифр)</value>
   </data>
   <data name="FriendsAddMessage" xml:space="preserve">
-    <value>Скажите, кто вы — это единственное сообщение, пока вам не ответят</value>
+    <value>Скажите, кто вы — только одно сообщение</value>
   </data>
   <data name="FriendsAddAction" xml:space="preserve">
     <value>Отправить запрос</value>
@@ -6326,7 +6326,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Удалить из друзей</value>
   </data>
   <data name="FriendsWithdraw" xml:space="preserve">
-    <value>Отозвать запрос</value>
+    <value>Отозвать</value>
   </data>
   <data name="FriendsMessage" xml:space="preserve">
     <value>Написать сообщение</value>

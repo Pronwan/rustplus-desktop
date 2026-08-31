@@ -1058,8 +1058,9 @@
                         <TextBlock Text="{DynamicResource FriendsTitle}" Foreground="{StaticResource LfgText}"
                                    FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
 
-                        <ScrollViewer MaxHeight="330" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
+                        <ScrollViewer MaxHeight="330" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="0,0,4,0">
                                 <TextBlock x:Name="FriendsEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
                                            Text="{DynamicResource FriendsEmpty}" TextWrapping="Wrap"
                                            Foreground="{StaticResource LfgMuted}" FontSize="11" />
@@ -1151,15 +1152,16 @@
                                 <ItemsControl x:Name="FriendOutgoingList">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="0,0,0,6">
+                                            <Grid Margin="0,0,2,6">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" MinWidth="0" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0"
                                                            Text="{Binding DisplayName}" Foreground="{StaticResource LfgMuted}"
                                                            FontSize="11.5" TextTrimming="CharacterEllipsis" />
-                                                <ui:Button Grid.Column="1" Height="24" Appearance="Secondary"
+                                                <ui:Button Grid.Column="1" Height="24" Padding="8,0" FontSize="11"
+                                                           Appearance="Secondary"
                                                            Tag="{Binding}" Click="BtnFriendWithdraw_Click"
                                                            Content="{DynamicResource FriendsWithdraw}" />
                                             </Grid>
