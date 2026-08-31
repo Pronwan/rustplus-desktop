@@ -94,7 +94,7 @@ public static class SocialApi
     public static Task<bool> ConsentAsync(string scope)
         => WriteAsync("social/consent", HttpMethod.Post, new { scope });
 
-    public sealed record MyLfgListing(LfgMode Mode, string? Blurb, string? Region);
+    public sealed record MyLfgListing(LfgMode Mode, string? Blurb, string? Region, string? ServerName);
 
     /// <summary>The full listing details, or None when there is none.</summary>
     public static async Task<MyLfgListing> GetListingDetailsAsync()
@@ -104,13 +104,14 @@ public static class SocialApi
             var (status, body) = await CloudApiClient.TryCallApiAsync("social/lfg/me", HttpMethod.Get)
                 .ConfigureAwait(false);
 
-            if (status == 404 || status is < 200 or >= 300) return new MyLfgListing(LfgMode.None, null, null);
+            if (status == 404 || status is < 200 or >= 300) return new MyLfgListing(LfgMode.None, null, null, null);
 
             using var doc = JsonDocument.Parse(body);
             var data = doc.RootElement.GetProperty("data");
             var modeStr = data.TryGetProperty("mode", out var m) ? m.GetString() : null;
             var blurb = data.TryGetProperty("blurb", out var b) ? b.GetString() : null;
             var region = data.TryGetProperty("region", out var r) ? r.GetString() : null;
+            var serverName = data.TryGetProperty("server_name", out var s) ? s.GetString() : null;
 
             var mode = modeStr switch
             {
@@ -119,11 +120,11 @@ public static class SocialApi
                 _ => LfgMode.None,
             };
 
-            return new MyLfgListing(mode, blurb, region);
+            return new MyLfgListing(mode, blurb, region, serverName);
         }
         catch
         {
-            return new MyLfgListing(LfgMode.None, null, null);
+            return new MyLfgListing(LfgMode.None, null, null, null);
         }
     }
 
@@ -138,7 +139,7 @@ public static class SocialApi
     /// Publishes or withdraws a listing. Returns false when the disclosure has not been accepted
     /// yet — the server answers 409 for that, which is a step missing rather than a refusal.
     /// </summary>
-    public static async Task<bool> SetListingAsync(LfgMode mode, string? blurb = null, string? region = null)
+    public static async Task<bool> SetListingAsync(LfgMode mode, string? blurb = null, string? region = null, string? serverName = null)
     {
         if (mode == LfgMode.None)
             return await WriteAsync("social/lfg/me", HttpMethod.Delete).ConfigureAwait(false);
@@ -148,8 +149,41 @@ public static class SocialApi
             mode = mode == LfgMode.LookingForTeam ? "lfg" : "lfm",
             blurb = string.IsNullOrWhiteSpace(blurb) ? null : blurb.Trim(),
             region = string.IsNullOrWhiteSpace(region) ? Helpers.AppLanguages.Current() : region.Trim(),
+            server_name = string.IsNullOrWhiteSpace(serverName) ? null : serverName.Trim(),
         };
         return await WriteAsync("social/lfg/me", HttpMethod.Put, payload).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Updates the connected server on an active listing, without disturbing mode or blurb.
+    /// </summary>
+    public static async Task UpdateActiveListingServerAsync(string? serverName)
+    {
+        try
+        {
+            var current = await GetListingDetailsAsync().ConfigureAwait(false);
+            if (current.Mode == LfgMode.None) return;
+
+            await SetListingAsync(current.Mode, current.Blurb, Helpers.AppLanguages.Current(), serverName)
+                .ConfigureAwait(false);
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// Updates language/region on an active listing when user changes UI language.
+    /// </summary>
+    public static async Task UpdateActiveListingLanguageAsync(string? language)
+    {
+        try
+        {
+            var current = await GetListingDetailsAsync().ConfigureAwait(false);
+            if (current.Mode == LfgMode.None) return;
+
+            await SetListingAsync(current.Mode, current.Blurb, language ?? Helpers.AppLanguages.Current(), current.ServerName)
+                .ConfigureAwait(false);
+        }
+        catch { }
     }
 
     /// <summary>
@@ -519,6 +553,7 @@ public static class SocialApi
             TeamSize = team.ValueKind == JsonValueKind.Object
                 && team.TryGetProperty("members_count", out var c) && c.TryGetInt32(out var n) ? n : 0,
             Blurb = Str(row, "blurb"),
+            ServerName = Str(row, "server_name"),
         };
     }
 

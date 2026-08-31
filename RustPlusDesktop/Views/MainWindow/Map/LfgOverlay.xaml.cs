@@ -233,6 +233,22 @@ public partial class LfgOverlay : UserControl
         await SaveCurrentBlurbAsync().ConfigureAwait(true);
     }
 
+    private static string? GetConnectedServerName()
+    {
+        try
+        {
+            if (System.Windows.Application.Current?.MainWindow?.DataContext is ViewModels.MainViewModel vm)
+            {
+                if (vm.Selected?.IsConnected == true && !string.IsNullOrWhiteSpace(vm.Selected?.Name))
+                {
+                    return vm.Selected.Name;
+                }
+            }
+        }
+        catch { }
+        return null;
+    }
+
     private async Task SaveCurrentBlurbAsync()
     {
         var isLfg = RbModeLfg.IsChecked == true;
@@ -241,7 +257,8 @@ public partial class LfgOverlay : UserControl
 
         var mode = isLfg ? LfgMode.LookingForTeam : LfgMode.LookingForMembers;
         var blurb = TxtBlurb.Text?.Trim();
-        await SocialApi.SetListingAsync(mode, blurb).ConfigureAwait(true);
+        var serverName = GetConnectedServerName();
+        await SocialApi.SetListingAsync(mode, blurb, Helpers.AppLanguages.Current(), serverName).ConfigureAwait(true);
         await UpdateMyListingPreviewAsync().ConfigureAwait(true);
     }
 
@@ -259,6 +276,17 @@ public partial class LfgOverlay : UserControl
         PreviewModeBadge.Text = isLfg
             ? Properties.Resources.GetString("LfgModeLfg")
             : Properties.Resources.GetString("LfgModeLfm");
+
+        var serverName = GetConnectedServerName();
+        if (!string.IsNullOrWhiteSpace(serverName))
+        {
+            PreviewServerName.Text = serverName;
+            PreviewServerBadge.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            PreviewServerBadge.Visibility = Visibility.Collapsed;
+        }
 
         var steamId = Services.TrackingService.SteamId64;
         var profile = await SteamProfileService.GetAsync(steamId).ConfigureAwait(true);
@@ -363,7 +391,8 @@ public partial class LfgOverlay : UserControl
         if (mode == LfgMode.None) return;
 
         var blurb = TxtBlurb.Text?.Trim();
-        if (await SocialApi.SetListingAsync(mode, blurb).ConfigureAwait(true))
+        var serverName = GetConnectedServerName();
+        if (await SocialApi.SetListingAsync(mode, blurb, Helpers.AppLanguages.Current(), serverName).ConfigureAwait(true))
         {
             ApplyListedConstraints(true);
             _ = UpdateMyListingPreviewAsync();

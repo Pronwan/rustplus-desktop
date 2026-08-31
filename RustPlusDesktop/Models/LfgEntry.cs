@@ -33,6 +33,10 @@ public sealed class LfgEntry
 
     public string? Blurb { get; init; }
 
+    public string? ServerName { get; init; }
+
+    public bool HasServer => !string.IsNullOrWhiteSpace(ServerName);
+
     /// <summary>Green when online, muted red otherwise — the one thing read at a glance.</summary>
     public Brush StatusBrush => IsOnline
         ? new SolidColorBrush(Color.FromRgb(0x4C, 0xC3, 0x8A))
