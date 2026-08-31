@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace RustPlusDesk.Services.Emoji;
@@ -116,6 +117,11 @@ public static class EmojiService
 
     private static readonly Dictionary<string, BitmapSource[]> s_animatedFramesCache = new(StringComparer.OrdinalIgnoreCase);
 
+    // Per-frame display durations in milliseconds, parallel to s_animatedFramesCache. Playing the
+    // frames back on a fixed clock ignores how the emoji was actually authored; these keep the
+    // speed true to the source (the Rust emojis are 60fps, i.e. ~16ms a frame).
+    private static readonly Dictionary<string, int[]> s_frameDelaysCache = new(StringComparer.OrdinalIgnoreCase);
+
     public static string? GetCustomEmojiWebpPath(string emojiName)
     {
         if (string.IsNullOrWhiteSpace(emojiName)) return null;
@@ -163,9 +169,21 @@ public static class EmojiService
             if (frameCount == 0) return null;
 
             var list = new BitmapSource[frameCount];
+            var delays = new int[frameCount];
             for (int i = 0; i < frameCount; i++)
             {
                 var frame = image.Frames[i];
+
+                // Real per-frame delay from the WebP; fall back to 60fps when a frame omits it.
+                int delayMs = 16;
+                try
+                {
+                    var frameDelay = (int)frame.Metadata.GetWebpMetadata().FrameDelay;
+                    if (frameDelay > 0) delayMs = frameDelay;
+                }
+                catch { }
+                delays[i] = delayMs;
+
                 var bgraBytes = new byte[frame.Width * frame.Height * 4];
                 frame.CopyPixelDataTo(bgraBytes);
 
@@ -197,6 +215,7 @@ public static class EmojiService
             }
 
             s_animatedFramesCache[emojiName] = list;
+            s_frameDelaysCache[emojiName] = delays;
             return list;
         }
         catch (Exception ex)
@@ -212,6 +231,14 @@ public static class EmojiService
         if (string.IsNullOrWhiteSpace(emojiName)) return false;
         emojiName = emojiName.Trim().Trim(':').ToLowerInvariant();
         return s_animatedFramesCache.TryGetValue(emojiName, out frames!);
+    }
+
+    /// <summary>Per-frame durations (ms) for an emoji, once its frames have been decoded.</summary>
+    public static int[]? GetFrameDelays(string emojiName)
+    {
+        if (string.IsNullOrWhiteSpace(emojiName)) return null;
+        emojiName = emojiName.Trim().Trim(':').ToLowerInvariant();
+        return s_frameDelaysCache.TryGetValue(emojiName, out var d) ? d : null;
     }
 
     public static string? GetCustomEmojiThumbnailPath(string emojiName)

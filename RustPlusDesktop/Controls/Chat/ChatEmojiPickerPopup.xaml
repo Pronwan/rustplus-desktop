@@ -1,12 +1,17 @@
 <UserControl x:Class="RustPlusDesk.Controls.Chat.ChatEmojiPickerPopup"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:local="clr-namespace:RustPlusDesk.Controls.Chat"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="340" d:DesignWidth="260">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:BoolToVisibilityConverter x:Key="InverseBoolToVis" Invert="True" />
+    </UserControl.Resources>
     <Border Background="#1A1F29" BorderBrush="#2D384D" BorderThickness="1" CornerRadius="8" Padding="10"
             Width="260" MaxHeight="350">
         <Border.Effect>
@@ -14,119 +19,30 @@
         </Border.Effect>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Search & Category bar -->
-                <RowDefinition Height="*"/>    <!-- Content area (Grid of Emojis / Items) -->
+                <RowDefinition Height="Auto"/> <!-- Search bar -->
+                <RowDefinition Height="*"/>    <!-- Unified emoji + item list -->
             </Grid.RowDefinitions>
 
-            <!-- Search & Category Bar -->
-            <Grid Grid.Row="0" Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <!-- Search Input (one list for everything, so this is the only control up here) -->
+            <ui:TextBox x:Name="TxtSearch" Grid.Row="0" Margin="0,0,0,10"
+                        PlaceholderText="Search emojis &amp; items..."
+                        FontSize="12" Height="32" Padding="6,2"
+                        Background="#121620" BorderBrush="#2A354A" Foreground="#FFFFFF"
+                        TextChanged="TxtSearch_TextChanged">
+                <ui:TextBox.Icon>
+                    <ui:SymbolIcon Symbol="Search24" FontSize="14" Foreground="#7E8B9F"/>
+                </ui:TextBox.Icon>
+            </ui:TextBox>
 
-                <!-- Search Input using WPF-UI style -->
-                <ui:TextBox x:Name="TxtSearch" Grid.Column="0" PlaceholderText="Search..."
-                            FontSize="12" Height="32" Padding="6,2"
-                            Background="#121620" BorderBrush="#2A354A" Foreground="#FFFFFF"
-                            TextChanged="TxtSearch_TextChanged">
-                    <ui:TextBox.Icon>
-                        <ui:SymbolIcon Symbol="Search24" FontSize="14" Foreground="#7E8B9F"/>
-                    </ui:TextBox.Icon>
-                </ui:TextBox>
-
-                <!-- Category Toggles -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6,0,0,0">
-                    <RadioButton x:Name="TabEmojis" GroupName="EmojiCategory" IsChecked="True"
-                                 Width="32" Height="32" Margin="1,0"
-                                 ToolTip="Rust Emojis" Checked="Category_Checked">
-                        <RadioButton.Template>
-                            <ControlTemplate TargetType="RadioButton">
-                                <Border x:Name="TabBd" Background="#121620" BorderBrush="#2A354A" BorderThickness="1" CornerRadius="6">
-                                    <ui:SymbolIcon x:Name="TabIco" Symbol="EmojiSmileSlight24" FontSize="16" Foreground="#7E8B9F"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter TargetName="TabBd" Property="Background" Value="#25334A"/>
-                                        <Setter TargetName="TabBd" Property="BorderBrush" Value="#3FD7FF"/>
-                                        <Setter TargetName="TabIco" Property="Foreground" Value="#3FD7FF"/>
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="TabBd" Property="BorderBrush" Value="#3FD7FF"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </RadioButton.Template>
-                    </RadioButton>
-
-                    <RadioButton x:Name="TabItems" GroupName="EmojiCategory"
-                                 Width="32" Height="32" Margin="2,0,0,0"
-                                 ToolTip="Rust Items" Checked="Category_Checked">
-                        <RadioButton.Template>
-                            <ControlTemplate TargetType="RadioButton">
-                                <Border x:Name="TabBd" Background="#121620" BorderBrush="#2A354A" BorderThickness="1" CornerRadius="6">
-                                    <ui:SymbolIcon x:Name="TabIco" Symbol="Box24" FontSize="16" Foreground="#7E8B9F"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter TargetName="TabBd" Property="Background" Value="#25334A"/>
-                                        <Setter TargetName="TabBd" Property="BorderBrush" Value="#3FD7FF"/>
-                                        <Setter TargetName="TabIco" Property="Foreground" Value="#3FD7FF"/>
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="TabBd" Property="BorderBrush" Value="#3FD7FF"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </RadioButton.Template>
-                    </RadioButton>
-                </StackPanel>
-            </Grid>
-
-            <!-- Content: Emojis Grid / Items List -->
+            <!-- Content: a single searchable list of emojis and Rust items, no categories -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                          MaxHeight="280">
+                          MaxHeight="290">
                 <StackPanel>
-                    <!-- 1: Custom Face Emojis Grid -->
-                    <ItemsControl x:Name="EmojiGrid" Visibility="Visible">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="4" HorizontalAlignment="Center"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Margin="2" Width="52" Height="52" Padding="0" Background="Transparent" BorderThickness="0"
-                                        Cursor="Hand" ToolTip="{Binding DisplayName}"
-                                        Click="EmojiButton_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border x:Name="BtnBd" Background="Transparent" BorderBrush="Transparent" BorderThickness="1"
-                                                    CornerRadius="6" Padding="3">
-                                                <local:AnimatedEmojiImage EmojiName="{Binding Name}" AnimateOnHover="True" AutoPlay="False"
-                                                                          Width="42" Height="42" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                                          RenderOptions.BitmapScalingMode="HighQuality"/>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="BtnBd" Property="Background" Value="#243248"/>
-                                                    <Setter TargetName="BtnBd" Property="BorderBrush" Value="#3FD7FF"/>
-                                                </Trigger>
-                                                <Trigger Property="IsPressed" Value="True">
-                                                    <Setter TargetName="BtnBd" Property="Background" Value="#101520"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <TextBlock x:Name="EmptyNotice" Visibility="Collapsed" Margin="4,10"
+                               Text="No matches" Foreground="#7E8B9F" FontSize="11"
+                               HorizontalAlignment="Center"/>
 
-                    <!-- 2: Searchable Items List -->
-                    <ItemsControl x:Name="ItemList" Visibility="Collapsed">
+                    <ItemsControl x:Name="EmojiList">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="1,2" Padding="6,4" CornerRadius="6" Background="#131722" BorderBrush="#252F42" BorderThickness="1"
@@ -146,9 +62,19 @@
                                             <ColumnDefinition Width="36"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Image Grid.Column="0" Source="{Binding Icon}" Width="30" Height="30"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                                        <!-- Icon: animated custom emoji, or static Rust item icon -->
+                                        <Grid Grid.Column="0" Width="30" Height="30"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <local:AnimatedEmojiImage EmojiName="{Binding Name}" AutoPlay="True" AnimateOnHover="False"
+                                                                      Width="30" Height="30"
+                                                                      Visibility="{Binding IsCustomEmoji, Converter={StaticResource BoolToVis}}"
+                                                                      RenderOptions.BitmapScalingMode="HighQuality"/>
+                                            <Image Source="{Binding Icon}" Width="30" Height="30"
+                                                   Visibility="{Binding IsCustomEmoji, Converter={StaticResource InverseBoolToVis}}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        </Grid>
+
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
                                             <TextBlock Text="{Binding Tag}" Foreground="#E4E9F2" FontSize="11"
                                                        FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
