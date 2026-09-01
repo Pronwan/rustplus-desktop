@@ -64,6 +64,19 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     /// <summary>Set by the host so a repeated upload failure reaches the app log.</summary>
     public Action<string>? Log { get; set; }
 
+    /// <summary>
+    /// One upload at a time.
+    ///
+    /// A team poll produces an observation per player, each firing its own upload, so four of
+    /// them used to hit the server in the same millisecond. On the server that raced the archive
+    /// creation against its own retention check: one request created the archive, found it one
+    /// over the plan limit, deleted it again, and a sibling request inserting a day against that
+    /// row got a foreign key violation. The server no longer creates rows it might delete, but
+    /// four simultaneous requests were never wanted anyway — they arrive within a second of each
+    /// other either way, and one at a time is gentler on both ends.
+    /// </summary>
+    private readonly SemaphoreSlim _uploadGate = new(1, 1);
+
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, DateTime> _cloudLastUpload = new(StringComparer.Ordinal);
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (ulong SteamId, DateTime TimestampUtc, string PlayerName)> _cloudDirty = new(StringComparer.Ordinal);
 
@@ -453,6 +466,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         if (!_cloudDirty.TryRemove(key, out var entry))
             return;
 
+        await _uploadGate.WaitAsync().ConfigureAwait(false);
         try
         {
             await _store.FlushAsync().ConfigureAwait(false);
@@ -468,9 +482,12 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
                 return;
             }
 
-            var (status, acknowledged) = await _cloudClient.AppendDayAsync(request).ConfigureAwait(false);
+            var (status, acknowledged, reason) = await _cloudClient.AppendDayAsync(request).ConfigureAwait(false);
             if (status is < 200 or >= 300)
             {
+                Log?.Invoke($"[wipe-tracker] Cloud backup refused ({status})"
+                    + (string.IsNullOrWhiteSpace(reason) ? "." : $": {reason}."));
+
                 // Put it back so the next cycle picks the same window up again.
                 _cloudDirty.TryAdd(key, entry);
                 return;
@@ -498,6 +515,10 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             // be visible somewhere.
             Log?.Invoke($"[wipe-tracker] Cloud append failed for {key}: {ex.GetType().Name}: {ex.Message}");
             _cloudDirty.TryAdd(key, entry);
+        }
+        finally
+        {
+            _uploadGate.Release();
         }
     }
 
