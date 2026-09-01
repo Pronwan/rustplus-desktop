@@ -2675,5 +2675,10 @@ namespace RustPlusDesk.Views
             TxtCustomMapUrl.Text = "";
             BtnApplyCustomMapUrl_Click(sender, e);
         }
+
+        private void BtnOpenCrashLogs_Click(object sender, RoutedEventArgs e)
+        {
+            CrashReporter.OpenCrashLogsFolder();
+        }
     }
 }
