@@ -758,7 +758,14 @@
                             </StackPanel>
                         </ui:CardExpander>
 
-                        <ui:ToggleSwitch x:Name="ChkTelegramIntegration" Content="{DynamicResource UiTeamPathsTracking}" Margin="0,0,0,10" Opacity="0.45" IsEnabled="False" />
+                        <!--
+                            The same two flags as under General. The tracker is a connected service
+                            in every practical sense, and someone reviewing what this app sends
+                            outward looks here, not under Behaviour. Both copies write the one
+                            setting; OnPlayerWipeTrackerToggled keeps them showing the same thing.
+                        -->
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeTrackerConnected" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloudConnected" Content="Player Wipe Tracker cloud backup" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." />
                     </StackPanel>
                 </ui:Card>
                 <ui:Button

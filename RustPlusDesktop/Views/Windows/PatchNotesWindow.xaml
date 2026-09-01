@@ -33,6 +33,93 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v9.1 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.1 | Community Hub, Farm Routes &amp; Clan Chat Commands" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                Version 9.1 opens the app up to other players: a Community Hub with global and supporter chat, group finding with Steam profile previews, a friend list and reporting. On the map, farm routes now measure themselves in metres and sprint seconds. Chat commands reach clan chat, with per-role permissions.
+                            </TextBlock>
+
+                            <!-- Community Hub -->
+                            <TextBlock Text="🌐 Community Hub" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Global Chat &amp; Supporter Chat:</Run>
+                                A shared room for everyone using RustPlus Desktop, and a second one reserved for supporters. Messages arrive live over the cloud connection, so a reply shows up while you are still on the map.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Looking for Group &amp; Looking for Mates:</Run>
+                                Post what you are after &#x2014; a wipe partner, a full team, a language you actually speak &#x2014; or browse what others posted. Filter by language and by who is online right now.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Steam Profile Preview Before You Answer:</Run>
+                                Every listing shows the poster's Steam profile before you reply, so you can see who you would be teaming up with rather than finding out afterwards.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Friend List:</Run>
+                                Add people by Steam ID with a single message. They receive a message request and a friend request as two separate decisions, so nobody can be spammed into a conversation. The list shows who is online, which server they are on and how large their team is.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Inbox, Blocking &amp; Reporting:</Run>
+                                Requests and conversations live in their own tab with unread badges. Anyone can be blocked, and messages can be reported with a reason. Misconduct is acted on against the Steam ID.
+                            </TextBlock>
+
+                            <!-- Farm Routes -->
+                            <TextBlock Text="🗺️ Farm Routes with Distance &amp; Sprint Time" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Draw Routes on the Map:</Run>
+                                A Routes mode next to the map layers, with its own legend: name each route, give it a colour, show or hide it. Draw on from the end to extend a route; come back to the start and it closes into a lap.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Length and How Long It Takes:</Run>
+                                Every route reports its length in metres or kilometres (yards and miles on imperial) and how long it takes at sprint speed, so you can tell a farm run apart from a hike before you walk it.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Shared With Your Team:</Run>
+                                Routes sync with the rest of your map overlay. A teammate's route is imported under their name in brackets and can be deleted like your own.
+                            </TextBlock>
+
+                            <!-- Clan Chat Commands -->
+                            <TextBlock Text="🏰 Clan Chat Commands &amp; Alerts" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Commands in Clan Chat, Granted per Role:</Run>
+                                Team chat answers commands as before; clan chat can be switched on alongside it. The clan's own roles are read from the server and you decide which of them may use commands. Answers go back to the chat the command came from.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Base Codes and Switches Stay Out by Default:</Run>
+                                A door code posted in clan chat cannot be taken back, and most clan members have no tool cupboard rights on your base anyway. Both are excluded until you deliberately include them.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Chat Alerts to Team or Clan:</Run>
+                                Alerts go to one in-game chat or the other, chosen in the Chat Alerts settings. Timers keep reporting to the chat they were started from, whatever that choice is.
+                            </TextBlock>
+
+                            <!-- Smart Home -->
+                            <TextBlock Text="🏠 Smart Home" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Home Assistant via REST API:</Run>
+                                Smart switches can now be driven from Home Assistant over a REST endpoint, for anyone who would rather run their own automation than depend on a voice assistant.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Improved Alexa Endpoints:</Run>
+                                Additional regional endpoints are in review with Amazon, so device discovery works reliably outside Europe as well.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Google Home &#x2014; Where It Stands:</Run>
+                                The integration is built and passes Google's full test suite. Launching it requires certification, and Google's programme is aimed at commercially available hardware, so an integration for virtual in-game devices may well not be certified. We will keep you posted either way.
+                            </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/9.1/CommunityHub.jpg" Description="The Community Hub: global chat, supporter chat, group finding and your inbox, with unread badges down to the individual conversation"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/9.1/FarmRoutes.jpg" Description="Farm routes drawn on the map, each with its own colour and visibility, reporting length in metres and how long the run takes at sprint speed"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/9.1/Clan-Chat-Commands-AndAlerts.jpg" Description="Clan chat commands with per-role permissions, base codes and switches excluded by default, and the choice of whether alerts go to team or clan chat"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v9.0.3 HOTFIX PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

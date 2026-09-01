@@ -303,6 +303,7 @@
         </DataTemplate>
 
         <conv:BoolToVisibilityConverter x:Key="Vis" />
+        <conv:InverseBoolConverter x:Key="Not" />
         </ResourceDictionary>
     </ui:FluentWindow.Resources>
 
@@ -5165,12 +5166,48 @@
                                                                                  <!-- Horizontal Separator -->
                                                                                  <Border BorderBrush="#15FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10" />
 
-                                                                                 <TextBlock
-                                                                                     Margin="8,0,8,10"
-                                                                                     FontSize="12"
-                                                                                     FontWeight="SemiBold"
-                                                                                     Foreground="{DynamicResource TextPrimary}"
-                                                                                     Text="{DynamicResource UiChatMessageAlerts}" />
+                                                                                 <!--
+                                                                                     Which in-game channel the alerts go to, sitting on the
+                                                                                     header row because it governs everything listed below it.
+                                                                                     Greyed out under "Discord only": that switch stops alerts
+                                                                                     reaching the game at all, so a channel choice would be a
+                                                                                     control that does nothing.
+                                                                                 -->
+                                                                                 <Grid Margin="8,0,8,10">
+                                                                                     <Grid.ColumnDefinitions>
+                                                                                         <ColumnDefinition Width="*" />
+                                                                                         <ColumnDefinition Width="Auto" />
+                                                                                     </Grid.ColumnDefinitions>
+
+                                                                                     <TextBlock
+                                                                                         VerticalAlignment="Center"
+                                                                                         FontSize="12"
+                                                                                         FontWeight="SemiBold"
+                                                                                         Foreground="{DynamicResource TextPrimary}"
+                                                                                         Text="{DynamicResource UiChatMessageAlerts}" />
+
+                                                                                     <StackPanel
+                                                                                         x:Name="ChatAlertChannelPicker"
+                                                                                         Grid.Column="1"
+                                                                                         Orientation="Horizontal"
+                                                                                         VerticalAlignment="Center"
+                                                                                         ToolTip="{DynamicResource ChatAlertsChannelHint}"
+                                                                                         IsEnabled="{Binding Selected.DiscordWebhookChatAlertsExclusive, Converter={StaticResource Not}}">
+                                                                                         <RadioButton
+                                                                                             GroupName="ChatAlertChannel"
+                                                                                             Content="{DynamicResource ChatAlertsChannelTeam}"
+                                                                                             FontSize="11"
+                                                                                             Margin="0,0,10,0"
+                                                                                             VerticalContentAlignment="Center"
+                                                                                             IsChecked="{Binding Selected.ChatAlertsUseClanChannel, Mode=TwoWay, Converter={StaticResource Not}}" />
+                                                                                         <RadioButton
+                                                                                             GroupName="ChatAlertChannel"
+                                                                                             Content="{DynamicResource ChatAlertsChannelClan}"
+                                                                                             FontSize="11"
+                                                                                             VerticalContentAlignment="Center"
+                                                                                             IsChecked="{Binding Selected.ChatAlertsUseClanChannel, Mode=TwoWay}" />
+                                                                                     </StackPanel>
+                                                                                 </Grid>
 
                                                                                  <!-- Categorized Items Host -->
                                                                                  <StackPanel IsItemsHost="True" Orientation="Horizontal" />
@@ -8245,15 +8282,28 @@
 
                                         <!-- 2: QUICK COMMANDS DRAWER (Collapsible) -->
                                         <Border x:Name="ChatQuickCommandsDrawer" Grid.Row="2" Background="#161920" BorderBrush="#1F2430" BorderThickness="0,0,0,1" Padding="8,6" Visibility="Collapsed">
-                                            <WrapPanel Orientation="Horizontal">
-                                                <Button Content="!upkeep" Tag="!upkeep" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Tool Cupboard Upkeep Status" />
-                                                <Button Content="!heli" Tag="!heli" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Patrol Heli Status &amp; Grid" />
-                                                <Button Content="!cargo" Tag="!cargo" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Cargo Ship Status" />
-                                                <Button Content="!timer 15" Tag="!timer 15 Oil Rig" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Start 15m Oil Rig Timer" />
-                                                <Button Content="!code" Tag="!code" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Base Codes Vault" />
-                                                <Button Content="!pop" Tag="!pop" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Server Player Count" />
-                                                <Button Content="!switches" Tag="!switches" Margin="2" Padding="6,2" FontSize="10" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" ToolTip="Smart Switches State" />
-                                            </WrapPanel>
+                                            <!--
+                                                Built from the profile rather than written out here: the
+                                                prefix is configurable and the command names are too, so a
+                                                fixed "!upkeep" is only right by coincidence.
+                                            -->
+                                            <ItemsControl ItemsSource="{Binding QuickCommandChips, RelativeSource={RelativeSource AncestorType=Window}}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Button Content="{Binding Label}"
+                                                                Tag="{Binding Command}"
+                                                                ToolTip="{Binding Tooltip}"
+                                                                Margin="2" Padding="6,2" FontSize="10"
+                                                                Style="{StaticResource ModernButtonSecondary}"
+                                                                Click="BtnQuickCommandChip_Click" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </Border>
 
                                         <!-- 3: MESSAGE HISTORY & EMPTY STATE -->
@@ -8266,11 +8316,24 @@
                                                     </Border>
                                                     <TextBlock Text="No Messages Yet" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,0,0,4" />
                                                     <TextBlock Text="Send a message or use quick commands to coordinate with your team." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="280" Margin="0,0,0,10" />
-                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                        <Button Content="!upkeep" Tag="!upkeep" Margin="3,0" Padding="8,3" FontSize="10.5" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" />
-                                                        <Button Content="!heli" Tag="!heli" Margin="3,0" Padding="8,3" FontSize="10.5" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" />
-                                                        <Button Content="!cargo" Tag="!cargo" Margin="3,0" Padding="8,3" FontSize="10.5" Style="{StaticResource ModernButtonSecondary}" Click="BtnQuickCommandChip_Click" />
-                                                    </StackPanel>
+                                                    <ItemsControl ItemsSource="{Binding QuickCommandChips, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                  MaxWidth="280" HorizontalAlignment="Center">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Button Content="{Binding Label}"
+                                                                        Tag="{Binding Command}"
+                                                                        ToolTip="{Binding Tooltip}"
+                                                                        Margin="3,2" Padding="8,3" FontSize="10.5"
+                                                                        Style="{StaticResource ModernButtonSecondary}"
+                                                                        Click="BtnQuickCommandChip_Click" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
                                                 </StackPanel>
                                             </Border>
 

@@ -3,11 +3,11 @@ using System.Windows.Input;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class Version8NoticeWindow : Window
+    public partial class WhatsNewWindow : Window
     {
         public bool DontShowAgain => ChkDontShowAgain.IsChecked == true;
 
-        public Version8NoticeWindow()
+        public WhatsNewWindow()
         {
             InitializeComponent();
             
