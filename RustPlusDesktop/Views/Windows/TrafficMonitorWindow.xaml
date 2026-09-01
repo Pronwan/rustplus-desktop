@@ -45,8 +45,15 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Unit Display Toggle -->
+                <!-- Unit & Feature Enable Controls -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:ToggleSwitch x:Name="ToggleFeatureEnable"
+                                     Content="Tracking Active"
+                                     IsChecked="{Binding IsFeatureEnabled, Mode=TwoWay}"
+                                     Checked="ToggleFeatureEnable_Checked"
+                                     Unchecked="ToggleFeatureEnable_Unchecked"
+                                     Margin="0,0,20,0"
+                                     VerticalAlignment="Center"/>
                     <TextBlock Text="Speed Unit:" VerticalAlignment="Center" FontSize="12" Foreground="#8B949E" Margin="0,0,8,0"/>
                     <RadioButton x:Name="RbUnitBits" Content="Mbps / Kbps" IsChecked="True" Checked="UnitRadio_Checked" Foreground="#F0F6FC" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <RadioButton x:Name="RbUnitBytes" Content="MB/s / KB/s" Checked="UnitRadio_Checked" Foreground="#F0F6FC" VerticalAlignment="Center"/>

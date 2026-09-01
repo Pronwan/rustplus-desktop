@@ -44,6 +44,29 @@ namespace RustPlusDesk.Views.Windows
 
         public string TotalRequestsDisplay => $"{_monitor.TotalRequestsCount:N0}";
 
+        public bool IsFeatureEnabled
+        {
+            get => _monitor.IsEnabled;
+            set
+            {
+                if (_monitor.IsEnabled != value)
+                {
+                    _monitor.IsEnabled = value;
+                    TrackingService.TrafficMonitorEnabled = value;
+                    if (value)
+                    {
+                        if (!_uiUpdateTimer.IsEnabled) _uiUpdateTimer.Start();
+                    }
+                    else
+                    {
+                        _uiUpdateTimer.Stop();
+                    }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsFeatureEnabled)));
+                    RefreshUiStats();
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public TrafficMonitorWindow()
@@ -64,9 +87,22 @@ namespace RustPlusDesk.Views.Windows
                 Interval = TimeSpan.FromMilliseconds(500)
             };
             _uiUpdateTimer.Tick += UiUpdateTimer_Tick;
-            _uiUpdateTimer.Start();
+            if (_monitor.IsEnabled)
+            {
+                _uiUpdateTimer.Start();
+            }
 
             Closed += TrafficMonitorWindow_Closed;
+        }
+
+        private void ToggleFeatureEnable_Checked(object sender, RoutedEventArgs e)
+        {
+            IsFeatureEnabled = true;
+        }
+
+        private void ToggleFeatureEnable_Unchecked(object sender, RoutedEventArgs e)
+        {
+            IsFeatureEnabled = false;
         }
 
         private void UnitRadio_Checked(object sender, RoutedEventArgs e)

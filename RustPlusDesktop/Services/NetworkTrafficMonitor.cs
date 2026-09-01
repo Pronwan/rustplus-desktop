@@ -99,7 +99,7 @@ namespace RustPlusDesk.Services
 
         public bool IsRecording { get; set; } = true;
 
-        private bool _isEnabled = true;
+        private volatile bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -110,9 +110,14 @@ namespace RustPlusDesk.Services
                     _isEnabled = value;
                     if (!value)
                     {
+                        _speedTimer.Stop();
                         CurrentDownloadSpeedBps = 0;
                         CurrentUploadSpeedBps = 0;
                         while (_speedHistory.TryDequeue(out _)) { }
+                    }
+                    else
+                    {
+                        _speedTimer.Start();
                     }
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(BandwidthSummaryBadge));
@@ -496,6 +501,11 @@ namespace RustPlusDesk.Services
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            if (!NetworkTrafficMonitor.Instance.IsEnabled)
+            {
+                return await base.SendAsync(request, cancellationToken);
+            }
+
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var endpoint = request.RequestUri?.ToString() ?? "HTTP";
             var category = _category ?? NetworkTrafficExtensions.DetectCategoryFromUri(request.RequestUri);
@@ -554,6 +564,11 @@ namespace RustPlusDesk.Services
             string? category = null,
             CancellationToken cancellationToken = default)
         {
+            if (!NetworkTrafficMonitor.Instance.IsEnabled)
+            {
+                return await client.SendAsync(request, cancellationToken);
+            }
+
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var endpoint = request.RequestUri?.ToString() ?? "HTTP";
             var detectedCategory = category ?? DetectCategoryFromUri(request.RequestUri);
@@ -609,6 +624,11 @@ namespace RustPlusDesk.Services
             string? category = null,
             CancellationToken cancellationToken = default)
         {
+            if (!NetworkTrafficMonitor.Instance.IsEnabled)
+            {
+                return await client.GetStringAsync(uri, cancellationToken);
+            }
+
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var detectedCategory = category ?? (Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? DetectCategoryFromUri(parsed) : "HTTP");
             try
@@ -649,6 +669,11 @@ namespace RustPlusDesk.Services
             string? category = null,
             CancellationToken cancellationToken = default)
         {
+            if (!NetworkTrafficMonitor.Instance.IsEnabled)
+            {
+                return await client.GetByteArrayAsync(uri, cancellationToken);
+            }
+
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var detectedCategory = category ?? (Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? DetectCategoryFromUri(parsed) : "HTTP");
             try
