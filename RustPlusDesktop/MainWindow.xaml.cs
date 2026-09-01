@@ -2315,7 +2315,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             if (!ShouldCheckForUpdate())
                 return false;
 
-            using var client = new HttpClient();
+            using var client = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Game Data"));
             client.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
             client.Timeout = TimeSpan.FromSeconds(15);
 
@@ -4835,7 +4835,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         try
         {
-            using var http = new HttpClient();
+            using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Steam Community"));
             var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId64}?xml=1");
 
             var nameMatch = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]>");
@@ -4986,7 +4986,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
-                using var http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
+                using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Game Icons")) { Timeout = TimeSpan.FromSeconds(10) };
                 http.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
 
                 HttpResponseMessage? resp = null;

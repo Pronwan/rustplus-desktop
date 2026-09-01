@@ -259,7 +259,7 @@ namespace RustPlusDesk.Views
         {
             if (string.IsNullOrEmpty(host)) return null;
 
-            using var client = new HttpClient();
+            using var client = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("RustMaps"));
             client.Timeout = TimeSpan.FromSeconds(8);
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) RustPlusDesk");
 

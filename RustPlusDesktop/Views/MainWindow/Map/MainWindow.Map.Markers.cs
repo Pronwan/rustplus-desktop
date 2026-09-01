@@ -330,7 +330,7 @@ public partial class MainWindow
     {
         try
         {
-            using var client = new System.Net.Http.HttpClient();
+            using var client = new System.Net.Http.HttpClient(new Services.TrafficTrackingHttpMessageHandler("Map Images"));
             client.Timeout = TimeSpan.FromSeconds(20);
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
             byte[] bytes = await client.GetByteArrayAsync(url, ct).ConfigureAwait(false);

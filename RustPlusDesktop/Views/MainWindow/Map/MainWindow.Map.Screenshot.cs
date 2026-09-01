@@ -12,7 +12,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    private static readonly HttpClient _discordMapHttpClient = new HttpClient();
+    private static readonly HttpClient _discordMapHttpClient = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Discord Webhook"));
 
     public async Task<string> GetCurrentMapScreenshotBase64Async()
     {

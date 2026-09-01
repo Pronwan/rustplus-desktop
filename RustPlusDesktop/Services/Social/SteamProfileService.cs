@@ -32,7 +32,7 @@ public sealed record SteamProfile(
 /// </summary>
 public static class SteamProfileService
 {
-    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(8) };
+    private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("Steam Community")) { Timeout = TimeSpan.FromSeconds(8) };
 
     /// <summary>
     /// Answers are cached for the session. A profile page is opened repeatedly while scrolling a
