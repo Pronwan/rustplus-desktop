@@ -458,10 +458,15 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             await _store.FlushAsync().ConfigureAwait(false);
 
             var day = DateOnly.FromDateTime(entry.TimestampUtc);
-            var cursor = _store.GetCloudCursor(_serverKey, _wipeKey, entry.SteamId, day);
-            var request = BuildCloudDelta(entry.SteamId, day, entry.PlayerName, cursor);
+            var (cursor, fromOffset) = _store.GetCloudCursor(_serverKey, _wipeKey, entry.SteamId, day);
+            var (request, nextOffset, complete) = BuildCloudDelta(entry.SteamId, day, entry.PlayerName, cursor, fromOffset);
             if (request is null)
+            {
+                // Nothing new, but the read still established how far the file has been examined.
+                if (cursor is not null && nextOffset > fromOffset)
+                    _store.SetCloudCursor(_serverKey, _wipeKey, entry.SteamId, day, cursor.Value, nextOffset);
                 return;
+            }
 
             var (status, acknowledged) = await _cloudClient.AppendDayAsync(request).ConfigureAwait(false);
             if (status is < 200 or >= 300)
@@ -474,11 +479,14 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             var mark = acknowledged ?? DateTime.Parse(
                 request.Observations[^1].Timestamp, CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind);
-            _store.SetCloudCursor(_serverKey, _wipeKey, entry.SteamId, day, mark);
+            // The offset only advances when the batch carried everything that was read. Otherwise
+            // the remainder lies between the old offset and here, and moving it would skip it.
+            _store.SetCloudCursor(_serverKey, _wipeKey, entry.SteamId, day, mark,
+                complete ? nextOffset : fromOffset);
 
             // A capped batch leaves a backlog behind; mark the day so the next cycle continues
             // rather than waiting for the player to move again.
-            if (request.Observations.Count >= EffectiveBatchSize)
+            if (!complete)
                 _cloudDirty.TryAdd(key, entry);
         }
         catch (Exception ex)
@@ -493,22 +501,32 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         }
     }
 
-    /// <summary>Builds a batch of observations newer than <paramref name="cursorUtc"/>, capped.</summary>
-    private CloudDayAppendRequest? BuildCloudDelta(ulong steamId, DateOnly day, string? playerName, DateTime? cursorUtc)
+    /// <summary>
+    /// Builds a batch of observations newer than <paramref name="cursorUtc"/>, capped, and
+    /// reports where the day starts in the file so the next call can skip straight to it.
+    /// </summary>
+    private (CloudDayAppendRequest? Request, long NextOffset, bool Complete) BuildCloudDelta(
+        ulong steamId, DateOnly day, string? playerName, DateTime? cursorUtc, long fromOffset)
     {
         if (_serverKey is null || _wipeKey is null)
-            return null;
+            return (null, fromOffset, false);
 
-        var observations = _store.Load(_serverKey, _wipeKey, steamId)
+        var (stored, nextOffset) = _store.LoadDay(_serverKey, _wipeKey, steamId, day, fromOffset);
+
+        var pending = stored
             .Where(item => item.Kind == "observation")
             .Select(item => item.Observation)
-            .Where(item => DateOnly.FromDateTime(item.TimestampUtc.ToUniversalTime()) == day)
             .Where(item => cursorUtc is null || item.TimestampUtc.ToUniversalTime() > cursorUtc.Value)
             .OrderBy(item => item.TimestampUtc)
-            .Take(EffectiveBatchSize)
             .ToArray();
+
+        // Everything read is going out, so the offset may move past it. When the cap bites, it
+        // must not: the remainder still sits between the old offset and here.
+        var observations = pending.Take(EffectiveBatchSize).ToArray();
+        var complete = observations.Length == pending.Length;
+
         if (observations.Length == 0)
-            return null;
+            return (null, nextOffset, true);
 
         var cloud = new List<CloudTrackerObservation>(observations.Length);
         PlayerObservation? previous = null;
@@ -539,7 +557,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             previous = observation;
         }
 
-        return new CloudDayAppendRequest
+        return (new CloudDayAppendRequest
         {
             ServerKey = _serverKey,
             WipeKey = _wipeKey,
@@ -549,7 +567,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             Day = day.ToString("yyyy-MM-dd"),
             Observations = cloud,
             Sessions = observations.Select(item => item.SessionId).Distinct(StringComparer.Ordinal).ToArray(),
-        };
+        }, nextOffset, complete);
     }
 
     /// <summary>
