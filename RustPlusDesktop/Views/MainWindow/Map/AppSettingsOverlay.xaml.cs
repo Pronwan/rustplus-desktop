@@ -797,6 +797,8 @@ namespace RustPlusDesk.Views
 
                     PopulateGoogleServers();
                     _ = LoadGoogleSettingsAsync();
+
+                    _ = InitFeatureFlagsAsync();
                 }
             }
         }
@@ -2522,6 +2524,54 @@ namespace RustPlusDesk.Views
                       "Only smart switches are supported. For raid/death alerts use the Smart Home Webhook URL field instead.";
 
             MessageBox.Show(msg, "Google Home Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // --- Global feature flags (admin on/off + status note) ---
+
+        private async Task InitFeatureFlagsAsync()
+        {
+            await Services.Cloud.CloudFeatureFlags.RefreshAsync();
+            ApplyFeatureFlags();
+        }
+
+        /// <summary>
+        /// Reflect the admin feature flags into each integration panel: show the
+        /// status note (or a default "disabled" message) and enable/disable the
+        /// panel's controls when a feature is turned off globally.
+        /// </summary>
+        private void ApplyFeatureFlags()
+        {
+            ApplyFeatureFlag("alexa", TxtAlexaStatusNote,
+                BtnGenerateAlexaPIN, CmbAlexaServer, BtnLinkAlexa, BtnRevokeAlexa);
+            ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
+                BtnGenerateHaToken, BtnCopyHaToken, BtnCopyHaSnippet, BtnRevokeHa);
+            ApplyFeatureFlag("google", TxtGoogleStatusNote,
+                BtnGenerateGooglePIN, CmbGoogleServer, BtnLinkGoogle, BtnRevokeGoogle);
+        }
+
+        private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)
+        {
+            var enabled = Services.Cloud.CloudFeatureFlags.IsEnabled(key);
+            var statusNote = Services.Cloud.CloudFeatureFlags.Note(key);
+
+            // The banner is shown only when the feature is disabled — it uses the
+            // admin status note if one is set, otherwise a default message.
+            if (!enabled)
+            {
+                note.Text = string.IsNullOrWhiteSpace(statusNote)
+                    ? "This integration is currently disabled by the administrator."
+                    : statusNote;
+                note.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                note.Visibility = Visibility.Collapsed;
+            }
+
+            foreach (var control in controls)
+            {
+                control.IsEnabled = enabled;
+            }
         }
 
         private void TxtCustomMapUrl_TextChanged(object sender, TextChangedEventArgs e)

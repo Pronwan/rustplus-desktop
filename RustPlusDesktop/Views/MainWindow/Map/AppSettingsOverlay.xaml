@@ -664,6 +664,8 @@
                                     <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnAlexaHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="{DynamicResource UiAlexaSetupInfo}" VerticalAlignment="Top" />
                                 </Grid>
                                 
+                                <TextBlock x:Name="TxtAlexaStatusNote" Visibility="Collapsed" TextWrapping="Wrap" FontSize="11" Padding="8,6" Margin="0,0,0,10" Background="#3A2A15" Foreground="#F0B75E" />
+
                                 <ui:TextBlock Text="{DynamicResource UiAmazonAlexaLogin}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
                                 <Grid Margin="0,0,0,16">
                                     <Grid.ColumnDefinitions>
@@ -698,6 +700,8 @@
                                     <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnHomeAssistantHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Home Assistant setup info" VerticalAlignment="Top" />
                                 </Grid>
 
+                                <TextBlock x:Name="TxtHaStatusNote" Visibility="Collapsed" TextWrapping="Wrap" FontSize="11" Padding="8,6" Margin="0,0,0,10" Background="#3A2A15" Foreground="#F0B75E" />
+
                                 <ui:TextBlock Text="API Token" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -727,6 +731,8 @@
                                     <ui:TextBlock Text="Control your Rust smart switches with Google Home / Assistant. Generate a PIN, pick a server, then add the RustPlusDesktop service in the Google Home app and enter the PIN." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
                                     <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnGoogleHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Google Home setup info" VerticalAlignment="Top" />
                                 </Grid>
+
+                                <TextBlock x:Name="TxtGoogleStatusNote" Visibility="Collapsed" TextWrapping="Wrap" FontSize="11" Padding="8,6" Margin="0,0,0,10" Background="#3A2A15" Foreground="#F0B75E" />
 
                                 <ui:TextBlock Text="Google Login PIN" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
                                 <Grid Margin="0,0,0,16">
