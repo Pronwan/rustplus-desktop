@@ -728,7 +728,7 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <ui:TextBlock Text="Control your Rust smart switches with Google Home / Assistant. Generate a PIN, pick a server, then add the RustPlusDesktop service in the Google Home app and enter the PIN." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
+                                    <ui:TextBlock Text="Control your Rust smart switches with Google Home / Assistant, and get raid alarms as motion sensors. Generate a PIN, pick a server, then add the RustPlusDesktop service in the Google Home app and enter the PIN." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
                                     <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnGoogleHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Google Home setup info" VerticalAlignment="Top" />
                                 </Grid>
 
