@@ -98,6 +98,27 @@ namespace RustPlusDesk.Services
 
         public bool IsRecording { get; set; } = true;
 
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    if (!value)
+                    {
+                        CurrentDownloadSpeedBps = 0;
+                        CurrentUploadSpeedBps = 0;
+                        while (_speedHistory.TryDequeue(out _)) { }
+                    }
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(BandwidthSummaryBadge));
+                }
+            }
+        }
+
         public long TotalInboundBytes
         {
             get => Interlocked.Read(ref _totalInboundBytes);
@@ -162,7 +183,9 @@ namespace RustPlusDesk.Services
         public string FormattedTotalInboundBits => FormatBits(TotalInboundBytes);
         public string FormattedTotalOutboundBits => FormatBits(TotalOutboundBytes);
 
-        public string BandwidthSummaryBadge => $"↓ {FormatBits((long)_currentDownloadSpeedBps)}  ↑ {FormatBits((long)_currentUploadSpeedBps)}";
+        public string BandwidthSummaryBadge => IsEnabled 
+            ? $"↓ {FormatBits((long)_currentDownloadSpeedBps)}  ↑ {FormatBits((long)_currentUploadSpeedBps)}"
+            : "Off";
 
         public event EventHandler<TrafficEntry>? EntryAdded;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -179,6 +202,13 @@ namespace RustPlusDesk.Services
 
         private void SpeedTimer_Tick(object? sender, EventArgs e)
         {
+            if (!IsEnabled)
+            {
+                CurrentDownloadSpeedBps = 0;
+                CurrentUploadSpeedBps = 0;
+                return;
+            }
+
             var now = DateTime.UtcNow;
             var windowStart = now.AddSeconds(-1.5);
 
@@ -212,7 +242,7 @@ namespace RustPlusDesk.Services
             string status = "OK",
             string details = "")
         {
-            if (!IsRecording) return;
+            if (!IsEnabled || !IsRecording) return;
 
             var now = DateTime.UtcNow;
             _speedHistory.Enqueue((now, bytesIn, bytesOut));
