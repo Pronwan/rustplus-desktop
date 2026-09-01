@@ -84,6 +84,7 @@ public class TrackingSettings
     public bool AutoStartEnabled { get; set; } = false;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
+    public bool TrafficMonitorEnabled { get; set; } = true;
     // Default on: use the in-process native FCM listener instead of the bundled Node fcm-listen.
     public bool UseNativeFcmListener { get; set; } = true;
     public double SidebarWidth { get; set; } = 420;
@@ -370,6 +371,7 @@ public static class TrackingService
             {
                 var json = File.ReadAllText(_settingsPath);
                 _settings = JsonSerializer.Deserialize<TrackingSettings>(json) ?? new();
+                NetworkTrafficMonitor.Instance.IsEnabled = _settings.TrafficMonitorEnabled;
             }
         }
         catch { }
@@ -628,6 +630,17 @@ public static class TrackingService
     {
         get => _settings.HideConsole;
         set { _settings.HideConsole = value; SaveDB(); }
+    }
+
+    public static bool TrafficMonitorEnabled
+    {
+        get => _settings.TrafficMonitorEnabled;
+        set
+        {
+            _settings.TrafficMonitorEnabled = value;
+            NetworkTrafficMonitor.Instance.IsEnabled = value;
+            SaveDB();
+        }
     }
 
     public static double SidebarWidth

@@ -6800,6 +6800,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             LogPanel.Visibility = TrackingService.HideConsole ? Visibility.Collapsed : Visibility.Visible;
         }
+        if (BtnTrafficMonitor != null)
+        {
+            BtnTrafficMonitor.Visibility = TrackingService.TrafficMonitorEnabled ? Visibility.Visible : Visibility.Collapsed;
+        }
         if (WebViewHost != null)
         {
             WebViewHost.Margin = new Thickness(-12, 0, -12, TrackingService.HideConsole ? -12 : 8);
