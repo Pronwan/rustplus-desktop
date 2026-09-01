@@ -790,6 +790,14 @@ namespace RustPlusDesk.Views
             {
                 PopulateAlexaServers();
                 _ = LoadAlexaSettingsAsync();
+
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    _ = LoadHomeAssistantSettingsAsync();
+
+                    PopulateGoogleServers();
+                    _ = LoadGoogleSettingsAsync();
+                }
             }
         }
 
@@ -2175,6 +2183,345 @@ namespace RustPlusDesk.Views
             {
                 BtnRevokeAlexa.IsEnabled = true;
             }
+        }
+
+        // --- Home Assistant integration (platform-only) ---
+
+        /// <summary>Public base URL of the cloud worker that serves the /api/ha endpoints.</summary>
+        private const string HaWorkerBaseUrl = "https://worker.rustplusdesktop.cloud";
+
+        private async Task LoadHomeAssistantSettingsAsync()
+        {
+            try
+            {
+                var token = await Services.Cloud.CloudHomeAssistantAdapter.GetTokenAsync();
+                ApplyHaToken(token);
+            }
+            catch
+            {
+                // No token yet, or the endpoint is unreachable — leave the panel in its empty state.
+                ApplyHaToken(null);
+            }
+        }
+
+        /// <summary>Reflect a token (or its absence) into the token box, copy button, and snippet.</summary>
+        private void ApplyHaToken(string? token)
+        {
+            var hasToken = !string.IsNullOrEmpty(token);
+
+            TxtHaToken.Text = hasToken ? token : string.Empty;
+            BtnCopyHaToken.IsEnabled = hasToken;
+            BtnGenerateHaToken.Content = hasToken ? "Regenerate Token" : "Generate Token";
+            TxtHaSnippet.Text = BuildHaSnippet(token);
+        }
+
+        private static string BuildHaSnippet(string? token)
+        {
+            var bearer = string.IsNullOrEmpty(token) ? "<YOUR_TOKEN>" : token;
+
+            return
+                "# Add to Home Assistant configuration.yaml\n" +
+                "switch:\n" +
+                "  - platform: rest\n" +
+                "    name: Rust Smart Switch\n" +
+                $"    resource: {HaWorkerBaseUrl}/api/ha/switch/SERVERKEY_ENTITYID\n" +
+                "    headers:\n" +
+                $"      Authorization: \"Bearer {bearer}\"\n" +
+                "    body_on: '{\"on\": true}'\n" +
+                "    body_off: '{\"on\": false}'\n" +
+                "    is_on_template: \"{{ value_json.on }}\"";
+        }
+
+        private async void BtnGenerateHaToken_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Home Assistant integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            BtnGenerateHaToken.IsEnabled = false;
+            try
+            {
+                var token = await Services.Cloud.CloudHomeAssistantAdapter.RegenerateTokenAsync();
+                ApplyHaToken(token);
+                ParentWindow?.ShowInfoSnackbar("Success", "Home Assistant token generated. Copy it into your configuration.yaml.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to generate Home Assistant token: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateHaToken.IsEnabled = true;
+            }
+        }
+
+        private void BtnCopyHaToken_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtHaToken.Text)) return;
+            try
+            {
+                Clipboard.SetText(TxtHaToken.Text);
+                ParentWindow?.ShowInfoSnackbar("Copied", "Token copied to clipboard.", WpfUi.ControlAppearance.Success);
+            }
+            catch { /* clipboard can transiently fail; nothing actionable */ }
+        }
+
+        private void BtnCopyHaSnippet_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtHaSnippet.Text)) return;
+            try
+            {
+                Clipboard.SetText(TxtHaSnippet.Text);
+                ParentWindow?.ShowInfoSnackbar("Copied", "Configuration snippet copied to clipboard.", WpfUi.ControlAppearance.Success);
+            }
+            catch { /* clipboard can transiently fail; nothing actionable */ }
+        }
+
+        private async void BtnRevokeHa_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform || !Services.Cloud.CloudAuth.IsAuthenticated) return;
+
+            BtnRevokeHa.IsEnabled = false;
+            try
+            {
+                await Services.Cloud.CloudHomeAssistantAdapter.RevokeAsync();
+                ApplyHaToken(null);
+                ParentWindow?.ShowInfoSnackbar("Success", "Home Assistant token revoked.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to revoke Home Assistant token: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeHa.IsEnabled = true;
+            }
+        }
+
+        private void BtnHomeAssistantHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use the Home Assistant integration:\n\n" +
+                      "1. Click 'Generate Token' to create your API token.\n" +
+                      "2. Copy the token (or the whole example snippet).\n" +
+                      "3. In Home Assistant, open configuration.yaml and add a REST switch per device.\n" +
+                      "4. Replace SERVERKEY_ENTITYID with a device id from your device list — the format is {host}-{port}_{entityId}.\n" +
+                      "5. Restart Home Assistant. The switch appears and can be toggled; its state is read back from the Rust server.\n\n" +
+                      "For raid/death alerts, use the Smart Home Webhook URL field with a Home Assistant webhook automation instead.\n\n" +
+                      "Keep your token secret — anyone with it can control your linked switches. Use 'Revoke Token' to invalidate it.";
+
+            MessageBox.Show(msg, "Home Assistant Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // --- Google Home integration (platform-only) ---
+
+        private void PopulateGoogleServers()
+        {
+            CmbGoogleServer.Items.Clear();
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Servers != null)
+            {
+                foreach (var s in vm.Servers)
+                {
+                    if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
+                    {
+                        CmbGoogleServer.Items.Add(new ComboBoxItem
+                        {
+                            Content = string.IsNullOrEmpty(s.Name) ? $"{s.Host}:{s.Port}" : $"{s.Name} ({s.Host}:{s.Port})",
+                            Tag = $"{s.Host}-{s.Port}"
+                        });
+                    }
+                }
+            }
+        }
+
+        private async Task LoadGoogleSettingsAsync()
+        {
+            try
+            {
+                if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
+
+                var activeServerKey = await Services.Cloud.CloudSmartHomeAdapter.GetActiveServerKeyAsync();
+                if (string.IsNullOrEmpty(activeServerKey)) return;
+
+                foreach (ComboBoxItem item in CmbGoogleServer.Items)
+                {
+                    if (item.Tag?.ToString() == activeServerKey)
+                    {
+                        CmbGoogleServer.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+                // Not linked yet, or endpoint unreachable — leave the panel unselected.
+            }
+        }
+
+        private async void BtnGenerateGooglePIN_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Google Home integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var vm = RustPlusDesk.App.Current.MainWindow.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnGenerateGooglePIN.IsEnabled = false;
+            try
+            {
+                var random = new Random();
+                string pin = random.Next(100000, 999999).ToString();
+
+                // The PIN is platform-agnostic (it resolves to a steam id regardless of
+                // which assistant links), so this reuses the same mechanism as Alexa.
+                if (!await Services.Cloud.CloudAlexaAdapter.SetAlexaPinAsync(steamId, pin, DateTime.UtcNow.AddMinutes(15)))
+                {
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                TxtGooglePIN.Text = pin;
+                TxtGooglePIN.Visibility = Visibility.Visible;
+                BtnGenerateGooglePIN.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiPINGeneratedValidFor15m");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedGeneratePin"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateGooglePIN.IsEnabled = true;
+            }
+        }
+
+        private async void BtnLinkGoogle_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Google Home integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var selected = CmbGoogleServer.SelectedItem as ComboBoxItem;
+            var serverKey = selected?.Tag?.ToString();
+            if (string.IsNullOrEmpty(serverKey))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("PleaseSelectServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (ParentWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm) return;
+            var steamId = vm.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnLinkGoogle.IsEnabled = false;
+            try
+            {
+                var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
+                if (serverProfile != null)
+                {
+                    // Pair the server (uploads credentials the worker uses) and point the
+                    // generic smart-home active server at it. No FCM sync needed — Google
+                    // control does not use push alarms.
+                    await Services.Cloud.CloudSmartHomeAdapter.LinkServerAsync(
+                        steamId,
+                        serverProfile.Host,
+                        serverProfile.Port,
+                        serverProfile.Name,
+                        serverProfile.PlayerToken);
+
+                    // Force a device snapshot so Google's SYNC has switches to discover.
+                    if (ulong.TryParse(steamId, out var steamIdUlong))
+                    {
+                        var currentOverlay = Services.Data.OverlayDataModule.LoadLocalOverlay(serverKey, steamIdUlong);
+                        _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
+                    }
+
+                    var msgBox = new Wpf.Ui.Controls.MessageBox
+                    {
+                        Title = Properties.Resources.GetString("CodeUiSuccess"),
+                        Content = "Google Home server linked. Now open the Google Home app, add the RustPlusDesktop service under 'Works with Google', and enter your PIN. Then say \"Hey Google, sync my devices\".",
+                        PrimaryButtonText = Properties.Resources.OK
+                    };
+                    await msgBox.ShowDialogAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = Properties.Resources.GetString("ErrorTitle"),
+                    Content = $"Failed to link Google Home server: {ex.Message}",
+                    PrimaryButtonText = Properties.Resources.OK
+                };
+                await msgBox.ShowDialogAsync();
+            }
+            finally
+            {
+                BtnLinkGoogle.IsEnabled = true;
+            }
+        }
+
+        private async void BtnRevokeGoogle_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform || !Services.Cloud.CloudAuth.IsAuthenticated) return;
+
+            BtnRevokeGoogle.IsEnabled = false;
+            try
+            {
+                await Services.Cloud.CloudSmartHomeAdapter.RevokeAsync();
+                CmbGoogleServer.SelectedItem = null;
+                ParentWindow?.ShowInfoSnackbar("Success", "Google Home access revoked.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to revoke Google Home access: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeGoogle.IsEnabled = true;
+            }
+        }
+
+        private void BtnGoogleHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use the Google Home integration:\n\n" +
+                      "1. Click 'Generate Login PIN' (valid 15 minutes).\n" +
+                      "2. Select the server whose smart switches you want to control and click 'Link Selected Server'.\n" +
+                      "3. In the Google Home app: + → Set up a device → Works with Google, choose RustPlusDesktop, and enter the PIN.\n" +
+                      "4. Your smart switches appear in Google Home and respond to voice commands, e.g. \"Hey Google, turn on Turrets\".\n\n" +
+                      "Only smart switches are supported. For raid/death alerts use the Smart Home Webhook URL field instead.";
+
+            MessageBox.Show(msg, "Google Home Setup", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void TxtCustomMapUrl_TextChanged(object sender, TextChangedEventArgs e)
