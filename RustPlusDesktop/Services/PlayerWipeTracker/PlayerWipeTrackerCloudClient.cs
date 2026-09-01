@@ -29,6 +29,44 @@ public sealed class PlayerWipeTrackerCloudClient
         return (int)response.StatusCode;
     }
 
+    /// <summary>
+    /// Sends a batch of new observations and returns the newest timestamp the server has stored.
+    ///
+    /// The acknowledged timestamp is what the caller records as its cursor. Taking it from the
+    /// response rather than from the batch it sent means a partially merged batch — anything the
+    /// server chose to reject or deduplicate — leaves the cursor where the server actually is.
+    /// </summary>
+    public async Task<(int Status, DateTime? LastObservedUtc)> AppendDayAsync(
+        CloudDayAppendRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await SendAsync(HttpMethod.Post, "player-wipe-tracker/days/append", request, cancellationToken).ConfigureAwait(false);
+        var status = (int)response.StatusCode;
+        if (status is < 200 or >= 300)
+            return (status, null);
+
+        try
+        {
+            var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            using var document = JsonDocument.Parse(body);
+            if (document.RootElement.TryGetProperty("data", out var data)
+                && data.TryGetProperty("last_observed_at", out var last)
+                && last.ValueKind == JsonValueKind.String
+                && DateTime.TryParse(last.GetString(), CultureInfo.InvariantCulture,
+                    DateTimeStyles.RoundtripKind | DateTimeStyles.AdjustToUniversal, out var parsed))
+            {
+                return (status, parsed);
+            }
+        }
+        catch
+        {
+            // A stored batch with an unreadable acknowledgement is still stored. Leaving the
+            // cursor put costs one repeated batch, and the server merges by timestamp.
+        }
+
+        return (status, null);
+    }
+
     public async Task<JsonDocument?> GetWipesAsync(CancellationToken cancellationToken = default)
         => await SendJsonAsync(HttpMethod.Get, "player-wipe-tracker/wipes", null, cancellationToken).ConfigureAwait(false);
 

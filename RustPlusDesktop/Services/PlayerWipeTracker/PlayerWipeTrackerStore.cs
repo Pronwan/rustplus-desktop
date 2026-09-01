@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -341,6 +342,50 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
 
     private string FilePath(string serverKey, string wipeKey, ulong steamId)
         => Path.Combine(WipeDirectory(serverKey, wipeKey), $"{steamId}.jsonl");
+
+    /// <summary>
+    /// The newest observation timestamp the cloud has confirmed for this player-day, or null
+    /// when nothing has been acknowledged yet.
+    ///
+    /// Persisted rather than held in memory: without it a restart would have no idea what the
+    /// server already holds and would send the day from the beginning again, which is the very
+    /// cost the incremental upload exists to avoid.
+    /// </summary>
+    public DateTime? GetCloudCursor(string serverKey, string wipeKey, ulong steamId, DateOnly day)
+    {
+        try
+        {
+            var path = CloudCursorFile(serverKey, wipeKey, steamId, day);
+            if (!File.Exists(path)) return null;
+            var text = File.ReadAllText(path).Trim();
+            return DateTime.TryParse(text, CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind | DateTimeStyles.AdjustToUniversal, out var value)
+                ? value
+                : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public void SetCloudCursor(string serverKey, string wipeKey, ulong steamId, DateOnly day, DateTime lastObservedUtc)
+    {
+        try
+        {
+            var path = CloudCursorFile(serverKey, wipeKey, steamId, day);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, lastObservedUtc.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture));
+        }
+        catch
+        {
+            // A lost cursor costs one repeated batch, never correctness: the server merges
+            // by timestamp, so re-sending what it already has changes nothing.
+        }
+    }
+
+    private string CloudCursorFile(string serverKey, string wipeKey, ulong steamId, DateOnly day)
+        => Path.Combine(WipeDirectory(serverKey, wipeKey), $".cloud_cursor_{steamId}_{day:yyyyMMdd}");
 
     private string WipeDirectory(string serverKey, string wipeKey)
         => Path.Combine(_root, Safe(serverKey), Safe(wipeKey));
