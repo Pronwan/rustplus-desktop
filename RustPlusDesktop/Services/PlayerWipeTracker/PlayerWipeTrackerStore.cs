@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -344,6 +345,102 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         => Path.Combine(WipeDirectory(serverKey, wipeKey), $"{steamId}.jsonl");
 
     /// <summary>
+    /// One day's observations, without reading the days before it.
+    ///
+    /// These files reach tens of megabytes over a wipe, and the cloud upload only ever wants the
+    /// current day — so parsing the whole history once a minute, per player, was most of the
+    /// tracker's cost after the network traffic was dealt with. The file is append-only and
+    /// written in time order, so the byte offset where a day begins never moves once found:
+    /// callers keep it and hand it back, and the read starts there.
+    ///
+    /// <paramref name="fromOffset"/> means "everything before this byte is already dealt with".
+    /// The returned NextOffset points just past the last complete line read, so a caller that
+    /// consumed everything can hand it back next time and read only what was appended since.
+    /// A stale or impossible offset costs a larger read, never a missed observation.
+    /// </summary>
+    public (IReadOnlyList<TrackerPersistedObservation> Items, long NextOffset) LoadDay(
+        string serverKey,
+        string wipeKey,
+        ulong steamId,
+        DateOnly day,
+        long fromOffset)
+    {
+        var path = FilePath(serverKey, wipeKey, steamId);
+        if (!File.Exists(path))
+            return (Array.Empty<TrackerPersistedObservation>(), 0);
+
+        try
+        {
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            // A hint past the end means the file was reset underneath us; start over rather than
+            // silently reading nothing.
+            var start = fromOffset > 0 && fromOffset <= stream.Length ? fromOffset : 0;
+            stream.Seek(start, SeekOrigin.Begin);
+
+            var remaining = (int)(stream.Length - start);
+            if (remaining <= 0)
+                return (Array.Empty<TrackerPersistedObservation>(), start);
+
+            var buffer = new byte[remaining];
+            stream.ReadExactly(buffer, 0, remaining);
+
+            var items = new List<TrackerPersistedObservation>();
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            // Only complete lines count: the writer may be halfway through appending one.
+            long next = start;
+            var lineStart = 0;
+
+            for (var i = 0; i <= buffer.Length; i++)
+            {
+                // 0x0A cannot occur inside a UTF-8 multi-byte sequence, so splitting on the raw
+                // byte is safe and keeps the offsets exact.
+                if (i == buffer.Length)
+                    break;
+                if (buffer[i] != (byte)'\n')
+                    continue;
+
+                var length = i - lineStart;
+                if (length > 0)
+                {
+                    var line = Encoding.UTF8.GetString(buffer, lineStart, length).Trim();
+                    if (line.Length > 0)
+                    {
+                        try
+                        {
+                            var item = JsonSerializer.Deserialize<TrackerPersistedObservation>(line, _json);
+                            if (item is not null)
+                            {
+                                var itemDay = DateOnly.FromDateTime(item.Observation.TimestampUtc.ToUniversalTime());
+                                if (itemDay == day)
+                                {
+                                    var key = $"{item.Kind}|{item.Observation.SessionId}|{item.Observation.TimestampUtc:O}";
+                                    if (seen.Add(key))
+                                        items.Add(item);
+                                }
+                            }
+                        }
+                        catch (JsonException)
+                        {
+                            // One malformed line must not hide the rest of the day.
+                        }
+                    }
+                }
+
+                lineStart = i + 1;
+                next = start + lineStart;
+            }
+
+            items.Sort((a, b) => a.Observation.TimestampUtc.CompareTo(b.Observation.TimestampUtc));
+            return (items, next);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return (Array.Empty<TrackerPersistedObservation>(), fromOffset);
+        }
+    }
+
+    /// <summary>
     /// The newest observation timestamp the cloud has confirmed for this player-day, or null
     /// when nothing has been acknowledged yet.
     ///
@@ -351,31 +448,45 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
     /// server already holds and would send the day from the beginning again, which is the very
     /// cost the incremental upload exists to avoid.
     /// </summary>
-    public DateTime? GetCloudCursor(string serverKey, string wipeKey, ulong steamId, DateOnly day)
+    /// <summary>
+    /// What the cloud has confirmed for this player-day, plus where that day starts in the
+    /// player's file. The offset is only a read hint — see <see cref="LoadDay"/>.
+    /// </summary>
+    public (DateTime? LastObservedUtc, long DayStartOffset) GetCloudCursor(
+        string serverKey, string wipeKey, ulong steamId, DateOnly day)
     {
         try
         {
             var path = CloudCursorFile(serverKey, wipeKey, steamId, day);
-            if (!File.Exists(path)) return null;
-            var text = File.ReadAllText(path).Trim();
-            return DateTime.TryParse(text, CultureInfo.InvariantCulture,
+            if (!File.Exists(path)) return (null, 0);
+
+            // "<iso>|<offset>". Older files hold the timestamp alone; they read back with a zero
+            // offset, which costs one full scan and then writes the current form.
+            var parts = File.ReadAllText(path).Trim().Split('|');
+            var timestamp = DateTime.TryParse(parts[0], CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind, out var value)
                 ? value.ToUniversalTime()
-                : null;
+                : (DateTime?)null;
+            var offset = parts.Length > 1 && long.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed)
+                ? parsed
+                : 0;
+            return (timestamp, offset);
         }
         catch
         {
-            return null;
+            return (null, 0);
         }
     }
 
-    public void SetCloudCursor(string serverKey, string wipeKey, ulong steamId, DateOnly day, DateTime lastObservedUtc)
+    public void SetCloudCursor(string serverKey, string wipeKey, ulong steamId, DateOnly day, DateTime lastObservedUtc, long dayStartOffset)
     {
         try
         {
             var path = CloudCursorFile(serverKey, wipeKey, steamId, day);
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            File.WriteAllText(path, lastObservedUtc.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture));
+            File.WriteAllText(path,
+                lastObservedUtc.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture)
+                + "|" + dayStartOffset.ToString(CultureInfo.InvariantCulture));
         }
         catch
         {
