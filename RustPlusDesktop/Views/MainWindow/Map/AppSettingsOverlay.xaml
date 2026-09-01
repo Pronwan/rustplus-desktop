@@ -687,6 +687,36 @@
                                 </Grid>
                             </StackPanel>
                         </ui:CardExpander>
+                        <ui:CardExpander Header="Home Assistant" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                            <StackPanel Margin="0,8,0,0">
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="Control your Rust smart switches from Home Assistant using a REST switch. Generate an API token, then add the generated snippet to your configuration.yaml." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnHomeAssistantHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Home Assistant setup info" VerticalAlignment="Top" />
+                                </Grid>
+
+                                <ui:TextBlock Text="API Token" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnGenerateHaToken" Content="Generate Token" Icon="{ui:SymbolIcon Symbol=Key24}" HorizontalAlignment="Stretch" Height="36" Click="BtnGenerateHaToken_Click" />
+                                    <ui:Button x:Name="BtnCopyHaToken" Grid.Column="1" Content="Copy" Icon="{ui:SymbolIcon Symbol=Copy24}" Height="36" Margin="8,0,0,0" IsEnabled="False" Click="BtnCopyHaToken_Click" />
+                                </Grid>
+                                <ui:TextBox x:Name="TxtHaToken" IsReadOnly="True" Height="28" Padding="6,4" Margin="0,0,0,16" FontFamily="Consolas" PlaceholderText="No token generated yet" />
+
+                                <ui:TextBlock Text="Example configuration.yaml" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <ui:TextBlock Text="Replace SERVERKEY_ENTITYID with a device id from your device list (shown as {host}-{port}_{entityId})." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                <ui:TextBox x:Name="TxtHaSnippet" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" MaxHeight="180" Padding="6,4" Margin="0,0,0,8" FontFamily="Consolas" FontSize="11" />
+                                <ui:Button x:Name="BtnCopyHaSnippet" Content="Copy Snippet" Icon="{ui:SymbolIcon Symbol=Copy24}" HorizontalAlignment="Stretch" Height="32" Margin="0,0,0,16" Click="BtnCopyHaSnippet_Click" />
+
+                                <ui:Button x:Name="BtnRevokeHa" Content="Revoke Token" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Click="BtnRevokeHa_Click" />
+                            </StackPanel>
+                        </ui:CardExpander>
 
                         <ui:ToggleSwitch x:Name="ChkTelegramIntegration" Content="{DynamicResource UiTeamPathsTracking}" Margin="0,0,0,10" Opacity="0.45" IsEnabled="False" />
                     </StackPanel>
