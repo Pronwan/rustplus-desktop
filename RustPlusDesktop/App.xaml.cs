@@ -44,6 +44,8 @@ public partial class App : Application
     {
         VelopackApp.Build().Run();
 
+        CrashReporter.Initialize();
+
         var app = new App();
         app.InitializeComponent();
         app.Run();
@@ -51,6 +53,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        CrashReporter.Initialize(Dispatcher);
         AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
         base.OnStartup(e);
         _ = StartupWithSplashAsync(e.Args);
