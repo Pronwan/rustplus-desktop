@@ -378,6 +378,23 @@
                         Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
                         ToolTip="{DynamicResource PatchNotes}" />
                     <ui:Button
+                        x:Name="BtnTrafficMonitor"
+                        Height="36"
+                        Margin="2,6"
+                        Padding="6,0"
+                        Appearance="Transparent"
+                        Click="BtnTrafficMonitor_Click"
+                        ToolTip="Network Traffic &amp; Bandwidth Monitor">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="DataUsage24" Foreground="{DynamicResource Accent}" FontSize="15" Margin="0,0,5,0" />
+                            <TextBlock x:Name="TxtTrafficBadge"
+                                       FontSize="11"
+                                       Foreground="#CCCCCC"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Source={x:Static services:NetworkTrafficMonitor.Instance}, Path=BandwidthSummaryBadge}" />
+                        </StackPanel>
+                    </ui:Button>
+                    <ui:Button
                         x:Name="BtnSettings"
                         tutorials:Tutorial.TargetId="Navigation.Settings"
                         Width="36"
