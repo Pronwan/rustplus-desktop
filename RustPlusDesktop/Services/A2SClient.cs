@@ -41,7 +41,7 @@ namespace RustPlusDesk.Services
             // 2. Read the first response — could be:
             //    0x41  A2S_CHALLENGE: server wants us to re-send with a real token
             //    0x44  A2S_PLAYER:    server skipped the challenge and sent the list directly (valid per spec)
-            var firstRes = await udp.ReceiveAsync().WithCancellation(cts.Token);
+            var firstRes = await udp.ReceiveAsync(cts.Token);
             NetworkTrafficMonitor.Instance.RecordInbound("Steam A2S", $"A2S Response ({host}:{port})", firstRes.Buffer.Length, details: $"Packet size {firstRes.Buffer.Length} B");
             {
                 using var ms0 = new MemoryStream(firstRes.Buffer);
@@ -75,13 +75,7 @@ namespace RustPlusDesk.Services
 
             while (!cts.IsCancellationRequested)
             {
-                var pResTask = udp.ReceiveAsync();
-                if (await Task.WhenAny(pResTask, Task.Delay(timeoutMs, cts.Token)) != pResTask)
-                {
-                    throw new Exception($"Timeout waiting for player packets on port {port}. Received {packets.Count}/{totalPackets} split packets.");
-                }
-
-                var pRes = await pResTask;
+                var pRes = await udp.ReceiveAsync(cts.Token);
                 NetworkTrafficMonitor.Instance.RecordInbound("Steam A2S", $"A2S Split Packet ({host}:{port})", pRes.Buffer.Length, details: $"Packet size {pRes.Buffer.Length} B");
                 var pMs = new MemoryStream(pRes.Buffer);
                 var pBr = new BinaryReader(pMs);

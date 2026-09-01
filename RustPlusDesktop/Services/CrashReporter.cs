@@ -80,7 +80,20 @@ namespace RustPlusDesk.Services
             // 3. TaskScheduler unobserved task exceptions
             TaskScheduler.UnobservedTaskException += (s, e) =>
             {
-                LogCrash(e.Exception, "TaskScheduler.UnobservedTaskException", isFatal: false);
+                e.SetObserved();
+
+                // Routine background socket closures, cancelled tasks, or thread aborts are normal cleanup
+                var baseEx = e.Exception?.GetBaseException();
+                if (baseEx is OperationCanceledException or TaskCanceledException or ObjectDisposedException ||
+                    (baseEx is System.Net.Sockets.SocketException se && (se.SocketErrorCode == System.Net.Sockets.SocketError.OperationAborted || se.SocketErrorCode == System.Net.Sockets.SocketError.Interrupted)))
+                {
+                    return;
+                }
+
+                if (e.Exception != null)
+                {
+                    LogCrash(e.Exception, "TaskScheduler.UnobservedTaskException", isFatal: false);
+                }
             };
 
             // 4. Start UI Freeze Watchdog
