@@ -7576,6 +7576,32 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private Views.Windows.TrafficMonitorWindow? _trafficMonitorWindow;
+
+    private void BtnTrafficMonitor_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_trafficMonitorWindow != null && _trafficMonitorWindow.IsLoaded)
+            {
+                if (_trafficMonitorWindow.WindowState == WindowState.Minimized)
+                    _trafficMonitorWindow.WindowState = WindowState.Normal;
+                _trafficMonitorWindow.Activate();
+                _trafficMonitorWindow.Focus();
+                return;
+            }
+
+            _trafficMonitorWindow = new Views.Windows.TrafficMonitorWindow();
+            _trafficMonitorWindow.Closed += (_, _) => _trafficMonitorWindow = null;
+            _trafficMonitorWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not open Traffic Monitor window: " + ex.Message);
+            MessageBox.Show($"Could not open Traffic Monitor window:\n{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
     private void BtnSettings_Click(object sender, RoutedEventArgs e)
     {
         if (AppSettingsPanel.Visibility == Visibility.Visible)

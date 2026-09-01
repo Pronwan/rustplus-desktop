@@ -31,6 +31,7 @@ namespace RustPlusDesk.Services.Cloud
         /// </summary>
         public static async Task<string?> GetPublicAsync(string routePath)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 using var request = new HttpRequestMessage(HttpMethod.Get, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
@@ -39,13 +40,23 @@ namespace RustPlusDesk.Services.Cloud
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
 
                 using var response = await Http.SendAsync(request);
-                if (!response.IsSuccessStatusCode)
-                    return null;
+                sw.Stop();
 
-                return await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    NetworkTrafficMonitor.Instance.Record("Cloud API", TrafficDirection.Both, $"GET /api/v1/{routePath}", 0, 200, sw.ElapsedMilliseconds, $"{(int)response.StatusCode} {response.StatusCode}");
+                    return null;
+                }
+
+                var body = await response.Content.ReadAsStringAsync();
+                long respBytes = Encoding.UTF8.GetByteCount(body);
+                NetworkTrafficMonitor.Instance.Record("Cloud API", TrafficDirection.Both, $"GET /api/v1/{routePath}", respBytes, 200, sw.ElapsedMilliseconds, $"{(int)response.StatusCode} OK", details: $"Length: {respBytes} B");
+                return body;
             }
-            catch
+            catch (Exception ex)
             {
+                sw.Stop();
+                NetworkTrafficMonitor.Instance.Record("Cloud API", TrafficDirection.Both, $"GET /api/v1/{routePath}", 0, 200, sw.ElapsedMilliseconds, "Error", details: ex.Message);
                 return null;
             }
         }
@@ -60,6 +71,10 @@ namespace RustPlusDesk.Services.Cloud
             if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
                 return false;
 
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            long reqBytes = 0;
+            try { reqBytes = content.Headers.ContentLength ?? 0; } catch { }
+
             using var request = new HttpRequestMessage(HttpMethod.Post, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
             if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
@@ -67,10 +82,18 @@ namespace RustPlusDesk.Services.Cloud
             request.Content = content;
 
             using var response = await Http.SendAsync(request);
+            sw.Stop();
+
             if (response.IsSuccessStatusCode)
+            {
+                NetworkTrafficMonitor.Instance.Record("Cloud API", TrafficDirection.Both, $"POST /api/v1/{routePath}", 0, reqBytes, sw.ElapsedMilliseconds, $"{(int)response.StatusCode} OK", details: "Multipart upload success");
                 return true;
+            }
 
             var body = await response.Content.ReadAsStringAsync();
+            long respBytes = Encoding.UTF8.GetByteCount(body);
+            NetworkTrafficMonitor.Instance.Record("Cloud API", TrafficDirection.Both, $"POST /api/v1/{routePath}", respBytes, reqBytes, sw.ElapsedMilliseconds, $"{(int)response.StatusCode} {response.StatusCode}", details: DescribeError(body));
+
             SupabaseAuthManager.HandleUpgradeRequiredResponse(body);
             SupabaseAuthManager.AppendLog($"[Cloud/Error] POST /api/v1/{routePath} -> {(int)response.StatusCode}: {DescribeError(body)}");
 
@@ -93,18 +116,36 @@ namespace RustPlusDesk.Services.Cloud
             if (string.IsNullOrEmpty(bearerToken))
                 return (401, "{\"message\":\"Unauthenticated.\"}");
 
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             using var request = new HttpRequestMessage(method, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
             if (!string.IsNullOrEmpty(bearerToken))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 
+            long reqBytes = 200;
             if (payload != null)
-                request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            {
+                var jsonStr = JsonSerializer.Serialize(payload);
+                reqBytes += Encoding.UTF8.GetByteCount(jsonStr);
+                request.Content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+            }
 
             SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Request: {method} /api/v1/{routePath}" + (payload != null ? " (with payload)" : ""));
 
             using var response = await Http.SendAsync(request);
+            sw.Stop();
             var body = await response.Content.ReadAsStringAsync();
+            long respBytes = Encoding.UTF8.GetByteCount(body);
+
+            NetworkTrafficMonitor.Instance.Record(
+                "Cloud API",
+                TrafficDirection.Both,
+                $"{method} /api/v1/{routePath}",
+                respBytes,
+                reqBytes,
+                sw.ElapsedMilliseconds,
+                $"{(int)response.StatusCode} {response.StatusCode}",
+                details: payload != null ? "JSON payload" : "");
 
             SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Response: {method} /api/v1/{routePath} -> {(int)response.StatusCode} {response.StatusCode}" + (!response.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(body) ? $" ({body})" : ""));
 

@@ -91,10 +91,12 @@ public static class AvatarLoader
 
     private static async Task<ImageSource?> FetchSteamAvatarInternalAsync(ulong steamId, CancellationToken ct)
     {
+        var sw = System.Diagnostics.Stopwatch.StartNew();
         try
         {
             var xml = await Http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1", ct)
                 .ConfigureAwait(false);
+            NetworkTrafficMonitor.Instance.RecordInbound("Steam Community", $"Steam Profile XML ({steamId})", System.Text.Encoding.UTF8.GetByteCount(xml));
 
             string url = "";
             var mFull = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
@@ -106,6 +108,9 @@ public static class AvatarLoader
             if (string.IsNullOrWhiteSpace(url)) return null;
 
             var bytes = await Http.GetByteArrayAsync(url, ct).ConfigureAwait(false);
+            sw.Stop();
+            NetworkTrafficMonitor.Instance.RecordInbound("Steam Community", $"Steam Avatar Image ({steamId})", bytes.Length, sw.ElapsedMilliseconds, "200 OK", Path.GetFileName(url));
+
             return BytesToImage(bytes);
         }
         catch

@@ -232,6 +232,65 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         return default!;
     }
 
+    private static long CalculateProtoSize(object? obj)
+    {
+        if (obj == null) return 0;
+        if (obj is byte[] raw) return raw.Length;
+        try
+        {
+            var mCalc = obj.GetType().GetMethod("CalculateSize", Type.EmptyTypes);
+            if (mCalc != null && mCalc.Invoke(obj, null) is int size)
+            {
+                return size;
+            }
+        }
+        catch { }
+        try
+        {
+            var mToByte = obj.GetType().GetMethod("ToByteArray", Type.EmptyTypes);
+            if (mToByte != null && mToByte.Invoke(obj, null) is byte[] bytes)
+            {
+                return bytes.Length;
+            }
+        }
+        catch { }
+        return 64;
+    }
+
+    private static string IdentifyProtoRequestName(object? envelope)
+    {
+        if (envelope == null) return "Request";
+        var t = envelope.GetType();
+        var props = t.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+        foreach (var p in props)
+        {
+            if (p.Name is "Seq" or "Sequence" or "SequenceId" or "PlayerId" or "PlayerToken" or "EntityId") continue;
+            var val = p.GetValue(envelope);
+            if (val != null)
+            {
+                return p.Name;
+            }
+        }
+        return t.Name;
+    }
+
+    private static string IdentifyProtoResponseName(object? envelope)
+    {
+        if (envelope == null) return "Response";
+        var t = envelope.GetType();
+        var props = t.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+        foreach (var p in props)
+        {
+            if (p.Name is "Seq" or "Sequence" or "SequenceId" or "Error") continue;
+            var val = p.GetValue(envelope);
+            if (val != null)
+            {
+                return p.Name;
+            }
+        }
+        return t.Name;
+    }
+
 
     public async Task<bool> PromoteToLeaderAsync(ulong steamId, CancellationToken ct = default)
     {
@@ -1006,6 +1065,10 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                     _seqToEntity[seqN.Value] = entityId;
                     // _log?.Invoke($"[stor/seq] req seq={seqN.Value} → entity={entityId}");
                 }
+
+                long reqBytes = CalculateProtoSize(reqObj);
+                string reqName = IdentifyProtoRequestName(envelope ?? root);
+                NetworkTrafficMonitor.Instance.RecordOutbound("Rust+ Protobuf", $"AppRequest: {reqName}", reqBytes, details: entityId != 0 ? $"Entity #{entityId} (Seq {seqN.Value})" : $"Seq {seqN.Value}");
             }
             catch { /* tolerant */ }
         };
@@ -1029,6 +1092,10 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 var seqN = TryReadIntN(envelope, "Seq", "Sequence", "SequenceId");
                 if (seqN is not null && _seqToEntity.TryGetValue(seqN.Value, out var mapped))
                     entityId = mapped;
+
+                long respBytes = CalculateProtoSize(respObj);
+                string respName = IdentifyProtoResponseName(envelope ?? root);
+                NetworkTrafficMonitor.Instance.RecordInbound("Rust+ Protobuf", $"AppResponse: {respName}", respBytes, details: entityId != 0 ? $"Entity #{entityId}" : (seqN.HasValue ? $"Seq {seqN.Value}" : ""));
 
                 // === 1) Direkte Storage-/Container-Antwort (ohne EntityInfo-Hülle) ===
                 var storDirect =

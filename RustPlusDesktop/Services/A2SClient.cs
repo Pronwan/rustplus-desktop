@@ -35,12 +35,14 @@ namespace RustPlusDesk.Services
 
             // 1. Send initial A2S_PLAYER request with dummy challenge 0xFFFFFFFF
             byte[] req = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0x55, 0xFF, 0xFF, 0xFF, 0xFF };
+            NetworkTrafficMonitor.Instance.RecordOutbound("Steam A2S", $"A2S_PLAYER Query ({host}:{port})", req.Length, details: "Initial player list query");
             await udp.SendAsync(req, req.Length);
 
             // 2. Read the first response — could be:
             //    0x41  A2S_CHALLENGE: server wants us to re-send with a real token
             //    0x44  A2S_PLAYER:    server skipped the challenge and sent the list directly (valid per spec)
             var firstRes = await udp.ReceiveAsync().WithCancellation(cts.Token);
+            NetworkTrafficMonitor.Instance.RecordInbound("Steam A2S", $"A2S Response ({host}:{port})", firstRes.Buffer.Length, details: $"Packet size {firstRes.Buffer.Length} B");
             {
                 using var ms0 = new MemoryStream(firstRes.Buffer);
                 using var br0 = new BinaryReader(ms0);
@@ -58,6 +60,7 @@ namespace RustPlusDesk.Services
                             byte[] challenge = br0.ReadBytes(4);
                             var req2 = new List<byte> { 0xFF, 0xFF, 0xFF, 0xFF, 0x55 };
                             req2.AddRange(challenge);
+                            NetworkTrafficMonitor.Instance.RecordOutbound("Steam A2S", $"A2S_PLAYER Challenge Token ({host}:{port})", req2.Count, details: "Responding with challenge token");
                             await udp.SendAsync(req2.ToArray(), req2.Count);
                             // fall through to multi-packet receive below
                         }
@@ -79,6 +82,7 @@ namespace RustPlusDesk.Services
                 }
 
                 var pRes = await pResTask;
+                NetworkTrafficMonitor.Instance.RecordInbound("Steam A2S", $"A2S Split Packet ({host}:{port})", pRes.Buffer.Length, details: $"Packet size {pRes.Buffer.Length} B");
                 var pMs = new MemoryStream(pRes.Buffer);
                 var pBr = new BinaryReader(pMs);
 
